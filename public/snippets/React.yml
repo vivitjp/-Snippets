@@ -37,12 +37,12 @@
   BODY: |
     import React, { FC, useState } from "react"
 
-    type Props = {
+    type $TM_FILENAME_BASE = {
       xxxx: string
       yyyy: number
     }
 
-    export const $TM_FILENAME_BASE:FC<Props> = ({ xxxx, yyyy }: Props) => {
+    export const $TM_FILENAME_BASE:FC<$TM_FILENAME_BASE> = ({ xxxx, yyyy }: Props) => {
       const [xxxx, setXxxx] = useState<string>("")
 
       return <div>{xxxx}</div>

@@ -43,11 +43,25 @@ export const Button = styled.button<CSSProperties>`
     &:hover {
       background-color: #eee;
     }
-    box-shadow: 0 0 5px #bbb;
+    box-shadow: 0 0 5px #ddd;
   `}
 `
 
 export const Checkbox = styled.input.attrs<CSSProperties>({ type: "checkbox" })`
   padding: 0;
   width: 30px;
+`
+
+export const Select = styled.select`
+  padding: 0.2rem;
+  width: 160px;
+  height: 40px;
+  color: #555;
+  border: 1px solid #aaa;
+  border-radius: 3px;
+  background-color: white;
+  &:hover {
+    background-color: #eee;
+  }
+  box-shadow: 0 0 5px #ddd;
 `

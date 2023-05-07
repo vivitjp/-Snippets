@@ -75,7 +75,7 @@
 #-------------------------------
 
 - KEY: pk.rhf.core.methodByPram
-  EXPLAIN: RFHのFormProvider Core
+  EXPLAIN: RFHのFormProvider Core パラメタ
   BODY: |
     <form onSubmit={handleSubmit(onSubmit)}>
       <ChildByMethod methods={methods} /> <--method引数

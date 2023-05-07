@@ -1,35 +1,40 @@
-import styled from "styled-components"
+import styled, { CSSProperties } from "styled-components"
 
-//-------------------
-type Options = {
+export const makeOptions = <T,>(items: T[]) => {
+  return items.map((item) => ({
+    title: item as string,
+    value: item,
+  }))
+}
+
+export type Options<T> = {
   title: string
-  value: string
+  value: T
 }
-type SelectSet = {
-  options: Options[]
-  widthEmpty?: boolean
+
+export type SelectSet<T> = {
+  options: Options<T>[]
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
-}
+  withBlanc?: boolean
+  defaultValue?: T
+} & Omit<CSSProperties, "translate">
 
-const emptyOption = {
-  title: "",
-  value: "",
-}
-
-export const SelectSet = ({
+export const SelectSet = <T,>({
   options,
   onChange,
-  widthEmpty = false,
-}: SelectSet) => {
-  const optionsWithEmpty: Options[] = widthEmpty
-    ? [{ ...emptyOption }, ...options]
+  withBlanc,
+  defaultValue = options[0].value,
+  ...args
+}: SelectSet<T>) => {
+  const revOptions = withBlanc
+    ? [{ title: "", value: "" as T }, ...options]
     : [...options]
 
   return (
-    <Select onChange={onChange}>
+    <Select {...args} onChange={onChange} defaultValue={defaultValue as string}>
       {!!options.length &&
-        optionsWithEmpty.map((n, index) => (
-          <option key={index} value={n.value}>
+        revOptions.map((n, index) => (
+          <option key={index} value={n.value as string}>
             {n.title}
           </option>
         ))}
@@ -37,11 +42,14 @@ export const SelectSet = ({
   )
 }
 
-export const Select = styled.select`
-  padding: 0.2rem;
-  width: 160px;
-  height: 40px;
-  color: #555;
+const Select = styled.select<CSSProperties>`
+  width: ${({ width = 160 }) => `${width}px`};
+  height: ${({ height = 40 }) => `${height}px`};
+  padding: 0;
+  padding-left: 10px;
   border: 1px solid #aaa;
-  border-radius: 3px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 0 5px #eee;
+  font-size: ${({ fontSize }) => `${fontSize ? `${fontSize}px` : "inherit"}`};
 `

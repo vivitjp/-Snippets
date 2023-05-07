@@ -36,9 +36,7 @@ export const makeSnippets = async ({
     const key = EXPLAIN ?? KEY
     returnData[key] = {
       prefix: KEY,
-      body: BODY?.split("\n")
-        .filter((n) => n)
-        .map((n) => n.trim()),
+      body: BODY?.split("\n"),
     }
     if (scope) returnData[key].scope = scope
   })

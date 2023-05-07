@@ -206,16 +206,6 @@ export const Title = styled.div<Div>`
   `}
 `
 
-export const DivPre = styled.div<Div>`
-  ${(props) => css`
-    font-size: ${props.fontSize ?? "14px"};
-    font-family: monospace;
-    overflow: auto;
-    white-space: pre;
-    color: #333;
-  `}
-`
-
 export const Span = styled.span`
   margin: 0;
   padding: 0;

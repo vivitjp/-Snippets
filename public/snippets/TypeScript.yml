@@ -15,13 +15,13 @@
     } as const
 
     type Person = typeof person[keyof typeof person]
-    // "name" | "address"
+    // "Name" | "Address"
 
 - KEY: ts.union.fromArray
   EXPLAIN: unionをarrayから生成
   BODY: |
     const person = ["Name","Address"] as const
-    type Person = (typeof arr)[number]
+    type Person = (typeof person)[number]
     // "Name" | "Address"
 
 #-------------------------------
@@ -30,7 +30,7 @@
 - KEY: ts.switch.never
   EXPLAIN: switchでneverチェック
   BODY: |
-    export const func = (name: person) => {
+    export const func = (name: Person) => {
       switch (name) {
         case "Name":
           break

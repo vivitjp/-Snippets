@@ -12,9 +12,12 @@
       randomCount: () => void 
       resetCount: () => void
     }
+
     export const useCount = create<CountState>()((set, get) => ({
       count: 1,
       addCount: (by) => set((state) => ({ count: state.count + by })),
       randomCount: 
       resetCount: () => set(() => ({ count: 1 })),
     }))
+
+    //const count = useCount((state) => state.count)
