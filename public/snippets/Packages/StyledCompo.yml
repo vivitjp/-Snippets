@@ -1,0 +1,272 @@
+---
+#-------------------------------
+# Package: Styled Component
+#-------------------------------
+
+#-------------------------------
+# Div Row / Column
+#-------------------------------
+- KEY: pk.styled.rowColumn
+  EXPLAIN: row & column コンポーネント
+  BODY: |
+    const Row = styled.div`
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 5px;
+      padding: 5px;
+    `
+    const Column = styled.div`
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 5px;
+      padding: 5px;
+    `
+
+- KEY: pk.styled.divParam
+  EXPLAIN: div 引数
+  BODY: |
+    type Div = {
+      width?: number
+      border?: string
+      padding?: number
+    }
+
+    export const Div = styled.div<Div>`
+      width: ${({ width }) => `${width ? `${width}px` : "100%"}`};
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 10px;
+      border: ${({ border }) => `${border ? `1px solid ${border};` : "none"}`};
+      padding: ${({ padding }) => `${padding ? `${padding}px` : "5px"}`};
+    `
+
+- KEY: pk.styled.css
+  EXPLAIN: div flex 引数(css)
+  BODY: |
+    export const FlexDiv = styled.div`
+      ${(props) => css`
+        margin: 0;
+        padding: 0;
+        color: var(--main-color);
+        font-size: ${props.fontSize ?? "inherit"};
+        ${props.fontFamily && `font-family: ${props.fontFamily}`};
+      `}
+    `
+
+#-------------------------------
+# Input系 部品
+#-------------------------------
+
+- KEY: pk.styled.button
+  EXPLAIN: button
+  BODY: |
+    const Button = styled.button`
+      width: 60px;
+      height: 25px;
+      padding: 3px 10px;
+      border: 1px solid #aaa;
+    `
+
+- KEY: pk.styled.inputButton
+  EXPLAIN: input button
+  BODY: |
+    const Button = styled.input.attrs({ type: "button" })`
+      padding: 0.2rem;
+      width: 160px;
+      height: 40px;
+      color: #999;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: white;
+      box-shadow: 1px 1px 5px #ccc;
+    `
+
+- KEY: pk.styled.text
+  EXPLAIN: input text
+  BODY: |
+    const Input = styled.input.attrs({ type: "text" })`
+      padding: 0.2rem;
+      width: 160px;
+      height: 30px;
+      color: #555;
+      ::placeholder {
+        color: grey;
+      }
+    `
+
+- KEY: pk.styled.check
+  EXPLAIN: input checkbox
+  BODY: |
+    const Checkbox = styled.input.attrs({ type: "checkbox" })`
+      padding: 0.2rem;
+      width: 50px;
+    `
+
+- KEY: pk.styled.select
+  EXPLAIN: select
+  BODY: |
+    type Options = {
+      title: string
+      value: number
+    }
+    type SelectSet = {
+      options: Options[]
+      onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
+    }
+
+    const SelectSet = ({ options, onChange }: SelectSet) => {
+      return (
+        <Select onChange={onChange}>
+          {!!options.length &&
+            options.map((n, index) => (
+              <option key={index} value={n.value}>
+                {n.title}
+              </option>
+            ))}
+        </Select>
+      )
+    }
+
+    type Select = {
+      width?: number
+      height?: number
+    }
+    const Select = styled.select<Select>`
+      width: ${({ width = 160 }) => `${width}px`};
+      height: ${({ height = 40 }) => `${height}px`};
+      padding: 4px;
+      border: 1px solid #aaa;
+      background-color: white;
+      border-radius: 5px;
+    `
+
+#---------------------------------------------------
+# Parameters
+#---------------------------------------------------
+
+- KEY: pk.styled.param.div
+  EXPLAIN: 引数付 div
+  BODY: |
+    type Div = {
+      width?: number
+      height?: number
+    }
+
+    const Div = styled.div<Div>`
+      width: ${({ width = 100 }) => `${width}px`};
+      height: ${({ height = 100 }) => `${height}px`};
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 2px;
+      padding: 0;
+    `
+
+- KEY: pk.styled.param.input
+  EXPLAIN: 引数付 input
+  BODY: |
+    type Input = {
+      width?: number
+      height?: number
+    }
+
+    const Input = styled.input<Input>`
+      width: ${({ width = 100 }) => `${width}px`};
+      height: ${({ height = 100 }) => `${height}px`};
+      padding: 8px;
+      :hover { color: blue; }
+      ::placeholder { color: grey; }
+    `
+    //<Input width={200} placeholder="ここ" />
+
+- KEY: pk.styled.param.attrs1
+  EXPLAIN: 引数付(推奨)
+  BODY: |
+    type InputAttrs = {
+      width?: number
+      height?: number
+    }
+
+    const InputAttrs = styled.input.attrs<InputAttrs>(
+      ({ width = 200, height = 50 }) => ({
+        style: {
+          width: `${width}px`,
+          height: `${height}px`,
+        },
+      })
+    )<InputAttrs>`
+      border: 1px solid black;
+      :hover { color: blue; }
+      ::placeholder { color: grey; }
+    `
+
+- KEY: pk.styled.param.attrs2
+  EXPLAIN: (非)引数付
+  BODY: |
+    type InputAttrs = {
+      width?: number
+    }
+
+    const InputAttrs = styled.input.attrs<InputAttrs>(() => ({
+      type: "text",
+    }))<InputAttrs>`
+      width: ${({ width = 100 }) => `${width}px`};
+      padding: 8px;
+    `
+
+#---------------------------------------------------
+# forward
+#---------------------------------------------------
+
+- KEY: pk.styled.param.forwardInput
+  EXPLAIN: attrs forward Input
+  BODY: |
+    type InputForward = {
+      width?: number
+    } & React.ComponentPropsWithRef<"input">
+
+    export const InputForward = React.forwardRef<HTMLInputElement, InputForward>(
+      ({ width = 100 }, ref) => {
+        return <InputForwardStyled width={width} ref={ref} />
+      }
+    )
+
+    export const InputForwardStyled = styled.input<{ width: number }>`
+      height: 100%;
+      width: ${({ width }) => `${width}px`};
+    `
+
+- KEY: pk.styled.param.forwardDiv
+  EXPLAIN: attrs forward Div
+  BODY: |
+    type DivForward = {
+      width?: number
+    } & ComponentProps<"div">
+
+    export const DivForward = React.forwardRef<HTMLDivElement, DivForward>(
+      ({ children, width = 100 }, ref) => {
+        return (
+          <DivForwardStyled width={width} ref={ref}>
+            {children}
+          </DivForwardStyled>
+        )
+      }
+    )
+
+    export const DivForwardStyled = styled.div<{ width: number }>`
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: flex-start;
+      height: 100%;
+      width: ${({ width }) => `${width}px`};
+      margin: 0;
+      padding: 0;
+    `

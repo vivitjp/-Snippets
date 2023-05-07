@@ -1,0 +1,357 @@
+---
+#-------------------------------
+# JavaScript
+#-------------------------------
+
+#-------------------------------
+# protoType
+#-------------------------------
+
+- KEY: js.protoType.method
+  EXPLAIN: ProtoType 追加
+  BODY: |
+    String.addId = function (str: string) {
+      return this + (this.length ? "-" + str : str)
+    }
+    //types.d.ts への追加
+    export declare global {
+      interface String {
+        addId(id: string): string
+      }
+    }
+
+#-------------------------------
+# Object
+#-------------------------------
+
+- KEY: js.obj.isObject
+  EXPLAIN: Object判定関数
+  BODY: |
+    const isObject = (obj: any) => {
+      return obj !== null && typeof obj === "object"
+    }
+
+- KEY: js.obj.isEmpty
+  EXPLAIN: Object「空」判定関数
+  BODY: |
+    const isEmpty = (obj: any) => {
+      return Object.keys(obj).length === 0 && obj.constructor === Object
+    }
+
+- KEY: js.obj.removeUndefined
+  EXPLAIN: object から undefined を削除
+  BODY: |
+    const removeUndefined = (obj: object) => {
+      return Object.fromEntries(
+        Object.entries(obj).filter(([, v]) => v !== undefined)
+      )
+    }
+
+- KEY: js.obj.deepCopy.OK
+  EXPLAIN: 望ましい DeepCopy
+  BODY: |
+    const copiedObject = structuredClone(object)
+
+- KEY: js.obj.deepCopy.NG
+  EXPLAIN: 望ましくない DeepCopy
+  BODY: |
+    //Undefined が削除される
+    const deepCopyNG = (objOrArr: object) => {
+      return JSON.parse(JSON.stringify(objOrArr))
+    }
+
+- KEY: js.obj.deepCopy.sample
+  EXPLAIN: サンプル
+  BODY: |
+    const objectFrom = {
+      a: 12,
+      b: "A",
+      c: undefined,
+      d: null,
+      e: true,
+      f: [1, undefined],
+      g: { a: 1, b: "B", c: [5, undefined], d: { k: 1 } },
+    }
+
+    const objectTo = structuredClone(objectFrom)
+    objectTo.a = 13
+    console.log(objectFrom)
+    console.log(objectTo)
+
+    const objectToInside = {
+      a: 13,
+      b: "A",
+      c: undefined,
+      d: null,
+      e: true,
+      f: [1, undefined],
+      g: { a: 1, b: "B", c: [5, undefined], d: { k: 1 } },
+    }
+
+    const JSONObjectTo = JSON.parse(JSON.stringify(objectFrom))
+    console.log(JSONObjectTo)
+    const JSONObjectToInside = {
+      a: 12,
+      b: "A",
+      d: null,
+      e: true,
+      f: [1, null],
+      g: { a: 1, b: "B", c: [5, null], d: { k: 1 } },
+    }
+
+- KEY: js.obj.shallowCopy
+  EXPLAIN: 配列の階層限定のDeepCopy
+  BODY: |
+    const shallowCopy = <T,>(arr: T[]) => {
+      return arr.map((list) => ({ ...list }))
+    }
+
+- KEY: js.obj.deepCopy.Lodash
+  EXPLAIN: lodashのcloneDeepでDeepCopy
+  BODY: |
+    //npm i --save lodash
+    import _ from 'lodash'
+    let copyLists = _.cloneDeep(lists)
+
+- KEY: js.obj.obj2arr
+  EXPLAIN: object=>arr
+  BODY: |
+    const objArr = { id: 23, name: "apple", address: "Tokyo" }
+    const arr = Object.entries(objArr)
+    console.log(arr)
+
+#-------------------------------
+# Array
+#-------------------------------
+
+- KEY: js.array.sequence
+  EXPLAIN: 連番配列作成
+  BODY: |
+    const arr1 = [...Array(20)].map((_, idx) => idx)
+    const arr2 = Array.from({ length: 20 }, (_, i) => i)
+    const arr3 = [...Array(20)].fill(0)
+
+#-------------------------------
+# Array map,reduce
+#-------------------------------
+
+- KEY: js.array.method.map
+  EXPLAIN: map(配列)
+  BODY: |
+    const sample: number[] = [1, 4, 7]
+    const res: number[] = sample.map((id) => id * 2)
+
+    type Object = { id: number }
+    const sample: Object[] = [{ id: 1 }, { id: 4 }, { id: 7 }]
+    const res: number[] = sample.map(({ id }) => id * 2)
+
+- KEY: js.array.method.reduce
+  EXPLAIN: reduce(配列)
+  BODY: |
+    const sample: number[] = [1, 4, 7]
+    const res: number[] = sample.reduce((acc, id) => {
+      return [...acc, id * 2]
+    }, [] as number[])
+
+    type Object = { id: number }
+    const sample: Object[] = [{ id: 1 }, { id: 4 }, { id: 7 }]
+    const res: number[] = sample.reduce((acc, { id }) => {
+      return [...acc, id * 2]
+    }, [] as number[])
+
+- KEY: js.array.method.reduce.average
+  EXPLAIN: reduce(平均値)
+  BODY: |
+    const getAverage = (arr: number[]) => reduce((acc, elm) => acc + elm, 0) / arr.length
+
+#-------------------------------
+# Array methods
+#-------------------------------
+- KEY: js.array.method.repeat
+  EXPLAIN: 配列・反復
+  BODY: |
+    arr.forEach(elm=>{}) => void
+    arr.map(elm=>{}) => 配列
+    arr.reduce((acc,elm,arr)=>{}, 初期値) => any
+    arr.reduceRight((acc,elm,arr)=>{}, 初期値) => any
+
+- KEY: js.array.method.copy
+  EXPLAIN: 配列・コピー
+  BODY: |
+    arr.slice([start, end]) //部分配列(シャローコピー)
+    arr.splice(start, [delCount, item1, item2, itemN]) =>削除配列
+    arr.copyWithin([target, start, end]) => 内部コピー後の配列
+
+- KEY: js.array.method.search
+  EXPLAIN: 配列・検索
+  BODY: |
+    arr.filter(value => value>1) => 条件一致要素の配列
+    arr.find(value => value>1) => 最初の該当要素
+    arr.findIndex(value => value>1) => 最初の該当index
+    arr.findLast(value => value>1) => 最後の該当要素
+    arr.findLastIndex(value => value>1) => 最後の該当index
+    arr.indexOf(要素) => 最初の該当要素
+    arr.lastIndexOf(要素) => 最後の該当要素
+
+- KEY: js.array.method.judge
+  EXPLAIN: 配列・判定
+  BODY: |
+    Array.isArray(配列)
+    arr.includes(要素) => Boolean 判定
+    arr.some(value => value>1) //該当が1でもあれば true
+    arr.every(value => value>1) //全てが該当すれば true
+
+- KEY: js.array.method.object
+  EXPLAIN: 配列・オブジェクト反復
+  BODY: |
+    arr.entries(([key, {id,name}])=>{}) //キーと値iterator
+    arr.values(value => {}) //値iterator
+    arr.keys(key=>{}) //キーiterator
+
+- KEY: js.array.method.make.arrange
+  EXPLAIN: 配列・Index/生成/変更
+  BODY: |
+    arr.at(index) //要素取得
+    Array.of(1,2,3) => 配列もどきから配列生成
+    Array.from(文字列,Map,Set) => 配列生成
+    arr.fill(値) //全上書き(破壊的)
+    arr.flat(深さ数値) => 配列 //多重配列のフラット化
+    arr.flatMap(value=>value) => 配列 //多重配列のフラット化
+    arr.concat(配列) => 配列合体
+    arr.join(配列) => 文字列化
+
+- KEY: js.array.method.pushPop
+  EXPLAIN: 配列・挿入/取得
+  BODY: |
+    arr.pop() //最後の要素取得(破壊的)
+    arr.push(value) //末尾に追加(破壊的)
+    arr.shift() //最初の要素取得(破壊的)
+    arr.unshift(value) //先頭に追加(破壊的)
+
+- KEY: js.array.method.sort
+  EXPLAIN: 配列・ソート
+  BODY: |
+    arr.sort((a,b)=>a-b) //昇順ソート(破壊的)
+    arr.sort((a,b)=>b-a) //降順ソート(破壊的)
+    arr.reverse() //逆ソート(破壊的)
+
+- KEY: js.array.method.toString
+  EXPLAIN: 配列・文字列化
+  BODY: |
+    arr.toLocaleString() //文字列化
+    arr.toString() //文字列化
+
+#-------------------------------
+# Array ランダム化
+#-------------------------------
+
+- KEY: js.array.function.shuffle
+  EXPLAIN: シャッフルアルゴリズム
+  BODY: |
+    //フィッシャーイェーツの配列シャッフルアルゴリズム
+    const shuffleArray_FisherYates = (arrParam: number[]) => {
+      let arr = [...arrParam]
+      for (let i = arr.length - 1; i >= 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1))
+        ;[arr[i], arr[j]] = [arr[j], arr[i]]
+      }
+      return arr
+    }
+
+#-------------------------------
+# Map (Array & Object)
+#-------------------------------
+
+- KEY: js.map.obj2map
+  EXPLAIN: Object->Map
+  BODY: |
+    const objArr = [
+      { id: 23, name: "apple" },
+      { id: 45, name: "orange" },
+    ]
+    const map = new Map<number, string>(objArr.map(({ id, name }) => [id, name]))
+    console.log(map)
+
+- KEY: js.map.map2arr
+  EXPLAIN: Map->Array
+  BODY: |
+    const map = new Map([["a", 1],["b", 2]])
+    const arr = Array.from(map)
+    console.log(arr)
+
+- KEY: js.map.map2obj
+  EXPLAIN: Map->Object(制限あり)
+  BODY: |
+    //keyはstringに変換
+    const map = new Map([["a", 1],["b", 2]])
+    const obj = Object.fromEntries(map)
+    console.log(obj)
+
+#-------------------------------
+# 乱数
+#-------------------------------
+
+- KEY: js.number.randomDigit
+  EXPLAIN: ランダム数(桁)
+  BODY: |
+    const getRandomDigit = (digit: number) => {
+      return Math.floor(Math.random() * 10 ** digit)
+    }
+
+- KEY: js.number.randomMinMax
+  EXPLAIN: ランダム数(MinMax)
+  BODY: |
+    const getRandomMinMax = (min: number, max: number) => {
+      return Math.floor(Math.random() * (max - min) + min)
+    }
+
+- KEY: js.string.randomValueID
+  EXPLAIN: ランダム文字列(*useMemo必須)
+  BODY: |
+    const randStr1 = useMemo(() => window.crypto.randomUUID(), [])
+    const typedArray = new Uint32Array(6)
+    const randStr2 = useMemo(() => window.crypto.getRandomValues(typedArray), [])
+
+#-------------------------------
+# 時間計測
+#-------------------------------
+
+- KEY: js.function.performance
+  EXPLAIN: 処理時間計測
+  BODY: |
+    const performanceAbout = (func: () => void) => {
+      const startTime = Date.now()
+      func()
+      console.log(`経過時間: ${Date.now() - startTime}`)
+    }
+
+- KEY: js.function.performanceAccurate
+  EXPLAIN: 処理時間計測(精密)
+  BODY: |
+    const performanceAccurate = (func: () => void) => {
+      const start = performance.now()
+      func()
+      const elapsed = performance.now() - start
+      const elapsedStr = elapsed.toPrecision(3)
+      console.log(`経過時間: ${elapsedStr}`)
+    }
+
+#-------------------------------
+# JSON
+#-------------------------------
+- KEY: js.json
+  EXPLAIN: jsonの構造表現
+  BODY: |
+    JSON.stringify(obj, undefined, 3)
+
+#-------------------------------
+#
+#-------------------------------
+
+# - KEY: xxxxx
+#   EXPLAIN:
+#   BODY: |
+
+# - KEY: xxxxx
+#   EXPLAIN:
+#   BODY: |

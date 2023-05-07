@@ -1,0 +1,465 @@
+---
+#-------------------------------
+# React
+#-------------------------------
+
+#-------------------------------
+# 型
+#-------------------------------
+
+- KEY: qw.type.useState
+  EXPLAIN: useStateの型
+  BODY: |
+    React.Dispatch<React.SetStateAction<string>>
+
+- KEY: qw.type.useRef
+  EXPLAIN: useRefの型
+  BODY: |
+    React.RefObject<HTMLInputElement>
+
+#-------------------------------
+# Basic Components
+#-------------------------------
+
+- KEY: qw.FC.noProps
+  EXPLAIN: コンポーネント
+  BODY: |
+    import React, { useState } from "react"
+
+    export const $TM_FILENAME_BASE = () => {
+      const [xxxx, setXxxx] = useState<string>("")
+
+      return <div>{xxxx}</div>
+    }
+
+- KEY: qw.FC.props
+  EXPLAIN: コンポーネント(Props付)
+  BODY: |
+    import React, { FC, useState } from "react"
+
+    type Props = {
+      xxxx: string
+      yyyy: number
+    }
+
+    export const $TM_FILENAME_BASE:FC<Props> = ({ xxxx, yyyy }: Props) => {
+      const [xxxx, setXxxx] = useState<string>("")
+
+      return <div>{xxxx}</div>
+    }
+
+#-------------------------------
+# Component Props
+#-------------------------------
+- KEY: qw.type.ComponentProps
+  EXPLAIN: コンポーネントの基本Props型
+  BODY: |
+    type Props = {}
+     & React.ComponentProps<"input">
+     & React.ComponentPropsWithRef<"input">
+     & React.ComponentPropsWithoutRef<"input">
+
+#-------------------------------
+# Handler
+#-------------------------------
+- KEY: qw.handle
+  EXPLAIN: ハンドラ(シンプル)
+  BODY: |
+    const handle = () => {}
+
+- KEY: qw.handle.formSubmit
+  EXPLAIN: Submit ハンドラ
+  BODY: |
+    const handleSubmit = useCallback(
+      (e: React.FormEvent<HTMLFormElement>) => {
+        console.log(`text: ${text}`)
+        e.stopPropagation()
+        e.preventDefault()
+      },
+      [text]
+    )
+
+- KEY: qw.handle.ButtonClick
+  EXPLAIN: button ハンドラ
+  BODY: |
+    const handleClickButton = useCallback(
+      (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation()
+      },
+      []
+    )
+
+- KEY: qw.handle.ChangeText
+  EXPLAIN: Change Text ハンドラ
+  BODY: |
+    const handleChangeText = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.currentTarget.value
+        setText(value)
+      },
+      []
+    )
+
+- KEY: qw.handle.ClickInputButton
+  EXPLAIN: Click Input ハンドラ
+  BODY: |
+    const handleClickInputButton = useCallback(
+      (e: React.MouseEvent<HTMLInputElement>) => {
+        e.stopPropagation()
+      },
+      []
+    )
+
+- KEY: qw.handle.ChangeCheckbox
+  EXPLAIN: Change Checkbox ハンドラ
+  BODY: |
+    const handleChangeCheck = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.currentTarget.checked
+        setIsChecked(value)
+      },
+      []
+    )
+
+- KEY: qw.handle.ChangeRadio
+  EXPLAIN: Change Radio ハンドラ
+  BODY: |
+    const handleChangeRadio = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = parseInt(e.currentTarget.value ?? "0")
+        setRadio(value)
+      },
+      []
+    )
+
+- KEY: qw.handle.ChangeSelect
+  EXPLAIN: Change Select ハンドラ
+  BODY: |
+    const [selectedValue, setSelectedValue] = useState<number>(1)
+
+    const handleChangeSelect = useCallback(
+      (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const value = parseInt(e.currentTarget.value ?? 1)
+        setSelectedValue(value)
+      },
+      []
+    )
+
+#-------------------------------
+# Hooks: useState
+#-------------------------------
+- KEY: qw.useState.string
+  EXPLAIN: useState(文字列)
+  BODY: |
+    const [xxxxx, setXxxxx] = useState<string>("")
+
+- KEY: qw.useState.number
+  EXPLAIN: useState(数値)
+  BODY: |
+    const [xxxxx, setXxxxx] = useState<number>(0)
+
+- KEY: qw.useState.boolean
+  EXPLAIN: useState(真偽値)
+  BODY: |
+    const [xxxxx, setXxxxx] = useState<boolean>(false)
+
+- KEY: qw.useState.Map
+  EXPLAIN: useState(Mapメソッド)
+  BODY: |
+    const [xxxxx, setXxxxx] = useState<Map<string, any>>()
+
+- KEY: qw.useState.Set
+  EXPLAIN: useState(Setメソッド)
+  BODY: |
+    const [xxxxx, setXxxxx] = useState<Set<string>>()
+
+#-------------------------------
+# useEffect
+#-------------------------------
+- KEY: qw.useEffect
+  EXPLAIN: useEffect(シンプル)
+  BODY: |
+    useEffect(() => {
+      console.log()
+    }, [])
+
+- KEY: qw.useEffect.IIFE
+  EXPLAIN: useEffect(非同期・即時関数)
+  BODY: |
+    useEffect(() => {
+      (async (param:any) => {
+        const xxx = await getXxx(xxxId)
+      })(param)
+    }, [])
+
+- KEY: qw.useEffect.SetTimeout
+  EXPLAIN: useEffect(Timeoutコールバック)
+  BODY: |
+    useEffect(() => {
+      let timeoutId: NodeJS.Timeout | null = null
+      timeoutId = setTimeout(() => {
+        setXxx(XXX)
+      }, 1000)
+      return () => {
+        if (timeoutId) clearTimeout(timeoutId)
+      }
+    }, [])
+
+- KEY: qw.useEffect.asyncAwait
+  EXPLAIN: useEffect(非同期)
+  BODY: |
+    useEffect(() => {
+      const methodXxx = async () => {
+        const xxx = await getXxx(xxxId)
+      }
+      methodXxx()
+    }, [])
+
+- KEY: qw.useEffect.asyncAwaitV18
+  EXPLAIN: useEffect(非同期v18)
+  BODY: |
+    useEffect(() => {
+      let isRead = false
+      const methodXxx = async () => {
+        const xxx = await getXxx(xxxId)
+        if (!isRead) setXxx(xxx)
+      }
+      methodXxx()
+
+      return () => {
+        isRead = true
+      }
+    }, [])
+
+- KEY: qw.useEffect.asyncThenCatch
+  EXPLAIN: useEffect(非同期関数/then/catch)
+  BODY: |
+    useEffect(() => {
+      let isRead = false
+      getXxx()
+        .then((xxx) => {
+          if (xxx && !isRead) setXxx(xxx)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+      return () => {
+        isRead = true
+      }
+    }, [])
+
+- KEY: qw.useEffect.fetch
+  EXPLAIN: useEffect(fetch/v18)
+  BODY: |
+    useEffect(() => {
+      let isRead = false
+      fetch(URL)
+        .then((res) => res.json())
+        .then((json) => {
+          if (!isRead) setXxx(json)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+      return () => {
+        isRead = true
+      }
+    }, [])
+
+#-------------------------------
+# Hooks: useRef
+#-------------------------------
+- KEY: qw.useRef.input
+  EXPLAIN: useRef(input)
+  BODY: |
+    const inputRef = useRef<HTMLInputElement>(null!)
+    // <input ref={inputRef} type="text" />
+    // inputRef.current.value
+    // inputRef.current.clientWidth
+
+- KEY: qw.useRef.multiple
+  EXPLAIN: useRefの配列
+  BODY: |
+    const refs = useRef<RefObject<HTMLXXXXElement>[]>([])
+    refs.forEach((_, index) => {
+      refs.current[index] = createRef<HTMLXXXXElement>()
+    })
+    // <input ref={refs[idx]} type="XXXX" />
+    // refs.current[idx].value
+    // refs.current[idx].clientWidth
+
+#-------------------------------
+# Hooks: useReducer
+#-------------------------------
+- KEY: qw.useReducer.boolean
+  EXPLAIN: useReducer で flip関数
+  BODY: |
+    const [isTrue, flipFlag] = useReducer((flag: boolean) => !flag, false)
+    //Usage: flipFlag()
+
+- KEY: qw.useReducer.1.callback
+  EXPLAIN: useReducer メソッド定義
+  BODY: |
+    type Action = { type: "up" } | { type: "reset"; payload: { counter: number } }
+    type State = { counter: number }
+
+    const callback = (state: State, action: Action): State => {
+      switch (action.type) {
+        case "up":
+          return { counter: state.counter + 1 }
+        case "reset":
+          return { counter: action.payload.counter }
+      }
+    }
+
+- KEY: qw.useReducer.2.makeHooks
+  EXPLAIN: useReducer メソッド使用
+  BODY: |
+    export const UseReducer = () => {
+      const [myCounter, dispatch] = useReducer(callback, { counter: 0 })
+      const handleClickUp = () => {
+        dispatch({ type: "up" })
+      }
+      const handleClickDown = () => {
+        dispatch({ type: "reset", payload: { counter: 0 } })
+      }
+
+      return (
+        <Section>
+          <DivCell>{myCounter.counter}</DivCell>
+          <Button onClick={handleClickUp}>Up</Button>
+          <Button onClick={handleClickDown}>Reset</Button>
+        </Section>
+      )
+    }
+
+#-------------------------------
+# Hooks: useContext
+#-------------------------------
+- KEY: qw.context.1.createContext
+  EXPLAIN: useContext コンテキスト定義
+  BODY: |
+    import React, { createContext, useState, useContext, useEffect } from "react"
+    import { useGetXXXHooks } from "../hooks/useGetXXXHooks"
+
+    // ■ 型
+    type DataType = {}
+    type DataContextType = {
+      data: DataType
+      setData: (data: DataType) => void
+    }
+
+    // ■ Context (createContext)
+    const DataContext = createContext<DataContextType>({} as DataContextType)
+
+    // ■ Hooks (useContext)
+    export const useContextHooks = () => {
+      return useContext(DataContext)
+    }
+
+    // ■ Provider
+    export const ContextProvider = ({
+      children,
+    }: {
+      children: React.ReactNode
+    }) => {
+      const { getData } = useGetXXXHooks()
+      const [data, setData] = useState<DataType>()
+
+      useEffect(() => {
+        //getData(), setData()
+      }, [])
+
+      return (
+        <DataContext.Provider value={{ data, setData }}>
+          {children}
+        </DataContext.Provider>
+      )
+    }
+
+- KEY: qw.context.2.provider
+  EXPLAIN: useContext Provider適用
+  BODY: |
+    import { ContextProvider } from "../context/Context"
+    export const UseContext = () => {
+      return (
+        <ContextProvider>
+          <Component />
+        </ContextProvider>
+      )
+    }
+
+- KEY: qw.context.3.useContext
+  EXPLAIN: useContext データ使用
+  BODY: |
+    import { useContextHooks } from "../context/Context"
+    export const Component = () => {
+      const { data } = useContextHooks()
+      return <Component data={data} />
+    }
+
+#-------------------------------
+# Custom Hooks
+#-------------------------------
+- KEY: qw.Hooks.custom
+  EXPLAIN: カスタムフック
+  BODY: |
+    import { useCallback, useState } from "react"
+
+    export const useXXXXX = () => {
+      const [value, setValue] = useState<string>("")
+
+      const method = useCallback((val: string) => {
+        setValue(val)
+      }, [])
+
+      //Render Hooks
+      const JsxCompo = useCallback(() => {
+        return <div>Hello</div>
+      }, [])
+
+      return { method, value, JsxCompo }
+    }
+
+- KEY: qw.Hooks.custom.param
+  EXPLAIN: カスタムフック(引数)
+  BODY: |
+    import { useCallback, useState } from "react"
+
+    type Props = {
+      init: string
+    }
+
+    export const useXXXXX = ({ init }: Props) => {
+      const [value, setValue] = useState<string>(init)
+
+      const method = useCallback((val: string) => {
+        setValue(val)
+      }, [])
+
+      return { method, value }
+    }
+
+#-------------------------------
+# Render Hooks
+#-------------------------------
+- KEY: qw.Hooks.renderHooks
+  EXPLAIN: レンダーフックス
+  BODY: |
+    type UseChecks = [boolean, () => JSX.Element]
+
+    export const useChecks = (labels: readonly string[]): UseChecks => {
+      const [checkList, setCheckList] = useState(() => labels.map(() => false))
+
+      const handleCheck = (index: number) => {
+        setCheckList((checks) => checks.map((c, i) => (i === index ? !c : c)))
+      }
+
+      const isAllChecked = checkList.every((x) => x)
+
+      const renderChecks = () => (
+        <Checks checkList={checkList} labels={labels} handler={handleCheck} />
+      )
+
+      return [isAllChecked, renderChecks]
+    }

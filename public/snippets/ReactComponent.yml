@@ -1,0 +1,64 @@
+---
+#-------------------------------
+# React Component Samples
+#-------------------------------
+
+- KEY: qw.custom.input
+  EXPLAIN: input カスタムコンポーネント
+  BODY: |
+    type Props = {
+      checkList: readonly boolean[]
+      labels: readonly string[]
+      handler: (index: number) => void
+    } & React.ComponentPropsWithoutRef<"input">
+
+    export const Checks: React.FC<Props> = ({
+      checkList, labels, handler, ...args
+    }) => {
+      const id = useId()
+      const handleChange = (index: number) => handler(index)
+
+      return (
+        <ul>
+          {labels.map((label, idx) => (
+            <li key={idx}>
+              <label htmlFor={id}>{label}</label>
+              <input
+                {...args}
+                id={id}
+                type="checkbox"
+                checked={checkList[idx]}
+                onChange={() => handleChange(idx)}
+              />
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+- KEY: qw.custom.inputRef
+  EXPLAIN: input+Ref カスタムコンポーネント
+  BODY: |
+    type Props = {
+      text: string
+      setText: React.Dispatch<React.SetStateAction<string>>
+      label: string
+    } & React.ComponentPropsWithRef<"input">
+
+    export const InputRef = forwardRef<HTMLInputElement, Props>(
+      ({ text, setText, label, ...args }, ref) => {
+        const id = useId()
+
+        const handleChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
+          const value = e.currentTarget.value
+          setText(value)
+        }
+
+        return (
+          <div>
+            <label htmlFor={id}>{label}</label>
+            <input {...args} id={id} ref={ref} onChange={handleChangeText} />
+          </div>
+        )
+      }
+    )

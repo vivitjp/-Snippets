@@ -1,0 +1,94 @@
+---
+#-------------------------------
+# JavaScript
+#-------------------------------
+
+#-------------------------------
+# Async
+#-------------------------------
+
+- KEY: js.Promise.sleep
+  EXPLAIN: sleep関数
+  BODY: |
+    const sleep = async (ms: number) =>
+      new Promise((resolve) => setTimeout(resolve, ms))
+
+- KEY: js.promise.sleepResRej
+  EXPLAIN: sleep関数(Res/Rej)
+  BODY: |
+    type Props = { ms?: number; TF?: boolean }
+    const sleepResRej = async ({ ms = 1000, TF = true }: Props) => {
+      return new Promise<string>((resolve, reject) => {
+        setTimeout(() => (TF ? resolve(`OK`) : reject(`NG`)), ms)
+      })
+    }
+
+- KEY: js.promise.all
+  EXPLAIN: all(全OKならOK)
+  BODY: |
+    //条件: 全 OK なら OK 
+    //成功の戻り値: 両方
+    //失敗の戻り値: NG のみ
+    const handleAll = async () => {
+      const p1 = promise({ ms: 800, name: "A" })
+      const p2 = promise({ ms: 500, name: "B" })
+
+      try {
+        return await Promise.all([p1, p2])
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+- KEY: js.promise.any
+  EXPLAIN: any(最初のOKのみ)
+  BODY: |
+    //条件: 最初の OK のみ返す
+    //成功の戻り値: 最初の OK
+    //失敗の戻り値: 全 NG なら error(AggregateError) を返す
+    const handleAny = async () => {
+      const p1 = promise({ ms: 500, name: "A" })
+      const p2 = promise({ ms: 900, name: "B" })
+
+      try {
+        return await Promise.any([p1, p2])
+      } catch (error) {
+        console.error((error as AggregateError).message)
+      }
+    }
+
+- KEY: js.promise.race
+  EXPLAIN: race(最初のOK/NG値)
+  BODY: |
+    //条件: どちらでも最初のOK/NG値のみを返す
+    //成功の戻り値: 最初の OK
+    //失敗の戻り値: 最初の NG
+    const handleRace = async () => {
+      const p1 = promise({ ms: 500, name: "A" })
+      const p2 = promise({ ms: 900, name: "B" })
+
+      try {
+        return await Promise.race([p1, p2])
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+- KEY: js.promise.allSettled
+  EXPLAIN: allSettled(全終了後)
+  BODY: |
+    //条件: 全終了後にオブジェクト(OK/NG)を返す
+    //戻り値: [
+    //   { "status": "rejected",  "reason": "A:NG" },
+    //   { "status": "fulfilled", "value": "B:OK" }
+    // ]
+    const handleAllSettled = async () => {
+      const p1 = promise({ ms: 900, name: "A" })
+      const p2 = promise({ ms: 500, name: "B" })
+
+      try {
+        return await Promise.allSettled([p1, p2])
+      } catch (error) {
+        console.error(error as string)
+      }
+    }

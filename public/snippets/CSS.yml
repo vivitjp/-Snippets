@@ -1,0 +1,242 @@
+# ----------------------------
+# CSS 短縮形
+# ----------------------------
+- KEY: bg
+  EXPLAIN: 背景色
+  BODY: |
+    background-color: #aaa;
+
+- KEY: bg.types
+  EXPLAIN: 背景色(各種)
+  BODY: |
+    background-color: #aaa
+    //background: linear-gradient(blue, green);
+    //background: rgba(255, 255, 255, 0.5)
+
+- KEY: bdr
+  EXPLAIN: ボーダー
+  BODY: |
+    border: 1px solid #aaa;
+
+- KEY: bdr.type
+  EXPLAIN: border 種類
+  BODY: |
+    solid/dotted/dashed
+
+- KEY: just
+  EXPLAIN: flex 属性
+  BODY: |
+    justify-content: flex-start;
+    align-items: center;
+    //stretch,baseline,space-between
+
+# ----------------------------
+# CSS
+# ----------------------------
+
+- KEY: css.combinator
+  EXPLAIN: 結合子
+  BODY: |
+    div > p //子
+    div p   //子孫
+    div + p //隣接兄弟(1)
+    div ~ p //一般兄弟(1)
+
+# ----------------------------
+#  Flex
+# ----------------------------
+
+- KEY: css.flex.row
+  EXPLAIN: Flex Row
+  BODY: |
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    gap: 0.5rem;
+
+- KEY: css.flex.column
+  EXPLAIN: Flex Column
+  BODY: |
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    gap: 0.5rem;
+
+- KEY: css.font
+  EXPLAIN: Font関連
+  BODY: |
+    color: #777;
+    font-size: 1rem; 
+    font-family: sans-serif;
+    /* monospace, cursive */
+    /* font-weight: 500; */
+    /* line-height: 1.2rem; */
+
+# ----------------------------
+#  clamp(ellipsis)
+# ----------------------------
+
+- KEY: css.text.clamp
+  EXPLAIN: 長テキストの省略
+  BODY: |
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+
+- KEY: css.text.clampMulti
+  EXPLAIN: 長テキストの省略(複数行)
+  BODY: |
+    padding: 0;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+
+# ----------------------------
+#  other
+# ----------------------------
+
+- KEY: css.text.deco
+  EXPLAIN: テキストDeco(複数可)
+  BODY: |
+    text-decoration: none/underline/overline/line-through;
+    text-decoration-color: blue;
+    text-decoration-skip-ink: none/auto/all;
+    text-decoration-style: solid/double/dotted/dashed/wavy;
+    text-decoration-thickness: auto/1px/from-font;
+
+- KEY: css.text.pre
+  EXPLAIN: 改行そのまま表示
+  BODY: |
+    white-space: pre
+
+- KEY: css.boxShadow
+  EXPLAIN: Boxシャドー
+  BODY: |
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.4);
+
+- KEY: css.rgba
+  EXPLAIN: 透明度
+  BODY: |
+    rgba(255, 255, 255, 0.5)
+    //= #FFF7
+
+- KEY: css.transform
+  EXPLAIN: 変形
+  BODY: |
+    transform: translate(50px); //X
+    transform: translateX(50px, 0); //X, Y
+    transform: scale(1.1, 1.1);
+    transform: rotate(0.5turn);
+    transform: skew(30deg, 20deg);
+    transform-origin: center;
+
+- KEY: css.beforeAfter
+  EXPLAIN: 先頭にContent追加
+  BODY: |
+    :before {
+      content: "■";
+      margin-right: 5px;
+      color: #777;
+    }
+
+- KEY: css.image.object
+  EXPLAIN: イメージ関連
+  BODY: |
+    object-fit: fill; //拡張(ゆがみ)
+    object-fit: contain; //全体(空白あり)
+    object-fit: cover; //中央クロップ
+    object-fit: none; //元サイズクロップ
+    object-fit: scale-down; //=contain?
+
+    object-position: 50% 50%; //中央
+    object-position: center center; //中央
+    object-position: right top; //右上
+    object-position: left bottom; //左下
+    object-position: 100px 100px; //指定
+
+- KEY: css.variable
+  EXPLAIN: 変数
+  BODY: |
+    :root {
+      --defColor: #4158d0;
+    }
+    .one {
+      background-color: var(--defColor);
+    }
+
+- KEY: css.text.gradientColor
+  EXPLAIN: テキストのグラデーション切り抜き
+  BODY: |
+    :root { --defColor: #4158d0; }
+    font-size: 4rem;
+    font-weight: 600;
+    background: linear-gradient(90deg, var(--defColor), white);
+    background: -webkit-linear-gradient(90deg, var(--defColor), orange);
+    background: -moz-linear-gradient(90deg, var(--defColor), blue);
+    background: -ms-linear-gradient(90deg, var(--defColor), green);
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -ms-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    -ms-text-fill-color: transparent;
+
+- KEY: css.text.backgroundImageClip
+  EXPLAIN: 文字背景イメージ切り抜き
+  BODY: |
+    background-image: url("./image.jpg");
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+
+# ----------------------------
+#  animation
+# ----------------------------
+
+- KEY: css.anime.transition
+  EXPLAIN: アニメーション(transition)
+  BODY: |
+    //transition: <target> <duration(所要時間)> <easing> <delay(遅延)> 
+    transition: width 1s ease-in-out 0s;
+    transition: width 1s ease-in-out, color 2s; //複数
+    transition: all 1s ease-in-out; //全属性に適用
+
+    //分割
+    transition-property: all/none/<width,height,margin-left,...>;
+    transition-duration: [def]0s/1s;
+    transition-timing-function: [def]ease/ease-in-out/ease-in/ease-out/linear/step-start/step-end;
+    transition-delay: [def]0s/1s/1.5s/-1s(1秒スキップ);
+
+- KEY: css.anime.animation
+  EXPLAIN: アニメーション(animation)
+  BODY: |
+    //@keyframes <duration> <easing> <delay> <count> <dir> <fill> <state> <name>
+    animation: 3s ease-in 1s 2 reverse both paused slidein;
+
+    //分割
+    animation-duration: [def]0s/2s; //既定値が0s(非実行)つまり指定必須
+    animation-timing-function: [def]ease/ease-in-out/ease-in/ease-out/linear/step-start/step-end;
+    // cubic-bezier(0.1, 0.7, 1.0, 0.1)/steps(4, end)/steps(4, jump-start)
+    animation-delay: [def]0s/1s/250ms/-2s(最初の2sをスキップ);
+    animation-iteration-count: [def]1/2/1.5/infinite;
+    animation-direction: [def]normal/reverse/alternate/alternate-reverse;
+    animation-fill-mode: [def]none/forwards/backwards/both;
+    //[forwards]
+    // <direction> 	<反復数> 	<最後のキーフレーム>
+    // normal 	  偶数または奇数 	100% または to
+    // reverse 	  偶数または奇数 	0% または from
+    // alternate 	偶数 	         0% または from
+    // alternate 	奇数 	         100% または to
+    // alternate-reverse 	偶数 	 100% または to
+    // alternate-reverse 	奇数 	 0% または from
+    //[backwards]
+    // normal/alternate 	        0% または from
+    // reverse/alternate-reverse 	100% または to
+    animation-play-state: running/paused; //停止と再開を設定可能
+    animation-name: slidein; //カスタム名(A-B, A_B)

@@ -1,0 +1,76 @@
+---
+#-------------------------------
+# Package: React Fetch & State
+#-------------------------------
+
+#-------------------------------
+# SWR
+#-------------------------------
+
+- KEY: pk.fetch.swr
+  EXPLAIN: SWRセット
+  BODY: |
+    //yarn add swr
+    import useSWR, { Fetcher } from "swr"
+    import { XxxType } from "Xxx"
+
+    const fetcher: Fetcher<XxxType[] | undefined, string> = async (
+      url: string
+    ) => {
+      const res = await fetch(url)
+      return await res.json()
+    }
+
+    type useXxx = {
+      number: number
+    }
+
+    const URL: string = "https://"
+
+    export const useXxx = ({ number }: useXxx) => {
+      const { data, error } = useSWR(`${URL}/${number}`, fetcher, {
+        revalidateOnFocus: false,
+      })
+
+      return {
+        people: data,
+        isLoading: !error && !data,
+        isError: error,
+      }
+    }
+
+#-------------------------------
+# Recoil
+#-------------------------------
+
+- KEY: pk.state.recoil.1.state
+  EXPLAIN: Recoil 1 State
+  BODY: |
+    import { atom } from "recoil"
+    export const xxxxRecoilState = atom<TypeXxxx[]>({
+      key: "xxxxRecoilStateKey", //Unique名
+      default: dataXxxx, //初期データ
+    })
+
+- KEY: pk.state.recoil.2.root
+  EXPLAIN: Recoil 2 Root
+  BODY: |
+    import { RecoilRoot } from "recoil"
+    export const ParentCompo = () => {
+      return (
+        <RecoilRoot>
+          <ChildCompo />
+        </RecoilRoot>
+      )
+    }
+
+- KEY: pk.state.recoil.3.use
+  EXPLAIN: Recoil 3 Use
+  BODY: |
+    import { useRecoilState } from "recoil"
+    import { xxxxRecoilState } from "./xxxxRecoilState"
+    export const ChildCompo = () => {
+      const [xxxx] = useRecoilState(xxxxRecoilState)
+
+      return <Compo data={xxxx} />
+    }

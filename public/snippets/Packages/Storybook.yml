@@ -1,0 +1,74 @@
+---
+#-------------------------------
+# Package: Storybook
+#-------------------------------
+
+- KEY: pk.storybook.templateV6
+  EXPLAIN: Storybook基本
+  BODY: |
+    import React from "react"
+    import { ComponentStory, ComponentMeta } from "@storybook/react"
+
+    import { XXXXX } from "./XXXXX"
+
+    export default {
+      //title: 'Example/XXXXX',
+      component: XXXXX,
+      argTypes: {
+        backgroundColor: { control: "color" }, // 表示
+        variant: { control: 'radio' },         // 表示
+        checkBoxLabel: { table: { disable: true } }, //非表示
+      },
+    } as ComponentMeta<typeof XXXXX>
+
+    const Template: ComponentStory<typeof XXXXX> = (args) => <XXXXX {...args} />
+
+    export const Primary = Template.bind({})
+    Primary.args = {
+      primary: true,
+      label: "Button",
+    }
+
+    export const Secondary = Template.bind({})
+    Secondary.args = {
+      label: "Button",
+    }
+
+- KEY: pk.storybook.controls
+  EXPLAIN: control リスト
+  BODY: |
+    name:     { control: 'text' },    // テキスト
+    choice:   { control: 'radio' },   // ラジオボタン
+    disabled: { control: 'boolean' }, // 真偽
+    age:      { control: 'number' },  // 数
+    butObj:   { control: 'object' },  // オブジェクト
+    types:    { control: 'array' },   // 配列
+    myEnum:   { control: 'enum' },    // Enum
+    color:    { control: "color" },   // 色
+
+- KEY: pk.storybook.argTypesList
+  EXPLAIN: argTypes MUI リスト
+  BODY: |
+    const attributes = [
+      ['children'],
+      ['disabled'],
+      ['defaultValue', 'rules', 'helperText'],
+      ['className', 'focusVisibleClassName'],
+      ['names', 'name'],
+      ['tabIndex', 'href', 'as', 'forwardedAs', 'target', 'ref'],
+      ['action', 'onFocusVisible', 'onClick', 'disableElevation', 'download'],
+      ['checkBoxProps'],
+      ['startIcon', 'endIcon'],
+      ['fontSize', 'fontWeight'],
+      ['variant', 'theme', 'color'],
+      ['size', 'minWidth', 'fullWidth', 'height', 'width'],
+      ['m', 'mt', 'mb', 'ml', 'mr', 'mx', 'my'],
+      [ 'disableFocusRipple', 'centerRipple', 'disableRipple', 'disableTouchRipple',
+        'focusRipple', 'TouchRippleProps', ],
+      ['hatenaModalElement'],
+    ];
+
+    //多重配列を flat() で1次元配列にまとめて Object化
+    export const argTypeExemptMUIControls = attributes.flat().reduce((acc, attr) => {
+      return { ...acc, [attr]: { table: { disable: true } } };
+    }, {});

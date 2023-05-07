@@ -1,0 +1,147 @@
+---
+#-------------------------------
+# React Hook Form
+#-------------------------------
+
+#-------------------------------
+# By Context
+#-------------------------------
+
+- KEY: pk.rhf.core.providerContext
+  EXPLAIN: RFHのFormProvider Core
+  BODY: |
+    <FormProvider {...methods}> <----- ここから
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <ChildByContext />
+        <button type="submit">OK</button>
+      </form>
+    </FormProvider>
+
+    export const ChildByContext = () => {
+      const { register } = useFormContext<型依存>() <---ここへ
+      return (
+        <input {...register("name", { required: true })} />
+      )
+    }
+
+- KEY: pk.rhf.full.providerContext1
+  EXPLAIN: RFHのFormProvider親
+  BODY: |
+    import { useForm, SubmitHandler, FormProvider } from "react-hook-form"
+    import { ChildByContext } from "./ChildByContext"
+
+    export type RHF_SimpleValues = { name: string }
+    const defaultValues: RHF_SimpleValues = { name: "James" }
+
+    export const RHF_Simple = () => {
+      const methods = useForm<RHF_SimpleValues>({
+        defaultValues,
+        //shouldUnregister: true, //mnt/unmnt データ保存有無
+      })
+      const { handleSubmit } = methods
+      const onSubmit: SubmitHandler<RHF_SimpleValues> = (data)
+       => { console.table(data) }
+
+      return (
+        <FormProvider {...methods}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <ChildByContext />
+            <button type="submit">OK</button>
+          </form>
+        </FormProvider>
+      )
+    }
+
+- KEY: pk.rhf.full.providerContext2
+  EXPLAIN: RFHのContext子
+  BODY: |
+    import { useFormContext } from "react-hook-form"
+    import { RHF_SimpleValues } from "./RHFByProvider"
+
+    export const ChildByContext = () => {
+      const { register, formState: { errors } } =
+       useFormContext<RHF_SimpleValues>() //<---依存
+
+      return (
+        <div>
+          <input {...register("name", { required: true })} />
+          {errors.name && <span>必須</span>}
+        </div>
+      )
+    }
+
+#-------------------------------
+# By Parameter
+#-------------------------------
+
+- KEY: pk.rhf.core.methodByPram
+  EXPLAIN: RFHのFormProvider Core
+  BODY: |
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <ChildByMethod methods={methods} /> <--method引数
+      <button type="submit">OK</button>
+    </form>
+
+    const ChildByMethod = ({ methods }: {
+      methods: UseFormReturn<型依存, any>
+    }) => {
+      const { register } = methods
+      return (
+        <input {...register("name", { required: true })} />
+      )
+    }
+
+- KEY: pk.rhf.full.methodByPram1
+  EXPLAIN: 引数method親
+  BODY: |
+    import { useForm, SubmitHandler } from "react-hook-form"
+    import { ChildByMethod } from "./ChildByMethod"
+
+    export type RHF_SimpleValues = {
+      name: string
+    }
+
+    const defaultValues: RHF_SimpleValues = {
+      name: "By Method",
+    }
+
+    export const RHFByMethod = () => {
+      const methods = useForm<RHF_SimpleValues>({
+        defaultValues,
+        //shouldUnregister: true, //mnt/unmnt データ保存有無
+      })
+      const { handleSubmit } = methods
+
+      const onSubmit: SubmitHandler<RHF_SimpleValues> = (data) => {
+        console.table(data)
+      }
+
+      return (
+        <section>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <ChildByMethod methods={methods} />
+            <button type="submit">OK</button>
+          </form>
+        </section>
+      )
+    }
+
+- KEY: pk.rhf.full.methodByPram2
+  EXPLAIN: 引数method子
+  BODY: |
+    import { UseFormReturn } from "react-hook-form"
+    import { RHF_SimpleValues } from "./RHFByMethod"
+
+    type Props = {
+      methods: UseFormReturn<RHF_SimpleValues, any>
+    }
+
+    export const ChildByMethod = ({ methods }: Props) => {
+      const { register, formState: { errors } } = methods
+      return (
+        <div>
+          <input {...register("name", { required: true })} />
+          {errors.name && <span>必須</span>}
+        </div>
+      )
+    }

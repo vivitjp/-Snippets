@@ -1,0 +1,96 @@
+# ----------------------------
+# HTML INPUT
+# ----------------------------
+
+- KEY: html.specialChars
+  EXPLAIN: 特殊文字
+  BODY: |
+    &amp; // &
+    &copy; // ©
+    &quot; // "
+    &apos; // '
+    &nbsp; // Space
+    &lt;   // <
+    &gt;   // >
+
+- KEY: html.summary
+  EXPLAIN: Detail & Summary
+  BODY: |
+    <details>
+      <summary>TITLE</summary>
+      TEXT CONTENT
+    </details>
+
+- KEY: html.button
+  EXPLAIN: Button
+  BODY: |
+    <button onClick={handleClickButton} value="">
+      Submit
+    </button>
+
+- KEY: html.input.text
+  EXPLAIN: Text
+  BODY: |
+    <input
+      type="text"
+      onChange={handleChangeText}
+      value={text}
+      placeholder="name"
+    />
+
+- KEY: html.input.button
+  EXPLAIN: InputButton
+  BODY: |
+    <input type="button" onClick={handleClick} value="Click" />
+
+- KEY: html.input.checkbox
+  EXPLAIN: Checkbox
+  BODY: |
+    //const xxxid = React.useId()
+    <input
+      type="checkbox"
+      id={checkId}
+      onChange={handleChangeCheck}
+      checked={isChecked}
+    />
+    <label htmlFor={checkId}>On</label>
+
+- KEY: html.input.radio
+  EXPLAIN: Radio
+  BODY: |
+    //const xxxid = React.useId()
+    <input
+      type="radio"
+      id={radioId1}
+      name="myRadio"
+      onChange={handleChangeRadio}
+      value={1}
+      checked={radio === 1}
+    />
+    <label htmlFor={radioId1}>1</label>
+
+- KEY: html.select
+  EXPLAIN: Select
+  BODY: |
+    type Options = {
+      title: string
+      value: string
+    }
+
+    type Select = {
+      options: Options[]
+      onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
+    }
+
+    const SelectSet = ({ options, onChange }: Select) => {
+      return (
+        <select onChange={onChange}>
+          {!!options.length &&
+            options.map((n, index) => (
+              <option key={index} value={n.value} >
+                {n.title}
+              </option>
+            ))}
+        </select>
+      )
+    }

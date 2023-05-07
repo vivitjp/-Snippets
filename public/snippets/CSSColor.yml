@@ -1,0 +1,218 @@
+# ----------------------------
+# CSS 色
+# ----------------------------
+- KEY: color.blue.dark
+  EXPLAIN: 青色系(暗)
+  BODY: |
+    color: DodgerBlue;
+    color: CornflowerBlue;
+    color: SteelBlue;
+    color: RoyalBlue;
+    color: Blue;
+    color: MediumBlue;
+    color: DarkBlue;
+    color: Navy;
+    color: MidnightBlue;
+
+- KEY: color.blue.light
+  EXPLAIN: 青色系(明)
+  BODY: |
+    color: LightSteelBlue;
+    color: PowderBlue;
+    color: LightBlue;
+    color: SkyBlue;
+    color: LightSkyBlue;
+    color: DeepSkyBlue;
+
+- KEY: color.cyan.dark
+  EXPLAIN: シアン色系(暗)
+  BODY: |
+    color: LightSeaGreen;
+    color: CadetBlue;
+    color: DarkCyan;
+    color: Teal;
+
+- KEY: color.cyan.light
+  EXPLAIN: シアン色系(明)
+  BODY: |
+    color: LightCyan;
+    color: PaleTurquoise;
+    color: Aquamarine;
+    color: Turquoise;
+    color: MediumTurquoise;
+    color: DarkTurquoise;
+
+- KEY: color.green.dark
+  EXPLAIN: 緑系(暗)
+  BODY: |
+    color: DarkOliveGreen;
+    color: Olive;
+    color: OliveDrab;
+    color: SeaGreen;
+    color: ForestGreen;
+    color: Green;
+    color: DarkGreen;
+
+- KEY: color.green.light
+  EXPLAIN: xxxx色系(明)
+  BODY: |
+    color: YellowGreen;
+    color: LimeGreen;
+    color: Lime;
+    color: LawnGreen;
+    color: Chartreuse;
+    color: GreenYellow;
+    color: SpringGreen;
+    color: MediumSpringGreen ;
+    color: LightGreen;
+    color: PaleGreen;
+    color: DarkSeaGreen;
+    color: MediumAquamarine;
+    color: MediumSeaGreen;
+
+- KEY: color.purple.dark
+  EXPLAIN: 紫色系(暗)
+  BODY: |
+    color: Lavender;
+    color: Thistle;
+    color: Plum;
+    color: Violet;
+    color: Orchid;
+    color: Fuchsia;
+    color: Magenta;
+
+- KEY: color.purple.light
+  EXPLAIN: 紫色系(明)
+  BODY: |
+    color: MediumOrchid;
+    color: MediumPurple;
+    color: BlueViolet;
+    color: DarkViolet;
+    color: DarkOrchid;
+    color: DarkMagenta;
+    color: Purple;
+    color: Indigo;
+    color: DarkSlateBlue;
+    color: SlateBlue;
+    color: MediumSlateBlue ;
+
+- KEY: color.brawn.dark
+  EXPLAIN: 茶色系(暗)
+  BODY: |
+    color: Burlywood;
+    color: Tan;
+    color: RosyBrown;
+    color: SandyBrown;
+    color: Goldenrod;
+    color: DarkGoldenrod;
+    color: Peru;
+    color: Chocolate;
+    color: SaddleBrown;
+    color: Sienna;
+    color: Brown;
+    color: Maroon;
+
+- KEY: color.brawn.light
+  EXPLAIN: 茶色系(明)
+  BODY: |
+    color: Cornsilk;
+    color: BlanchedAlmond;
+    color: Bisque;
+    color: NavajoWhite;
+    color: Wheat;
+
+- KEY: color.yellow.dark
+  EXPLAIN: 黄色系(暗)
+  BODY: |
+    color: LightYellow;
+    color: LemonChiffon;
+    color: LightGoldenrodYellow ;
+    color: PapayaWhip;
+
+- KEY: color.yellow.light
+  EXPLAIN: 黄色系(明)
+  BODY: |
+    color: Yellow;
+    color: Moccasin;
+    color: PeachPuff;
+    color: PaleGoldenrod;
+    color: Khaki;
+    color: DarkKhaki;
+    color: Gold;
+
+- KEY: color.orange
+  EXPLAIN: オレンジ色系
+  BODY: |
+    color: OrangeRed;
+    color: Tomato;
+    color: Coral;
+    color: DarkOrange;
+    color: Orange;
+
+- KEY: color.red.light
+  EXPLAIN: 赤系(明)
+  BODY: |
+    color: LightSalmon;
+    color: Salmon;
+    color: DarkSalmon;
+    color: LightCoral;
+
+- KEY: color.red.dark
+  EXPLAIN: 赤系(暗)
+  BODY: |
+    color: IndianRed;
+    color: Crimson;
+    color: Firebrick;
+    color: DarkRed;
+    color: Red;
+
+- KEY: color.pink.dark
+  EXPLAIN: ピンク系
+  BODY: |
+    color: Pink;
+    color: LightPink;
+    color: HotPink;
+    color: DeepPink;
+    color: PaleVioletRed;
+    color: MediumVioletRed;
+
+- KEY: color.gray
+  EXPLAIN: グレー系
+  BODY: |
+    color: Gainsboro;
+    color: LightGray;
+    color: Silver;
+    color: DarkGray;
+    color: Gray;
+    color: DimGray;
+    color: LightSlateGray;
+    color: SlateGray;
+    color: DarkSlateGray;
+
+- KEY: color.white.blue
+  EXPLAIN: 白(青系)
+  BODY: |
+    color: MintCream;
+    color: Azure;
+    color: AliceBlue;
+    color: GhostWhite;
+    color: WhiteSmoke;
+
+- KEY: color.white.green
+  EXPLAIN: 白(緑系)
+  BODY: |
+    color: Honeydew;
+    color: Beige;
+
+- KEY: color.white.red
+  EXPLAIN: 白(赤系)
+  BODY: |
+    color: Snow;
+    color: Seashell;
+    color: OldLace;
+    color: FloralWhite;
+    color: Ivory;
+    color: AntiqueWhite;
+    color: Linen;
+    color: LavenderBlush;
+    color: MistyRose;

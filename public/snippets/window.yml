@@ -1,0 +1,25 @@
+---
+#-------------------------------
+# Windows
+#-------------------------------
+
+- KEY: win.clipboard
+  EXPLAIN: クリップボードにコピー
+  BODY: |
+    const copyToClipboard = async (text: string) => {
+      await navigator.clipboard.writeText(text) //非同期
+    }
+
+- KEY: win.darkMode
+  EXPLAIN: ダークモードの検出
+  BODY: |
+    const isDarkMode = () =>
+      window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+    console.log(isDarkMode())
+
+- KEY: win.scroll
+  EXPLAIN: スクロール
+  BODY: |
+    const scrollToTop = (element: HTMLElement) =>
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      //上方 'start' 下方 'end'

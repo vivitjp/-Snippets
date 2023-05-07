@@ -1,0 +1,20 @@
+---
+#-------------------------------
+# Package: Storybook
+#-------------------------------
+
+- KEY: pk.zustand.store
+  EXPLAIN: zustand Store
+  BODY: |
+    type CountState={
+      count: number
+      addCount: (by: number) => void
+      randomCount: () => void 
+      resetCount: () => void
+    }
+    export const useCount = create<CountState>()((set, get) => ({
+      count: 1,
+      addCount: (by) => set((state) => ({ count: state.count + by })),
+      randomCount: 
+      resetCount: () => set(() => ({ count: 1 })),
+    }))

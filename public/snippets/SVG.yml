@@ -1,0 +1,529 @@
+---
+#-------------------------------
+# SVG
+#-------------------------------
+
+- KEY: svg.svg
+  EXPLAIN: svgの属性
+  BODY: |
+    <svg 
+      // x ={数値}  //親SVGに対する座標
+      // y ={数値}  //親SVGに対する座標
+      width ={数値}
+      height ={数値}
+      // viewBox ="0 0 W H" //表示範囲
+      xmlns ="http://www.w3.org/2000/svg"
+      preserveAspectRatio ="xMinYMin slice" //"slice"|"meet"
+    > {children} </svg>
+
+- KEY: svg.svg.preserveAspectRatio
+  EXPLAIN: avg aspect比率
+  BODY: |
+    preserveAspectRatio ="xMinYMin slice" //"slice"|"meet"
+
+- KEY: svg.attr.strokeFill
+  EXPLAIN: 共通属性(stroke/fill)
+  BODY: |
+    stroke ="CSS色" //線色
+    strokeWidth ="整数"
+    strokeDasharray ="{数値} {数値}" //描 空
+    strokeLinecap ="butt"|"round"|"square"
+    strokeLinejoin ="arcs"|"bevel"|"miter"|"miter-clip"|"round"
+    strokeOpacity ="0.1~1.0"
+    fill ="CSS色"
+    fillOpacity ="0.1~1.0"
+    fillRule ="nonzero"|"evenodd"
+    opacity ="0.1~1.0" //StrokeとFillを同時に
+    shapeRendering ="CrispEdges"|"" //精密度(アンチエイリアス解除)
+
+#-------------------------------
+# テキスト要素
+#-------------------------------
+
+- KEY: svg.element.text
+  EXPLAIN: text 要素
+  BODY: |
+    <text
+      x ={数値} //X座標
+      y ={数値} //Y座標
+      fill ="CSS色"
+      stroke ="CSS色"
+      strokeWidth ={整数値}
+      textAnchor ="start"|"middle"|"end"
+      dominantBaseline =
+        "text-after-edge"| //上: フォント空間最上
+        "ideographic"|     //上: ひらがな，漢字，ハングル用
+        "alphabetic"|      //上: アルファベット用
+        "auto"|            //上: デフォルト
+        "middle"|          //中央
+        "central"|         //中央
+        "mathematical"|    //下: 数値用
+        "hanging"|         //下: ぶらさがり
+        "text-before-edge" //下: フォント空間最下
+      fontWeight ="normal"|"100-800" //SVGはCSSのような微妙な変化に未対応
+      fontFamily ="sans-serif"|"serif"|"monospace",
+      style ={{ fontSize: "18px" }} //CSSスタイル(fontサイズはここで指定)
+      transform ={} //各種効果
+      filter ={} //各種効果
+    >
+      テキスト
+    </text>
+
+#-------------------------------
+# transform
+#-------------------------------
+
+- KEY: svg.transform
+  EXPLAIN: transform
+  BODY: |
+
+#-------------------------------
+# PATH 要素
+#-------------------------------
+
+- KEY: svg.path.M
+  EXPLAIN: path要素 移動(M/m)
+  BODY: |
+    <path d="M/m{MX},{MY}" />
+    //MX: 移動先X座標
+    //MY: 移動先Y座標
+
+- KEY: svg.path.A
+  EXPLAIN: path要素 弧(A/a)
+  BODY: |
+    <path d="M{MX},{MY} A/a{HR},{VR} {angle} {flagLS} {flagClock} {X},{Y}" />
+    //MX: 移動先X座標
+    //MY: 移動先Y座標
+    //HR: 水平半径
+    //VR: 水直半径
+    //angle: {傾き}
+    //flagLS {1:長方向/0:短方向}
+    //flagClock {1:時計回/0:反時計回}
+    //X: {終点X座標}
+    //Y: {終点Y座標}
+
+- KEY: svg.path.L
+  EXPLAIN: path 要素 線(L/l)
+  BODY: |
+    <path d="M{MX},{MY} L/l{X},{Y}" />
+    //MX: 移動先X座標
+    //MY: 移動先Y座標
+    //X: 終点X座標
+    //Y: 終点Y座標
+
+- KEY: svg.path.H
+  EXPLAIN: path 要素 水平線(H/h)
+  BODY: |
+    <path d="M{MX},{MY} H/h{size}" />
+    //MX: 移動先X座標
+    //MY: 移動先Y座標
+    //size: 水平X座標移動距離
+
+- KEY: svg.path.V
+  EXPLAIN: path 要素 垂直線(V/v)
+  BODY: |
+    <path d="M{MX},{MY} V/v{size}" />
+    //MX: 移動先X座標
+    //MY: 移動先Y座標
+    //size: 水平Y座標移動距離
+
+- KEY: svg.path.C
+  EXPLAIN: path要素 3次ベジェ曲線(C/c)
+  BODY: |
+    <path d="M{MX},{MY} C/c{X1},{Y1} {X2},{Y2} {X3},{Y3}" />
+    //MX: 移動先X座標
+    //MY: 移動先Y座標
+    //X1: 第1線X座標(MX-X1)
+    //Y1: 第1線Y座標(MY-Y1)
+    //X2: 第2線X座標(X1-X2)
+    //Y2: 第2線Y座標(Y1-Y2)
+    //X3: 第3線X座標(X2-X3)
+    //Y3: 第3線Y座標(Y2-Y3)
+
+- KEY: svg.path.S
+  EXPLAIN: path要素 3次ベジェ曲線(S/s)
+  BODY: |
+    <path d="C/c{座標} S/s{X2},{Y2} {X3},{Y3}" />
+    //第1線: C{X3},{Y3}を軸にC/cの第3線を反転コピー(省略)
+    //X2: 第2線X座標(X1-X2)
+    //Y2: 第2線Y座標(Y1-Y2)
+    //X3: 第3線X座標(X2-X3)
+    //Y3: 第3線Y座標(Y2-Y3)
+
+- KEY: svg.path.Q
+  EXPLAIN: path要素 2次ベジェ曲線(Q/q)
+  BODY: |
+    <path d="M{MX},{MY} Q/q{X1},{Y1} {X2},{Y2}" />
+    //MX: 移動先X座標
+    //MY: 移動先Y座標
+    //X1: 第1線X座標(MX-X1)
+    //Y1: 第1線Y座標(MY-Y1)
+    //X2: 第2線X座標(X1-X2)
+    //Y2: 第2線Y座標(Y1-Y2)
+
+- KEY: svg.path.T
+  EXPLAIN: path要素 2次ベジェ曲線(T/t)
+  BODY: |
+    <path d="C/c{座標} T/t{X2},{Y2}" />
+    //第1線: C{X3},{Y3}を軸にQ/qの第2線を反転コピー(省略)
+    //X2: 第2線X座標(X1-X2)
+    //Y2: 第2線Y座標(Y1-Y2)
+
+#-------------------------------
+# 他の要素
+#-------------------------------
+
+- KEY: svg.element.rectangle
+  EXPLAIN: rectangle 要素
+  BODY: |
+    <rect
+      x={X}
+      y={Y}
+      width={W}
+      height={H}
+      rx={RX} //角丸めX軸長
+      ry={RY} //角丸めY軸長
+    />
+
+- KEY: svg.element.line
+  EXPLAIN: line 要素
+  BODY: |
+    <line
+      x1={X1} //開始点X座標
+      y1={Y1} //開始点Y座標
+      x2={X2} //終了点X座標
+      y2={Y2} //終了点Y座標
+    />
+
+- KEY: svg.element.polyline
+  EXPLAIN: polyline 要素
+  BODY: |
+    <polyline
+      points={"X,Y X,Y X,Y X,Y,..."}
+    />
+
+- KEY: svg.element.polygon
+  EXPLAIN: polygon 要素
+  BODY: |
+    <polygon
+      points={"X,Y X,Y X,Y X,Y"} //4 sets
+    />
+
+- KEY: svg.element.circle
+  EXPLAIN: circle 要素
+  BODY: |
+    <circle
+      cx={CX} //円の中心X座標
+      cy={CY} //円の中心Y座標
+      r={R} //半径
+    />
+
+- KEY: svg.element.ellipse
+  EXPLAIN: ellipse 要素
+  BODY: |
+    <ellipse
+      cx={CX} //円の中心X座標
+      cy={CY} //円の中心Y座標
+      rx={RX} //X軸の半径
+      ry={RY} //Y軸の半径
+    />
+
+- KEY: svg.element.image
+  EXPLAIN: image 要素
+  BODY: |
+    <image
+      width={W}
+      height={H}
+      href="URL"
+      preserveAspectRatio={"xMinYMin meet"}
+    />
+
+#-------------------------------
+# グループ
+#-------------------------------
+
+- KEY: svg.group
+  EXPLAIN: svg group
+  BODY: |
+    <g id={id} fill={CSS色}stroke={CSS色}> //x, y, width, heightは無効
+      <rect x={X} y={Y} width={W} height={H} />
+      <rect x={X} y={Y} width={W} height={H} fill={CSS色} /> //色上書き
+    </g>
+
+#-------------------------------
+# フィルタ
+#-------------------------------
+
+- KEY: svg.xxxxx
+  EXPLAIN: xxxxxxxx
+  BODY: |
+    <xxx
+    />
+
+#-------------------------------
+# クリップパス
+#-------------------------------
+
+- KEY: svg.clipPath
+  EXPLAIN: svg clipPath
+  BODY: |
+    // const cpId = useId()
+    <defs>
+      <clipPath id={cpId}>
+        <rect x={100} y={100} width={100} height={100} />
+      </clipPath>
+    </defs>
+    <circle clipPath={`url(#${cpId})`} cx={X} cy={Y} r={R} />
+
+#-------------------------------
+# マスク(mask)
+#-------------------------------
+
+- KEY: svg.mask
+  EXPLAIN: svg mask
+  BODY: |
+    // const maskId = useId()
+    // fill= "#000"~"#FFF" //通過レベル
+    // maskType= "luminance"(通過)|"alpha"
+    <mask id={maskId} fill="#777"
+      style={{ maskType: "luminance" } as CSSProperties} >
+      <rect x={X} y={Y} width={W} height={H} />
+    </mask>
+
+    <circle mask={`url(#${maskId})`} cx={X} cy={Y} r={R} />
+
+- KEY: svg.mask.imageByString
+  EXPLAIN: svg maskで文字通過イメージ
+  BODY: |
+    // const id = useId()
+    // fill= "#000"~"#FFF(100%)" //通過レベル
+    <mask id={id}>
+      <text x={X} y={Y} fill="#777"
+        textAnchor="middle" dominantBaseline="central"
+        style={{ fontSize: 数値, fontFamily: "monospace" }}
+      >
+        文字列
+      </text>
+    </mask>
+    <image mask={`url(#${id})`}
+      width={W} height={H}
+      href="name.jpg"
+      preserveAspectRatio={"xMinYMid slice"}
+    />
+
+#-------------------------------
+# Use
+#-------------------------------
+
+- KEY: svg.use
+  EXPLAIN: svg ノード複製
+  BODY: |
+    // const rectId = useId()
+    <defs>
+      <rect id={rectId} width={数値} height={数値} />
+    </defs>
+    <use href={`#${rectId}`} x={数値} y={数値} />
+
+- KEY: svg.use.format
+  EXPLAIN: svg ノード複製書式
+  BODY: |
+    <use href={`#${rectId}`} />
+
+#-------------------------------
+# 効果(effect)
+#-------------------------------
+
+- KEY: svg.effect.shadow
+  EXPLAIN: svg effect シャドー
+  BODY: |
+    // const filterId = useId()
+    // stdDeviation= 0~5...など
+    <defs>
+      <filter id={filterId}>
+        <feDropShadow stdDeviation={数値} floodColor={CSS色} />
+      </filter>
+    </defs>
+    <path filter={`url(#${filterId})`} d="PATH" />
+
+- KEY: svg.effect.blur
+  EXPLAIN: svg effect ぼかし
+  BODY: |
+    // const filterId = useId()
+    // stdDeviation= 0~5...など
+    <defs>
+      <filter id={filterId}>
+        <feGaussianBlur stdDeviation={2} />
+      </filter>
+    </defs>
+    <image width={W} height={Y}
+      href="name.jpg"
+      filter={`url(#${filterId})`}
+      preserveAspectRatio="xMinYMin meet"
+    />
+
+#-------------------------------
+# グラデーション
+#-------------------------------
+
+- KEY: svg.gradation.radial
+  EXPLAIN: svg radialGradient 円
+  BODY: |
+    // const filterId = useId()
+    // offset: 0.0~1.0 / "0%"~"100%"
+    <defs>
+      <radialGradient id={filterId}>
+        <stop offset={0}   stopColor={CSS色} />
+        <stop offset={0.5} stopColor={CSS色} />
+        <stop offset={1}   stopColor={CSS色} />
+      </radialGradient>
+    </defs>
+    <circle cx={CX} cy={CY} r={R} fill={`url(#${filterId})`}/>
+
+- KEY: svg.gradation.linear
+  EXPLAIN: svg linearGradient 線
+  BODY: |
+    // const filterId = useId()
+    // offset: 0.0~1.0 / "0%"~"100%"
+    <defs>
+      <linearGradient id={filterId}>
+        <stop offset={0}   stopColor={CSS色} />
+        <stop offset={0.5} stopColor={CSS色} />
+        <stop offset={1}   stopColor={CSS色} />
+      </linearGradient>
+    </defs>
+    <path d="PATH" fill={`url(#${filterId})`} />
+
+- KEY: svg.gradation.linearGamma
+  EXPLAIN: svg linearGradient 線(Gamma)
+  BODY: |
+    //const expoId = useId()
+    //const filterId = useId()
+    //exponent指数: 0.1~2.0
+    <defs>
+      <filter id={expoId}>
+        <feComponentTransfer>
+          <feFuncR type="gamma" exponent={0.5} />
+          <feFuncG type="gamma" exponent={0.5} />
+          <feFuncB type="gamma" exponent={0.5} />
+        </feComponentTransfer>
+      </filter>
+      <linearGradient id={filterId}>
+        <stop offset="0" stopColor={CSS色} />
+        <stop offset="1" stopColor={CSS色} />
+      </linearGradient>
+    </defs>
+    <path d="PATH" filter={`url(#${expoId})`} fill={`url(#${filterId})`} />
+
+#-------------------------------
+# ForeignObject
+#-------------------------------
+
+- KEY: svg.foreignObject
+  EXPLAIN: svg foreignObject HTML使用
+  BODY: |
+    <foreignObject x={X} y={Y} width={W} height={H}
+      requiredExtensions="http://www.w3.org/1999/xhtml"
+    >
+      <div>{text}</div>
+    </foreignObject>
+
+#-------------------------------
+# event
+#-------------------------------
+
+- KEY: svg.event
+  EXPLAIN: svg eventとpropagation
+  BODY: |
+    const handleMouse = (flag: boolean) => { }
+    const handleClickInside = (e: React.MouseEvent<SVGCircleElement>) => {}
+    const handleClickOutside = (e: React.MouseEvent<HTMLDivElement>) => {}
+
+    <div onClick={handleClickOutside}> // 外部にPropagation
+      <svg width={W} height={H}>
+        <circle cx={CX} cy={CY} r={R} fill={CSS色}
+          pointerEvents="fill"         // イベントターゲット
+          onMouseEnter={() => handleMouse(true)}  //イベント
+          onMouseLeave={() => handleMouse(false)} //イベント
+          onClick={handleClickInside}  // 内部イベント
+        />
+      </svg>
+    </div>
+
+#-------------------------------
+# 三角関数
+#-------------------------------
+
+- KEY: svg.trigonometric.atan2
+  EXPLAIN: svg 三角関数 θ取得
+  BODY: |
+    const theta = Math.atan2(y,x)
+    const w = Math.tan(theta) * H
+    const H = Math.tan(theta) * W
+
+- KEY: svg.trigonometric.roundFloat
+  EXPLAIN: svg 用のround関数
+  BODY: |
+    export const roundFloat = (num: number, digit: number = 2) => {
+      return Math.round(num * (100 * digit)) / (100 * digit)
+    }
+
+#-------------------------------
+# アニメーション
+#-------------------------------
+
+- KEY: svg.animation1.values
+  EXPLAIN: Animation(values)
+  BODY: |
+    <animate
+      attributeName="fill" //ターゲット属性(数値以外に適切)
+      dur="数値s" // 持続時間
+      repeatCount="indefinite"|"数値" // 反復回数
+      values="white;blue;white"  //-- 属性値(from,to,byより優先)
+      keyTimes="0;0.5;1" // valuesに対応する時間(0-1)
+    />
+
+- KEY: svg.animation2.from
+  EXPLAIN: Animation(from/to-by)
+  BODY: |
+    <animate 
+      attributeName="r" //ターゲット属性(数値に適切)
+      from="0" //開始属性値(values属性があると無効)
+      to="60" // 終了属性値(優先)
+      または by="60" // ステップ属性値
+      repeatCount="indefinite"|"数値" // 反復回数
+      calcMode="linear"|"discrete"|"spline"|"paced"
+    />
+
+- KEY: svg.animation3.dur
+  EXPLAIN: Animation(bur持続時間)
+  BODY: |
+    <animate 
+      attributeName="r" //ターゲット属性(数値に適切)
+      dur="数値s" // 持続時間
+      to="60" // 終了属性値(優先)
+      by="60" // ステップ属性値
+      repeatCount="indefinite"|"数値" // 反復回数
+      calcMode="linear"|"discrete"|"spline"|"paced"
+    />
+
+- KEY: svg.animation4.spline
+  EXPLAIN: Animation(keySplines) Safari未対応
+  BODY: |
+    <animate
+      attributeName="cx" //ターゲット属性(数値に適切)
+      from="30"
+      to="580"
+      dur="数値s" // 持続時間
+      begin="1s" // 開始時間
+      calcMode="spline" // 変化モード
+      keyTimes="0;1"
+      keySplines="スペースで区切った数値"
+      repeatCount="indefinite"|"数値" // 反復回数
+    />
+    //keySplinesサンプル
+    // ** Safari has issues: "0.42; 0.0; 0.58; 1.0"
+    //"Linear": "0.0 0.0 1.0 1.0"
+    //"Ease": "0.25 0.1 0.25 1.0"
+    //"Ease-in": "0.42 0 1.0 1.0"
+    //"Ease-out": "0.0 0.0 0.58 1.0"
+    //"Ease-in-out": "0.42 0.0 0.58 1.0"
