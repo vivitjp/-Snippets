@@ -1,12 +1,15 @@
 import { YAMLData, Snippets } from "../../types/type"
+import { CodeKeyType } from "../syntaxHighlighter/syntaxHighlighter"
 import { getLocalYmlFile } from "./getLocalYmlFile"
 
 export const makeSnippets = async ({
   file,
   scope,
+  codeKeyType,
 }: {
   file: string
   scope: string
+  codeKeyType?: CodeKeyType
 }) => {
   const jsonData = (await getLocalYmlFile({
     path: file,
@@ -37,6 +40,7 @@ export const makeSnippets = async ({
     returnData[key] = {
       prefix: KEY,
       body: BODY?.split("\n"),
+      codeKeyType: codeKeyType,
     }
     if (scope) returnData[key].scope = scope
   })

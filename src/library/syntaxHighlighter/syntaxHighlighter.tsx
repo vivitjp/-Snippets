@@ -1,7 +1,11 @@
+import { keysDocker } from "./keys/Docker"
 import { keysJSTS } from "./keys/JSTS"
 
+export const defaultSnippetsStyle = "JSTS"
+
 const codeKeyType = {
-  Snippets: "keysJSTS",
+  JSTS: defaultSnippetsStyle,
+  Docker: "Docker",
 } as const
 export type CodeKeyType = (typeof codeKeyType)[keyof typeof codeKeyType]
 
@@ -17,13 +21,15 @@ type SyntaxHighlight = {
 
 export const syntaxHighlight = ({
   code,
-  codeKeyType = "keysJSTS",
+  codeKeyType = defaultSnippetsStyle,
 }: SyntaxHighlight) => {
   let keyDef: KeyDef[] = []
 
+  console.log(codeKeyType)
+
   switch (codeKeyType) {
-    case "keysJSTS":
-      keyDef = keysJSTS
+    case "Docker":
+      keyDef = keysDocker
       break
     default:
       keyDef = keysJSTS
@@ -40,6 +46,7 @@ export const syntaxHighlight = ({
     //Keywords
     keyDef.forEach(({ color, keys }) => {
       keys.forEach((key) => {
+        if (!key) return
         const re = new RegExp(`\\b${key}\\b`, "g")
         result = result.replaceAll(
           re,
@@ -47,15 +54,16 @@ export const syntaxHighlight = ({
         )
       })
     })
-
-    rebuilt.push(
-      <pre
-        key={idx}
-        dangerouslySetInnerHTML={{
-          __html: result,
-        }}
-      />
-    )
+    if (result.trim()) {
+      rebuilt.push(
+        <pre
+          key={idx}
+          dangerouslySetInnerHTML={{
+            __html: result,
+          }}
+        />
+      )
+    }
   })
   return rebuilt
 }

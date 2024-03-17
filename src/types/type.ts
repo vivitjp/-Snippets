@@ -1,3 +1,5 @@
+import { CodeKeyType } from "../library/syntaxHighlighter/syntaxHighlighter"
+
 //------------------
 // 型
 //------------------
@@ -12,5 +14,6 @@ export type Snippets = {
     prefix: string
     scope?: string
     body: string[]
+    codeKeyType?: CodeKeyType
   }
 }

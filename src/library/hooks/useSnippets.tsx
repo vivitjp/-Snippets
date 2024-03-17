@@ -4,17 +4,23 @@ import { copyToClipboard } from "../utilities/copyToClipboard"
 import { makeSnippets } from "../utilities/makeSnippets"
 import { Column } from "../../common/styleDiv"
 import { Button } from "../../common/styleInput"
-import { syntaxHighlight } from "../syntaxHighlighter/syntaxHighlighter"
+import {
+  CodeKeyType,
+  syntaxHighlight,
+} from "../syntaxHighlighter/syntaxHighlighter"
 import { useSelect } from "./useSelect"
-import styled from "styled-components"
+import { DivTitle } from "./components/DivTitle"
+import { DivBody } from "./components/DivBody"
+import { MenuItemType } from "../../store/menuStore"
 
 type SnippetsObject = {
   prefix: string
   scope?: string | undefined
   body: string[]
+  codeKeyType?: CodeKeyType
 }
 
-export const useSnippets = (fileName: string) => {
+export const useSnippets = (choice: MenuItemType | undefined) => {
   const [data, setData] = useState<Snippets | string[] | undefined>()
 
   const { JSX: SnippetsStyleSelection, value } = useSelect({
@@ -24,14 +30,15 @@ export const useSnippets = (fileName: string) => {
   })
 
   useEffect(() => {
-    if (!fileName) return
+    if (!choice?.fileName) return
     makeSnippets({
-      file: `snippets/${fileName}.yml`,
+      file: `snippets/${choice.fileName}.yml`,
       scope: value,
+      codeKeyType: choice.codeKeyType,
     }).then((data) => {
       setData(data)
     })
-  }, [fileName, value])
+  }, [choice, value])
 
   const [copied, setCopied] = useState<boolean>(false)
   const handleClickInputButton = useCallback(
@@ -64,8 +71,10 @@ export const useSnippets = (fileName: string) => {
       <>
         {array.map(([title, snippetsObject]) => {
           const code = snippetsObject.body.map((n) => (!n ? " " : n)).join("\n")
-          const result = syntaxHighlight({ code })
-
+          const result = syntaxHighlight({
+            code,
+            codeKeyType: snippetsObject.codeKeyType,
+          })
           return (
             <Column>
               <DivTitle>■ {title}</DivTitle>
@@ -79,20 +88,3 @@ export const useSnippets = (fileName: string) => {
 
   return { SnippetsStyleSelection, Snippets, CopyButton }
 }
-
-const DivTitle = styled.div`
-  font-size: 18px;
-  overflow: auto;
-  color: var(--main-color);
-`
-
-const DivBody = styled.div`
-  font-size: 14px;
-  font-family: monospace;
-  overflow: auto;
-  white-space: pre;
-  color: #555;
-  padding: 10px;
-  width: 100%;
-  border: 1px solid #ccc;
-`

@@ -5,9 +5,8 @@ import { Row } from "../../common/styleDiv"
 
 export const PageBody = () => {
   const selectedMenu = useMenu((state) => state.selectedMenu)
-  const { SnippetsStyleSelection, Snippets, CopyButton } = useSnippets(
-    selectedMenu?.fileName ?? ""
-  )
+  const { SnippetsStyleSelection, Snippets, CopyButton } =
+    useSnippets(selectedMenu)
 
   return (
     <Section data-testid="layout-section">

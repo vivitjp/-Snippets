@@ -1,68 +1,112 @@
 import { MenuItemType } from "../../store/menuStore"
 
-export const menuItems: MenuItemType[] = [
+type menuByCategories = {
+  category: string
+  items: MenuItemType[]
+}
+
+export const menuItems: menuByCategories[] = [
   {
-    name: "CSS",
-    fileName: "CSS",
+    category: "Html/CSS",
+    items: [
+      {
+        name: "CSS(bg,bdr,just,css)",
+        fileName: "html/CSS",
+      },
+      {
+        name: "CSSColor(color)",
+        fileName: "html/CSSColor",
+      },
+      {
+        name: "HTML(html)",
+        fileName: "html/HTML",
+      },
+    ],
   },
   {
-    name: "CSSColor",
-    fileName: "CSSColor",
+    category: "JavaScript",
+    items: [
+      {
+        name: "JavaScript(js)",
+        fileName: "JavaScript/JavaScript",
+      },
+      {
+        name: "JavaScript(非同期)(js)",
+        fileName: "JavaScript/JavaScriptAsync",
+      },
+      {
+        name: "TypeScript(ts)",
+        fileName: "JavaScript/TypeScript",
+      },
+    ],
   },
   {
-    name: "HTML",
-    fileName: "HTML",
+    category: "React",
+    items: [
+      {
+        name: "React(qw)",
+        fileName: "React/React",
+      },
+      {
+        name: "React Component(qw)",
+        fileName: "React/ReactComponent",
+      },
+      {
+        name: "React Routing(qw)",
+        fileName: "React/ReactRouting",
+      },
+    ],
   },
   {
-    name: "JavaScript",
-    fileName: "JavaScript",
+    category: "React Packages",
+    items: [
+      {
+        name: "Fetch/State(pk)",
+        fileName: "ReactPackage/ReactFetchState",
+      },
+      {
+        name: "ReactHookForm(pk)",
+        fileName: "ReactPackage/ReactHookForm",
+      },
+      {
+        name: "Storybook(v6)(pk)",
+        fileName: "ReactPackage/Storybook",
+      },
+      {
+        name: "StyledComponent(pk)",
+        fileName: "ReactPackage/StyledCompo",
+      },
+      {
+        name: "zustand(pk)",
+        fileName: "ReactPackage/zustand",
+      },
+    ],
   },
   {
-    name: "JavaScript(非同期)",
-    fileName: "JavaScriptAsync",
+    category: "WebAPI",
+    items: [
+      {
+        name: "SVG(svg)",
+        fileName: "WebAPI/SVG",
+      },
+      {
+        name: "windows(win)",
+        fileName: "WebAPI/windows",
+      },
+    ],
   },
   {
-    name: "TypeScript",
-    fileName: "TypeScript",
-  },
-  {
-    name: "React",
-    fileName: "React",
-  },
-  {
-    name: "React Component",
-    fileName: "ReactComponent",
-  },
-  {
-    name: "React Routing",
-    fileName: "ReactRouting",
-  },
-  {
-    name: "SVG",
-    fileName: "SVG",
-  },
-  {
-    name: "windows",
-    fileName: "windows",
-  },
-  {
-    name: "React Fetch/State",
-    fileName: "Packages/ReactFetchState",
-  },
-  {
-    name: "React Hook Form",
-    fileName: "Packages/ReactHookForm",
-  },
-  {
-    name: "Storybook(v6)",
-    fileName: "Packages/Storybook",
-  },
-  {
-    name: "Styled Component",
-    fileName: "Packages/StyledCompo",
-  },
-  {
-    name: "zustand",
-    fileName: "Packages/zustand",
+    category: "Project管理",
+    items: [
+      {
+        name: "docker(docker)",
+        fileName: "Project/Docker",
+        codeKeyType: "Docker",
+      },
+      {
+        name: "Lint(lint)",
+        fileName: "Project/Lint",
+      },
+    ],
   },
 ]

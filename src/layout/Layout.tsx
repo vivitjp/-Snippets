@@ -28,20 +28,27 @@ export const Layout = () => {
       <Header>Sunabar Snippets</Header>
       <Body data-testid="body">
         <MenuNav data-testid="menu">
-          <Group open>
-            <GroupTitle data-testid="group-title">Snippets</GroupTitle>
-            <>
-              {!!menuItems.length && (
-                <GroupBody>
-                  {menuItems.map((menu) => (
-                    <MenuItem key={menu.name} onClick={() => handleMenu(menu)}>
-                      {menu.name}
-                    </MenuItem>
-                  ))}
-                </GroupBody>
-              )}
-            </>
-          </Group>
+          <>
+            {menuItems.map((menu) => {
+              return (
+                <Group open>
+                  <GroupTitle data-testid="group-title">
+                    {menu.category}
+                  </GroupTitle>
+                  <GroupBody>
+                    {menu.items.map((item) => (
+                      <MenuItem
+                        key={item.name}
+                        onClick={() => handleMenu(item)}
+                      >
+                        {item.name}
+                      </MenuItem>
+                    ))}
+                  </GroupBody>
+                </Group>
+              )
+            })}
+          </>
         </MenuNav>
         <Playground data-testid="playground">
           <PageBody />
