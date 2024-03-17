@@ -1,0 +1,24 @@
+---
+#-------------------------------
+# Lint
+#-------------------------------
+
+#-------------------------------
+# Exception
+#-------------------------------
+- KEY: lint.exception.line
+  EXPLAIN: 単数行をチェックから除外
+  BODY: |
+    // eslint-disable-next-line
+    // eslint-disable-next-line no-unused-vars
+
+- KEY: lint.exception.lines
+  EXPLAIN: 囲い行をチェックから除外
+  BODY: |
+    /* eslint-disable */
+    ...
+    /* eslint-enable */
+
+    /* eslint-disable no-unused-vars */
+    ...
+    /* eslint-enable no-unused-vars */

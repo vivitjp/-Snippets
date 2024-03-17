@@ -1,0 +1,83 @@
+---
+#-------------------------------
+# Docker
+#-------------------------------
+
+- KEY: docker.image
+  EXPLAIN: image コマンド1
+  BODY: |
+    docker image ls //リスト
+    docker image build -t <myImage[:TAG]> . //作成(CWDにDockerfile) -t:名前
+    docker image history <myImage/821...> //履歴表示
+    docker image inspect <myImage> //詳細表示
+    docker image rm <myImage/821...> //イメージ削除
+    docker image prune //未使用全削除
+#
+- KEY: docker.image.more
+  EXPLAIN: image コマンド2
+  BODY: |
+    docker search <IMAGE_KEYWORD> //Docker レジストリ検索
+    docker image pull <IMAGE_NAME[:TAG]> //ダウンロード
+    docker image push <REGISTRY_URL/RESPOSITRY_NAME>[:VERSION] //アップロード
+#
+- KEY: docker.container
+  EXPLAIN: container コマンド1
+  BODY: |
+    docker container run -d --name <myCont> -p 80:80 <myImage> //作成＆起動
+    docker container run --it --name <myCont> -p 80:80 <myImage> //作成＆起動
+    docker container exec -it <myCont> <command(bash,...)> //起動済コンテナのコマンド実行
+    --detatch(-d)
+    --name <名>
+    --publish(内:外)(-p)
+    --rm(停止後削除)
+    --interactive(-i)
+    --tty(-t)
+#
+- KEY: docker.container.process
+  EXPLAIN: container コマンド2
+  BODY: |
+    docker container create <myCont[:TAG]> //作成のみ
+    docker container start <myCont> //起動
+    docker container pause/unpause <myCont> //一時停止/再開
+    docker container stop <myCont> //停止
+    docker container kill <myCont> //強制停止
+    docker container restart <myCont> //再起動
+    docker container top <myCont> //プロセス表示
+    docker container attach <myCont> //StdInput/Output接続
+    docker container rm [-f] <myCont> //削除(-f 強制)
+    docker container prune //未使用全削除
+
+- KEY: docker.container.other
+  EXPLAIN: container コマンド3
+  BODY: |
+    docker container inspect <myCont> //詳細表示
+    docker container logs <myCont> //ログ表示
+    docker container commit <myCont> //コンテナ変更からIMAGE作成
+    docker container diff <myCont> //コンテナファイルの更新差分
+    docker container export <myCont> //コンテナファイルからtar作成
+    docker container port <myCont> //ポート一覧
+    docker container rename <myCont> //コンテナ名変更
+    docker container stats <myCont> //使用中コンテナのリソース
+    docker container update <myCont> //設定アップデート適用
+    docker container wait <myCont> //1以上のコンテナが停止まで待機
+#
+- KEY: docker.container.fileCopy
+  EXPLAIN: container コマンド4
+  BODY: |
+    docker container cp <PATH/LOCAL_FILE> <myCont>:<PATH>
+    //ファイルコピー(local2Cont)
+    docker container cp <myCont>:<PATH/LOCAL_FILE> .
+    //ファイルコピー(Cont2local)
+#
+- KEY: docker.container.network
+  EXPLAIN: network コマンド1
+  BODY: |
+    docker network create --subnet <MASK> <myNetwork> //作成
+    docker network connect <myNetwork> <myCont> //接続
+    docker network connect --ip <IP> <myNetwork> <myCont> //IP 割当
+    docker network disconnect <myNetwork> <myCont> //切断
+    docker network inspect <myNetwork> //詳細表示
+    docker network rm <myNetwork> //削除
+    docker network prune //未使用全削除
+
+#
