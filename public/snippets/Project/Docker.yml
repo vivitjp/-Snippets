@@ -8,10 +8,18 @@
   BODY: |
     docker image ls //リスト
     docker image build -t <myImage[:TAG]> . //作成(CWDにDockerfile) -t:名前
-    docker image history <myImage/821...> //履歴表示
-    docker image inspect <myImage> //詳細表示
-    docker image rm <myImage/821...> //イメージ削除
-    docker image prune //未使用全削除
+    docker image history <myImage/821...>   //履歴表示
+    docker image inspect <myImage>          //詳細表示
+    docker image rm <myImage/821...>        //イメージ削除
+    docker image prune                      //未使用全削除
+#
+- KEY: docker.image.build
+  EXPLAIN: image.build コマンド
+  BODY: |
+    // コマンド実行DIRに Dockerfile があること
+    // -t/--tag はimageのタグ名(小文字のみ)
+    // . ディレクトリはCOPY先Root指定
+    docker image build -t my-ubuntu .
 #
 - KEY: docker.image.more
   EXPLAIN: image コマンド2
@@ -23,8 +31,9 @@
 - KEY: docker.container
   EXPLAIN: container コマンド1
   BODY: |
-    docker container run -d --name <myCont> -p 80:80 <myImage> //作成＆起動
-    docker container run --it --name <myCont> -p 80:80 <myImage> //作成＆起動
+    docker container run -d --name <myCont> -p 80:80 <myImage>  //作成＆起動 WEB Daemon
+    docker container run -it --name <myCont> -p 80:80 <myImage> //作成＆起動 WEB
+    docker container run -it --name <myCont> <myImage>          //作成＆起動 shell起動
     docker container exec -it <myCont> <command(bash,...)> //起動済コンテナのコマンド実行
     --detatch(-d)
     --name <名>
@@ -33,8 +42,26 @@
     --interactive(-i)
     --tty(-t)
 #
+- KEY: docker.exec
+  EXPLAIN: 起動中のContainerに入る/実行のみ
+  BODY: |
+    docker container exec -it <myCont> bash //bashを実行可能にする
+    docker container exec -it <myCont> <command> //コマンド実行&終了
+#
+- KEY: docker.run
+  EXPLAIN: runで作成&起動
+  BODY: |
+    docker container run -d --name <myCont> -p 80:80 <myImage>
+    docker container run --it --name <myCont> -p 80:80 <myImage>
+    -d/--detatch (daemonとして実行)
+    -i/--interactive (daemonではなくコンテナ内部に入いる)
+    -t/--tty (shellを連結してコマンド実行状態にする)
+    --name <タグ名> (image作成時のタグ名)
+    -p/--publish <外部>:<内部> (8000:3000) ポートforward(ブラウザ:8000)
+    --rm (停止後 container 削除)
+#
 - KEY: docker.container.process
-  EXPLAIN: container コマンド2
+  EXPLAIN: container コマンド(プロセス)
   BODY: |
     docker container create <myCont[:TAG]> //作成のみ
     docker container start <myCont> //起動
@@ -43,12 +70,12 @@
     docker container kill <myCont> //強制停止
     docker container restart <myCont> //再起動
     docker container top <myCont> //プロセス表示
-    docker container attach <myCont> //StdInput/Output接続
+    docker container attach <myCont> //内部接続(CMDでshell指定しないと接続不可)
     docker container rm [-f] <myCont> //削除(-f 強制)
     docker container prune //未使用全削除
 
-- KEY: docker.container.other
-  EXPLAIN: container コマンド3
+- KEY: docker.container.Utilities
+  EXPLAIN: container コマンド(Utilities)
   BODY: |
     docker container inspect <myCont> //詳細表示
     docker container logs <myCont> //ログ表示
@@ -62,7 +89,7 @@
     docker container wait <myCont> //1以上のコンテナが停止まで待機
 #
 - KEY: docker.container.fileCopy
-  EXPLAIN: container コマンド4
+  EXPLAIN: container コマンド(fileCopy)
   BODY: |
     docker container cp <PATH/LOCAL_FILE> <myCont>:<PATH>
     //ファイルコピー(local2Cont)
@@ -70,7 +97,7 @@
     //ファイルコピー(Cont2local)
 #
 - KEY: docker.container.network
-  EXPLAIN: network コマンド1
+  EXPLAIN: network コマンド
   BODY: |
     docker network create --subnet <MASK> <myNetwork> //作成
     docker network connect <myNetwork> <myCont> //接続
@@ -79,5 +106,45 @@
     docker network inspect <myNetwork> //詳細表示
     docker network rm <myNetwork> //削除
     docker network prune //未使用全削除
-
 #
+- KEY: docker.Dockerfile.basicCommand
+  EXPLAIN: Dockerfile
+  BODY: |
+    FROM <IMAGE>                  // ベースイメージ指定
+    LABEL title="sampleImage"\    // ラベル(タイトル,バージョン,詳細)
+      version="1.0"\
+      description="Sample"
+    ENV 変数=値                    // 環境変数
+    ARG 変数=値                    // Dockerfile内でのみ ${変数} で呼び出し可能
+    WORKDIR <CONT_PATH>           // コンテナのPATH移動
+    RUN <LINUX_COMMAND>	\         // 任意のコマンド実行(レイヤー作成)
+      && <LINUX_COMMAND>           
+    SHELL ["COMMAND", "PARAMS"]   // shell種類指定
+    COPY <HOST_PATH> <CONT_PATH>  // ファイル/DIRコピー(相対PATH:外部は build -f で指定) 
+    ADD <URL> [<CONT_PATH>]       // リモートファイルダウンロード/tar展開
+    VOLUME <CONT_PATH>            // マウント予定PATH(run -v CONT_PATH)
+    EXPOSE <PORT_NUMBER>          // 外部公開PORT(実際には run -p での記述が必要)
+    ENTRYPOINT ["COMMAND"]        // 優先度高い起動時実行コマンド
+    CMD ["COMMAND", "PARAM", ...] // コンテナ起動時の実行命令
+#
+- KEY: docker.Dockerfile.FROM
+  EXPLAIN: FROMについて
+  BODY: |
+    FROM ubuntu:20.04
+#
+- KEY: docker.Dockerfile.RUN
+  EXPLAIN: RUNについて
+  BODY: |
+    RUN apt update
+    RUN apt install -y vim
+#
+- KEY: docker.Dockerfile.COPY
+  EXPLAIN: COPYについて
+  BODY: |
+    COPY HOST IMAGE(LINUX DIR)
+    COPY .vimrc /root/.vimrc
+#
+- KEY: docker.Dockerfile.CMD
+  EXPLAIN: CMDについて
+  BODY: |
+    CMD date +"%Y/%m/%d %H:%M:%S ( UTC )"

@@ -1,0 +1,623 @@
+---
+#-------------------------------
+# Linux
+#-------------------------------
+
+#-------------------------------
+# Distribution
+#-------------------------------
+- KEY: linux.distribution
+  EXPLAIN: ディストリビューション
+  BODY: |
+    debian(debian_xxx)
+      Ubuntu(debian_xxx & lsb-xxx:700MB)
+        apt(apt-get)
+        apt list              # インストール済リスト
+        apt update            # パッケージリスト更新
+        apt search <キー>     # パッケージ検索
+        apt upgrade <package> # インストール済パッケージのアップデート
+        apt install -y wget   # パッケージのインストール
+        apt remove <package>  # Package削除
+    BusyBox
+      Apline(100MB)
+        /bin/ash
+        apk info             # インストール済リスト
+        apk update           # パッケージリスト更新
+        apk search <キー>    # パッケージ検索
+        apk add bash         # インストール bash
+        apk add vim          # インストール vim
+        apk del <package>    # Package削除
+        /var/cache/apk       # 以下にパッケージcache
+    fedora(fedora-xxx)
+      redhat(redhat-xxx/oracle-xxx)
+      Centos(4GB)
+        dnf(yumの後継, rpm)
+        dnf install <package> # パッケージのインストール: 
+        dnf update            # パッケージのアップデート: 
+        dnf remove <package>  # パッケージの削除: 
+        dnf search <キー>     # パッケージの検索: 
+        yum廃止
+        yum info <package>    # パッケージ情報
+        yum install httpd     # インストール apache
+      vine(vine-xxx)          # 日本のdistribution
+    arch(arch-xxx)
+    SuSE(SuSE-xxx)
+    TurboLinux(turbolinux)
+    mandriva(mandriva-xxx)
+    gentoo(gentoo-xxx)
+    BSD
+      OSX(Apple)
+        homebrew
+
+#-------------------------------
+# Directory
+#-------------------------------
+
+- KEY: linux.directory
+  EXPLAIN: Linuxディレクトリ
+  BODY: |
+    /         # ルートディレクトリ
+    /bin      # Binaries(基本コマンド保存)
+    /boot     # システム起動ファイル
+    /cmd      # (任意)特定コマンド
+    /dev      # device(ハードウェア機器)
+    /etc      # システム設定ファイル
+    /home     # ユーザーホーム
+    /lib      # カーネル・各種ライブラリ(/bin/,/sbin/関連)
+    /media    # OS用自動マウントポイント(DVD,CD-ROM,USB)
+    /tmp      # 臨時データ
+    /mnt      # 取り外し可能な機器(ユーザー用)
+    /sbin     # ルートユーザ用Binaries(システム管理)
+    /opt      # アプリケーションインストール先
+    /proc     # カーネル関連情報保存(メモリ上に存在する仮想ファイル)
+    /root     # rootアカウントのホーム
+    /sys      # カーネル情報、システム全般(起動ごとに作成)
+    /usr      # rootが入れる全ユーザー用アプリ(win Program and Files)
+    /var      # Variable(システム運用ファイル一時保存: ログ,キャッシュ)
+
+#-------------------------------
+# User
+#-------------------------------
+- KEY: linux.user.password
+  EXPLAIN: ユーザ & パスワード
+  BODY: |
+    w                # ログインユーザの作業内容
+    w -sf            # 省略表示
+    who              # ログインユーザ
+    who am i         # 自身の状況
+    --------------------------------------------------------
+    last             # ログイン履歴
+    --------------------------------------------------------
+    passwd           # 自身のパスワード変更
+    passwd <user>    # <user>のパスワード変更
+    su -             # スーパーユーザへログイン
+    su - <user>      # <user>へログイン
+    id <user>                           # ユーザ情報
+    > uid=516(hoge) gid=516(hoge) groups=516(hoge)
+    id root
+    > uid=0(root) gid=0(root) groups=0(root)
+    > 1(bin) 2(daemon) 3(sys) 4(adm) 6(disk)
+
+- KEY: linux.user.group
+  EXPLAIN: ユーザ & グループ管理
+  BODY: |
+    useradd <user>                      # ユーザ追加
+    userdel <user>                      # ユーザ削除
+    userdel -r <user>                   # ホームDirも同時削除
+    usermod -e 12/31/00 <user>          # 有効期限変更
+    usermod -d /home/<user> -m <user>   # ホームDir変更
+    usermod -l <from_user> <to_user>    # ユーザ名変更
+    usermod -G <group> <user>           # グループ変更(ユーザ指定)
+    --------------------------------------------------------
+    groupadd <group>                    # グループ追加
+    groupdel <group>                    # グループ削除
+    groupmod -n <from_group> <to_gropu> # ユーザ名変更
+    groups <user>                       # グループリスト
+
+#-------------------------------
+# 日付・時間
+#-------------------------------
+- KEY: linux.date.time
+  EXPLAIN: 日付と時間
+  BODY: |
+    date --set="2003/10/8 16:20"     # カーネル日付時刻設定
+    hwclock --systohc                # CMOS日付時刻設定
+    date                             # 現在の日付時刻表示
+    cal                              # カレンダー(今月)
+    cal <year>                       # カレンダー(指定年)
+    cal <month> <year>               # カレンダー(指定年月)
+    ntpdate <TimeServerHost/IP>      # タイムサーバーによる時刻設定
+    hwclock --systohc                # 同上
+
+#-------------------------------
+# FD(file/directory) Permission
+#-------------------------------
+- KEY: linux.fd.permission
+  EXPLAIN: permission
+  BODY: |
+    1文字目 : -(ファイル) d(ディレクトリ) l(シンボリック・リンク)
+    2文字目~: 2-4(user) 5-7(group) 8-10(他user)
+    r(読) w(書) x(実行) -(権限なし)
+    t(sticky:削除変更制限) s(セット:実行権限委譲)
+    ---------------------------------------------------------
+    -rw-r--r--      # F: 読(userのみ書)
+    -rwx------      # F: 実行(userのみアクセス)
+    -rwxrwxrwx      # F: 全user全可能
+    -rwxrwxr-x      # F: user+groupのみ書
+    -rwsrwxr-x      # F: user権限実行
+    -rwxrwsr-x      # F: group権限実行
+    -rwTrw-rw-      # F: 全user書(削除/名変更はuserのみ)
+    drwxr-xr-x      # D: 他は書不可
+    drwx------      # D: プライベート
+    drwxrwxrwt      # D: 全userが書/変更(削除/名変更userのみ)
+    lrwxrwxrwx      # L: リンク(パーミッションはリンク元継承)
+
+- KEY: linux.fd.permission.change
+  EXPLAIN: permission 変更
+  BODY: |
+    a(all) u(user) g(group)
+    ---------------------------------------------------------
+    chmod a+w <file>        # all書
+    chmod a+x <file>        # all実行
+    chmod 777 <file>        # all全権
+    chmod 755 <file>        # all実行(user以外の書不可)
+    chmod 644 <file>        # all読(user以外の書不可)
+    chmod a-w,a-x <file>    # 読専
+    chmod u+s <file>        # userSet(他実行時user権限)
+    chmod g+s <file>        # groupSet(他実行時group権限)
+    ---------------------------------------------------------
+    chmod 700 <dir>         # プライベート
+    chmod 755 <dir>         # 公開(user以外の書不可)
+    chmod 777 <dir>         # ALLフリー
+    chmod 1777 <dir>        # スティッキ・ビット(userのみ削除/名変更)
+    chmod 000 <file>        # 全アクセス無効
+
+- KEY: linux.fd.owner.group
+  EXPLAIN: 所有者グループ変更
+  BODY: |
+    chown <user> <file>          # fileの所有者変更
+    chown <user>:<group> <file>  # fileの所有者/グループ変更
+    chown -h <user> <file>       # シンボリック先
+    groups                       # 自分の所属グループ
+    chgrp <group> <file>         # グループ変更
+    chgrp -R <group> <dir>       # dir内全グループ変更
+
+#-------------------------------
+# /etc/
+#-------------------------------
+- KEY: linux.etc.password
+  EXPLAIN: ユーザリスト
+  BODY: |
+    # more /etc/passwd
+    ----------------------------------------------
+    名:暗号化パスワード:UID:GID:fillName:home:shell
+    ----------------------------------------------
+    root:x:0:0:root:/root:/bin/bash
+    daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+    bin:x:2:2:bin:/bin:/usr/sbin/nologin
+    sys:x:3:3:sys:/dev:/usr/sbin/nologin
+
+#-------------------------------
+# Shell
+#-------------------------------
+- KEY: linux.shell
+  EXPLAIN: shell関連
+  BODY: |
+    echo $0          # 現在のShell /usr/bin/bash
+
+- KEY: linux.shell.bash
+  EXPLAIN: bash 設定
+  BODY: |
+    ~/.bash_profile   # ログイン時に1回実行
+    ~/.bashrc         # shell起動時に1回実行
+    source ~/.bashrc  # 現shellですぐに有効化
+
+- KEY: linux.command.alias
+  EXPLAIN: alias作成・削除
+  BODY: |
+    alias ll='ls -al' # Alias作成
+    unalias ll
+
+- KEY: linux.command.which
+  EXPLAIN: コマンドbin位置
+  BODY: |
+    which <command>
+    > /usr/bin/<command>
+
+- KEY: linux.command.pipe
+  EXPLAIN: 連結(|,<,<<,>>,>)
+  BODY: |
+    ls -l | more               # コマンド結果を more に連結
+    grep "hoge" a.log | less   # 検索結果を less に連結
+    sort target > result       # sort結果をファイル出力(上書)
+    grep "hoge" a.log >> 1.log # ファイルに追記
+    grep "hoge" < a.log        # ファイルから入力
+    cat <<END > result         # 終了文字指定で結果連結
+    > Hello!!
+    > Happy Linux
+    > END                        # 終了---_END_が入力終端文字列)
+
+- KEY: linux.command.utils
+  EXPLAIN: time.nice
+  BODY: |
+    time <command>              # 実行時間の計測
+      time find <file名>
+      real    0m0.002s
+      user    0m0.001s
+      sys     0m0.000s
+    ----------------------------
+    nice -n -10 grep "A" <file> > <out>  # 実行優先度(減にはroot権限)
+    -n [nice値] -20(最高) ~ 10(default) ~ 19(最低)
+    renice -3 12566             # PIDで実行優先度を最定義
+
+#-------------------------------
+# Path
+#-------------------------------
+- KEY: linux.path
+  EXPLAIN: PATH関連
+  BODY: |
+    echo $PATH       # PATH表示
+    /usr/local/bin   # PATHを通す
+    PATH=/usr/local/bin:$PATH
+
+#-------------------------------
+# System
+#-------------------------------
+- KEY: linux.system
+  EXPLAIN: system関連
+  BODY: |
+    shutdown -r now     # 再起動(FSチェック)
+    reboot              # 再起動(FSチェック)
+    fastboot            # 再起動(FSチェック省略)
+    shutdown -h now     # シャットダウン(FSチェック)
+    halt                # シャットダウン(FSチェック)
+    fasthalt            # シャットダウン(FSチェック省略)
+    shutdown -h 0:0     # 0時にシャットダウン
+
+#-------------------------------
+# System Job & Kill
+#-------------------------------
+- KEY: linux.system.job
+  EXPLAIN: ジョブ(jobs,fg,bg,top,at)
+  BODY: |
+    vi a.txt &               # BackGround(bg)で実行
+      [1] 1595
+      [1]+  Stopped  vi a.txt  # [+]付はCurrent Job
+    jobs                     # Jobリスト表示
+      [1]+  Stopped  vi a.txt  # [+]付はCurrent Job
+    fg                       # Current Job を戻す
+    fg 1                     # job 1 をfgに戻す
+    fg %1                    # job 1 をfgに戻す
+    bg %1                    # job 1 をbgに回す
+      Keyboard: ctrl+z       # 実行jobをbgに回す
+    -------------------------------------------
+    top                      # 実行中のプロセス(リアルタイム表示)
+    -------------------------------------------
+    <command> 	             # ctrl+c:中断, terminalEnd:中断
+    <command> &              # ctrl+c:-,    terminalEnd:中断
+    nohup <command> 	       # ctrl+c:中断, terminalEnd:継続
+    nohup <command> & 	     # ctrl+c:-,    terminalEnd:継続
+
+- KEY: linux.system.ps
+  EXPLAIN: 停止・終了(stop,kill)
+  BODY: |
+    ps -e             # プロセス表示 (-e 全プロセス)
+       PID  PPID PGID WINPID  TTY  UID    STIME    COMMAND
+       1428    1 1428  11348 cons0 197610 12:23:04 /usr/bin/bash
+    S  1885 1428 1885  11732 cons0 197610 17:33:09 /usr/bin/vim
+       1891 1428 1891  18504 cons0 197610 17:33:11 /usr/bin/ps
+    stop              # Current Jon を一時停止(Bash?)
+    stop 1            # job 1 を一時停止(Bash?)
+    kill              # Current Jon を終了
+    kill %1           # job 1 を終了
+    kill -HUP %1      # job 1 を再起動(設定適用など)
+    kill -STOP <PID>  # プロセス<PID> を停止
+    kill -KILL <PID>  # プロセス<PID> を終了
+    killall -HUP <COMMAND> # プロセス<COMMAND> を終了(root)
+
+- KEY: linux.system.cron
+  EXPLAIN: 定期実行
+  BODY: |
+    crontab -e          # 設定ファイル crontab 編集
+    ---------------------------------------
+    min hour day month week command
+    ---------------------------------------
+    00 01 * * * /usr/local/sbin/logrotate
+
+#-------------------------------
+# File & Directory
+#-------------------------------
+- KEY: linux.fd.ls.cd
+  EXPLAIN: ファイルリスト
+  BODY: |
+    ls          # カレント・ディレクトリ
+    ls <dir>    # 指定したディレクトリ
+    ls -a       # 隠しファイル
+    ls -l       # 詳細
+    ls -t       # 更新日時順
+    ls -F       # 種類(@:シンボリックリンク, /:ディレクトリ,*:実行可能)
+    ls -R       # サブディレクトリ
+
+- KEY: linux.fd.file
+  EXPLAIN: ファイル
+  BODY: |
+    touch <file>            # 更新時刻の更新(なければ作成)
+    mktemp <file.XXX>       # tempファイル作成(乱数, X大文字, MIN3)
+    cp <file> <dir/>        # コピー(-i:上書き警告, -p:属性維持, -u:更新比較コピー)
+    cp <file> <file>        # save as
+    cp -r <dir/> <dir/>     # ディレクトリ再帰コピー
+    cp -a <dir/> <dir/>     # ディレクトリ再帰コピー(属性維持)
+    rm <"file name">        # ファイル削除 (./-1文字目がハイフン)
+    rm -rf <dir>            # ディレクトリ内ファイル全削除(-f:強制)
+    mv <file> <file>        # ファイル名変更
+    mv <file> <dir存在/>     # ファイル移動 (<file>複数可, -b:同名には~付)
+    mv <dir/> <dir存在/>     # ファイル移動 (ディレクトリごと -v:移動中表示)
+    mv <dir??/> <dir存在/>   # ファイル移動 (??は数値01,02,03,...)
+    mv <dir/> <dir非存在/>   # ディレクトリ名変更
+
+- KEY: linux.fd.directory
+  EXPLAIN: ディレクトリ
+  BODY: |
+    pwd                      # カレントPATH
+    cd <dir>                 # ディレクリ移動
+    cd /                     # Rootディレクリに移動
+    cd ~                     # Homeディレクリに移動
+    cd ..                    # 親ディレクリに移動
+    pushd <dir>              # 現ディレクトリを保存しつつ、指定ディレクトリに移動
+    popd                     # 保存ディレクトに移動
+    dirs                     # 保存ディレクトリスト
+    du                       # 現ディレクトのサイズ
+    du -s <dir>              # 指定ディレクトのサイズ(-s:合計のみ)
+    mkdir <dir> [<dir>]      # 作成(複数可)
+    mkdir -m 755 <dir>       # 作成(複数可 -m:パーミッション付き)
+    rmdir <dir> [<dir>]      # 削除(複数可)
+    rmdir -rfp <dir>         # 削除(-r:再帰 -f:強制 -p:親も削除)
+
+- KEY: linux.fd.link
+  EXPLAIN: リンク
+  BODY: |
+    ln -s ~/moto.txt ./saki/   #シンボリックリンク(ファイル)
+    ln -s /home/src ~/         #シンボリックリンク(ディレクトリ)
+    ln /home/src ~/            #ハードリンク(ディレクトリ)
+
+- KEY: linux.fd.loop
+  EXPLAIN: 一括処理
+  BODY: |
+    for nm in *              # Loop 開始(変数 nm)
+    > do head -n 1 $nm       # 任意のコマンド
+    > done                   # Loop END
+
+- KEY: linux.fd.split.cat
+  EXPLAIN: 分割結合
+  BODY: |
+    split -l <行> <file> <分割file>.<aa~>     # file分割(行)
+    split -d <bytek> <file> <分割file>.<aa~>  # file分割(byte)
+    cat <分割file>.?? > <結合file>             # file結合
+
+- KEY: linux.fd.df
+  EXPLAIN: ディスク容量
+  BODY: |
+    df
+    Filesystem  1k-blocks      Used Available Use% Mounted on
+    /dev/hda2     2732745   1300968   1290456  50% /
+    /dev/hdb1      998013     23348    923108   2% /usr/local
+
+#-------------------------------
+# TEXT
+#-------------------------------
+- KEY: linux.text.echo.more.head
+  EXPLAIN: 表示
+  BODY: |
+    echo this           # 文字列出力
+    echo -n > <file>    # 空ファイル作成
+    echo \              # 入力継続
+    > this
+    this
+    -----------------------------------------
+    cat <file>          # file内容表示
+    more <file>         # file内容表示
+    less <file>         # file内容表示(カーソル)
+    head -n 3 <file>    # fileの最初の指定行内容
+    tail -n 3 -f <file> # fileの最後の指定行内容(-f 更新)
+
+- KEY: linux.text.utilities
+  EXPLAIN: 差分、結合、カウント
+  BODY: |
+    diff <file1> <file2>                 # 2ファイル差分
+    diff -Naru <dir1> <dir2> > dir.diff  # ディテクトリ差分
+    patch < dir.diff                     # パッチ適用
+    cat <file1> <file2> > <file>         # ファイル結合
+    cat <file[1-3]> > <file>             # 連番ファイル結合
+    -----------------------------------------------------
+    paste file1 file2 > output           # ファイル行単位結合
+    [file1]     [file2]  [output]
+    2003/10/1   Orange   2003/10/1 Orange
+    2003/10/2   Apple    2003/10/2 Apple
+    -----------------------------------------------------
+    wc <file>                     # テキスト情報
+    215 1132 8052 <file>          # 行数，単語数，バイト数
+    wc -c <file>                  # バイト数
+    wc -w <file>                  # 単語数
+    wc -l <file>                  # 行数
+
+- KEY: linux.text.sort
+  EXPLAIN: ソート
+  BODY: |
+    sort <file>                 # 結果出力
+    sort -r <file>              # 逆ソート
+    sort <file> > <result>      # 結果をファイル保存
+    sort -o <result> <file>     # 同上
+    sort -n <file>              # 行頭に+-がある場合は数値扱い
+    sort -f <file>              # Case-In-sensitive
+    sort -b <file>              # カラム値の先頭Trim
+    sort -t , -k 3 <file.csv>   # -t:セパレータ, -k:カラムindex(1~)
+    --------------------------------------------------------------
+    sort <file1> > <result1>    # マージソートの準備ソート1
+    sort <file2> > <result2>    # マージソートの準備ソート2
+    sort -mu <result[1-2]> > <result> # -m:マージソート, -u:重複圧縮
+
+- KEY: linux.text.code
+  EXPLAIN: コード(改行・文字)変換
+  BODY: |
+    nkf -j -Lu <file> > <file>      # 文字コード変換
+      -j: JIS(ISO-2022-JP)
+      -e: EUC
+      -s: シフトJIS
+      -w: UTF-8
+      -Lu: LF      # Linux改行コード
+      -Lw: CR+LF   # Windows改行コード
+      -Lm: CR      # Mac改行コード
+
+- KEY: linux.text.replace
+  EXPLAIN: 置換(dd,expand,tr)
+  BODY: |
+    dd if=<file> of=<file> conv=lcase
+      if=<file>: 入力ファイル
+      of=<file>: 出力ファイル
+      conv=lcase: 大文字->小文字に変換
+      conv=ucase: 小文字->大文字に変換
+    ------------------------------------
+    expand <tab file> > <space file>       # タブをSpaceに変換
+    unexpand -a <space file> > <tab file>  # Spaceをタブに変換
+    ------------------------------------
+    cat file | tr A-Z a-z > <file>         # 全大文字を小文字に変換
+    cat file | tr "L" "l"                  #「L->l」に変換
+    cat file | tr "LNK" "lnk"              #「L->l,N->n,K->k」に変換
+    cat file | tr [:punct:] , > <file>     # 全記号をカンマ(,)に変更
+    cat file | tr "[:upper:]" "[:lower:]"  # 小文字に変換
+
+- KEY: linux.text.replace.sed
+  EXPLAIN: 置換(sed)
+  BODY: |
+    sed -e "s/KEY_FIND/KEY_REPLACE/g" <file>
+    -----------------------------------------
+    A 1 a            具体文字
+    .                何らかの１文字
+    [AHZ]            どれかの文字に一致
+    [0-9] \d         半角数字
+    [a-z]            小文字の半角英字
+    [A-Z]            大文字の半角英字
+    [0-9a-zA-Z] \w   半角英数字
+    \s               改行文字を含んだ空白文字
+    *                0回以上の繰り返し
+    +                1回以上の繰り返し
+    ?                0回または1回の繰り返し
+    {1,3}            1〜3回の繰り返し
+    {3,}             3回以上の繰り返し
+    {,8}             8回以内の繰り返し
+    {6}              6回ちょうどの繰り返し
+    ^                行頭を表す
+    $                行末を表す
+
+- KEY: linux.text.extract
+  EXPLAIN: 抽出(awk,cut)
+  BODY: |
+    awk '{print $3}' <file>           # スペース区切りの3番目抽出(1~)
+    awk -F':' '{print $2,$3}' <file>  # コロン区切りの2番目,3番目抽出
+    cat <file> | grep abc | sed s/aaa/bbb/g | awk '{print $2, $3}'
+    ------------------------------------------------------------
+    cut -f 3 <tsv_file>               # デフォデリミタ(tab)区分3番目抽出表示
+    cut -c 14- <file> > <result>      # 14文字以後をファイルに抽出
+    cut -c 14-20 <file> > <result>    # 14-20文字をファイルに抽出
+    cut -d ' ' -f 3 <file>            # デリミタ区分3番目抽出して表示
+
+#-------------------------------
+# 検索
+#-------------------------------
+- KEY: linux.text.find.grep
+  EXPLAIN: grep検索
+  BODY: |
+    grep REG FILES          #正規表現を用いてファイル内の文言を検索
+    grep this *.txt         #文字列「this」を指定ファイルから探す
+    file2.txt:this is my file 
+    sample.txt:test file like this
+
+- KEY: linux.text.find.locate
+  EXPLAIN: ファイル位置検索
+  BODY: |
+    locate <file_name>        # Index検索(updatedbによって定期更新必要)
+    find <dir> -name <キー>   # 超スロー(/では実行しないように)
+    find <dir> -size +999k    # 999KB以上のファイル
+    find <dir> -perm -a+w     # Permissionで検索
+    find <dir> -type f        # -f:ファイル, -d:ディレクトリごと
+    find <dir> -mtime 3       # 3日前に更新
+    ... -fprint result        # 結果をファイルに出力
+
+- KEY: linux.text.find.wildcard
+  EXPLAIN: ワイルドカード
+  BODY: |
+    ?     任意の1文字---ドット・ファイルのドット"."除外)
+    *     0文字以上の文字列---ドット・ファイルのドット"."除外)
+    []    []内の任意の１文字---ハイフン"-"で文字範囲を指定)
+    {}    {}内の任意の文字列---文字列はカンマ","で複数列挙)
+    -----------------------------------------
+    [0-9]        数字
+    [a-z]        小文字アルファベット
+    [A-Z]        大文字アルファベット
+    [0-9a-zA-Z]  数字，アルファベット
+    -----------------------------------------
+    rm *                # カレントDIR内の全ファイル削除
+    mv ????? ~/         # 名前が5文字のファイルをホームDirに移動
+    ls -l [a-zA-Z]*     # 名前の先頭がalphabetのファイル一覧
+    cp *.{rpm,gz} src/  # 拡張子rpm,gzのファイルを src/ にコピー
+
+#-------------------------------
+# ドキュメント編集
+#-------------------------------
+- KEY: linux.editor.vi
+  EXPLAIN: コマンド実行
+  BODY: |
+    vi <file>      # <file>編集
+    Esc:           # コマンドモード
+    :a             # 編集モード
+    ZZ             # 保存して終了
+    :w             # 保存
+    :w <file>      # 別名で保存
+    :r <file>      # file読み込み
+    :e <file>      # 新規ファイルの編集開始
+    :q             # 終了
+    / <Reg>        # 検索モード
+
+- KEY: linux.editor.nano
+  EXPLAIN: コマンド実行
+  BODY: |
+    nano <file>    # <file>編集
+
+#-------------------------------
+# Network
+#-------------------------------
+- KEY: linux.network
+  EXPLAIN: ネットワーク
+  BODY: |
+    /etc/init.d/network start    # 接続開始
+    /etc/modules.conf            # interfaceを確認
+    /sbin/ifconfig eth0 up       # interface up
+    /etc/init.d/network stop     # 接続終了
+    /sbin/ifconfig eth0 down     # interface down
+    ---------------------------------------------
+    ping                # network 稼働確認
+    traceroute          # 接続経路
+    route               # network経路情報
+
+#-------------------------------
+# 圧縮
+#-------------------------------
+- KEY: linux.zip
+  EXPLAIN: 圧縮
+  BODY: |
+  zip <name>.zip <file>        # 圧縮単一ファイル
+  zip -r <name>.zip <dir>      # ディレクトリごと圧縮
+  unzip <name>.zip             # 解凍
+  --------------------------------------------------------
+  gzip <file>                  # 圧縮(元ファイル削除)
+  gzip -c <file> > <name>.gz   # 圧縮(元ファイル残す)
+  gzip -r <dir>                # 圧縮(サブdir内を全部圧縮)
+  --------------------------------------------------------
+  gunzip <name>.gz             # 解凍(圧縮ファイル削除)
+  gunzip -c <name>.gz > <name> # 解凍(圧縮ファイル残す)
+  gzip -d <name>.gz            # 解凍(圧縮ファイル削除)
+  gzip -dc <name>.gz > <name>  # 解凍(圧縮ファイル残す)
+  --------------------------------------------------------
+  tar czvf <name>.tar.gz <dir>          # 圧縮(ディレクトリ)
+  tar czvf <name>.tar.gz <file> <file>  # 圧縮(複数ファイル)
+  tar xzvf <name>.tar.gz                # 解凍(ファイル残す)
