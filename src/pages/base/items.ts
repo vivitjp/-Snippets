@@ -29,14 +29,17 @@ export const menuItems: menuByCategories[] = [
       {
         name: "JavaScript(js)",
         fileName: "JavaScript/JavaScript",
-      },
-      {
-        name: "JavaScript(非同期)(js)",
-        fileName: "JavaScript/JavaScriptAsync",
+        codeKeyType: "JSTS",
       },
       {
         name: "TypeScript(ts)",
         fileName: "JavaScript/TypeScript",
+        codeKeyType: "JSTS",
+      },
+      {
+        name: "非同期(js)",
+        fileName: "JavaScript/JavaScriptAsync",
+        codeKeyType: "JSTS",
       },
     ],
   },
@@ -46,14 +49,17 @@ export const menuItems: menuByCategories[] = [
       {
         name: "React(qw)",
         fileName: "React/React",
+        codeKeyType: "JSTS",
       },
       {
-        name: "React Component(qw)",
+        name: "Component(qw)",
         fileName: "React/ReactComponent",
+        codeKeyType: "JSTS",
       },
       {
-        name: "React Routing(qw)",
+        name: "Routing(qw)",
         fileName: "React/ReactRouting",
+        codeKeyType: "JSTS",
       },
     ],
   },
@@ -63,22 +69,73 @@ export const menuItems: menuByCategories[] = [
       {
         name: "Fetch/State(pk)",
         fileName: "ReactPackage/ReactFetchState",
+        codeKeyType: "JSTS",
       },
       {
         name: "ReactHookForm(pk)",
         fileName: "ReactPackage/ReactHookForm",
+        codeKeyType: "JSTS",
       },
       {
         name: "Storybook(v6)(pk)",
         fileName: "ReactPackage/Storybook",
+        codeKeyType: "JSTS",
       },
       {
         name: "StyledComponent(pk)",
         fileName: "ReactPackage/StyledCompo",
+        codeKeyType: "JSTS",
       },
       {
         name: "zustand(pk)",
         fileName: "ReactPackage/zustand",
+        codeKeyType: "JSTS",
+      },
+    ],
+  },
+  {
+    category: "OS & Docker",
+    items: [
+      {
+        name: "docker(docker)",
+        fileName: "OS/Docker",
+        codeKeyType: "Docker",
+      },
+      {
+        name: "Linux(linux)",
+        fileName: "OS/LinuxCommand",
+      },
+    ],
+  },
+  {
+    category: "Database",
+    items: [
+      {
+        name: "mySQL(mysql)",
+        fileName: "database/mySql",
+      },
+    ],
+  },
+  {
+    category: "Project管理",
+    items: [
+      {
+        name: "Git",
+        fileName: "Project/Git",
+        codeKeyType: "Git",
+      },
+      {
+        name: "Lint(lint)",
+        fileName: "Project/Lint",
+      },
+    ],
+  },
+  {
+    category: "テスト",
+    items: [
+      {
+        name: "jest",
+        fileName: "Test/Jest",
       },
     ],
   },
@@ -90,22 +147,8 @@ export const menuItems: menuByCategories[] = [
         fileName: "WebAPI/SVG",
       },
       {
-        name: "windows(win)",
+        name: "Windows(win)",
         fileName: "WebAPI/windows",
-      },
-    ],
-  },
-  {
-    category: "Project管理",
-    items: [
-      {
-        name: "docker(docker)",
-        fileName: "Project/Docker",
-        codeKeyType: "Docker",
-      },
-      {
-        name: "Lint(lint)",
-        fileName: "Project/Lint",
       },
     ],
   },

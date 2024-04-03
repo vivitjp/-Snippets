@@ -215,9 +215,11 @@
       methodXxx()
     }, [])
 
-- KEY: qw.useEffect.asyncAwaitV18
+- KEY: qw.useEffect.asyncAwait_v18
   EXPLAIN: useEffect(非同期v18)
   BODY: |
+    //Develop環境での二重コールを防止する
+    //Build後には意味なし
     useEffect(() => {
       let isRead = false
       const methodXxx = async () => {
@@ -402,14 +404,21 @@
 # Custom Hooks
 #-------------------------------
 - KEY: qw.Hooks.custom
-  EXPLAIN: カスタムフック
+  EXPLAIN: カスタムHook
   BODY: |
+    // いわゆる React版 Closure
     import { useCallback, useState } from "react"
 
-    export const useXXXXX = () => {
-      const [value, setValue] = useState<string>("")
+    export type UseXXX<T> = {
+      init: T
+    }
 
-      const method = useCallback((val: string) => {
+    //命名規則: useXXX
+    export const useXXX = <T,>({ init }: UseXXX<T>) => {
+      //ステート
+      const [value, setValue] = useState<typeof init>(init)
+      //メソッド
+      const method = useCallback((val: typeof init) => {
         setValue(val)
       }, [])
 
@@ -421,38 +430,20 @@
       return { method, value, JsxCompo }
     }
 
-- KEY: qw.Hooks.custom.param
-  EXPLAIN: カスタムフック(引数)
-  BODY: |
-    import { useCallback, useState } from "react"
-
-    type Props = {
-      init: string
-    }
-
-    export const useXXXXX = ({ init }: Props) => {
-      const [value, setValue] = useState<string>(init)
-
-      const method = useCallback((val: string) => {
-        setValue(val)
-      }, [])
-
-      return { method, value }
-    }
-
 #-------------------------------
 # Render Hooks
 #-------------------------------
 - KEY: qw.Hooks.renderHooks
-  EXPLAIN: レンダーフックス
+  EXPLAIN: レンダーHooks
   BODY: |
+    // いわゆる React版 Closure で、ステート描画コンポーネントをメソッドに持つ
     type UseChecks = [boolean, () => JSX.Element]
 
     export const useChecks = (labels: readonly string[]): UseChecks => {
       const [checkList, setCheckList] = useState(() => labels.map(() => false))
 
-      const handleCheck = (index: number) => {
-        setCheckList((checks) => checks.map((c, i) => (i === index ? !c : c)))
+      const handleCheck = (target: number) => {
+        setCheckList((checks) => checks.map((_, index: number) => index === target))
       }
 
       const isAllChecked = checkList.every((x) => x)

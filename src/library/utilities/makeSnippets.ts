@@ -14,11 +14,13 @@ export const makeSnippets = async ({
   const jsonData = (await getLocalYmlFile({
     path: file,
   })) as YAMLData[]
-  if (!jsonData) return undefined
+  if (!jsonData) return []
 
   //Preflight 検査
   const keys = new Set<string>()
   const dupKeys: string[] = []
+
+  console.log("jsonDataサイズ", jsonData.length)
 
   jsonData.forEach(({ KEY, EXPLAIN }) => {
     const key = EXPLAIN ?? KEY
@@ -31,18 +33,29 @@ export const makeSnippets = async ({
       keys.add(key)
     }
   })
-  if (dupKeys.length) return dupKeys
+  if (dupKeys.length) {
+    console.log("重複あり")
+    dupKeys.forEach((key, val) => {
+      console.log("K:", key, "V:", val)
+    })
+    return dupKeys
+  }
 
   //Snippets Making
   const returnData: Snippets = {}
-  jsonData.forEach(({ KEY, BODY, EXPLAIN }) => {
-    const key = EXPLAIN ?? KEY
-    returnData[key] = {
-      prefix: KEY,
-      body: BODY?.split("\n"),
-      codeKeyType: codeKeyType,
-    }
-    if (scope) returnData[key].scope = scope
-  })
+  try {
+    jsonData.forEach(({ KEY, BODY, EXPLAIN }) => {
+      const key = EXPLAIN ?? KEY
+      returnData[key] = {
+        prefix: KEY,
+        body: BODY?.split("\n"),
+        codeKeyType: codeKeyType ?? "Unknown",
+      }
+      if (scope) returnData[key].scope = scope
+    })
+    console.log("returnDataサイズ", Object.keys(returnData).length)
+  } catch (error) {
+    console.log("error")
+  }
   return returnData
 }

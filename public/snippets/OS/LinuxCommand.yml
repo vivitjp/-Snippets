@@ -2,7 +2,6 @@
 #-------------------------------
 # Linux
 #-------------------------------
-
 #-------------------------------
 # Distribution
 #-------------------------------
@@ -186,7 +185,7 @@
 # /etc/
 #-------------------------------
 - KEY: linux.etc.password
-  EXPLAIN: ユーザリスト
+  EXPLAIN: パスワード
   BODY: |
     # more /etc/passwd
     ----------------------------------------------
@@ -293,10 +292,10 @@
     -------------------------------------------
     top                      # 実行中のプロセス(リアルタイム表示)
     -------------------------------------------
-    <command> 	             # ctrl+c:中断, terminalEnd:中断
+    <command>                # ctrl+c:中断, terminalEnd:中断
     <command> &              # ctrl+c:-,    terminalEnd:中断
-    nohup <command> 	       # ctrl+c:中断, terminalEnd:継続
-    nohup <command> & 	     # ctrl+c:-,    terminalEnd:継続
+    nohup <command>          # ctrl+c:中断, terminalEnd:継続
+    nohup <command> &        # ctrl+c:-,    terminalEnd:継続
 
 - KEY: linux.system.ps
   EXPLAIN: 停止・終了(stop,kill)
@@ -565,7 +564,7 @@
 # ドキュメント編集
 #-------------------------------
 - KEY: linux.editor.vi
-  EXPLAIN: コマンド実行
+  EXPLAIN: 編集(vi)
   BODY: |
     vi <file>      # <file>編集
     Esc:           # コマンドモード
@@ -577,11 +576,6 @@
     :e <file>      # 新規ファイルの編集開始
     :q             # 終了
     / <Reg>        # 検索モード
-
-- KEY: linux.editor.nano
-  EXPLAIN: コマンド実行
-  BODY: |
-    nano <file>    # <file>編集
 
 #-------------------------------
 # Network
@@ -605,19 +599,19 @@
 - KEY: linux.zip
   EXPLAIN: 圧縮
   BODY: |
-  zip <name>.zip <file>        # 圧縮単一ファイル
-  zip -r <name>.zip <dir>      # ディレクトリごと圧縮
-  unzip <name>.zip             # 解凍
-  --------------------------------------------------------
-  gzip <file>                  # 圧縮(元ファイル削除)
-  gzip -c <file> > <name>.gz   # 圧縮(元ファイル残す)
-  gzip -r <dir>                # 圧縮(サブdir内を全部圧縮)
-  --------------------------------------------------------
-  gunzip <name>.gz             # 解凍(圧縮ファイル削除)
-  gunzip -c <name>.gz > <name> # 解凍(圧縮ファイル残す)
-  gzip -d <name>.gz            # 解凍(圧縮ファイル削除)
-  gzip -dc <name>.gz > <name>  # 解凍(圧縮ファイル残す)
-  --------------------------------------------------------
-  tar czvf <name>.tar.gz <dir>          # 圧縮(ディレクトリ)
-  tar czvf <name>.tar.gz <file> <file>  # 圧縮(複数ファイル)
-  tar xzvf <name>.tar.gz                # 解凍(ファイル残す)
+    zip <name>.zip <file>        # 圧縮単一ファイル
+    zip -r <name>.zip <dir>      # ディレクトリごと圧縮
+    unzip <name>.zip             # 解凍
+    --------------------------------------------------------
+    gzip <file>                  # 圧縮(元ファイル削除)
+    gzip -c <file> > <name>.gz   # 圧縮(元ファイル残す)
+    gzip -r <dir>                # 圧縮(サブdir内を全部圧縮)
+    --------------------------------------------------------
+    gunzip <name>.gz             # 解凍(圧縮ファイル削除)
+    gunzip -c <name>.gz > <name> # 解凍(圧縮ファイル残す)
+    gzip -d <name>.gz            # 解凍(圧縮ファイル削除)
+    gzip -dc <name>.gz > <name>  # 解凍(圧縮ファイル残す)
+    --------------------------------------------------------
+    tar czvf <name>.tar.gz <dir>          # 圧縮(ディレクトリ)
+    tar czvf <name>.tar.gz <file> <file>  # 圧縮(複数ファイル)
+    tar xzvf <name>.tar.gz                # 解凍(ファイル残す)

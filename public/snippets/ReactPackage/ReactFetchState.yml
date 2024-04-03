@@ -8,7 +8,7 @@
 #-------------------------------
 
 - KEY: pk.fetch.swr
-  EXPLAIN: SWRセット
+  EXPLAIN: SWR
   BODY: |
     //yarn add swr
     import useSWR, { Fetcher } from "swr"

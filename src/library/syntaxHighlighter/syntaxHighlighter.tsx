@@ -1,13 +1,18 @@
 import { keysDocker } from "./keys/Docker"
+import { keysGit } from "./keys/Git"
 import { keysJSTS } from "./keys/JSTS"
+import { keysUnknown } from "./keys/Unknown"
 
-export const defaultSnippetsStyle = "JSTS"
-
-const codeKeyType = {
-  JSTS: defaultSnippetsStyle,
+const codeKeys = {
+  JSTS: "JSTS",
   Docker: "Docker",
+  Git: "Git",
+  Unknown: "Unknown",
 } as const
-export type CodeKeyType = (typeof codeKeyType)[keyof typeof codeKeyType]
+
+export const defaultSnippetsStyle = codeKeys.Unknown
+
+export type CodeKeyType = (typeof codeKeys)[keyof typeof codeKeys]
 
 export type KeyDef = {
   color: string
@@ -25,11 +30,17 @@ export const syntaxHighlight = ({
 }: SyntaxHighlight) => {
   let keyDef: KeyDef[] = []
 
-  console.log(codeKeyType)
+  console.log("Syntax Highlight: ", codeKeyType)
 
   switch (codeKeyType) {
-    case "Docker":
+    case codeKeys.Docker:
       keyDef = keysDocker
+      break
+    case codeKeys.Git:
+      keyDef = keysGit
+      break
+    case codeKeys.Unknown:
+      keyDef = keysUnknown
       break
     default:
       keyDef = keysJSTS
@@ -47,7 +58,7 @@ export const syntaxHighlight = ({
     keyDef.forEach(({ color, keys }) => {
       keys.forEach((key) => {
         if (!key) return
-        const re = new RegExp(`\\b${key}\\b`, "g")
+        const re = new RegExp(`\\b${key}\\b`, "ig")
         result = result.replaceAll(
           re,
           `<span class="syntax" style="color:${color}">${key}</span>`
