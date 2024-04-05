@@ -1,5 +1,5 @@
 import { YAMLData, Snippets } from "../../types/type"
-import { CodeKeyType } from "../syntaxHighlighter/syntaxHighlighter"
+import { CodeKeyType } from "../syntaxHighlighter/getKey"
 import { getLocalYmlFile } from "./getLocalYmlFile"
 
 export const makeSnippets = async ({

@@ -1,4 +1,4 @@
-import { CodeKeyType } from "../library/syntaxHighlighter/syntaxHighlighter"
+import { CodeKeyType } from "../library/syntaxHighlighter/getKey"
 
 //------------------
 // 型

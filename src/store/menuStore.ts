@@ -1,5 +1,5 @@
 import { create } from "zustand"
-import { CodeKeyType } from "../library/syntaxHighlighter/syntaxHighlighter"
+import { CodeKeyType } from "../library/syntaxHighlighter/getKey"
 
 export type MenuItemType = {
   name: string

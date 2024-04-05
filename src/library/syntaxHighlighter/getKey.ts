@@ -4,7 +4,7 @@ import { keysJSTS } from "./keys/JSTS"
 import { keysJest } from "./keys/Jest"
 import { keysUnknown } from "./keys/Unknown"
 
-export const codeKeys = {
+const codeKeys = {
   JSTS: "JSTS",
   Docker: "Docker",
   Git: "Git",
@@ -16,7 +16,7 @@ export const defaultSnippetsStyle = codeKeys.Unknown
 
 export type CodeKeyType = (typeof codeKeys)[keyof typeof codeKeys]
 
-export const getKey = (codeKeyType: string) => {
+export const getKey = (codeKeyType: CodeKeyType) => {
   console.log("Syntax Highlight: ", codeKeyType)
 
   switch (codeKeyType) {

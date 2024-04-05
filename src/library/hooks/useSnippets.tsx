@@ -4,14 +4,12 @@ import { copyToClipboard } from "../utilities/copyToClipboard"
 import { makeSnippets } from "../utilities/makeSnippets"
 import { Column } from "../../common/styleDiv"
 import { Button } from "../../common/styleInput"
-import {
-  CodeKeyType,
-  syntaxHighlight,
-} from "../syntaxHighlighter/syntaxHighlighter"
+import { syntaxHighlight } from "../syntaxHighlighter/syntaxHighlighter"
 import { useSelect } from "./useSelect"
 import { DivTitle } from "./components/DivTitle"
 import { DivBody } from "./components/DivBody"
 import { MenuItemType } from "../../store/menuStore"
+import { CodeKeyType } from "../syntaxHighlighter/getKey"
 
 type SnippetsObject = {
   prefix: string

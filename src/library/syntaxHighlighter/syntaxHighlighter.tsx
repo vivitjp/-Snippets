@@ -1,22 +1,11 @@
-// const codeKeys = {
-//   JSTS: "JSTS",
-//   Docker: "Docker",
-//   Git: "Git",
-//   Unknown: "Unknown",
-// } as const
-
 import { CodeKeyType, defaultSnippetsStyle, getKey } from "./getKey"
-
-// export const defaultSnippetsStyle = codeKeys.Unknown
-
-// export type CodeKeyType = (typeof codeKeys)[keyof typeof codeKeys]
 
 export type KeyDef = {
   color: string
   keys: string[]
 }
 
-type SyntaxHighlight = {
+export type SyntaxHighlight = {
   code: string
   codeKeyType?: CodeKeyType | undefined
 }
@@ -26,21 +15,6 @@ export const syntaxHighlight = ({
   codeKeyType = defaultSnippetsStyle,
 }: SyntaxHighlight) => {
   const keyDef: KeyDef[] = getKey(codeKeyType)
-
-  // switch (codeKeyType) {
-  //   case codeKeys.Docker:
-  //     keyDef = keysDocker
-  //     break
-  //   case codeKeys.Git:
-  //     keyDef = keysGit
-  //     break
-  //   case codeKeys.Unknown:
-  //     keyDef = keysUnknown
-  //     break
-  //   default:
-  //     keyDef = keysJSTS
-  //     break
-  // }
 
   const escaped = escapeHtml(code) ?? ""
 
