@@ -136,6 +136,7 @@ export const menuItems: menuByCategories[] = [
       {
         name: "jest",
         fileName: "Test/Jest",
+        codeKeyType: "Jest",
       },
     ],
   },

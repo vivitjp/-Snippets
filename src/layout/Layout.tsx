@@ -29,9 +29,9 @@ export const Layout = () => {
       <Body data-testid="body">
         <MenuNav data-testid="menu">
           <>
-            {menuItems.map((menu) => {
+            {menuItems.map((menu, index) => {
               return (
-                <Group open>
+                <Group open key={index}>
                   <GroupTitle data-testid="group-title">
                     {menu.category}
                   </GroupTitle>

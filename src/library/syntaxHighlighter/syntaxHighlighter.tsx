@@ -1,18 +1,15 @@
-import { keysDocker } from "./keys/Docker"
-import { keysGit } from "./keys/Git"
-import { keysJSTS } from "./keys/JSTS"
-import { keysUnknown } from "./keys/Unknown"
+// const codeKeys = {
+//   JSTS: "JSTS",
+//   Docker: "Docker",
+//   Git: "Git",
+//   Unknown: "Unknown",
+// } as const
 
-const codeKeys = {
-  JSTS: "JSTS",
-  Docker: "Docker",
-  Git: "Git",
-  Unknown: "Unknown",
-} as const
+import { CodeKeyType, defaultSnippetsStyle, getKey } from "./getKey"
 
-export const defaultSnippetsStyle = codeKeys.Unknown
+// export const defaultSnippetsStyle = codeKeys.Unknown
 
-export type CodeKeyType = (typeof codeKeys)[keyof typeof codeKeys]
+// export type CodeKeyType = (typeof codeKeys)[keyof typeof codeKeys]
 
 export type KeyDef = {
   color: string
@@ -28,24 +25,22 @@ export const syntaxHighlight = ({
   code,
   codeKeyType = defaultSnippetsStyle,
 }: SyntaxHighlight) => {
-  let keyDef: KeyDef[] = []
+  const keyDef: KeyDef[] = getKey(codeKeyType)
 
-  console.log("Syntax Highlight: ", codeKeyType)
-
-  switch (codeKeyType) {
-    case codeKeys.Docker:
-      keyDef = keysDocker
-      break
-    case codeKeys.Git:
-      keyDef = keysGit
-      break
-    case codeKeys.Unknown:
-      keyDef = keysUnknown
-      break
-    default:
-      keyDef = keysJSTS
-      break
-  }
+  // switch (codeKeyType) {
+  //   case codeKeys.Docker:
+  //     keyDef = keysDocker
+  //     break
+  //   case codeKeys.Git:
+  //     keyDef = keysGit
+  //     break
+  //   case codeKeys.Unknown:
+  //     keyDef = keysUnknown
+  //     break
+  //   default:
+  //     keyDef = keysJSTS
+  //     break
+  // }
 
   const escaped = escapeHtml(code) ?? ""
 
@@ -67,12 +62,7 @@ export const syntaxHighlight = ({
     })
     if (result.trim()) {
       rebuilt.push(
-        <pre
-          key={idx}
-          dangerouslySetInnerHTML={{
-            __html: result,
-          }}
-        />
+        <pre key={idx} dangerouslySetInnerHTML={{ __html: result }} />
       )
     }
   })

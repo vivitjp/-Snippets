@@ -69,14 +69,14 @@ export const useSnippets = (choice: MenuItemType | undefined) => {
     ][]
     return (
       <>
-        {array.map(([title, snippetsObject]) => {
+        {array.map(([title, snippetsObject], index) => {
           const code = snippetsObject.body.map((n) => (!n ? " " : n)).join("\n")
           const result = syntaxHighlight({
             code,
             codeKeyType: snippetsObject.codeKeyType,
           })
           return (
-            <Column>
+            <Column key={index}>
               <DivTitle>■ {title}</DivTitle>
               <DivBody>{result}</DivBody>
             </Column>

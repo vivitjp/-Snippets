@@ -53,7 +53,7 @@
     it.skip.('Title', ()=>{ })       # 非実行
     it.each([])('Title', ()=>{ })    # 配列を引数に実行
     it.todo('Title', ()=>{ })        # 実行予定
-    it.concurrent('Title', ()=>{ })	 # 非同期同時実行
+    it.concurrent('Title', ()=>{ })  # 非同期同時実行
 
 - KEY: jest.it.syncAsync
   EXPLAIN: it(同期・非同期)
@@ -105,25 +105,25 @@
 # Mock関数
 #-------------------------------
 
-- KEY: jest.mock.callBack
+- KEY: jest.mock.mockFn
   EXPLAIN: Mock関数(コールバック)
   BODY: |
-    const mockCallBack = jest.fn(x => x ** 2);
-    const result = getArr([1,2,3], mockCallBack);
-    expect(mock.mock.calls.length).toBe(3); //パラメタ数 ？？？？
-    expect(mock.mock.calls[0][0]).toBe(1);  //パラメタ
-    expect(mock.mock.calls[1][0]).toBe(2);  //パラメタ
-    expect(mock.mock.results[0].value).toBe(1); //結果
-    expect(mock.mock.results[1].value).toBe(4); //結果
+    const mockFn = jest.fn(x => x ** 2);
+    const result = getArr([1,2,3], mockFn);
+    expect(mockFn.mock.calls.length).toBe(3);     //呼び出し回数
+    expect(mockFn.mock.calls[0][0]).toBe(1);      //パラメタ1
+    expect(mockFn.mock.calls[1][0]).toBe(2);      //パラメタ2
+    expect(mockFn.mock.results[0].value).toBe(1); //結果
+    expect(mockFn.mock.results[1].value).toBe(4); //結果
 
 - KEY: jest.mock.returnValue
   EXPLAIN: Mock関数(戻り値)
   BODY: |
-    const mock = jest.fn();
-    mock.mockReturnValueOnce(4)  //戻り値1指定
-        .mockReturnValueOnce(9); //戻り値2指定
-    expect(mock()).toBe(4);
-    expect(mock()).toBe(9);
+    const mockFn = jest.fn();
+    mockFn.mockReturnValueOnce(4)  //戻り値1指定
+          .mockReturnValueOnce(9); //戻り値2指定
+    expect(mockFn()).toBe(4);
+    expect(mockFn()).toBe(9);
 
 #-------------------------------
 # SpyOn
@@ -133,10 +133,10 @@
   BODY: |
     const spy = jest.spyOn(axios, 'get');  //Axios:GET 上書き
     spy.mockResolvedValue({                //戻り値
-      data:{id:1, todo:'Hello'}
+      data:{id:1, title:'Hello'}
     });
     const res = await getJsonAxios(1);     //コール
-    expect(res.todo).toBe("Hello");
+    expect(res.title).toBe("Hello");
     spy.mockRestore();                     //リセット
 
 #-------------------------------
@@ -146,9 +146,9 @@
 - KEY: jest.matcher.expect.anything
   EXPLAIN: null,undefined以外
   BODY: |
-    const mock = jest.fn();
-    [1].map(x => mock(x));
-    expect(mock).toBeCalledWith(expect.anything());
+    const mockFn = jest.fn();
+    [1].map(x => mockFn(x));
+    expect(mockFn).toBeCalledWith(expect.anything());
     //null,undefined 以外、すべてに一致
 
 - KEY: jest.matcher.expect.any
@@ -157,9 +157,9 @@
     function randomCall(fn: (arg: number) => void) {
       return fn(Math.floor(Math.random() * 6 + 1))
     }
-    const mock = jest.fn()
-    randomCall(mock)
-    expect(mock).toBeCalledWith(expect.any(Number))
+    const mockFn = jest.fn()
+    randomCall(mockFn)
+    expect(mockFn).toBeCalledWith(expect.any(Number))
 
 - KEY: jest.matcher.expect.arrayContaining1
   EXPLAIN: 配列要素包含
@@ -207,7 +207,7 @@
 - KEY: jest.matcher.toBe
   EXPLAIN: プリミティブ(参照一致)
   BODY: |
-    expect(7).toBe(7);   //プリミティブ一致
+    expect(7).toBe(7);               //プリミティブ一致
     const obj = { A: "a" }
     expect(obj).not.toBe({ A: "a" }) //不一致
 
@@ -221,16 +221,18 @@
 - KEY: jest.matcher.toStrictEqual
   EXPLAIN: toEqualとの違い
   BODY: |
-    //違い1: undefined
+    //■ 違い1: undefined
     const object = { id: "A", name: undefined }
     expect(object).toEqual({ id: "A" })
     expect(object).not.toStrictEqual({ id: "A" })
-    //違い2: arrayの空要素
+     
+    //■ 違い2: arrayの空要素
     const arr = [, 2, 3]
     expect(arr).toEqual([undefined, 2, 3])
     expect(arr).not.toStrictEqual([undefined, 2, 3])
     expect(arr).toStrictEqual([, 2, 3])
-    //違い3: インスタンス
+     
+    //■ 違い3: インスタンス
     class A { x = 1 }
     expect(new A()).toEqual({ x: 1 })
     expect(new A()).not.toStrictEqual({ x: 1 })
@@ -316,9 +318,9 @@
   EXPLAIN: 関数呼び出し
   BODY: |
     ■.toHaveBeenCalled()
-      const callBack = jest.fn()
-      method(callBack, "A")
-      expect(callBack).toHaveBeenCalled()
+      const mockFn = jest.fn()
+      method(mockFn, "A")
+      expect(mockFn).toHaveBeenCalled()
     ■.toHaveBeenCalledTimes(number)
     ■.toHaveBeenCalledWith(arg1, arg2, ...)
     ■.toHaveBeenLastCalledWith(arg1, arg2, ...)
@@ -328,14 +330,14 @@
   EXPLAIN: 関数戻り値
   BODY: |
     ■.toHaveReturned()=toReturn()
-      const callBack = jest.fn(()=>true)
-      callBack()
-      expect(callBack).functionReturned()
+      const mockFn = jest.fn(()=>true)
+      mockFn()
+      expect(mockFn).functionReturned()
     ■.toHaveReturnedTimes(number)
-      callBack()
-      callBack()
-      expect(callBack).toHaveReturnedTimes(2)
-    ■.toHaveReturnedWith(value) 戻り値
+      mockFn()
+      mockFn()
+      expect(mockFn).toHaveReturnedTimes(2)
+    ■.toHaveReturnedWith(value)     //戻り値
       const data = {id: 123};
       const method = jest.fn(data => data.id);
       method(data);
@@ -346,13 +348,13 @@
 - KEY: jest.matcher.numbers
   EXPLAIN: 数値比較
   BODY: |
-    ■.toBeCloseTo(数,小数点) *浮動小数点等価性
+    ■.toBeCloseTo(数,小数点)          //浮動小数点等価性
       expect(0.2 + 0.1).not.toBe(0.3)
       expect(0.2 + 0.1).toBeCloseTo(0.3, 5)
-    ■.toBeGreaterThan(数)	*以上かつ不等
-    ■.toBeGreaterThanOrEqual(数) *以上
-    ■.toBeLessThan(数) *未満
-    ■.toBeLessThanOrEqual(数)	*以下
+    ■.toBeGreaterThan(数)            //以上かつ不等
+    ■.toBeGreaterThanOrEqual(数)     //以上
+    ■.toBeLessThan(数)               //未満
+    ■.toBeLessThanOrEqual(数)        //以下
     ■.toBeNaN()
       expect(NaN).toBeNaN();
       expect(1).not.toBeNaN();
@@ -360,20 +362,20 @@
 - KEY: jest.matcher.define
   EXPLAIN: 定義
   BODY: |
-    ■.toBeDefined()	非undefinedの検証
+    ■.toBeDefined()                  //非undefinedの検証
       expect(method()).toBeDefined();
-    ■.toBeUndefined()	undefinedの検証
+    ■.toBeUndefined()                //undefinedの検証
       expect(method(1)).toBeUndefined();
 
 - KEY: jest.matcher.truthy.falsy
   EXPLAIN: 真偽・NULL
   BODY: |
-    ■.toBeTruthy()	真
+    ■.toBeTruthy()               //真
       expect(method()).toBeTruthy();
-    ■.toBeFalsy()	偽
+    ■.toBeFalsy()                //偽
       expect(method()).toBeFalsy();
-    ■.toBeNaN()	NaNの検証
-    ■.toBeNull()	nullの検証
+    ■.toBeNaN()                  //NaNの検証
+    ■.toBeNull()                 //nullの検証
       expect(method()).toBeNull();
 
 #-------------------------------

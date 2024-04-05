@@ -20,8 +20,6 @@ export const makeSnippets = async ({
   const keys = new Set<string>()
   const dupKeys: string[] = []
 
-  console.log("jsonDataサイズ", jsonData.length)
-
   jsonData.forEach(({ KEY, EXPLAIN }) => {
     const key = EXPLAIN ?? KEY
 
@@ -53,7 +51,6 @@ export const makeSnippets = async ({
       }
       if (scope) returnData[key].scope = scope
     })
-    console.log("returnDataサイズ", Object.keys(returnData).length)
   } catch (error) {
     console.log("error")
   }

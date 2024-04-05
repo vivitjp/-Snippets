@@ -10,237 +10,232 @@
     mysqldump -u [username] -p [database] > data_backup.sql // DBのデータ書き出し
 
 - KEY: mysql.db
-EXPLAIN: テーブル定義
-BODY: |
-  CREATE/DROP DATABASE <database>; // DB作成/削除
-  USE <database>;                  // 指定DBのDefault Schema化
-  DESCRIBE <table>;                // テーブルの詳細(カラム、型など)
-  SHOW DATABASES/TABLES;           // DB/テーブルリスト表示
-  SHOW CREATE TABLE <table>;       // テーブルのDDL(SQL形式)
-  SHOW COLUMNS FROM <table>;       // テーブルのDDL(表形式)
+  EXPLAIN: テーブル作成
+  BODY: |
+    CREATE/DROP DATABASE <database>; // DB作成/削除
+    USE <database>;                  // 指定DBのDefault Schema化
+    DESCRIBE <table>;                // テーブルの詳細(カラム、型など)
+    SHOW DATABASES/TABLES;           // DB/テーブルリスト表示
+    SHOW CREATE TABLE <table>;       // テーブルのDDL(SQL形式)
+    SHOW COLUMNS FROM <table>;       // テーブルのDDL(表形式)
 
 - KEY: mysql.db.explain
-EXPLAIN: クエリ解析
-BODY: |
-  EXPLAIN <query>;         // 実行計画
-  EXPLAIN ANALYZE <query>; // 実行結果
+  EXPLAIN: クエリ解析
+  BODY: |
+    EXPLAIN <query>;         // 実行計画
+    EXPLAIN ANALYZE <query>; // 実行結果
 
 - KEY: mysql.table.create
-EXPLAIN: テーブル定義
-BODY: |
-  CREATE <schema>.<table>(
-    <col> INT PRIMARY KEY AUTO_INCREMENT,          // PK(プライマリーキー)定義
-    <col> 型 [NOT NULL] [DEFAULT value] [COMMENT], // カラム定義
-    ... ON UPDATE/DELETE [RESTRICT|CASCADE|SET NULL|NO ACTION|SET DEFAULT] //FK(外部キー)連携
-    <col> 型 CHECK(<col> > 0),                     // Check制約追加
-    <col> 型 INVISIBLE,                            // 非表示カラム
-    -- 別行で定義
-    [PRIMARY] KEY(<cal>,...),                      // PKの別定義
-    INDEX (<col>,...) | (method(<col>)),           // Index作成
-    [CONSTRAINT] FOREIGN KEY(<fk_name>) REFERENCES (<col> <> value),  // FKの別定義
-    [CONSTRAINT] <constraint_name> CHECK (<col> <> value),            // 制約の別定義
-    [CONSTRAINT] CHECK (c1 > c3),                  // 複数カラムの関係制約
-    some_method(<col>,...) AS <col_alias>,         // COLUMN VIEW定義
-    <col> DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  // 日付自動更新
-  )
+  EXPLAIN: テーブル定義
+  BODY: |
+    CREATE <schema>.<table>(
+      <col> INT PRIMARY KEY AUTO_INCREMENT,          // PK(プライマリーキー)定義
+      <col> 型 [NOT NULL] [DEFAULT value] [COMMENT], // カラム定義
+      ... ON UPDATE/DELETE [RESTRICT|CASCADE|SET NULL|NO ACTION|SET DEFAULT] //FK(外部キー)連携
+      <col> 型 CHECK(<col> > 0),                     // Check制約追加
+      <col> 型 INVISIBLE,                            // 非表示カラム
+      -- 別行で定義
+      [PRIMARY] KEY(<cal>,...),                      // PKの別定義
+      INDEX (<col>,...) | (method(<col>)),           // Index作成
+      [CONSTRAINT] FOREIGN KEY(<fk_name>) REFERENCES (<col> <> value),  // FKの別定義
+      [CONSTRAINT] <constraint_name> CHECK (<col> <> value),            // 制約の別定義
+      [CONSTRAINT] CHECK (c1 > c3),                  // 複数カラムの関係制約
+      some_method(<col>,...) AS <col_alias>,         // COLUMN VIEW定義
+      <col> DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  // 日付自動更新
+    )
 
 - KEY: mysql.table.create.sample
-EXPLAIN: テーブル定義サンプル
-BODY: |
-  create table person (
-    id int primary key AUTO_INCREMENT,
-    -- (2行) id int AUTO_INCREMENT, constraint primary key(id),
-    name varchar(50) not null default '' comment '名前',
-    city_id int references city(id) on update CASCADE on delete set null,
-    -- (2行) city_id int, constraint foreign key(city_id) references city(id) on update CASCADE on delete set null,
-    age smallint not null default 0 comment "年齢" check(age < 120),
-    -- (2行) age smallint not null default 0 comment "年齢", constraint check(age > 120),
-    act boolean not null default true,
-    index (age),
-    created timestamp default CURRENT_TIMESTAMP,
-    updated timestamp default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP
-  );
+  EXPLAIN: テーブル定義サンプル
+  BODY: |
+    create table person (
+      id int primary key AUTO_INCREMENT,
+      -- (2行) id int AUTO_INCREMENT, constraint primary key(id),
+      name varchar(50) not null default '' comment '名前',
+      city_id int references city(id) on update CASCADE on delete set null,
+      -- (2行) city_id int, constraint foreign key(city_id) references city(id) on update CASCADE on delete set null,
+      age smallint not null default 0 comment "年齢" check(age < 120),
+      -- (2行) age smallint not null default 0 comment "年齢", constraint check(age > 120),
+      act boolean not null default true,
+      index (age),
+      created timestamp default CURRENT_TIMESTAMP,
+      updated timestamp default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP
+    );
 
 - KEY: mysql.table.create.sample.city.person
-EXPLAIN: テーブル定義(市と人)
-BODY: |
-  create table city (
-    id int primary key,
-    name varchar(50)
-  );
-  ----------------
-  | id | name    |
-  ----------------
-  |  1 | '北海道' |
-  |  2 | '青森'   |
-  |  3 | '岩手'   |
-  ----------------
-  insert into city(id,name) values (1, '北海道'),(2, '青森'),(3, '岩手');
-  create table person (
-    id int primary key AUTO_INCREMENT,
-    name varchar(50)',
-    city_id int references city(id)
-  );
-  ------------------------
-  | id | name  | city_id |
-  ------------------------
-  |  1 | John  |      1  | 
-  |  2 | Smith |      2  | 
-  |  3 | Lilly |      0  | 
-  |  4 | Bill  |   NULL  | 
-  ------------------------
+  EXPLAIN: テーブル定義(市・人)
+  BODY: |
+    create table city (
+      id int primary key,
+      name varchar(50)
+    );
+    ----------------
+    | id | name    |
+    ----------------
+    |  1 | '北海道' |
+    |  2 | '青森'   |
+    |  3 | '岩手'   |
+    ----------------
+    insert into city(id,name) values (1, '北海道'),(2, '青森'),(3, '岩手');
+    create table person (
+      id int primary key AUTO_INCREMENT,
+      name varchar(50)',
+      city_id int references city(id)
+    );
+    ------------------------
+    | id | name  | city_id |
+    ------------------------
+    |  1 | John  |      1  | 
+    |  2 | Smith |      2  | 
+    |  3 | Lilly |      0  | 
+    |  4 | Bill  |   NULL  | 
+    ------------------------
 
 - KEY: mysql.table.alter.drop
-EXPLAIN: テーブル変更・削除
-BODY: |
-  ALTER TABLE <tableA> RENAME <tableB>;                    // テーブル名変更
-  ALTER TABLE <table> ADD COLUMN <colB> 型 [AFTER <colA>]; // カラム追加(場所指定)
-  ALTER TABLE <table> RENAME COLUMN <colA> TO <colB>;      // カラム名変更
-  ALTER TABLE <table> MODIFY COLUMN <col> 型;              // (部分的自動型変換)カラム型変更
-  ALTER TABLE <table> CHANGE <colA> <colB> 型;             // カラム型＆名同時変更
-  ALTER TABLE <table> DROP COLUMN <col>;                   // カラム削除
-  DROP TABLE <table>;                                      // テーブル削除
+  EXPLAIN: テーブル変更・削除
+  BODY: |
+    ALTER TABLE <tableA> RENAME <tableB>;                    // テーブル名変更
+    ALTER TABLE <table> ADD COLUMN <colB> 型 [AFTER <colA>]; // カラム追加(場所指定)
+    ALTER TABLE <table> RENAME COLUMN <colA> TO <colB>;      // カラム名変更
+    ALTER TABLE <table> MODIFY COLUMN <col> 型;              // (部分的自動型変換)カラム型変更
+    ALTER TABLE <table> CHANGE <colA> <colB> 型;             // カラム型＆名同時変更
+    ALTER TABLE <table> DROP COLUMN <col>;                   // カラム削除
+    DROP TABLE <table>;                                      // テーブル削除
 
 - KEY: mysql.query
-EXPLAIN: クエリ
-BODY: |
-  SELECT [DISTINCT] <alias>.<col> as <alias>, ...
-  FROM <schema>.<table> <alias>, ...
-  WHERE <condition> AND/OR ...
-  GROUP BY <aliasA>.<col> [WITH ROLLUP]  //ROLLUP:総計(要集約関数)
-  ORDER BY <aliasA>.<col> ASC/DESC
-  HAVING <condition>
-  OFFSET <number> LIMIT <number>;
+  EXPLAIN: クエリ
+  BODY: |
+    SELECT [DISTINCT] <alias>.<col> as <alias>, ...
+    FROM <schema>.<table> <alias>, ...
+    WHERE <condition> AND/OR ...
+    GROUP BY <aliasA>.<col> [WITH ROLLUP]  //ROLLUP:総計(要集約関数)
+    ORDER BY <aliasA>.<col> ASC/DESC
+    HAVING <condition>
+    OFFSET <number> LIMIT <number>;
 
 - KEY: mysql.query.join
-EXPLAIN: クエリ(join)
-BODY: |
-  SELECT <tableA>.<col>, <tableB>.<col>
-  FROM <tableA>
-  [NATURAL] [ INNER | LEFT | RIGHT | CROSS ] JOIN <tableB>
-  ON <tableA>.<col> = <tableB>.<col>;  USING (<col>,... *カラム名が一致);
+  EXPLAIN: クエリ(join)
+  BODY: |
+    SELECT <tableA>.<col>, <tableB>.<col>
+    FROM <tableA>
+    [NATURAL] [ INNER | LEFT | RIGHT | CROSS ] JOIN <tableB>
+    ON <tableA>.<col> = <tableB>.<col>;  USING (<col>,... *カラム名が一致);
 
 - KEY: mysql.query.join.sample
-EXPLAIN: クエリ(join)サンプル
-BODY: |
-  select * from city, person where city.id=person.city_id;
-  = select * from city inner join person on city.id=person.city_id;
-  = select * from city cross join person on city.id=person.city_id;
-  ---------------------------------------
-  | id | name  |  id  | name  | city_id |
-  ---------------------------------------
-  |  1 | 北海道 |    3 | Lilly |  1     |
-  |  1 | 北海道 |    1 | John  |  1     |
-  |  2 | 青森   |    2 | Smith |  2     |
-  ---------------------------------------
-  select * from city left outer join person on city.id=person.city_id;
-  ---------------------------------------
-  | id | name  |  id  | name  | city_id |
-  ---------------------------------------
-  |  1 | 北海道 |    3 | Lilly |  1     |
-  |  1 | 北海道 |    1 | John  |  1     |
-  |  2 | 青森   |    2 | Smith |  2     |
-  |  3 | 岩手   | NULL | NULL  | NULL   |
-  ---------------------------------------
-  select * from city right outer join person on city.id=person.city_id;
-  -----------------------------------------
-  | id   | name  |  id  | name  | city_id |
-  -----------------------------------------
-  |  1   | 北海道 |    3 | Lilly |  1     |
-  |  1   | 北海道 |    1 | John  |  1     |
-  |  2   | 青森   |    2 | Smith |  2     |
-  | NULL | NULL   |    4 | Bill  |  NULL  |
-  -----------------------------------------
+  EXPLAIN: クエリ(join)サンプル
+  BODY: |
+    select * from city, person where city.id=person.city_id;
+    = select * from city inner join person on city.id=person.city_id;
+    = select * from city cross join person on city.id=person.city_id;
+    ---------------------------------------
+    | id | name  |  id  | name  | city_id |
+    ---------------------------------------
+    |  1 | 北海道 |    3 | Lilly |  1     |
+    |  1 | 北海道 |    1 | John  |  1     |
+    |  2 | 青森   |    2 | Smith |  2     |
+    ---------------------------------------
+    select * from city left outer join person on city.id=person.city_id;
+    ---------------------------------------
+    | id | name  |  id  | name  | city_id |
+    ---------------------------------------
+    |  1 | 北海道 |    3 | Lilly |  1     |
+    |  1 | 北海道 |    1 | John  |  1     |
+    |  2 | 青森   |    2 | Smith |  2     |
+    |  3 | 岩手   | NULL | NULL  | NULL   |
+    ---------------------------------------
+    select * from city right outer join person on city.id=person.city_id;
+    -----------------------------------------
+    | id   | name  |  id  | name  | city_id |
+    -----------------------------------------
+    |  1   | 北海道 |    3 | Lilly |  1     |
+    |  1   | 北海道 |    1 | John  |  1     |
+    |  2   | 青森   |    2 | Smith |  2     |
+    | NULL | NULL   |    4 | Bill  |  NULL  |
+    -----------------------------------------
 
 - KEY: mysql.query.union.sample
-EXPLAIN: クエリ(UNION)サンプル
-BODY: |
-  (select <2 columns> from <table>) union (<2 columns> from <table>) order by <colum>;
-  -----------------------------------------------------------------------------------
-  select * 
-  from ((select <2 columns> from <table> limit 1) union (<2 columns> from <table> limit 1)) as temp
-  order by <colum>;
-  -----------------------------------------------------------------------------------
-  *Error: ()が必要
-  select <2 columns> from <table> limit 1 union <2 columns> from <table> limit 1 order by <colum>;
-  *Error: カラム数不一致
-  (select <2 columns> from <table>) union (<3 columns> from <table>) order by <colum>;
+  EXPLAIN: クエリ(UNION)サンプル
+  BODY: |
+    (select <2 columns> from <table>) union (<2 columns> from <table>) order by <colum>;
+    -----------------------------------------------------------------------------------
+    select * 
+    from ((select <2 columns> from <table> limit 1) union (<2 columns> from <table> limit 1)) as temp
+    order by <colum>;
+    -----------------------------------------------------------------------------------
+    *Error: ()が必要
+    select <2 columns> from <table> limit 1 union <2 columns> from <table> limit 1 order by <colum>;
+    *Error: カラム数不一致
+    (select <2 columns> from <table>) union (<3 columns> from <table>) order by <colum>;
 
 - KEY: mysql.query.union
-EXPLAIN: クエリ(UNION)
-BODY: |
-  create table city (
-    id int primary key,
-    name varchar(50)
-  );
-  ----------------
-  | id | name    |
-  ----------------
-  |  1 | '北海道' |
-  |  2 | '青森'   |
-  |  3 | '岩手'   |
-  ----------------
-  create table person (
-    id int primary key AUTO_INCREMENT,
-    name varchar(50),
-    city_id int references city(id)
-  );
-  ------------------------
-  | id | name  | city_id |
-  ------------------------
-  |  1 | John  |      1  | 
-  |  2 | Smith |      2  | 
-  |  3 | Lilly |      0  | 
-  |  4 | Bill  |   NULL  | 
-  ------------------------
-  (select id,name from city) union (select id,name from person) order by id;
-  ----------------
-  | id | name    |
-  ----------------
-  |  1 | '北海道' |
-  |  1 | John    |
-  |  2 | '青森'   |
-  |  2 | Smith   |
-  |  3 | '岩手'   |
-  |  3 | Lilly   |
-  |  4 | Bill    |
-  ----------------
+  EXPLAIN: クエリ(UNION)
+  BODY: |
+    create table city (
+      id int primary key,
+      name varchar(50)
+    );
+    ----------------
+    | id | name    |
+    ----------------
+    |  1 | '北海道' |
+    |  2 | '青森'   |
+    |  3 | '岩手'   |
+    ----------------
+    create table person (
+      id int primary key AUTO_INCREMENT,
+      name varchar(50),
+      city_id int references city(id)
+    );
+    ------------------------
+    | id | name  | city_id |
+    ------------------------
+    |  1 | John  |      1  | 
+    |  2 | Smith |      2  | 
+    |  3 | Lilly |      0  | 
+    |  4 | Bill  |   NULL  | 
+    ------------------------
+    (select id,name from city) union (select id,name from person) order by id;
+    ----------------
+    | id | name    |
+    ----------------
+    |  1 | '北海道' |
+    |  1 | John    |
+    |  2 | '青森'   |
+    |  2 | Smith   |
+    |  3 | '岩手'   |
+    |  3 | Lilly   |
+    |  4 | Bill    |
+    ----------------
 
 - KEY: mysql.query.values
-EXPLAIN: クエリ(VALUES)
-BODY: |
-  VALUES ROW(value1,value2,value3), ROW(value1,value2,value3), ...;
-  select * from (VALUES ROW(1,-2,3), ROW(5,7,9)) as tmp;
-  ------------------------------------------------------------------
-  *SELECT不要
-  *Error: カラム数不一致 VALUES ROW(value1,value2,value3), ROW(value1);
+  EXPLAIN: クエリ(VALUES)
+  BODY: |
+    VALUES ROW(value1,value2,value3), ROW(value1,value2,value3), ...;
+    select * from (VALUES ROW(1,-2,3), ROW(5,7,9)) as tmp;
+    ------------------------------------------------------------------
+    *SELECT不要
+    *Error: カラム数不一致 VALUES ROW(value1,value2,value3), ROW(value1);
 
 - KEY: mysql.query.with
-EXPLAIN: クエリ(WITH句)
-BODY: |
-  WITH [RECURSIVE] <with1> [(<col>,...)] AS (SELECT <col>,....), <with2>
-  SELECT <col>,<col> FROM <with1>;
+  EXPLAIN: クエリ(WITH句)
+  BODY: |
+    WITH [RECURSIVE] <with1> [(<col>,...)] AS (SELECT <col>,....), <with2>
+    SELECT <col>,<col> FROM <with1>;
+
 # ------------------------------------------------------------------
- 
 
 # - KEY: mysql.
-# EXPLAIN: 
-# BODY: |
-
-
+#   EXPLAIN:
+#   BODY: |
 
 # - KEY: mysql.
-# EXPLAIN: 
+# EXPLAIN:
 # BODY: |
-
 
 # - KEY: mysql.
-# EXPLAIN: 
+# EXPLAIN:
 # BODY: |
-
 
 # - KEY: mysql.
-# EXPLAIN: 
+# EXPLAIN:
 # BODY: |
-
 
