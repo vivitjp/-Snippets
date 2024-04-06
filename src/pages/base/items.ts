@@ -1,3 +1,4 @@
+import { codeKeys } from "../../library/syntaxHighlighter/getKey"
 import { MenuItemType } from "../../store/menuStore"
 
 type menuByCategories = {
@@ -10,15 +11,17 @@ export const menuItems: menuByCategories[] = [
     category: "Html/CSS",
     items: [
       {
-        name: "CSS(bg,bdr,just,css)",
+        name: "CSS:bg,bdr,just,css",
         fileName: "html/CSS",
+        codeKeyType: codeKeys.CSS,
       },
       {
-        name: "CSSColor(color)",
+        name: "CSSColor:color",
         fileName: "html/CSSColor",
+        html_encode: false,
       },
       {
-        name: "HTML(html)",
+        name: "HTML",
         fileName: "html/HTML",
       },
     ],
@@ -27,19 +30,19 @@ export const menuItems: menuByCategories[] = [
     category: "JavaScript",
     items: [
       {
-        name: "JavaScript(js)",
+        name: "JavaScript:js",
         fileName: "JavaScript/JavaScript",
-        codeKeyType: "JSTS",
+        codeKeyType: codeKeys.JSTS,
       },
       {
-        name: "TypeScript(ts)",
+        name: "TypeScript:ts",
         fileName: "JavaScript/TypeScript",
-        codeKeyType: "JSTS",
+        codeKeyType: codeKeys.JSTS,
       },
       {
-        name: "非同期(js)",
+        name: "非同期:js",
         fileName: "JavaScript/JavaScriptAsync",
-        codeKeyType: "JSTS",
+        codeKeyType: codeKeys.JSTS,
       },
     ],
   },
@@ -47,19 +50,19 @@ export const menuItems: menuByCategories[] = [
     category: "React",
     items: [
       {
-        name: "React(qw)",
+        name: "React:qw",
         fileName: "React/React",
-        codeKeyType: "JSTS",
+        codeKeyType: codeKeys.JSTS,
       },
       {
-        name: "Component(qw)",
+        name: "Component:qw",
         fileName: "React/ReactComponent",
-        codeKeyType: "JSTS",
+        codeKeyType: codeKeys.JSTS,
       },
       {
-        name: "Routing(qw)",
+        name: "Routing:qw",
         fileName: "React/ReactRouting",
-        codeKeyType: "JSTS",
+        codeKeyType: codeKeys.JSTS,
       },
     ],
   },
@@ -67,29 +70,29 @@ export const menuItems: menuByCategories[] = [
     category: "React Packages",
     items: [
       {
-        name: "Fetch/State(pk)",
+        name: "Fetch/State:pk",
         fileName: "ReactPackage/ReactFetchState",
-        codeKeyType: "JSTS",
+        codeKeyType: codeKeys.JSTS,
       },
       {
-        name: "ReactHookForm(pk)",
+        name: "ReactHookForm:pk",
         fileName: "ReactPackage/ReactHookForm",
-        codeKeyType: "JSTS",
+        codeKeyType: codeKeys.JSTS,
       },
       {
-        name: "Storybook(v6)(pk)",
+        name: "Storybook(v6):pk",
         fileName: "ReactPackage/Storybook",
-        codeKeyType: "JSTS",
+        codeKeyType: codeKeys.JSTS,
       },
       {
-        name: "StyledComponent(pk)",
+        name: "StyledComponent:pk",
         fileName: "ReactPackage/StyledCompo",
-        codeKeyType: "JSTS",
+        codeKeyType: codeKeys.JSTS,
       },
       {
-        name: "zustand(pk)",
+        name: "zustand:pk",
         fileName: "ReactPackage/zustand",
-        codeKeyType: "JSTS",
+        codeKeyType: codeKeys.JSTS,
       },
     ],
   },
@@ -97,13 +100,14 @@ export const menuItems: menuByCategories[] = [
     category: "OS & Docker",
     items: [
       {
-        name: "docker(docker)",
+        name: "docker",
         fileName: "OS/Docker",
-        codeKeyType: "Docker",
+        codeKeyType: codeKeys.Docker,
       },
       {
-        name: "Linux(linux)",
+        name: "Linux",
         fileName: "OS/LinuxCommand",
+        codeKeyType: codeKeys.Linux,
       },
     ],
   },
@@ -111,8 +115,9 @@ export const menuItems: menuByCategories[] = [
     category: "Database",
     items: [
       {
-        name: "mySQL(mysql)",
+        name: "mySQL",
         fileName: "database/mySql",
+        codeKeyType: codeKeys.MySql,
       },
     ],
   },
@@ -122,10 +127,10 @@ export const menuItems: menuByCategories[] = [
       {
         name: "Git",
         fileName: "Project/Git",
-        codeKeyType: "Git",
+        codeKeyType: codeKeys.Git,
       },
       {
-        name: "Lint(lint)",
+        name: "Lint",
         fileName: "Project/Lint",
       },
     ],
@@ -136,7 +141,7 @@ export const menuItems: menuByCategories[] = [
       {
         name: "jest",
         fileName: "Test/Jest",
-        codeKeyType: "Jest",
+        codeKeyType: codeKeys.Jest,
       },
     ],
   },
@@ -144,11 +149,11 @@ export const menuItems: menuByCategories[] = [
     category: "WebAPI",
     items: [
       {
-        name: "SVG(svg)",
+        name: "SVG",
         fileName: "WebAPI/SVG",
       },
       {
-        name: "Windows(win)",
+        name: "Windows:win",
         fileName: "WebAPI/windows",
       },
     ],

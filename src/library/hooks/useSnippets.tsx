@@ -6,10 +6,10 @@ import { Column } from "../../common/styleDiv"
 import { Button } from "../../common/styleInput"
 import { syntaxHighlight } from "../syntaxHighlighter/syntaxHighlighter"
 import { useSelect } from "./useSelect"
-import { DivTitle } from "./components/DivTitle"
+import { DivPrefix, DivTitle, DivTitleWrapper } from "./components/DivTitle"
 import { DivBody } from "./components/DivBody"
 import { MenuItemType } from "../../store/menuStore"
-import { CodeKeyType } from "../syntaxHighlighter/getKey"
+import { CodeKeyType, getKey } from "../syntaxHighlighter/getKey"
 
 type SnippetsObject = {
   prefix: string
@@ -18,8 +18,15 @@ type SnippetsObject = {
   codeKeyType?: CodeKeyType
 }
 
+export type KeyDef = {
+  color: string
+  keys: string[]
+}
+
 export const useSnippets = (choice: MenuItemType | undefined) => {
+  const [isPending, setIsPending] = useState(false)
   const [data, setData] = useState<Snippets | string[] | undefined>()
+  const [dataFormatted, setDataFormatted] = useState<JSX.Element[]>([])
 
   const { JSX: SnippetsStyleSelection, value } = useSelect({
     title: "形式",
@@ -29,14 +36,48 @@ export const useSnippets = (choice: MenuItemType | undefined) => {
 
   useEffect(() => {
     if (!choice?.fileName) return
-    makeSnippets({
-      file: `snippets/${choice.fileName}.yml`,
-      scope: value,
-      codeKeyType: choice.codeKeyType,
-    }).then((data) => {
-      setData(data)
-    })
+    setIsPending(true)
+    ;(async () => {
+      //ファイルからデータ読み込み
+      const result = await makeSnippets({
+        file: `snippets/${choice.fileName}.yml`,
+        scope: value,
+      })
+      setData(result)
+      if (!result) return
+
+      //配列化
+      const array = Object.entries(result ?? {}) as [string, SnippetsObject][]
+      //Highlight
+      const keyDefs: KeyDef[] = getKey(choice?.codeKeyType)
+      //Highlightして JSX.Element[] に変換
+
+      const formatted = array.map(([title, snippetsObject], index) => {
+        const code = snippetsObject.body.map((n) => (!n ? " " : n)).join("\n")
+
+        const highlighted = syntaxHighlight({
+          code,
+          keyDefs,
+          html_encode: choice.html_encode,
+        })
+        return (
+          <Column key={index}>
+            <DivTitleWrapper>
+              <DivTitle>■ {title}</DivTitle>
+              <DivPrefix>{snippetsObject.prefix}</DivPrefix>
+            </DivTitleWrapper>
+            <DivBody>{highlighted}</DivBody>
+          </Column>
+        )
+      })
+      setDataFormatted(formatted)
+      setIsPending(false)
+    })()
   }, [choice, value])
+
+  const Snippets = () => {
+    return <>{dataFormatted}</>
+  }
 
   const [copied, setCopied] = useState<boolean>(false)
   const handleClickInputButton = useCallback(
@@ -60,29 +101,5 @@ export const useSnippets = (choice: MenuItemType | undefined) => {
     )
   }
 
-  const Snippets = () => {
-    const array = Object.entries(data ?? {}) as unknown as [
-      string,
-      SnippetsObject
-    ][]
-    return (
-      <>
-        {array.map(([title, snippetsObject], index) => {
-          const code = snippetsObject.body.map((n) => (!n ? " " : n)).join("\n")
-          const result = syntaxHighlight({
-            code,
-            codeKeyType: snippetsObject.codeKeyType,
-          })
-          return (
-            <Column key={index}>
-              <DivTitle>■ {title}</DivTitle>
-              <DivBody>{result}</DivBody>
-            </Column>
-          )
-        })}
-      </>
-    )
-  }
-
-  return { SnippetsStyleSelection, Snippets, CopyButton }
+  return { SnippetsStyleSelection, Snippets, CopyButton, isPending }
 }

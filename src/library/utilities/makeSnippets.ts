@@ -1,20 +1,16 @@
 import { YAMLData, Snippets } from "../../types/type"
-import { CodeKeyType } from "../syntaxHighlighter/getKey"
 import { getLocalYmlFile } from "./getLocalYmlFile"
 
-export const makeSnippets = async ({
-  file,
-  scope,
-  codeKeyType,
-}: {
+type Props = {
   file: string
   scope: string
-  codeKeyType?: CodeKeyType
-}) => {
+}
+
+export const makeSnippets = async ({ file, scope }: Props) => {
   const jsonData = (await getLocalYmlFile({
     path: file,
   })) as YAMLData[]
-  if (!jsonData) return []
+  if (!jsonData) return
 
   //Preflight 検査
   const keys = new Set<string>()
@@ -36,7 +32,7 @@ export const makeSnippets = async ({
     dupKeys.forEach((key, val) => {
       console.log("K:", key, "V:", val)
     })
-    return dupKeys
+    return
   }
 
   //Snippets Making
@@ -46,8 +42,7 @@ export const makeSnippets = async ({
       const key = EXPLAIN ?? KEY
       returnData[key] = {
         prefix: KEY,
-        body: BODY?.split("\n"),
-        codeKeyType: codeKeyType ?? "Unknown",
+        body: BODY?.split("\n").filter((n) => n),
       }
       if (scope) returnData[key].scope = scope
     })

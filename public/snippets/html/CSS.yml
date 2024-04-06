@@ -27,8 +27,7 @@
   EXPLAIN: flex 属性
   BODY: |
     justify-content: flex-start;
-    align-items: center;
-    //stretch,baseline,space-between
+    align-items: center; //stretch,baseline,space-between
 
 # ----------------------------
 # CSS
@@ -37,10 +36,10 @@
 - KEY: css.combinator
   EXPLAIN: 結合子
   BODY: |
-    div > p //子
-    div p   //子孫
-    div + p //隣接兄弟(1)
-    div ~ p //一般兄弟(1)
+    div > p    //子
+    div p      //子孫
+    div + p    //隣接兄弟(1)
+    div ~ p    //一般兄弟(1)
 
 # ----------------------------
 #  Flex
@@ -72,8 +71,7 @@
   BODY: |
     color: #777;
     font-size: 1rem; 
-    font-family: sans-serif;
-    /* monospace, cursive */
+    font-family: sans-serif; /* monospace, cursive */
     /* font-weight: 500; */
     /* line-height: 1.2rem; */
 
@@ -123,13 +121,12 @@
 - KEY: css.rgba
   EXPLAIN: 透明度
   BODY: |
-    rgba(255, 255, 255, 0.5)
-    //= #FFF7
+    rgba(255, 255, 255, 0.5)  //= #FFF7
 
 - KEY: css.transform
   EXPLAIN: 変形
   BODY: |
-    transform: translate(50px); //X
+    transform: translate(50px);     //X
     transform: translateX(50px, 0); //X, Y
     transform: scale(1.1, 1.1);
     transform: rotate(0.5turn);
@@ -148,17 +145,17 @@
 - KEY: css.image.object
   EXPLAIN: イメージ関連
   BODY: |
-    object-fit: fill; //拡張(ゆがみ)
-    object-fit: contain; //全体(空白あり)
-    object-fit: cover; //中央クロップ
-    object-fit: none; //元サイズクロップ
-    object-fit: scale-down; //=contain?
+    object-fit: fill;               //拡張(ゆがみ)
+    object-fit: contain;            //全体(空白あり)
+    object-fit: cover;              //中央クロップ
+    object-fit: none;               //元サイズクロップ
+    object-fit: scale-down;         //=contain?
 
-    object-position: 50% 50%; //中央
+    object-position: 50% 50%;       //中央
     object-position: center center; //中央
-    object-position: right top; //右上
-    object-position: left bottom; //左下
-    object-position: 100px 100px; //指定
+    object-position: right top;     //右上
+    object-position: left bottom;   //左下
+    object-position: 100px 100px;   //指定
 
 - KEY: css.variable
   EXPLAIN: 変数
@@ -205,7 +202,7 @@
     //transition: <target> <duration(所要時間)> <easing> <delay(遅延)> 
     transition: width 1s ease-in-out 0s;
     transition: width 1s ease-in-out, color 2s; //複数
-    transition: all 1s ease-in-out; //全属性に適用
+    transition: all 1s ease-in-out;             //全属性に適用
 
     //分割
     transition-property: all/none/<width,height,margin-left,...>;
@@ -228,15 +225,15 @@
     animation-direction: [def]normal/reverse/alternate/alternate-reverse;
     animation-fill-mode: [def]none/forwards/backwards/both;
     //[forwards]
-    // <direction> 	<反復数> 	<最後のキーフレーム>
-    // normal 	  偶数または奇数 	100% または to
-    // reverse 	  偶数または奇数 	0% または from
-    // alternate 	偶数 	         0% または from
-    // alternate 	奇数 	         100% または to
-    // alternate-reverse 	偶数 	 100% または to
-    // alternate-reverse 	奇数 	 0% または from
+    // <direction>        <反復数>   <最後のキーフレーム>
+    // normal             偶/奇数    100% または to
+    // reverse            偶/奇数    0% または from
+    // alternate          偶数       0% または from
+    // alternate          奇数       100% または to
+    // alternate-reverse  偶数       100% または to
+    // alternate-reverse  奇数       0% または from
     //[backwards]
-    // normal/alternate 	        0% または from
-    // reverse/alternate-reverse 	100% または to
-    animation-play-state: running/paused; //停止と再開を設定可能
-    animation-name: slidein; //カスタム名(A-B, A_B)
+    // normal/alternate                   0% または from
+    // reverse/alternate-reverse          100% または to
+    animation-play-state: running/paused;  //停止と再開を設定可能
+    animation-name: slidein;               //カスタム名(A-B, A_B)

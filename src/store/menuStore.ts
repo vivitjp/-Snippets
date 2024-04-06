@@ -5,6 +5,7 @@ export type MenuItemType = {
   name: string
   fileName: string
   codeKeyType?: CodeKeyType
+  html_encode?: boolean
 }
 
 type Menu = {
@@ -12,10 +13,8 @@ type Menu = {
   subDir: string | undefined
   setMenu: (menu: MenuItemType) => void
 }
-export const useMenu = create<Menu>()((set) => ({
+export const zooMenu = create<Menu>()((set) => ({
   selectedMenu: undefined,
   subDir: undefined,
   setMenu: (selectedMenu) => set({ selectedMenu }),
 }))
-
-// const setMenu = useMenu(state => state.setMenu)

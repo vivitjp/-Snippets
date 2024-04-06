@@ -12,14 +12,30 @@ export const Section = styled.section`
   overflow: hidden;
 `
 
-export const Header = styled.section`
+export const HeaderWrapper = styled.section`
   display: flex;
-  justify-content: flex-start;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
   height: 50px;
-  padding-left: 20px;
+  padding: 0 20px;
   background-color: var(--main-color);
+`
+
+export const HeaderTitle = styled.section`
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: #fff;
+`
+
+export const HeaderOptions = styled.section`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  height: 100%;
   font-size: 1.8rem;
   font-weight: 300;
   color: #fff;
@@ -53,8 +69,7 @@ export const Group = styled.details`
   gap: 5px;
   width: 100%;
 `
-
-export const GroupTitle = styled.summary`
+export const MenuGroupTitle = styled.summary`
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -83,6 +98,25 @@ export const GroupBody = styled.div`
 
 export const MenuItem = styled.div`
   padding: 5px;
+  text-decoration: none;
+  font-size: 0.8rem;
+  color: #777;
+  width: 100%;
+  cursor: pointer;
+  :hover {
+    color: var(--main-color);
+  }
+`
+
+export const MenuItemGroup = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+`
+
+export const MenuItemGroupItems = styled.div`
   text-decoration: none;
   font-size: 0.8rem;
   color: #777;

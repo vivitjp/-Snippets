@@ -1,5 +1,3 @@
-import { CodeKeyType, defaultSnippetsStyle, getKey } from "./getKey"
-
 export type KeyDef = {
   color: string
   keys: string[]
@@ -7,16 +5,16 @@ export type KeyDef = {
 
 export type SyntaxHighlight = {
   code: string
-  codeKeyType?: CodeKeyType | undefined
+  keyDefs: KeyDef[]
+  html_encode?: boolean
 }
 
 export const syntaxHighlight = ({
   code,
-  codeKeyType = defaultSnippetsStyle,
+  keyDefs,
+  html_encode = true,
 }: SyntaxHighlight) => {
-  const keyDef: KeyDef[] = getKey(codeKeyType)
-
-  const escaped = escapeHtml(code) ?? ""
+  const escaped = escapeHtml(code, html_encode) ?? ""
 
   const rebuilt: JSX.Element[] = []
 
@@ -24,7 +22,7 @@ export const syntaxHighlight = ({
     let result = line
 
     //Keywords
-    keyDef.forEach(({ color, keys }) => {
+    keyDefs.forEach(({ color, keys }) => {
       keys.forEach((key) => {
         if (!key) return
         const re = new RegExp(`\\b${key}\\b`, "ig")
@@ -54,8 +52,8 @@ function replaceUnsafeChar(ch: string): string {
   return HTML_REPLACEMENTS[ch]
 }
 
-function escapeHtml(str: string): string {
-  if (HTML_ESCAPE_REPLACE_RE.test(str)) {
+function escapeHtml(str: string, html_encode: boolean): string {
+  if (html_encode) {
     return str.replace(HTML_ESCAPE_REPLACE_RE, replaceUnsafeChar)
   }
   return str

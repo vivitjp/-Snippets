@@ -8,5 +8,6 @@ export const DivBody = styled.div`
   color: #555;
   padding: 10px;
   width: 100%;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
+  box-shadow: 2px 2px 4px #eee;
 `

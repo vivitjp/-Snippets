@@ -3,21 +3,30 @@ import {
   Body,
   Group,
   GroupBody,
-  GroupTitle,
-  Header,
+  MenuGroupTitle,
+  HeaderTitle,
+  HeaderOptions,
   MenuItem,
+  MenuItemGroup,
+  MenuItemGroupItems,
   MenuNav,
   Playground,
   Section,
+  HeaderWrapper,
 } from "./Layout.style"
-import { MenuItemType, useMenu } from "../store/menuStore"
+import { MenuItemType, zooMenu } from "../store/menuStore"
 import { PageBody } from "../pages/base/PageBody"
+import { useSnippets } from "../library/hooks/useSnippets"
 
 //------------------------------
 // Main
 //------------------------------
 export const Layout = () => {
-  const setMenu = useMenu((state) => state.setMenu)
+  const setMenu = zooMenu((state) => state.setMenu)
+
+  const selectedMenu = zooMenu((state) => state.selectedMenu)
+  const { SnippetsStyleSelection, Snippets, isPending, CopyButton } =
+    useSnippets(selectedMenu)
 
   const handleMenu = (menu: MenuItemType) => {
     setMenu(menu)
@@ -25,25 +34,46 @@ export const Layout = () => {
 
   return (
     <Section data-testid="layout">
-      <Header>Sunabar Snippets</Header>
+      <HeaderWrapper>
+        <HeaderTitle>Sunabar Snippets</HeaderTitle>
+        <HeaderOptions>
+          {SnippetsStyleSelection}
+          <CopyButton />
+        </HeaderOptions>
+      </HeaderWrapper>
+
       <Body data-testid="body">
         <MenuNav data-testid="menu">
           <>
             {menuItems.map((menu, index) => {
               return (
                 <Group open key={index}>
-                  <GroupTitle data-testid="group-title">
+                  <MenuGroupTitle data-testid="group-title">
                     {menu.category}
-                  </GroupTitle>
+                  </MenuGroupTitle>
                   <GroupBody>
-                    {menu.items.map((item) => (
-                      <MenuItem
-                        key={item.name}
-                        onClick={() => handleMenu(item)}
-                      >
-                        {item.name}
-                      </MenuItem>
-                    ))}
+                    {menu.items.map((item) => {
+                      const names = item.name.split(":")
+                      return (
+                        <MenuItem
+                          key={item.name}
+                          onClick={() => handleMenu(item)}
+                        >
+                          {names.length > 1 ? (
+                            <MenuItemGroup>
+                              <MenuItemGroupItems>
+                                {names[0]}
+                              </MenuItemGroupItems>
+                              <MenuItemGroupItems>
+                                {names[1]}
+                              </MenuItemGroupItems>
+                            </MenuItemGroup>
+                          ) : (
+                            item.name
+                          )}
+                        </MenuItem>
+                      )
+                    })}
                   </GroupBody>
                 </Group>
               )
@@ -51,7 +81,7 @@ export const Layout = () => {
           </>
         </MenuNav>
         <Playground data-testid="playground">
-          <PageBody />
+          <PageBody Snippets={Snippets} isPending={isPending} />
         </Playground>
       </Body>
     </Section>

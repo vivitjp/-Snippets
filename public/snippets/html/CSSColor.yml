@@ -4,215 +4,215 @@
 - KEY: color.blue.dark
   EXPLAIN: 青色系(暗)
   BODY: |
-    color: DodgerBlue;
-    color: CornflowerBlue;
-    color: SteelBlue;
-    color: RoyalBlue;
-    color: Blue;
-    color: MediumBlue;
-    color: DarkBlue;
-    color: Navy;
-    color: MidnightBlue;
+    color: DodgerBlue; <span style="color:DodgerBlue">■</span>
+    color: CornflowerBlue; <span style="color:CornflowerBlue">■</span>
+    color: SteelBlue; <span style="color:SteelBlue">■</span>
+    color: RoyalBlue; <span style="color:RoyalBlue">■</span>
+    color: Blue; <span style="color:Blue">■</span>
+    color: MediumBlue; <span style="color:MediumBlue">■</span>
+    color: DarkBlue; <span style="color:DarkBlue">■</span>
+    color: Navy; <span style="color:Navy">■</span>
+    color: MidnightBlue; <span style="color:MidnightBlue">■</span>
 
 - KEY: color.blue.light
   EXPLAIN: 青色系(明)
   BODY: |
-    color: LightSteelBlue;
-    color: PowderBlue;
-    color: LightBlue;
-    color: SkyBlue;
-    color: LightSkyBlue;
-    color: DeepSkyBlue;
+    color: LightSteelBlue; <span style="color:LightSteelBlue">■</span>
+    color: PowderBlue; <span style="color:PowderBlue">■</span>
+    color: LightBlue; <span style="color:LightBlue">■</span>
+    color: SkyBlue; <span style="color:SkyBlue">■</span>
+    color: LightSkyBlue; <span style="color:LightSkyBlue">■</span>
+    color: DeepSkyBlue; <span style="color:DeepSkyBlue">■</span>
 
 - KEY: color.cyan.dark
   EXPLAIN: シアン色系(暗)
   BODY: |
-    color: LightSeaGreen;
-    color: CadetBlue;
-    color: DarkCyan;
-    color: Teal;
+    color: LightSeaGreen; <span style="color:LightSeaGreen">■</span>
+    color: CadetBlue; <span style="color:CadetBlue">■</span>
+    color: DarkCyan; <span style="color:DarkCyan">■</span>
+    color: Teal; <span style="color:Teal">■</span>
 
 - KEY: color.cyan.light
   EXPLAIN: シアン色系(明)
   BODY: |
-    color: LightCyan;
-    color: PaleTurquoise;
-    color: Aquamarine;
-    color: Turquoise;
-    color: MediumTurquoise;
-    color: DarkTurquoise;
+    color: LightCyan; <span style="color:LightCyan">■</span>
+    color: PaleTurquoise; <span style="color:PaleTurquoise">■</span>
+    color: Aquamarine; <span style="color:Aquamarine">■</span>
+    color: Turquoise; <span style="color:Turquoise">■</span>
+    color: MediumTurquoise; <span style="color:MediumTurquoise">■</span>
+    color: DarkTurquoise; <span style="color:DarkTurquoise">■</span>
 
 - KEY: color.green.dark
   EXPLAIN: 緑系(暗)
   BODY: |
-    color: DarkOliveGreen;
-    color: Olive;
-    color: OliveDrab;
-    color: SeaGreen;
-    color: ForestGreen;
-    color: Green;
-    color: DarkGreen;
+    color: DarkOliveGreen; <span style="color:DarkOliveGreen">■</span>
+    color: Olive; <span style="color:Olive">■</span>
+    color: OliveDrab; <span style="color:OliveDrab">■</span>
+    color: SeaGreen; <span style="color:SeaGreen">■</span>
+    color: ForestGreen; <span style="color:ForestGreen">■</span>
+    color: Green; <span style="color:Green">■</span>
+    color: DarkGreen; <span style="color:DarkGreen">■</span>
 
 - KEY: color.green.light
   EXPLAIN: xxxx色系(明)
   BODY: |
-    color: YellowGreen;
-    color: LimeGreen;
-    color: Lime;
-    color: LawnGreen;
-    color: Chartreuse;
-    color: GreenYellow;
-    color: SpringGreen;
-    color: MediumSpringGreen ;
-    color: LightGreen;
-    color: PaleGreen;
-    color: DarkSeaGreen;
-    color: MediumAquamarine;
-    color: MediumSeaGreen;
+    color: YellowGreen; <span style="color:YellowGreen">■</span>
+    color: LimeGreen; <span style="color:LimeGreen">■</span>
+    color: Lime; <span style="color:Lime">■</span>
+    color: LawnGreen; <span style="color:LawnGreen">■</span>
+    color: Chartreuse; <span style="color:Chartreuse">■</span>
+    color: GreenYellow; <span style="color:GreenYellow">■</span>
+    color: SpringGreen; <span style="color:SpringGreen">■</span>
+    color: MediumSpringGreen ; <span style="color:MediumSpringGreen ">■</span>
+    color: LightGreen; <span style="color:LightGreen">■</span>
+    color: PaleGreen; <span style="color:PaleGreen">■</span>
+    color: DarkSeaGreen; <span style="color:DarkSeaGreen">■</span>
+    color: MediumAquamarine; <span style="color:MediumAquamarine">■</span>
+    color: MediumSeaGreen; <span style="color:MediumSeaGreen">■</span>
 
 - KEY: color.purple.dark
   EXPLAIN: 紫色系(暗)
   BODY: |
-    color: Lavender;
-    color: Thistle;
-    color: Plum;
-    color: Violet;
-    color: Orchid;
-    color: Fuchsia;
-    color: Magenta;
+    color: Lavender; <span style="color:Lavender">■</span>
+    color: Thistle; <span style="color:Thistle">■</span>
+    color: Plum; <span style="color:Plum">■</span>
+    color: Violet; <span style="color:Violet">■</span>
+    color: Orchid; <span style="color:Orchid">■</span>
+    color: Fuchsia; <span style="color:Fuchsia">■</span>
+    color: Magenta; <span style="color:Magenta">■</span>
 
 - KEY: color.purple.light
   EXPLAIN: 紫色系(明)
   BODY: |
-    color: MediumOrchid;
-    color: MediumPurple;
-    color: BlueViolet;
-    color: DarkViolet;
-    color: DarkOrchid;
-    color: DarkMagenta;
-    color: Purple;
-    color: Indigo;
-    color: DarkSlateBlue;
-    color: SlateBlue;
-    color: MediumSlateBlue ;
+    color: MediumOrchid; <span style="color:MediumOrchid">■</span>
+    color: MediumPurple; <span style="color:MediumPurple">■</span>
+    color: BlueViolet; <span style="color:BlueViolet">■</span>
+    color: DarkViolet; <span style="color:DarkViolet">■</span>
+    color: DarkOrchid; <span style="color:DarkOrchid">■</span>
+    color: DarkMagenta; <span style="color:DarkMagenta">■</span>
+    color: Purple; <span style="color:Purple">■</span>
+    color: Indigo; <span style="color:Indigo">■</span>
+    color: DarkSlateBlue; <span style="color:DarkSlateBlue">■</span>
+    color: SlateBlue; <span style="color:SlateBlue">■</span>
+    color: MediumSlateBlue ; <span style="color:MediumSlateBlue ">■</span>
 
 - KEY: color.brawn.dark
   EXPLAIN: 茶色系(暗)
   BODY: |
-    color: Burlywood;
-    color: Tan;
-    color: RosyBrown;
-    color: SandyBrown;
-    color: Goldenrod;
-    color: DarkGoldenrod;
-    color: Peru;
-    color: Chocolate;
-    color: SaddleBrown;
-    color: Sienna;
-    color: Brown;
-    color: Maroon;
+    color: Burlywood; <span style="color:Burlywood">■</span>
+    color: Tan; <span style="color:Tan">■</span>
+    color: RosyBrown; <span style="color:RosyBrown">■</span>
+    color: SandyBrown; <span style="color:SandyBrown">■</span>
+    color: Goldenrod; <span style="color:Goldenrod">■</span>
+    color: DarkGoldenrod; <span style="color:DarkGoldenrod">■</span>
+    color: Peru; <span style="color:Peru">■</span>
+    color: Chocolate; <span style="color:Chocolate">■</span>
+    color: SaddleBrown; <span style="color:SaddleBrown">■</span>
+    color: Sienna; <span style="color:Sienna">■</span>
+    color: Brown; <span style="color:Brown">■</span>
+    color: Maroon; <span style="color:Maroon">■</span>
 
 - KEY: color.brawn.light
   EXPLAIN: 茶色系(明)
   BODY: |
-    color: Cornsilk;
-    color: BlanchedAlmond;
-    color: Bisque;
-    color: NavajoWhite;
-    color: Wheat;
+    color: Cornsilk; <span style="color:Cornsilk">■</span>
+    color: BlanchedAlmond; <span style="color:BlanchedAlmond">■</span>
+    color: Bisque; <span style="color:Bisque">■</span>
+    color: NavajoWhite; <span style="color:NavajoWhite">■</span>
+    color: Wheat; <span style="color:Wheat">■</span>
 
 - KEY: color.yellow.dark
   EXPLAIN: 黄色系(暗)
   BODY: |
-    color: LightYellow;
-    color: LemonChiffon;
-    color: LightGoldenrodYellow ;
-    color: PapayaWhip;
+    color: LightYellow; <span style="color:LightYellow">■</span>
+    color: LemonChiffon; <span style="color:LemonChiffon">■</span>
+    color: LightGoldenrodYellow ; <span style="color:LightGoldenrodYellow ">■</span>
+    color: PapayaWhip; <span style="color:PapayaWhip">■</span>
 
 - KEY: color.yellow.light
   EXPLAIN: 黄色系(明)
   BODY: |
-    color: Yellow;
-    color: Moccasin;
-    color: PeachPuff;
-    color: PaleGoldenrod;
-    color: Khaki;
-    color: DarkKhaki;
-    color: Gold;
+    color: Yellow; <span style="color:Yellow">■</span>
+    color: Moccasin; <span style="color:Moccasin">■</span>
+    color: PeachPuff; <span style="color:PeachPuff">■</span>
+    color: PaleGoldenrod; <span style="color:PaleGoldenrod">■</span>
+    color: Khaki; <span style="color:Khaki">■</span>
+    color: DarkKhaki; <span style="color:DarkKhaki">■</span>
+    color: Gold; <span style="color:Gold">■</span>
 
 - KEY: color.orange
   EXPLAIN: オレンジ色系
   BODY: |
-    color: OrangeRed;
-    color: Tomato;
-    color: Coral;
-    color: DarkOrange;
-    color: Orange;
+    color: OrangeRed; <span style="color:OrangeRed">■</span>
+    color: Tomato; <span style="color:Tomato">■</span>
+    color: Coral; <span style="color:Coral">■</span>
+    color: DarkOrange; <span style="color:DarkOrange">■</span>
+    color: Orange; <span style="color:Orange">■</span>
 
 - KEY: color.red.light
   EXPLAIN: 赤系(明)
   BODY: |
-    color: LightSalmon;
-    color: Salmon;
-    color: DarkSalmon;
-    color: LightCoral;
+    color: LightSalmon; <span style="color:LightSalmon">■</span>
+    color: Salmon; <span style="color:Salmon">■</span>
+    color: DarkSalmon; <span style="color:DarkSalmon">■</span>
+    color: LightCoral; <span style="color:LightCoral">■</span>
 
 - KEY: color.red.dark
   EXPLAIN: 赤系(暗)
   BODY: |
-    color: IndianRed;
-    color: Crimson;
-    color: Firebrick;
-    color: DarkRed;
-    color: Red;
+    color: IndianRed; <span style="color:IndianRed">■</span>
+    color: Crimson; <span style="color:Crimson">■</span>
+    color: Firebrick; <span style="color:Firebrick">■</span>
+    color: DarkRed; <span style="color:DarkRed">■</span>
+    color: Red; <span style="color:Red">■</span>
 
 - KEY: color.pink.dark
   EXPLAIN: ピンク系
   BODY: |
-    color: Pink;
-    color: LightPink;
-    color: HotPink;
-    color: DeepPink;
-    color: PaleVioletRed;
-    color: MediumVioletRed;
+    color: Pink; <span style="color:Pink">■</span>
+    color: LightPink; <span style="color:LightPink">■</span>
+    color: HotPink; <span style="color:HotPink">■</span>
+    color: DeepPink; <span style="color:DeepPink">■</span>
+    color: PaleVioletRed; <span style="color:PaleVioletRed">■</span>
+    color: MediumVioletRed; <span style="color:MediumVioletRed">■</span>
 
 - KEY: color.gray
   EXPLAIN: グレー系
   BODY: |
-    color: Gainsboro;
-    color: LightGray;
-    color: Silver;
-    color: DarkGray;
-    color: Gray;
-    color: DimGray;
-    color: LightSlateGray;
-    color: SlateGray;
-    color: DarkSlateGray;
+    color: Gainsboro; <span style="color:Gainsboro">■</span>
+    color: LightGray; <span style="color:LightGray">■</span>
+    color: Silver; <span style="color:Silver">■</span>
+    color: DarkGray; <span style="color:DarkGray">■</span>
+    color: Gray; <span style="color:Gray">■</span>
+    color: DimGray; <span style="color:DimGray">■</span>
+    color: LightSlateGray; <span style="color:LightSlateGray">■</span>
+    color: SlateGray; <span style="color:SlateGray">■</span>
+    color: DarkSlateGray; <span style="color:DarkSlateGray">■</span>
 
 - KEY: color.white.blue
   EXPLAIN: 白(青系)
   BODY: |
-    color: MintCream;
-    color: Azure;
-    color: AliceBlue;
-    color: GhostWhite;
-    color: WhiteSmoke;
+    color: MintCream; <span style="color:MintCream">■</span>
+    color: Azure; <span style="color:Azure">■</span>
+    color: AliceBlue; <span style="color:AliceBlue">■</span>
+    color: GhostWhite; <span style="color:GhostWhite">■</span>
+    color: WhiteSmoke; <span style="color:WhiteSmoke">■</span>
 
 - KEY: color.white.green
   EXPLAIN: 白(緑系)
   BODY: |
-    color: Honeydew;
-    color: Beige;
+    color: Honeydew; <span style="color:Honeydew">■</span>
+    color: Beige; <span style="color:Beige">■</span>
 
 - KEY: color.white.red
   EXPLAIN: 白(赤系)
   BODY: |
-    color: Snow;
-    color: Seashell;
-    color: OldLace;
-    color: FloralWhite;
-    color: Ivory;
-    color: AntiqueWhite;
-    color: Linen;
-    color: LavenderBlush;
-    color: MistyRose;
+    color: Snow; <span style="color:Snow">■</span>
+    color: Seashell; <span style="color:Seashell">■</span>
+    color: OldLace; <span style="color:OldLace">■</span>
+    color: FloralWhite; <span style="color:FloralWhite">■</span>
+    color: Ivory; <span style="color:Ivory">■</span>
+    color: AntiqueWhite; <span style="color:AntiqueWhite">■</span>
+    color: Linen; <span style="color:Linen">■</span>
+    color: LavenderBlush; <span style="color:LavenderBlush">■</span>
+    color: MistyRose; <span style="color:MistyRose">■</span>
