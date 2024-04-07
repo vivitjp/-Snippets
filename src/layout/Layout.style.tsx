@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 
 export const Section = styled.section`
   display: flex;
@@ -96,16 +96,26 @@ export const GroupBody = styled.div`
   padding-left: 5px;
 `
 
-export const MenuItem = styled.div`
-  padding: 5px;
-  text-decoration: none;
-  font-size: 0.8rem;
-  color: #777;
-  width: 100%;
-  cursor: pointer;
-  :hover {
-    color: var(--main-color);
-  }
+type MenuItem = {
+  isPending?: boolean
+}
+export const MenuItem = styled.div<MenuItem>`
+  ${({ isPending = false }) => css`
+    padding: 5px;
+    text-decoration: none;
+    font-size: 0.8rem;
+    width: 100%;
+    color: #999;
+    cursor: default;
+    ${isPending &&
+    css`
+      color: #555;
+      :hover {
+        cursor: pointer;
+        color: var(--main-color);
+      }
+    `}
+  `}
 `
 
 export const MenuItemGroup = styled.div`

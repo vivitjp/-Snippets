@@ -7,7 +7,7 @@ export const keysDocker: KeyDef[] = [
   },
   // ■ Methods
   {
-    color: "RoyalBlue", //"LightSeaGreen",
+    color: "RoyalBlue",
     keys: [
       "ls",
       "build",
@@ -44,69 +44,51 @@ export const keysDocker: KeyDef[] = [
       "disconnect",
     ],
   },
-  // // ■
-  // {
-  //   color: "LightSeaGreen",
-  //   keys: [],
-  // },
-  // // ■
-  // {
-  //   color: "Goldenrod",
-  //   keys: [],
-  // },
-  // // ■
-  // {
-  //   color: "RoyalBlue",
-  //   keys: [],
-  // },
-  // // ■
-  // {
-  //   color: "ForestGreen",
-  //   keys: ["const", "let"],
-  // },
-  // // ■
-  // {
-  //   color: "DodgerBlue",
-  //   keys: [],
-  // },
-  // // ■
-  // {
-  //   color: "CadetBlue",
-  //   keys: [],
-  // },
-  // {
-  //   color: "SteelBlue",
-  //   keys: [],
-  // },
-  // //Event
-  // {
-  //   color: "darkOrange",
-  //   keys: [],
-  // },
   {
-    color: "darkOrange",
-    keys: ["myNetwork"],
+    color: "DodgerBlue",
+    keys: [
+      "FROM",
+      "LABEL",
+      "ENV",
+      "ARG",
+      "WORKDIR",
+      "RUN",
+      "SHELL",
+      "COPY",
+      "ADD",
+      "VOLUME",
+      "EXPOSE",
+      "ENTRYPOINT",
+      "CMD",
+    ],
   },
   {
-    color: "CadetBlue", //"SteelBlue",
-    keys: ["myImage"],
-  },
-  {
-    color: "ForestGreen", //"SteelBlue",
-    keys: ["myCont"],
+    color: "CadetBlue",
+    keys: ["myCont", "myImage", "myNetwork"],
   },
   {
     color: "#555",
     keys: [
-      "IMAGE_KEYWORD",
-      "IMAGE_NAME",
-      "REGISTRY_URL",
-      "RESPOSITRY_NAME",
-      "TAG",
-      "VERSION",
-      "PATH",
-      "LOCAL_FILE",
-      "MASK",
+      "image_keyword",
+      "image_name",
+      "registry_url",
+      "respositry_name",
+      "tag",
+      "version",
+      "path",
+      "local_file",
+      "mask",
+      "title",
+      "description",
+      "cont_path",
+      "linux_command",
+      "command",
+      "params",
+      "host_path",
+      "cont_path",
+      "url",
+      "port_number",
+      "param",
     ],
   },
 ]

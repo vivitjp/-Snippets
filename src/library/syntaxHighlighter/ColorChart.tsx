@@ -6,17 +6,18 @@ export const IndianRed = styled.div`
 export const Goldenrod = styled.div`
   color: Goldenrod;
 `
-export const DarkOrange = styled.div`
-  color: darkOrange;
+export const Tomato = styled.div`
+  color: Tomato;
 `
-
+export const DarkOrange = styled.div`
+  color: DarkOrange;
+`
 export const RoyalBlue = styled.div`
   color: RoyalBlue;
 `
 export const DodgerBlue = styled.div`
   color: DodgerBlue;
 `
-
 export const ForestGreen = styled.div`
   color: ForestGreen;
 `
@@ -25,4 +26,7 @@ export const LightSeaGreen = styled.div`
 `
 export const CadetBlue = styled.div`
   color: CadetBlue;
+`
+export const DarkOrchid = styled.div`
+  color: DarkOrchid;
 `

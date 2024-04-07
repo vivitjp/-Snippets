@@ -1,0 +1,211 @@
+---
+#-------------------------------
+# TypeScript
+#-------------------------------
+
+#-------------------------------
+# Utilities
+#-------------------------------
+- KEY: ts.Util.Partial<T>
+  EXPLAIN: オプショナルに変換
+  BODY: |
+    interface Person {
+      name: string
+      age: number
+    }
+    const person: Partial<Person> = {
+      name: "John",
+    }
+    console.log(person) //{ firstName: 'John' }
+
+- KEY: ts.Util.Required<T>
+  EXPLAIN: 必須に変換
+  BODY: |
+    interface Person {
+      name?: string
+      age?: number
+    }
+    const person: Required<Person> = {
+      name: 'John', //NG age is missing
+    }
+
+- KEY: ts.Util.Readonly<T>
+  EXPLAIN: readonlyに変換
+  BODY: |
+    interface Person {
+      name: string
+    }
+    const person: Readonly<Person> = {
+      name: "John",
+    }
+    person.name = "Smith" //NG
+
+- KEY: ts.Util.Record<K,T>
+  EXPLAIN: K名:T型のレコード型作成
+  BODY: |
+    interface Person {
+      name: string
+    }
+    type People = Record<number, Person>
+    const people: People = { 0: { name: "John" }, 1: { name: "Karen" } }
+
+- KEY: ts.Util.Pick<T,K>
+  EXPLAIN: T型からK[Key]選択
+  BODY: |
+    interface Person {
+      name: string
+      address: string
+      age: number
+    }
+    type PersonAge = Pick<Person, "name" | "age">
+    const people: PersonAge[] = [
+      { name: "John", age: 32 },
+      { name: "Steve", age: 45 },
+    ]
+
+- KEY: ts.Util.Omit<T,K>
+  EXPLAIN: T型からK[Key]排除
+  BODY: |
+    interface Person {
+      name: string
+      address: string
+      age: number
+    }
+    type PersonName = Omit<Person, "address" | "age">
+    const people: PersonName[] = [{ name: "John" }, { name: "Steve" }]
+
+- KEY: ts.Util.Exclude<T,U>
+  EXPLAIN: T[型/Key]からU[型/Key]除外
+  BODY: |
+    interface TypeA {
+      id: number
+      name: string
+    }
+    interface TypeB {
+      id: number
+      address: string
+    }
+
+    type Excluded1 = Exclude<keyof TypeA, keyof TypeB> // "name"
+    type Excluded2 = Exclude<string | number | boolean, string | boolean> // number
+
+- KEY: ts.Util.Extract<T,U>
+  EXPLAIN: T[型/Key]とU[型/Key]の重複
+  BODY: |
+    interface A {
+      id: number
+      name: string
+    }
+    interface B {
+      id: number
+      address: string
+    }
+
+    type Extracted1 = Extract<keyof A, keyof B> // "id"
+    type Extracted2 = Extract<string | number | boolean, string | boolean> // string | boolean
+
+- KEY: ts.Util.NonNullable<T>
+  EXPLAIN: null/undefined 除外
+  BODY: |
+    interface A {
+      id?: number | null
+      name: string | undefined
+    }
+    type ANonNU = NonNullable<A["id"]> // number
+
+- KEY: ts.Util.DeepNonNullable<T>
+  EXPLAIN: 再帰的にnull/undefined 除外
+  BODY: |
+    type Primitive = number|string|boolean|bigint|symbol|undefined|null
+    type Builtin = Primitive | Function | Date | Error | RegExp
+    type DeepNonNullable<T> = T extends Builtin
+      ? NonNullable<T>
+      : { [key in keyof T]-?: DeepNonNullable<T[key]> }
+
+    interface A {
+      id?: number | null
+      name: string | undefined
+      address:{ 
+        zip: string | undefined
+        city: string | null
+      }|undefined
+    }
+    type ANonNU = DeepNonNullable<A>
+
+- KEY: ts.Util.Maybe<T>
+  EXPLAIN: Apolloで定義 undefined/null追加
+  BODY: |
+    type Maybe<T> = { [P in keyof T]: P | undefined | null }
+
+- KEY: ts.Util.Parameters<T>
+  EXPLAIN: メソッド引数の型群を取得
+  BODY: |
+    const funcA = (text: string, num: number) => { }
+    type A1 = Parameters<typeof funcA> // [string, number]
+    type A2 = Parameters<typeof funcA>[number] // string | number
+
+- KEY: ts.Util.ConstructorParameters<T>
+  EXPLAIN: コンストラクタの属性型群取得
+  BODY: |
+    class Person {
+      name: string
+      age: number
+      constructor(name: string, age: number) {
+        this.name = name
+        this.age = age
+      }
+    }
+    type A = ConstructorParameters<typeof Person> // [string, number]
+
+- KEY: ts.Util.ReturnType<T>
+  EXPLAIN: メソッドの戻り値型
+  BODY: |
+    const func2 = (): number => 1
+    type A = ReturnType<typeof func2> // number
+
+- KEY: ts.Util.Awaited<T>
+  EXPLAIN: 非同期awaitの戻り値
+  BODY: |
+    type A = Awaited<Promise<string>> //string
+    type B = Awaited<Promise<Promise<number>>> //number
+
+#-------------------------------
+# object Literal
+#-------------------------------
+
+- KEY: ts.objectLiteral.Util.Union
+  EXPLAIN: OLの組み合わせ
+  BODY: |
+    type Id = "A" | "B"
+    type Kind = "X" | "Y"
+    type NewId = `${Id | Kind}_id`
+    const newId: NewId = "A_id" // 'B_id', 'X_id', 'Y_id'
+
+- KEY: ts.objectLiteral.Util.Uppercase<T>
+  EXPLAIN: OLの大文字化
+  BODY: |
+    type A = "name"
+    type C = Uppercase<A> //"NAME"
+
+- KEY: ts.objectLiteral.Util.Lowercase<T>
+  EXPLAIN: OLの小文字化
+  BODY: |
+    type A = "NAME"
+    type S = Lowercase<A> //"name"
+
+- KEY: ts.objectLiteral.Util.Capitalize<T>
+  EXPLAIN: OLの先頭文字の大文字化
+  BODY: |
+    type A1 = "name"
+    type S1 = Capitalize<A1> //"Name"
+    type A2 = "NAME"
+    type S2 = Capitalize<A2> //注意:"NAME"
+    type S3 = Capitalize<Lowercase<A2>> //"Name"
+
+- KEY: ts.objectLiteral.Util.Uncapitalize<T>
+  EXPLAIN: OLの先頭文字の小文字化
+  BODY: |
+    type A1 = "Name"
+    type S1 = Uncapitalize<A1> //"name"
+    type A2 = "NAME"
+    type S2 = Uncapitalize<A2> //注意:"NAME"

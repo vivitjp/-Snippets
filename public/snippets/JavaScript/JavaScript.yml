@@ -63,6 +63,7 @@
 - KEY: js.obj.deepCopy.sample
   EXPLAIN: サンプル
   BODY: |
+    //オブジェクト
     const objectFrom = {
       a: 12,
       b: "A",
@@ -71,33 +72,29 @@
       e: true,
       f: [1, undefined],
       g: { a: 1, b: "B", c: [5, undefined], d: { k: 1 } },
-    }
-
-    const objectTo = structuredClone(objectFrom)
-    objectTo.a = 13
-    console.log(objectFrom)
-    console.log(objectTo)
-
-    const objectToInside = {
-      a: 13,
+    };
+    --------------------------------------------------
+    //■ structuredClone
+    const objectToClone = structuredClone(objectFrom);
+    objectFrom.a = 13;
+    console.log(objectFrom);
+    console.log(objectToClone);  // objectFromから影響を受けない
+    --------------------------------------------------
+    //■ JSON.parse & stringify
+    const objectToJsonCopy = JSON.parse(JSON.stringify(objectFrom));
+    //console.log(objectToJsonCopy);
+    const objectToJsonCopy_Result = {
+      a: 12,
       b: "A",
-      c: undefined,
+      // c: undefined, <--- 消失
       d: null,
       e: true,
       f: [1, undefined],
       g: { a: 1, b: "B", c: [5, undefined], d: { k: 1 } },
-    }
-
-    const JSONObjectTo = JSON.parse(JSON.stringify(objectFrom))
-    console.log(JSONObjectTo)
-    const JSONObjectToInside = {
-      a: 12,
-      b: "A",
-      d: null,
-      e: true,
-      f: [1, null],
-      g: { a: 1, b: "B", c: [5, null], d: { k: 1 } },
-    }
+    };
+    // objectFrom.f[1] = 0
+    // console.log(objectFrom.f);
+    // console.log(objectToJsonCopy.f);  // objectFromから影響を受けない
 
 - KEY: js.obj.shallowCopy
   EXPLAIN: 配列の階層限定のDeepCopy
@@ -140,21 +137,23 @@
   BODY: |
     const sample: number[] = [1, 4, 7]
     const res: number[] = sample.map((id) => id * 2)
-
-    type Object = { id: number }
-    const sample: Object[] = [{ id: 1 }, { id: 4 }, { id: 7 }]
+    --------------------------------------------------
+    type Obj = { id: number }
+    const sample: Obj[] = [{ id: 1 }, { id: 4 }, { id: 7 }]
     const res: number[] = sample.map(({ id }) => id * 2)
 
 - KEY: js.array.method.reduce
   EXPLAIN: reduce(配列)
   BODY: |
+    //配列サンプル
     const sample: number[] = [1, 4, 7]
     const res: number[] = sample.reduce((acc, id) => {
       return [...acc, id * 2]
     }, [] as number[])
-
-    type Object = { id: number }
-    const sample: Object[] = [{ id: 1 }, { id: 4 }, { id: 7 }]
+    -----------------------------------------------
+    //オブジェクトサンプル
+    type Obj = { id: number }
+    const sample: Obj[] = [{ id: 1 }, { id: 4 }, { id: 7 }]
     const res: number[] = sample.reduce((acc, { id }) => {
       return [...acc, id * 2]
     }, [] as number[])
@@ -170,76 +169,84 @@
 - KEY: js.array.method.repeat
   EXPLAIN: 配列・反復
   BODY: |
-    arr.forEach(elm=>{}) => void
-    arr.map(elm=>{}) => 配列
-    arr.reduce((acc,elm,arr)=>{}, 初期値) => any
-    arr.reduceRight((acc,elm,arr)=>{}, 初期値) => any
+    arr.forEach(elm=>{})                         //void
+    arr.map(elm=>{})                             //配列
+    arr.reduce((acc,elm,arr)=>{}, 初期値)        //any
+    arr.reduceRight((acc,elm,arr)=>{}, 初期値)   //any
 
 - KEY: js.array.method.copy
   EXPLAIN: 配列・コピー
   BODY: |
-    arr.slice([start, end]) //部分配列(シャローコピー)
-    arr.splice(start, [delCount, item1, item2, itemN]) =>削除配列
-    arr.copyWithin([target, start, end]) => 内部コピー後の配列
+    arr.slice([start, end])                    //部分配列(シャローコピー)
+    arr.splice(start, [delCount, item1, item2, itemN]) //削除配列
+    arr.copyWithin([target, start, end])       //内部コピー後の配列
+    -----------------------------------------------------------
+    spliced = arr.toSpliced([start, [delCount, item1, item2, itemN]]) //2023 削除配列(新規配列)
+    [X]sliced = arr.toSliced([start, end])     //存在せず
 
 - KEY: js.array.method.search
   EXPLAIN: 配列・検索
   BODY: |
-    arr.filter(value => value>1) => 条件一致要素の配列
-    arr.find(value => value>1) => 最初の該当要素
-    arr.findIndex(value => value>1) => 最初の該当index
-    arr.findLast(value => value>1) => 最後の該当要素
-    arr.findLastIndex(value => value>1) => 最後の該当index
-    arr.indexOf(要素) => 最初の該当要素
-    arr.lastIndexOf(要素) => 最後の該当要素
+    arr.filter(value => value>1)        //条件一致要素の配列
+    arr.find(value => value>1)          //最初の該当要素
+    arr.findIndex(value => value>1)     //最初の該当index
+    arr.findLast(value => value>1)      //最後の該当要素
+    arr.findLastIndex(value => value>1) //最後の該当index
+    arr.indexOf(要素)                   //最初の該当要素
+    arr.lastIndexOf(要素)               //最後の該当要素
 
 - KEY: js.array.method.judge
   EXPLAIN: 配列・判定
   BODY: |
     Array.isArray(配列)
-    arr.includes(要素) => Boolean 判定
-    arr.some(value => value>1) //該当が1でもあれば true
-    arr.every(value => value>1) //全てが該当すれば true
+    arr.includes(要素)                  //Boolean 判定
+    arr.some(value => value>1)          //該当が1でもあれば true
+    arr.every(value => value>1)         //全てが該当すれば true
 
 - KEY: js.array.method.object
   EXPLAIN: 配列・オブジェクト反復
   BODY: |
     arr.entries(([key, {id,name}])=>{}) //キーと値iterator
-    arr.values(value => {}) //値iterator
-    arr.keys(key=>{}) //キーiterator
+    arr.values(value => {})             //値iterator
+    arr.keys(key=>{})                   //キーiterator
 
 - KEY: js.array.method.make.arrange
   EXPLAIN: 配列・Index/生成/変更
   BODY: |
-    arr.at(index) //要素取得
-    Array.of(1,2,3) => 配列もどきから配列生成
-    Array.from(文字列,Map,Set) => 配列生成
-    arr.fill(値) //全上書き(破壊的)
-    arr.flat(深さ数値) => 配列 //多重配列のフラット化
-    arr.flatMap(value=>value) => 配列 //多重配列のフラット化
-    arr.concat(配列) => 配列合体
-    arr.join(配列) => 文字列化
+    arr.at(index)                 //要素取得(2022)
+    Array.of(1,2,3)               //配列もどきから配列生成
+    Array.from(文字列,Map,Set)     //配列生成
+    arr.fill(値)                  //全上書き(破壊的)
+    arr.flat(深さ数値)             //配列: 多重配列のフラット化
+    arr.flatMap(value=>value)     //配列: 多重配列のフラット化
+    arr.concat(配列)              //配列合体
+    arr.join(配列)                 //文字列化
+    -----------------------------------------------------------
+    result = arr.with(index, value) //2023 指定Index要素の置換で新配列を戻す
 
 - KEY: js.array.method.pushPop
   EXPLAIN: 配列・挿入/取得
   BODY: |
-    arr.pop() //最後の要素取得(破壊的)
-    arr.push(value) //末尾に追加(破壊的)
-    arr.shift() //最初の要素取得(破壊的)
-    arr.unshift(value) //先頭に追加(破壊的)
+    arr.pop()            //最後の要素取得(破壊的)
+    arr.push(value)      //末尾に追加(破壊的)
+    arr.shift()          //最初の要素取得(破壊的)
+    arr.unshift(value)   //先頭に追加(破壊的)
 
 - KEY: js.array.method.sort
   EXPLAIN: 配列・ソート
   BODY: |
-    arr.sort((a,b)=>a-b) //昇順ソート(破壊的)
-    arr.sort((a,b)=>b-a) //降順ソート(破壊的)
-    arr.reverse() //逆ソート(破壊的)
+    arr.sort((a,b)=>a-b)               //昇順ソート(破壊的)
+    arr.sort((a,b)=>b-a)               //降順ソート(破壊的)
+    arr.reverse()                      //逆ソート(破壊的)
+    -----------------------------------------------------------
+    sorted = arr.toSorted((a,b)=>a-b)  //昇順ソート(2023)
+    sorted = arr.toReversed()          //逆ソート(2023)
 
 - KEY: js.array.method.toString
   EXPLAIN: 配列・文字列化
   BODY: |
     arr.toLocaleString() //文字列化
-    arr.toString() //文字列化
+    arr.toString()       //文字列化
 
 #-------------------------------
 # Array ランダム化

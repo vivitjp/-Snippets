@@ -20,9 +20,9 @@
 
       return (
         <ul>
-          {labels.map((label, idx) => (
+          {labels.map((title, idx) => (
             <li key={idx}>
-              <label htmlFor={id}>{label}</label>
+              <label htmlFor={id}>{title}</label>
               <input
                 {...args}
                 id={id}
@@ -42,11 +42,11 @@
     type Props = {
       text: string
       setText: React.Dispatch<React.SetStateAction<string>>
-      label: string
+      title: string
     } & React.ComponentPropsWithRef<"input">
 
     export const InputRef = forwardRef<HTMLInputElement, Props>(
-      ({ text, setText, label, ...args }, ref) => {
+      ({ text, setText, title, ...args }, ref) => {
         const id = useId()
 
         const handleChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,7 +56,7 @@
 
         return (
           <div>
-            <label htmlFor={id}>{label}</label>
+            <label htmlFor={id}>{title}</label>
             <input {...args} id={id} ref={ref} onChange={handleChangeText} />
           </div>
         )

@@ -31,7 +31,6 @@
       const { data, error } = useSWR(`${URL}/${number}`, fetcher, {
         revalidateOnFocus: false,
       })
-
       return {
         people: data,
         isLoading: !error && !data,
@@ -47,6 +46,7 @@
   EXPLAIN: Recoil 1 State
   BODY: |
     import { atom } from "recoil"
+
     export const xxxxRecoilState = atom<TypeXxxx[]>({
       key: "xxxxRecoilStateKey", //Unique名
       default: dataXxxx, //初期データ
@@ -56,6 +56,7 @@
   EXPLAIN: Recoil 2 Root
   BODY: |
     import { RecoilRoot } from "recoil"
+
     export const ParentCompo = () => {
       return (
         <RecoilRoot>
@@ -69,6 +70,7 @@
   BODY: |
     import { useRecoilState } from "recoil"
     import { xxxxRecoilState } from "./xxxxRecoilState"
+
     export const ChildCompo = () => {
       const [xxxx] = useRecoilState(xxxxRecoilState)
 

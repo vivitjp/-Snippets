@@ -4,16 +4,26 @@ export const keysJest: KeyDef[] = [
   // ■ Main(赤)
   {
     color: "IndianRed",
-    keys: ["test", "it", "describe", "jest"],
+    keys: [
+      "beforeEach",
+      "afterEach",
+      "beforeAll",
+      "afterAll",
+      "describe",
+      "test",
+      "it",
+      "jest",
+      "not",
+    ],
   },
   // ■ Sub(青)
   {
-    color: "RoyalBlue",
+    color: "DodgerBlue",
     keys: ["expect", "extend"],
   },
   // ■ オレンジ
   {
-    color: "darkOrange",
+    color: "ForestGreen",
     keys: [
       "only",
       "skip",
@@ -25,12 +35,19 @@ export const keysJest: KeyDef[] = [
       "calls",
       "results",
       "fn",
-      "not",
+      "anything",
+      "any",
+      "arrayContaining",
+      "stringContaining",
+      "stringMatching",
+      "resolves",
+      "rejects",
+      "objectContaining",
     ],
   },
   // ■ 緑
   {
-    color: "ForestGreen",
+    color: "CadetBlue",
     keys: [
       "toBe",
       "toBeCalledWith",
@@ -80,23 +97,6 @@ export const keysJest: KeyDef[] = [
       "toBeWithinRange",
       "message",
       "pass",
-    ],
-  },
-  // ■ 別青
-  {
-    color: "CadetBlue",
-    keys: ["beforeEach", "afterEach", "beforeAll", "afterAll"],
-  },
-  {
-    color: "SteelBlue",
-    keys: [
-      "anything",
-      "any",
-      "arrayContaining",
-      "stringContaining",
-      "stringMatching",
-      "resolves",
-      "rejects",
     ],
   },
   // // ■

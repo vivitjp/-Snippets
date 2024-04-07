@@ -10,15 +10,17 @@
 - KEY: pk.rhf.core.providerContext
   EXPLAIN: RFHのFormProvider Core
   BODY: |
-    <FormProvider {...methods}> <----- ここから
+    親コンポーネント
+    <FormProvider {...methods}>                    <----- ここから
       <form onSubmit={handleSubmit(onSubmit)}>
-        <ChildByContext />
+        <ChildByContext<型> />
         <button type="submit">OK</button>
       </form>
     </FormProvider>
 
-    export const ChildByContext = () => {
-      const { register } = useFormContext<型依存>() <---ここへ
+    子コンポーネント
+    export const ChildByContext<型> = () => {
+      const { register } = useFormContext<型>() <---ここへ
       return (
         <input {...register("name", { required: true })} />
       )
@@ -38,6 +40,7 @@
         defaultValues,
         //shouldUnregister: true, //mnt/unmnt データ保存有無
       })
+
       const { handleSubmit } = methods
       const onSubmit: SubmitHandler<RHF_SimpleValues> = (data)
        => { console.table(data) }
@@ -45,7 +48,7 @@
       return (
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <ChildByContext />
+            <ChildByContext<RHF_SimpleValues> />
             <button type="submit">OK</button>
           </form>
         </FormProvider>
@@ -56,11 +59,11 @@
   EXPLAIN: RFHのContext子
   BODY: |
     import { useFormContext } from "react-hook-form"
-    import { RHF_SimpleValues } from "./RHFByProvider"
+    //import { RHF_SimpleValues } from "./RHFByProvider"
 
-    export const ChildByContext = () => {
+    export const ChildByContext<T> = () => {
       const { register, formState: { errors } } =
-       useFormContext<RHF_SimpleValues>() //<---依存
+       useFormContext<T>()
 
       return (
         <div>

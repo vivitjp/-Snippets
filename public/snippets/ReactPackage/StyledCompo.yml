@@ -31,19 +31,15 @@
   BODY: |
     type Div = {
       width?: number
-      border?: string
-      padding?: number
+      isPending? : boolean
     }
 
     export const Div = styled.div<Div>`
       width: ${({ width }) => `${width ? `${width}px` : "100%"}`};
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: center;
-      gap: 10px;
-      border: ${({ border }) => `${border ? `1px solid ${border};` : "none"}`};
-      padding: ${({ padding }) => `${padding ? `${padding}px` : "5px"}`};
+      :hover {
+        color: ${({ isPending = false }) =>
+          isPending ? "var(--main-color)" : "#777"};
+      }
     `
 
 - KEY: pk.styled.css
@@ -56,6 +52,27 @@
         color: var(--main-color);
         font-size: ${props.fontSize ?? "inherit"};
         ${props.fontFamily && `font-family: ${props.fontFamily}`};
+      `}
+    `
+
+- KEY: pk.styled.css.css
+  EXPLAIN: div flex 引数(css入れ子)
+  BODY: |
+    type MenuItem = {
+      isPending?: boolean
+    }
+    export const MenuItem = styled.div<MenuItem>`
+      ${({ isPending = false }) => css`
+        padding: 5px;
+        color: #999;
+        ${isPending &&
+        css`
+          color: #555;
+          :hover {
+            cursor: pointer;
+            color: var(--main-color);
+          }
+        `}
       `}
     `
 

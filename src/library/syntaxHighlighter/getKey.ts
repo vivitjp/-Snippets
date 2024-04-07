@@ -1,20 +1,30 @@
 import { keysCSS } from "./keys/CSS"
 import { keysDocker } from "./keys/Docker"
 import { keysGit } from "./keys/Git"
+import { keysHTML } from "./keys/HTML"
 import { keysJSTS } from "./keys/JSTS"
 import { keysJest } from "./keys/Jest"
 import { keysLinux } from "./keys/Linux"
 import { keysMySql } from "./keys/MySql"
-import { keysUnknown } from "./keys/Unknown"
+import { keysPackage } from "./keys/Package"
+import { keysReact } from "./keys/React"
+import { keysTS } from "./keys/TS"
+import { keysCurl } from "./keys/curl"
+import { KeyDef } from "./syntaxHighlighter"
 
 export const codeKeys = {
   CSS: "CSS",
+  HTML: "HTML",
   JSTS: "JSTS",
+  TS: "TS",
+  React: "React",
+  Package: "Package",
   Docker: "Docker",
   Git: "Git",
   Jest: "Jest",
   Linux: "Linux",
   MySql: "MySql",
+  Curl: "Curl",
   Unknown: "Unknown",
 } as const
 
@@ -22,27 +32,29 @@ export const defaultSnippetsStyle = codeKeys.Unknown
 
 export type CodeKeyType = (typeof codeKeys)[keyof typeof codeKeys]
 
-export const getKey = (codeKeyType: CodeKeyType | undefined) => {
-  console.log("Syntax Highlight: ", codeKeyType)
+export const KeyAndCodes: Record<CodeKeyType, KeyDef[]> = {
+  CSS: keysCSS,
+  HTML: keysHTML,
+  JSTS: keysJSTS,
+  TS: keysTS,
+  React: keysReact,
+  Package: keysPackage,
+  Docker: keysDocker,
+  Git: keysGit,
+  Jest: keysJest,
+  Linux: keysLinux,
+  MySql: keysMySql,
+  Curl: keysCurl,
+  Unknown: [],
+}
 
-  if (!codeKeyType) return keysUnknown
+export const getKey = (codeKeyTypes: CodeKeyType[] | undefined) => {
+  if (!codeKeyTypes?.length) return []
 
-  switch (codeKeyType) {
-    case codeKeys.CSS:
-      return keysCSS
-    case codeKeys.JSTS:
-      return keysJSTS
-    case codeKeys.Docker:
-      return keysDocker
-    case codeKeys.Git:
-      return keysGit
-    case codeKeys.Jest:
-      return keysJest
-    case codeKeys.Linux:
-      return keysLinux
-    case codeKeys.MySql:
-      return keysMySql
-    default:
-      return keysUnknown
+  let mergedKeys: KeyDef[] = []
+
+  for (const codeKeyType of codeKeyTypes) {
+    mergedKeys = [...mergedKeys, ...KeyAndCodes[codeKeyType]]
   }
+  return mergedKeys
 }

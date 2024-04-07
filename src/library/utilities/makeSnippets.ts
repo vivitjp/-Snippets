@@ -42,7 +42,7 @@ export const makeSnippets = async ({ file, scope }: Props) => {
       const key = EXPLAIN ?? KEY
       returnData[key] = {
         prefix: KEY,
-        body: BODY?.split("\n").filter((n) => n),
+        body: BODY?.trim().split("\n"),
       }
       if (scope) returnData[key].scope = scope
     })

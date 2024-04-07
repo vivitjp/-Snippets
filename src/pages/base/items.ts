@@ -11,18 +11,24 @@ export const menuItems: menuByCategories[] = [
     category: "Html/CSS",
     items: [
       {
+        name: "HTML",
+        fileName: "html/HTML",
+        codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS],
+      },
+      {
         name: "CSS:bg,bdr,just,css",
         fileName: "html/CSS",
-        codeKeyType: codeKeys.CSS,
+        codeKeyTypes: [codeKeys.CSS],
+      },
+      {
+        name: "CSS(レスポンシブ)",
+        fileName: "",
+        codeKeyTypes: [codeKeys.CSS],
       },
       {
         name: "CSSColor:color",
         fileName: "html/CSSColor",
         html_encode: false,
-      },
-      {
-        name: "HTML",
-        fileName: "html/HTML",
       },
     ],
   },
@@ -32,17 +38,27 @@ export const menuItems: menuByCategories[] = [
       {
         name: "JavaScript:js",
         fileName: "JavaScript/JavaScript",
-        codeKeyType: codeKeys.JSTS,
+        codeKeyTypes: [codeKeys.JSTS],
       },
       {
         name: "TypeScript:ts",
         fileName: "JavaScript/TypeScript",
-        codeKeyType: codeKeys.JSTS,
+        codeKeyTypes: [codeKeys.JSTS],
+      },
+      {
+        name: "TypeScript(Util):ts",
+        fileName: "JavaScript/TypeScriptUtilities",
+        codeKeyTypes: [codeKeys.JSTS, codeKeys.TS],
       },
       {
         name: "非同期:js",
         fileName: "JavaScript/JavaScriptAsync",
-        codeKeyType: codeKeys.JSTS,
+        codeKeyTypes: [codeKeys.JSTS],
+      },
+      {
+        name: "Dom",
+        fileName: "",
+        codeKeyTypes: [],
       },
     ],
   },
@@ -52,17 +68,17 @@ export const menuItems: menuByCategories[] = [
       {
         name: "React:qw",
         fileName: "React/React",
-        codeKeyType: codeKeys.JSTS,
+        codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS, codeKeys.React],
       },
       {
         name: "Component:qw",
         fileName: "React/ReactComponent",
-        codeKeyType: codeKeys.JSTS,
+        codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS, codeKeys.React],
       },
       {
         name: "Routing:qw",
         fileName: "React/ReactRouting",
-        codeKeyType: codeKeys.JSTS,
+        codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS, codeKeys.React],
       },
     ],
   },
@@ -72,27 +88,94 @@ export const menuItems: menuByCategories[] = [
       {
         name: "Fetch/State:pk",
         fileName: "ReactPackage/ReactFetchState",
-        codeKeyType: codeKeys.JSTS,
+        codeKeyTypes: [
+          codeKeys.HTML,
+          codeKeys.JSTS,
+          codeKeys.React,
+          codeKeys.Package,
+        ],
       },
       {
         name: "ReactHookForm:pk",
         fileName: "ReactPackage/ReactHookForm",
-        codeKeyType: codeKeys.JSTS,
+        codeKeyTypes: [
+          codeKeys.HTML,
+          codeKeys.JSTS,
+          codeKeys.React,
+          codeKeys.Package,
+        ],
       },
       {
         name: "Storybook(v6):pk",
         fileName: "ReactPackage/Storybook",
-        codeKeyType: codeKeys.JSTS,
+        codeKeyTypes: [
+          codeKeys.HTML,
+          codeKeys.JSTS,
+          codeKeys.React,
+          codeKeys.Package,
+        ],
       },
       {
         name: "StyledComponent:pk",
         fileName: "ReactPackage/StyledCompo",
-        codeKeyType: codeKeys.JSTS,
+        codeKeyTypes: [
+          codeKeys.CSS,
+          codeKeys.HTML,
+          codeKeys.JSTS,
+          codeKeys.React,
+          codeKeys.Package,
+        ],
       },
       {
         name: "zustand:pk",
         fileName: "ReactPackage/zustand",
-        codeKeyType: codeKeys.JSTS,
+        codeKeyTypes: [
+          codeKeys.HTML,
+          codeKeys.JSTS,
+          codeKeys.React,
+          codeKeys.Package,
+        ],
+      },
+    ],
+  },
+
+  {
+    category: "React Framework",
+    items: [
+      {
+        name: "Nextjs",
+        fileName: "",
+        codeKeyTypes: [],
+      },
+      {
+        name: "Nestjs",
+        fileName: "",
+        codeKeyTypes: [],
+      },
+      {
+        name: "TypeORM",
+        fileName: "",
+        codeKeyTypes: [],
+      },
+    ],
+  },
+  {
+    category: "クラウド",
+    items: [
+      {
+        name: "AWSサービス",
+        fileName: "",
+        codeKeyTypes: [],
+      },
+    ],
+  },
+  {
+    category: "他言語",
+    items: [
+      {
+        name: "Python",
+        fileName: "",
+        codeKeyTypes: [],
       },
     ],
   },
@@ -102,12 +185,17 @@ export const menuItems: menuByCategories[] = [
       {
         name: "docker",
         fileName: "OS/Docker",
-        codeKeyType: codeKeys.Docker,
+        codeKeyTypes: [codeKeys.Docker],
+      },
+      {
+        name: "dockerCompose",
+        fileName: "",
+        codeKeyTypes: [codeKeys.Docker],
       },
       {
         name: "Linux",
         fileName: "OS/LinuxCommand",
-        codeKeyType: codeKeys.Linux,
+        codeKeyTypes: [codeKeys.Linux],
       },
     ],
   },
@@ -117,7 +205,20 @@ export const menuItems: menuByCategories[] = [
       {
         name: "mySQL",
         fileName: "database/mySql",
-        codeKeyType: codeKeys.MySql,
+        codeKeyTypes: [codeKeys.MySql],
+        case_sensitive: false,
+      },
+      {
+        name: "PostgreSQL",
+        fileName: "",
+        codeKeyTypes: [],
+        case_sensitive: false,
+      },
+      {
+        name: "MongoDB",
+        fileName: "",
+        codeKeyTypes: [],
+        case_sensitive: false,
       },
     ],
   },
@@ -127,7 +228,7 @@ export const menuItems: menuByCategories[] = [
       {
         name: "Git",
         fileName: "Project/Git",
-        codeKeyType: codeKeys.Git,
+        codeKeyTypes: [codeKeys.Git],
       },
       {
         name: "Lint",
@@ -141,7 +242,7 @@ export const menuItems: menuByCategories[] = [
       {
         name: "jest",
         fileName: "Test/Jest",
-        codeKeyType: codeKeys.Jest,
+        codeKeyTypes: [codeKeys.Jest],
       },
     ],
   },
@@ -153,8 +254,34 @@ export const menuItems: menuByCategories[] = [
         fileName: "WebAPI/SVG",
       },
       {
-        name: "Windows:win",
-        fileName: "WebAPI/windows",
+        name: "window:win",
+        fileName: "WebAPI/window",
+      },
+      {
+        name: "LocalStorage",
+        fileName: "",
+      },
+      {
+        name: "IndexedDB",
+        fileName: "",
+      },
+    ],
+  },
+  {
+    category: "Network",
+    items: [
+      {
+        name: "HTTPレスポンス",
+        fileName: "network/http_response",
+      },
+      {
+        name: "Curl",
+        fileName: "network/curl",
+        codeKeyTypes: [codeKeys.Curl],
+      },
+      {
+        name: "Cookie",
+        fileName: "",
       },
     ],
   },

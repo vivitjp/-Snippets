@@ -4,8 +4,9 @@ import { CodeKeyType } from "../library/syntaxHighlighter/getKey"
 export type MenuItemType = {
   name: string
   fileName: string
-  codeKeyType?: CodeKeyType
+  codeKeyTypes?: CodeKeyType[]
   html_encode?: boolean
+  case_sensitive?: boolean
 }
 
 type Menu = {

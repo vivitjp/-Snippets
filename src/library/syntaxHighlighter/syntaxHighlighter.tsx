@@ -7,16 +7,18 @@ export type SyntaxHighlight = {
   code: string
   keyDefs: KeyDef[]
   html_encode?: boolean
+  case_sensitive?: boolean
 }
 
 export const syntaxHighlight = ({
   code,
   keyDefs,
   html_encode = true,
+  case_sensitive = true,
 }: SyntaxHighlight) => {
   const escaped = escapeHtml(code, html_encode) ?? ""
-
   const rebuilt: JSX.Element[] = []
+  const case_sense = case_sensitive ? "g" : "gi"
 
   escaped.split("\n").forEach((line, idx) => {
     let result = line
@@ -25,7 +27,7 @@ export const syntaxHighlight = ({
     keyDefs.forEach(({ color, keys }) => {
       keys.forEach((key) => {
         if (!key) return
-        const re = new RegExp(`\\b${key}\\b`, "ig")
+        const re = new RegExp(`\\b${key}\\b`, case_sense)
         result = result.replaceAll(
           re,
           `<span class="syntax" style="color:${color}">${key}</span>`
@@ -36,6 +38,8 @@ export const syntaxHighlight = ({
       rebuilt.push(
         <pre key={idx} dangerouslySetInnerHTML={{ __html: result }} />
       )
+    } else {
+      rebuilt.push(<pre key={idx}>&nbsp;</pre>)
     }
   })
   return rebuilt

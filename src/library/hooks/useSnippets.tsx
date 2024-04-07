@@ -15,7 +15,7 @@ type SnippetsObject = {
   prefix: string
   scope?: string | undefined
   body: string[]
-  codeKeyType?: CodeKeyType
+  codeKeyTypes?: CodeKeyType[]
 }
 
 export type KeyDef = {
@@ -23,7 +23,7 @@ export type KeyDef = {
   keys: string[]
 }
 
-export const useSnippets = (choice: MenuItemType | undefined) => {
+export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
   const [isPending, setIsPending] = useState(false)
   const [data, setData] = useState<Snippets | string[] | undefined>()
   const [dataFormatted, setDataFormatted] = useState<JSX.Element[]>([])
@@ -35,12 +35,14 @@ export const useSnippets = (choice: MenuItemType | undefined) => {
   })
 
   useEffect(() => {
-    if (!choice?.fileName) return
+    if (!selectedMenu?.fileName) return
+    //Spinner Flag
+
     setIsPending(true)
     ;(async () => {
       //ファイルからデータ読み込み
       const result = await makeSnippets({
-        file: `snippets/${choice.fileName}.yml`,
+        file: `snippets/${selectedMenu.fileName}.yml`,
         scope: value,
       })
       setData(result)
@@ -49,16 +51,23 @@ export const useSnippets = (choice: MenuItemType | undefined) => {
       //配列化
       const array = Object.entries(result ?? {}) as [string, SnippetsObject][]
       //Highlight
-      const keyDefs: KeyDef[] = getKey(choice?.codeKeyType)
+      const keyDefs: KeyDef[] = getKey(selectedMenu?.codeKeyTypes)
       //Highlightして JSX.Element[] に変換
 
       const formatted = array.map(([title, snippetsObject], index) => {
-        const code = snippetsObject.body.map((n) => (!n ? " " : n)).join("\n")
+        const code = (
+          !snippetsObject.body.at(-1)
+            ? snippetsObject.body.splice(-1, 1)
+            : snippetsObject.body
+        )
+          .map((n) => (!n ? " " : n))
+          .join("\n")
 
         const highlighted = syntaxHighlight({
           code,
           keyDefs,
-          html_encode: choice.html_encode,
+          html_encode: selectedMenu.html_encode,
+          case_sensitive: selectedMenu.case_sensitive,
         })
         return (
           <Column key={index}>
@@ -73,7 +82,7 @@ export const useSnippets = (choice: MenuItemType | undefined) => {
       setDataFormatted(formatted)
       setIsPending(false)
     })()
-  }, [choice, value])
+  }, [selectedMenu, value])
 
   const Snippets = () => {
     return <>{dataFormatted}</>

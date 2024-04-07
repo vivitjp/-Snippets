@@ -64,7 +64,7 @@ export const keysGit: KeyDef[] = [
   },
   // ■
   {
-    color: "darkOrange",
+    color: "Coral",
     keys: [
       "show",
       "set-upstream-to",
