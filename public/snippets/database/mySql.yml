@@ -212,6 +212,7 @@
     VALUES ROW(value1,value2,value3), ROW(value1,value2,value3), ...;
     select * from (VALUES ROW(1,-2,3), ROW(5,7,9)) as tmp;
     ------------------------------------------------------------------
+    EXISTS (<values|subquery>)        // (速い)存在有無(1行でも)
     *SELECT不要
     *Error: カラム数不一致 VALUES ROW(value1,value2,value3), ROW(value1);
 
@@ -221,21 +222,541 @@
     WITH [RECURSIVE] <with1> [(<col>,...)] AS (SELECT <col>,....), <with2>
     SELECT <col>,<col> FROM <with1>;
 
-# ------------------------------------------------------------------
+- KEY: mysql.query.sub
+  EXPLAIN: サブクエリ
+  BODY: |
+    <col> IN (1,2,3)                   // (遅い)存在有無 =ANY
+    <col> IN (<subquery>)              // (遅い)存在有無 =ANY
+    <col> =/</> ANY/SOME (<subquery>)  // (遅い)部分合致 SOME=ANY
+    <col> =/</> ALL (<subquery>)       // (遅い)全合致 SOME=ANY
+    EXISTS (<subquery>)                // (速い)存在有無(1行でも)
+    -- -----------------------------------------------------------
+    // 相関サブクエリ
+    ... FROM t1 WHERE c1 = ANY(SELECT c1 FROM t2 WHERE t2.c2 = t1.c2);
+    // 導出
+    SELECT ...,p FROM t1, (SELECT t1id,p FROM t2) t2 WHERE t1.id=t2.t1id;
+    // ラテラル導出
+    SELECT ...,p FROM t1, LATERAL (SELECT p FROM t2 WHERE t1.id=t2.t1id) t2;
 
-# - KEY: mysql.
-#   EXPLAIN:
-#   BODY: |
+- KEY: mysql.view
+  EXPLAIN: ビュー
+  BODY: |
+    //INSERT/UPDATE/DELETE も条件次第で可能
+    CREATE OR REPLACE VIEW <view> AS SELECT ... ORDER BY <col>;
+    DROP VIEW <view>;
 
-# - KEY: mysql.
-# EXPLAIN:
-# BODY: |
+- KEY: mysql.insert
+  EXPLAIN: 挿入(or更新)
+  BODY: |
+    INSERT INTO <table>(<cols>) VALUES (values),(values),...;
+    INSERT INTO <table>(<cols>) SELECT <cols> FROM <table> WHERE condition;
+    // 挿入 or 更新(KEY重複時)
+    INSERT INTO <table>(<cols>) VALUES (values) ON DUPLICATE KEY UPDATE <col>=value, ...;
+    // 挿入 or 削除=>新規挿入
+    REPLACE INTO <table>(<cols>) VALUES (values),(values),...;
 
-# - KEY: mysql.
-# EXPLAIN:
-# BODY: |
+- KEY: mysql.update
+  EXPLAIN: 更新
+  BODY: |
+    UPDATE <schema>.<table> SET <col>=value WHERE condition;
 
-# - KEY: mysql.
-# EXPLAIN:
-# BODY: |
+- KEY: mysql.delete
+  EXPLAIN: 削除
+  BODY: |
+    DELETE FROM <schema>.<table> WHERE condition;  // 削除
+    TRUNCATE TABLE <schema>.<table>;               // (テーブル内全データ)削除
 
+- KEY: mysql.compare.signs
+  EXPLAIN: 比較記号
+  BODY: |
+    =, <, <=, >, =>, <>, BETWEEN A AND B, IS
+    <col> [比較記号] value
+    <col(日付/時刻文字列)> [比較記号] '12:00'  // 日付文字列との前後比較可能
+    <col(文字列)> [比較記号] 'abc'            // 文字コード順の前後比較可能
+    <col> IS NULL(=UNKNOWN)                  // NULL比較
+    GREATEST(values)
+    LEAST(values)
+    INTERVAL
+    --現在時刻から60秒前以降の値のものを抽出
+    select * from foo where modified < now() - interval 60 second;
+    --7日後を表示
+    select now() + interval 7 day;
+    --30分以内のdate
+    INTERVAL 例: SELECT * FROM table WHERE (`date` > (NOW() - INTERVAL 30 MINUTE)
+
+- KEY: mysql.regExp
+  EXPLAIN: 正規表現
+  BODY: |
+    <col> LIKE '%文字列%' (%:0以上)
+    <col> LIKE '_文字列_' (_:1文字) 
+    <col> REGEXP [BINARY] '正規表現'      //BINARY:CASE区別
+
+- KEY: mysql.regExp.REGEXP_INSTR
+  EXPLAIN: 拡張(INDEX)
+  BODY: |
+    REGEXP_INSTR(<col>,'正規表現',一致位置,出現回数,返す位置,type) => INDEX
+    ------------------------------------------------------------------
+    REGEXP_INSTR('dog cat dog', 'dog')    => 1
+    REGEXP_INSTR('dog cat dog', 'dog', 2) => 9
+    REGEXP_INSTR('aa aaa aaaa', 'a{2}')   => 1
+    REGEXP_INSTR('aa aaa aaaa', 'a{4}')   => 8
+
+- KEY: mysql.regExp.REGEXP_LIKE
+  EXPLAIN: 拡張(LIKE)
+  BODY: |
+    REGEXP_LIKE(<col>,'正規表現',type('c':case,'i':ins,'m':mult,...))
+    ------------------------------------------------------------------
+    REGEXP_LIKE('CamelCase', 'CAMELCASE') => 1
+    REGEXP_LIKE('CamelCase', 'CAMELCASE' COLLATE utf8mb4_0900_as_cs) => 0
+    REGEXP_LIKE('Michael!', '.*')                => 1
+    REGEXP_LIKE('new*\n*line', 'new\\*.\\*line') => 0
+    REGEXP_LIKE('a', '^[a-d]')                   => 1
+    REGEXP_LIKE('a', 'A')                        => 1
+    REGEXP_LIKE('a', BINARY 'A')                 => 0
+    REGEXP_LIKE('abc', 'ABC')                    => 1
+    REGEXP_LIKE('abc', 'ABC', 'c')               => 0
+
+- KEY: mysql.regExp.REGEXP_REPLACE
+  EXPLAIN: 拡張(置換)
+  BODY: |
+    REGEXP_REPLACE(<col>,'正規表現','置換文字',一致位置,出現回数,type)
+    ------------------------------------------------------------------
+    REGEXP_REPLACE('a b c', 'b', 'X')                  => a X c
+    REGEXP_REPLACE('abc def ghi', '[a-z]+', 'X', 1, 3) => abc def X
+
+- KEY: mysql.regExp.REGEXP_SUBSTR
+  EXPLAIN: 拡張(部分一致)
+  BODY: |
+    REGEXP_SUBSTR(<col>,'正規表現',一致位置,出現回数,type)
+    ------------------------------------------------------------------
+    REGEXP_SUBSTR('abc def ghi', '[a-z]+')       => abc
+    REGEXP_SUBSTR('abc def ghi', '[a-z]+', 1, 3) => ghi
+
+- KEY: mysql.group
+  EXPLAIN: 集約
+  BODY: |
+    COUNT([DISTINCT]<col>) //総数
+    AVG(<col>)             //平均値
+    MAX(<col>)             //最大値
+    MIN(<col>)             //最小値
+    SUM(<col>)             //合計値
+
+- KEY: mysql.group_concat
+  EXPLAIN: 結合
+  BODY: |
+    GROUP_CONCAT([DISTINCT] <col> [ORDER BY <col>] [SEPARATOR ' '])
+    ------------------------------------------------------------------
+    SELECT name, GROUP_CONCAT(score) FROM student GROUP BY name;
+    SELECT name, GROUP_CONCAT(DISTINCT score ORDER BY score DESC SEPARATOR ',')
+      FROM student GROUP BY name;
+
+- KEY: mysql.json_agg
+  EXPLAIN: JSON形式
+  BODY: |
+    +----+-----------+-------+
+    | id | attribute | value |
+    +----+-----------+-------+
+    |  2 | color     | red   |
+    |  2 | fabric    | silk  |
+    |  3 | color     | green |
+    |  3 | shape     | square|
+    +----+-----------+-------+
+    SELECT id, JSON_ARRAYAGG(attribute) AS attributes FROM <table> GROUP BY id;
+    +----+---------------------+
+    |  2 | ["color", "fabric"] |
+    |  3 | ["color", "shape"]  |
+    +----+---------------------+
+    SELECT id, JSON_OBJECTAGG(attribute, value) FROM <table> GROUP BY id;
+    +----+---------------------------------------+
+    |  2 | {"color": "red", "fabric": "silk"}    |
+    |  3 | {"color": "green", "shape": "square"} |
+    +----+---------------------------------------+
+
+- KEY: mysql.window
+  EXPLAIN: 集計(GROUP BY不要)
+  BODY: |
+    // 全レコードから集計
+    SUM(profit) OVER() AS <alias>
+    // 指定Colごとに集計
+    SUM(profit) OVER(PARTITION BY <col> [ORDER BY <col>]) AS <alias>
+
+- KEY: mysql.if.case
+  EXPLAIN: 条件節
+  BODY: |
+    IF(条件節, 正, 負)
+    select if(1=2, 3, 4);
+    ---------------------------------------------------------
+    CASE <table>.<col> WHEN value THEN value ELSE value END;
+
+- KEY: mysql.if.null
+  EXPLAIN: 条件節(NULL)
+  BODY: |
+    ISNULL(<col>)
+      ISNULL(1+1)  => 0
+      ISNULL(1/0)  => 1
+    ---------------------------------------------------------
+    COALESCE(<col>,<col>,...)
+      COALESCE(NULL, 1)       => 1
+      COALESCE(NULL, NULL, 1)  => 1
+    ---------------------------------------------------------
+    NULLIF(<col1>,<col2>) //(col1=col2)=>Null else col1
+      NULLIF(1, 1)  => NULL
+      NULLIF(3, 2)  => 3
+    ---------------------------------------------------------
+    IFNULL(<col(比較対象)>,<col(戻り値)>)
+    // 対象 IS NOT NULL => 対象 IF NULL => 戻り値
+      IFNULL(1, 0)       => 1
+      IFNULL(NULL, 10)   => 10
+      IFNULL(1/0, 10)    => 10
+      IFNULL(1/0, 'yes') => 'yes'
+
+- KEY: mysql.type.number
+  EXPLAIN: 型(数)
+  BODY: |
+    BIT(桁)                  :1bit
+    TINYINT(桁)              :1B
+    BOOL=BOOLEAN=TINYINT     :1B
+    SMALLINT(桁)             :2B
+    MEDIUMINT(桁)            :3B
+    INT=INTEGER(桁)          :4B
+    BIGINT(桁)               :8B
+    FLOAT(桁,小数点桁)        :4B
+    DOUBLE [PRECISION]/REAL  :8B
+    DECIMAL=DEC(桁[,小数点桁])
+
+- KEY: mysql.method.number
+  EXPLAIN: 関数(数)
+  BODY: |
+    MOD(<col>,modulo)
+    ROUND(<col>[,小数点桁])
+    ABS(<col>)
+    SQRT(<col>)
+    EXP(<col>)
+    CEIL(<col>)
+    FLOOR(<col>)
+    TRUNCATE(<col>[,小数点桁])
+    FORMAT(<col>,小数点桁[,Locale]) 例: xxx,xxx[.xx]
+
+- KEY: mysql.type.string
+  EXPLAIN: 型(文字)
+  BODY: |
+    CHAR(数)
+    BINARY(1B:0<=数<=255)
+    VARCHAR/VARBINARY(数)
+    TINYTEXT(2B**8)
+    TEXT(2B**16)
+    MEDIUMTEXT(2B**24)
+    LONGTEXT(2B**32) BLOB置換可
+    ENUM('value1','value2',...)
+    SET('value1','value2',...)
+
+- KEY: mysql.method.string
+  EXPLAIN: 関数(文字)
+  BODY: |
+    CONCAT(<col>,<col>,...)
+    CONCAT_WS(separator,<col>,<col>,...),
+    LOWER(<col>)
+    UPPER(<col>)
+    LCASE/UCASE(<col>)
+    ASCII(<col>)
+    LENGTH(<col>)
+    SUBSTRING(<col>,start,end)
+    REPLACE(<col>,<検索>,<置換>)
+    LOCATE(<col>,<検索>,start)
+    LPAD/RPAD(<col>)
+    LEFT/RIGHT(<col>)
+    LTRIM/RTRIM(<col>)
+    INSERT(<col>)
+    SPACE(数)
+    REPEAT(<col>,数)
+    REVERSE(<col>)
+    LOAD_FILE('/dir/file')
+
+- KEY: mysql.type.date
+  EXPLAIN: 型(日付)
+  BODY: |
+    DATE='YYYY-MM-DD'
+    TIME='HH:MM:SS'
+    YEAR=YYYY,
+    DATETIME='YYYY-MM-DD HH:MM:SS'
+    TIMESTAMP='YYYY-MM-DD HH:MM:SS'(TimeZone関連)
+
+- KEY: mysql.method.date
+  EXPLAIN: 関数(日付)
+  BODY: |
+    //期間指定(日時)
+    INTERVAL 'y-m' YEAR_MONTH (=INTERVAL y YEAR + INTERVAL m MONTH)
+    //期間指定(時間)
+    INTERVAL 'h-m' HOUR_MINUTE
+    //現時刻,日付,TS
+    CURRENT_TIME=CURTIME()
+    CURRENT_DATE=CURDATE()
+    CURRENT_TIMESTAMP=NOW()
+    //日付のみを抜き出す
+    DATE('YYYY-MM-DD HH:MM:SS')
+    //(各数値)YYYY/MM/DD
+    YEAR(CAST('YYYY-MM-DD' AS DATE))
+    MONTH(CAST('YYYY-MM-DD' AS DATE))
+    DAY(CAST('YYYY-MM-DD' AS DATE))
+    //日付からUNIXタイムスタンプ(数)
+    UNIX_TIMESTAMP(TIMESTAMP or DATETIME)
+    //UNIXタイムスタンプ(数)から日付
+    FROM_UNIXTIME(UNIX_TIMESTAMP)
+    //日付加算(+)
+    ADDDATE/DATE_ADD('YYYY-MM-DD', INTERVAL n/-n YEAR/MONTH/WEEK/DAY)
+    //日付加算(+日数)
+    ADDDATE('YYYY-MM-DD', n)
+    //タイムスタンプ加算
+    TIMESTAMPADD(YEAR/MONTH/WEEK/DAY, n/-n,'YYYY-MM-DD HH:MM:SS')
+    //時刻加算
+    ADDTIME('YYYY-MM-DD HH:MM:SS', 'HH:MM:SS')
+    //日数差分の整数
+    DATEDIFF('YYYY-MM-DD', 'YYYY-MM-DD')
+    //時刻差分の時刻('HH:MM:SS')
+    TIMEDIFF('HH:MM:SS', 'HH:MM:SS')
+    //タイムスタンプ差分整数
+    TIMESTAMPDIFF(YEAR/MONTH/WEEK/DAY,'YYYY-MM-DD','YYYY-MM-DD')
+
+- KEY: mysql.cast
+  EXPLAIN: 型変換
+  BODY: |
+    対象: CHAR,NCHAR,BINARY,DECIMAL,DOUBLE,FLOAT,REAL,DATE,TIME,DATETIME
+    CAST(<col> AS 型)                       //文字列 <=> 数値変換
+    =CONVERT(<col>, 型)
+    CAST('YYYY-MM-DD' AS DATE)              //文字列 => DATE変換
+    CAST('HH:MM' AS TIME)                   //文字列 => DATE/TIME変換
+    CAST('YYYY-MM-DD HH:MM:SS' AS DATETIME) //文字列 => DATETIME変換
+
+- KEY: mysql.variable.set
+  EXPLAIN: 変数(set@)
+  BODY: |
+    SET @var1[=value], @var2[=value], ...;                     //宣言(=初期値)
+    SET @var = SELECT <col> FROM <table> WHERE condition;      //単数
+    SELECT <col(s)> INTO @var(s) FROM <table> WHERE condition; //複数
+    SELECT @var := <col>,... FROM <table> WHERE condition;
+    ------------------------------------------------------------
+    SELECT @A:=SUM(salary) FROM table1 WHERE type=1;
+    UPDATE table2 SET summary=@A WHERE type=1;
+
+- KEY: mysql.variable.declare
+  EXPLAIN: 変数(Declare)
+  BODY: |
+    DECLARE xname VARCHAR(5) DEFAULT 'bob';
+    DECLARE newname VARCHAR(5);
+    DECLARE xid INT;
+    SELECT xname, id INTO newname, xid FROM table1 WHERE xname = xname;
+    SELECT newname;
+
+- KEY: mysql.statement.proc
+  EXPLAIN: プロセス
+  BODY: |
+    delimiter //
+    CREATE PROCEDURE <NAME>(IN <var> 型, OUT <var> 型, INOUT <var> 型)
+    BEGIN
+      ...
+    END;
+    //
+    delimiter ;
+    ----------------------
+    CALL <NAME>(PARAM,...);
+
+- KEY: mysql.statement.func
+  EXPLAIN: 関数
+  BODY: |
+    delimiter //
+    CREATE FUNCTION <NAME> (<in> 型) RETURNS 型 DETERMINISTIC
+    BEGIN
+      ...
+    END;
+    //
+    delimiter ;
+    ----------------------
+    SELECT <NAME>(PARAM,...);
+
+- KEY: mysql.statement.trigger
+  EXPLAIN: トリガー
+  BODY: |
+    DELIMITER //
+    CREATE TRIGGER <NAME> BEFORE/AFTER INSERT/UPDATE/DELETE ON <tableA>
+    FOR EACH ROW
+      BEGIN
+        //INSERT/UPDATE: NEW.<col>
+        //UPDATE/DELETE: OLD.<col>
+      END;
+    //
+    DELIMITER ;
+    ------------------------------------------
+    BEGIN
+      IF NEW.amount < 0 THEN        SET NEW.amount = 0;
+      ELSEIF NEW.amount > 100 THEN  SET NEW.amount = 100;
+      END IF;
+    END;
+
+- KEY: mysql.statement.repeat
+  EXPLAIN: 繰り返し(REPEAT)
+  BODY: |
+    BEGIN
+      SET @x = 0;
+      REPEAT
+        SET @x = @x + 1; 
+      UNTIL @x > p1 END REPEAT;
+    END;
+
+- KEY: mysql.statement.loop
+  EXPLAIN: 繰り返し(LOOP)
+  BODY: |
+    BEGIN
+      label1: LOOP
+        SET p1 = p1 + 1;
+        IF p1 < 10 THEN ITERATE label1; END IF;
+        LEAVE label1;
+      END LOOP label1;
+    END;
+
+- KEY: mysql.statement.while
+  EXPLAIN: 繰り返し(WHILE)
+  BODY: |
+    BEGIN
+      DECLARE v1 INT DEFAULT 5;
+      WHILE v1 > 0 DO
+        ...
+        SET v1 = v1 - 1;
+      END WHILE;
+    END;
+
+- KEY: mysql.statement.cursor
+  EXPLAIN: カーソル
+  BODY: |
+    CREATE PROCEDURE sp2 (x VARCHAR(5))
+    BEGIN
+      DECLARE xname VARCHAR(5) DEFAULT 'bob';
+      DECLARE newname VARCHAR(5);
+      DECLARE xid INT;
+      DECLARE done TINYINT DEFAULT 0;
+      DECLARE cur1 CURSOR FOR SELECT xname, id FROM table1;
+      DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+      OPEN cur1;
+      read_loop: LOOP
+        FETCH FROM cur1 INTO newname, xid;
+        IF done THEN LEAVE read_loop; END IF;
+        SELECT newname;
+      END LOOP;
+      CLOSE cur1;
+    END;
+
+- KEY: mysql.statement.case
+  EXPLAIN: 分岐(CASE)
+  BODY: |
+    BEGIN
+      DECLARE v INT DEFAULT 1;
+      CASE v
+        WHEN 2 THEN SELECT v;
+        WHEN 3 THEN SELECT 0;
+        ELSE
+          BEGIN
+            ...
+          END;
+      END CASE;
+    END;
+
+- KEY: mysql.statement.if
+  EXPLAIN: 分岐(IF)
+  BODY: |
+    BEGIN
+      DECLARE s VARCHAR(20);
+      IF n > m THEN SET s = '>';
+      ELSEIF n = m THEN SET s = '=';
+      ELSE SET s = '<';
+      END IF;
+      SET s = CONCAT(n, ' ', s, ' ', m);
+      RETURN s;
+    END //
+
+- KEY: mysql.statement.prepared
+  EXPLAIN: プリペアド
+  BODY: |
+    PREPARE <NAME> FROM '<statement文字列に引数(?)>'; // 文字列は動的に生成可能
+    EXECUTE <NAME> USING @var(s);                    // 引数で実行
+    DEALLOCATE PREPARE <NAME>;                       // 削除
+    ----------------------------------------------------------
+    PREPARE stmt1 FROM 'SELECT SQRT(POW(?,2) + POW(?,2)) AS X';
+    SET @a = 3;
+    SET @b = 4;
+    EXECUTE stmt1 USING @a, @b; // => 5
+    DEALLOCATE PREPARE stmt1;
+    ----------------------------------------------------------
+    SET @s = 'SELECT SQRT(POW(?,2) + POW(?,2)) AS X';
+    PREPARE stmt2 FROM @s;
+    SET @a = 6;
+    SET @b = 8;
+    EXECUTE stmt2 USING @a, @b; // => 10
+    DEALLOCATE PREPARE stmt2;
+    ----------------------------------------------------------
+    CREATE TABLE t1 (a INT NOT NULL);
+    INSERT INTO t1 VALUES (4), (8), (11), (32);
+    SET @table = 't1';
+    SET @s = CONCAT('SELECT * FROM ', @table);
+    PREPARE stmt3 FROM @s;
+    EXECUTE stmt3;
+    +----+
+    |  4 |
+    |  8 |
+    | 11 |
+    | 32 |
+    +----+
+    DEALLOCATE PREPARE stmt3;
+
+- KEY: mysql.transaction
+  EXPLAIN: トランザクション
+  BODY: |
+    START TRANSACTION;
+      SELECT @A:=SUM(salary) FROM table1 WHERE type=1;
+      UPDATE table2 SET summary=@A WHERE type=1;
+    COMMIT;
+
+- KEY: mysql.transaction.stored
+  EXPLAIN:
+  BODY: |
+    DELIMITER //
+    CREATE PROCEDURE プロシージャ名()
+    BEGIN
+      -- DECLARE 変数
+      -- DECLARE CURSOR
+      DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
+      BEGIN
+        GET DIAGNOSTICS CONDITION 1 @sqlstate = RETURNED_SQLSTATE, @errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+        SELECT @sqlstate, @errno, @text;
+        ROLLBACK;
+      END;
+      -- DECLARE 追加のHANDLER
+      START TRANSACTION;
+      -- ここに処理を書く
+      COMMIT;
+      SELECT 'Success!' AS result FROM DUAL;
+    END//
+    DELIMITER ;
+
+- KEY: mysql.
+  EXPLAIN:
+  BODY: |
+
+- KEY: mysql.
+  EXPLAIN:
+  BODY: |
+
+- KEY: mysql.transaction.deadlock
+  EXPLAIN: デッドロック
+  BODY: |
+    SHOW ENGINE INNODB STATUS;
+
+- KEY: mysql.
+  EXPLAIN:
+  BODY: |
+
+- KEY: mysql.
+  EXPLAIN:
+  BODY: |
+
+- KEY: mysql.
+  EXPLAIN:
+  BODY: |

@@ -1,0 +1,345 @@
+---
+#-------------------------------
+# JavaScript: RegularExpression
+#-------------------------------
+
+- KEY: reg.RegExp
+  EXPLAIN: 正規表現
+  BODY: |
+    const regexp = new RegExp( pattern[, flags] )
+
+    const target = 'ABCDEFG';
+
+    const regexp = /DEF/ig;
+    regexp.test(target);       //true
+    regexp.compile(target);    //Deprecated
+
+    //コンストラクタへのパラメタ
+    const regexp = new RegExp('DEF', 'ig');
+    regexp.test(target);       //true
+
+- KEY: reg.captureGroup
+  EXPLAIN: 名前付きキャプチャグループ
+  BODY: |
+    const target = '123 456 789';
+    const regexp = /(?<first>[0-9]+)\s(?<second>[0-9]+)/u;
+
+    const hits = regexp.exec(target);  //gフラグとの相性OK
+    hits.groups.first;                 //'123'
+    hits.groups.second;                //'456'
+
+    const hits = target.match(regexp); //gフラグとの相性悪し
+    hits.groups.first;                 //'123'
+    hits.groups.second;                //'456'
+
+- KEY: reg.exec()
+  EXPLAIN: 一致文字列取得
+  BODY: |
+    const target = '123 456 789';
+    const regexp = /[0-9]+/g;
+
+    //実行する度に内部indexが移動
+    let hit = regexp.exec(target);  // ["123"]
+    hit = regexp.exec(target);      // ["456"] 
+    hit = regexp.exec(target);      // ["789"]
+    hit = regexp.exec(target);      // null
+
+    while(hit = regexp.exec(target)){ //イテレータもどき
+      hit;                          //["123"],["456"],["789"]
+      regexp.lastIndex;             //3,7,11
+    }
+
+- KEY: reg.test()
+  EXPLAIN: 一致:boolean
+  BODY: |
+    const target = 'table cable maple';
+    const regexp = new RegExp('ab*', 'g');
+
+    //実行する度に内部indexが移動
+    regexp.lastIndex;         //0
+    regexp.test(target);      //true
+    regexp.lastIndex;         //3
+    regexp.test(target);      //false
+
+- KEY: reg.match()
+  EXPLAIN: 一致:値
+  BODY: |
+    const target = "123 456 789";
+    const regexp = /[0-9]+/g;
+
+    let hit = target.match(regexp);      //['123','456','789']
+
+- KEY: reg.str.matchAll2022
+  EXPLAIN: String2022での一致
+  BODY: |
+    const target = 'test1 test2';
+    const regexp = /t(e)(st(\d?))/g;
+
+    const array = [...target.matchAll(regexp)];
+    array[0];     //["test1", "e", "st1", "1"]
+    array[1];     //["test2", "e", "st2", "2"]
+
+    const target = 'table football, foosball';
+    const regexp = RegExp('foo[a-z]*','g');
+
+    const hits = target.matchAll(regexp);
+    console.log(hits);             //{} 空なので要注意
+    for (const hit of hits) {      //実際には存在
+      let idx = hit.index;
+      console.log(`${hit[0]}: ${idx}~${idx + hit[0].length - 1}`);
+    }
+
+    const res = Array.from(target.matchAll(regexp), m => m[0]);
+    //["football", "foosball"]
+
+- KEY: reg.flags
+  EXPLAIN: フラグ
+  BODY: |
+    g  global(複数マッチ)
+    i  ignoreCase(大小文字区別なし)
+    m  multiline(複数行検索)
+    u  unicode(サロゲーションペアを1文字として扱う)
+    y  sticky(lastIndexで指定した位置から検索)
+    s  dotAll([.]がCR,LF,U+2028,U+2029など全文字マッチ)
+
+- KEY: reg.flag.m
+  EXPLAIN: 改行を行頭行末認識
+  BODY: |
+    行頭(^)や行末($)が、改行(\n)後の行頭行末にもマッチング
+
+    const target = 'ABC\nDEF\nGHI';
+    target.match(/ABC$/);        //null
+    target.match(/ABC$/m);       //["ABC"]
+    target.match(/^DEF/);        //null
+    target.match(/^DEF/m);       //["DEF"]
+    target.match(/^DEF$/);       //null
+    target.match(/^DEF$/m);      //["DEF"]
+
+- KEY: reg.flag.u
+  EXPLAIN: サロゲーションペア
+  BODY: |
+    U+10000以上のサロゲーションペア領域の文字も1文字
+
+    console.log('🧲'.match(/^.$/));  //null (2文字だから)
+    console.log('🧲'.match(/^.$/u)); //uフラグ(1文字として一致)
+
+- KEY: reg.flag.y
+  EXPLAIN: lastIndex位置固定
+  BODY: |
+    yフラグ: lastIndex の位置からから先頭マッチングで位置を固定(lastIndexが先に進まない)。
+    gをつけても結果は一つ。挙動要注意
+
+    const target = '123 456 789';
+    const regexp = /[0-9]+/gy;   //gフラグ + yフラグ
+    regexp.lastIndex = 7;        //lastIndex指定(位置固定)
+
+    let hit= null;
+    hit= regexp.exec(target)
+    console.log(hit, regexp.lastIndex);
+    hit= regexp.exec(target)
+    console.log(hit, regexp.lastIndex);
+    hit= regexp.exec(target)
+    console.log(hit, regexp.lastIndex);
+    hit= regexp.exec(target)
+    console.log(hit, regexp.lastIndex);
+
+- KEY: reg.flag.s
+  EXPLAIN: ドットを改行にも一致
+  BODY: |
+    //.(ドット)を改行文字にも一致
+    const target = "ABC\nDEF\nGHI";
+    const regexp = /.+/g;             //No sフラグ
+    for (const hit of target.matchAll(regexp)) {
+      console.log(hit, hit.index);    // ["ABC"],0 | ["DEF"],4 | ["GHI"],8 
+    }
+
+    const regexp = /.+/gs;           //sフラグ
+    for (const hit of target.matchAll(regexp)) {
+      console.log(hit, hit.index);   // [""ABC\nDEF\nGHI""] 0
+    }
+
+- KEY: reg.matching
+  EXPLAIN: マッチング表現
+  BODY: |
+    x        xという文字
+    xyz      単語マッチ
+    [xyz]    []内1文字
+    [x-z]    x～zの1文字
+    [^xyz]   x,y,z以外の1文字
+    .        任意の1文字(以下以外)
+              Line Feed(\n), Carriage Return(\r),
+              Line Separator(\u2028),Paragraph Separator(\u2029)
+    ^x       xで始まる文字列
+    x$       xで終わる文字列
+    x*?      0文字以上のx
+    x+?      1文字以上のx
+    x??      0文字または1文字のx
+    x{n}?    n個のx
+    x{n,}?   n個以上のx
+    x{n,m}?  n個～m個のx
+    [\b]     バックスペース
+    (?:x)    xという文字(参照除外)
+    x(?=y)   先読み言明
+    x(?!y)   否定先読み言明
+    (?<=x)y  後読み言明
+    (?<!x)y  否定後読み言明
+
+- KEY: reg.matching.x*?
+  EXPLAIN: 最大最小Match(*)
+  BODY: |
+    "<ABC><DEF>".match(/<.*>/)   //["<ABC><DEF>"]
+    "<ABC><DEF>".match(/<.*?>/)  //["<ABC>"]
+
+- KEY: reg.matching.x+?
+  EXPLAIN: 最大最小Match(+)
+  BODY: |
+    "<ABC><DEF>".match(/<.+>/)   //["<ABC><DEF>"]
+    "<ABC><DEF>".match(/<.+?>/)  //["<ABC>"]
+
+- KEY: reg.matching.x??
+  EXPLAIN: 最大最小Match(?)
+  BODY: |
+    "ABC".match(/AB?/)           //["AB"]
+    "ABC".match(/AB??/)          //["A"]
+
+- KEY: reg.matching.postfix
+  EXPLAIN: 先読み言明
+  BODY: |
+    const target = 'CAT CAS CAN';
+
+    const regexp = /(CA(?=S))/g;       //CASがある場合、CAにマッチ
+    const hit1 = target.match(regexp); //["CA"]
+
+    const regexp = /(CA(?=X))/g;       //CAXがある場合、CAにマッチ
+    const hit2 = target.match(regexp); //null
+
+- KEY: reg.matching.postfix.not
+  EXPLAIN: 先読み言明(否定)
+  BODY: |
+    const target = 'CAT CAS';
+
+    const regexp = /(CA(?!S))/g;       //CASがある場合、CAにマッチせず
+    const hit1 = target.match(regexp); //["CA"] (CATにマッチ)
+
+    const regexp = /(CA(?!X))/g;       //CAXがない場合、CAにマッチ
+    const hit2 = target.match(regexp); //["CA", "CA"] (全部にマッチ)
+
+- KEY: reg.matching.prefix
+  EXPLAIN: 後読み言明
+  BODY: |
+    const target = 'CAT CASE CAN CAST CAL';
+
+    const regexp = /((?<=CA)S[^\s]*)/g;  //直前のCAに続く S[^\s] にマッチ
+    const hit= target.match(regexp);     // ["SE", "ST"]
+
+- KEY: reg.matching.prefix.not
+  EXPLAIN: 後読み言明(否定)
+  BODY: |
+    const target = 'CAT CASE MAST CAST RISK';
+
+    const regexp = /((?<!CA)S[^\s]*)/g;
+    const hit= target.match(regexp); // ["ST", "SK"]
+
+- KEY: reg.specialChars
+  EXPLAIN: 特殊文字
+  BODY: |
+    \0     NUL文字
+    \b     単語の区切り文字
+    \B     \b以外の文字
+    \cX    Ctrl-X(X には A-Z のどれかの文字)
+    \d     半角数字=[0-9]
+    \D     \d 以外の文字=[^0-9]
+    \f     改ページ(FF:Form-feed)
+    \n     改行文字(LF:Line feed)
+    \r     復帰文字(CR:Carriage return)
+    \s     1文字のホワイトスペース
+    \S     ホワイトスペース以外の1文字
+    \t     水平タブ(HT:Horozontal tab)
+    \v     垂直タブ(VT:Vertical tab)
+    \w     アンダーバー(_)を含む半角英数文字)=[A-Za-z0-9_]
+    \W     \w以外の文字 =[^A-Za-z0-9_]
+    \n     n番目の (...) にマッチした文字列
+    \\\    \ohhh (非)8進数で hhh の文字
+    \xhh   16進数で hh の文字
+
+- KEY: reg.specialChar.b
+  EXPLAIN: 区切り文字
+  BODY: |
+    "I like Java.".match(/\bJava\b/)       // ["Java"]
+    "I like JavaScript.".match(/\bJava\b/) // null
+    "I like JavaScript.".match(/\bJava/)   // ["Java"]
+
+- KEY: reg.specialChars.unicode
+  EXPLAIN: 特殊文字(Unicode)
+  BODY: |
+    \uhhhh             UTF-16 Unicode文字
+    \u{hhhh}           非サロゲートペア領域の UTF-16 Unicode文字、gフラグ指定時のみ利用可能
+    \u{hhhhh}          サロゲートペア領域の UTF-16 Unicode文字、gフラグ指定時のみ利用可能
+    \p{property}       Binaryプロパティに propety を持つ文字(要u:ES2018)
+    \P{property}       Binaryプロパティに propety を持たない文字(要u:ES2018)
+    \p{gc=property}    General_Category に propety を持つ文字(要u:ES2018)
+    \P{gc=property}    General_Category に propety を持たない文字(要u:ES2018)
+    \p{sc=property}    Script が propety にマッチする文字(要u:ES2018)
+    \p{sc=Hiragana}    Script が ひらがな にマッチする文字(要u:ES2018)
+    \P{sc=property}    Script が propety にマッチしない文字(要u:ES2018)
+    \p{scx=property}   Script_Extensions が propety にマッチする文字(要u:ES2018)
+    \P{scx=property}   Script_Extensions が propety にマッチしない文字(要u:ES2018)
+
+- KEY: reg.sample.postalCode
+  EXPLAIN: 郵便番号
+  BODY: |
+    // 郵便番号(ハイフンなし)
+    const regexp = /^\d{7}$/
+    regexp.test("1234567".trim())  // true
+    regexp.test("1234567 ".trim()) // true
+    regexp.test("123456".trim())   // false
+    regexp.test("A123456".trim())  // false
+
+    // 郵便番号(ハイフンあり)
+    const regexp = /^[0-9]{3}-[0-9]{4}$/
+    regexp.test("111-1111".trim())  // true
+    regexp.test("111-1111 ".trim()) // true
+    regexp.test("1111-111".trim())  // false
+    regexp.test("11A-1111".trim())  // false
+
+    //郵便番号(ハイフン任意)
+    const regexp = /^[0-9]{3}-?[0-9]{4}$/
+    regexp.test("123-4567".trim())  // true
+    regexp.test("1234567".trim())   // true
+    regexp.test("1234-567".trim())  // false
+    regexp.test("1234A67".trim())   // false
+
+- KEY: reg.sample.phoneNumber
+  EXPLAIN: 電話番号(固定)
+  BODY: |
+    //電話番号(ハイフンあり)
+    const regexp = /\d{2,4}-\d{2,4}-\d{4}/
+    regexp.test("03-1234-5678".trim())   // true
+    regexp.test("030-2340-5678".trim())  // true
+    regexp.test("0301-240-5678".trim())  // true
+    regexp.test("0301-2400-567".trim())  // false
+    regexp.test("030-2340-5678 ".trim()) // true
+    regexp.test("030-2 40-5678".trim())  // false
+
+    //電話番号(ハイフンなし)
+    const regexp = /^(0{1}\d{9,10})$/
+    regexp.test("0312345678".trim())    // true
+    regexp.test("0312345A78 ".trim())   // false
+    regexp.test("03012345678 ".trim())  // true
+    regexp.test("031234568".trim())     // false
+    regexp.test("03-12345A78".trim())   // false
+
+- KEY: reg.sample.phoneNumberCell
+  EXPLAIN: 電話番号(携帯)
+  BODY: |
+    //携帯番号(ハイフンあり)1
+    const regexp = /^0[5789]0-[0-9]{4}-[0-9]{4}$/
+    regexp.test("080-1234-5678".trim())   // true
+    regexp.test("080-1234-5678 ".trim())  // true
+    regexp.test("080-123-45678 ".trim())  // false
+
+    //携帯番号(ハイフンあり)2
+    const regexp = /^(050|070|080|090)-\d{4}-\d{4}$/
+    regexp.test("080-1234-5678".trim())   // true
+    regexp.test("080-1234-5678 ".trim())  // true
+    regexp.test("060-1234-5678 ".trim())  // false

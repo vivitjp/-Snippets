@@ -16,8 +16,8 @@ type Props<T> = {
   width?: number
 }
 
-function isKV<T>(arg: any): arg is KV<T> {
-  return arg.K !== undefined
+function isKV<T>(arg: T | KV<T>): arg is KV<T> {
+  return (arg as KV<T>).K !== undefined
 }
 
 export const useSelect = <T,>({

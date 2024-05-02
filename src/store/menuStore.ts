@@ -5,7 +5,7 @@ export type MenuItemType = {
   name: string
   fileName: string
   codeKeyTypes?: CodeKeyType[]
-  html_encode?: boolean
+  encodeRequired?: boolean
   case_sensitive?: boolean
 }
 

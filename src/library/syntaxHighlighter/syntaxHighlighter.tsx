@@ -6,17 +6,17 @@ export type KeyDef = {
 export type SyntaxHighlight = {
   code: string
   keyDefs: KeyDef[]
-  html_encode?: boolean
+  encodeRequired?: boolean
   case_sensitive?: boolean
 }
 
 export const syntaxHighlight = ({
   code,
   keyDefs,
-  html_encode = true,
+  encodeRequired = false,
   case_sensitive = true,
 }: SyntaxHighlight) => {
-  const escaped = escapeHtml(code, html_encode) ?? ""
+  const escaped = encodeRequired ? escapeHtml(code) : code
   const rebuilt: JSX.Element[] = []
   const case_sense = case_sensitive ? "g" : "gi"
 
@@ -56,9 +56,6 @@ function replaceUnsafeChar(ch: string): string {
   return HTML_REPLACEMENTS[ch]
 }
 
-function escapeHtml(str: string, html_encode: boolean): string {
-  if (html_encode) {
-    return str.replace(HTML_ESCAPE_REPLACE_RE, replaceUnsafeChar)
-  }
-  return str
+function escapeHtml(str: string): string {
+  return str.replace(HTML_ESCAPE_REPLACE_RE, replaceUnsafeChar)
 }

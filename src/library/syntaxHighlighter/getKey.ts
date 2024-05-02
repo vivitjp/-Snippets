@@ -7,7 +7,9 @@ import { keysJest } from "./keys/Jest"
 import { keysLinux } from "./keys/Linux"
 import { keysMySql } from "./keys/MySql"
 import { keysPackage } from "./keys/Package"
+import { keysPython } from "./keys/Python"
 import { keysReact } from "./keys/React"
+import { keysRegExp } from "./keys/RegExp"
 import { keysTS } from "./keys/TS"
 import { keysCurl } from "./keys/curl"
 import { KeyDef } from "./syntaxHighlighter"
@@ -17,8 +19,10 @@ export const codeKeys = {
   HTML: "HTML",
   JSTS: "JSTS",
   TS: "TS",
+  RegExp: "RegExp",
   React: "React",
   Package: "Package",
+  Python: "Python",
   Docker: "Docker",
   Git: "Git",
   Jest: "Jest",
@@ -37,8 +41,10 @@ export const KeyAndCodes: Record<CodeKeyType, KeyDef[]> = {
   HTML: keysHTML,
   JSTS: keysJSTS,
   TS: keysTS,
+  RegExp: keysRegExp,
   React: keysReact,
   Package: keysPackage,
+  Python: keysPython,
   Docker: keysDocker,
   Git: keysGit,
   Jest: keysJest,

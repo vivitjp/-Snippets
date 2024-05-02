@@ -1,12 +1,5 @@
 import styled, { CSSProperties } from "styled-components"
 
-export const makeOptions = <T,>(items: T[]) => {
-  return items.map((item) => ({
-    title: item as string,
-    value: item,
-  }))
-}
-
 export type Options<T> = {
   title: string
   value: T

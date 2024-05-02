@@ -1,34 +1,8 @@
 import { KeyDef } from "../syntaxHighlighter"
 
 export const keysTS: KeyDef[] = [
-  // // ■
-  // {
-  //   color: "ForestGreen",
-  //   keys: [],
-  // },
-  // // ■
-  // {
-  //   color: "#555",
-  //   keys: [],
-  // },
-  // // ■ TypeScript
-  // {
-  //   color: "LightSeaGreen",
-  //   keys: [],
-  // },
-  // // ■
-  // {
-  //   color: "SteelBlue",
-  //   keys: [],
-  // },
-  // // ■
-  // {
-  //   color: "RoyalBlue",
-  //   keys: [],
-  // },
-  // ■ JS Methods
   {
-    color: "DarkOrchid",
+    color: "IndianRed",
     keys: [
       "Required",
       "Partial",
@@ -51,20 +25,4 @@ export const keysTS: KeyDef[] = [
       "Uncapitalize",
     ],
   },
-
-  // // ■ JS Event
-  // {
-  //   color: "darkOrange",
-  //   keys: [],
-  // },
-  // // ■ Event
-  // {
-  //   color: "CadetBlue",
-  //   keys: [],
-  // },
-  // // ■ Inactive Words
-  // {
-  //   color: "#999",
-  //   keys: [],
-  // },
 ]

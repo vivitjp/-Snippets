@@ -31,7 +31,7 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
   const { JSX: SnippetsStyleSelection, value } = useSelect({
     title: "形式",
     initValue: "",
-    values: ["", "typescriptreact", "typescript"],
+    values: ["", "typescriptreact", "typescript", "python"],
   })
 
   useEffect(() => {
@@ -66,7 +66,7 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
         const highlighted = syntaxHighlight({
           code,
           keyDefs,
-          html_encode: selectedMenu.html_encode,
+          encodeRequired: selectedMenu.encodeRequired,
           case_sensitive: selectedMenu.case_sensitive,
         })
         return (

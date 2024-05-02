@@ -56,6 +56,10 @@ export const keysJSTS: KeyDef[] = [
       "symbol",
       "void",
       "object",
+      "Function",
+      "Date ",
+      "Error",
+      "RegExp",
     ],
   },
   // ■ JS Methods

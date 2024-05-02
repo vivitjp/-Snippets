@@ -28,7 +28,6 @@ export const menuItems: menuByCategories[] = [
       {
         name: "CSSColor:color",
         fileName: "html/CSSColor",
-        html_encode: false,
       },
     ],
   },
@@ -41,8 +40,8 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.JSTS],
       },
       {
-        name: "TypeScript:ts",
-        fileName: "JavaScript/TypeScript",
+        name: "TypeScript(Tips):ts",
+        fileName: "JavaScript/TypeScriptTips",
         codeKeyTypes: [codeKeys.JSTS],
       },
       {
@@ -60,6 +59,11 @@ export const menuItems: menuByCategories[] = [
         fileName: "",
         codeKeyTypes: [],
       },
+      {
+        name: "正規表現:reg",
+        fileName: "JavaScript/RegularExpression",
+        codeKeyTypes: [codeKeys.RegExp],
+      },
     ],
   },
   {
@@ -69,16 +73,19 @@ export const menuItems: menuByCategories[] = [
         name: "React:qw",
         fileName: "React/React",
         codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS, codeKeys.React],
+        encodeRequired: true,
       },
       {
         name: "Component:qw",
         fileName: "React/ReactComponent",
         codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS, codeKeys.React],
+        encodeRequired: true,
       },
       {
         name: "Routing:qw",
         fileName: "React/ReactRouting",
         codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS, codeKeys.React],
+        encodeRequired: true,
       },
     ],
   },
@@ -104,6 +111,7 @@ export const menuItems: menuByCategories[] = [
           codeKeys.React,
           codeKeys.Package,
         ],
+        encodeRequired: true,
       },
       {
         name: "Storybook(v6):pk",
@@ -125,6 +133,7 @@ export const menuItems: menuByCategories[] = [
           codeKeys.React,
           codeKeys.Package,
         ],
+        encodeRequired: true,
       },
       {
         name: "zustand:pk",
@@ -152,29 +161,29 @@ export const menuItems: menuByCategories[] = [
         fileName: "",
         codeKeyTypes: [],
       },
-      {
-        name: "TypeORM",
-        fileName: "",
-        codeKeyTypes: [],
-      },
     ],
   },
   {
     category: "クラウド",
     items: [
       {
-        name: "AWSサービス",
+        name: "AWS",
         fileName: "",
         codeKeyTypes: [],
       },
     ],
   },
   {
-    category: "他言語",
+    category: "Python",
     items: [
       {
         name: "Python",
-        fileName: "",
+        fileName: "Python/Python",
+        codeKeyTypes: [codeKeys.Python],
+      },
+      {
+        name: "ライブラリ",
+        fileName: "Python/PythonLib",
         codeKeyTypes: [],
       },
     ],
@@ -220,6 +229,21 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [],
         case_sensitive: false,
       },
+      {
+        name: "TypeORM",
+        fileName: "",
+        codeKeyTypes: [],
+      },
+      {
+        name: "GraphQL",
+        fileName: "",
+        codeKeyTypes: [],
+      },
+      {
+        name: "Redis",
+        fileName: "",
+        codeKeyTypes: [],
+      },
     ],
   },
   {
@@ -252,6 +276,7 @@ export const menuItems: menuByCategories[] = [
       {
         name: "SVG",
         fileName: "WebAPI/SVG",
+        encodeRequired: true,
       },
       {
         name: "window:win",
