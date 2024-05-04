@@ -1,0 +1,279 @@
+---
+#-------------------------------
+# MongoDB
+#-------------------------------
+
+- KEY: mon.install
+  EXPLAIN: インストール
+  BODY: |
+    mongodb Windows版をインストール
+    deamon/server で server 選択
+
+    pip install pymongo
+    # 他の環境設定不要
+
+- KEY: mon.connection
+  EXPLAIN: DB接続
+  BODY: |
+    from pymongo import MongoClient
+    uri = "mongodb://localhost:27017"
+    client: MongoClient = MongoClient(uri)
+
+    # 任意DBへのリンク取得
+    db = client[<DB_NAME>]
+
+    # 任意Collectionへのリンク取得
+    books = db[<COLLECTION_NAME>]
+
+- KEY: mon.basic
+  EXPLAIN: 基礎
+  BODY: |
+    database -> collection(table) -> document(record)
+
+- KEY: mon.db.collection
+  EXPLAIN: コレクションリスト取得
+  BODY: |
+    # DBリスト取得
+    dbs = client.list_database_names()
+
+    # 任意DBへのリンク取得
+    db = client[<DB_NAME>]
+
+    # Collectionリスト取得(system関連以外)
+    filter = {"name": {"$regex": r"^(?!system\.)"}}
+    names = db.list_collection_names(filter=filter)
+
+#-------------------------------
+# 検索
+#-------------------------------
+
+- KEY: mon.find.all
+  EXPLAIN: 検索(複)
+  BODY: |
+    def findAll() -> list[dict]:
+        """複数検索"""
+        return [n for n in books.find()]
+    -------------------------------------
+    found = findAll()
+    print([book.get("name") for book in found])
+
+- KEY: mon.find.columns
+  EXPLAIN: 検索(複)カラム指定
+  BODY: |
+    def findAllWithColumns(column: dict) -> list[dict]:
+        """複数検索(結果カラム, "_id"は明示的に0にしないと出力される)"""
+        return [n for n in books.find({}, column)]
+    -------------------------------------
+    found = findAllWithColumns({"_id": 0, "name": 1})
+    print([book.get("name") for book in found])
+
+- KEY: mon.find.many.limit.order
+  EXPLAIN: 検索(複)制限と順序
+  BODY: |
+    def findAllWithLimitSort(sort: dict, limit: int = 10) -> list[dict]:
+        """
+        複数検索(Limit & sort(1:asc, -1:desc))
+        from pymongo import ASCENDING, DESCENDING
+        """
+        return [n for n in books.find().limit(limit).sort(sort)]
+    -------------------------------------
+    found = findAllWithLimitSort({"pages": ASCENDING})
+    print([book.get("name") for book in found])
+
+- KEY: mon.find.one.byId
+  EXPLAIN: 検索(単)id検索
+  BODY: |
+    def findOneById(id: str) -> dict | None:
+        """単数検索(id検索)"""
+        return books.find_one({"_id": ObjectId(id)})
+    -------------------------------------
+    found = findOneById("6631fda9798bad7a8345f8ac")
+    print(found.get("author") if found else "None")
+
+- KEY: mon.find.many.regexp
+  EXPLAIN: 検索(複)正規表現
+  BODY: |
+    def findManyByRegExp(key: str) -> list[dict]:
+        """複数検索(正規表現)"""
+        return [n for n in books.find({"author": {"$regex": f"{key}"}})]
+    -------------------------------------
+    found = findManyByRegExp("Kevin")
+    print([book.get("name") for book in found])
+
+- KEY: mon.find.many.byComparison
+  EXPLAIN: 検索(複)値比較
+  BODY: |
+    def findManyByComparison(value: int = 200) -> list[dict]:
+        """複数検索(数値比較)"""
+        return [n for n in books.find({"pages": {"$gt": value}})]
+    -------------------------------------
+    found = findManyByComparison(200)
+    print([book.get("name") for book in found])
+
+- KEY: mon.find.many.AND
+  EXPLAIN: 検索(複)AND
+  BODY: |
+    def findManyAnd(target1: dict, target2: dict) -> list[dict]:
+        """複数検索(複合AND)"""
+        return [n for n in books.find({"$and": [target1, target2]})]
+    -------------------------------------
+    found = findManyAnd({"author": "Silly"}, {"pages": {"$lt": 100}})
+    print([book.get("name") for book in found])
+
+- KEY: mon.find.many.or
+  EXPLAIN: 検索(複)OR
+  BODY: |
+    def findManyOr(target1: dict, target2: dict) -> list[dict]:
+        """複数検索(複合OR)"""
+        return [n for n in books.find({"$or": [target1, target2]})]
+    -------------------------------------
+    found = findManyOr({"author": "Silly"}, {"pages": {"$lt": 100}})
+    print([book.get("name") for book in found])
+
+- KEY: mon.find.many.in
+  EXPLAIN: 検索(複)IN
+  BODY: |
+    def findManyIn(values: list[str]) -> list[dict]:
+        """複数検索(In)"""
+        return [n for n in books.find({"author": {"$in": values}})]
+
+    found = findManyIn(["Silly", "Bill"])
+    print([book.get("name") for book in found])
+
+#-------------------------------
+# カウント
+#-------------------------------
+
+- KEY: mon.count
+  EXPLAIN: カウント
+  BODY: |
+    def getCount1() -> int:
+        """1)count_documents"""
+        count = books.count_documents(filter={})
+        return count
+    -------------------------------------
+    def getCount2() -> int:
+        """2)estimated_document_count"""
+        count = books.estimated_document_count()
+        return count
+    -------------------------------------
+    def getCount3():
+        """3)aggregate"""
+        countName = "myCount"
+        count = list(books.aggregate([{"$count": countName}]))
+        return count.pop().get(countName)
+    -------------------------------------
+    def getCount4(): #DEPRECATED
+        """4)count"""
+        # records = books.count()
+
+#-------------------------------
+# 挿入
+#-------------------------------
+
+- KEY: mon.insert.one
+  EXPLAIN: 挿入(単)
+  BODY: |
+    def insertOne(data: dict) -> int:
+        """
+        単数挿入
+        引数 data: 挿入データ
+        戻り値 int: 新規挿入 document id 例)66333f2159c2f9c7e7494943
+        """
+        inserted = books.insert_one(data).inserted_id
+        return inserted
+    -----------------------------------------------------------------
+    data1 = {"name": "Joel book", "author": "Joel", "pages": 32, "active": True}
+    inserted = insertOne(data1)
+
+- KEY: mon.insert.many
+  EXPLAIN: 挿入(複)
+  BODY: |
+    def insertMany(dataList: list[dict]) -> list[str]:
+        """
+        複数挿入
+        引数 list[dict]: 挿入データリスト
+        戻り値 list[str]: 新規挿入 document ids 例) ['66333f2159c2f9c7e7494943',...]
+        """
+        inserted = books.insert_many(dataList)
+        # print(inserted.inserted_ids)  [ObjectId('66333ea918daf4ea78f022c0'), ...]
+        # print(len(inserted.inserted_ids)) サイズ
+        ids = [str(id) for id in inserted]
+        # print(ids)  # ['663345939832c494af6c600a', ...]
+        return ids
+    -----------------------------------------------------------------
+    dataMany = [
+        {"name": "book30", "author": "Kevin", "pages": 196, "active": True},
+        {"name": "book31", "author": "Jeff", "pages": 218, "active": True},
+    ]
+    inserted = insertMany(dataMany)
+
+#-------------------------------
+# 更新
+#-------------------------------
+
+- KEY: mon.update.one
+  EXPLAIN: 更新(単)
+  BODY: |
+    def updateOne(target: dict, updateData: dict) -> int:
+        """
+        単数更新
+        引数1 dict: 検索条件
+        引数2 dict: 更新データ
+        更新タイプ: $set(更新), $unset(値削除), $inc(加算), $rename(property名変更)
+        戻り値 int: 更新数
+        """
+        result = books.update_one(target, {"$set": updateData})
+        return result.modified_count
+    -----------------------------------------------------------------
+    result = updateOne({"author": "Levin"}, {"name": "Update One Book"})
+
+- KEY: mon.update.many
+  EXPLAIN: 更新(複)
+  BODY: |
+    def updateMany(target: dict, updateData: dict) -> int:
+        """
+        複数更新
+        引数1 dict: 検索条件
+        引数2 dict: 更新データ
+        更新タイプ: $set(更新), $unset(値削除), $inc(加算), $rename(property名変更)
+        戻り値 int: 更新数
+        """
+        result = books.update_many(target, {"$set": updateData})
+        return result.modified_count
+    -----------------------------------------------------------------
+    result = updateMany(
+        {"author": {"$regex": r"john|Kevin"}}, {"name": "Update Book"}
+    )
+
+#-------------------------------
+# 削除
+#-------------------------------
+
+- KEY: mon.delete.one
+  EXPLAIN: 削除(単)
+  BODY: |
+    def deleteOne(target: dict) -> int:
+        """
+        単数削除
+        引数1 dict: 検索条件
+        戻り値 int: 削除数
+        """
+        result = books.delete_one(target)
+        return result.deleted_count
+    -----------------------------------------------------------------
+    deleted = deleteOne({"_id": ObjectId("6631fcd9798bad7a8345f8d9")})
+
+- KEY: mon.delete.many
+  EXPLAIN: 削除(複)
+  BODY: |
+    def deleteMany(target: dict) -> int:
+        """
+        複数削除
+        引数1 dict: 検索条件
+        戻り値 int: 削除数
+        """
+        result = books.delete_many(target)
+        return result.deleted_count
+    -----------------------------------------------------------------
+    deleted = deleteMany({"pages": {"$gt": 200}})

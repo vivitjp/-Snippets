@@ -225,8 +225,8 @@ export const menuItems: menuByCategories[] = [
       },
       {
         name: "MongoDB",
-        fileName: "",
-        codeKeyTypes: [],
+        fileName: "database/mongo",
+        codeKeyTypes: [codeKeys.Mongo, codeKeys.Python],
         case_sensitive: false,
       },
       {

@@ -5,6 +5,7 @@ import { keysHTML } from "./keys/HTML"
 import { keysJSTS } from "./keys/JSTS"
 import { keysJest } from "./keys/Jest"
 import { keysLinux } from "./keys/Linux"
+import { keysMongo } from "./keys/Mongo"
 import { keysMySql } from "./keys/MySql"
 import { keysPackage } from "./keys/Package"
 import { keysPython } from "./keys/Python"
@@ -23,6 +24,7 @@ export const codeKeys = {
   React: "React",
   Package: "Package",
   Python: "Python",
+  Mongo: "Mongo",
   Docker: "Docker",
   Git: "Git",
   Jest: "Jest",
@@ -45,6 +47,7 @@ export const KeyAndCodes: Record<CodeKeyType, KeyDef[]> = {
   React: keysReact,
   Package: keysPackage,
   Python: keysPython,
+  Mongo: keysMongo,
   Docker: keysDocker,
   Git: keysGit,
   Jest: keysJest,

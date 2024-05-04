@@ -7,15 +7,25 @@
   EXPLAIN: インストール
   BODY: |
     ■ 本家ダウンロード https://www.python.org/downloads/
-      C:\Windows\py.exe
-      C:\Windows\pyw.exe
     ■ 下記をPATHに追加（自動で追加）
       C:\Users\VIVIT\AppData\Local\Programs\Python\Python39\Scripts
-      ...
-    ■ 新旧バージョン
-      前バージョンは削除せずに、新バージョンへのマイグレーションが無事に済むまで必要
-      「インタープリターの選択」で最新バージョンを選択
-      プロジェクトで使用するライブラリはすべてインストールしなおし
+    ■ 別バージョンの混在OK、VSCODEで切り替え可能
+    ■ 環境管理
+    pip     パッケージの管理
+            - Pythonの標準パッケージマネージャー
+            - PyPIからパッケージをインストール
+    venv    仮想環境の管理 
+            - プロジェクトごとに独立したPython環境を作成
+    pyenv   Pythonバージョンの管理 
+            - 複数のPythonバージョンをインストール・管理
+            - グローバルやプロジェクト単位でのバージョン切替
+    Poetry  パッケージ+仮想環境管理
+            - pyproject.tomlを使った依存関係管理
+            - パッケージのビルドと公開を容易に実行可能
+    Pipenv  パッケージ+仮想環境管理
+            - Pipfileを使用して依存関係を管理
+    Rye     パッケージ+仮想環境+Pythonバージョン管理
+            - Pythonバージョン管理も含めて、すべてこれ1つで完結できるツール
 
 - KEY: py.version
   EXPLAIN: pythonバージョン
@@ -63,6 +73,7 @@
       > py -m pip list
       > py -m pip list --format=columns | sls <LIBRARY>
       > py -m list --outdated          # 最新でない
+      > pip freeze (見にくい)
     ■ アンインストール
       > py -m pip uninstall <LIBRARY>
     ■ アップグレード
@@ -520,9 +531,9 @@
     long[X]   廃止=>int統合       922337203688L
     float     浮動小数点          1.234, 1.2e3
     complex   虚数(complex)       3.14j
-    list      リスト              [1,2,3]
-    tuple     タプル              (1,2,3)
-    dict      辞書                {'A':1}
+    list      リスト              [1,2,3] => 旧:from typing import List
+    tuple     タプル              (1,2,3) => 旧:from typing import Tuple
+    dict      辞書                {'A':1} => 旧:from typing import Dict
     NoneType  他言語Null          None
     --------------------------------------
     * list[int|str]  UNION型は v3.10以上
@@ -820,6 +831,11 @@
     ----------------------------------------
     x = "OK" if n == 1 else "NO"
 
+- KEY: py.syntax.ifElseLine
+  EXPLAIN: 三項分岐
+  BODY: |
+    <TRUE_RESULT> if <CONDITION> else <FALSE_RESULT>)
+
 - KEY: py.syntax.while
   EXPLAIN: 制御構文(while)
   BODY: |
@@ -922,6 +938,143 @@
     ----------------------------------------
     a = 3
     print('OK' if a<10 else 'No')  # 三項演算子: OK
+
+#-------------------------------
+# 関数
+#-------------------------------
+
+- KEY: py.func
+  EXPLAIN: 関数
+  BODY: |
+    def FUNCTION_NAME(param:TYPE): -> RETURN_TYPE
+      ...
+      return VALUE
+
+- KEY: py.func.param
+  EXPLAIN: 関数(引数)
+  BODY: |
+    def func(arg1, arg2):
+        print(arg1, arg2)
+        ...
+    func(1, 2)                  # 1 2
+    func(arg1=1, arg2=2)        # 1 2
+    func(arg2=1, arg1=2)        # 2 1
+    --------------------------------------------
+    def func(arg1, arg2=7):
+        print(arg1, arg2)
+        ...
+    func(1, 2)                  # 1 2
+    func(1)                     # 1 7 (default値)
+    func(arg1=1)                # 1 7 (default値)
+    func(arg1=1, arg2=None)     # 1 7 (default値)
+    --------------------------------------------
+    def func(arg1, arg2=[]):    # 悪例: default値が参照 []
+        arg2.append(arg1)
+        print(arg1, arg2)
+        ...
+    func(1)                     # 1 [1]
+    func(2)                     # 2 [1, 2] <== Wrong
+    # ------- 上記関数の修正版 -------
+    def func(arg1, arg2=None):
+        if not arg2:
+            arg2 = []
+        arg2.append(arg1)
+        print(arg1, arg2)
+    --------------------------------------------
+    def func(arg1, *args):
+        print(arg1, args)
+        ...
+    func(1, 2, 3)               # =>  1 (2, 3)
+    func(arg1=1)                # 1 ()
+    [NG] func(arg1=1, 2, 3)
+    [NG] func(*2, arg1=1)
+    [NG] func(arg1=1, more1=1)
+    --------------------------------------------
+    def func(*arg, more):       # 名前付き必須
+        print(arg, more)
+        ...
+    func(more=5)                # () 5
+    func(1, more=5)             # (1,) 5
+    func(1, 2, 3, more=5)       # (1, 2, 3) 5
+    [NG] func(1)
+    [NG] func(1, 2, 3)
+    [NG] func(more=5, 1)
+    --------------------------------------------
+    def func(*, arg, more):
+        print(arg, more)
+        ...
+    func(arg=1, more=5)         # 1 5
+    [NG] func(1)
+    [NG] func(1, 2, 3)
+    [NG] func(1, arg=1, more=5)
+    --------------------------------------------
+    def func(*arg, **kwargs):   # keyWordArguments
+        print(arg, kwargs)
+        ...
+    [NG] def func(**kwargs, *arg): # パラメタ位置反対
+
+    func(1, 2, 3)               # (1, 2, 3) {}
+    func(arg1=1)                # () {'arg1': 1}
+    func(1, 2, arg1=1, abc=3)   # (1, 2) {'arg1': 1, 'abc': 3}
+    [NG] func(arg1=1, 2, abc=3, 4) # Error
+
+- KEY: py.func.factory
+  EXPLAIN: ファクトリ関数
+  BODY: |
+    def factory() -> Callable:
+      def add(a: int) -> int:
+          return a + 1
+      return add  # 戻り値:関数
+
+    factAdd = factory()
+    print(factAdd(1))    # 2
+
+- KEY: py.func.factory.curry
+  EXPLAIN: カリー関数
+  BODY: |
+    def curry(a: int = 0) -> Callable:
+      def add(b: int) -> int:
+          value = a + b
+          return value
+      return add  # 戻り値:関数
+    -----------------------------------
+    curryAdd = curry(3)
+    print(curryAdd(2))  # 5
+    print(curry(3)(2))  # 5
+
+- KEY: py.func.factory.closure
+  EXPLAIN: クロージャ関数
+  BODY: |
+    def factory() -> tuple[Callable, int]:
+        sum: int = 0
+        def add(a: int) -> int:
+            global sum
+            sum += a
+            return a + 1
+        return (add, sum)
+    -----------------------------------
+    (factAdd, sum) = factory()
+    print(factAdd(3), sum)  # 4 3
+    print(factAdd(2), sum)  # 3 5
+    print(factAdd(1), sum)  # 2 6
+
+- KEY: py.func.lambda
+  EXPLAIN: ラムダ関数
+  BODY: |
+    def lambdaWrap(func: Callable, numbers: list[int]) -> list[int]:
+        return [func(n) for n in numbers]
+    arr = [1, 2, 3]
+    result = lambdaWrap(lambda n: n + 1, arr)     # [2, 3, 4]
+    -------------------------------------------------------------
+    arr = [1, 2, 3, 4, 5]
+    a = map(lambda k: k * 2, arr)        # [2, 4, 6, 8, 10]
+    a = filter(lambda k: k % 2, arr)     # [1, 3, 5]
+    * reduce は py.struct.list.reduce 参照
+    -------------------------------------------------------------
+    # 警告: lambdaをアサインするな
+    f = lambda x, *args, rival, **kwargs: [rival, args, kwargs]
+    f(1, 2, 3, rival="ruby", name="python")
+    # => ['ruby', (2, 3), {'name': 'python'}]
 
 #-------------------------------
 # 構造体
@@ -1199,6 +1352,14 @@
     print(list(a))      # [2, 4, 6, 8, 10]
     print(list(a))      # [] <= a の中身は空
 
+- KEY: py.struct.list.reduce
+  EXPLAIN: 配列(reduce)
+  BODY: |
+    from functools import reduce
+    arr = [2, 4, 6]
+    a: int = reduce(lambda k, j: k + j, iter(arr), 0)             # 12
+    b: int = reduce(lambda k, j: int(k + (j / 2)), iter(arr), 0)  # 6
+
 - KEY: py.struct.list.zip
   EXPLAIN: 配列(zip)
   BODY: |
@@ -1211,6 +1372,14 @@
 - KEY: py.struct.list.sort
   EXPLAIN: 配列(ソート)
   BODY: |
+    ■ Mutable
+    score1 = [5, 8, 2, 4]
+    score1.sort()                   # [2, 4, 5, 8]
+    --------------------------------------------------
+    score = [("A", 4), ("B", 8), ("C", 2)]
+    score.sort(key=lambda x:x[1])   # [('C', 2), ('A', 4), ('B', 8)]
+    --------------------------------------------------
+    ■ Immutable
     a = [4, 3, 1, 2, 10]
     # 戻り値: iterator
     list(reversed(a))             # [10, 2, 1, 3, 4]
