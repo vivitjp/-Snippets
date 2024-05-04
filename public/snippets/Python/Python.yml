@@ -1021,6 +1021,7 @@
 - KEY: py.func.factory
   EXPLAIN: ファクトリ関数
   BODY: |
+    from typing import Callable
     def factory() -> Callable:
       def add(a: int) -> int:
           return a + 1
@@ -1032,6 +1033,7 @@
 - KEY: py.func.factory.curry
   EXPLAIN: カリー関数
   BODY: |
+    from typing import Callable
     def curry(a: int = 0) -> Callable:
       def add(b: int) -> int:
           value = a + b
@@ -1045,6 +1047,7 @@
 - KEY: py.func.factory.closure
   EXPLAIN: クロージャ関数
   BODY: |
+    from typing import Callable
     def factory() -> tuple[Callable, int]:
         sum: int = 0
         def add(a: int) -> int:
