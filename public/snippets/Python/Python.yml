@@ -55,47 +55,47 @@
   EXPLAIN: パッケージ管理
   BODY: |
     ■ 1) 実行
-    py -m pip install pipenv
+    pip install pipenv
 
 - KEY: py.pkg.pip
   EXPLAIN: パッケージインストール
   BODY: |
     ■ パッケージ管理(pip)のアップグレード
       > python.exe -m pip install --upgrade pip
-      > py -m pip install --upgrade/-U pip
-      > py -m pip install --force-reinstall --upgrade pip
+      > pip install --upgrade/-U pip
+      > pip install --force-reinstall --upgrade pip
 
 - KEY: py.pkg.pip.install
   EXPLAIN: パッケージ追加
   BODY: |
-    ■ パッケージインストール(WinPowershell「 py -m 」必要)
-      > py -m pip install <LIBRARY>
-      > py -m pip install <LIBRARY>==1.23 //バージョン指定
-      例: py -m pip install pandas
+    ■ パッケージインストール
+      > pip install <LIBRARY>
+      > pip install <LIBRARY>==1.23 //バージョン指定
+      例: pip install pandas
 
     ■ インストール済リスト
-      > py -m pip list
-      > py -m pip list --format=columns | sls <LIBRARY>
-      > py -m list --outdated          # 最新でない
+      > pip list
+      > pip list --format=columns | sls <LIBRARY>
+      > list --outdated          # 最新でない
       > pip freeze (見にくい)
 
     ■ アンインストール
-      > py -m pip uninstall <LIBRARY>
+      > pip uninstall <LIBRARY>
 
     ■ アップグレード
-      > py -m pip install --upgrade/-U <LIBRARY>
+      > pip install --upgrade/-U <LIBRARY>
 
     ■ 依存関係
-      > py -m pip show <LIBRARY>
-      > py -m pipdeptree -p LIBRARY    # 詳細
+      > pip show <LIBRARY>
+      > pipdeptree -p LIBRARY    # 詳細
 
 - KEY: py.pkg.pip.user
   EXPLAIN: パッケージ追加(ユーザ)
   BODY: |
     ■ インストール先の確認
-    > py -m site --user-base
+    > site --user-base
     C:\Users\VIVIT\AppData\Roaming\Python
-    > py -m pip install --user pandas
+    > pip install --user pandas
 
 #-------------------------------
 # VSCODE
@@ -669,7 +669,8 @@
   EXPLAIN: 文字列長さ
   BODY: |
     txt = 'ABC'           # 'ABC'
-    len(txt)              # 文字長さ: 3  *[NG] txt.len()
+    len(txt)              # 文字長さ: 3
+    [NG] txt.len()        # Python には存在せず
 
 - KEY: py.type.string.join.split
   EXPLAIN: 文字列結合・分離
@@ -753,7 +754,7 @@
     res.start()   # 10
     res.end()     # 13
     res.span()    # (10, 13) タプル
-    #[NG] res.match()
+    [NG] res.match()
 
     ■ 複数検索(結果文字列)
     res = re.findall('pen', txt)
@@ -1157,7 +1158,7 @@
     c: list = [1, "A"]
     d: list = [1, "A", 2]
     e: list[int] = [1, 2]
-    #[NG] f: list[int] = [1, "A"]  # Error
+    [NG] f: list[int] = [1, "A"]  # 型Error
     g: list[int | str] = [1, "A"]
     h: list[list[int]] = [[1, 2], [3, 4]]
 
@@ -1186,7 +1187,7 @@
     ■ 追加
     a = [1, 2]
     a.append(3)          # [1, 2, 3]
-    # [NG] a += 3        # 数値NG
+    [NG] a += 3          # Error オペランドによる追加
 
     b: list[int] = [1, 2]
     b.insert(1, 5)       # [1, 5, 2]
@@ -1218,7 +1219,7 @@
     ■ 置換/挿入
     a = [1,2,3]
     a[1] = 3             # 置換 [1, 3, 3]
-      # [NG] a[100] = 3  list assignment index out of range
+    [NG] a[100] = 3      # Index超過：list assignment index out of range
     a[1:1] = "A"         # 挿入 [1, 'A', 3, 3]
     a[1:1] = ["A"]       # 挿入 [1, 'A', 'A', 3, 3]
 
@@ -1255,14 +1256,14 @@
 
     c = a + b             # [1, 2, 2, 3]
     c = a.extend([2, 3])  # [1, 2, 2, 3]
-    # [NG] c = a - b
-    # [NG] c = a * b
-    # [NG] c = a / b
-    # [NG] c = a + 1      # + 1
-    # [NG] c = a - 1      # - 1
+    [NG] c = a - b
+    [NG] c = a * b
+    [NG] c = a / b
+    [NG] c = a + 1        # + 1
+    [NG] c = a - 1        # - 1
 
     c = a * 2             # [1, 2, 1, 2]
-    # [NG] c = a / 2
+    [NG] c = a / 2
 
 - KEY: py.struct.list.commonMethod
   EXPLAIN: 配列(結合/長/判定/分割代入)
@@ -1280,7 +1281,7 @@
     ■ 分割代入
     x, y, z = var1         # 
     print(x, y, z)         # "A", "B", "C"
-    # x, y = var1          # Error
+    [NG] x, y = var1       # Error 変数不足
 
 - KEY: py.struct.list.copy
   EXPLAIN: 配列コピー
@@ -1439,7 +1440,7 @@
     list(sorted(b))               # ['1','10','2','A','F']
 
     ■ ナチュラルソート
-    # py -m pip install natsort
+    # pip install natsort
     from natsort import natsorted
     c = ["F", "A", "1", "2", "10"]
     list(natsorted(c))            # ['1','2','10','A','F']
@@ -1545,7 +1546,7 @@
       del d["D"]
 
     ■ 削除(複数) NG
-    # [NG] del d["A", "B"]   # KeyError: 複数不可
+    [NG] del d["A", "B"]   # KeyError: 複数不可
 
     ■ 全要素削除
     d.clear()
@@ -1593,7 +1594,7 @@
 
     ■ 削除
     a = set([5, 1, 2, 1])
-    # [NG] a.remove(6)   # (非存在)削除: Error
+    [NG] a.remove(6)     # (非存在)削除: Error
     a.remove(2)          # 削除
     a.discard(7)         # (非存在)削除(No Error)
 
@@ -1673,7 +1674,7 @@
     print('result', a)   # None 値が返らない
 
     ■ compile
-    b = compile(str, filename='< string >', mode='exec')  # #AST Obj
+    b = compile(str, filename='< string >', mode='exec')  # AST Obj
     a = b(2)             # 4
 
 #-------------------------------
