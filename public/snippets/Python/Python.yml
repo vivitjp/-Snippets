@@ -554,15 +554,17 @@
     * list[int|str]  UNION型は v3.10以上
     * 浮動小数点 (0.1+0.2)==0.3 -> False   丸め誤差あり
 
-    var1 = 100          print(type(var1))  # class 'int'
-    var2 = 123.12       print(type(var2))  # class 'float'
-    var3 = True         print(type(var3))  # class 'bool'
-    var4 = "abc"        print(type(var4))  # class 'str'
-    var5 = ["a", "b"]   print(type(var5))  # class 'list'
-    var6 = ("a", "b")   print(type(var6))  # class 'tuple'
-    var7 = {"a", "b"}   print(type(var7))  # class 'set'
-    var8 = {"a": "a"}   print(type(var8))  # class 'dict'
-    var9 = None         print(type(var9))  # class 'NoneType'
+    ■ 型判定: type()
+    var1 = 100           print(type(var1) is int)
+    var2 = 123.12        print(type(var2) is float)
+    var3 = True          print(type(var3) is bool)
+    var4 = "abc"         print(type(var4) is str)
+    var5 = ["a", "b"]    print(type(var5) is list)
+    var6 = ("a", "b")    print(type(var6) is tuple)
+    var7 = {"a", "b"}    print(type(var7) is set)
+    var8 = {"a": "a"}    print(type(var8) is dict)
+    # from types import NoneType
+    var9 = None          print(type(var9) is NoneType)
 
 - KEY: py.type.constant
   EXPLAIN: 組み込み定数
@@ -1875,3 +1877,17 @@
 - KEY: py.class.decorator
   EXPLAIN: デコレータ
   BODY: |
+    def switch_type(func):
+        def wrapper(*args, **kwargs):
+            # --------------------------------------
+            new_args = [f"[{str(a)}]" for a in args]
+            # --------------------------------------
+            return func(*new_args, **kwargs)  # パラメタのオーバーライド
+        return wrapper
+
+    @switch_type
+    def add(x, y):
+        return x + y
+
+    print(add(1, 2))      # [1][2]
+    print(add("a", "b"))  # [1][2]
