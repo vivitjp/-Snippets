@@ -910,6 +910,74 @@
     for f in open('a.txt'):   # File読み取り
       print(f)
 
+- KEY: py.syntax.match
+  EXPLAIN: 制御構文(=switch)
+  BODY: |
+    ■ v3.10 以前
+    def http_error(status):
+      error_string = {
+        400: "Bad request",
+        404: "Not found",
+        418: "I'm a teapot",
+      }
+      return error_string.get(status, "Something's wrong with the Internet")
+
+    ■ match(int)
+    match status:
+      case 400:
+        return "Bad request"
+      case 404:
+        return "Not found"
+      case 418:
+        return "I'm a teapot"
+      case _:
+        return "Something's wrong with the Internet"
+
+    ■ match(tuple)
+    match point:
+      case (0, 0):
+        return "Center"
+      case (0, y):
+        return f"Y={y}"
+      case (x, 0):
+        return f"X={x}"
+      case (x, y):
+        return f"X={x}, Y={y}"
+      case _:
+        raise ValueError("Not a point")
+
+    ■ match(class)
+    class Point:
+      x: int
+      y: int
+
+    match point:
+      case Point(x=0, y=0):
+        return "Center"
+      case Point(x=0, y=defY):
+        return f"Y={defY}"
+      case Point(x=defX, y=0):
+        return f"X={defX}"
+      case Point(x=defX, y=defY):
+        return f"X={defX}, Y={defY}"
+      case _:
+        raise ValueError("Not a point")
+
+    ■ match(classes)
+    class Point:
+    class Rectangle:
+    class Circle:
+
+    match shape:
+      case Point():
+        return f"Point({shape.x}, {shape.y})"
+      case Rectangle():
+        return f"Rectangle({shape.width}, {shape.length})"
+      case Circle():
+        return f"Circle({shape.radius})"
+      case _:
+        return "Unknown shape"
+
 #-------------------------------
 # 例外・デバグ
 #-------------------------------
@@ -1269,6 +1337,7 @@
   EXPLAIN: 配列(結合/長/判定/分割代入)
   BODY: |
     var1 = ['A','B','C']
+
     ■ JOIN
     print(','.join(var1))  # A,B,C
 
@@ -1313,12 +1382,14 @@
     def funcVal(x):    # 値渡し
       x = 9
       return x
+
     x = 7
     y = funcVal(x)     # x:7, y:9
 
     def funcVal(x):    # 値渡し
       x[0] = 9
       return x
+
     x = [7]
     y = funcVal(x)     # x: 9, y: 9
 
@@ -1780,3 +1851,27 @@
 
     class Smith(People):
         age = 18           # Raise Error
+
+- KEY: py.class.lib.dataclasses
+  EXPLAIN: ダンダーメソッド自動生成
+  BODY: |
+    from dataclasses import dataclass
+
+    @dataclass
+    class Movie:
+        name: str
+        year: int
+
+    starwars1 = Movie("Star wars", 1979)
+    starwars2 = Movie(year=1979, name="Star wars")
+
+    print(starwars1)               # Movie(name='Star wars', year=1979)
+    print(starwars1 == starwars2)  # True
+
+#-------------------------------
+# Class Decorator
+#-------------------------------
+
+- KEY: py.class.decorator
+  EXPLAIN: デコレータ
+  BODY: |
