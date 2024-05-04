@@ -6,323 +6,323 @@
 - KEY: py.library.text
   EXPLAIN: ライブラリ(テキスト)
   BODY: |
-    string      一般的文字列操作
-    re          正規表現操作
-    difflib     差分の計算
-    textwrap    テキストの折り返し
-    unicodedata Unicode DB
-    stringprep  ネット文字列
+    string                              一般的文字列操作
+    re                                  正規表現操作
+    difflib                             差分の計算
+    textwrap                            テキストの折り返し
+    unicodedata                         Unicode DB
+    stringprep                          ネット文字列
 
 - KEY: py.library.binary
   EXPLAIN: ライブラリ(バイナリ)
   BODY: |
-    struct  バイト列パック・バイナリ
-    codecs  codec レジストリと基底クラス
+    struct                              バイト列パック・バイナリ
+    codecs                              codec レジストリと基底クラス
 
 - KEY: py.library.dataTypes
   EXPLAIN: ライブラリ(型別)
   BODY: |
-    datetime     基本的な日付型/時間型
-    zoneinfo     IANA time zone
-    calendar     一般的なカレンダー
-    collections  コンテナデータ型
-    heapq        ヒープキューアルゴリズム
-    bisect       配列二分法アルゴリズム
-    array        効率のよい数値アレイ
-    weakref      弱参照
-    types        動的型生成と組込型名
-    copy         浅い/深いコピー
-    pprint       データ出力の整然化
-    reprlib      別の repr() 実装
-    enum         列挙型
-    graphlib     graph like構造
+    datetime                            基本的な日付型/時間型
+    zoneinfo                            IANA time zone
+    calendar                            一般的なカレンダー
+    collections                         コンテナデータ型
+    heapq                               ヒープキューアルゴリズム
+    bisect                              配列二分法アルゴリズム
+    array                               効率のよい数値アレイ
+    weakref                             弱参照
+    types                               動的型生成と組込型名
+    copy                                浅い/深いコピー
+    pprint                              データ出力の整然化
+    reprlib                             別の repr() 実装
+    enum                                列挙型
+    graphlib                            graph like構造
 
 - KEY: py.library.math
   EXPLAIN: ライブラリ(数学)
   BODY: |
-    numbers     数の抽象基底クラス
-    math        数学関数
-    cmath       複素数
-    decimal     十進固定,浮動小数点数
-    fractions   有理数
-    random      擬似乱数生成
-    statistics  数理統計関数
+    numbers                             数の抽象基底クラス
+    math                                数学関数
+    cmath                               複素数
+    decimal                             十進固定,浮動小数点数
+    fractions                           有理数
+    random                              擬似乱数生成
+    statistics                          数理統計関数
 
 - KEY: py.library.functional
   EXPLAIN: ライブラリ(関数)
   BODY: |
-    itertools  イテレータ生成
-    functools  高階関数
-    operator   関数形式の標準演算子
+    itertools                           イテレータ生成
+    functools                           高階関数
+    operator                            関数形式の標準演算子
 
 - KEY: py.library.fileDir
   EXPLAIN: ライブラリ(ファイル・ディレクトリ)
   BODY: |
-    pathlib    OOのパス
-    os.path    パス操作
-    fileinput  複数入力またぐ反復処理
-    stat       stat() 結果解釈
-    filecmp    FD比較
-    tempfile   TEMP FD作成
-    glob       Unix PATH名のパターン展開
-    fnmatch    Unix F名のパターンマッチ
-    linecache  テキストライン・ランダムアクセス
-    shutil     ファイル操作
+    pathlib                             OOのパス
+    os.path                             パス操作
+    fileinput                           複数入力またぐ反復処理
+    stat                                stat() 結果解釈
+    filecmp                             FD比較
+    tempfile                            TEMP FD作成
+    glob                                Unix PATH名のパターン展開
+    fnmatch                             Unix F名のパターンマッチ
+    linecache                           テキストライン・ランダムアクセス
+    shutil                              ファイル操作
 
 - KEY: py.library.dataPersistance
   EXPLAIN: ライブラリ(永続化)
   BODY: |
-    pickle     Python Obj直列化
-    copyreg    pickle サポート関数登録
-    shelve     Python Obj永続化
-    marshal    内部使用向けのオブジェクト整列化
-    dbm        Unix DB へのインタフェース
-    sqlite3    SQLite, DB API2.0インタフェース
+    pickle                              Python Obj直列化
+    copyreg                             pickle サポート関数登録
+    shelve                              Python Obj永続化
+    marshal                             内部使用向けのオブジェクト整列化
+    dbm                                 Unix DB へのインタフェース
+    sqlite3                             SQLite, DB API2.0インタフェース
 
 - KEY: py.library.zip
   EXPLAIN: ライブラリ(圧縮)
   BODY: |
-    zlib       gzip 互換の圧縮
-    gzip       gzip ファイルのサポート
-    bz2        bzip2 圧縮のサポート
-    lzma       LZMA アルゴリズムを使用した圧縮
-    zipfile    ZIP アーカイブの処理
-    tarfile    tar アーカイブファイルの読み書き
+    zlib                                gzip 互換の圧縮
+    gzip                                gzip ファイルのサポート
+    bz2                                 bzip2 圧縮のサポート
+    lzma                                LZMA アルゴリズムを使用した圧縮
+    zipfile                             ZIP アーカイブの処理
+    tarfile                             tar アーカイブファイルの読み書き
 
 - KEY: py.library.fileOutputType
   EXPLAIN: ライブラリ(永続化ファイル出力)
   BODY: |
-    csv           CSV ファイルの読み書き
-    configparser  設定ファイルのパーサー
-    netrc         netrc ファイルの処理
-    xdrlib        XDR データのエンコード/デコード
-    plistlib      Generate and parse Apple .plist
+    csv                                 CSV ファイルの読み書き
+    configparser                        設定ファイルのパーサー
+    netrc                               netrc ファイルの処理
+    xdrlib                              XDR データのエンコード/デコード
+    plistlib                            Generate and parse Apple .plist
 
 - KEY: py.library.crypt
   EXPLAIN: ライブラリ(暗号化)
   BODY: |
-    hashlib    セキュアハッシュ/メッセージダイジェスト
-    hmac       メッセージ認証のための鍵付きハッシュ化
-    secrets    機密を扱うために安全な乱数生成
+    hashlib                             セキュアハッシュ/メッセージダイジェスト
+    hmac                                メッセージ認証のための鍵付きハッシュ化
+    secrets                             機密を扱うために安全な乱数生成
 
 - KEY: py.library.os
   EXPLAIN: ライブラリ(OS関連雑多)
   BODY: |
-    os                雑多なOSインタフェース
-    io                ストリーム
-    time              時刻データ
-    argparse          CLI、引数、サブコマンドのパーサ
-    getopt            C 言語スタイルCLIパーサ
-    logging           Python 用ロギング機能
-    logging.config    ロギングの環境設定
-    logging.handlers  ロギングハンドラ
-    getpass           可搬性のあるパスワード入力機構
-    curses            文字セル表示を扱うための端末操作
-    curses.textpad    curses プログラムのためのテキスト入力
-    curses.ascii      ASCII 文字に関するユーティリティ
-    curses.panel      curses パネルスタック拡張
-    platform          実行中プラットフォーム
-    errno             errno システムシンボル
-    ctypes            Pythonのための外部関数ライブラリ
+    os                                  雑多なOSインタフェース
+    io                                  ストリーム
+    time                                時刻データ
+    argparse                            CLI、引数、サブコマンドのパーサ
+    getopt                              C 言語スタイルCLIパーサ
+    logging                             Python 用ロギング機能
+    logging.config                      ロギングの環境設定
+    logging.handlers                    ロギングハンドラ
+    getpass                             可搬性のあるパスワード入力機構
+    curses                              文字セル表示を扱うための端末操作
+    curses.textpad                      curses プログラムのためのテキスト入力
+    curses.ascii                        ASCII 文字に関するユーティリティ
+    curses.panel                        curses パネルスタック拡張
+    platform                            実行中プラットフォーム
+    errno                               errno システムシンボル
+    ctypes                              Pythonのための外部関数ライブラリ
 
 - KEY: py.library.thread
   EXPLAIN: ライブラリ(並列処理)
   BODY: |
-    threading         スレッドベースの並列処理
-    multiprocessing   プロセスベースの並列処理
-    concurrent        並行実行
-    subprocess        サブプロセス管理
-    sched             イベントスケジューラ
-    queue             同期キュークラス
-    contextvars       コンテキスト変数
-    _thread           低水準の スレッド API
+    threading                           スレッドベースの並列処理
+    multiprocessing                     プロセスベースの並列処理
+    concurrent                          並行実行
+    subprocess                          サブプロセス管理
+    sched                               イベントスケジューラ
+    queue                               同期キュークラス
+    contextvars                         コンテキスト変数
+    _thread                             低水準の スレッド API
 
 - KEY: py.library.comm
   EXPLAIN: ライブラリ(通信)
   BODY: |
-    asyncio    非同期 I/O
-    socket     低水準ネットワークインターフェース
-    ssl        ソケットに対する TLS/SSL ラッパー
-    select     I/O 処理の完了待機
-    selectors  高水準の I/O 多重化
-    asyncore   非同期ソケットハンドラ
-    asynchat   非同期ソケットコマンド/レスポンスハンドラ
-    signal     非同期イベントにハンドラ設定
-    mmap       メモリマップファイル
+    asyncio                             非同期 I/O
+    socket                              低水準ネットワークインターフェース
+    ssl                                 ソケットに対する TLS/SSL ラッパー
+    select                              I/O 処理の完了待機
+    selectors                           高水準の I/O 多重化
+    asyncore                            非同期ソケットハンドラ
+    asynchat                            非同期ソケットコマンド/レスポンスハンドラ
+    signal                              非同期イベントにハンドラ設定
+    mmap                                メモリマップファイル
 
 - KEY: py.library.dataFormat
   EXPLAIN: ライブラリ(データ型)
   BODY: |
-    email       電子メールと MIME 処理
-    json        JSON エンコーダ/デコーダ
-    mailcap     mailcap ファイル
-    mailbox     様々な形式のメールボックス
-    mimetypes   ファイル名 MIME 型マップ
-    base64      Base16, Base32, Base64, Base85
-    binhex      binhex4 形式のエンコード/デコード
-    binascii    バイナリとASCII 間変換
-    quopri      MIME エンコード/デコード
-    uu          uuencode形式のエンコードとデコード
+    email                               電子メールと MIME 処理
+    json                                JSON エンコーダ/デコーダ
+    mailcap                             mailcap ファイル
+    mailbox                             様々な形式のメールボックス
+    mimetypes                           ファイル名 MIME 型マップ
+    base64                              Base16, Base32, Base64, Base85
+    binhex                              binhex4 形式のエンコード/デコード
+    binascii                            バイナリとASCII 間変換
+    quopri                              MIME エンコード/デコード
+    uu                                  uuencode形式のエンコードとデコード
 
 - KEY: py.library.html
   EXPLAIN: ライブラリ(HTML)
   BODY: |
-    html             HTML サポート
-    html.parser      HTML/XHTML パーサー
-    html.entities    HTML 定義
-    xml              XML
-    xml.dom          DOM
-    xml.dom.minidom  MIN DOM
-    xml.dom.pulldom  部分的 DOM ツリー構築
+    html                                HTML サポート
+    html.parser                         HTML/XHTML パーサー
+    html.entities                       HTML 定義
+    xml                                 XML
+    xml.dom                             DOM
+    xml.dom.minidom                     MIN DOM
+    xml.dom.pulldom                     部分的 DOM ツリー構築
 
 - KEY: py.library.netProtocol
   EXPLAIN: ライブラリ(ネット)
   BODY: |
-    webbrowser      ウェブブラウザコントローラー
-    cgi             CGI (ゲートウェイインターフェース)
-    cgitb           CGI スクリプトのトレースバック管理
-    wsgiref         WSGI ユーティリティとリファレンス実装
-    urllib          URL を扱うモジュール群
-    urllib.request  URL を開くための拡張可能ライブラリ
-    urllib.response urllib で使用するレスポンスクラス
-    urllib.parse    URL 解析して構成要素
-    urllib.error    urllib.request が投げる例外
-    urllib.robotparser  robots.txt のためのパーザ
-    http            HTTP モジュール群
-    http.client     HTTP プロトコルクライアント
-    ftplib          FTPプロトコルクライアント
-    poplib          POP3 プロトコルクライアント
-    imaplib         IMAP4 プロトコルクライアント
-    nntplib         NNTP プロトコルクライアント
-    smtplib         SMTP プロトコルクライアント
-    smtpd           SMTP サーバー
-    telnetlib       Telnet クライアント
-    uuid            RFC 4122 に基づくUUID オブジェクト
-    socketserver    ネットワークサーバのフレームワーク
-    http.server     HTTP サーバ
-    http.cookies    HTTP 状態管理
-    http.cookiejar  HTTP クライアント用の Cookie 処理
-    xmlrpc          XML RPC サーバー/クライアント
-    xmlrpc.client   XML RPC クライアントアクセス
-    xmlrpc.server   基本的なXML RPCサーバー
-    ipaddress       IPv4/IPv6 操作ライブラリ
+    webbrowser                          ウェブブラウザコントローラー
+    cgi                                 CGI (ゲートウェイインターフェース)
+    cgitb                               CGI スクリプトのトレースバック管理
+    wsgiref                             WSGI ユーティリティとリファレンス実装
+    urllib                              URL を扱うモジュール群
+    urllib.request                      URL を開くための拡張可能ライブラリ
+    urllib.response                     urllib で使用するレスポンスクラス
+    urllib.parse                        URL 解析して構成要素
+    urllib.error                        urllib.request が投げる例外
+    urllib.robotparser                  robots.txt のためのパーザ
+    http                                HTTP モジュール群
+    http.client                         HTTP プロトコルクライアント
+    ftplib                              FTPプロトコルクライアント
+    poplib                              POP3 プロトコルクライアント
+    imaplib                             IMAP4 プロトコルクライアント
+    nntplib                             NNTP プロトコルクライアント
+    smtplib                             SMTP プロトコルクライアント
+    smtpd                               SMTP サーバー
+    telnetlib                           Telnet クライアント
+    uuid                                RFC 4122 に基づくUUID オブジェクト
+    socketserver                        ネットワークサーバのフレームワーク
+    http.server                         HTTP サーバ
+    http.cookies                        HTTP 状態管理
+    http.cookiejar                      HTTP クライアント用の Cookie 処理
+    xmlrpc                              XML RPC サーバー/クライアント
+    xmlrpc.client                       XML RPC クライアントアクセス
+    xmlrpc.server                       基本的なXML RPCサーバー
+    ipaddress                           IPv4/IPv6 操作ライブラリ
 
 - KEY: py.library.multimedia
   EXPLAIN: ライブラリ(マルチメディア)
   BODY: |
-    audioop    生の音声データ操作
-    aifc       AIFF/AIFCファイル読み書き
-    sunau      Sun AUファイル読み書き
-    wave       WAVファイルの読み書き
-    chunk      IFFチャンクデータ読み込み
-    colorsys   色体系間の変換
-    imghdr     画像形式
-    sndhdr     サウンドファイルの識別
-    ossaudiodev  OSS互換オーディオデバイス
+    audioop                             生の音声データ操作
+    aifc                                AIFF/AIFCファイル読み書き
+    sunau                               Sun AUファイル読み書き
+    wave                                WAVファイルの読み書き
+    chunk                               IFFチャンクデータ読み込み
+    colorsys                            色体系間の変換
+    imghdr                              画像形式
+    sndhdr                              サウンドファイルの識別
+    ossaudiodev                         OSS互換オーディオデバイス
 
 - KEY: py.library.language
   EXPLAIN: ライブラリ(言語)
   BODY: |
-    gettext   多言語対応国際化サービス
-    locale    国際化サービス
+    gettext                             多言語対応国際化サービス
+    locale                              国際化サービス
 
 - KEY: py.library.develop
   EXPLAIN: ライブラリ(開発)
   BODY: |
-    typing             型ヒントのサポート
-    pydoc              Doc生成とオンラインヘルプ
-    Development Mode   開発モード
-    doctest            対話的な実行例テスト
-    unittest           ユニットテストフレームワーク
-    unittest.mock      モックオブジェクト
-    2to3               Python 2 から 3 へのコード変換
-    test               回帰テスト
-    test.support       テストのためのユーティリティ関数
-    test.support.socket_helper    ソケットテスト
-    test.support.script_helper    実行テスト
-    test.support.bytecode_helper  正しいバイトコード生成テスト
+    typing                              型ヒントのサポート
+    pydoc                               Doc生成とオンラインヘルプ
+    Development Mode                    開発モード
+    doctest                             対話的な実行例テスト
+    unittest                            ユニットテストフレームワーク
+    unittest.mock                       モックオブジェクト
+    2to3                                Python 2 から 3 へのコード変換
+    test                                回帰テスト
+    test.support                        テストのためのユーティリティ関数
+    test.support.socket_helper          ソケットテスト
+    test.support.script_helper          実行テスト
+    test.support.bytecode_helper        正しいバイトコード生成テスト
 
 - KEY: py.library.debug
   EXPLAIN: ライブラリ(デバグ)
   BODY: |
-    Audit           events table    
-    bdb             デバッガーフレームワーク
-    faulthandler    tracebackのダンプ
-    pdb             デバッガ
-    profile,pstats  実行時間の統計情報
-    timeit          小さなコード断片の実行時間計測
-    trace           Python 文実行のトレースと追跡
-    tracemalloc     メモリ割り当ての追跡
+    Audit                               events table    
+    bdb                                 デバッガーフレームワーク
+    faulthandler                        tracebackのダンプ
+    pdb                                 デバッガ
+    profile,pstats                      実行時間の統計情報
+    timeit                              小さなコード断片の実行時間計測
+    trace                               Python 文実行のトレースと追跡
+    tracemalloc                         メモリ割り当ての追跡
 
 - KEY: py.library.module
   EXPLAIN: ライブラリ(配布モジュール)
   BODY: |
-    distutils    モジュール構築とインストール
-    ensurepip    pip インストーラのブートストラップ
-    venv         仮想環境の作成
-    zipapp       zip関連
+    distutils                           モジュール構築とインストール
+    ensurepip                           pip インストーラのブートストラップ
+    venv                                仮想環境の作成
+    zipapp                              zip関連
 
 - KEY: py.library.runtime
   EXPLAIN: ライブラリ(ランタイム)
   BODY: |
-    sys          システムパラメータと関数
-    sysconfig    構成情報にアクセス
-    builtins     組み込みオブジェクト
-    __main__     トップレベルのスクリプト環境
-    warnings     警告の制御
-    dataclasses  データクラス
-    contextlib   contexts ユーティリティ
-    abc          抽象基底クラス
-    atexit       終了ハンドラ
-    traceback    スタックトレースの表示/取得
-    __future__   future 文の定義
-    gc           ガベージコレクタインターフェース
-    inspect      活動中のオブジェクトの情報取得
-    site         サイト固有の設定フック
+    sys                                 システムパラメータと関数
+    sysconfig                           構成情報にアクセス
+    builtins                            組み込みオブジェクト
+    __main__                            トップレベルのスクリプト環境
+    warnings                            警告の制御
+    dataclasses                         データクラス
+    contextlib                          contexts ユーティリティ
+    abc                                 抽象基底クラス
+    atexit                              終了ハンドラ
+    traceback                           スタックトレースの表示/取得
+    __future__                          future 文の定義
+    gc                                  ガベージコレクタインターフェース
+    inspect                             活動中のオブジェクトの情報取得
+    site                                サイト固有の設定フック
 
 - KEY: py.library.pythonLanguage
   EXPLAIN: ライブラリ(Python言語)
   BODY: |
-    parser       解析木アクセス
-    ast          抽象構文木
-    symtable     コンパイラ記号表アクセス
-    symbol       解析木と共に使われる定数
-    token        解析木と共に使われる定数
-    keyword      キーワードチェック
-    tokenize     トークナイザ
-    tabnanny     あいまいなインデント検出
-    pyclbr       モジュールブラウザ
-    py_compile   ソースコードのコンパイル
-    compileall   ライブラリをバイトコンパイル
-    dis          バイトコードの逆アセンブラ
-    pickletools  pickle 開発者のツール群
+    parser                              解析木アクセス
+    ast                                 抽象構文木
+    symtable                            コンパイラ記号表アクセス
+    symbol                              解析木と共に使われる定数
+    token                               解析木と共に使われる定数
+    keyword                             キーワードチェック
+    tokenize                            トークナイザ
+    tabnanny                            あいまいなインデント検出
+    pyclbr                              モジュールブラウザ
+    py_compile                          ソースコードのコンパイル
+    compileall                          ライブラリをバイトコンパイル
+    dis                                 バイトコードの逆アセンブラ
+    pickletools                         pickle 開発者のツール群
 
 - KEY: py.library.formatter
   EXPLAIN: ライブラリ(フォーマット)
   BODY: |
-    formatter    汎用の出力書式化機構
+    formatter                           汎用の出力書式化機構
 
 - KEY: py.library.os.windows
   EXPLAIN: ライブラリ(Windows)
   BODY: |
-    msilib    MS インストーラーの読み書き
-    msvcrt    MS VC++実行時システムのルーチン群
-    winreg    Windows レジストリへのアクセス
-    winsound  Windows 用の音声再生インタフェース
+    msilib                              MS インストーラーの読み書き
+    msvcrt                              MS VC++実行時システムのルーチン群
+    winreg                              Windows レジストリへのアクセス
+    winsound                            Windows 用の音声再生インタフェース
 
 - KEY: py.library.os.unix
   EXPLAIN: ライブラリ(Unix)
   BODY: |
-    posix     最も一般的な POSIX システムコール群
-    pwd       パスワードDBへのアクセス
-    spwd      シャドウパスワードDB
-    grp       グループDBへのアクセス
-    crypt     Unix パスワードチェック
-    termios   POSIX スタイルの端末制御
-    tty       端末制御のための関数群
-    pty       擬似端末ユーティリティ
-    fcntl     fcntl/ioctl システムコール
-    pipes     シェルパイプラインへのインタフェース
-    resource  リソース使用状態の情報
-    nis       Sun の NIS へのインタフェース
-    syslog    Unix syslog ライブラリルーチン
+    posix                               最も一般的な POSIX システムコール群
+    pwd                                 パスワードDBへのアクセス
+    spwd                                シャドウパスワードDB
+    grp                                 グループDBへのアクセス
+    crypt                               Unix パスワードチェック
+    termios                             POSIX スタイルの端末制御
+    tty                                 端末制御のための関数群
+    pty                                 擬似端末ユーティリティ
+    fcntl                               fcntl/ioctl システムコール
+    pipes                               シェルパイプラインへのインタフェース
+    resource                            リソース使用状態の情報
+    nis                                 Sun の NIS へのインタフェース
+    syslog                              Unix syslog ライブラリルーチン

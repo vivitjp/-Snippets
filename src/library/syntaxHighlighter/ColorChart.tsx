@@ -30,3 +30,6 @@ export const CadetBlue = styled.div`
 export const DarkOrchid = styled.div`
   color: DarkOrchid;
 `
+export const Darkkhaki = styled.div`
+  color: darkkhaki;
+`

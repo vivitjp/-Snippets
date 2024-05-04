@@ -32,6 +32,8 @@ export const keysPython: KeyDef[] = [
       "in",
       "raise",
       "lambda",
+      "self",
+      "super",
     ],
   },
   // ■ 型
@@ -214,6 +216,8 @@ export const keysPython: KeyDef[] = [
       "compile",
       "finditer",
       "maketrans",
+      "pop",
+      "isinstance",
     ],
   },
   // ■ 定数
@@ -225,6 +229,7 @@ export const keysPython: KeyDef[] = [
       "True",
       "and",
       "or",
+      "not",
       "None",
       "NotImplemented",
       "Ellipsis",
@@ -237,23 +242,48 @@ export const keysPython: KeyDef[] = [
       "IndexError",
       "Exception",
       "AssertionError",
-      "__debug__",
-      "print",
     ],
   },
   // ■ パラメタ
   {
     color: "LightSeaGreen",
-    keys: ["compact", "indent", "width", "depth", "flags", "match"],
+    keys: [
+      "compact",
+      "indent",
+      "width",
+      "depth",
+      "flags",
+      "match",
+      "metaclass",
+      "attributes",
+    ],
   },
   // ■ NG
   {
     color: "Goldenrod",
     keys: ["NG"],
   },
+  // ■ print
+  {
+    color: "Darkkhaki",
+    keys: ["print"],
+  },
   // // ■
-  // {
-  //   color: "DodgerBlue",
-  //   keys: [],
-  // },
+  {
+    color: "DarkOrchid",
+    keys: [
+      "__debug__",
+      "__init__",
+      "__repr__",
+      "__str__",
+      "__eq__",
+      "__add__",
+      "__sub__",
+      "__mul__",
+      "__truediv__",
+      "__floordiv__",
+      "__new__",
+      "__dict__",
+    ],
+  },
 ]
