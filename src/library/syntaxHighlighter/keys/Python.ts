@@ -4,12 +4,15 @@ export const keysPython: KeyDef[] = [
   // ■ Main(赤)
   {
     color: "IndianRed",
-    keys: ["Python", "py.exe", "pyw.exe", "pip", "pipdeptree", "import", "def"],
-  },
-  // ■ Sub(青)
-  {
-    color: "DodgerBlue",
     keys: [
+      "Python",
+      "py.exe",
+      "pyw.exe",
+      "pip",
+      "pipdeptree",
+      "from",
+      "import",
+      "def",
       "install",
       "upgrade",
       "return",
@@ -22,17 +25,35 @@ export const keysPython: KeyDef[] = [
       "for",
       "break",
       "continue",
-      "arr",
       "try",
       "except",
       "finally",
       "assert",
       "in",
+      "raise",
+      "lambda",
     ],
   },
-  // ■ 緑
+  // ■ 型
   {
-    color: "ForestGreen",
+    color: "DodgerBlue",
+    keys: [
+      "bool",
+      "str",
+      "int",
+      "float",
+      "complex",
+      "list",
+      "tuple",
+      "dict",
+      "set",
+      "NoneType",
+      "Callable",
+    ],
+  },
+  // ■ ライブラリ
+  {
+    color: "CadetBlue",
     keys: [
       "pandas",
       "math",
@@ -45,24 +66,27 @@ export const keysPython: KeyDef[] = [
       "random",
       "copy",
       "natsort",
+      "typing",
+      "functools",
     ],
   },
-  // ■ 青緑
+  // ■ メソッド
   {
-    color: "CadetBlue",
+    color: "RoyalBlue",
     keys: [
       "format",
       "input",
-      "print",
       "date",
       "str",
       "del",
       "global",
       "dir",
+      "globals",
       "locals",
       "bytes",
       "memoryview",
       "truth",
+      "today",
       "pos",
       "neg",
       "add",
@@ -161,8 +185,10 @@ export const keysPython: KeyDef[] = [
       "sum",
       "filter",
       "map",
+      "reduce",
       "zip",
       "reversed",
+      "sort",
       "sorted",
       "natsorted",
       "range",
@@ -186,6 +212,8 @@ export const keysPython: KeyDef[] = [
       "eval",
       "exec",
       "compile",
+      "finditer",
+      "maketrans",
     ],
   },
   // ■ 定数
@@ -210,6 +238,7 @@ export const keysPython: KeyDef[] = [
       "Exception",
       "AssertionError",
       "__debug__",
+      "print",
     ],
   },
   // ■ パラメタ
@@ -217,20 +246,10 @@ export const keysPython: KeyDef[] = [
     color: "LightSeaGreen",
     keys: ["compact", "indent", "width", "depth", "flags", "match"],
   },
-  // ■ 型
+  // ■ NG
   {
     color: "Goldenrod",
-    keys: [
-      "bool",
-      "str",
-      "int",
-      "float",
-      "complex",
-      "list",
-      "tuple",
-      "dict",
-      "NoneType",
-    ],
+    keys: ["NG"],
   },
   // // ■
   // {

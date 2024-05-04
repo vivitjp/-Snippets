@@ -20,10 +20,29 @@ export const syntaxHighlight = ({
   const rebuilt: JSX.Element[] = []
   const case_sense = case_sensitive ? "g" : "gi"
 
+  //  const pattern = /(<\/?[^>]+>)|([^<]+)/g
+
   escaped.split("\n").forEach((line, idx) => {
     let result = line
 
     //Keywords
+    // keyDefs.forEach(({ color, keys }) => {
+    //   keys.forEach((key) => {
+    //     if (!key) return
+    //     const re = new RegExp(`\\b${key}\\b`, case_sense)
+    //     function replacer(match: string) {
+    //       if (match?.[0] === "<") return match
+    //       else
+    //         return match.replace(
+    //           re,
+    //           `<span class="syntax" style="color:${color}">${match}</span>`
+    //         )
+    //     }
+    //     result = result.replaceAll(pattern, replacer)
+    //   })
+    // })
+
+    // オリジナル
     keyDefs.forEach(({ color, keys }) => {
       keys.forEach((key) => {
         if (!key) return

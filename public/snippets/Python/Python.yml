@@ -189,15 +189,15 @@
 - KEY: py.print
   EXPLAIN: 出力
   BODY: |
-    print(3)                # 3
-    print([1,2,3])          # [1,2,3] List配列
-    print((1,2,3))          # (1,2,3) Tuple
-    print({'A':1})          # {'A':2} Dict辞書
-    print('Hello world!')   # Hello world!
+    print(3)                  # 3
+    print([1,2,3])            # [1,2,3] List配列
+    print((1,2,3))            # (1,2,3) Tuple
+    print({'A':1})            # {'A':2} Dict辞書
+    print('Hello world!')     # Hello world!
     print('Hi', var, sep='-') # Hi-...
-    print('A','B')          # A B
-    print('A')              # 出力後改行
-    print('A', end='')      # 出力後改行なし
+    print('A','B')            # A B
+    print('A')                # 出力後改行
+    print('A', end='')        # 出力後改行なし
     -------------------------------------
     import sys
     sys.stdout.write('Hi')     #半角SP無
@@ -460,19 +460,19 @@
               operator.truth(a)       # True
     +a        operator.pos(a)         # +a: 10
     -a        operator.neg(a)         # -a: -10
-    a+b       operator.add(a,b)       # 12
-    a-b       operator.sub(a,b)       # 8
-    a*b       operator.mul(a,b)       # 20
-    a/b       operator.truediv(a,b)   # 5.0
-    a//b      operator.floordiv(a,b)  # 切捨除算: 5
-    a%b       operator.mod(a,b)       # 余: 0
-    a**b      operator.pow(a,b)       # 乗算: 100
+    a + b     operator.add(a,b)       # 12
+    a - b     operator.sub(a,b)       # 8
+    a * b     operator.mul(a,b)       # 20
+    a / b     operator.truediv(a,b)   # 5.0
+    a // b    operator.floordiv(a,b)  # 切捨除算: 5
+    a % b     operator.mod(a,b)       # 余: 0
+    a ** b    operator.pow(a,b)       # 乗算: 100
               operator.invert(a)      # bit反転: -11
-    a&b       operator.and_(a,b)      # bitAND積: 2
-    a|b       operator.or_(a,b)       # bit和: 10
-    a^b       operator.xor(a,b)       # bitXOR排他和: 8
-    a<<b      operator.lshift(a,b)    # 左シフト: 40
-    a>>b      operator.rshift(a,b)    # 右シフト: 2
+    a & b     operator.and_(a,b)      # bitAND積: 2
+    a | b     operator.or_(a,b)       # bit和: 10
+    a ^ b     operator.xor(a,b)       # bitXOR排他和: 8
+    a << b    operator.lshift(a,b)    # 左シフト: 40
+    a >> b    operator.rshift(a,b)    # 右シフト: 2
 
 - KEY: py.operator.math.i
   EXPLAIN: 演算子(数i)
@@ -539,15 +539,15 @@
     * list[int|str]  UNION型は v3.10以上
     * 浮動小数点 (0.1+0.2)==0.3 -> False   丸め誤差あり
     --------------------------------------
-    var1 = 100          print(type(var1))  # <class 'int'>
-    var2 = 123.12       print(type(var2))  # <class 'float'>
-    var3 = True         print(type(var3))  # <class 'bool'>
-    var4 = "abc"        print(type(var4))  # <class 'str'>
-    var5 = ["a", "b"]   print(type(var5))  # <class 'list'>
-    var6 = ("a", "b")   print(type(var6))  # <class 'tuple'>
-    var7 = {"a", "b"}   print(type(var7))  # <class 'set'>
-    var8 = {"a": "a"}   print(type(var8))  # <class 'dict'>
-    var9 = None         print(type(var9))  # <class 'NoneType'>
+    var1 = 100          print(type(var1))  # class 'int'
+    var2 = 123.12       print(type(var2))  # class 'float'
+    var3 = True         print(type(var3))  # class 'bool'
+    var4 = "abc"        print(type(var4))  # class 'str'
+    var5 = ["a", "b"]   print(type(var5))  # class 'list'
+    var6 = ("a", "b")   print(type(var6))  # class 'tuple'
+    var7 = {"a", "b"}   print(type(var7))  # class 'set'
+    var8 = {"a": "a"}   print(type(var8))  # class 'dict'
+    var9 = None         print(type(var9))  # class 'NoneType'
 
 - KEY: py.type.constant
   EXPLAIN: 組み込み定数
@@ -802,12 +802,12 @@
 - KEY: py.type.object.method
   EXPLAIN: オブジェクト型関数
   BODY: |
-    o = object()     # 生成: <object object at 0x7fe2e5ecff20>
-    o = id(o)        # ID(メモリアドレス): 140612496850720
-    o = callable(o)  # 呼び出し可能: False
-    o = hash(o)      # ハッシュ値: 0
-    o = repr(o)      # 文字列: 0
-    o = type(o)      # obj型: <class 'str'>
+    o = object()    # 生成: <object object at 0x7fe2e5ecff20>
+    id(o)           # ID(メモリアドレス): 140612496850720
+    callable(o)     # 呼び出し可能: False
+    hash(o)         # ハッシュ値: 0
+    repr(o)         # 文字列: 0
+    type(o)         # obj型: <class 'str'>
 
 #-------------------------------
 # 構文
@@ -1341,19 +1341,17 @@
   EXPLAIN: 配列(filter)
   BODY: |
     arr = [1, 2, 3, 4, 5]
-    a = filter(lambda k: (k % 2 == 1), arr)
-    # a: filter[int]    # 戻り値: iterator
-    print(list(a))      # [1, 3, 5]
-    print(list(a))      # [] <= a の中身は空
+    a = filter(lambda k: (k % 2 == 1), arr)  # 注意戻り値: iterator
+    print(list(a))                           # [1, 3, 5]
+    print(list(a))                           # [] <= a の中身は空
 
 - KEY: py.struct.list.map
   EXPLAIN: 配列(map)
   BODY: |
     arr = [1, 2, 3, 4, 5]
-    a = map(lambda k: k * 2, arr)
-    # a: map[int]       # 戻り値: iterator
-    print(list(a))      # [2, 4, 6, 8, 10]
-    print(list(a))      # [] <= a の中身は空
+    a = map(lambda k: k * 2, arr)  # 注意戻り値: iterator
+    print(list(a))                 # [2, 4, 6, 8, 10]
+    print(list(a))                 # 2回目コール [] <= a の中身は空
 
 - KEY: py.struct.list.reduce
   EXPLAIN: 配列(reduce)
@@ -1367,10 +1365,14 @@
   EXPLAIN: 配列(zip)
   BODY: |
     arr = [1, 2, 3, 4, 5]
-    a = zip(arr, ["A", "B", "C"])
-    # a: zip[tuple[int, str]]  # 戻り値: iterator
-    print(list(a))             # [(1,'A'),(2,'B'),(3,'C')]
-    print(list(a))             # [] <= a の中身は空
+    a = zip(arr, ["A", "B", "C"])  # 注意戻り値: iterator
+    print(list(a))                 # [(1,'A'),(2,'B'),(3,'C')]
+    print(list(a))                 # 2回目コール [] <= a の中身は空
+    --------------------------------------------------------
+    header = ["name", "age"]
+    info = [["Kevin", 23], ["John", 45]]
+    res = [dict(zip(header, n)) for n in info]
+    # [{'name': 'Kevin', 'age': 23}, {'name': 'John', 'age': 45}]
 
 - KEY: py.struct.list.sort
   EXPLAIN: 配列(ソート)
@@ -1429,12 +1431,14 @@
     # 内包表記の戻り値は Iterator
     a = [1, 2, 3] b = [4, 5, 6]
     --------------------------------------------------
-    [x - 1 for x in a]                   # [0,1,2]
-    [x * 2 for x in a if x == 3]         # [6]
-    [[x, x * 2] for x in a]              # [[1,2],[2,4],[3,6]]
-    [(x, x * 2) for x in a]              # [(1,2),(2,4),(3,6)]
-    [x * y for x in a for y in b]        # [4,5,6,8,10,12,12,15,18]
-    [a[i] * b[i] for i in range(len(a))] # [4,10,18]
+    [x - 1 for x in a]                      # [0,1,2]
+    [x * 2 for x in a if x == 3]            # [6]
+    [[x, x * 2] for x in a]                 # [[1,2],[2,4],[3,6]] 配列
+    [(x, x * 2) for x in a]                 # [(1,2),(2,4),(3,6)] タプル
+    [x * y for x in a for y in b]           # [4,5,6,8,10,12,12,15,18] 配列x配列
+    --------------------------------------------------
+    [a[i] * b[i] for i in range(len(a))]    # [4,10,18] *非推奨
+    [a[i] * b[i] for i, _ in enumerate(a)]  # [4,10,18] *推奨
 
 - KEY: py.struct.tuple
   EXPLAIN: タプル
@@ -1530,7 +1534,8 @@
     ■ 生成
     a = set([5, 1, 2, 1, 5])
     a = {1, 2, 3}                  # 簡易生成
-    a = {i%5 for i in range(10)}   # 内包表記
+    ■ 内包表記
+    a = { i % 5 for i in range(10) }
     -------------------------------------------
     ■ 要素数
     len(a)              # 要素数
