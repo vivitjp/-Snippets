@@ -92,7 +92,3 @@
     # 値変換(C=>F) * dtype < converters 優先
     c2f = lambda c: float(c) * 1.8 + 32
     df = pd.read_csv(FILE_NAME, converters={"MinTemp": c2f, "MinTemp": c2f})
-
-- KEY: py.lib.pandas
-  EXPLAIN: Pandas(サンプル)
-  BODY: |
