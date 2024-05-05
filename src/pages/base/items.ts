@@ -14,6 +14,7 @@ export const menuItems: menuByCategories[] = [
         name: "HTML",
         fileName: "html/HTML",
         codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS],
+        encodeRequired: true,
       },
       {
         name: "CSS:bg,bdr,just,css",

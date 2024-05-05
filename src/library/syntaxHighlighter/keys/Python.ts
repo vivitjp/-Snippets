@@ -34,6 +34,7 @@ export const keysPython: KeyDef[] = [
       "lambda",
       "self",
       "super",
+      "wrapper",
     ],
   },
   // ■ 型
@@ -70,6 +71,7 @@ export const keysPython: KeyDef[] = [
       "natsort",
       "typing",
       "functools",
+      "dataclasses",
     ],
   },
   // ■ メソッド
@@ -218,6 +220,7 @@ export const keysPython: KeyDef[] = [
       "maketrans",
       "pop",
       "isinstance",
+      "dataclass",
     ],
   },
   // ■ 定数

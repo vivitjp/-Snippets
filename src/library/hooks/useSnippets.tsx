@@ -6,10 +6,10 @@ import { Column } from "../../common/styleDiv"
 import { Button } from "../../common/styleInput"
 import { syntaxHighlight } from "../syntaxHighlighter/syntaxHighlighter"
 import { useSelect } from "./useSelect"
-import { DivPrefix, DivTitle, DivTitleWrapper } from "./components/DivTitle"
-import { DivBody } from "./components/DivBody"
+import { DivPrefix, DivTitle, SummaryWrapper } from "./components/DivTitle"
 import { MenuItemType } from "../../store/menuStore"
 import { CodeKeyType, getKey } from "../syntaxHighlighter/getKey"
+import { DetailInside, Details } from "./components/Detail"
 
 type SnippetsObject = {
   prefix: string
@@ -71,11 +71,13 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
         })
         return (
           <Column key={index}>
-            <DivTitleWrapper>
-              <DivTitle>■ {title}</DivTitle>
-              <DivPrefix>{snippetsObject.prefix}</DivPrefix>
-            </DivTitleWrapper>
-            <DivBody>{highlighted}</DivBody>
+            <Details className={"detailClass"}>
+              <SummaryWrapper>
+                <DivTitle>■ {title}</DivTitle>
+                <DivPrefix>{snippetsObject.prefix}</DivPrefix>
+              </SummaryWrapper>
+              <DetailInside>{highlighted}</DetailInside>
+            </Details>
           </Column>
         )
       })

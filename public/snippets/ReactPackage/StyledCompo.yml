@@ -287,3 +287,38 @@
       margin: 0;
       padding: 0;
     `
+
+- KEY: pk.styled.param.forwardInput
+  EXPLAIN: Children付きRef
+  BODY: |
+    import React, { ReactNode } from "react"
+    import styled from "styled-components"
+
+    export const Details = styled.details`
+      font-size: 14px;
+      ...
+    `
+    export type DetailsRefType = {
+      children?: ReactNode
+    }
+
+    export const DetailsRef = React.forwardRef<HTMLDetailsElement, DetailsRefType>(
+      ({ children }, ref) => {
+        return <Details ref={ref}>{children}</Details>
+      }
+    )
+    --------------------------------------------------------------------
+    const SomeComponent = () => {
+        ...
+        const ref = useRef<HTMLDetailsElement>(null)
+
+        return (
+          <DetailsRef ref={refDetail}>
+            <SummaryWrapper>
+              <DivTitle>■ {title}</DivTitle>
+              <DivPrefix>{snippetsObject.prefix}</DivPrefix>
+            </SummaryWrapper>
+            <DetailInside>{highlighted}</DetailInside>
+          </DetailsRef>
+        )
+    }
