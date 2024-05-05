@@ -6,12 +6,13 @@
 - KEY: py.errors.variableName
   EXPLAIN: 変数名衝突
   BODY: |
-    予約キーワードを変数名に使用
+    list = [1,2,34]            # 予約キーワードを変数名に使用
+    print(list( range(5) ))    # [0, 1, 2, 3, 4] <== Error
+
     TypeErrorTraceback (most recent call last)
     <ipython-input-238-b502a86a7614> in <module>
           1 list = [1,2,34]
     ----> 2 print(list( range(5) ))        # [0, 1, 2, 3, 4]
-          3 print(list( range(2,5) ))      # [2, 3, 4]
     TypeError: 'list' object is not callable
 
 - KEY: py.errors.charAndString

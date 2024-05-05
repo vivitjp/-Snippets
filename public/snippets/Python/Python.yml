@@ -1890,4 +1890,4 @@
         return x + y
 
     print(add(1, 2))      # [1][2]
-    print(add("a", "b"))  # [1][2]
+    print(add("a", "b"))  # [a][b]

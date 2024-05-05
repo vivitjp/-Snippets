@@ -183,9 +183,14 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.Python],
       },
       {
-        name: "ライブラリ",
-        fileName: "Python/PythonLib",
+        name: "ライブラリ(List)",
+        fileName: "Python/PythonLibs",
         codeKeyTypes: [],
+      },
+      {
+        name: "ライブラリ(Sample)",
+        fileName: "Python/PythonLibSamples",
+        codeKeyTypes: [codeKeys.Python],
       },
     ],
   },
