@@ -1,0 +1,916 @@
+---
+#-------------------------------
+# TypeScript 2024
+#-------------------------------
+- KEY: ts.types
+  EXPLAIN: 型(プリミティブ型)
+  BODY: |
+    ■ プリミティブ型
+    b:boolean   = true;                      // Boolean型
+    s:string    = "abc";                     // 文字列型
+    n:number    = 1;                         // 数型
+    b:bigint    = 10n;                       // BigInt型(ES2020)
+    y:symbol    = Symbol();                  // シンボル型
+    u:undefined = undefined;                 // undefined型
+    l:null      = null;                      // null型
+
+    ■ 関数型
+    const f:Function = ()=>{}
+    const f:Function = ()=>void              // void型
+
+    ■ オブジェクト型
+    a:object={}                              // プリミティブ以外:{},[],()=>{}
+    b:Object={}                              // null,undefined以外全部:忌避!
+    c:{} = {}                                // ≒Object
+
+    ■ 全能型
+    const a:any = 10;
+    const i:number = a;                      // (危険)代入OK
+    const s:string = a;                      // (危険)代入OK
+    const o:object = a;                      // (危険)代入OK
+
+    ■ unknown
+    const a:unknown = 10;
+    const i:number = a;                      // (安全)Error
+    const s:string = a;                      // (安全)Error
+    const o:object = a;                      // (安全)Error
+    if(typeof(a)==="string")                 // 型Check:v5.3
+      const s:string = a;                    // (安全)代入可
+
+    ■ never
+    type A={ a:"A" }
+    type B={ a:"B" }
+    const f=(props:A|B)=>{
+      switch (props.a) {
+        case "A": return ...
+        case "B": return ...
+        default: let _ng:never = props       // 警告
+
+- KEY: ts.type.and.or
+  EXPLAIN: 型操作
+  BODY: |
+    type U = number | string                 // or
+    type I = number & string                 // and(この場合はnever)
+
+- KEY: ts.const
+  EXPLAIN: 定数&推論型
+  BODY: |
+    let a = 1                                // a:number型
+    const a = 1                              // a:1型
+    const a = {a:1}                          // widening: {a:number}型
+    const b = {a:1} as const                 // narrowing: {readonly a:1}型
+    type A = { readonly a:number }           // 読取専用
+
+- KEY: ts.interface
+  EXPLAIN: 型宣言とエイリアス
+  BODY: |
+    interface A { a:number, x?:string }
+    interface B { b:number }                 // {b}
+    interface B { c:number }                 // マージ{b,c}
+    interface C extends A, B {}              // {}必要
+    => const c:C ={ a:1, b:2, c:3 }
+
+    type A = { a: number, x?:string }
+    type B = A & { b: number }               // intersect
+    const b:B = { a:1, b:2 }                 // 型適用
+    const b = { a:1, b:2 } as B              // 型適用
+    const b = { a:1 } as unknown as B        // 強制
+
+- KEY: ts.assertion
+  EXPLAIN: 型指定と推論
+  BODY: |
+    type A = { a: number; b: string | number }
+    const a1: A = { a: 1, b: 2 }
+    const a2: A = { a: 1, b: "2" }
+    const a3 = { a: 1, b: 2 } as A
+    [NG] const a4 = { a: "1", b:2 } as A     //型Error
+    [NG] const a5 = <A>{ a: 1, b:2 }         //型Error
+
+    ■ satisfies(型指定:v4.9)
+    const a6 = {
+      a: 1, b: 2
+    } satisfies A                            //{ a: number; b: number; }
+
+    const a7 = {
+      a: 1, b: 2
+    } as const satisfies A                   //{ readonly a: 1; readonly b: 2; }
+
+- KEY: ts.typeof.keyof
+  EXPLAIN: 型取得とKV
+  BODY: |
+    const x = ["A", "B", "C"] as const
+    type Keys = (typeof x)[number]           // "A"|"B"|"C"
+    type Y = typeof x[0|1]                   // "A" | "B"
+
+    const o = { a: "A", b: "B" }
+    type X = typeof o                        // {a:number;b:number;}
+    type K = keyof X                         // "a" | "b"
+    type Y = keyof typeof o                  // "a" | "b"
+    type B = (typeof o)[keyof typeof o]      // string
+
+    const o = { a: "A", b: "B" } as const
+    type X = typeof o                        // { readonly a:"A"; readonly b:"B"; }
+    type K = keyof X                         // "a" | "b"
+    type Y = keyof typeof o                  // "a" | "b"
+    type B = (typeof o)[keyof typeof o]      // "A" | "B"
+
+- KEY: ts.indexing
+  EXPLAIN: 添字アクセス
+  BODY: |
+    type T = { a:{ x:number } }
+    const a: T["a"]      = { x: 123 }
+    const b: T["a"]["x"] = 123
+
+- KEY: ts.lookupTypes
+  EXPLAIN: 型内の型流用
+  BODY: |
+    type T = { a:string, b:number }
+    type A = T["a"];                         // string
+    type B = T["a"|"b"];                     // string|number
+
+- KEY: ts.index.signature
+  EXPLAIN: Object型のKey指定
+  BODY: |
+    type S
+      = { [ index: string ]: number }        // *名称任意
+      = Record<string, number>               // Utility
+      = Record<PropertyKey, number>          * PropertyKey=string,number,symbol
+    const c:S = { a:1, b:2, c:3 }
+
+- KEY: ts.mapped.types
+  EXPLAIN: Keyの集合(in)
+  BODY: |
+    type A = number | string
+    type X = { [key in A]: number }
+
+    type B = { a: number; b: string }
+    type Y = { [key in keyof B]: number }         //{ a:number, b:number }
+
+    const o: B = { a: 1, b: "a" }
+    type Z = { [key in keyof typeof o]: number }  //{ a:number, b:number }
+
+- KEY: ts.alias(as)
+  EXPLAIN: エイリアス
+  BODY: |
+    type X<T> = { [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K] }
+    type A = X<{ a: string }>                //{ getA:() => string }
+
+- KEY: ts.enum
+  EXPLAIN: 列挙体
+  BODY: |
+    enum ColorNo {
+      Red = 1,                               // ColorNo.Red = 1
+      Green,                                 // ColorNo.Green = 2
+      Blue,                                  // ColorNo.Blue = 3
+    }
+
+    enum ColorName {
+      Red = "red",                           // ColorName.Red = "red"
+      Blue = "blue",                         // ColorName.Blue = "blue"
+    }
+
+#-------------------------------
+# Generics
+#-------------------------------
+- KEY: ts.generics.type
+  EXPLAIN: ジェネリクス(型宣言)
+  BODY: |
+    type G<T> = { a: T }
+    const a:G<number> = { a: 1 }
+    const b:G<string> = { a: "x" }
+
+- KEY: ts.generics.extends
+  EXPLAIN: ジェネリクス(制約)
+  BODY: |
+    ■ 基礎
+    type A<T extends number> = { a: T }
+    const a: A<number> = { a: 1 }
+
+    ■ 定数選択
+    type ABC = "A" | "B" | "C"
+    type B<T extends ABC> = { a: T }
+    const b: B<ABC> = { a: "A" }
+
+    ■ Object型制約
+    type Obj = {
+      n: string
+      a: number
+    }
+    type C<T extends Obj> = T
+    const c: C<Obj> = {
+      n: "a",
+      a: 1,
+    }
+
+    ■ 既存 Object型取得して制約
+    const obj = { n: "abc", a: 1 }
+
+    type D<T extends typeof obj> = T
+    const d: D<Obj> = { n: "a", a: 1 }
+
+- KEY: ts.generics.extends.if
+  EXPLAIN: ジェネリクス(三項分岐)
+  BODY: |
+    ■ 三項分岐 extends(=if)
+    type A = { a: string }
+    type B = { a: string }
+    type C = { a: string; b: number }
+
+    type AB = A extends B ? number : string  //三項分岐: number
+    type BC = B extends C ? number : string  //三項分岐: string
+
+    type Y<T> = T extends true ? 1 : 0       // 三項分岐
+
+    type Z<T extends boolean>                // (前半)型制約: T は Boolean
+      = T extends true ? "a" : "b"           // (後半)三項分岐
+
+- KEY: ts.generics.extends.never
+  EXPLAIN: ジェネリクス(単純型変換)
+  BODY: |
+    ■ 三項分岐(:never) extends
+    type MakeArray<T>
+      = T extends any ? T[] : never          //要素を配列に変換
+    type X1 = MakeArray<string>              // string[]
+    type X2 = MakeArray<string | number>     // string[]|number[] 想定外
+
+    type MakeArrayBetter<T>
+      = [T] extends [any] ? T[] : never      //改善
+    type Y = MakeArrayBetter<string | number> // (string|number)[] 想定通り
+
+- KEY: ts.generics.extends.infer
+  EXPLAIN: ジェネリクス(内部型取得と変換)
+  BODY: |
+    ■ 三項分岐(:infarで内包ターゲットの取り出し)
+
+    //悪例(infer不要なのに使用)
+    type WrongConvert<T extends any>
+      = T extends infer U ? [U] : never
+    => Constraining the generic type `T` to `any` does nothing and is unnecessary
+
+    type RipPromise<T extends Promise<any>>  // Promiseを除去
+      = T extends Promise<infer U> ? U : never
+    type X = RipPromise<Promise<string>>     //string
+
+    // 例: 関数の戻り値取得
+    type ReturnType<T>
+      = T extends (...args: any[]) => infer R ? R : any
+    type Y = ReturnType<() => string>        // string
+
+    // 例: 配列の第1要素が数なら取得
+    type FirstElemIfNum<T>
+      = T extends [infer U extends number, ...unknown[]] ? U : never
+    type Z = FirstElemIfNum<[1, 2, 3]>       // 1 : 最初の要素
+
+- KEY: ts.generics.extends.divide.string
+  EXPLAIN: ジェネリクス(文字列分割)
+  BODY: |
+    // ■ extends => 文字列分割
+    // 例: 文字列をパスカルケースに変更
+    type PascalCase<S extends string> = S extends `${infer H}${infer T}`
+      ? `${Capitalize<H>}${Lowercase<T>}`
+      : S
+    type G = PascalCase<"ABC">               //"Abc"
+
+#-------------------------------
+# Function
+#-------------------------------
+- KEY: ts.function
+  EXPLAIN: 関数(引数型,戻り値型)
+  BODY: |
+    const f:Function = (a:number) => a       // 関数型
+
+    type G = {(a:number): void}              // 従来関数型
+    type A = (a:number) => void              // Arrow関数型
+    const f: A = () => 1                     // パラメタ少ない場合はPASS!
+    const res = f()                          // 引数なし:NG
+    const res = f(1)                         // 引数あり:OK
+
+    type E = () => void                      // 戻り値void
+    [NG] const f:E = (a:number) => a         // パラメタ少ない場合はNG
+    [NG] const res = f(1)                    // 戻り値:number
+
+- KEY: ts.function.overload
+  EXPLAIN: 関数オーバーロード
+  BODY: |
+    function F(a:string):void
+    function F(a:string[]):void
+    function X(a:string|string[]):void
+    {
+      if(typeof a==="string") {...} else {...}
+    }
+
+    ■ 関数型宣言オーバーロード
+    type W = {
+      (a:number): number;
+      (a:string): number;
+    }
+    const f:W = (a:number|string):number =>{
+      if(typeof a==="string") {...} else {...}
+    }
+
+- KEY: ts.function.callback
+  EXPLAIN: 関数Callback引数のパラメタ数
+  BODY: |
+    ■ Callback引数のパラメタ数
+    const f = (x: (a: number) => void) => {}
+    f(() => {})                              // パラメタ少ない場合はPASS!
+    f((a: number) => {})                     // パラメタ数一致: OK
+    f((a: number, b: number) => {})          // パラメタ数多: NG
+
+    const f = (cb: (...a: number[]) => number, num: number[]) => cb(...num)
+    const cb = (a: number, b: number, ...c:number[]): number => a * b
+    f(cb, [2])                               // NaN
+    f(cb, [2, 3])                            // 6
+    f(cb, [2, 3, 4])                         // 6
+
+- KEY: ts.function.parameters
+  EXPLAIN: 関数引数 Sub/Super Set
+  BODY: |
+    type Sub = { x:number; y:number }
+    let sub = (p: Sub) => {...}
+
+    type Super = { x:number; y:number; z:number }
+    let super = (p: Super) => {...}
+
+    super = sub                              // 多 <- 少: OK
+    sub = super                              // 少 <- 多: NG(旧OK)
+
+- KEY: ts.function.react.companion
+  EXPLAIN: コンパニオン(引数型と関数同名)
+  BODY: |
+    ■ React Moduleの命名規則
+    export type A = { name:string }
+    export const A = (props:A):JSX.Element => {...}
+
+- KEY: ts.function.generic.parameters
+  EXPLAIN: ジェネリック関数パラメタ
+  BODY: |
+    ■ Reactでの書式(,付き)
+    const g1 = <T,>(a: T): void          => { console.log(a) }
+    const g2 = <T,>(a: T): T             => { return a }
+    const g3 = <T, S>(a: T, b: S): T | S => { return 1 ? a : b }
+    const g4 = <T=number,>(a: T)         => { console.log(a) }
+    const g5 = <T extends number>(a: T)  => { console.log(a) }
+
+- KEY: ts.function.generic
+  EXPLAIN: ジェネリック関数型
+  BODY: |
+    type A1<T> = {(a: T[]): T}               // 一般関数
+    type A2<T> = (a: T[]) => T               // Arrow関数
+    type A3 = {                              // 関数オーバーロード
+      A: <T>(a: T[]) => {...}; 
+      B: <T>(b: T[]) => {...};
+    }
+
+- KEY: ts.function.generic.jsx
+  EXPLAIN: ジェネリックJSX関数
+  BODY: |
+    type A<T> = { a: T }
+
+    const A = <T extends PropertyKey>({ a }: P<T>) => {
+      return <>{a}</>
+    }
+    const B = () => <A<number> a={123} />
+
+- KEY: ts.freshness
+  EXPLAIN: 関数の引数制限
+  BODY: |
+    const f1 = (props: { a: string }) => props.a
+
+    // 多属性の間接代入 OK
+    const a = { a: "a", b: "b" }
+    f1(a)
+
+    // 多属性の直接代入 NG
+    f1({ a: "a", b: "b" })
+
+    //余分引数の受け先追加
+    type X = { a: string; [x: string]: unknown }
+    const f2 = (props: X) => props.a
+
+    // 多属性の直接代入 OK!
+    f2({ a: "a", b: "b" })
+
+- KEY: ts.type.guard.predicate
+  EXPLAIN: 型ガードと型想定
+  BODY: |
+    type ABC = { a: number }
+    type XYZ = { x: number }
+
+    // 型ガード関数
+    const isABC1 = (props: ABC | XYZ) => {
+      return "a" in props && typeof props.a === "number"
+    }
+
+    // 型ガード関数:NG (不十分な型check)
+    const isABC2 = (props: ABC | XYZ) => {
+      return typeof props.a === "number"     //Error
+    }
+
+    // 型ガード関数:Type Predicate
+    //「props is ABC」は戻り値の型ではない
+    const isABC3 = (props: ABC | XYZ): props is ABC => {
+      return !!(props as ABC).a
+    }
+
+#-------------------------------
+# Class
+#-------------------------------
+
+- KEY: ts.class.variables
+  EXPLAIN: クラス変数
+  BODY: |
+    interface A {
+      c: number // 変数はpublicのみ
+    }
+
+    // ■ Access Modifier
+    // private      スコープ: そのClass
+    // protected    スコープ: そのClassと継承先Classのみ
+    // public       スコープ: インスタンスからアクセス可能
+
+    class Abc implements A {
+      private _a = 0                         // _の慣習:初期値要
+      protected b = 0                        // 初期値要
+      c = 0                                  // default: Public
+      [NG] d: number                         // 初期値なし
+      readonly y: number = 0                 // 定数化
+      accessor k: number = 0                 // set() & get() 代替: v4.9
+    }
+
+    const abc = new Abc()
+    abc.c = 1       // public
+    abc.k = 1       // Auto accessor
+    [NG] abc._a     // private
+    [NG] abc.b      // protected
+    [NG] abc.y = 1  // Readonly
+
+- KEY: ts.class.generic
+  EXPLAIN: ジェネリッククラス
+  BODY: |
+    interface A<T> {
+      a: T
+    }
+    interface B<T> extends A<T> {
+      b: T
+    }
+    class A implements B<number> {
+      b = 0
+      a = 0
+    }
+
+- KEY: ts.class.inheritance
+  EXPLAIN: クラス継承
+  BODY: |
+    class Base {
+      baseA: number
+      constructor(a: number) {
+        this.baseA = a
+      }
+    }
+
+    class Derived extends Base {
+      b = 0
+      constructor(a: number, b: number) {
+        super(a)
+        this.b = b
+      }
+    }
+
+    const A = new Derived(1, 2)
+    console.log(A.baseA, A.b)
+
+- KEY: ts.class.abstract
+  EXPLAIN: クラス継承専用
+  BODY: |
+    abstract class Base {
+      baseA: number
+      abstract baseB: number //継承専用
+      constructor(a: number) {
+        this.baseA = a
+        // this.baseB = 1 代入不可
+      }
+    }
+
+    class Derived extends Base {
+      b = 0
+      baseB = 1 //実装必須
+      constructor(a: number, b: number) {
+        super(a)
+        this.b = b
+        this.baseB = 0
+      }
+    }
+
+    //[NG] const B = new Base(1)
+    const A = new Derived(1, 2)
+    console.log(A.baseA, A.b, A.baseB)
+
+- KEY: ts.class
+  EXPLAIN: クラス
+  BODY: |
+    class ClassA {
+      private _a = 0
+      accessor _b = 0                        // 自動 accessor
+      
+      constructor(a: number) { this._a = a } // コンストラクタ
+      
+      c(x: number) { return (this._a = +x) } //メソッド
+
+      get a() { return this._a }             // マニュアル accessor
+      set a(x: number) { this._a = x }
+    }
+
+    const classA = new ClassA(1)             // インスタンス化
+    classA.a = 5                             // マニュアル accessor
+    classA._b = 5                            // 自動 accessor
+    classA.c(3)                              // public関数
+
+- KEY: ts.class.static
+  EXPLAIN: static クラス
+  BODY: |
+    class A {
+      static a: number                       // 初期値不要
+      static { this.a = 1 }                  // コンストラクタ
+      static f(x: number) { this.a = x }     //メソッド
+    }
+
+    A.a = 2                                  // Static値(インスタンス化不要)
+    A.f(3)                                   // Static関数(インスタンス化不要)
+
+#-------------------------------
+# Utilities
+#-------------------------------
+
+- KEY: ts.utilities.Record
+  EXPLAIN: オブジェクト生成
+  BODY: |
+    type MyRecord<K extends PropertyKey, T>
+      = {[P in K]: T}
+
+    type Sample = "a"|"b"
+    type Record1 = Record<Sample, string>
+    type Record2 = MyRecord<Sample, string>
+      = { a: string; b: string; }
+
+- KEY: ts.utilities.Required
+  EXPLAIN: 必須化
+  BODY: |
+    type MyRequired<T> = { [P in keyof T]-?: T[P] | undefined }
+
+    type Sample = {a:string; b:number}
+    type Req1 = Required<Sample>
+    type Req2 = MyRequired<Sample>
+      = { a: string; b: string; }
+
+- KEY: ts.utilities.Partial
+  EXPLAIN: オプショナル化
+  BODY: |
+    type MyPartial<T> = {[P in keyof T]?: T[P] | undefined}
+
+    type Sample = {a:string; b:number}
+    type Par1 = Partial<Sample>
+    type Par2 = MyPartial<Sample>
+      = { a: string; b: string; }
+
+- KEY: ts.utilities.Readonly
+  EXPLAIN: 読み取り専用化
+  BODY: |
+    type MyReadonly<T> = {readonly [P in keyof T]-?: T[P]}
+
+    type Sample = {a:string; b:number}
+    type Par1 = Readonly<Sample>
+    type Par2 = MyReadonly<Sample>
+      = { readonly a: string; readonly b: string; }
+
+- KEY: ts.utilities.Pick
+  EXPLAIN: Keyで抽出
+  BODY: |
+    type MyPick<T, K extends keyof T> = {[P in K]: T[P]}
+
+    type Sample = {a:string; b:number}
+    type Pick1 = Pick<Sample, "a">
+    [NG] Pick<Sample, "a"|"c">               //"c" 存在せず NG
+    type Pick2 = MyPick<Sample, "a">
+
+- KEY: ts.utilities.Omit
+  EXPLAIN: Keyで除外
+  BODY: |
+    type MyOmit<T, K> = {[P in Exclude<keyof T, K>]:T[P]}
+
+    type Sample = {a:string; b:number}
+
+    type Omit1 = Omit<Sample, "a">
+    type Omit2 = Omit<Sample, "a"|"c">       //"c"存在せずともOK
+
+    type Omit3 = MyOmit<Sample, "a">
+    type Omit4 = MyOmit<Sample, "a"|"c">     //"c"存在せずともOK
+      = { b: number }
+
+- KEY: ts.utilities.Exclude
+  EXPLAIN: Key配列から除外
+  BODY: |
+    Exclude<T, U>      // キー除外
+    = T extends U ? never:T
+      <keyof T,"a"|"c"> ⇨ "b"
+
+    Extract<T, U>      // キー抽出
+    = T extends U ? T:never
+      <keyof T,"a"|"c"> ⇨ "a"
+    NonNullable<T>      // null|undefined キー除外
+    = T & {}
+      <string|null|undefined> ⇨ string
+
+- KEY: ts.utilities.ReturnType
+  EXPLAIN: 関数戻り値
+  BODY: |
+    type MyReturnType<T extends Function>
+    = T extends (...a:any) => infer R ? R:any
+
+    const func = (param:number): string => param.toLocaleString()
+
+    type myRet1 = ReturnType<typeof func>
+    type myRet2 = MyReturnType<typeof func>
+
+- KEY: ts.utilities.Parameters
+  EXPLAIN: 関数引数
+  BODY: |
+    type MyParameters<T extends Function>
+    = T extends (...a: infer P) => any ? P : never
+
+    const func = (param:number): string => param.toLocaleString()
+
+    type myParam1 = Parameters<typeof func>
+    type myParam2 = MyParameters<typeof func>
+
+- KEY: ts.utilities.This
+  EXPLAIN: 関数This
+  BODY: |
+    ThisParameterType<T>
+    OmitThisParameter<T>
+    ThisType<T>
+
+- KEY: ts.utilities.constructor
+  EXPLAIN: コンストラクタ
+  BODY: |
+    type MyConstructorParameters<T extends abstract new (...a:any)=>any>
+    = T extends abstract new (...a:infer P)
+    => any ? P : never
+
+    class X{
+      a:number
+      constructor(a:number){
+        this.a = a
+      }
+    }
+
+    type myConst1 = ConstructorParameters<typeof func>
+    type myConst2 = MyConstructorParameters<typeof func>
+    //  [a: number]
+
+- KEY: ts.utilities.instance
+  EXPLAIN: インスタンス
+  BODY: |
+    InstanceType<T>
+
+- KEY: ts.utilities.string
+  EXPLAIN: 文字列操作
+  BODY: |
+    Uppercase<StringType>                    = intrinsic
+    Lowercase<StringType>                    = intrinsic
+    Capitalize<StringType>                   = intrinsic
+    Uncapitalize<StringType>                 = intrinsic
+
+    type B = Uppercase<"hello">              // "HELLO"
+    type C = Lowercase<"HELLO">              // "hello"
+    type D = Capitalize<"hello">             // "Hello"
+    type E = Uncapitalize<"HELLO">           // "hELLO"
+
+- KEY: ts.utilities.stringMapped
+  EXPLAIN: 文字列 Mapped Type
+  BODY: |
+    function toUpperCase<T extends string>(str: T) {
+        type Mapped = Uppercase<T>;
+        return str.toUpperCase() as Mapped;
+    }
+    const str = toUpperCase("abcd");         // "ABCD"
+
+- KEY: ts.utilities.templateLiteral
+  EXPLAIN: テンプレートリテラル
+  BODY: |
+    type MyID<S extends string> = `id-${Lowercase<S>}`
+    type Y = MyID<A>                         // "id-hello"
+
+    type A = "abcd" extends `ab${infer S}` ? S : never; // "cd"
+    type B = "aaaa" extends `ab${infer S}` ? S : never; // never
+
+#-------------------------------
+# By Version
+#-------------------------------
+
+- KEY: ts.ver5.3.import
+  EXPLAIN: import型
+  BODY: |
+    ■ 5.3 静的/動的 import type
+    import o from "a.json" with {type:"json"}
+
+    const o = await import("a.json", { with:{type:"json"} });
+
+- KEY: ts.ver5.3.unknown
+  EXPLAIN: unkonwn型
+  BODY: |
+    ■ 5.3 unkonwn型 check
+    const value:unknown = "a"
+    if(typeof(value)==="string")
+      const s:string = value;                // (安全)代入
+
+- KEY: ts.ver5.2.classDispose
+  EXPLAIN: Instance削除時実行
+  BODY: |
+    ■ 5.2 Instance削除時実行
+    class AFile implements Disposable {
+      ...
+      //class instance 
+      [Symbol.dispose]() { 
+        //instance削除時の実行実装
+      }
+    }
+
+    //tryCatch サンプル
+    const file = new AFile(".file");
+    try { ... }
+    catch { ... }
+    finally { 
+      file[Symbol.dispose]()
+    }
+
+- KEY: ts.ver5.2.methodDispose
+  EXPLAIN: Function削除時実行
+  BODY: |
+    ■ 5.2 Function削除時の実行(同期)
+    function log(id:string): Disposable {
+      ...
+      return { 
+        [Symbol.dispose]() { 
+          //メソッド削除時の実行実装
+        }
+      }
+    }
+
+    ■ 5.2 Function削除時の実行(非同期)
+    function log(id:string): AsyncDisposable {
+      ...
+      return {
+        async [Symbol.asyncDispose]() {
+          await someMethod();
+        }
+      }
+    }
+
+- KEY: ts.ver5.2.decoratorMetadata
+  EXPLAIN: デコレータメタデータ
+  BODY: |
+    ■ 5.2 Decorator Metadata
+    interface X {
+      name: string;
+      metadata: Record<PropertyKey, unknown>;
+    }
+
+    function setMetadata(_target:any, x:X){
+      x.metadata[x.name] = true;
+    }
+
+    class AClass {
+      @setMetadata
+      foo = 123;
+
+      @setMetadata
+      accessor bar = "hello!";
+
+      @setMetadata
+      baz() { }
+    }
+
+    const md = AClass[Symbol.metadata];
+     = { "bar":true,"baz":true,"foo":true }
+
+- KEY: ts.ver5.2.TupleType
+  EXPLAIN: タプル型
+  BODY: |
+    ■ 5.2 Tuple
+    type T1<T> = [T, T]                      // no-named
+    type T2<T> = [f:T, s:T]                  // named
+    type T3<T> = [f:T, s:T, rest:...T[]]
+
+    type X = [a:string, b:string]
+    type Y = [number, number]
+    type Z = [...Label, ...NoLabel]
+           = [number, number, string, string]
+
+- KEY: ts.ver5.1.methodReturn
+  EXPLAIN: 関数戻り値(undefined)
+  BODY: |
+    ■ 5.1 Function Returns Undefined
+    割愛
+
+# - KEY: ts.ver5.0.decorator
+#   EXPLAIN: デコレータ
+#   BODY: |
+#     クラス宣言  Class Decorators
+#     メソッド    Method Decorators
+#     アクセサ    Accessor Decorators
+#     プロパティ  Property Decorators
+#     パラメータ  Parameter Decorators
+
+#     function decoLog(orgMethod:any, _context:any){
+#       return ((this:any, ...args:any[]){
+#         ...
+#         const result = orgMethod.call(this, ...args)
+#         ...
+#         return result;
+#       })()
+#     }
+
+#     class A{
+#       a: string;
+#       constructor(a:string){this.a = a}
+#       @decoLog
+#       g(){ console.log(`Hi ${this.a}`) }
+#     }
+#     const p = new A("John");
+#     p.g();
+
+- KEY: ts.ver5.0.generic.const
+  EXPLAIN: ジェネリック・定数
+  BODY: |
+    type A = { a: readonly string[] };
+
+    const func = <T extends A>(obj: T): T["a"] => {
+      return obj.a;
+    };
+    const res1 = func({ a: ["A", "B"] });    // string[]
+
+    ■ Generic定数
+    const cFunc = <const T extends A>(obj: T): T["a"] => {
+      return obj.a;
+    };
+    const res2 = cFunc({ a: ["A", "B"] });   // readonly ["A", "B"]
+
+- KEY: ts.ver4.9.satisfies
+  EXPLAIN: Widening防止
+  BODY: |
+    ■ Widening防止
+    type A = { x:string; y:number; }
+    const a1: A
+     = { x: "X", y: 1 } as const             //{ x:string; y:number; }
+    const a2
+     = { x: "X", y:1 } as const satisfies A  //{readonly x:"X", readonly y:1}
+
+    ■ Tupleの型保存(Widening防止)
+    type Colors = "a"|"b"
+    type RGB = [r:number,g:number,b:number]  //Tuple
+
+    const x: Record<Colors, string|RGB> = {  // Widening!!
+      a: [255,0,255],                        // string | RGB
+      b: "#00ff00",                          // string | RGB
+    }
+
+    const y = {                              // Widening!!
+      a: [255,0,255],                        // number[]
+      b: "#00ff00",                          // string *
+    } satisfies Record<Colors, unknown>
+
+    const z = {                              // Widening防止
+      a: [255,0,255],                        // [number,number,number]
+      b: "#00ff00",                          // string
+    } satisfies Record<Colors, string|RGB>
+
+    [NG] const c = z.a.at(0);                // 配列at():NG
+    const c = z.a[0];                        // 添字処理:OK
+
+- KEY: ts.4.9.classAccessor
+  EXPLAIN: アクセッサ
+  BODY: |
+    class X {
+      accessor a: string;                    // accessor
+      constructor(a: string){
+        this.a = a
+      }                                      // get,set 定義不要
+    }
+    const x = new X("a")
+    const res = x.a                          // get getA()
+    x.a = "b"                                // set setA()
+
+- KEY: ts.4.9.NaN
+  EXPLAIN: NaNの挙動
+  BODY: |
+    NaN == NaN, NaN === NaN                  // Before: false
+    NaN == NaN, NaN === NaN                  // After : true
+
+- KEY: ts.4.8.unknown
+  EXPLAIN: Unknown型
+  BODY: |
+    const x:unknown
+    const y:{}|null|undefined
+    x = y;                                   // Before: OK
+    y = x;                                   // After : OK

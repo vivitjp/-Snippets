@@ -715,7 +715,7 @@
     COMMIT;
 
 - KEY: mysql.transaction.stored
-  EXPLAIN:
+  EXPLAIN: トランザクション(Stored)
   BODY: |
     DELIMITER //
     CREATE PROCEDURE プロシージャ名()
@@ -736,27 +736,27 @@
     END//
     DELIMITER ;
 
-- KEY: mysql.
-  EXPLAIN:
-  BODY: |
+# - KEY: mysql.
+#   EXPLAIN:
+#   BODY: |
 
-- KEY: mysql.
-  EXPLAIN:
-  BODY: |
+# - KEY: mysql.
+#   EXPLAIN:
+#   BODY: |
 
-- KEY: mysql.transaction.deadlock
-  EXPLAIN: デッドロック
-  BODY: |
-    SHOW ENGINE INNODB STATUS;
+# - KEY: mysql.transaction.deadlock
+#   EXPLAIN: デッドロック
+#   BODY: |
+#     SHOW ENGINE INNODB STATUS;
 
-- KEY: mysql.
-  EXPLAIN:
-  BODY: |
+# - KEY: mysql.
+#   EXPLAIN:
+#   BODY: |
 
-- KEY: mysql.
-  EXPLAIN:
-  BODY: |
+# - KEY: mysql.
+#   EXPLAIN:
+#   BODY: |
 
-- KEY: mysql.
-  EXPLAIN:
-  BODY: |
+# - KEY: mysql.
+#   EXPLAIN:
+#   BODY: |

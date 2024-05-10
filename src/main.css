@@ -35,15 +35,14 @@ dialog::backdrop {
 
 pre {
   margin: 0;
-  font-family: monospace;
+  font-family: "Courier Prime", monospace;
   font-size: 1rem;
   width: 100%;
 }
 
 span.syntax {
-  font-family: monospace;
+  font-family: "Courier Prime", monospace;
   font-size: 1rem;
-  font-weight: 600;
 }
 
 span.syntaxQ {

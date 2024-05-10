@@ -41,23 +41,32 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.JSTS],
       },
       {
+        name: "TypeScript:ts",
+        fileName: "JavaScript/TypeScript",
+        codeKeyTypes: [codeKeys.JSTS],
+        encodeRequired: true,
+      },
+      {
         name: "TypeScript(Tips):ts",
         fileName: "JavaScript/TypeScriptTips",
         codeKeyTypes: [codeKeys.JSTS],
+        encodeRequired: true,
       },
       {
         name: "TypeScript(Util):ts",
         fileName: "JavaScript/TypeScriptUtilities",
         codeKeyTypes: [codeKeys.JSTS, codeKeys.TS],
+        encodeRequired: true,
       },
       {
         name: "非同期:js",
         fileName: "JavaScript/JavaScriptAsync",
         codeKeyTypes: [codeKeys.JSTS],
+        encodeRequired: true,
       },
       {
         name: "Dom",
-        fileName: "",
+        fileName: "JavaScript/dom",
         codeKeyTypes: [],
       },
       {
@@ -178,17 +187,17 @@ export const menuItems: menuByCategories[] = [
     category: "Python",
     items: [
       {
-        name: "Python",
+        name: "Python:py",
         fileName: "Python/Python",
         codeKeyTypes: [codeKeys.Python],
       },
       {
-        name: "ライブラリ(List)",
+        name: "Library List:py",
         fileName: "Python/PythonLibs",
         codeKeyTypes: [],
       },
       {
-        name: "ライブラリ(Sample)",
+        name: "Library Sample:py",
         fileName: "Python/PythonLibSamples",
         codeKeyTypes: [codeKeys.Python],
       },
@@ -201,11 +210,13 @@ export const menuItems: menuByCategories[] = [
         name: "docker",
         fileName: "OS/Docker",
         codeKeyTypes: [codeKeys.Docker],
+        case_sensitive: false,
       },
       {
         name: "dockerCompose",
         fileName: "",
         codeKeyTypes: [codeKeys.Docker],
+        case_sensitive: false,
       },
       {
         name: "Linux",

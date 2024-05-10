@@ -89,7 +89,7 @@
   BODY: |
     docker network create --subnet <MASK> <myNetwork>     //作成
     docker network connect <myNetwork> <myCont>           //接続
-    docker network connect --ip <IP> <myNetwork> <myCont> //IP 割当
+    docker network connect --ip < IP > <myNetwork> <myCont> //IP 割当
     docker network disconnect <myNetwork> <myCont>        //切断
     docker network inspect <myNetwork>                    //詳細表示
     docker network rm <myNetwork>                         //削除

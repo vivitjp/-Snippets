@@ -1,6 +1,6 @@
 ---
 #-------------------------------
-# Pandas
+# Pandas  https://qiita.com/fujine/items/dbe2f5e4101d6299ff12
 #-------------------------------
 
 - KEY: py.lib.pandas.install
@@ -11,7 +11,7 @@
     # pandas-stubs: Public type stubs for pandas(型ファイル)
 
 - KEY: py.lib.pandas.file
-  EXPLAIN: Pandas(ファイル)
+  EXPLAIN: Pandas(Fromファイル)
   BODY: |
     FILE_NAME = "data\\sample.csv"
 
@@ -22,7 +22,7 @@
     p = Path(FILE_NAME)
 
 - KEY: py.lib.pandas.iomemory
-  EXPLAIN: Pandas(IO仮想メモリ)
+  EXPLAIN: Pandas(FromIO仮想メモリ)
   BODY: |
     from io import StringIO
 
@@ -38,43 +38,56 @@
         df = pd.read_csv(f)
         print(df)
 
-- KEY: py.lib.pandas.options
-  EXPLAIN: Pandas(オプション)
-  BODY: |
-    df = pd.read_csv(FILE_NAME, encoding=, sep=)
+    # ■ 最初の1万行は数字、末尾の1行だけ文字列のデータを生成して読み込む
+    with StringIO('\n'.join('x' + '0'*10000 + 'a')) as f:
+    df = pd.read_csv(f)
 
-    # エンコード
+- KEY: py.lib.pandas.iterator
+  EXPLAIN: Pandas(分割読み込み)
+  BODY: |
+    ■ メモリ節約のために行数指定読み込みを反復
+    with pd.read_csv(FILE_NAME, iterator=True, chunksize=3) as reader:
+      for df in reader:
+          print(df)
+          print("-" * 60)
+
+- KEY: py.lib.pandas.options
+  EXPLAIN: Pandas(出力オプション)
+  BODY: |
+    df = pd.read_csv(FILE_NAME, options...)
+
+    # ■ エンコード
     encoding="shift-jis","utf-8"
 
-    # セパレータ
+    # ■ セパレータ
     sep=","                 コンマ
     sep=None                自動判定
     delim_whitespace=True   スペース: sepと同時指定不可
 
-    # ヘッダ行数
+    # ■ ヘッダ行数
     header=1                Default
     header=[1, 3]           ヘッダ 1行目、3行目
     header=None             ヘッダ なし
     header=0, names=names   ヘッダ + カスタムヘッダ使用(カラム数不一致はエラー)
       names = ['年月日', '観測値', '最低気温', ...]
 
-    # カラム指定
+    # ■ カラム指定
     usecols=usecols
       usecols = ["1月", "2月", "3月", "年間"]
       usecols = [[f"{x}月" for x in range(1, 13)]].append("年間")
       usecols = lambda n: re.search("([1|2|3]月|年間)", n)
 
-    # 非推奨
+    # ■ 非推奨
     squeeze    => pandas.DataFrame.squeeze を使用
     prefix     => pandas.DataFrame.add_prefix を使用
     mangle_dupe_cols
 
 - KEY: py.lib.pandas.dtype
-  EXPLAIN: Pandas(データ型変換)
+  EXPLAIN: Pandas(データ型NP変換)
   BODY: |
     import numpy as np
 
-    # 個別設定
+    # ■ 個別設定
     dtype = {"MinTemp": np.float16, "MaxTemp": np.float16}
     df = pd.read_csv(FILE_NAME, dtype=dtype)
     ------------------------------------------------------------
@@ -82,13 +95,118 @@
     0  2023/4/1  東京  10.296875  23.296875        2.6       NaN
     1  2023/4/1  大阪  10.398438  25.093750        2.3       NaN
 
-    # 一律設定
+    # ■ 一律設定
     df = pd.read_csv(FILE_NAME, dtype=str)
     ------------------------------------------------------------
           Date  Area MinTemp MaxTemp WindSpeed Rainfall
     0  2023/4/1  東京    10.3    23.3       2.6      NaN
     1  2023/4/1  大阪    10.4    25.1       2.3      NaN
 
-    # 値変換(C=>F) * dtype < converters 優先
+- KEY: py.lib.pandas.replace
+  EXPLAIN: Pandas(データ変換)
+  BODY: |
+    # ■ 値変換(null=>0)
+    c2f = lambda c: 0 if c == "null" or c == "" else c
+    df = pd.read_csv(
+        FILE_NAME,
+        converters={"MinTemp": c2f, "MaxTemp": c2f, "WindSpeed": c2f, "Rainfall": c2f},
+    )
+    ------------------------------------------------------------
+           Date  Area MinTemp MaxTemp WindSpeed Rainfall
+    0  2023/4/1  東京    10.3    23.3         0        0
+    1  2023/4/1  大阪    10.4       0       2.3        0
+
+    # ■ 値変換(C=>F) * dtype < converters 優先
     c2f = lambda c: float(c) * 1.8 + 32
     df = pd.read_csv(FILE_NAME, converters={"MinTemp": c2f, "MinTemp": c2f})
+    ------------------------------------------------------------
+              Date  Area  MinTemp  MaxTemp  WindSpeed  Rainfall
+    0  2023/4/1  東京    50.54     23.3        2.6       NaN
+    1  2023/4/1  大阪    50.72     25.1        2.3       NaN
+
+    # ■ Bool値変換
+    df = pd.read_csv(FILE_NAME, true_values=["大阪"], false_values=["東京"])
+    ------------------------------------------------------------
+          Date   Area  MinTemp  MaxTemp  WindSpeed  Rainfall
+    0  2023/4/1  False     10.3     23.3        2.6       NaN
+    1  2023/4/1   True     10.4     25.1        2.3       NaN
+
+    # ■ NA/NaN への置換
+    df = pd.read_csv(FILE_NAME, na_values=0.0)               # 0.0 => NaN
+    df = pd.read_csv(FILE_NAME, na_values=["Rainfall", 1.0]) # 1.0 => NaN
+
+    # ■ 欠損値フィルタ(無効化でファイル読み込みパフォーマンス向上)
+    df = pd.read_csv(FILE_NAME, na_filter=False)
+
+- KEY: py.lib.pandas.columns
+  EXPLAIN: Pandas(カラム一覧)
+  BODY: |
+    df = pd.read_csv(FILE_NAME)
+    df = pd.read_csv(FILE_NAME, skipinitialspace=True) # トリミング
+    list(df.columns)
+    ------------------------------------------------------------
+    ['Date', 'Area', 'MinTemp', 'MaxTemp', 'WindSpeed', 'Rainfall']
+
+- KEY: py.lib.pandas.rows
+  EXPLAIN: Pandas(行)
+  BODY: |
+    # ■ HEAD/TAIL行数
+    df = pd.read_csv(FILE_NAME)
+    print(df.head(3))            # HEAD 3行のみ
+    print(df.tail(3))            # TAIL 3行のみ
+
+    # ■ スライス
+    df = pd.read_csv(FILE_NAME)
+    print(df[:3])                # 指定行(=HEAD(3))
+    print(df[3:4])               # 指定行(3)
+    print(df[-2:])               # 指定行(=TAIL(2))
+
+    # ■ 読み込み行スキップ
+    df = pd.read_csv(FILE_NAME, skiprows=[1]) # 1行目スキップ
+    df = pd.read_csv(FILE_NAME, skiprows=2)   # 先頭2行スキップ
+
+    # ■ 読み込み行フィルタ
+    skiprows = lambda n: n % 2
+    df = pd.read_csv(FILE_NAME, skiprows=skiprows) # CB
+
+    # ■ 読み込み行数指定
+    df = pd.read_csv(FILE_NAME, nrows=2)
+    print(df)
+
+    # ■ 空行スキップ(default:True)
+    df = pd.read_csv(FILE_NAME, skip_blank_lines=False)
+
+- KEY: py.lib.pandas.memory
+  EXPLAIN: Pandas(読み込みメモリ)
+  BODY: |
+    # ■ Default 使用メモリ制限(部分的に読み込みながらデータ型推定)
+    df = pd.read_csv(FILE_NAME, low_memory=True)
+
+    # ■ 全体を読み込んでからデータ型推定
+    df = pd.read_csv(FILE_NAME, low_memory=False)
+
+- KEY: py.lib.pandas.type.date
+  EXPLAIN: Pandas(日付)
+  BODY: |
+    ■ 日付データをdatetimeに変換
+    df = pd.read_csv(FILE_NAME, parse_dates=["Date"])
+    print(df)
+    ------------------------------------------------------------
+          Date  Area  MinTemp  MaxTemp  WindSpeed  Rainfall
+    0  2023/4/1  東京     10.3     23.3        NaN       NaN
+    1  2023/4/1  大阪     10.4      NaN        NaN       NaN
+    ------------------------------------------------------------    
+            Date  Area  MinTemp  MaxTemp  WindSpeed  Rainfall
+    0 2023-04-01  東京     10.3     23.3        NaN       NaN
+    1 2023-04-01  大阪     10.4      NaN        2.3       NaN
+
+    ■ インデックスをdatetimeに変換
+    df = pd.read_csv(FILE_NAME, index_col="Date", parse_dates=True)
+            Area  MinTemp  MaxTemp  WindSpeed  Rainfall
+    Date
+    2023-04-01  東京     10.3     23.3        NaN       NaN
+    2023-04-01  大阪     10.4      NaN        2.3       NaN
+
+# - KEY: py.lib.pandas.type.int
+#   EXPLAIN: Pandas(数)
+#   BODY: |

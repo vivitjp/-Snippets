@@ -2,7 +2,7 @@ import styled from "styled-components"
 
 export const Details = styled.details`
   font-size: 14px;
-  font-family: monospace;
+  font-family: "Courier Prime",  monospace;
   overflow: auto;
   white-space: pre;
   color: #555;
@@ -13,7 +13,7 @@ export const Details = styled.details`
 
 export const DetailInside = styled.div`
   font-size: 14px;
-  font-family: monospace;
+  font-family: "Courier Prime",  monospace;
   overflow: auto;
   white-space: pre;
   color: #555;
