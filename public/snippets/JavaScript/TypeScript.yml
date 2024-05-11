@@ -813,32 +813,85 @@
     ■ 5.1 Function Returns Undefined
     割愛
 
-# - KEY: ts.ver5.0.decorator
-#   EXPLAIN: デコレータ
-#   BODY: |
-#     クラス宣言  Class Decorators
-#     メソッド    Method Decorators
-#     アクセサ    Accessor Decorators
-#     プロパティ  Property Decorators
-#     パラメータ  Parameter Decorators
+- KEY: ts.ver5.0.decorator.types
+  EXPLAIN: デコレータタイプ
+  BODY: |
+    クラス宣言  Class Decorators
+    メソッド    Method Decorators
+    アクセサ    Accessor Decorators
+    プロパティ  Property Decorators
+    パラメータ  Parameter Decorators
 
-#     function decoLog(orgMethod:any, _context:any){
-#       return ((this:any, ...args:any[]){
-#         ...
-#         const result = orgMethod.call(this, ...args)
-#         ...
-#         return result;
-#       })()
-#     }
+- KEY: ts.ver5.0.decorator.IIFE
+  EXPLAIN: デコレータ(class関数)
+  BODY: |
+    // 設定が不必要
+    tsconfig.json
+      "experimentalDecorators": false        // true でエラー
+    -----------------------------------------
+    //即時関数による定義
+    function decoLog(orgMethod:any, _context:any){
+      return (function(this: any, ...args:any[]){
+        console.log(_context)             
+        // Print:2
+        // {
+        //   "kind": "method",
+        //   "name": "get",
+        //   "static": false,
+        //   "private": false,
+        //   "access": {},
+        //   "metadata": undefined
+        // } 
+        const result = orgMethod.call(this, ...args)
+        return result;
+      })()
+    }
 
-#     class A{
-#       a: string;
-#       constructor(a:string){this.a = a}
-#       @decoLog
-#       g(){ console.log(`Hi ${this.a}`) }
-#     }
-#     const p = new A("John");
-#     p.g();
+    class A{
+      a: string;
+      constructor(a:string){ this.a = a }
+      @decoLog
+      get(A:string){
+        console.log(`Hi ${this?.a || "Oops"}`) 
+        // Print:1 "Hi Oops"
+        // Print:4 "Hi John"
+      }
+    }
+
+    const p = new A("John");
+    console.log("Instance")
+    // Print:3 "Instance"
+    p.get("ABC")
+    console.log("Method Called")
+    // Print:5 "Method Called"
+
+- KEY: ts.ver5.0.decorator
+  EXPLAIN: デコレータ(コール順)
+  BODY: |
+    // 設定が必要
+    tsconfig.json
+      "experimentalDecorators": true
+    -----------------------------------------
+    function first() {
+      console.log("first(): factory evaluated");
+      return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+        console.log("first(): called");
+      };
+    }
+
+    function second() {
+      console.log("second(): factory evaluated");
+      return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+        console.log("second(): called");
+      };
+    }
+
+    class ExampleClass {
+      accessor name: string = ""
+      @first()  // コール順2
+      @second() // コール順1
+      method(name: string) { this.name = name }
+    }
 
 - KEY: ts.ver5.0.generic.const
   EXPLAIN: ジェネリック・定数
