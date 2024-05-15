@@ -76,6 +76,25 @@
       `}
     `
 
+- KEY: pk.styled.css.disabled
+  EXPLAIN: Disabled
+  BODY: |
+    export const FlexDiv = styled.div`
+      ${(props) => css`
+        margin: 0;
+        padding: 0;
+        color: var(--main-color);
+        font-size: ${props.fontSize ?? "inherit"};
+        ${props.fontFamily && `font-family: ${props.fontFamily}`};
+      `}
+      ${(props) =>
+        props.disabled &&
+        css`
+          background-color: #aaa;
+        `
+      }
+    `
+
 #-------------------------------
 # Input系 部品
 #-------------------------------

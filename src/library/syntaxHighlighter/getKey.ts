@@ -8,6 +8,7 @@ import { keysLinux } from "./keys/Linux"
 import { keysMongo } from "./keys/Mongo"
 import { keysMySql } from "./keys/MySql"
 import { keysPackage } from "./keys/Package"
+import { keysPackageRHF } from "./keys/PackageRHF"
 import { keysPython } from "./keys/Python"
 import { keysReact } from "./keys/React"
 import { keysRegExp } from "./keys/RegExp"
@@ -23,6 +24,7 @@ export const codeKeys = {
   RegExp: "RegExp",
   React: "React",
   Package: "Package",
+  keysPackageRHF: "keysPackageRHF",
   Python: "Python",
   Mongo: "Mongo",
   Docker: "Docker",
@@ -46,6 +48,7 @@ export const KeyAndCodes: Record<CodeKeyType, KeyDef[]> = {
   RegExp: keysRegExp,
   React: keysReact,
   Package: keysPackage,
+  keysPackageRHF: keysPackageRHF,
   Python: keysPython,
   Mongo: keysMongo,
   Docker: keysDocker,

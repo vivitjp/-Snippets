@@ -20,6 +20,7 @@ export const SummaryWrapper = styled.summary`
 export const DivTitle = styled.div`
   font-size: 18px;
   color: #555;
+  line-height: 2rem;
 `
 
 export const DivPrefix = styled.div`

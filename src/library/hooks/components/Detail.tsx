@@ -5,7 +5,7 @@ export const Details = styled.details`
   font-family: "Courier Prime",  monospace;
   overflow: auto;
   white-space: pre;
-  color: #555;
+  color: #666;
   padding: 10px;
   width: 100%;
   box-shadow: 2px 2px 4px #eee;
@@ -16,9 +16,9 @@ export const DetailInside = styled.div`
   font-family: "Courier Prime",  monospace;
   overflow: auto;
   white-space: pre;
-  color: #555;
+  color: #666;
   padding: 10px;
   width: 100%;
-  border: 1px solid #ddd;
-  box-shadow: 2px 2px 4px #eee;
+  line-height: 1.2rem;
+  background-color:  #F9F9F9;
 `

@@ -1,3 +1,5 @@
+import styled from "styled-components"
+
 export type KeyDef = {
   color: string
   keys: string[]
@@ -55,10 +57,10 @@ export const syntaxHighlight = ({
     })
     if (result.trim()) {
       rebuilt.push(
-        <pre key={idx} dangerouslySetInnerHTML={{ __html: result }} />
+        <Pre key={idx} dangerouslySetInnerHTML={{ __html: result }} />
       )
     } else {
-      rebuilt.push(<pre key={idx}>&nbsp;</pre>)
+      rebuilt.push(<Pre key={idx}>&nbsp;</Pre>)
     }
   })
   return rebuilt
@@ -78,3 +80,7 @@ function replaceUnsafeChar(ch: string): string {
 function escapeHtml(str: string): string {
   return str.replace(HTML_ESCAPE_REPLACE_RE, replaceUnsafeChar)
 }
+
+const Pre = styled.pre`
+  background-color: #F9F9F9
+`

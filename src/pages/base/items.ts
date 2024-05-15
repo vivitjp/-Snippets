@@ -115,12 +115,7 @@ export const menuItems: menuByCategories[] = [
       {
         name: "ReactHookForm:pk",
         fileName: "ReactPackage/ReactHookForm",
-        codeKeyTypes: [
-          codeKeys.HTML,
-          codeKeys.JSTS,
-          codeKeys.React,
-          codeKeys.Package,
-        ],
+        codeKeyTypes: [codeKeys.keysPackageRHF],
         encodeRequired: true,
       },
       {

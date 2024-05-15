@@ -2,70 +2,136 @@
 #-------------------------------
 # React Hook Form
 #-------------------------------
+- KEY: pk.rhf.keywords
+  EXPLAIN: 引数とメソッド
+  BODY: |
+    ■ useForm
+    const method = useForm({
+      mode,                  // 検証戦略
+      reValidateMode,        // Validation strategy after submitting behaviour.
+      defaultValues,         // フォームのデフォルト値
+      values,                // フォーム値を更新するためのリアクティブな値
+      errors,                // フォームエラーを更新するためのリアクティブエラー
+      resetOptions,          // 新しいフォーム値の更新中にフォーム状態の更新をリセットするオプション
+      criteriaMode,          // すべての検証エラーを表示するか、一度に 1 つずつ表示
+      shouldFocusError,      // 組み込みのフォーカス管理を有効または無効にします
+      delayError,            // エラーが即座に表示されるのを遅らせます
+      shouldUseNativeValidation, // ブラウザ組み込みのフォーム制約 API を使用
+      shouldUnregister,      // アンマウント後の入力登録解除を有効または無効に
+    });
+
+    ■ mode
+      mode: onChange | onBlur | onSubmit | onTouched | all
+
+    ■ method
+    const {
+      register,              // フォームフィールド登録
+      handleSubmit,          // フォームの送信処理
+      reset,                 // フォームリセット
+      watch,                 // フィールド値監視
+      control,               // Controller で使用
+      setValue,              // フィールド値設定(個別)
+      getValues,             // フィールド値取得(全体)
+      formState,             // フォームステート(dirty, isSubmitted, touched, submitCount, error...)
+      -----------------
+      trigger,               // 子コンポーネントへの引数
+      setFocus,              // ref.current.focus() の代用
+      unregister,
+      clearErrors,
+      setError,
+      getFieldState,
+      resetField,
+    } = method
+
+    ■ formState
+    errors                    // object
+    defaultValues             // object
+    isValid                   // boolean
+    isDirty                   // boolean
+    dirtyFields               // object
+    touchedFields             // object
+    isSubmitted               // boolean
+    isSubmitSuccessful        // boolean
+    isSubmitting              // boolean
+    isLoading                 // boolean
+    submitCount               // number
+    isValidating              // boolean
+    validatingFields          // boolean
+
+    ■ field
+    type field = {
+      value,                  // コンポーネント値
+      ref,                    // Reactのref
+      name,                   // (String) 登録名
+      onChange,               // (Function) 変更イベントメソッド
+      onBlur,                 // (Function) ロストフォーカスイベントメソッド
+    },
+
+    ■ fieldState
+    type fieldState = {
+      invalid,                // (Boolean) 全入力値のバリディティ
+      isTouched,              // (Boolean) 一度でもタッチされたか
+      isDirty,                // (Boolean) 入力が変更されたか
+      error,                  // (Object) エラー情報
+    }
+
+- KEY: pk.rhf.vlidation
+  EXPLAIN: バリデーション
+  BODY: |
+    required      (共通)   required: "必須項目"
+    min           (number) min: { value: 1, message: "1以上の数値" },
+    max           (number) 
+    minLength     (string) minLength: { value: 4, message: "4文字以上必須" },
+    maxLength     (string) 
+    pattern       (string) { value: /^[a-zA-Z0-9]+$/, message: '半角英数字のみ' }
+    validate      (共通) 
+    valueAsNumber (型チェック) valueAsNumber: true,
 
 #-------------------------------
 # By Context
 #-------------------------------
 
-- KEY: pk.rhf.core.providerContext
-  EXPLAIN: RFHのFormProvider Core
-  BODY: |
-    親コンポーネント
-    <FormProvider {...methods}>                    <----- ここから
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <ChildByContext<型> />
-        <button type="submit">OK</button>
-      </form>
-    </FormProvider>
-
-    子コンポーネント
-    export const ChildByContext<型> = () => {
-      const { register } = useFormContext<型>() <---ここへ
-      return (
-        <input {...register("name", { required: true })} />
-      )
-    }
-
-- KEY: pk.rhf.full.providerContext1
-  EXPLAIN: RFHのFormProvider親
+- KEY: pk.rhf.byContext.parent
+  EXPLAIN: 1) By Context 親
   BODY: |
     import { useForm, SubmitHandler, FormProvider } from "react-hook-form"
     import { ChildByContext } from "./ChildByContext"
 
-    export type RHF_SimpleValues = { name: string }
-    const defaultValues: RHF_SimpleValues = { name: "James" }
+    export type SimpleType = { name: string }
+    const defaultValues: SimpleType = { name: "By Method" }
 
-    export const RHF_Simple = () => {
-      const methods = useForm<RHF_SimpleValues>({
+    export const Simple = () => {
+
+      const method = useForm<SimpleType>({
         defaultValues,
-        //shouldUnregister: true, //mnt/unmnt データ保存有無
+        mode = "onBlur"                                                         // 離脱時にValidate
       })
+      const { handleSubmit } = method
 
-      const { handleSubmit } = methods
-      const onSubmit: SubmitHandler<RHF_SimpleValues> = (data)
-       => { console.table(data) }
+      const onSubmit: SubmitHandler<SimpleType>=(data)=>{
+        console.table(data)
+      }
 
       return (
-        <FormProvider {...methods}>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <ChildByContext<RHF_SimpleValues> />
-            <button type="submit">OK</button>
+        <FormProvider {...method}>                                              // Context 親
+          <form onSubmit={ handleSubmit(onSubmit) }>
+            <ChildByContext<SimpleType> />                                      // 子への引数なし
+            <button type="submit"> OK </button>
           </form>
         </FormProvider>
       )
     }
 
-- KEY: pk.rhf.full.providerContext2
-  EXPLAIN: RFHのContext子
+- KEY: pk.rhf.byContext.child
+  EXPLAIN: 1) By Context 子
   BODY: |
     import { useFormContext } from "react-hook-form"
-    //import { RHF_SimpleValues } from "./RHFByProvider"
 
     export const ChildByContext<T> = () => {
-      const { register, formState: { errors } } =
-       useFormContext<T>()
+      
+      const { register, formState: {errors} } = useFormContext<T>()             // 共通 register を取り出し
 
-      return (
+      return (                                                                  // 以下、共通
         <div>
           <input {...register("name", { required: true })} />
           {errors.name && <span>必須</span>}
@@ -77,74 +143,339 @@
 # By Parameter
 #-------------------------------
 
-- KEY: pk.rhf.core.methodByPram
-  EXPLAIN: RFHのFormProvider Core パラメタ
-  BODY: |
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <ChildByMethod methods={methods} /> <--method引数
-      <button type="submit">OK</button>
-    </form>
-
-    const ChildByMethod = ({ methods }: {
-      methods: UseFormReturn<型依存, any>
-    }) => {
-      const { register } = methods
-      return (
-        <input {...register("name", { required: true })} />
-      )
-    }
-
-- KEY: pk.rhf.full.methodByPram1
-  EXPLAIN: 引数method親
+- KEY: pk.rhf.byPram.parent
+  EXPLAIN: 2) By Parameter 親
   BODY: |
     import { useForm, SubmitHandler } from "react-hook-form"
     import { ChildByMethod } from "./ChildByMethod"
 
-    export type RHF_SimpleValues = {
-      name: string
-    }
+    export type SimpleType = { name: string }
+    const defaultValues: SimpleType = { name: "By Method" }
 
-    const defaultValues: RHF_SimpleValues = {
-      name: "By Method",
-    }
+    export const ByMethod = () => {
 
-    export const RHFByMethod = () => {
-      const methods = useForm<RHF_SimpleValues>({
+      const method = useForm<SimpleType>({
         defaultValues,
-        //shouldUnregister: true, //mnt/unmnt データ保存有無
+        mode = "onBlur"                                                         // 離脱時にValidate
       })
-      const { handleSubmit } = methods
+      const { handleSubmit } = method
 
-      const onSubmit: SubmitHandler<RHF_SimpleValues> = (data) => {
+      const onSubmit: SubmitHandler<SimpleType> = (data) => {
         console.table(data)
       }
 
       return (
         <section>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <ChildByMethod methods={methods} />
-            <button type="submit">OK</button>
+          <form onSubmit = { handleSubmit(onSubmit) }>
+            <ChildByMethod method={method} />                                   // 子への引数: method
+            <button type="submit"> OK </button>
           </form>
         </section>
       )
     }
 
-- KEY: pk.rhf.full.methodByPram2
-  EXPLAIN: 引数method子
+- KEY: pk.rhf.byPram.child
+  EXPLAIN: 2) By Parameter 子
   BODY: |
     import { UseFormReturn } from "react-hook-form"
-    import { RHF_SimpleValues } from "./RHFByMethod"
+    import { SimpleType } from "./RHFByMethod"
 
     type Props = {
-      methods: UseFormReturn<RHF_SimpleValues, any>
+      method: UseFormReturn<SimpleType, any>
     }
 
-    export const ChildByMethod = ({ methods }: Props) => {
-      const { register, formState: { errors } } = methods
-      return (
+    export const ChildByMethod = ({ method }: Props) => {                       // 共通 register を取り出し
+
+      const { register, formState: { errors } } = method
+
+      return (                                                                  // 以下、共通
         <div>
           <input {...register("name", { required: true })} />
           {errors.name && <span>必須</span>}
         </div>
+      )
+    }
+
+#-------------------------------
+# By Control
+#-------------------------------
+
+- KEY: pk.rhf.byControl.parent
+  EXPLAIN: 3) By Control 親
+  BODY: |
+    import { SubmitHandler, useForm, useWatch } from "react-hook-form"
+    import { SampleControlInput } from "./SampleControlInput"
+    import { useMemo, useState } from "react"
+
+    type GFieldType = Record<string, unknown>
+
+    //Data型
+    type Person = {
+      name: string
+      age: number
+      act: number //Chakra Checkbox 型
+    }
+
+    //Data デフォルト値
+    const defaultValues = {
+      name: "佐藤",
+      age: 55,
+      act: 0,
+    }
+
+    //Data 制約
+    const constrain: Record<keyof Person, GFieldType> = {
+      name: {
+        required: "必須項目です",
+        minLength: { value: 4, message: "4文字以上必須です" },
+      },
+      age: {
+        required: "必須項目です",
+        min: { value: 1, message: "1以上の数値です" },
+        validate: (item: string) => !!Number(item),
+        validateMessage: "数値のみです",
+      },
+      act: {},
+    }
+
+    export const SampleControlForm = () => {
+      const method = useForm<Person>({ defaultValues, mode: "onBlur" })
+      const {
+        watch,
+        control,
+        handleSubmit,
+        formState: { isValid },
+      } = method
+
+      const [inputData, setInputData] = useState("")
+
+      const onSubmit: SubmitHandler<Person> = (data) => {
+        setInputData(JSON.stringify(data, undefined, 2))
+      }
+
+      //watch は 非Reactive
+      const [calcAgeMan, setCalcAgeMan] = useState(0)
+      const handleWatch = () => {
+        const age = Number(watch("age")) * 3 || 0
+        setCalcAgeMan(age)
+      }
+
+      //useWatch の戻り値変数は Reactive(再描画に注意)
+      const watchAge = useWatch({ control, name: "age" })
+      const ageCalcAuto = useMemo(() => (Number(watchAge) || 0) * 2, [watchAge])
+
+      return (
+        <Row>
+          <Column>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Column>
+                <Row>
+                  <SampleControlInput
+                    method={method}
+                    target={"name"}
+                    title={"氏名"}
+                    constrain={constrain.name}
+                  />
+                </Row>
+
+                {/* age */}
+                <Row>
+                  <SampleControlInput
+                    method={method}
+                    target={"age"}
+                    title={"年齢"}
+                    constrain={constrain.age}
+                  />
+                </Row>
+
+                <Row>
+                  <Div">年(自動)</Div>
+                  <BorderDiv>{ageCalcAuto}</BorderDiv>
+                </Row>
+
+                <Row>
+                  <Button" onClick={handleWatch}>
+                    年(手動)
+                  </Button>
+                  <BorderDiv>{calcAgeMan}</BorderDiv>
+                </Row>
+
+                {/* act */}
+                <Row>
+                  <SampleControlInput
+                    method={method}
+                    target={"act"}
+                    title={"有効"}
+                    constrain={constrain.act}
+                  />
+                </Row>
+                <Row>
+                  <Submit value={"保存"} disabled={!isValid} />
+                </Row>
+              </Column>
+            </form>
+          </Column>
+          <DivPre>{inputData}</DivPre>
+        </Row>
+      )
+    }
+
+- KEY: pk.rhf.byControl.child
+  EXPLAIN: 3) By Control 子
+  BODY: |
+    import { Controller, Path, UseFormReturn } from "react-hook-form"
+    import { Input as ChakraInput } from "@chakra-ui/react"
+
+    type GFieldType = Record<string, unknown>
+
+    type SampleControlInput<T extends GFieldType, R> = {
+      method: UseFormReturn<T>
+      target: Path<T>
+      title: string
+      constrain: GFieldType
+    }
+
+    export const SampleControlInput = <
+      T extends GFieldType,
+      R extends string | number
+    >({ method, target, title, constrain }: SampleControlInput<T, R>) => {
+      const { control } = method
+
+      return (
+        <Row>
+          <Div>{title}</Div>
+          <Controller
+            render={({ field, fieldState: { error } }) => {
+              const { value, ...other } = field
+              return (
+                <>
+                  <ChakraInput {...{ ...other, value: value as R }} />
+                  {error && <ErrorBox>{error?.message}</ErrorBox>}
+                </>
+              )
+            }}
+            name={target}
+            control={control}
+            rules={constrain}
+          />
+        </Row>
+      )
+    }
+
+#-------------------------------
+# Generic Parent
+#-------------------------------
+
+- KEY: pk.rhf.generic.parent
+  EXPLAIN: ジェネリック 親
+  BODY: |
+    import { useForm, UseFormProps, UseFormReturn } from "react-hook-form"
+
+    export type GFieldType = Record<string, unknown>
+
+    const useDefaultForm = <FormDataType extends GFieldType>(
+      props: UseFormProps<FormDataType> & {
+        defaultValues: FormDataType
+      }
+    ): UseFormReturn<FormDataType> => {
+      return useForm(props)
+    }
+
+    export { useDefaultForm }
+
+- KEY: pk.rhf.generic.child
+  EXPLAIN: ジェネリック 子
+  BODY: |
+    import { Path, UseFormReturn } from "react-hook-form"
+    import { GFieldType } from "./useDefaultForm"
+
+    type MyInput<T extends GFieldType, R> = {
+      method: UseFormReturn<T>
+      target: Path<T>
+      constrain: GFieldType
+    }
+
+    export const MyInput = <T extends GFieldType, R extends string | number>({
+      method,
+      target,
+      constrain,
+    }: MyInput<T, R>) => {
+      const { register, formState: { errors } } = method
+
+      return (
+        <Row>
+          <Input {...register(target, constrain)} />
+          {errors?.[target]?.message && (
+            <ErrorBox>{`${errors?.[target]?.message || ""}`}</ErrorBox>
+          )}
+        </Row>
+      )
+    }
+
+- KEY: pk.rhf.generic.sample
+  EXPLAIN: ジェネリック サンプル
+  BODY: |
+    import { SubmitHandler } from "react-hook-form"
+    import { MyInput } from "./SampleInput"
+    import { GFieldType, useDefaultForm } from "./useDefaultForm"
+
+    //Data型
+    export type Person = {
+      name: string
+      age: number
+    }
+
+    //Data デフォルト値
+    const defaultValues: Person = {
+      name: "",
+      age: 0,
+    }
+
+    //Data 制約
+    const constrain: Record<keyof Person, GFieldType> = {
+      name: {
+        required: "必須項目です",
+        minLength: { value: 4, message: "4文字以上必須です" },
+      },
+      age: {
+        required: "必須項目です",
+        min: { value: 1, message: "1以上の数値です" },
+        valueAsNumber: true,
+      },
+    }
+
+    export const SampleForm = () => {
+      const method = useDefaultForm<Person>({ defaultValues })
+      const { handleSubmit } = method
+
+      const onSubmit: SubmitHandler<Person> = (data) => {
+        console.table(data)
+      }
+      return (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Row>
+            <Column>
+              <Div>Name</Div>
+              <MyInput<Person, string>
+                method={method}
+                target={"name"}
+                constrain={constrain["name"]}
+              />
+            </Column>
+          </Row>
+          <Row>
+            <Column>
+              <Div>Age</Div>
+              <MyInput<Person, number>
+                method={method}
+                target={"age"}
+                constrain={constrain["age"]}
+              />
+            </Column>
+          </Row>
+          <Row>
+            <Submit value={"OK"} />
+          </Row>
+        </form>
       )
     }
