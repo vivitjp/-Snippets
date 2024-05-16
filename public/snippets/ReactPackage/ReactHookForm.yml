@@ -7,7 +7,7 @@
   BODY: |
     ■ useForm
     const method = useForm({
-      mode,                  // 検証戦略
+      mode,                  // onChange | onBlur | onSubmit | onTouched | all
       reValidateMode,        // Validation strategy after submitting behaviour.
       defaultValues,         // フォームのデフォルト値
       values,                // フォーム値を更新するためのリアクティブな値
@@ -86,6 +86,80 @@
     pattern       (string) { value: /^[a-zA-Z0-9]+$/, message: '半角英数字のみ' }
     validate      (共通) 
     valueAsNumber (型チェック) valueAsNumber: true,
+
+#-------------------------------
+# Data 構造
+#-------------------------------
+
+- KEY: pk.rhf.data.structure
+  EXPLAIN: データ構造
+  BODY: |
+    ■ data と error data の構造が違う。取得時の添字の型に注意
+
+    type Phases = "phase1" | "phase2";
+    type Attrs = "name" | "age";
+
+    const defaultData = {
+      name: "Smith",
+      age: 1,
+    };
+    type DefaultDataHidden = typeof defaultData;
+
+    type Data = Partial<Record<`${Phases}.${Attrs}`, string>>;
+    const data: Data = {
+      "phase1.name": "John",
+      "phase1.age": "Tokyo",
+      "phase2.name": "Jim",
+      "phase2.age": "LA",
+    };
+
+    type ErrorDataHidden = Record<
+      Phases,
+      Record<keyof DefaultDataHidden, { message: string }>
+    >;
+
+    const errorData: ErrorDataHidden = {
+      phase1: {
+        name: { message: "Must be String" },
+        age: { message: "Must be Number" },
+      },
+      phase2: {
+        name: { message: "Must be String" },
+        age: { message: "Must be Number" },
+      },
+    };
+
+    //-----------------------------------------------
+    // Data
+    //-----------------------------------------------
+    {
+      type DefaultData = typeof defaultData;
+      type DefaultDataKeys = keyof DefaultData;
+
+      type DataKeys = keyof typeof data;
+      const phases = ["phase1", "phase2"];
+
+      phases.forEach((phase) => {
+        const keyName = "name" as DefaultDataKeys;                              //添字の型
+        const res1 = data?.[`${phase}.${keyName}` as DataKeys] || "Unknown";
+        console.log(keyName, res1);
+      });
+    }
+
+    //-----------------------------------------------
+    // Error
+    //-----------------------------------------------
+    {
+      type DefaultData = typeof defaultData;
+      const dataKeys = Object.keys(data);
+
+      dataKeys.forEach((key) => {
+        const [phase, attr] = key.split(".");
+        const [phase, attr] = key.split(".") as [Phases, keyof DefaultData] ;   //添字の型
+        const res1 = errorData?.[phase]?.[attr]?.message || "Unknown";
+        console.log(phase, attr, res1);
+      });
+    }
 
 #-------------------------------
 # By Context
