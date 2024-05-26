@@ -1,0 +1,41 @@
+---
+#-------------------------------
+# Windows
+#-------------------------------
+
+- KEY: gg.googleFont
+  EXPLAIN: Fontの使用法
+  BODY: |
+    Next13新機能
+    https://ja.next-community-docs.dev/docs/app-router/api-reference/components/font
+
+    ■ Package
+    yarn add @next/font
+    npm install @next/font
+
+    ■ または CDN => index.html に以下追加
+    <head>
+      ...
+      <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+    rel="stylesheet">
+    </head>
+
+    ■ import
+    import { Courier_Prime } from "next/font/google"
+
+    const courierPrime = Courier_Prime({
+      weight: "400", <--- option
+      subsets: ["latin"],
+      display: "auto",
+    })
+
+    const roboto = Roboto({
+      weight: ['400', '700'],
+      style: ['normal', 'italic'],
+      subsets: ['latin'],
+      display: 'swap',
+    })
+
+    <div className={courierPrime.className}>
+      ...
+    </div>

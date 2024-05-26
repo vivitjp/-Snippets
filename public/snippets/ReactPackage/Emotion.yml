@@ -1,0 +1,191 @@
+---
+#-------------------------------
+# Emotion
+#-------------------------------
+
+- KEY: pk.emotion.package
+  EXPLAIN: Package
+  BODY: |
+    https://qiita.com/cheez921/items/1d13545f8a0ea46beb51
+
+    @emotion/css
+        フレームワークにとらわれず、Emotionを使用するためのパッケージ。
+    @emotion/react
+        React用のEmotionパッケージ。
+    @emotion/styled
+        styled-component っぽい記法で書くことができるEmotionパッケージ。
+        (筆者はstyled-componentから乗り換える人用のパッケージだと思っています)
+    @emotion/core
+        @emotion/core はEmotion 11で @emotion/react に改名したため、忘れ去ってください。
+        参考：https://emotion.sh/docs/emotion-11#package-renaming
+    @emotion/babel-preset-css-prop
+        css propsを使用する場合、本来はすべてのファイルに/** @jsx jsx */を書く必要がある。
+        このJSX Pragmaの問題を解決するためのプラグインが@emotion/babel-preset-css-prop。
+    @emotion/babel-plugin
+        Emotionのコンパイルを最適化するためのプラグイン。
+        version 8 以上は不要
+    @emotion/server
+        サーバー側レンダリングするAPI
+
+- KEY: pk.emotion.style.object
+  EXPLAIN: オブジェクトスタイル
+  BODY: |
+    const objectStyle = css({
+      maxWidth: '400px',
+      margin: '0 auto',
+      padding: '10px'
+      '&:hover': {
+        opacity: 0.5,
+      },
+    });
+
+- KEY: pk.emotion.style.object.expand
+  EXPLAIN: オブジェクト拡張
+  BODY: |
+    const marginBottom = css({
+      marginBottom: '16px'
+    })
+
+    const style = css({
+      ...marginBottom,
+      padding: '16px'
+    })
+
+- KEY: pk.emotion.style.string
+  EXPLAIN: ストリングスタイル
+  BODY: |
+    const stringStyle = css`
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 10px
+      &:hover {
+        opacity: 0.5;
+      }
+    `
+
+    render(
+      <div css={stringStyle}>
+        {/* ... */}
+      </div>
+    )
+
+- KEY: pk.emotion.style.string.expand
+  EXPLAIN: ストリング拡張
+  BODY: |
+    const marginBottom = css`
+      margin-bottom: 16px
+    `
+
+    const style = css`
+      ${marginBottom}
+      padding: 16px;
+    `
+
+- KEY: pk.emotion.style.string.child
+  EXPLAIN: ストリング入れ子
+  BODY: |
+    const listStyle = css`
+      li {
+        //...
+      }
+    `
+
+    return (
+      <ul css={listStyle}>
+        <li css={item}>{/* */}</li>
+      </ul>
+    );
+
+- KEY: pk.emotion.style.string.child
+  EXPLAIN: ストリング親指定
+  BODY: |
+    const item = css`
+      ul & {
+        //...
+      }
+    `
+
+    return (
+      <>
+        <ul>
+          <li css={item}>{/* あたる */}</li>
+        </ul>
+        <div>
+          <span css={item}>{/* あたらない */}</span>
+        </div>
+      </>
+    );
+
+- KEY: pk.emotion.param
+  EXPLAIN: 引数として
+  BODY: |
+    const buttonWrapperStyle = css`
+      background-color: #ddd;
+    `
+
+    const ButtonWrapper =  () => (
+      <Button css={buttonWrapperStyle}>ボタン</Button>
+    )
+
+    // cssで渡しても、classNameに変換される
+    const Button = ({className, children}) => (
+      <button className={className}>{children}</button>
+    )
+
+- KEY: pk.emotion.paramArray
+  EXPLAIN: 引数(配列)として
+  BODY: |
+    const marginBottom = css`
+      margin-bottom: 16px
+    `
+
+    const style = css`
+      padding: 16px;
+    `
+
+    render (
+      <div css={[marginBottom, style]}>{/* */}</div> 
+    )
+
+- KEY: pk.emotion.mediaQuery
+  EXPLAIN: メディアクエリ
+  BODY: |
+    type breakpointsType = {
+      id: 'tablet' | 'pc';
+      breakpoint: number;
+    }[];
+
+    const breakpoints: breakpointsType = [
+      {
+        id: 'tablet',
+        breakpoint: 960,
+      },
+      {
+        id: 'pc',
+        breakpoint: 560,
+      },
+    ];
+
+    // min-widthのみしか設定できてないからもう少し工夫は必要かも？
+    export const MediaQuery = breakpoints.reduce((acc, { id, breakpoint }) => {
+      return {
+        ...acc,
+        [id]: `@media (min-width: ${breakpoint}px)`,
+      };
+    }, {});
+
+    // inline style
+    const style = css`
+      background-color: '#fff';
+      ${MediaQuery['pc']} {
+        color: gray;
+      }
+    `
+
+    // object style
+    const style = css({
+      backgroundColor: '#fff',
+      [MediaQuery['pc']]: {
+        padding: 20,
+      },
+    });

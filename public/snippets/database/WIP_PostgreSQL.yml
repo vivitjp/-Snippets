@@ -1,0 +1,9 @@
+---
+#-------------------------------
+# PostgreSQL
+#-------------------------------
+
+- KEY: postgre.
+  EXPLAIN: PostgreSQL
+  BODY: |
+    TEST

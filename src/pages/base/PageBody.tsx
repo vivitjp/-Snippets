@@ -18,19 +18,20 @@ export const PageBody = ({ Snippets, isPending }: Props) => {
   const [elements, setElements] = useState<NodeListOf<Element> | undefined>()
 
   const isOpened = useOCButton((state) => state.isOpened)
+  const toggleClose = useOCButton((state) => state.toggleClose)
   const toggleOpenClose = useOCButton((state) => state.toggleOpenClose)
 
   useEffect(() => {
     if (isPending) return
     const els = document.querySelectorAll(".detailClass")
     setElements(els)
-  }, [isPending])
+    toggleClose()
+  }, [isPending, toggleClose])
 
   const handleOpenClose = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     e.preventDefault()
 
-    console.log("open them", elements?.length)
     if (!elements?.length) return
     elements.forEach((el) => {
       isOpened ? el.removeAttribute("open") : el.setAttribute("open", "")

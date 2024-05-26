@@ -106,6 +106,9 @@ export const MenuItem = styled.div<MenuItem>`
     font-size: 0.8rem;
     width: 100%;
     color: #999;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
     cursor: default;
     ${
       isPending &&

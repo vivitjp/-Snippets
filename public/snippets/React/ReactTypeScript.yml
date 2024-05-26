@@ -1,0 +1,108 @@
+---
+#-------------------------------
+# React Type Script
+#-------------------------------
+
+- KEY: ts.react.typeCheck
+  EXPLAIN: 型チェック
+  BODY: |
+    declare module JSX {
+      interface IntrinsicElements {
+        a: React.HTMLAttributes;
+        abbr: React.HTMLAttributes;
+        div: React.HTMLAttributes;
+        span: React.HTMLAttributes;
+        ...
+      }
+    }
+
+- KEY: ts.react.funcComponent
+  EXPLAIN: 関数コンポーネント
+  BODY: |
+    type Props = {
+      foo: string;
+    }
+
+    const MyComponent: React.FC<Props> = (props) => {
+        return <span>{props.foo}</span>
+    }
+
+    <MyComponent foo="bar" />
+
+# - KEY: ts.react.event
+#   EXPLAIN: イベントハンドラ
+#   BODY: |
+#     onChange = (e: React.FormEvent<HTMLInputElement>): void => {
+#       setState({ text: e.currentTarget.value });
+#     }
+
+#     onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+#       setState({text: e.currentTarget.value})
+#     }
+
+#     return (
+#       <div>
+#         <input type="text" value={text} onChange={onChange} />
+#       </div>
+#     )
+
+- KEY: ts.react.classComponent
+  EXPLAIN: クラスコンポーネント
+  BODY: |
+    type Props = {
+      foo: string;
+    }
+     
+    class MyComponent extends React.Component<Props, {}> {
+        render() {
+            return <span>{this.props.foo}</span>
+        }
+    }
+
+    <MyComponent foo="bar" />
+
+- KEY: ts.react.
+  EXPLAIN:
+  BODY: |
+    type Props = {
+      header: React.ReactNode
+      body: React.ReactNode
+    }
+
+    const MyCompo = ({ header, body }: Props) => {
+      return (
+        <Column>
+          {header}
+          {body}
+        </Column>
+      )
+    }
+
+    export default function Sample() {
+      const name = "ABC"
+      return <MyCompo header={<Row>{name}</Row>} body={"ボディ"} />
+    }
+
+- KEY: ts.react.
+  EXPLAIN:
+  BODY: |
+
+- KEY: ts.react.
+  EXPLAIN:
+  BODY: |
+
+- KEY: ts.react.
+  EXPLAIN:
+  BODY: |
+
+- KEY: ts.react.
+  EXPLAIN:
+  BODY: |
+
+- KEY: ts.react.
+  EXPLAIN:
+  BODY: |
+
+- KEY: ts.react.
+  EXPLAIN:
+  BODY: |

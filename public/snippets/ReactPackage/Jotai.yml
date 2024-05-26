@@ -1,0 +1,91 @@
+---
+#-------------------------------
+# Package: Storybook
+#-------------------------------
+
+- KEY: pk.jotai.atom
+  EXPLAIN: atom 定義
+  BODY: |
+    import { atom } from "jotai"
+
+    export const countAtom = atom(0)
+    export const countDerivedAtom = atom(0)
+
+    export const citiesAtom = atom(["東京", "京都", "大阪"])
+    export const citySelectedAtom = atom("")
+
+    // 派生 Atom(他のAtomの値を加工)
+    export const doubledOrigAtom = atom(0)
+    export const doubledCountAtom = atom((get) => get(doubledOrigAtom) * 2)
+
+    // Get & Set
+    export const addingCountDerivedAtom = atom(
+      (get) => get(countDerivedAtom),                  // Get(null にすれば WriteOnly)
+      (get, set, num: number) => {                     // Method(複数不可)
+        set(countDerivedAtom, get(countDerivedAtom) + num)
+      }
+    )
+
+    //非同期fetch: 即時コール
+    export const urlAtom = atom("http://localhost:5099/posts")
+    export const fetchUrlAtom = atom(async (get) => {
+      const response = await fetch(get(urlAtom))
+      return await response.json()
+    })
+
+    //非同期fetch: Lazyコール
+    export const fetchDataAtom = atom("")
+    export const fetchUrlLazyAtom = atom(
+      (get) => get(fetchDataAtom),
+      async (get, set) => {
+        const response = await fetch(get(urlAtom))
+        set(fetchDataAtom, await response.json())
+      }
+    )
+
+- KEY: pk.jotai.
+  EXPLAIN: 親子サンプル
+  BODY: |
+    ■ Atoms
+    import { atom } from "jotai"
+     
+    export const countAtom = atom(0)
+    export const countDerivedAtom = atom(0)
+
+    ■ 親
+    import { useAtom } from "jotai"
+    import { countAtom } from "./atoms"
+    import { Counter } from "./components/Counter"
+
+    const Component = () => {
+      const [count] = useAtom(countAtom)
+
+      return (
+        <Row>
+          <Counter />
+          <Div> カウント: {count} </Div>
+        </Row>
+      )
+    }
+
+    ■ 子
+    import { useAtom } from "jotai"
+    import { countAtom } from "../atoms"
+
+    export const Counter = () => {
+      const [value, setValue] = useState(0)
+      const [_, setCounter] = useAtom(countAtom)
+
+      const handleSetValue = () => { setCounter(value) }
+      const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setValue(Number(e.currentTarget.value))
+      }
+
+      return (
+        <Row>
+          <Div>カウント</Div>
+          <Input defaultValue={value} onChange={handleOnChange} />
+          <Button onClick={handleSetValue}>セット</Button>
+        </Row>
+      )
+    }

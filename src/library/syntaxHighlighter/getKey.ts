@@ -4,6 +4,7 @@ import { keysGit } from "./keys/Git"
 import { keysHTML } from "./keys/HTML"
 import { keysJSTS } from "./keys/JSTS"
 import { keysJest } from "./keys/Jest"
+import { keysJotai } from "./keys/Jotai"
 import { keysLinux } from "./keys/Linux"
 import { keysMongo } from "./keys/Mongo"
 import { keysMySql } from "./keys/MySql"
@@ -30,6 +31,7 @@ export const codeKeys = {
   Docker: "Docker",
   Git: "Git",
   Jest: "Jest",
+  Jotai: "Jotai",
   Linux: "Linux",
   MySql: "MySql",
   Curl: "Curl",
@@ -54,6 +56,7 @@ export const KeyAndCodes: Record<CodeKeyType, KeyDef[]> = {
   Docker: keysDocker,
   Git: keysGit,
   Jest: keysJest,
+  Jotai: keysJotai,
   Linux: keysLinux,
   MySql: keysMySql,
   Curl: keysCurl,
