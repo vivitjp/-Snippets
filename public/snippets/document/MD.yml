@@ -1,0 +1,199 @@
+---
+#-------------------------------
+# MD Markdown
+#-------------------------------
+
+- KEY: doc.md.headers
+  EXPLAIN: 見出し
+  BODY: |
+    # This is an H1
+
+    ## This is an H2
+
+    ###### This is an H6
+
+- KEY: doc.md.blockQuotes
+  EXPLAIN: 引用
+  BODY: |
+    >"引用引用引用引用
+    引用引用"
+
+    >引用本文引用本文
+    >>入れ子
+
+- KEY: doc.md.list
+  EXPLAIN: リスト
+  BODY: |
+    - リスト 1
+      - リスト 1-2
+    - リスト 2
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST
+
+- KEY: doc.md.
+  EXPLAIN: MD
+  BODY: |
+    TEST

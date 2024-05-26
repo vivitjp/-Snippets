@@ -104,19 +104,19 @@ export const menuItems: menuByCategories[] = [
     items: [
       {
         name: "zustand:pk",
-        fileName: "ReactPackage/zustand",
+        fileName: "ReactGState/zustand",
         codeKeyTypes: [codeKeys.JSTS, codeKeys.React],
         encodeRequired: true,
       },
       {
         name: "Jotai:pk",
-        fileName: "ReactPackage/Jotai",
+        fileName: "ReactGState/Jotai",
         codeKeyTypes: [codeKeys.JSTS, codeKeys.Jotai],
         encodeRequired: true,
       },
       {
         name: "Recoil:pk",
-        fileName: "ReactPackage/Recoil",
+        fileName: "ReactGState/Recoil",
         codeKeyTypes: [codeKeys.Package],
         encodeRequired: true,
       },
@@ -126,19 +126,19 @@ export const menuItems: menuByCategories[] = [
     category: "React:Query",
     items: [
       {
-        name: "⛔TypeORM",
-        fileName: "",
-        codeKeyTypes: [],
-      },
-      {
-        name: "Fetch/State:pk",
-        fileName: "ReactPackage/ReactFetchState",
+        name: "SWR:pk",
+        fileName: "ReactQuery/SWR",
         codeKeyTypes: [
           codeKeys.HTML,
           codeKeys.JSTS,
           codeKeys.React,
           codeKeys.Package,
         ],
+      },
+      {
+        name: "🟡TypeORM",
+        fileName: "ReactQuery/TypeORM",
+        codeKeyTypes: [],
       },
     ],
   },
@@ -147,7 +147,7 @@ export const menuItems: menuByCategories[] = [
     items: [
       {
         name: "StyledCompo:pk",
-        fileName: "ReactPackage/StyledCompo",
+        fileName: "ReactCSS/StyledCompo",
         codeKeyTypes: [
           codeKeys.CSS,
           codeKeys.HTML,
@@ -159,7 +159,7 @@ export const menuItems: menuByCategories[] = [
       },
       {
         name: "Emotion:pk",
-        fileName: "ReactPackage/Emotion",
+        fileName: "ReactCSS/Emotion",
         codeKeyTypes: [
           codeKeys.CSS,
           codeKeys.HTML,
@@ -303,9 +303,10 @@ export const menuItems: menuByCategories[] = [
     category: "Project管理",
     items: [
       {
-        name: "⛔npm/yarn",
-        fileName: "",
-        codeKeyTypes: [],
+        name: "npm/yarn",
+        fileName: "Project/npm_yarn",
+        codeKeyTypes: [codeKeys.NPM],
+        encodeRequired: true,
       },
       {
         name: "Git",
@@ -358,6 +359,22 @@ export const menuItems: menuByCategories[] = [
       {
         name: "⛔IndexedDB",
         fileName: "",
+      },
+    ],
+  },
+  {
+    category: "Document",
+    items: [
+      {
+        name: "⛔MD",
+        fileName: "document/MD",
+        codeKeyTypes: [],
+      },
+      {
+        name: "YAML",
+        fileName: "document/YAML",
+        codeKeyTypes: [],
+        encodeRequired: true,
       },
     ],
   },

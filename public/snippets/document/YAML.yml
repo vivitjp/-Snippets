@@ -1,0 +1,229 @@
+---
+#-------------------------------
+# YAML
+#-------------------------------
+
+- KEY: doc.yaml.comment
+  EXPLAIN: コメント行
+  BODY: |
+    # コメント行
+    - aaa
+    - bbb        # これもコメント行
+    - ccc
+
+- KEY: doc.yaml.tab
+  EXPLAIN: タブ文字使用不可
+  BODY: |
+    半角空白のかわりに タブ文字(\t) 使用不可！
+    タブ文字の表示幅は環境によって異なる(8 文字が多いのは習慣)
+    そのため YAML ではタブ文字を不許可
+
+- KEY: doc.yaml.divider
+  EXPLAIN: 区切り文字
+  BODY: |
+    １ファイルに複数の YAML ドキュメントを含める。
+    またひとつのファイルから複数の YAML ドキュメントを読み込むには、
+    ライブラリ(YAML.load_stream,...)が必要
+
+    ---
+    name: foo
+    email: foo@mail.com
+    ---
+    name: bar
+    email: bar@mail.org
+    ---
+    name: baz
+    email: baz@mail.net
+
+- KEY: doc.yaml.terminate
+  EXPLAIN: 文章末
+  BODY: |
+    「...」だけの行以降は読み込まれない
+    Ruby における「END」と同じようなもので、エラーの絞り込みに便利
+    - aaa
+    - bbb
+    ...
+    - ccc      # 読み込まれない
+
+- KEY: doc.yaml.array
+  EXPLAIN: 配列
+  BODY: |
+    行頭に「-」をつけることで配列を表現
+    「-」のあとには半角スペース必須
+
+    - aaa
+    - bbb
+    - ccc
+
+    JS: ["aaa", "bbb", "ccc"]
+
+    ■ 多重配列
+
+    - aaa
+    -
+      - b1
+      - b2
+      -
+        - b3.1
+        - b3.2
+    - ccc
+
+    JS: [aaa", ["b1", "b2", ["b3.1", "b3.2"]], "ccc"]
+
+    ■ 間違った書式
+
+    - A
+      - a1
+      - a2
+      - a3
+
+- KEY: doc.yaml.hash
+  EXPLAIN: ハッシュ(辞書)
+  BODY: |
+    ハッシュは「キー: 値」形式
+    コロン「:」のあとに半角スペース 1 つ以上必要(タブ文字不可)
+
+    A: aaa
+    B: bbb
+    C: ccc
+
+    JS: {"A"=>"aaa", "B"=>"bbb", "C"=>"ccc"}
+
+    ■ 多重ハッシュ
+
+    A: aaa
+    B:
+      B1: bbb1
+      B2: bbb2
+    C: ccc
+
+    JS: {"A"=>"aaa", "B"=>{"B1"=>"bbb1", "B2"=>"bbb2"}, "C"=>"ccc"}
+
+    ■ 間違った書式
+
+    A: foo
+      a1: bar
+      a2: baz
+
+- KEY: doc.yaml.mixed
+  EXPLAIN: 配列と辞書混在
+  BODY: |
+    ■ ハッシュ(辞書)の配列
+
+    - name:  Hanako
+      email: flower@mail.com
+    - name:  Sumire
+      email: garnet@mail.net
+
+    JS: [
+      {"name"=>"Hanako", "email"=>"flower@mail.com"},
+      {"name"=>"Sumire", "email"=>"garnet@mail.net"}
+    ]
+
+    ■ 配列のハッシュ(辞書)
+
+    names:
+      - Hanako
+      - Sumire
+    emails:
+      - flower@mail.com
+      - garnet@mail.net
+
+    JS: {
+      "emails" => ["flower@mail.com", "garnet@mail.net"],
+      "names" => ["Hanako", "Sumire"]
+    }
+
+- KEY: doc.yaml.style
+  EXPLAIN: スタイル(ブロック & フロー)
+  BODY: |
+    ■ ブロックスタイル: 配列
+
+    - aaa
+    - bbb
+    - ccc
+
+    ■ フロースタイル: 配列
+    [ aaa, bbb, ccc ]
+    [ "aaa", "bbb", "ccc" ]
+
+    ■ フロースタイル: ハッシュ
+    { A: aaa, B: bbb, C: ccc }
+    { "A" => "aaa", "B" => "bbb", "C" => "ccc"}
+
+    ■ フロースタイルを使うと JSON と同じく構成可能(JSON == YAML)
+    { 
+      "menu": {
+        "id": "file",
+        "value": "File:",
+        "popup": {
+          "menuitem": [
+            { "value": "New", "onclick": "CreateNewDoc()" },
+            { "value": "Open", "onclick": "OpenDoc()" },
+            { "value": "Close", "onclick": "CloseDoc()" }
+          ]
+        }
+      }
+    }
+
+    {
+      "menu"=> {
+        "popup"=> {
+          "menuitem"=> [
+            {"value"=>"New", "onclick"=>"CreateNewDoc()" },
+            { "value"=>"Open", "onclick"=>"OpenDoc()" },
+            { "value"=>"Close", "onclick"=>"CloseDoc()" }
+          ]
+        },
+        "id"=>"file",
+        "value"=>"File:"
+      }
+    }
+
+- KEY: doc.yaml.return
+  EXPLAIN: 複数行の文字列
+  BODY: |
+    ■ 通常(全改行保存)
+    text1: |
+      AAA
+      BBB
+      ccc
+
+    { "text1" => "AAA\nBBB\nccc\n" }
+
+    ■ 最終行の改行無視
+
+    text3: |-
+      AAA
+      BBB
+      CCC
+
+    { "text3" => "AAA\nBBB\nCCC" }
+
+    ■ 全改行を複数のまま保存
+
+    text2: |+
+      AAA
+      BBB
+
+      CCC
+
+    { "text2" => "AAA\nBBB\n\nCCC\n" }
+
+    ■ 改行を半角スペースに置換(最終行の改行のみ保存)
+
+    text4: >
+      AAA
+      BBB
+      CCC
+
+    { "text4" => "AAA BBB CCC\n" }
+
+    ■ 改行を半角スペースに置換(最終行の改行削除)
+
+    text6: >-
+      AAA
+      BBB
+      CCC
+
+    { "text6" => "AAA BBB CCC" }

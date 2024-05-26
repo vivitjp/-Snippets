@@ -15,6 +15,7 @@ import { keysReact } from "./keys/React"
 import { keysRegExp } from "./keys/RegExp"
 import { keysTS } from "./keys/TS"
 import { keysCurl } from "./keys/curl"
+import { keysNPM } from "./keys/npm"
 import { KeyDef } from "./syntaxHighlighter"
 
 export const codeKeys = {
@@ -35,6 +36,7 @@ export const codeKeys = {
   Linux: "Linux",
   MySql: "MySql",
   Curl: "Curl",
+  NPM: "NPM",
   Unknown: "Unknown",
 } as const
 
@@ -60,6 +62,7 @@ export const KeyAndCodes: Record<CodeKeyType, KeyDef[]> = {
   Linux: keysLinux,
   MySql: keysMySql,
   Curl: keysCurl,
+  NPM: keysNPM,
   Unknown: [],
 }
 

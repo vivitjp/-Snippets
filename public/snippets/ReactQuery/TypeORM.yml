@@ -1,0 +1,16 @@
+---
+#-------------------------------
+# TypeORM
+#-------------------------------
+
+- KEY: orm.
+  EXPLAIN: TypeORM
+  BODY: |
+
+- KEY: orm.
+  EXPLAIN: TypeORM
+  BODY: |
+
+- KEY: orm.
+  EXPLAIN: TypeORM
+  BODY: |

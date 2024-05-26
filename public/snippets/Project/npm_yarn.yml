@@ -1,0 +1,145 @@
+---
+#-------------------------------
+# npm & yarn
+#-------------------------------
+
+- KEY: npm.basic
+  EXPLAIN: 基礎、設定
+  BODY: |
+    ■ package.json生成
+      npm init
+      yarn init
+
+    ■ インストール済
+      npm ls [-g] --depth=0
+      yarn [Global] list --depth=0
+
+    ■ binの場所
+      npm bin [-g]
+      yarn [Global] bin
+
+- KEY: npm.basic.install
+  EXPLAIN: インストール
+  BODY: |
+    ■ package.json再現(install/i)
+      npm i
+      yarn
+
+    ■ dependencies(--global/-g)
+      npm i [-g] <PCKG>
+      yarn [Global] add <PCKG>
+
+    ■ devDependencies(--save-dev/-D)
+      npm i -D <PCKG>
+      yarn add --dev <PCKG>
+
+- KEY: npm.basic.uninstall
+  EXPLAIN: アンインストール
+  BODY: |
+    ■ 指定
+      npm un [-g] <PCKG>
+      yarn [Global] remove <PCKG>
+      
+    ■ Dev指定
+      npm un -D <PCKG>
+      yarn remove <PCKG>
+
+- KEY: npm.basic.update
+  EXPLAIN: アップデート
+  BODY: |
+    ■ 全体
+      npm update [-g]
+      yarn [Global] upgrade
+
+    ■ 指定PCKG
+      npm update [-g] <PCKG>
+      yarn [Global] upgrade <PCKG>
+
+- KEY: npm.basic.info
+  EXPLAIN: パッケージの情報
+  BODY: |
+    ■ パッケージの情報
+      npm info [-g] <PCKG>
+      yarn info <PCKG>
+
+    ■ json出力
+      npm info <PCKG> --json
+      yarn info <PCKG> --json
+
+    ■ 属性情報
+      npm info <PCKG> {属性名}
+      yarn info <PCKG> {属性名}
+
+    ■ 古PCKG
+      npm outdated [-g]
+      yarn outdated
+
+    ■ 古PCKG:指定
+      npm outdated <PCKG>
+      yarn outdated <PCKG>
+
+- KEY: npm.basic.cache
+  EXPLAIN: キャッシュクリア
+  BODY: |
+    ■ クリア
+      npm cache verify
+      *npm cache clean (<v5)"
+      yarn cache clean
+
+    ■ 強制クリア(全体削除)
+      npm cache clean --force
+
+    ■ 一覧
+      yarn cache list
+
+    ■ ディレクトリ
+      yarn cache dir
+
+- KEY: npm.basic.config
+  EXPLAIN: コンフィグ
+  BODY: |
+    ■ 表示
+      npm config list
+      yarn config list
+
+    ■ Defaultのみ
+      npm config list -l
+
+    ■ 属性名指定
+      npm config get {属性名}
+      yarn config get {属性名}
+
+    ■ 属性名指定(json出力)
+      npm config list --json
+
+- KEY: npm.basic.script
+  EXPLAIN: スクリプト
+  BODY: |
+    ■ スクリプト一覧
+      npm run
+      yarn [run]
+
+    ■ スクリプト実行
+      npm run {script}
+      yarn run {script}
+
+    ■ 環境変数
+      npm run env
+      yarn run env
+
+- KEY: npm.basic.other
+  EXPLAIN: ローカルPCKG実行、脆弱性、ヘルプ
+  BODY: |
+    ■ ローカルPCKG実行
+      npx <PCKG>
+      yarn -s run <PCKG>
+
+    ■ 脆弱性と解決
+      npm audit
+      npm audit fix
+      npm audit fix --force"
+
+    ■ ヘルプ
+      npm -l
+      npm <command> -h
+      yarn help <command>
