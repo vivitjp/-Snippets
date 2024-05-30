@@ -3,7 +3,7 @@ import { KeyDef } from "../syntaxHighlighter"
 export const keysJotai: KeyDef[] = [
   // ■ Main(赤)
   {
-    color: "IndianRed",
+    color: "Crimson",
     keys: ["jotai", "atom", "useAtom"],
   },
   // ■ 鮮明な青

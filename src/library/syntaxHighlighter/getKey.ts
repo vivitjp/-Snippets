@@ -1,4 +1,6 @@
 import { keysCSS } from "./keys/CSS"
+import { keysClassValidator } from "./keys/ClassValidator"
+import { keysDOM } from "./keys/DOM"
 import { keysDocker } from "./keys/Docker"
 import { keysGit } from "./keys/Git"
 import { keysHTML } from "./keys/HTML"
@@ -14,6 +16,7 @@ import { keysPython } from "./keys/Python"
 import { keysReact } from "./keys/React"
 import { keysRegExp } from "./keys/RegExp"
 import { keysTS } from "./keys/TS"
+import { keysTypeORM } from "./keys/TypeORM"
 import { keysCurl } from "./keys/curl"
 import { keysNPM } from "./keys/npm"
 import { KeyDef } from "./syntaxHighlighter"
@@ -23,6 +26,7 @@ export const codeKeys = {
   HTML: "HTML",
   JSTS: "JSTS",
   TS: "TS",
+  DOM: "DOM",
   RegExp: "RegExp",
   React: "React",
   Package: "Package",
@@ -37,6 +41,8 @@ export const codeKeys = {
   MySql: "MySql",
   Curl: "Curl",
   NPM: "NPM",
+  TypeORM: "TypeORM",
+  ClassValidator: "ClassValidator",
   Unknown: "Unknown",
 } as const
 
@@ -49,6 +55,7 @@ export const KeyAndCodes: Record<CodeKeyType, KeyDef[]> = {
   HTML: keysHTML,
   JSTS: keysJSTS,
   TS: keysTS,
+  DOM: keysDOM,
   RegExp: keysRegExp,
   React: keysReact,
   Package: keysPackage,
@@ -63,6 +70,8 @@ export const KeyAndCodes: Record<CodeKeyType, KeyDef[]> = {
   MySql: keysMySql,
   Curl: keysCurl,
   NPM: keysNPM,
+  TypeORM: keysTypeORM,
+  ClassValidator: keysClassValidator,
   Unknown: [],
 }
 

@@ -3,7 +3,7 @@ import { KeyDef } from "../syntaxHighlighter"
 export const keysMongo: KeyDef[] = [
   // ■ Main(赤)
   {
-    color: "IndianRed",
+    color: "Crimson",
     keys: ["mongodb", "pymongo", "MongoClient", "", "", ""],
   },
   // ■ Sub(明るい青)

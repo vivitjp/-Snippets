@@ -1,0 +1,147 @@
+---
+#-------------------------------
+# ClassValidator
+#-------------------------------
+
+- KEY: valid.popular
+  EXPLAIN: 【一般】検証デコレーター
+  BODY: |
+    @IsDefined(value: any)              // 値が定義されているか(!==null,!==未定義)
+                                        // skipMissingProperties を無視する唯一のデコレータ
+    @IsOptional()                       // 指定値がオプショナルか(===null,===未定義)
+                                        // プロパティの全判定(validation)無視
+    @Equals(comparison: any)            // 値が等しいか(===)
+    @NotEquals(comparison: any)         // 値が等しくないか(!==)
+    @IsEmpty()                          // 指定された値が空/未定義(==='',===null,===未定義)か
+    @IsNotEmpty()                       // 指定された値が空でないか(!=='',!==null,!==未定義)か
+    @IsIn(values: any[])                // 値が許可された値の配列内にあるか
+    @IsNotIn(values: any[])             // 値が許可されていない値の配列内にないか
+    @Allow()                            // 他の制約が指定されていない場合にプロパティが削除されるのを防ぐ
+
+- KEY: valid.type
+  EXPLAIN: 【型】検証デコレーター
+  BODY: |
+    @IsBoolean()                        // 値がブール値か
+    @IsDate()                           // 値が日付か
+    @IsString()                         // 値が文字列か
+    @IsBooleanString()                  // 文字列がブール値(true, false, 1, 0)か
+    @IsDateString()                     // @IsISO8601()の別名
+    @IsNumber(options: Options)         // 値が数値か
+    @IsNumberString(options)            // 文字列が数値か
+    @IsInt()                            // 値が整数か
+    @IsArray()                          // 値が配列か
+    @IsEnum(entity: object)             // 値が有効な列挙型か
+    @IsJSON()                           // 文字列が JSONか
+    @IsJWT()                            // 文字列が JWTか
+    @IsUUID(version?: "3"|"4"|"5"|"all") // 文字列が UUID(バージョン 3、4、5、またはすべて)か
+
+- KEY: valid.object
+  EXPLAIN: 【オブジェクト】検証デコレーター
+  BODY: |
+    @IsObject()                         // Objectかどうか(null,functions,arrays: false)
+    @IsNotEmptyObject()                 // Objectが空でないか
+    @IsInstance(value: any)             // プロパティが渡された値のインスタンスか
+
+- KEY: valid.number
+  EXPLAIN: 【数値】検証デコレータ
+  BODY: |
+    @IsDivisibleBy(num: number)         // 値が割り切れる数値か
+    @IsPositive()                       // 値がゼロより大きい正の数か
+    @IsNegative()                       // 値がゼロより小さい負の数か
+    @Min(min: number)                   // 指定された数値が指定された数値以上か
+    @Max(max: number)                   // 指定された数値が指定された数値以下か
+    @IsHexadecimal()                    // 16 進数か
+    @IsOctal()                          // 8 進数か
+    @IsDecimal({                        // 全て整数値か判定
+      force_decimal: False,             // デフォルト値
+      decimal_digits: '1,',
+      locale: 'en-US'
+    })
+
+- KEY: valid.string
+  EXPLAIN: 【文字列】検証デコレータ
+  BODY: |
+    @IsFullWidth()                      // 全角文字が含まれているか
+    @IsHalfWidth()                      // 半角文字が含まれているか
+    @IsVariableWidth()                  // 全角文字と半角文字が混在しているか
+    @Contains(key: string)              // keyが含まれているか
+    @NotContains(key: string)           // keyが含まれていないか
+    @IsAlpha()                          // 文字(a-zA-Z)のみが含まれているか
+    @IsAlphanumeric()                   // 文字と数字のみが含まれているか
+    @IsAscii()                          // ASCII か
+    @IsBase32()                         // base32 か
+    @IsBase58()                         // base58 か
+    @IsBase64()                         // base64 か
+    @IsByteLength(min:number, max?:number) // 長さ(バイト単位)が範囲内
+    @IsLowercase()                      // 文字列が小文字か
+    @IsUppercase()                      // 文字列が大文字か
+    @Length(min: number, max?: number)  // 文字列の長さが範囲内にあるか
+    @MinLength(min: number)             // 文字列の長さが指定された数値以上か
+    @MaxLength(max: number)             // 文字列の長さが指定された数値以下か
+    @Matches(pattern: RegExp, modifiers?: string)  // 文字列が正規表現と一致するか
+                                        // ('foo', /foo/i) or ('foo', 'foo', 'i')
+    @IsMultibyte()                      // 文字列に 1 つ以上のマルチバイト文字が含まれているか
+    @IsSurrogatePair()                  // 文字列にサロゲートペアの文字が含まれているか
+
+- KEY: valid.date
+  EXPLAIN: 【日付】検証デコレータ
+  BODY: |
+    @MinDate(date: Date)                // 最も古い日付の限界値
+    @MaxDate(date: Date)                // 最も新しい日付の限界値
+    @IsISO8601({strict:true})           // 文字列が ISO 8601 日付フォーマットか
+    @IsTimeZone()                       // 文字列が有効な IANA タイムゾーンを表しているか
+
+- KEY: valid.array
+  EXPLAIN: 【配列】検証デコレータ
+  BODY: |
+    @ArrayContains(values: any[])       // 配列のすべての要素が values を含むか
+    @ArrayNotContains(values: any[])    // 配列のすべての要素が values を含まないか
+    @ArrayNotEmpty()                    // 配列が空でないか
+    @ArrayMinSize(min: number)          // 配列の最低サイズ
+    @ArrayMaxSize(max: number)          // 配列の最大サイズ
+    @ArrayUnique(identifier?:(o)=> any) // 全値が一意か(オブジェクトは参照)/CB指定可能
+
+- KEY: valid.network
+  EXPLAIN: 【Network】検証デコレータ
+  BODY: |
+    @IsDataURI()                        // データ URI 形式か
+    @IsEmail(options)                   // 電子メールか
+    @IsFQDN(options)                    // 完全修飾ドメイン名か
+    @IsMACAddress(options)              // 文字列が MAC アドレスか
+    @IsIP(version?: "4"|"6")            // 文字列が IP(version 4 or 6)か
+    @IsPort()                           // 文字列が有効なポート番号か
+    @IsUrl(options?)                    // 文字列が URL か
+    @IsMagnetURI()                      // 文字列が マグネット URI 形式 か
+
+- KEY: valid.color
+  EXPLAIN: 【CSS Color】検証デコレータ
+  BODY: |
+    @IsHexColor()                       // 16 進数の色か
+    @IsHSL()                            // HSL カラーか
+    @IsRgbColor(options?: IsRgbOptions) // rgb または rgba カラーか
+
+- KEY: valid.geographic
+  EXPLAIN: 【地理】検証デコレータ
+  BODY: |
+    @IsLatLong()                        // 文字列が緯度経度の形式で有効な緯度経度座標か
+    @IsLatitude()                       // 文字列または数値が有効な緯度座標か
+    @IsLongitude()                      // 文字列または数値が有効な経度座標か
+    @IsLocale()                         // 文字列がロケールか
+
+- KEY: valid.business
+  EXPLAIN: 【ビジネス】検証デコレータ
+  BODY: |
+    @IsCreditCard()                     // クレジット カード番号
+    @IsCurrency(options)                // 有効な通貨金額
+    @IsPassportNumber(countryCode?: string) // 特定国コードに対して有効なパスポート番号か
+    @IsPostalCode(locale?: string)      // 郵便番号か
+    @IsISBN(version?: "10"|"13")        // 文字列が ISBN(version 10 or 13)か
+    @IsMobilePhone(locale: string)      // 文字列が携帯電話番号か
+    @IsISO31661Alpha2()                 // 文字列が有効な ISO 3166-1 alpha-2 国コードか
+    @IsISO31661Alpha3()                 // 文字列が有効な ISO 3166-1 alpha-3 国コードか
+    @IsPhoneNumber(region: string)      // 文字列が有効な電話番号か(libphonenumber-js)
+    @IsMongoId()                        // 文字列が MongoDB ObjectId の有効な 16 進数エンコード表現か
+    @IsFirebasePushId()                 // 文字列が Firebase Push IDか
+    @IsHash(algorithm: string)          // 文字列がハッシュか(md4,md5,sha1,sha256,sha384, sha512,...)
+    @IsMimeType()                       // 文字列が有効な MIME タイプ 形式に一致するか
+    @IsStrongPassword(options)          // 文字列が強力なパスワードか

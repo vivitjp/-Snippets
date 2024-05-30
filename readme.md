@@ -19,6 +19,30 @@
 - [ ] B
 - [ ] C
 
-[ ] A
-[ ] B
-[ ] C
+---
+
+---
+
+---
+
+---
+
+<http://qiita.com>
+
+[Qiita](http://qiita.com)
+
+普通
+
+_イタリック_
+
+**ボールド**
+
+**_ボールド&イタリック_**
+
+~~打ち消し~~
+
+![ダミー画像](http://placehold.it/100)
+
+本文本文本文[^注釈]
+
+[^注釈]: public\snippets\document\more.md

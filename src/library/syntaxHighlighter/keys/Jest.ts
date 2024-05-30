@@ -3,7 +3,7 @@ import { KeyDef } from "../syntaxHighlighter"
 export const keysJest: KeyDef[] = [
   // ■ Main(赤)
   {
-    color: "IndianRed",
+    color: "Crimson",
     keys: [
       "beforeEach",
       "afterEach",

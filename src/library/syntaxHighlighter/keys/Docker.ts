@@ -2,7 +2,7 @@ import { KeyDef } from "../syntaxHighlighter"
 
 export const keysDocker: KeyDef[] = [
   {
-    color: "IndianRed",
+    color: "Crimson",
     keys: ["image", "container", "network", "volume"],
   },
   // ■ Methods

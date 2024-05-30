@@ -49,3 +49,7 @@ span.syntax {
 span.syntaxQ {
   color: white;
 }
+
+span.colorName {
+  font-size: 18px;
+}

@@ -28,172 +28,67 @@
       - リスト 1-2
     - リスト 2
 
-- KEY: doc.md.
-  EXPLAIN: MD
+- KEY: doc.md.checkbox
+  EXPLAIN: Checkbox
   BODY: |
-    TEST
+    - [ ] A
+    - [ ] B
+    - [ ] C
 
-- KEY: doc.md.
-  EXPLAIN: MD
+- KEY: doc.md.line
+  EXPLAIN: 水平線
   BODY: |
-    TEST
+    * * *
+    ***
+    *****  
+    - - -
 
-- KEY: doc.md.
-  EXPLAIN: MD
+- KEY: doc.md.link
+  EXPLAIN: リンク
   BODY: |
-    TEST
+    <URL>
 
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
+    [Qiita](URL)
 
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
+    ![画像名](URL)
 
-- KEY: doc.md.
-  EXPLAIN: MD
+- KEY: doc.md.deco
+  EXPLAIN: デコレーション
   BODY: |
-    TEST
+    *イタリック*
 
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
+    **ボールド**
 
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
+    ***ボールド&イタリック***
 
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
+    ~~打ち消し~~
 
-- KEY: doc.md.
-  EXPLAIN: MD
+- KEY: doc.md.annotation
+  EXPLAIN: 注釈
   BODY: |
-    TEST
+    本文[^注釈]
 
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
+    [^注釈]: more.md   <-- 別Documentへのpath
 
-- KEY: doc.md.
-  EXPLAIN: MD
+- KEY: doc.md.code
+  EXPLAIN: コード
   BODY: |
-    TEST
+    以下のコード `const hoge = 1` が重要
 
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
+    ```html
+    <div class="red">
+      <p>文字列</p>
+    </div>
+    ```
 
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
+    ```ts
+    const abc = 1
+    ```
 
-- KEY: doc.md.
-  EXPLAIN: MD
+- KEY: doc.md.table
+  EXPLAIN: テーブル
   BODY: |
-    TEST
-
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
-
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
-
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
-
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
-
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
-
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
-
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
-
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
-
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
-
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
-
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
-
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
-
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
-
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
-
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
-
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
-
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
-
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
-
-- KEY: doc.md.
-  EXPLAIN: MD
-  BODY: |
-    TEST
+    | Title 1 | Title 2 | Title 3 |
+    | :------ | ------: | :-----: |
+    | Left    |   Right | Center  |
+    | aligned | aligned | aligned |

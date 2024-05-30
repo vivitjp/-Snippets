@@ -1,0 +1,150 @@
+---
+#-------------------------------
+# JS DOM
+#-------------------------------
+
+- KEY: dom.document
+  EXPLAIN: Document
+  BODY: |
+    el = d.createElement()                        // el生成
+
+    el = d.getElementById('id')                   // 取得: 単 by ID
+    HC = d.getElementsByClassName('class')        // 取得: 複 by class
+    HC = d.getElementsByTagName('tag')            // 取得: 複
+
+    el = d.querySelector(#slct)                   // 取得: 複(遅) by ID
+    el = d.querySelector(.slct)                   // 取得: 複(遅) by class
+    NL = d.querySelectorAll(#slct)                // 取得: 複(遅) by ID
+    NL = d.querySelectorAll(slct)                 // 取得: 複(遅) by class
+
+- KEY: dom.node
+  EXPLAIN: Node
+  BODY: |
+    ■ 属性
+    node.nodeName                                 // 例: DIV
+    node.nodeType                                 // ENUM: 1-12
+    node.textContent                              // TAGなし文字列のみ
+    node.parentNode                               // 親(node)
+    node.parentElement                            // 親(element)
+    node.offsetParent                             // 親(要relative)
+    node.childNodes                               // parentNode.children
+    node.firstChild                               // parentNode.firstElementChild
+    node.lastChild                                // parentNode.lastElementChild
+    node.nextSibling                              // el.nextElementSibling
+    node.previousSibling                          // el.previousElementSibling
+
+    ■ Methods
+    node.appendChild(el)                          // 子群末に追加
+    node.cloneNode(bool)                          // true(子孫)
+    node.contains(trg)                            // 子el判定
+    node.hasChildNodes()                          // 子有無
+    node.isEqualNode(trg)                         // 同一性判定
+
+    node.isSameNode()                             // 廃止
+    node.normalize()                              // 正規化(テキストNodeマージ)
+
+- KEY: dom.node.parent
+  EXPLAIN: ParentNode
+  BODY: |
+    n  = parentNode.childElementCount             // 子群数
+    HC = parentNode.children                      // 子群
+    el = parentNode.firstElementChild             // 子群の頭
+    el = parentNode.lastElementChild              // 子群の末
+
+    parentNode.prepend(el)                        // 頭に追加/移動: 文字列可
+    parentNode.append(el)                         // 末に追加/移動: 文字列可
+    parentNode.insertBefore(el,trg)               // target前挿入/移動
+    parentNode.removeChild(nd)                    // nd削除
+    parentNode.replaceChild(nd,old)               // 置換
+    parentNode.replaceChildren(...from,...to)     // 全置換
+
+- KEY: dom.node.child
+  EXPLAIN: ChildNode
+  BODY: |
+    childNode.remove()                            // 自身削除
+    childNode.before(el)                          // 自身の兄に
+    childNode.after(el)                           // 自身の弟に
+    childNode.replaceWith(el)                     // 自身入替
+
+- KEY: dom.htmlCollection
+  EXPLAIN: HTMLCollection
+  BODY: |
+    numb = HC.length                              // サイズ
+    node = HC.item(n)/HC[n]                       // n番目のel
+
+- KEY: dom.nodeList
+  EXPLAIN: NodeList
+  BODY: |
+    numb = NL.length                              // サイズ
+    node = NL.item(n)                             // n番目のel
+    node = NL[n]                                  // n番目のel
+      NL.forEach()                                // ループ
+    iter = NL.entries()                           // 配列[key,val]
+    iter = NL.keys()                              // 配列[key]
+    iter = NL.values()                            // 配列[val]
+
+- KEY: dom.element
+  EXPLAIN: Element
+  BODY: |
+    ■ 属性
+    el.id                                         // id名
+    el.tagName                                    // 例:DIV
+    el.innerHTML                                  // TGA変換込
+    el.outerHTML                                  // 含自身
+    el.localName                                  // XML用
+    el.className                                  // class名
+    el.classList                                  // 戻値:DOMTokenList
+
+    ■ Methods
+    el.classList.add('class')                     // 追加
+    el.classList.remove('class')                  // 削除
+    el.classList.toggle('class')                  // 追加/削除
+    el.classList.contains('class')                // 有無判定
+
+    ■ Style
+    el.style.xxXxx                                // スタイル
+    el.style[xx-xx]                               // スタイル
+    window.getComputedStyle(el).xxXxx             // 実際値
+
+    ■ サイズ & 位置
+    el.client[Height/Width/Left/Top]              // 含border/scroll内
+    el.scroll[Height/Width/Left/Top]              // 含border/scroll内
+    el.offset[Height/Width/Left/Top]              // 含border
+
+    //[全] Height/Width/Left/Right/Top/Bottom/X/Y
+    el.getBoundingClientRect()                    // [全]含border(単)
+    el.getClientRects()                           // [全]含border(複)
+
+    ■ Event Listener
+    el.addEventListener(event,func)               // 追加
+    el.removeEventListener(func)                  // 削除
+    el.dispatchEvent(event)                       // 実行
+
+    ■ 属性Methods
+    el.attributes                                 // 設定属性一覧
+    el.getAttributeNames()                        // 設定属性名一覧
+    el.getAttribute(attr)                         // 取得
+    el.getAttributeNS(NS,attr)                    // NS取得
+    el.setAttribute(attr,val)                     // 追加
+    el.removeAttribute(attr)                      // 削除
+    el.hasAttribute(attr)                         // 有無判定
+
+    ■ Dataset
+    el.dataset.xxx                                // 属性['data-xxx']追加
+    el.dataset["xxx"]                             // 属性['data-xxx']追加
+    delete el.dataset.xxx                         // 削除
+
+    ■ 隣接Methods
+    el.nextElementSibling                         // 次el
+    el.previousElementSibling                     // 前el
+    el.closest(slct)                              // 遡上検索
+    el.matches(#slct.slct)                        // 有無判定 
+    el.insertAdjacentElement(pos,el)              // el
+    el.insertAdjacentHTML(pos,val)                // HTML
+    el.insertAdjacentText(pos,text)               // TEXT
+      elの外(前後)に挿入: 'beforebegin','afterend'
+      elの内(頭尾)に挿入: 'afterbegin','beforeend'
+
+    ■ Shadow
+    el.shadowRoot                                 // シャドールート
+    el.attachShadow()                             // シャドーツリー

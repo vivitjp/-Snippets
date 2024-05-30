@@ -2,7 +2,7 @@ import { KeyDef } from "../syntaxHighlighter"
 
 export const keysJSTSORIG: KeyDef[] = [
   {
-    color: "IndianRed",
+    color: "Crimson",
     keys: [
       "React",
       "export",

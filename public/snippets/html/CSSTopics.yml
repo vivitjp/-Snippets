@@ -5,23 +5,14 @@
   EXPLAIN: 背景色
   BODY: |
     background-color: #aaa;
-
-- KEY: bg.types
-  EXPLAIN: 背景色(各種)
-  BODY: |
-    background-color: #aaa
     //background: linear-gradient(blue, green);
     //background: rgba(255, 255, 255, 0.5)
-
-- KEY: bdr
-  EXPLAIN: ボーダー
-  BODY: |
-    border: 1px solid #aaa;
 
 - KEY: bdr.type
   EXPLAIN: border 種類
   BODY: |
-    solid/dotted/dashed
+    border: 1px solid #aaa;
+    // solid/dotted/dashed
 
 - KEY: just
   EXPLAIN: flex 属性

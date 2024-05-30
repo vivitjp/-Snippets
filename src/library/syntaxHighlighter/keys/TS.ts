@@ -2,7 +2,7 @@ import { KeyDef } from "../syntaxHighlighter"
 
 export const keysTS: KeyDef[] = [
   {
-    color: "IndianRed",
+    color: "Crimson",
     keys: [
       "Required",
       "Partial",

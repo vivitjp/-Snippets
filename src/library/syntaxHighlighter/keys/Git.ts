@@ -3,7 +3,7 @@ import { KeyDef } from "../syntaxHighlighter"
 export const keysGit: KeyDef[] = [
   // ■ Methods
   {
-    color: "IndianRed",
+    color: "Crimson",
     keys: ["git"],
   },
   // ■ Methods

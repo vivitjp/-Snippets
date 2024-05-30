@@ -14,15 +14,13 @@
       b: "Address",
     } as const
 
-    type Person = typeof person[keyof typeof person]
-    // "Name" | "Address"
+    type Person = typeof person[keyof typeof person]  // "Name" | "Address"
 
 - KEY: ts.union.fromArray
   EXPLAIN: unionをarrayから生成
   BODY: |
-    const person = ["Name","Address"] as const
-    type Person = (typeof person)[number]
-    // "Name" | "Address"
+    const person = [ "Name", "Address" ] as const
+    type Person = (typeof person)[number]         // "Name" | "Address"
 
 #-------------------------------
 # Switch
@@ -222,3 +220,77 @@
 
     const fooRO: ReadonlyArray<number> = [1, 2, 3]
     fooRO.push(4) // NG
+
+#-------------------------------
+# Literal Join
+#-------------------------------
+- KEY: ts.literal.keyJoin
+  EXPLAIN:
+  BODY: |
+    ■ ReactHookFormでのKeyが複数Keyの合成になった場合の対処
+
+    type Phases = "phase1" | "phase2";
+    type Attrs = "name" | "age";
+
+    const defaultData = {
+      name: "Smith",
+      age: 1,
+    };
+    type DefaultDataHidden = typeof defaultData;
+
+    type Data = Partial<Record<`${Phases}.${Attrs}`, string>>;
+    const data: Data = {
+      "phase1.name": "John",
+      "phase1.age": "Tokyo",
+      "phase2.name": "Jim",
+      "phase2.age": "LA",
+    };
+
+    type ErrorDataHidden = Record<
+      Phases,
+      Record<keyof DefaultDataHidden, { message: string }>
+    >;
+
+    const errorData: ErrorDataHidden = {
+      phase1: {
+        name: { message: "Must be String" },
+        age: { message: "Must be Number" },
+      },
+      phase2: {
+        name: { message: "Must be String" },
+        age: { message: "Must be Number" },
+      },
+    };
+
+    //-----------------------------------------------
+    // Data
+    //-----------------------------------------------
+    {
+      type DefaultData = typeof defaultData;
+      type DefaultDataKeys = keyof DefaultData;
+
+      type DataKeys = keyof typeof data;
+      const phases = ["phase1", "phase2"];
+
+      phases.forEach((phase) => {
+        const keyName = "name" as DefaultDataKeys;
+        const res1 = data?.[`${phase}.${keyName}` as DataKeys] || "Unknown";
+        console.log(keyName, res1);
+      });
+    }
+
+    //-----------------------------------------------
+    // Error
+    //-----------------------------------------------
+    {
+      type DefaultData = typeof defaultData;
+      const dataKeys = Object.keys(data);
+
+      dataKeys.forEach((key) => {
+        const [phase, attr] = key.split(".");
+        const res1 =
+          errorData?.[phase as Phases]?.[attr as keyof DefaultData]?.message ||
+          "Unknown";
+        console.log(phase, attr, res1);
+      });
+    }

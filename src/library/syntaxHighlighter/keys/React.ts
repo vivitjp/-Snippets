@@ -3,7 +3,7 @@ import { KeyDef } from "../syntaxHighlighter"
 export const keysReact: KeyDef[] = [
   // ■ ReactのMainキーワード
   {
-    color: "IndianRed",
+    color: "Crimson",
     keys: [
       "React",
       "children",

@@ -18,7 +18,7 @@ export const keysRegExp: KeyDef[] = [
   },
   // ■ 別青
   {
-    color: "IndianRed",
+    color: "Crimson",
     keys: ["test", "compile", "exec", "match", "lastIndex", ""],
   },
   {

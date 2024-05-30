@@ -3,7 +3,7 @@ import { KeyDef } from "../syntaxHighlighter"
 export const keysMySql: KeyDef[] = [
   // ■ Main(赤)
   {
-    color: "IndianRed",
+    color: "Crimson",
     keys: [
       "mysql",
       "mysqldump",

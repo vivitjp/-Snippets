@@ -60,7 +60,7 @@ export const keysCSS: KeyDef[] = [
   },
   // ■ Main(赤)
   {
-    color: "IndianRed",
+    color: "Crimson",
     keys: [
       "justify-content",
       "align-items",

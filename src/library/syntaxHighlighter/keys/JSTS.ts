@@ -64,7 +64,7 @@ export const keysJSTS: KeyDef[] = [
   },
   // ■ JS Methods
   {
-    color: "IndianRed",
+    color: "Crimson",
     keys: [
       "fetch",
       "then",

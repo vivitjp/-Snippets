@@ -18,3 +18,42 @@
 - [ ] A
 - [ ] B
 - [ ] C
+
+---
+
+---
+
+---
+
+---
+
+<http://qiita.com>
+
+[Qiita](http://qiita.com)
+
+普通
+
+_イタリック_
+
+**ボールド**
+
+**_ボールド&イタリック_**
+
+~~打ち消し~~
+
+![ダミー画像](http://placehold.it/100)
+
+本文[^注釈]
+
+[^注釈]: more.md
+
+以下のコード `const hoge = 1` が重要
+
+```ts
+const abc = 1
+```
+
+| Title 1 | Title 2 | Title 3 |
+| :------ | ------: | :-----: |
+| Left    |   Right | Center  |
+| aligned | aligned | aligned |

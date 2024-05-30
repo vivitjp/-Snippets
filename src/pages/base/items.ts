@@ -17,9 +17,10 @@ export const menuItems: menuByCategories[] = [
         encodeRequired: true,
       },
       {
-        name: "CSS:bg,bdr,just,css",
-        fileName: "html/CSS",
+        name: "CSS(topics)",
+        fileName: "html/CSSTopics",
         codeKeyTypes: [codeKeys.CSS],
+        encodeRequired: true,
       },
       {
         name: "⛔CSS(レスポンシブ)",
@@ -47,7 +48,7 @@ export const menuItems: menuByCategories[] = [
         encodeRequired: true,
       },
       {
-        name: "TS Tips:ts",
+        name: "TS(Topics):ts",
         fileName: "JavaScript/TypeScriptTips",
         codeKeyTypes: [codeKeys.JSTS],
         encodeRequired: true,
@@ -65,9 +66,9 @@ export const menuItems: menuByCategories[] = [
         encodeRequired: true,
       },
       {
-        name: "⛔Dom",
-        fileName: "",
-        codeKeyTypes: [],
+        name: "Dom",
+        fileName: "JavaScript/DOM",
+        codeKeyTypes: [codeKeys.DOM],
       },
       {
         name: "正規表現:reg",
@@ -136,9 +137,14 @@ export const menuItems: menuByCategories[] = [
         ],
       },
       {
-        name: "🟡TypeORM",
+        name: "TypeORM",
         fileName: "ReactQuery/TypeORM",
-        codeKeyTypes: [],
+        codeKeyTypes: [codeKeys.TypeORM],
+      },
+      {
+        name: "ClassValidator",
+        fileName: "ReactQuery/ClassValidator",
+        codeKeyTypes: [codeKeys.ClassValidator],
       },
     ],
   },
@@ -366,14 +372,13 @@ export const menuItems: menuByCategories[] = [
     category: "Document",
     items: [
       {
-        name: "⛔MD",
+        name: "MD",
         fileName: "document/MD",
-        codeKeyTypes: [],
+        encodeRequired: true,
       },
       {
         name: "YAML",
         fileName: "document/YAML",
-        codeKeyTypes: [],
         encodeRequired: true,
       },
     ],
