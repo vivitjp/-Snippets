@@ -145,3 +145,92 @@
     @IsHash(algorithm: string)          // 文字列がハッシュか(md4,md5,sha1,sha256,sha384, sha512,...)
     @IsMimeType()                       // 文字列が有効な MIME タイプ 形式に一致するか
     @IsStrongPassword(options)          // 文字列が強力なパスワードか
+
+- KEY: valid.custom.IsJISString
+  EXPLAIN: カスタムデコレータ(IsJISString)
+  BODY: |
+    import { registerDecorator, ValidationOptions } from 'class-validator';
+    import * as iconv from 'iconv-lite';
+
+    const ENCODE_TYPE = 'utf-8';
+    const DEFAULT_ERROR_MESSAGE = ' must be a string of 3 characters or less';
+
+    /**
+    * カスタムデコレータ(Factory)
+    * 1. 引数の文字列を1文字毎にUTF-8の文字コードへエンコード
+    * 2. 文字コードの先頭1バイト(16進数)を10進数に変換、
+         240以上の場合には1文字4バイト以上の文字としてバリデーションエラーを返却
+    * @param {ValidationOptions} validationOptions
+    * @returns {function} 関数
+          4バイト以上の文字を含む文字列の場合にfalseを返却
+    */
+    export function IsJISString(validationOptions?: ValidationOptions) {
+      return function (object: any, propertyName: string) {
+        registerDecorator({
+          name: 'IsJISString',
+          target: object.constructor,
+          propertyName: propertyName,
+          // バリデーションエラー発生時のメッセージを指定
+          options: {
+            ...validationOptions,
+            message:
+              validationOptions && validationOptions.message
+                ? validationOptions.message
+                : `${propertyName}${DEFAULT_ERROR_MESSAGE}`,
+          },
+          validator: {
+            validate(value: string) {
+              if (typeof value !== 'string') return true;
+
+              let hasNoError = true;
+              const arr = [...value];
+              let i = 0;
+              do {
+                // UTF-8へ変換
+                const buffer = iconv.encode(arr[i], ENCODE_TYPE);
+                if (240 <= buffer[0]) {
+                  hasNoError = false;
+                  break;
+                }
+                i++;
+              } while (arr.length > i);
+              return hasNoError;
+            },
+          },
+        });
+      };
+    }
+
+- KEY: valid.custom.IsHiraganaAndSpace
+  EXPLAIN: カスタムデコレータ(IsHiraganaAndSpace)
+  BODY: |
+    import { registerDecorator, ValidationOptions } from 'class-validator';
+
+    const DEFAULT_ERROR_MESSAGE = ' must be a string of 3 characters or less';
+
+    //ひらがなとスペースのみ
+    export function IsHiraganaAndSpace(validationOptions?: ValidationOptions) {
+      return function (object: any, propertyName: string) {
+        registerDecorator({
+          name: 'IsHiraganaAndSpace',
+          target: object.constructor,
+          propertyName: propertyName,
+          options: {
+            ...validationOptions,
+            message:
+              validationOptions && validationOptions.message
+                ? validationOptions.message
+                : `${propertyName}${DEFAULT_ERROR_MESSAGE}`,
+          },
+          validator: {
+            validate(value: string) {
+              if (typeof value !== 'string') return true;
+
+              // ひらがなと半角・全角スペースのみをチェックする正規表現
+              const allowedCharsRegex = /^[\u3040-\u309F\u0020\u3000]*$/;
+              return allowedCharsRegex.test(value);
+            },
+          },
+        });
+      };
+    }

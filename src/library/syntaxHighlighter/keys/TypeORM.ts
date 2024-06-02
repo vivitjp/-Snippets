@@ -5,7 +5,7 @@ export const keysTypeORM: KeyDef[] = [
   {
     color: "Crimson",
     keys: [
-      "@Entity",
+      "Entity",
       "PrimaryColumn",
       "Column",
       "Injectable",
@@ -25,8 +25,6 @@ export const keysTypeORM: KeyDef[] = [
       "ViewColumn",
       "manager",
       "createQueryBuilder",
-      "",
-      "",
     ],
   },
   // ■ 青
@@ -141,8 +139,6 @@ export const keysTypeORM: KeyDef[] = [
       "innerJoin",
       "leftJoinAndMapOne",
       "leftJoinAndMapMany",
-      "",
-      "",
     ],
   },
   // ■ CadetBlue
@@ -184,16 +180,6 @@ export const keysTypeORM: KeyDef[] = [
       "port",
       "tableName",
       "socket",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
     ],
   },
   // ■ DarkOrange(Validator)
@@ -228,18 +214,23 @@ export const keysTypeORM: KeyDef[] = [
       "And",
     ],
   },
-  // ■ グレー
+  // ■ deeppink
   {
-    color: "Tomato",
-    keys: ["abstract", "readonly", "await", "async", "", ""],
+    color: "deeppink",
+    keys: ["abstract", "readonly", "await", "async", "Promise"],
   },
+  // ■ cyan(Deprecated)
+  {
+    color: "cyan",
+    keys: ["getRepository", "getManager", "getConnection"],
+  },
+
   // ■ 青緑
   {
     color: "CadetBlue",
     keys: [
       "DataSource",
       "dataSource",
-      "getRepository",
       "queryRunner",
       "getTreeRepository",
       "getMongoRepository",
@@ -254,13 +245,6 @@ export const keysTypeORM: KeyDef[] = [
   // ■ LightSeaGreen
   {
     color: "LightSeaGreen",
-    keys: [
-      "JoinTable",
-      "JoinColumn",
-      "joinColumn",
-      "inverseJoinColumn",
-      "",
-      "",
-    ],
+    keys: ["JoinTable", "JoinColumn", "joinColumn", "inverseJoinColumn"],
   },
 ]

@@ -241,9 +241,14 @@
     @Entity()
     @Index(["firstName","lastName"])              // Default: Unique:false
     export class User {
-        @PrimaryGeneratedColumn()  id: number
-        @Column()                  firstName: string
-        @Column()                  lastName: string
+        @PrimaryGeneratedColumn()
+        id: number
+        
+        @Column()
+        firstName: string
+        
+        @Column()
+        lastName: string
         ...
     }
 
@@ -254,10 +259,17 @@
       { unique:true }                             // Unique 指定
     )
     export class User {
-        @PrimaryGeneratedColumn()  id: number
-        @Column()                  firstName: string
-        @Column()                  middleName: string
-        @Column()                  lastName: string
+        @PrimaryGeneratedColumn()
+        id: number
+        
+        @Column()
+        firstName: string
+        
+        @Column()
+        middleName: string
+        
+        @Column()
+        lastName: string
         ...
     }
 

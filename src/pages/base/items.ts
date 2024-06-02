@@ -11,16 +11,14 @@ export const menuItems: menuByCategories[] = [
     category: "Html/CSS",
     items: [
       {
-        name: "HTML",
+        name: "HTML(Topics)",
         fileName: "html/HTML",
         codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS],
-        encodeRequired: true,
       },
       {
-        name: "CSS(topics)",
+        name: "CSS(Topics)",
         fileName: "html/CSSTopics",
         codeKeyTypes: [codeKeys.CSS],
-        encodeRequired: true,
       },
       {
         name: "⛔CSS(レスポンシブ)",
@@ -45,28 +43,24 @@ export const menuItems: menuByCategories[] = [
         name: "TypeScript:ts",
         fileName: "JavaScript/TypeScript",
         codeKeyTypes: [codeKeys.JSTS],
-        encodeRequired: true,
       },
       {
         name: "TS(Topics):ts",
         fileName: "JavaScript/TypeScriptTips",
         codeKeyTypes: [codeKeys.JSTS],
-        encodeRequired: true,
       },
       {
         name: "TS Util:ts",
         fileName: "JavaScript/TypeScriptUtilities",
         codeKeyTypes: [codeKeys.JSTS, codeKeys.TS],
-        encodeRequired: true,
       },
       {
         name: "非同期:js",
         fileName: "JavaScript/JavaScriptAsync",
         codeKeyTypes: [codeKeys.JSTS],
-        encodeRequired: true,
       },
       {
-        name: "Dom",
+        name: "DOM",
         fileName: "JavaScript/DOM",
         codeKeyTypes: [codeKeys.DOM],
       },
@@ -84,42 +78,36 @@ export const menuItems: menuByCategories[] = [
         name: "React:qw",
         fileName: "React/React",
         codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS, codeKeys.React],
-        encodeRequired: true,
       },
       {
         name: "Component:qw",
         fileName: "React/ReactComponent",
         codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS, codeKeys.React],
-        encodeRequired: true,
       },
       {
         name: "Routing:qw",
         fileName: "React/ReactRouting",
         codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS, codeKeys.React],
-        encodeRequired: true,
       },
     ],
   },
   {
-    category: "React:G-State",
+    category: "React:State",
     items: [
       {
         name: "zustand:pk",
         fileName: "ReactGState/zustand",
         codeKeyTypes: [codeKeys.JSTS, codeKeys.React],
-        encodeRequired: true,
       },
       {
         name: "Jotai:pk",
         fileName: "ReactGState/Jotai",
         codeKeyTypes: [codeKeys.JSTS, codeKeys.Jotai],
-        encodeRequired: true,
       },
       {
         name: "Recoil:pk",
         fileName: "ReactGState/Recoil",
         codeKeyTypes: [codeKeys.Package],
-        encodeRequired: true,
       },
     ],
   },
@@ -136,16 +124,6 @@ export const menuItems: menuByCategories[] = [
           codeKeys.Package,
         ],
       },
-      {
-        name: "TypeORM",
-        fileName: "ReactQuery/TypeORM",
-        codeKeyTypes: [codeKeys.TypeORM],
-      },
-      {
-        name: "ClassValidator",
-        fileName: "ReactQuery/ClassValidator",
-        codeKeyTypes: [codeKeys.ClassValidator],
-      },
     ],
   },
   {
@@ -161,7 +139,6 @@ export const menuItems: menuByCategories[] = [
           codeKeys.React,
           codeKeys.Package,
         ],
-        encodeRequired: true,
       },
       {
         name: "Emotion:pk",
@@ -173,7 +150,6 @@ export const menuItems: menuByCategories[] = [
           codeKeys.React,
           codeKeys.Package,
         ],
-        encodeRequired: true,
       },
     ],
   },
@@ -185,7 +161,6 @@ export const menuItems: menuByCategories[] = [
         name: "ReactHookForm:pk",
         fileName: "ReactPackage/ReactHookForm",
         codeKeyTypes: [codeKeys.keysPackageRHF],
-        encodeRequired: true,
       },
       {
         name: "Storybook(v6):pk",
@@ -199,7 +174,36 @@ export const menuItems: menuByCategories[] = [
       },
     ],
   },
-
+  {
+    category: "Nestjs",
+    items: [
+      {
+        name: "Nestjs",
+        fileName: "frameWork/Nestjs/Nestjs",
+        codeKeyTypes: [
+          codeKeys.Nestjs,
+          codeKeys.TypeORM,
+          codeKeys.ClassValidator,
+          codeKeys.ClassTransformer,
+        ],
+      },
+      {
+        name: "TypeORM",
+        fileName: "frameWork/Nestjs/TypeORM",
+        codeKeyTypes: [codeKeys.TypeORM],
+      },
+      {
+        name: "ClassValidator",
+        fileName: "frameWork/Nestjs/ClassValidator",
+        codeKeyTypes: [codeKeys.ClassValidator],
+      },
+      {
+        name: "ClassTransformer",
+        fileName: "frameWork/Nestjs/ClassTransformer",
+        codeKeyTypes: [codeKeys.ClassTransformer],
+      },
+    ],
+  },
   {
     category: "Framework",
     items: [
@@ -210,11 +214,6 @@ export const menuItems: menuByCategories[] = [
       },
       {
         name: "⛔Nextjs",
-        fileName: "",
-        codeKeyTypes: [],
-      },
-      {
-        name: "⛔Nestjs",
         fileName: "",
         codeKeyTypes: [],
       },
@@ -312,7 +311,6 @@ export const menuItems: menuByCategories[] = [
         name: "npm/yarn",
         fileName: "Project/npm_yarn",
         codeKeyTypes: [codeKeys.NPM],
-        encodeRequired: true,
       },
       {
         name: "Git",
@@ -347,12 +345,10 @@ export const menuItems: menuByCategories[] = [
         name: "Google関連",
         fileName: "WebAPI/Google",
         codeKeyTypes: [codeKeys.CSS, codeKeys.HTML, codeKeys.React],
-        encodeRequired: true,
       },
       {
         name: "SVG",
         fileName: "WebAPI/SVG",
-        encodeRequired: true,
       },
       {
         name: "window:win",
@@ -374,12 +370,10 @@ export const menuItems: menuByCategories[] = [
       {
         name: "MD",
         fileName: "document/MD",
-        encodeRequired: true,
       },
       {
         name: "YAML",
         fileName: "document/YAML",
-        encodeRequired: true,
       },
     ],
   },

@@ -15,7 +15,7 @@ export type SyntaxHighlight = {
 export const syntaxHighlight = ({
   code,
   keyDefs,
-  encodeRequired = false,
+  encodeRequired = true,
   case_sensitive = true,
 }: SyntaxHighlight) => {
   const escaped = encodeRequired ? escapeHtml(code) : code

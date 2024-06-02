@@ -2,6 +2,10 @@ import { KeyDef } from "../syntaxHighlighter"
 
 export const keysClassValidator: KeyDef[] = [
   {
+    color: "IndianRed",
+    keys: ["registerDecorator", "ValidationOptions", "ValidationArguments"],
+  },
+  {
     color: "RoyalBlue",
     keys: [
       "IsDefined",
@@ -96,6 +100,26 @@ export const keysClassValidator: KeyDef[] = [
       "IsHash",
       "IsMimeType",
       "IsStrongPassword",
+      "validate",
+    ],
+  },
+  // ■ 緑
+  {
+    color: "ForestGreen",
+    keys: [
+      "name",
+      "propertyName",
+      "target",
+      "options",
+      "validator",
+      "force_decimal",
+      "decimal_digits",
+      "locale",
+      "min",
+      "max",
+      "pattern",
+      "strict",
+      "message",
     ],
   },
 ]

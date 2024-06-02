@@ -1,4 +1,5 @@
 import { keysCSS } from "./keys/CSS"
+import { keysClassTransformer } from "./keys/ClassTransformer"
 import { keysClassValidator } from "./keys/ClassValidator"
 import { keysDOM } from "./keys/DOM"
 import { keysDocker } from "./keys/Docker"
@@ -10,6 +11,7 @@ import { keysJotai } from "./keys/Jotai"
 import { keysLinux } from "./keys/Linux"
 import { keysMongo } from "./keys/Mongo"
 import { keysMySql } from "./keys/MySql"
+import { keysNestjs } from "./keys/Nestjs"
 import { keysPackage } from "./keys/Package"
 import { keysPackageRHF } from "./keys/PackageRHF"
 import { keysPython } from "./keys/Python"
@@ -43,6 +45,8 @@ export const codeKeys = {
   NPM: "NPM",
   TypeORM: "TypeORM",
   ClassValidator: "ClassValidator",
+  ClassTransformer: "ClassTransformer",
+  Nestjs: "Nestjs",
   Unknown: "Unknown",
 } as const
 
@@ -72,6 +76,8 @@ export const KeyAndCodes: Record<CodeKeyType, KeyDef[]> = {
   NPM: keysNPM,
   TypeORM: keysTypeORM,
   ClassValidator: keysClassValidator,
+  ClassTransformer: keysClassTransformer,
+  Nestjs: keysNestjs,
   Unknown: [],
 }
 
