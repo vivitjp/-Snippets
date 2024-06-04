@@ -1,0 +1,226 @@
+---
+#-------------------------------
+# Ubiquitous: IT
+#-------------------------------
+
+- KEY: ubi.polycolle
+  EXPLAIN: ポリコレ
+  BODY: |
+    リベラル
+    フラット
+
+- KEY: ubi.it.windows
+  EXPLAIN: Windows Search
+  BODY: |
+    サイズ:   >100KB
+    名前:     ~=234
+
+- KEY: ubi.it.vscode
+  EXPLAIN: VSCode(設定)
+  BODY: |
+    command:     ctrl+shift+[p]
+    file Open:	 ctrl+[p]
+    TypeScript:  Restart TS Server
+    折りたたみ:   ctrl+[k], ctrl+[1]~
+    設定:         wordWrap
+    同一選択:     ctrl+shift+[L] / [D]
+    Ruler(縦線):  setting.jsonで編集
+
+- KEY: ubi.it.design
+  EXPLAIN: デザイン
+  BODY: |
+    Figma
+    Miro
+    Storybook
+
+- KEY: ubi.it.agile
+  EXPLAIN: 開発手法
+  BODY: |
+    ウォーターフォール
+    アジャイル
+    フェイズ
+    スクラム
+    スプリント
+    ベロシティ
+    ストーリーポイント(SP)
+    フィボナッチ
+    レトスペ
+    KPT(Keep,Problem,Try)
+    Draft
+    リファクタ
+    オプティマ
+    デグレ
+    MVC(Model,View,Controller)
+    DDD(ドメイン駆動設計)
+
+- KEY: ubi.it.framework
+  EXPLAIN: ライブラリ/フレームワーク
+  BODY: |
+    JS: Vue
+    JS: React
+    JS: Angular
+    JS: Nest
+    JS: Remix
+    JS: Vite
+    PHP: Laravel
+    PHP: Blade(view)
+    トランスパイル
+    バンドル
+
+- KEY: ubi.it.rendering
+  EXPLAIN: レンダリング
+  BODY: |
+    SSR: ServerSide Rendering
+    SSG: Static Site Generation
+    ISR: Incremental Static Regeneration
+    SP: Single Page Application
+
+- KEY: ubi.it.compo.design
+  EXPLAIN: Atomicデザイン
+  BODY: |
+    Atom
+    Molecules
+    Organism
+
+- KEY: ubi.it.db
+  EXPLAIN: DB
+  BODY: |
+    Relational Database System(RDS/RDBS)
+    Entity Relation(ER)図
+    SQL
+    RDS: Oracle
+    RDS: Postgres
+    RDS: MySQL
+    NoSQL: Mongo
+    NoSQL: Redis
+    GraphQL
+    Query
+    Mutation
+
+- KEY: ubi.it.design.pattern
+  EXPLAIN: デザインパターン
+  BODY: |
+    Closure
+    Factory
+
+- KEY: ubi.it.server
+  EXPLAIN: FE & BE
+  BODY: |
+    サーバ
+    クライアント
+    FE: Frontend
+    BFF: Backend for Frontend
+    BE: Backend
+    Apache
+    Nginx
+    Node(Express)
+    Deno
+
+- KEY: ubi.it.security
+  EXPLAIN: セキュリティ
+  BODY: |
+    Authorization
+    Authentication
+    OAuth
+    Auth0
+    Token
+    JWT(Jason Web Token, ジョット)
+
+- KEY: ubi.it.variable
+  EXPLAIN: 変数名
+  BODY: |
+    camelCase
+    PascalCase
+    snake_case
+    kebab-case
+
+- KEY: ubi.it.clientSide.storage
+  EXPLAIN: クライアントサイドストレージ
+  BODY: |
+    ストレージ
+    Cookie クッキー
+    Session セッション
+    IndexedDB
+    LocalStorage
+
+- KEY: ubi.it.JavaScript
+  EXPLAIN: JavaScript/TypeScript
+  BODY: |
+    オブジェクトリテラル
+    分割代入(Spread構文)
+    残余引数(Rest構文)
+
+- KEY: ubi.it.react
+  EXPLAIN: React
+  BODY: |
+    v18
+    Suspense
+    Fallback
+    Spinner
+
+- KEY: ubi.it.react.state
+  EXPLAIN: ステート管理
+  BODY: |
+    ReduxToolkit
+    Dispatch
+    Recoil
+    zuStand
+    Jotai
+
+- KEY: ubi.it.css
+  EXPLAIN: CSS
+  BODY: |
+    CSS
+    SASS
+    レスポンシブ
+    StyledCompo
+    Emotion
+    Tailwind
+
+- KEY: ubi.it.component
+  EXPLAIN: コンポーネント
+  BODY: |
+    モダル
+    Overlay
+
+- KEY: ubi.it.formUI
+  EXPLAIN: Form & UI
+  BODY: |
+    MUI
+    ReactHookForm
+    Chakra
+    HeadlessUI
+
+- KEY: ubi.it.fetch
+  EXPLAIN: Fetch & Caching
+  BODY: |
+    fetch
+    Apollo
+    React Query
+    SWR
+
+- KEY: ubi.it.test
+  EXPLAIN: テスト
+  BODY: |
+    Mock
+    Stub
+    Spy
+    Jest
+    Vitest
+    RTL
+    PlayWright
+    Cypress
+
+- KEY: ubi.it.lint
+  EXPLAIN: Lint
+  BODY: |
+    Lint
+    esLint
+
+- KEY: ubi.it.cloud
+  EXPLAIN: Cloud
+  BODY: |
+    クラウド
+    AWS
+    GCP
+    Azure

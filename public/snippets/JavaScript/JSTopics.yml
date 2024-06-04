@@ -255,7 +255,7 @@
 - KEY: js.array.function.shuffle
   EXPLAIN: シャッフルアルゴリズム
   BODY: |
-    //フィッシャーイェーツの配列シャッフルアルゴリズム
+    ■ フィッシャーイェーツの配列シャッフルアルゴリズム
     const shuffleArray_FisherYates = (arrParam: number[]) => {
       let arr = [...arrParam]
       for (let i = arr.length - 1; i >= 0; i--) {
@@ -277,14 +277,12 @@
       { id: 45, name: "orange" },
     ]
     const map = new Map<number, string>(objArr.map(({ id, name }) => [id, name]))
-    console.log(map)
 
 - KEY: js.map.map2arr
   EXPLAIN: Map->Array
   BODY: |
     const map = new Map([["a", 1],["b", 2]])
     const arr = Array.from(map)
-    console.log(arr)
 
 - KEY: js.map.map2obj
   EXPLAIN: Map->Object(制限あり)
@@ -292,13 +290,45 @@
     //keyはstringに変換
     const map = new Map([["a", 1],["b", 2]])
     const obj = Object.fromEntries(map)
-    console.log(obj)
 
 - KEY: js.map.map2map
   EXPLAIN: Map->Map
   BODY: |
     const map1 = new Map<string,number>()
-    const map2 = new Map(map2)
+    const map2 = new Map(map1)
+
+#-------------------------------
+# Set & Map
+#-------------------------------
+
+- KEY: js.map.set2map
+  EXPLAIN: Obj->Set->Map
+  BODY: |
+    const data = [
+      { name: "A", type: "M1" },
+      { name: "B", type: "M2" },
+    ];
+
+    ■ Object => Set 生成
+    const noDupSet = new Set(
+      data.map((n) => [n.name, n.type]),
+    );
+
+    ■ Set => Map 生成
+    const noDupMap = new Map(
+      Array.from(noDupSet, ([v1,v2])=>[v1, v2])   // Iterator必須
+    );
+
+    ■ [NG] Set => Map 生成
+    const error = new Map(noDupSet);              // NG
+
+    ■ [NG] Set => Array => Map 生成: Error
+    const noDupArray = Array.from(noDupSet);
+    const error = new Map(noDupArray);            // NG
+
+    ■ [NG] Set => Array(Iterator) => Map 生成: Error
+    const noDupArrayIte = Array.from(noDupSet, ([v1,v2])=>[v1, v2]);
+    const noDupMap = new Map(noDupArrayIte);      // これもNG!
 
 #-------------------------------
 # 乱数

@@ -10,6 +10,7 @@ import { zooMenu } from "../store/menuStore"
 import { PageBody } from "../pages/base/PageBody"
 import { useSnippets } from "../library/hooks/useSnippets"
 import { Menu } from "./Menu"
+import { Top } from "./Top"
 
 //------------------------------
 // Main
@@ -32,7 +33,13 @@ export const Layout = () => {
       <Body data-testid="body">
         <Menu />
         <Playground data-testid="playground">
-          <PageBody Snippets={Snippets} isPending={isPending} />
+          <>
+            {selectedMenu ? (
+              <PageBody Snippets={Snippets} isPending={isPending} />
+            ) : (
+              <Top />
+            )}
+          </>
         </Playground>
       </Body>
     </Section>

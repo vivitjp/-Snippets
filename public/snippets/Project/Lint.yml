@@ -22,3 +22,154 @@
     /* eslint-disable no-unused-vars */
     ...
     /* eslint-enable no-unused-vars */
+
+#-------------------------------
+# 実行
+#-------------------------------
+- KEY: lint.execution
+  EXPLAIN: 実行
+  BODY: |
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --quiet"
+    "lint": "eslint --fix 'src/**/*.ts'"          // 修正箇所の限定
+
+#-------------------------------
+#
+#-------------------------------
+- KEY: lint.install.init
+  EXPLAIN: インストール & init
+  BODY: |
+    npm i -D eslint
+    yarn add eslint --dev
+
+    yarn run eslint --init
+
+    \# ? How would you like to use ESLint? … 
+    \#   To check syntax only
+    \# ❯ To check syntax and find problems
+    \#   To check syntax, find problems, and enforce code style
+
+    \# ? What type of modules does your project use? … 
+    \# ❯ JavaScript modules (import/export)
+    \#   CommonJS (require/exports)
+    \#   None of these
+
+    \# ? Which framework does your project use? … 
+    \# ❯ React
+    \#   Vue.js
+    \#   None of these
+
+    \# ? Does your project use TypeScript? › No / ❯ Yes
+
+    \# ? Where does your code run? 
+    \# ✔ Browser
+    \# ✔ Node
+
+    \# ? What format do you want your config file to be in? … 
+    \# ❯ JavaScript
+    \#   YAML
+    \#   JSON
+
+    \# The config that you've selected requires the following dependencies:
+    \# 
+    \# @typescript-eslint/eslint-plugin@latest @typescript-eslint/parser@latest
+    \# ? Would you like to install them now with npm? › No / ❯ Yes
+
+- KEY: lint.setting
+  EXPLAIN: 設定とプラグイン
+  BODY: |
+    ■ VScode に ESLint プラグイン追加
+    【.eslistrc.js】
+
+    module.exports = {
+      "env": {
+        "browser": true,                          // ブラウザ対応
+        "es2021": true,                           // ES2021に対応
+        "node": true                              // Node.js対応
+      },
+
+      "extends": [                                // ESLintの推奨設定を使う
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended"
+      ],
+
+      "parser": "@typescript-eslint/parser",
+
+      "parserOptions": {
+        "ecmaVersion": 12,
+        "sourceType": "module"
+      },
+
+      "plugins": [
+        "@typescript-eslint"
+      ],
+
+      "rules": {
+        "semi": ["error", "never"]                // []の第1引数:【error/warn/off】
+                                                  // []の第2引数: rule固有のOptionを定義
+                                                  // semiには"never"というOptionあり
+      }
+    }
+
+# - KEY: lint.xxxxxxx
+#   EXPLAIN: ZZZZZZZZZZZ
+#   BODY: |
+
+# - KEY: lint.xxxxxxx
+#   EXPLAIN: ZZZZZZZZZZZ
+#   BODY: |
+
+# - KEY: lint.xxxxxxx
+#   EXPLAIN: ZZZZZZZZZZZ
+#   BODY: |
+
+# - KEY: lint.xxxxxxx
+#   EXPLAIN: ZZZZZZZZZZZ
+#   BODY: |
+
+# - KEY: lint.xxxxxxx
+#   EXPLAIN: ZZZZZZZZZZZ
+#   BODY: |
+
+# - KEY: lint.xxxxxxx
+#   EXPLAIN: ZZZZZZZZZZZ
+#   BODY: |
+
+# - KEY: lint.xxxxxxx
+#   EXPLAIN: ZZZZZZZZZZZ
+#   BODY: |
+
+# - KEY: lint.xxxxxxx
+#   EXPLAIN: ZZZZZZZZZZZ
+#   BODY: |
+
+# - KEY: lint.xxxxxxx
+#   EXPLAIN: ZZZZZZZZZZZ
+#   BODY: |
+
+# - KEY: lint.xxxxxxx
+#   EXPLAIN: ZZZZZZZZZZZ
+#   BODY: |
+
+# - KEY: lint.xxxxxxx
+#   EXPLAIN: ZZZZZZZZZZZ
+#   BODY: |
+
+# - KEY: lint.xxxxxxx
+#   EXPLAIN: ZZZZZZZZZZZ
+#   BODY: |
+
+# - KEY: lint.xxxxxxx
+#   EXPLAIN: ZZZZZZZZZZZ
+#   BODY: |
+
+# - KEY: lint.xxxxxxx
+#   EXPLAIN: ZZZZZZZZZZZ
+#   BODY: |
+
+# - KEY: lint.xxxxxxx
+#   EXPLAIN: ZZZZZZZZZZZ
+#   BODY: |
+
+# - KEY: lint.xxxxxxx
+#   EXPLAIN: ZZZZZZZZZZZ
+#   BODY: |

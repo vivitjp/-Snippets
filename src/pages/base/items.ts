@@ -8,12 +8,42 @@ type menuByCategories = {
 
 export const menuItems: menuByCategories[] = [
   {
+    category: "ユビキタス",
+    items: [
+      {
+        name: "🔺IT",
+        fileName: "Ubiquitous/IT",
+        codeKeyTypes: [],
+      },
+    ],
+  },
+  {
+    category: "Editor",
+    items: [
+      {
+        name: "⛔VSCode",
+        fileName: "",
+        codeKeyTypes: [],
+      },
+    ],
+  },
+  {
     category: "Html/CSS",
     items: [
+      {
+        name: "⛔HTML",
+        fileName: "",
+        codeKeyTypes: [],
+      },
       {
         name: "HTML(Topics)",
         fileName: "html/HTML",
         codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS],
+      },
+      {
+        name: "⛔CSS",
+        fileName: "",
+        codeKeyTypes: [],
       },
       {
         name: "CSS(Topics)",
@@ -21,13 +51,14 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.CSS],
       },
       {
-        name: "⛔CSS(レスポンシブ)",
+        name: "⛔CSS(Responsive)",
         fileName: "",
         codeKeyTypes: [codeKeys.CSS],
       },
       {
         name: "CSSColor:color",
         fileName: "html/CSSColor",
+        encodeRequired: false,
       },
     ],
   },
@@ -35,32 +66,12 @@ export const menuItems: menuByCategories[] = [
     category: "JavaScript",
     items: [
       {
-        name: "JavaScript:js",
-        fileName: "JavaScript/JavaScript",
+        name: "Topics:js",
+        fileName: "JavaScript/JSTopics",
         codeKeyTypes: [codeKeys.JSTS],
       },
       {
-        name: "TypeScript:ts",
-        fileName: "JavaScript/TypeScript",
-        codeKeyTypes: [codeKeys.JSTS],
-      },
-      {
-        name: "TS(Topics):ts",
-        fileName: "JavaScript/TypeScriptTips",
-        codeKeyTypes: [codeKeys.JSTS],
-      },
-      {
-        name: "TS Util:ts",
-        fileName: "JavaScript/TypeScriptUtilities",
-        codeKeyTypes: [codeKeys.JSTS, codeKeys.TS],
-      },
-      {
-        name: "非同期:js",
-        fileName: "JavaScript/JavaScriptAsync",
-        codeKeyTypes: [codeKeys.JSTS],
-      },
-      {
-        name: "DOM",
+        name: "DOM:dom",
         fileName: "JavaScript/DOM",
         codeKeyTypes: [codeKeys.DOM],
       },
@@ -71,6 +82,37 @@ export const menuItems: menuByCategories[] = [
       },
     ],
   },
+  {
+    category: "TypeScript",
+    items: [
+      {
+        name: "TypeScript:ts",
+        fileName: "TypeScript/TypeScript",
+        codeKeyTypes: [codeKeys.JSTS],
+      },
+      {
+        name: "Topics:ts",
+        fileName: "TypeScript/TSTopics",
+        codeKeyTypes: [codeKeys.JSTS],
+      },
+      {
+        name: "Utilities:ts",
+        fileName: "TypeScript/Utilities",
+        codeKeyTypes: [codeKeys.JSTS, codeKeys.TS],
+      },
+      {
+        name: "非同期:js",
+        fileName: "TypeScript/Async",
+        codeKeyTypes: [codeKeys.JSTS],
+      },
+      {
+        name: "⛔TSConfig",
+        fileName: "",
+        codeKeyTypes: [],
+      },
+    ],
+  },
+
   {
     category: "React",
     items: [
@@ -95,7 +137,7 @@ export const menuItems: menuByCategories[] = [
     category: "React:State",
     items: [
       {
-        name: "zustand:pk",
+        name: "🔺zustand:pk",
         fileName: "ReactGState/zustand",
         codeKeyTypes: [codeKeys.JSTS, codeKeys.React],
       },
@@ -151,6 +193,16 @@ export const menuItems: menuByCategories[] = [
           codeKeys.Package,
         ],
       },
+      {
+        name: "⛔Tailwind",
+        fileName: "",
+        codeKeyTypes: [],
+      },
+      {
+        name: "⛔Panda",
+        fileName: "",
+        codeKeyTypes: [],
+      },
     ],
   },
 
@@ -171,6 +223,66 @@ export const menuItems: menuByCategories[] = [
           codeKeys.React,
           codeKeys.Package,
         ],
+      },
+    ],
+  },
+  {
+    category: "Nodejs",
+    items: [
+      {
+        name: "npm/yarn:ny",
+        fileName: "frameWork/nodejs/npm_yarn",
+        codeKeyTypes: [codeKeys.NPM],
+      },
+      {
+        name: "npm:npm",
+        fileName: "frameWork/nodejs/npm",
+        codeKeyTypes: [codeKeys.NPM],
+      },
+      {
+        name: "⛔pnpm",
+        fileName: "",
+        codeKeyTypes: [],
+      },
+      {
+        name: "⛔Webpack",
+        fileName: "",
+        codeKeyTypes: [],
+      },
+      {
+        name: "環境変数",
+        fileName: "/frameWork/nodejs/env",
+        codeKeyTypes: [],
+      },
+      {
+        name: "⛔Express",
+        fileName: "",
+        codeKeyTypes: [],
+      },
+    ],
+  },
+  {
+    category: "Nodejs Bundlers",
+    items: [
+      {
+        name: "⛔Bun",
+        fileName: "",
+        codeKeyTypes: [],
+      },
+      {
+        name: "⛔Vite",
+        fileName: "",
+        codeKeyTypes: [],
+      },
+    ],
+  },
+  {
+    category: "Nextjs",
+    items: [
+      {
+        name: "⛔Nextjs",
+        fileName: "",
+        codeKeyTypes: [],
       },
     ],
   },
@@ -202,20 +314,10 @@ export const menuItems: menuByCategories[] = [
         fileName: "frameWork/Nestjs/ClassTransformer",
         codeKeyTypes: [codeKeys.ClassTransformer],
       },
-    ],
-  },
-  {
-    category: "Framework",
-    items: [
       {
-        name: "⛔Node",
-        fileName: "",
-        codeKeyTypes: [],
-      },
-      {
-        name: "⛔Nextjs",
-        fileName: "",
-        codeKeyTypes: [],
+        name: "🔺Swagger",
+        fileName: "frameWork/Nestjs/Swagger",
+        codeKeyTypes: [codeKeys.Swagger],
       },
     ],
   },
@@ -250,7 +352,7 @@ export const menuItems: menuByCategories[] = [
     ],
   },
   {
-    category: "OS & Docker",
+    category: "Docker",
     items: [
       {
         name: "docker",
@@ -264,10 +366,20 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.Docker],
         case_sensitive: false,
       },
+    ],
+  },
+  {
+    category: "OS",
+    items: [
       {
         name: "Linux",
         fileName: "OS/LinuxCommand",
         codeKeyTypes: [codeKeys.Linux],
+      },
+      {
+        name: "⛔Shell",
+        fileName: "",
+        codeKeyTypes: [],
       },
     ],
   },
@@ -281,17 +393,16 @@ export const menuItems: menuByCategories[] = [
         case_sensitive: false,
       },
       {
-        name: "⛔PostgreSQL",
-        fileName: "",
-        codeKeyTypes: [],
-      },
-      {
         name: "MongoDB",
         fileName: "database/mongo",
         codeKeyTypes: [codeKeys.Mongo, codeKeys.Python],
         case_sensitive: false,
       },
-
+      {
+        name: "⛔PostgreSQL",
+        fileName: "",
+        codeKeyTypes: [],
+      },
       {
         name: "⛔GraphQL",
         fileName: "",
@@ -305,27 +416,27 @@ export const menuItems: menuByCategories[] = [
     ],
   },
   {
-    category: "Project管理",
+    category: "Git管理",
     items: [
-      {
-        name: "npm/yarn",
-        fileName: "Project/npm_yarn",
-        codeKeyTypes: [codeKeys.NPM],
-      },
       {
         name: "Git",
         fileName: "Project/Git",
         codeKeyTypes: [codeKeys.Git],
       },
       {
-        name: "Lint",
-        fileName: "Project/Lint",
+        name: "⛔GitHub",
+        fileName: "",
+        codeKeyTypes: [],
       },
     ],
   },
   {
     category: "テスト",
     items: [
+      {
+        name: "🔺Lint",
+        fileName: "Project/Lint",
+      },
       {
         name: "jest",
         fileName: "Test/Jest",
@@ -335,6 +446,16 @@ export const menuItems: menuByCategories[] = [
         name: "⛔RTL",
         fileName: "",
         codeKeyTypes: [codeKeys.Jest],
+      },
+      {
+        name: "⛔Cypress",
+        fileName: "",
+        codeKeyTypes: [],
+      },
+      {
+        name: "⛔Playwright",
+        fileName: "",
+        codeKeyTypes: [],
       },
     ],
   },
@@ -391,6 +512,15 @@ export const menuItems: menuByCategories[] = [
       },
       {
         name: "⛔Cookie",
+        fileName: "",
+      },
+    ],
+  },
+  {
+    category: "CS",
+    items: [
+      {
+        name: "⛔デザインパターン",
         fileName: "",
       },
     ],

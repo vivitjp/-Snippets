@@ -50,6 +50,21 @@ span.syntaxQ {
   color: white;
 }
 
-span.colorName {
+div.colorTr {
+  display: flex;
+  flex-flow: row;
+  margin-bottom: 2px;
+  gap: 5px;
+}
+div.colorName {
   font-size: 18px;
+  width: 250px;
+  padding: 3px 10px;
+  background-color: white;
+}
+div.colorReversed {
+  font-size: 18px;
+  width: 250px;
+  background-color: black;
+  padding: 3px 10px;
 }

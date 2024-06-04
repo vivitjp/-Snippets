@@ -17,6 +17,7 @@ import { keysPackageRHF } from "./keys/PackageRHF"
 import { keysPython } from "./keys/Python"
 import { keysReact } from "./keys/React"
 import { keysRegExp } from "./keys/RegExp"
+import { keysSwagger } from "./keys/Swagger"
 import { keysTS } from "./keys/TS"
 import { keysTypeORM } from "./keys/TypeORM"
 import { keysCurl } from "./keys/curl"
@@ -47,6 +48,7 @@ export const codeKeys = {
   ClassValidator: "ClassValidator",
   ClassTransformer: "ClassTransformer",
   Nestjs: "Nestjs",
+  Swagger: "Swagger",
   Unknown: "Unknown",
 } as const
 
@@ -78,6 +80,7 @@ export const KeyAndCodes: Record<CodeKeyType, KeyDef[]> = {
   ClassValidator: keysClassValidator,
   ClassTransformer: keysClassTransformer,
   Nestjs: keysNestjs,
+  Swagger: keysSwagger,
   Unknown: [],
 }
 

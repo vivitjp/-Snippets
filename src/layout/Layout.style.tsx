@@ -69,6 +69,18 @@ export const Group = styled.details`
   gap: 5px;
   width: 100%;
 `
+
+export const GroupRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  padding: 6px;
+  border-bottom: 1px solid #aaa;
+`
+
 export const MenuGroupTitle = styled.summary`
   display: flex;
   justify-content: flex-start;
@@ -91,6 +103,14 @@ export const MenuGroupTitle = styled.summary`
 export const GroupBody = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-left: 5px;
+`
+
+export const GroupBodyRow = styled.div`
+  display: flex;
+  flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
   padding-left: 5px;

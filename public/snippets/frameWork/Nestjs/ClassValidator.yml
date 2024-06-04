@@ -146,6 +146,32 @@
     @IsMimeType()                       // 文字列が有効な MIME タイプ 形式に一致するか
     @IsStrongPassword(options)          // 文字列が強力なパスワードか
 
+- KEY: valid.MinLength.callbacks
+  EXPLAIN: MinLength:コールバック
+  BODY: |
+    @MinLength(10, {
+      message:(args: ValidationArguments)=> {
+        if(args.value.length === 1){
+          return 'Too short, at least 1 char required';
+        } else {
+          return 'Too short, min length is ' + args.constraints[0] + ' chars';
+        }
+      },
+    })
+    title: string;
+
+- KEY: valid.MinLength.context
+  EXPLAIN: MinLength:Context
+  BODY: |
+    @MinLength(32, {
+      message: 'EIC code must be at least 32 characters',
+      context: {
+        errorCode: 1003,                          //内部は任意の属性
+        developerNote: 'The validated string must contain 32 or more characters.',
+      },
+    })
+    eicCode: string;
+
 - KEY: valid.custom.IsJISString
   EXPLAIN: カスタムデコレータ(IsJISString)
   BODY: |
