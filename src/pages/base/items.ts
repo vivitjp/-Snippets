@@ -8,26 +8,6 @@ type menuByCategories = {
 
 export const menuItems: menuByCategories[] = [
   {
-    category: "ユビキタス",
-    items: [
-      {
-        name: "🔺IT",
-        fileName: "Ubiquitous/IT",
-        codeKeyTypes: [],
-      },
-    ],
-  },
-  {
-    category: "Editor",
-    items: [
-      {
-        name: "⛔VSCode",
-        fileName: "",
-        codeKeyTypes: [],
-      },
-    ],
-  },
-  {
     category: "Html",
     items: [
       {
@@ -36,8 +16,8 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.HTML],
       },
       {
-        name: "🔺HTML(Topics)",
-        fileName: "html/HTMLTopics",
+        name: "🔺Purpose",
+        fileName: "html/Purpose",
         codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS],
       },
     ],
@@ -567,6 +547,26 @@ export const menuItems: menuByCategories[] = [
       {
         name: "⛔Excel Methods",
         fileName: "",
+      },
+    ],
+  },
+  {
+    category: "ユビキタス",
+    items: [
+      {
+        name: "🔺IT",
+        fileName: "Ubiquitous/IT",
+        codeKeyTypes: [],
+      },
+    ],
+  },
+  {
+    category: "Editor",
+    items: [
+      {
+        name: "🔺VSCode",
+        fileName: "editor/VSCode",
+        codeKeyTypes: [],
       },
     ],
   },

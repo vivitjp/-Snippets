@@ -42,11 +42,13 @@
 - KEY: html.特殊文字
   EXPLAIN: 特殊文字
   BODY: |
-    &lt;: 右大不等号
-    &gt;: 左大不等号
-    &amp;: アンパサンド
-    &quot;: ダブルクォート
-    &nbsp;: 空白文字
+    &amp;         // &
+    &copy;        // ©
+    &quot;        // "
+    &apos;        // '
+    &nbsp;        // Space
+    &lt;          // <
+    &gt;          // >
 
 - KEY: html.root
   EXPLAIN: Root タグまとめ
@@ -322,20 +324,31 @@
       <area shape="default" href="d.htm">
     </map>
 
-# - KEY: html.xxxxxx
-#   EXPLAIN: ZZZZZ
-#   BODY: |
-#     ■ <li> リスト
+- KEY: html.ul
+  EXPLAIN: <ul><li> リスト(順序無)
+  BODY: |
+    <ul style="list-style-type: TYPE_NAME">
+      <li>Item A</li>
+      <li>Item B</li>
+      <li>Item C</li>
+    </ul>
 
-# - KEY: html.xxxxxx
-#   EXPLAIN: ZZZZZ
-#   BODY: |
-#     ■ <ul> 順序無
+    TYPE_NAME: none, disc, circle, square
 
-# - KEY: html.xxxxxx
-#   EXPLAIN: ZZZZZ
-#   BODY: |
-#     ■ <ol> 順序有
+- KEY: html.ol
+  EXPLAIN: <ol><li> リスト(順序有)
+  BODY: |
+    <ol style="list-style-type: TYPE_NAME">
+      <li>Item A</li>
+      <li>Item B</li>
+      <li>Item C</li>
+    </ol>
+
+    TYPE_NAME: lower-roman, upper-roman,
+               lower-greek,
+               lower-latin, upper-latin,
+               lower-alpha, upper-alpha
+               decimal, decimal-leading-zero,
 
 # - KEY: html.xxxxxx
 #   EXPLAIN: ZZZZZ
@@ -1192,7 +1205,7 @@
   BODY: |
     type=MIMEタイプ
 
-    a,area,link,embed,object,script,source,style
+    a,area,link,embed,object,script,source,style で使用可能
 
     ■ MIMEタイプ
     text/html(HTML文書)
@@ -1203,435 +1216,489 @@
     text/css(CSSファイル)
 
 - KEY: html.attr.char
-  EXPLAIN: 【属性】char
+  EXPLAIN: 【属性】char(非)
   BODY: |
-#     ■ char= 桁揃え
-#       char 小数点 char 属性で指定した文字で揃える。テーブルのセルでのみ有効。作動しないケースが多い。
-#       CODE  <div class="c1">
+    char= 桁揃え
+
+    char 小数点 char 属性で指定した文字で揃える
+    テーブルのセルでのみ有効
+    作動しないケースが多い
 
 - KEY: html.attr.contenteditable
   EXPLAIN: 【属性】contenteditable
   BODY: |
-#     ■ contenteditable= 編集許可
-#       "true にすると HTMLのコンテンツをブラウザ上で編集することができるようになる。
-# true/false/inherit"
-#       <div contenteditable=true>編集可能テキスト</div>
+    contenteditable=true/false/inherit  // 編集許可
+
+    true にすると HTMLのコンテンツをブラウザ上で編集することができるようになる
+
+    <div contenteditable=true>編集可能テキスト</div>
 
 - KEY: html.attr.contextmenu
-  EXPLAIN: 【属性】contextmenu
+  EXPLAIN: 【属性】contextmenu(非)
   BODY: |
-#     ■ contextmenu= 右Clickメニュ
-#       右クリックした際に表示されるコンテキストメニューを指定。作動しないケースが多い。
-#       "<div contextmenu="menu1">メニューA</div>
-#  <menu type="context" id="menu1">
-#   <menuitem label="Google" onclick="location.href='http://www.google.co.jp/'"></menuitem>
-#   <menuitem label="Yahoo" onclick="location.href='http://www.yahoo.co.jp/'"></menuitem>
-#  </menu>
-# </form>"
+    contextmenu=右Clickメニュー
+
+    右クリックした際に表示されるコンテキストメニューを指定
+    作動しないケースが多い。
+
+    <div contextmenu="menu1">メニューA</div>
+      <menu type="context" id="menu1">
+        <menuitem label="Google" onclick="location.href='http://www.google.co.jp/'"></menuitem>
+        <menuitem label="Yahoo" onclick="location.href='http://www.yahoo.co.jp/'"></menuitem>
+      </menu>
+    </form>
 
 - KEY: html.attr.crossorigin
   EXPLAIN: 【属性】crossorigin
   BODY: |
-#     ■ crossorigin= CORS指定
-#       "CORS(Cross-Origin Resource Sharing) に関する属性
+    crossorigin= CORS指定
 
-# img, script, audio, video, link要素で指定可能。同一生成元ポリシー(Same-Origin Policy)に対するで、異なったオリジン(プロトコル, サーバ名, ポート番号の組み合わせ)間で画像などを共有するために使用。
+    CORS(Cross-Origin Resource Sharing) に関する属性
+    同一生成元ポリシーで異なったオリジン間でデータを共有する仕組み
+      同一生成元ポリシー(Same-Origin Policy)
+      オリジン(プロトコル, サーバ名, ポート番号の組み合わせ)
+    img, script, audio, video, link要素で指定可能
+    anonymous 認証情報不使用(Originヘッダ送信)
+    use-credintials 認証情報使用(Originヘッダ非送信)
 
-# anonymous 認証情報不使用(Originヘッダ送信)
-# use-credintials 認証情報使用(Originヘッダ非送信)"
-#       CODE  "<script
-#   src="https://code.jquery.com/jquery-3.3.1.min.js"
-#   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-#   crossorigin="anonymous"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous">
+    </script>
 
-# <script>
-# window.onload = function(){
-#   var canvas = document.getElementById("canvas");
-#   var context = canvas.getContext("2d");
-#   var img = new Image();
-#   img.crossOrigin = "anonymous";
-#   img.src = "http://www.exapmple.com/sample.png"+"?"+new Date().getTime();
-#   img.onload = function() {
-#     context.drawImage(img, 40, 40);
-#     var base64 = canvas.toDataURL("image/png");
-#     // crossorigin無しだとエラー
-#   }
-# }
-# </script>
+    <script>
+    window.onload = function(){
+      var canvas = document.getElementById("canvas");
+      var context = canvas.getContext("2d");
+      var img = new Image();
+      img.crossOrigin = "anonymous";
+      img.src = "http://www.exapmple.com/sample.png"+"?"+new Date().getTime();
+      img.onload = function() {
+        context.drawImage(img, 40, 40);
+        var base64 = canvas.toDataURL("image/png");
+        // crossorigin無しだとエラー
+      }
+    }
+    </script>
 
-# <canvas id="canvas" width=400 height=400></canvas>"
+    <canvas id="canvas" width=400 height=400></canvas>"
 
 #     ■ dir= 表示の方向制御
 
 - KEY: html.attr.disabled
   EXPLAIN: 【属性】disabled
   BODY: |
-#     ■ disabled 無効化
-#       "<textarea disabled rows=2 cols=50>
-# 編集不可内容
-# </textarea>"
+    disabled 無効化
+
+    <textarea disabled rows=2 cols=50>
+      編集不可内容
+    </textarea>
 
 - KEY: html.attr.draggable
   EXPLAIN: 【属性】draggable
   BODY: |
-#     ■ draggable= ドラッグ可能
-#       draggable="true"でドラッグが可能になる。HTML5だが、使用可能
-#       CODE  "<div
-#   draggable="true"
-#   ondragstart="doDragStart(event)"
-# >Move</div>
+    draggable=ドラッグ可能
 
-# <div class="dustbox"
-#   ondragover="doDragOver(event)"
-#   ondrop="doDrop(event, this)"
-# >Dustbox</div>
+    draggable="true"でドラッグが可能
 
-# <script>
-# function doDragStart(event) {
-#   var name = event.target.innerHTML;
-#   event.dataTransfer.setData("text/plain", name);
-# }
+    <div
+      draggable="true"
+      ondragstart="doDragStart(event)"
+    >Move</div>
 
-# function doDragOver(event) {
-#   event.preventDefault();
-# }
+    <div class="dustbox"
+      ondragover="doDragOver(event)"
+      ondrop="doDrop(event, this)"
+    >Dustbox</div>
 
-# function doDrop(event, dustbox) {
-#   event.preventDefault();
-#   var name = event.dataTransfer.getData("text/plain");
-#   dustbox.innerHTML += (name + " ");
-# }
-# </script>"
+    <script>
+    function doDragStart(event) {
+      var name = event.target.innerHTML;
+      event.dataTransfer.setData("text/plain", name);
+    }
+
+    function doDragOver(event) {
+      event.preventDefault();
+    }
+
+    function doDrop(event, dustbox) {
+      event.preventDefault();
+      var name = event.dataTransfer.getData("text/plain");
+      dustbox.innerHTML += (name + " ");
+    }
+    </script>
 
 - KEY: html.attr.dropzone
   EXPLAIN: 【属性】dropzone
   BODY: |
-#     ■ dropzone= ドロップゾーン
-#       未詳
+    dropzone= ドロップゾーン
+
+    Drag & Drop で使用
 
 - KEY: html.attr.hidden
   EXPLAIN: 【属性】hidden
   BODY: |
-#     ■ hidden 要素を隠蔽
-#       要素を隠しま
-#       "<div>AAA</div>
-# <div hidden>BBB</div>
-# <div>CCC</div>"
+    hidden 要素を隠蔽
+
+    <div>AAA</div>
+      <div hidden>BBB</div>
+    <div>CCC</div>
 
 - KEY: html.attr.hidefocus
-  EXPLAIN: 【属性】hidefocus
+  EXPLAIN: 【属性】hidefocus(非)
   BODY: |
-#     ■ hidefocus= フォーカス隠蔽
-#       hidefocus="true"。非サポートブラウザ多数。
-#       "<button>OK</button><br>
-# <button hidefocus="true">OK</button><br>
-# <a href="xxx.htm">XXX</a><br>
-# <a href="xxx.htm" hidefocus="true">XXX</a><br>"
+    hidefocus= フォーカス隠蔽
+
+    hidefocus="true"
+    非サポートブラウザ多数
+
+    <button>OK</button>
+    <button hidefocus="true">OK</button>
+    <a href="xxx.htm">XXX</a>
+    <a href="xxx.htm" hidefocus="true">XXX</a>
 
 - KEY: html.attr.inputmode
-  EXPLAIN: 【属性】inputmode
+  EXPLAIN: 【属性】inputmode(CSSに移動)
   BODY: |
-#     ■ inputmode= 入力モード
-#       "input,textarea 要素に対する入力モード指定。HTML5.2で削除。実装例少ない。スタイルシートの ime-mode 参照。
+    inputmode= 入力モード
 
-# none: 入力モードを指定しない(LS)
-# text: テキスト入力モード(LS)
-# tel: 電話番号入力モード(H5.1-5.1)
-# url: URL 入力モード(H5.1-5.1)
-# email: Eメールアドレス入力モード(H5.1-5.1)
-# numeric: 数値入力モード(H5.1-5.1)
-# decimal: 整数値入力モード(LS)
-# search: 検索語入力モード(LS)
-# verbatim: ラテン文字逐語モード(HTML 5.1の規定値)(H5.1-5.1)
-# latin: ラテン文字モード(H5.1-5.1)
-# latin-name: ラテン文字入力モード(名前入力用)(H5.1-5.1)
-# latin-prose: ラテン文字文章入力モード(H5.1-5.1)
-# full-width-latin: 全角ラテン文字入力モード(H5.1-5.1)
-# kana: 漢字変換ひらがな入力モード(H5.1-5.1)
-# kana-name: 漢字変換ひらがな入力モード(名前入力用)(H5.1-5.1)
-# katakana: カタカナ入力モード(H5.1-5.1)"
-#       CODE  "<div>TEL:
-#   <input type="text" inputmode="tel">
-# </div>"
+    input,textarea 要素に対する入力モード指定
+    HTML5.2で削除。実装例少ない
+    スタイルシートの ime-mode 参照
+
+    none              入力モードを指定しない(LS)
+    text              テキスト入力モード(LS)
+    tel               電話番号入力モード(H5.1-5.1)
+    url               URL 入力モード(H5.1-5.1)
+    email             Eメールアドレス入力モード(H5.1-5.1)
+    numeric           数値入力モード(H5.1-5.1)
+    decimal           整数値入力モード(LS)
+    search            検索語入力モード(LS)
+    verbatim          ラテン文字逐語モード(HTML 5.1の規定値)(H5.1-5.1)
+    latin             ラテン文字モード(H5.1-5.1)
+    latin-name        ラテン文字入力モード(名前入力用)(H5.1-5.1)
+    latin-prose       ラテン文字文章入力モード(H5.1-5.1)
+    full-width-latin  全角ラテン文字入力モード(H5.1-5.1)
+    kana              漢字変換ひらがな入力モード(H5.1-5.1)
+    kana-name         漢字変換ひらがな入力モード(名前入力用)(H5.1-5.1)
+    katakana          カタカナ入力モード(H5.1-5.1)
+
+    <div>TEL:
+      <input type="text" inputmode="tel">
+    </div>
 
 - KEY: html.attr.is
   EXPLAIN: 【属性】is
   BODY: |
-#     ■ is= カスタマイズドビルトイン
-#       CODE  "<script>
-# class AButton extends HTMLButtonElement {
-#   constructor() {
-#     super();
-#     this.addEventListener("click",()=>{ ... });
-#   }
-# }
-# customElements.define("a-button",AButton,{extends:"button"});
-# <script>
+    is= カスタマイズドビルトイン
 
-# <button is="plastic-button">Click Me!</button>"
+    <script>
+      class AButton extends HTMLButtonElement {
+        constructor() {
+          super();
+          this.addEventListener("click", ()=>{ ... });
+        }
+      }
 
-- KEY: html.attr.itemscope
+      customElements.define("a-button", AButton, { extends: "button" });
+    <script>
+
+    <button is="a-button">Click Me!</button>
+
+- KEY: html.attr.itemscope.itemtype
   EXPLAIN: 【属性】itemscope
   BODY: |
-#     ■ itemscope スコープ(構造化データ)
-#       構造化データ(Microformats,RDFa,JSON-LD)のひとつ、Microdata に関連する属性群。正確な意味づけし、自動データ抽出を可能に。
-#       CODE  "<div itemscope>
-#    :
-# </div>"
+    ● itemscope スコープ(構造化データ)
+    ● itemtype 種別(構造化データ)
+    ● itemid ID(構造化データ)
+      一意のグローバル識別子(例えば書籍の ISBN 番号)を示す URL/URN を指定
+    ● itemprop 属性名(構造化データ)
+    ● itemrel 疑似ID(構造化データ)
+      要素の親子関係に無いけれども、属性値として扱いたい要素の ID を指定
+      ID は空白区切りで複数指定可
+      itemscope 属性を指定した要素でのみ指定可
 
-- KEY: html.attr.itemtype
-  EXPLAIN: 【属性】itemtype
-  BODY: |
-#     ■ itemtype 種別(構造化データ)
-#       CODE  "<div itemscope itemtype="http://schema.org/Movie">
-#    :
-# </div>"
+    構造化データ(Microformats,RDFa,JSON-LD)のひとつ Microdata に関連する属性群
+    正確な意味づけし、自動データ抽出を可能に
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
-  BODY: |
-#     ■ itemid ID(構造化データ)
-#       一意のグローバル識別子(例えば書籍の ISBN 番号)を示す URL/URN を指定
-#       CODE
-
-#     ■ itemprop 属性名(構造化データ)
-#       CODE
-
-- KEY: html.attr.itemrel
-  EXPLAIN: 【属性】itemrel
-  BODY: |
-#     ■ itemrel 疑似ID(構造化データ)
-#       要素の親子関係に無いけれども、属性値として扱いたい要素の ID を指定。ID は空白区切りで複数指定可。itemscope 属性を指定した要素でのみ指定可。
-#       CODE
+    <div itemscope itemtype="https://schema.org/Movie">
+      <h1 itemprop="name">Avatar</h1>
+      <span>
+        Director:
+        <span itemprop="director">James Cameron</span>
+        (born August 16, 1954)
+      </span>
+      <span itemprop="genre">Science fiction</span>
+      <a href="https://youtu.be/0AY1XIkX7bY" itemprop="trailer">Trailer</a>
+    </div>
 
 - KEY: html.attr.lang
   EXPLAIN: 【属性】lang
   BODY: |
-#     ■ lang= 言語
-#       "ja(日),zh(中),ko(韓),en(英),de(独),fr(仏),it(伊),ru(露)
-# en-US(米国英語)、ja-osaka(大阪弁)などの方言設定も可能"
+    lang= 言語
+
+    ja(日),zh(中),ko(韓),en(英),de(独),fr(仏),it(伊),ru(露)
+
+    en-US(米国英語)、ja-osaka(大阪弁)などの方言設定も可能
 
 - KEY: html.attr.language
   EXPLAIN: 【属性】language
   BODY: |
-#     ■ language= スクリプト言語
-#       "language="JavaScript" (JavaScript)
-# language="JScript" (JavaScript)
-# language="VBScript" (VBScript)
-# language="VBS" (VBScript)"
+    language= スクリプト言語
+
+    language="JavaScript" (JavaScript)
+    language="JScript" (JavaScript)
+    language="VBScript" (VBScript)
+    language="VBS" (VBScript)
 
 - KEY: html.attr.nonce
-  EXPLAIN: 【属性】nonce
+  EXPLAIN: 【属性】nonce [HTML5.1]
   BODY: |
-#     ■ nonce= 改竄チェック
-#       [HTML5.1] コンテンツセキュリティポリシー(CPS: Content Security Policy)に従い、Webページ上に悪意を持って埋め込まれたスクリプトの実行を抑制。
-#       CODE  "HTTP ヘッダ
-# Content-Security-Policy: script-src 'nonce-hUygTfgbgFcdRt5eDqpLfB6f==' 'strict-dynamic'
+    nonce= 改竄チェック
 
-# <article>
-#   ～悪意のある書き込み～
-#   <script>悪意のあるスクリプト</script>
-#   ～悪意のある書き込み～
-# </article>
-# <script nonce="hUygTfgbgFcdRt5eDqpLfB6f==">正規のスクリプト</script>"
+    コンテンツセキュリティポリシー(CPS: Content Security Policy)
+    に従い、Webページ上に悪意を持って埋め込まれたスクリプトの実行を抑制
+
+    HTTP ヘッダ
+    Content-Security-Policy: script-src 'nonce-hUygTfgbgFcdRt5eDqpLfB6f==' 'strict-dynamic'
+
+    <article>
+      ～悪意のある書き込み～
+      <script>悪意のあるスクリプト</script>
+      ～悪意のある書き込み～
+    </article>
+
+    <script nonce="hUygTfgbgFcdRt5eDqpLfB6f==">正規のスクリプト</script>
 
 - KEY: html.attr.onbeforeunload
   EXPLAIN: 【属性】onbeforeunload
   BODY: |
-#     ■ onbeforeunload= Unloadコール
-#       ページがアンロードされる前に呼ばれ、ページを離れてもよいか確認するダイアログが表示されます。ダイアログに表示するメッセージを return で返します。Firefox ではメッセージが表示されない
-#       CODE  "<body onbeforeunload="return 'TEST'">
-# <script>
-# window.onbeforeunload = function(e){
-#   return "TEST";
-# }
-# </script>"
+    onbeforeunload= Unloadコール
+
+    ページがアンロードされる前に呼ばれ、ページを離れてもよいか確認するダイアログが表示
+    表示メッセージを return で返す
+
+    <body onbeforeunload="return 'TEST'">
+    <script>
+    window.onbeforeunload = function(e){ return "TEST"; }
+    </script>
 
 - KEY: html.attr.onmessage
   EXPLAIN: 【属性】onmessage
   BODY: |
-#     ■ onmessage= 受信ハンドラ
-#       postMessage() によるメッセージ受信時のハンドラを指定。Google Chrome や Opera では、ローカルファイルでは動作しません。http: か https: で始まるURLでアクセスしてください。
-#       CODE  "<script>
-# function init() {
-#   var worker = new Worker('test.js');
-#   worker.onmessage = function(event){
-#     document.getElementById('result').innerHTML = event.data;
-#   };
-# }
-# </script>
+    onmessage= 受信ハンドラ
 
-# <body onload="init()">
-#   <div id="result"></div>
-# </body>
+    postMessage() によるメッセージ受信時のハンドラを指定
+    Google Chrome や Opera では、ローカルファイルでは動作せず
+    http: か https: で始まるURLでアクセス
 
-# var count = 0;
-# setInterval(function(){
-#   postMessage('hoge' + count++);
-# },1000);"
+    <script>
+    function init() {
+      var worker = new Worker('test.js');
+      worker.onmessage = function(event){
+        document.getElementById('result').innerHTML = event.data;
+      };
+    }
+    </script>
+
+    <body onload="init()">
+      <div id="result"></div>
+    </body>
+
+    <script>
+    var count = 0;
+    setInterval(function(){ postMessage('hoge' + count++); },1000);
+    </script>
 
 - KEY: html.attr.onpopstate
   EXPLAIN: 【属性】onpopstate
   BODY: |
-#     ■ onpopstate= hisotry遷移
-#       同一ページ内でhisotryを遷移した際に発行
-#       CODE  "<script>
-# window.onload = function() {
-#   history.pushState({'page':1}, "page1", "?page=1");
-#   history.pushState({'page':2}, "page2", "?page=2");
-#   history.pushState({'page':3}, "page3", "?page=3");
-#   history.pushState({'page':4}, "page4", "?page=4");
-#   history.pushState({'page':5}, "page5", "?page=5");
-#   window.onpopstate = function(e) {
-#     alert(JSON.stringify(e.state));
-#   }
-# }
-# </script>
+    onpopstate= hisotry遷移
 
-# <input type="button" onclick="history.back()" value="Back">"
+    同一ページ内でhisotryを遷移した際に発行
+
+    <script>
+    window.onload = function() {
+      history.pushState({'page':1}, "page1", "?page=1");
+      history.pushState({'page':2}, "page2", "?page=2");
+      history.pushState({'page':3}, "page3", "?page=3");
+
+      window.onpopstate = function(e) {
+        alert(JSON.stringify(e.state));
+      }
+    }
+    </script>
+
+    <input type="button" onclick="history.back()" value="Back">
 
 - KEY: html.attr.ping
   EXPLAIN: 【属性】ping
   BODY: |
-#     ■ ping= ping通知
-#       ping属性指定リンクをクリックで、ping属性指定のURLをコール。ロギング目的などで使用
-#       CODE  <a href="http://www.web.com/a.htm" ping="http://www.stats.com/log?a.htm">LINK</a>
+    ping= ping通知
+
+    ping属性指定リンクをクリックで、ping属性指定のURLをコール
+    ロギング目的などで使用
+
+    <a 
+      href="http://www.web.com/a.htm"
+      ping="http://www.stats.com/log?a.htm"
+    >LINK</a>
 
 - KEY: html.attr.rel
   EXPLAIN: 【属性】rel
   BODY: |
-#     ■ rel= 関係
-#       "a,area,link の rel の指定値。HTML5で下記定義
+    rel= 関係
 
-# stylesheet スタイルシート(link要素)
-# prev ひとつ前の文書
-# next ひとつ次の文書。
-# alternate 代替文書
-# author 作者に関する文書
-# bookmark ブックマーク
-# help ヘルプ
-# icon アイコンファイル(link要素)
-# license ライセンス
-# nofollow 非推薦(a,area要素)
-# noreferrer HTTP Refereヘッダを非送信要求(a,area要素)
-# prefetch 先行キャッシュ
-# search 検索ページ
-# tag タグ(a,area要素)"
-#       CODE  "<link rel="stylesheet" href="css/style.html" type="text/css">
-# <link rel="prev" href="chapter1.html">
-# <link rel="next" href="chapter3.html">
-# <link rel="alternate" href="simple-format.html">
-# <link rel="author" href="author.html">
-# <link rel="bookmark" href="bookmark.html">
-# <link rel="help" href="help.html">
-# <link rel="icon" href="image/favicon.png" type="image-x-icon">
-# <link rel="license" href="license.html">"
+    a,area,link の rel の指定値
+
+    stylesheet   スタイルシート(link要素)
+    prev         ひとつ前の文書
+    next         ひとつ次の文書。
+    alternate    代替文書
+    author       作者に関する文書
+    bookmark     ブックマーク
+    help         ヘルプ
+    icon         アイコンファイル(link要素)
+    license      ライセンス
+    nofollow     非推薦(a,area要素)
+    noreferrer   HTTP Refereヘッダを非送信要求(a,area要素)
+    prefetch     先行キャッシュ
+    search       検索ページ
+    tag          タグ(a,area要素)
+
+    <link rel="stylesheet" href="css/style.html" type="text/css">
+    <link rel="prev"       href="chapter1.html">
+    <link rel="next"       href="chapter3.html">
+    <link rel="alternate"  href="simple-format.html">
+    <link rel="author"     href="author.html">
+    <link rel="bookmark"   href="bookmark.html">
+    <link rel="help"       href="help.html">
+    <link rel="icon"       href="image/favicon.png" type="image-x-icon">
+    <link rel="license"    href="license.html">
 
 - KEY: html.attr.slot
   EXPLAIN: 【属性】slot
   BODY: |
-#     ■ slot= スロット(Shadow DOM)
-#       Shadow DOM において、テンプレートのスロットとのマッピングを指定
-#       CODE  "<template id="shadow-dom-template">
-#   Title: [ <slot name="title"></slot> ],
-#   Artist: [ <slot name="artist"></slot> ]
-# </template>
+    slot= スロット(Shadow DOM)
 
-# <div class="song">
-#   <span slot="title">Let it be</span>
-#   <span slot="artist">The Beatles</span>
-# </div>
+    Shadow DOM において、テンプレートのスロットとのマッピングを指定
 
-# <div class="song">
-#   <span slot="title">Scarborough Fair</span>
-#   <span slot="artist">Simon & Garfunkel</span>
-# </div>
+    <template id="shadow-dom-template">
+      Title: [ <slot name="title"></slot> ],
+      Artist: [ <slot name="artist"></slot> ]
+    </template>
 
-# <script>
-# var hostElements = document.getElementsByClassName("song");
-# for (var i = 0; i < hostElements.length; i++) {
-#   var rootElement = hostElements[i].attachShadow({mode: "open"});
-#   var templeteContent = document.getElementById("shadow-dom-template").content.cloneNode(true);
-#   rootElement.appendChild(templeteContent);
-# }
-# </script>"
+    <div class="song">
+      <span slot="title">Let it be</span>
+      <span slot="artist">The Beatles</span>
+    </div>
+
+    <div class="song">
+      <span slot="title">Scarborough Fair</span>
+      <span slot="artist">Simon & Garfunkel</span>
+    </div>
+
+    <script>
+    var hostElements = document.getElementsByClassName("song");
+    for (var i = 0; i < hostElements.length; i++) {
+      var rootElement = hostElements[i].attachShadow({mode: "open"});
+      var templeteContent = document.getElementById("shadow-dom-template").content.cloneNode(true);
+      rootElement.appendChild(templeteContent);
+    }
+    </script>
 
 - KEY: html.attr.spellcheck
   EXPLAIN: 【属性】spellcheck
   BODY: |
-#     ■ spellcheck= スペルチェック
-#       textarea などにユーザが入力した文章に対してスペルチェックを行うかどうかを true または false で指定します。スペルチェック結果の表示方法はブラウザにまかされます。例えば Opera では、単語の下に赤い波線
-#       <textarea spellcheck="true">This is a boook.</textarea>
+    spellcheck=true/false               // スペルチェック
+
+    textarea などでスペルチェック指定
+    スペルチェック結果の表示方法はブラウザ次第
+    例えば Opera では、単語の下に赤い波線
+    <textarea spellcheck="true">This is a boook.</textarea>
 
 - KEY: html.attr.tabindex
   EXPLAIN: 【属性】tabindex
   BODY: |
-#     ■ tabindex= タブ順序
-#       TABキーで数値低順にフォーカス移動。tabindex=-1フォーカス拒否。
-#       "<form action="#">
-#   <input type="text" tabindex="3">3<br>
-#   <input type="text" tabindex="1">1<br>
-#   <input type="text" tabindex="2">2<br>
-# </form>"
+    tabindex= タブ順序
+
+    TABキーで数値低順にフォーカス移動
+    tabindex=-1フォーカス拒否。
+
+    <form action="#">
+      <input type="text" tabindex="3">3<br>
+      <input type="text" tabindex="1">1<br>
+      <input type="text" tabindex="2">2<br>
+    </form>
 
 - KEY: html.attr.target
   EXPLAIN: 【属性】target
   BODY: |
-#     ■ target= ターゲット
-#       "リンク先、フォーム結果をどのウィンドウ(フレーム)に表示するか指定。
+    target= ターゲット
 
-# ウィンドウ(フレーム)の名前:
-#   <frame>タグのname名前
-#   JavaScript の open() 第2引数
-#   アンダーバー(_)名
-#     _blank 新規ウィンドウ
-#     _self 自分自身ウィンドウ/フレーム
-#     _top 分割されたフレームを全解除表示
-#     _parent フレーム分割の1段だけ分割解除、その親フレームに表示"
-#       "<a href="www.test.html" target="_blank">TEST</a>
+    リンク先、フォーム結果をどのウィンドウ(フレーム)に表示するか指定
 
-# //helpというフレームに
-# <a href="www.text.html" target="help">to Help</a>"
+    ウィンドウ(フレーム)の名前:
+      <frame>タグのname名前
+      JavaScript の open() 第2引数
+      アンダーバー(_)名
+        _blank 新規ウィンドウ
+        _self 自分自身ウィンドウ/フレーム
+        _top 分割されたフレームを全解除表示
+        _parent フレーム分割の1段だけ分割解除、その親フレームに表示
+
+    <a href="www.test.html" target="_blank">TEST</a>
+
+    //helpというフレームに
+    <a href="www.text.html" target="help">to Help</a>
 
 - KEY: html.attr.title
   EXPLAIN: 【属性】title
   BODY: |
-#     ■ title= バルーンヘルプ
-#       バルーンヘルプを表示。特殊文字は要変換。
-#       "<div title="これがヒントだよ">
-#   このテキストのToolTipが表示される
-# </DIV>"
+    title= バルーンヘルプ
+
+    バルーンヘルプを表示。特殊文字は要変換。
+
+    <div title="これがヒントだよ">
+      このテキストのToolTipが表示される
+    </DIV>
 
 - KEY: html.attr.translate
   EXPLAIN: 【属性】translate
   BODY: |
-#     ■ translate= 翻訳可否
-#       yes(default)/noを指定。no 指定でプログラムのソースコードなど自動翻訳したくない箇所を対象外に。
-#       "<pre>
-# <code translate="no">
-# main() {
-#   printf("Hello world!");
-# }
-# </code>
-# </pre>"
+    translate=yes(default)/no           // 翻訳可否
+
+    no 指定でプログラムのソースコードなど自動翻訳したくない箇所を対象外に
+
+    <pre>
+      <code translate="no">
+      main() {
+        printf("Hello world!");
+      }
+      </code>
+    </pre>
 
 - KEY: html.attr.unselectable
   EXPLAIN: 【属性】unselectable
   BODY: |
-#     ■ unselectable= 選択禁止
-#       コンテンツ選択禁止
-#       <div unselectable=on>選択できない文字列</div>
+    unselectable= 選択禁止
+
+    コンテンツ選択禁止
+
+    <div unselectable=on>選択できない文字列</div>
 
 - KEY: html.attr.color
   EXPLAIN: 【属性】color
   BODY: |
-#     ■ =color 色指定
-#       "color="#000000" RGB値
-# color="blue" 色名前"
+    =color 色指定
+
+    color="#000000" RGB値
+    color="blue" 色名前
 
 - KEY: html.attr.url
   EXPLAIN: 【属性】url
   BODY: |
+    =url url
 
-#     ■ =url url
-#       URL(Uniform Resource Locator)
+    URL(Uniform Resource Locator)

@@ -1,28 +1,25 @@
-import { KeyDef } from "../syntaxHighlighter"
+import { KeyDef } from "../getKey"
 
-export const keysTS: KeyDef[] = [
-  {
-    color: "Crimson",
-    keys: [
-      "Required",
-      "Partial",
-      "Readonly",
-      "Record",
-      "Pick",
-      "Omit",
-      "Exclude",
-      "Extract",
-      "NonNullable",
-      "Maybe",
-      "DeepNonNullable",
-      "Parameters",
-      "ConstructorParameters",
-      "ReturnType",
-      "Awaited",
-      "Uppercase",
-      "Lowercase",
-      "Capitalize",
-      "Uncapitalize",
-    ],
-  },
-]
+export const keysTS: KeyDef = {
+  Crimson: [
+    "Required",
+    "Partial",
+    "Readonly",
+    "Record",
+    "Pick",
+    "Omit",
+    "Exclude",
+    "Extract",
+    "NonNullable",
+    "Maybe",
+    "DeepNonNullable",
+    "Parameters",
+    "ConstructorParameters",
+    "ReturnType",
+    "Awaited",
+    "Uppercase",
+    "Lowercase",
+    "Capitalize",
+    "Uncapitalize",
+  ],
+}

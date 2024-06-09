@@ -22,7 +22,10 @@ import { keysTS } from "./keys/TS"
 import { keysTypeORM } from "./keys/TypeORM"
 import { keysCurl } from "./keys/curl"
 import { keysNPM } from "./keys/npm"
-import { KeyDef } from "./syntaxHighlighter"
+
+export type KeyDef = {
+  [index: string]: string[]
+}
 
 export const codeKeys = {
   CSS: "CSS",
@@ -56,7 +59,7 @@ export const defaultSnippetsStyle = codeKeys.Unknown
 
 export type CodeKeyType = (typeof codeKeys)[keyof typeof codeKeys]
 
-export const KeyAndCodes: Record<CodeKeyType, KeyDef[]> = {
+export const KeyAndCodes: Record<string, KeyDef> = {
   CSS: keysCSS,
   HTML: keysHTML,
   JSTS: keysJSTS,
@@ -81,16 +84,24 @@ export const KeyAndCodes: Record<CodeKeyType, KeyDef[]> = {
   ClassTransformer: keysClassTransformer,
   Nestjs: keysNestjs,
   Swagger: keysSwagger,
-  Unknown: [],
 }
 
-export const getKey = (codeKeyTypes: CodeKeyType[] | undefined) => {
-  if (!codeKeyTypes?.length) return []
+export const getMergedKeys = (codeKeyTypes: string[] | undefined) => {
+  if (!codeKeyTypes?.length) return undefined
 
-  let mergedKeys: KeyDef[] = []
+  const mergedCodeKeyTypes: KeyDef = {}
 
-  for (const codeKeyType of codeKeyTypes) {
-    mergedKeys = [...mergedKeys, ...KeyAndCodes[codeKeyType]]
-  }
-  return mergedKeys
+  codeKeyTypes.forEach((keyDef) => {
+    const target = KeyAndCodes[keyDef]
+    Object.entries(target).forEach(([color, keys]) => {
+      if (mergedCodeKeyTypes[color]) {
+        const keySet = new Set([...mergedCodeKeyTypes[color], ...keys])
+        mergedCodeKeyTypes[color] = Array.from(keySet)
+      } else {
+        mergedCodeKeyTypes[color] = [...keys]
+      }
+    })
+  })
+
+  return mergedCodeKeyTypes
 }

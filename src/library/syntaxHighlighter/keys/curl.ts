@@ -1,21 +1,9 @@
-import { KeyDef } from "../syntaxHighlighter"
+import { KeyDef } from "../getKey"
 
-export const keysCurl: KeyDef[] = [
+export const keysCurl: KeyDef = {
   // ■ Main(赤)
-  {
-    color: "Crimson",
-    keys: ["curl"],
-  },
-  {
-    color: "ForestGreen",
-    keys: ["URL"],
-  },
-  {
-    color: "Goldenrod",
-    keys: ["BODY"],
-  },
-  {
-    color: "CadetBlue",
-    keys: ["XGET", "XPOST", "XPUT", "XDELETE", "XPATCH"],
-  },
-]
+  Crimson: ["curl"],
+  ForestGreen: ["URL"],
+  Goldenrod: ["BODY"],
+  CadetBlue: ["XGET", "XPOST", "XPUT", "XDELETE", "XPATCH"],
+}

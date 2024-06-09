@@ -1,8 +1,5 @@
-import { KeyDef } from "../syntaxHighlighter"
+import { KeyDef } from "../getKey"
 
-export const keysUnknown: KeyDef[] = [
-  {
-    color: "Crimson",
-    keys: [],
-  },
-]
+export const keysUnknown: KeyDef = {
+  Crimson: [],
+}

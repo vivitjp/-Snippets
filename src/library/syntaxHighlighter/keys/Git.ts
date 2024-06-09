@@ -1,85 +1,40 @@
-import { KeyDef } from "../syntaxHighlighter"
+import { KeyDef } from "../getKey"
 
-export const keysGit: KeyDef[] = [
+export const keysGit: KeyDef = {
   // ■ Methods
-  {
-    color: "Crimson",
-    keys: ["git"],
-  },
+  Crimson: ["git"],
   // ■ Methods
-  {
-    color: "RoyalBlue", //"LightSeaGreen",
-    keys: [
-      "config",
-      "remote",
-      "branch",
-      "fetch",
-      "checkout",
-      "add",
-      "commit",
-      "reset",
-      "revert",
-      "pull",
-      "push",
-      "status",
-      "merge",
-      "rebase",
-      "log",
-      "reglog",
-      "rm",
-      "tag",
-      "clone",
-      "diff",
-      "",
-    ],
-  },
-  // ■
-  {
-    color: "LightSeaGreen",
-    keys: [],
-  },
-  // ■
-  {
-    color: "Goldenrod",
-    keys: [],
-  },
-  // ■
-  {
-    color: "RoyalBlue",
-    keys: [],
-  },
-  // ■
-  {
-    color: "DodgerBlue",
-    keys: [],
-  },
-  // ■
-  {
-    color: "CadetBlue",
-    keys: ["github.com"],
-  },
-  {
-    color: "SteelBlue",
-    keys: [],
-  },
-  // ■
-  {
-    color: "Coral",
-    keys: [
-      "show",
-      "set-upstream-to",
-      "upstream",
-      "unset-upstream",
-      "set-url",
-      "get-url",
-    ],
-  },
-  {
-    color: "ForestGreen",
-    keys: ["Origin", "head"],
-  },
-  {
-    color: "#555",
-    keys: ["system", "global", "local", "list", "", "", "", ""],
-  },
-]
+  RoyalBlue: [
+    "config",
+    "remote",
+    "branch",
+    "fetch",
+    "checkout",
+    "add",
+    "commit",
+    "reset",
+    "revert",
+    "pull",
+    "push",
+    "status",
+    "merge",
+    "rebase",
+    "log",
+    "reglog",
+    "rm",
+    "tag",
+    "clone",
+    "diff",
+  ],
+  CadetBlue: ["github.com"],
+  Coral: [
+    "show",
+    "set-upstream-to",
+    "upstream",
+    "unset-upstream",
+    "set-url",
+    "get-url",
+  ],
+  ForestGreen: ["Origin", "head"],
+  "#555": ["system", "global", "local", "list", "", "", "", ""],
+}

@@ -1,20 +1,16 @@
 import styled from "styled-components"
-
-export type KeyDef = {
-  color: string
-  keys: string[]
-}
+import { getMergedKeys } from "./getKey"
 
 export type SyntaxHighlight = {
   code: string
-  keyDefs: KeyDef[]
+  codeKeyTypes?: string[]
   encodeRequired?: boolean
   case_sensitive?: boolean
 }
 
 export const syntaxHighlight = ({
   code,
-  keyDefs,
+  codeKeyTypes,
   encodeRequired = true,
   case_sensitive = true,
 }: SyntaxHighlight) => {
@@ -24,34 +20,22 @@ export const syntaxHighlight = ({
 
   //  const pattern = /(<\/?[^>]+>)|([^<]+)/g
 
+  if (!codeKeyTypes?.length) return undefined
+  const mergedCodeKeyTypes = getMergedKeys(codeKeyTypes)
+  if (!mergedCodeKeyTypes) return undefined
+
+  //console.log("length", keys.length)
   escaped.split("\n").forEach((line, idx) => {
     let result = line
 
-    //Keywords
-    // keyDefs.forEach(({ color, keys }) => {
-    //   keys.forEach((key) => {
-    //     if (!key) return
-    //     const re = new RegExp(`\\b${key}\\b`, case_sense)
-    //     function replacer(match: string) {
-    //       if (match?.[0] === "<") return match
-    //       else
-    //         return match.replace(
-    //           re,
-    //           `<span class="syntax" style="color:${color}">${match}</span>`
-    //         )
-    //     }
-    //     result = result.replaceAll(pattern, replacer)
-    //   })
-    // })
+    Object.entries(mergedCodeKeyTypes).forEach(([color, keys]) => {
+      if (!keys.length) return
 
-    // オリジナル
-    keyDefs.forEach(({ color, keys }) => {
       keys.forEach((key) => {
-        if (!key) return
         const re = new RegExp(`\\b${key}\\b`, case_sense)
         result = result.replaceAll(
           re,
-          `<span class="syntax" style="color:${color}">${key}</span>`
+          `<span class="syntax" style="color:${color}">${switcher(key)}</span>`
         )
       })
     })
@@ -64,6 +48,24 @@ export const syntaxHighlight = ({
     }
   })
   return rebuilt
+}
+
+const switcher = (key: string) => {
+  switch (key) {
+    case "style":
+      return "\u0073t-yle"
+    case "span":
+      return "\u0073p-an"
+    case "class":
+      return "\u0063l-ass"
+    case "id":
+      return "\u0069-d"
+    default:
+      return key
+  }
+
+  //   U+0073
+  // &#x0073
 }
 
 const HTML_ESCAPE_REPLACE_RE = /[&<>"]/g

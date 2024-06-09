@@ -1,10 +1,11 @@
 import { create } from "zustand"
-import { CodeKeyType } from "../library/syntaxHighlighter/getKey"
+// import { KeyDef } from "../library/syntaxHighlighter/syntaxHighlighter"
+// import { CodeKeyType } from "../library/syntaxHighlighter/getKey"
 
 export type MenuItemType = {
   name: string
   fileName: string
-  codeKeyTypes?: CodeKeyType[]
+  codeKeyTypes?: string[]
   encodeRequired?: boolean
   case_sensitive?: boolean
 }

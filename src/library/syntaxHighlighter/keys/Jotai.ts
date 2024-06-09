@@ -1,41 +1,24 @@
-import { KeyDef } from "../syntaxHighlighter"
+import { KeyDef } from "../getKey"
 
-export const keysJotai: KeyDef[] = [
+export const keysJotai: KeyDef = {
   // ■ Main(赤)
-  {
-    color: "Crimson",
-    keys: ["jotai", "atom", "useAtom"],
-  },
+  Crimson: ["jotai", "atom", "useAtom"],
   // ■ 鮮明な青
-  {
-    color: "RoyalBlue",
-    keys: ["get", "set"],
-  },
+  RoyalBlue: ["get", "set"],
   // ■ 緑
-  {
-    color: "ForestGreen",
-    keys: ["async", "await"],
-  },
-  // ■ 緑
-  {
-    color: "ForestGreen",
-    keys: ["async", "await"],
-  },
+  ForestGreen: ["async", "await"],
   // ■ グレー
-  {
-    color: "SteelBlue",
-    keys: [
-      "countAtom",
-      "countDerivedAtom",
-      "citiesAtom",
-      "citySelectedAtom",
-      "doubledOrigAtom",
-      "doubledCountAtom",
-      "addingCountDerivedAtom",
-      "urlAtom",
-      "fetchUrlAtom",
-      "fetchDataAtom",
-      "fetchUrlLazyAtom",
-    ],
-  },
-]
+  SteelBlue: [
+    "countAtom",
+    "countDerivedAtom",
+    "citiesAtom",
+    "citySelectedAtom",
+    "doubledOrigAtom",
+    "doubledCountAtom",
+    "addingCountDerivedAtom",
+    "urlAtom",
+    "fetchUrlAtom",
+    "fetchDataAtom",
+    "fetchUrlLazyAtom",
+  ],
+}

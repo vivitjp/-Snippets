@@ -3,12 +3,6 @@
 # Ubiquitous: IT
 #-------------------------------
 
-- KEY: ubi.polycolle
-  EXPLAIN: ポリコレ
-  BODY: |
-    リベラル
-    フラット
-
 - KEY: ubi.it.windows
   EXPLAIN: Windows Search
   BODY: |

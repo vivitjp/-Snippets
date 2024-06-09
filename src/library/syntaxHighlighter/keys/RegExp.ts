@@ -1,33 +1,14 @@
-import { KeyDef } from "../syntaxHighlighter"
+import { KeyDef } from "../getKey"
 
-export const keysRegExp: KeyDef[] = [
-  // ■
-  {
-    color: "LightSeaGreen",
-    keys: ["regexp"],
-  },
+export const keysRegExp: KeyDef = {
+  LightSeaGreen: ["regexp"],
   // ■ 緑
-  {
-    color: "ForestGreen",
-    keys: ["groups"],
-  },
+  ForestGreen: ["groups"],
   // ■ グレー
-  {
-    color: "#555",
-    keys: ["target", "trim"],
-  },
+  "#555": ["target", "trim"],
   // ■ 別青
-  {
-    color: "Crimson",
-    keys: ["test", "compile", "exec", "match", "lastIndex", ""],
-  },
-  {
-    color: "SteelBlue",
-    keys: ["matchAll"],
-  },
+  Crimson: ["test", "compile", "exec", "match", "lastIndex", ""],
+  SteelBlue: ["matchAll"],
   // ■ 鮮明な青
-  {
-    color: "RoyalBlue",
-    keys: ["RegExp"],
-  },
-]
+  RoyalBlue: ["RegExp"],
+}

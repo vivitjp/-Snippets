@@ -1,10 +1,9 @@
-import { KeyDef } from "../syntaxHighlighter"
+import { KeyDef } from "../getKey"
 
-export const keysCSS: KeyDef[] = [
+export const keysCSS: KeyDef =
   // ■ Sub(青)
   {
-    color: "RoyalBlue",
-    keys: [
+    RoyalBlue: [
       "color",
       "background",
       "border",
@@ -34,11 +33,8 @@ export const keysCSS: KeyDef[] = [
       "object-fit",
       "object-position",
     ],
-  },
-  // ■ 別青
-  {
-    color: "CadetBlue",
-    keys: [
+    // ■ 別青
+    CadetBlue: [
       "ellipsis",
       "hidden",
       "solid",
@@ -57,11 +53,8 @@ export const keysCSS: KeyDef[] = [
       "none",
       "all",
     ],
-  },
-  // ■ Main(赤)
-  {
-    color: "Crimson",
-    keys: [
+    // ■ Main(赤)
+    Crimson: [
       "justify-content",
       "align-items",
       "flex-direction",
@@ -69,11 +62,8 @@ export const keysCSS: KeyDef[] = [
       "flex-flow",
       "gap",
     ],
-  },
-  // ■ オレンジ
-  {
-    color: "darkOrange",
-    keys: [
+    // ■ オレンジ
+    darkOrange: [
       //"flex",
       "flex-end",
       "flex-start",
@@ -85,10 +75,6 @@ export const keysCSS: KeyDef[] = [
       "column",
       "nowrap",
     ],
-  },
-  // ■
-  {
-    color: "LightSeaGreen",
-    keys: ["transition", "animation"],
-  },
-]
+    // ■
+    LightSeaGreen: ["transition", "animation"],
+  }

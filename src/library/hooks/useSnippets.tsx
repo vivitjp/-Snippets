@@ -8,20 +8,16 @@ import { syntaxHighlight } from "../syntaxHighlighter/syntaxHighlighter"
 import { useSelect } from "./useSelect"
 import { DivPrefix, DivTitle, SummaryWrapper } from "./components/DivTitle"
 import { MenuItemType } from "../../store/menuStore"
-import { CodeKeyType, getKey } from "../syntaxHighlighter/getKey"
 import { DetailInside, Details } from "./components/Detail"
+import { KeyDef } from "../syntaxHighlighter/getKey"
 
 type SnippetsObject = {
   prefix: string
   scope?: string | undefined
   body: string[]
   options?: Options
-  codeKeyTypes?: CodeKeyType[]
-}
-
-export type KeyDef = {
-  color: string
-  keys: string[]
+  sample?: string
+  codeKeyTypes?: KeyDef[]
 }
 
 export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
@@ -52,7 +48,7 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
       //配列化
       const array = Object.entries(result ?? {}) as [string, SnippetsObject][]
       //Highlight
-      const keyDefs: KeyDef[] = getKey(selectedMenu?.codeKeyTypes)
+      const codeKeyTypes = selectedMenu?.codeKeyTypes
       //Highlightして JSX.Element[] に変換
 
       const formatted = array.map(([title, snippetsObject], index) => {
@@ -70,10 +66,11 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
 
         const highlighted = syntaxHighlight({
           code,
-          keyDefs,
+          codeKeyTypes,
           encodeRequired: selectedMenu.encodeRequired,
           case_sensitive: selectedMenu.case_sensitive,
         })
+
         return (
           <Column key={index}>
             <Details className={"detailClass"}>
@@ -84,6 +81,7 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
               <DetailInside colCount={snippetsObject.options?.COLS || 1}>
                 {highlighted}
               </DetailInside>
+              <>{snippetsObject.sample && <div>{snippetsObject.sample}</div>}</>
             </Details>
           </Column>
         )

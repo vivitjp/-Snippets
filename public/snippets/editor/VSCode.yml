@@ -1,0 +1,72 @@
+---
+#-------------------------------
+# VSCode
+#-------------------------------
+
+- KEY: vsc.extensions
+  EXPLAIN: 拡張機能
+  BODY: |
+    Git Graph
+    Git History
+    Code Spell Checker
+    Debugger for Firefox
+    ESLint
+    Import Cost
+    IntelliCode
+    IntelliCode API Usage Examples
+    Japanese Language Pack for Visual Studio
+    JavaScript (ES6) code snippets
+    JavaScript and TypeScript Nightly
+    Multiple cursor case preserve
+    Prettier - Code formatter
+    Pretty TypeScript Errors
+    Python Debugger
+    Python Environment Manager
+    Python Extension Pack
+    Python Indent
+    Remote - SSH
+    SQL Formatter
+    Stylelint
+    Tailwind CSS IntelliSense
+    Twoslash Query Comments
+    vscode-styled-components
+    WSL
+    zenkaku
+
+- KEY: vsc.WSL
+  EXPLAIN: Linux開発環境
+  BODY: |
+    Windows Subsystem for Linux
+
+    【WSL / WSL2】VSCode×WSLでWindows上にLinux開発環境を構築
+    https://qiita.com/_masa_u/items/d3c1fa7898b0783bc3ed
+
+    1. WSLが使える状態になっているか確認する
+
+    Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
+
+    2. WSLにLinuxディストリビューションをインストールする
+
+      Microsoft Storeで"Linux"で検索
+      Ubuntuをインストール
+
+    3. 「起動」ボタンをクリックしてUbuntuを起動
+
+      sudo apt update
+      sudo apt upgrade
+
+    4. VScodeに拡張機能を追加
+
+      Remote Development
+      WSL
+
+    5. WSL側からVScodeを起動する
+
+      # いディレクトリに移動
+      cd test
+      # Stable版（通常版）のVScodeを使う場合
+      code .
+      # insiders版（プレビュー版）を使う場合
+      code-insiders .
+
+      VScodeが開くと左下にWSL: <ディストリ名> 表示を確認

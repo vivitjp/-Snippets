@@ -1,0 +1,225 @@
+# ----------------------------
+# HTML By Purpose
+# ----------------------------
+
+- KEY: html.pps.font.size
+  EXPLAIN: フォントサイズ
+  BODY: |
+    ■ px: 絶対値
+    html { font-size: 12px; }
+    h1   { font-size: 20px; }           // 20px
+    span { font-size: 18px; }           // 18px
+
+    ■ em: 直親要素 font-size 基準
+    html { font-size: 12px; }
+    h1   { font-size: 2em;  }           // 24px
+    span { font-size: 0.5em;}           // 6px
+
+    ■ %: 親要素の相対値(emと同じ)
+    html { font-size: 32px; }
+    h1   { font-size: 200%; }           // 64px
+    h1>span { font-size: 50%;  }        // 32px
+
+    ■ rem: root em(html要素の font-size 基準)
+    html { font-size: 32px; }
+    h1   { font-size: 2rem; }           // 64px
+    span { font-size: 0.5rem; }         // 16px
+
+- KEY: html.pps.font.size.625
+  EXPLAIN: フォントサイズ(62.5%)
+  BODY: |
+    htmlのフォント基準サイズは 16px
+    1em -> 10pxに合わせると使いやすい
+
+    html {
+      font-size: 62.5%;                 // 10px
+    }
+    body {
+      font-size: 1.4em;                 // 14px
+    }
+
+- KEY: html.pps.table
+  EXPLAIN: テーブル
+  SAMPLE: BODY
+  BODY: |
+    <style>
+    table.sample_table {
+      border-collapse: collapse;
+      border: 1px solid #AAA;
+    }
+    table.sample_table th,table.sample_table td{
+      padding: 3px;
+      border: 1px solid #AAA;
+    }
+    </style>
+
+    <table class="sample_table">
+      <caption>TABLE CAPTION</caption>
+      <thead>
+        <th>TTL 1</th><th>TTL 2</th><th>TTL 3</th>
+      </thead>
+      <tbody>
+        <tr>
+          <td>A</td><td>B</td><td>C</td>
+        </tr>
+        <tr>
+          <td>X</td><td>Y</td><td>Z</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <th>FOOT 1</th><th>FOOT 2</th><th>FOOT 3</th>
+      </thead>
+    </table>
+
+- KEY: html.pps.list.ul
+  EXPLAIN: リスト ul
+  BODY: |
+    ■ list-style-type: none
+
+    <ul class="sample_list" style="list-style-type: none">
+      <li>Item A</li>
+      <li>Item B</li>
+      <li>Item C</li>
+    </ul>
+
+    ■ list-style-type: disc
+
+    <ul class="sample_list" style="list-style-type: disc">
+      <li>Item A</li>
+      <li>Item B</li>
+      <li>Item C</li>
+    </ul>
+
+    ■ list-style-type: circle
+
+    <ul class="sample_list" style="list-style-type: circle">
+      <li>Item A</li>
+      <li>Item B</li>
+      <li>Item C</li>
+    </ul>
+
+    ■ list-style-type: square
+
+    <ul class="sample_list" style="list-style-type: square">
+      <li>Item A</li>
+      <li>Item B</li>
+      <li>Item C</li>
+    </ul>
+
+- KEY: html.pps.list.ul
+  EXPLAIN: リスト ol
+  BODY: |
+    ■ list-style-type: lower-roman
+
+    <ol class="sample_list" style="list-style-type: lower-roman">
+      <li>Item A</li>
+      <li>Item B</li>
+      <li>Item C</li>
+    </ol>
+
+    ■ list-style-type: upper-roman
+
+    <ol class="sample_list" style="list-style-type: upper-roman">
+      <li>Item A</li>
+      <li>Item B</li>
+      <li>Item C</li>
+    </ol>"
+
+    ■ list-style-type: lower-greek
+
+    <ol class="sample_list" style="list-style-type: lower-greek">
+      <li>Item A</li>
+      <li>Item B</li>
+      <li>Item C</li>
+    </ol>
+
+    ■ list-style-type: decimal
+
+    <ol class="sample_list" style="list-style-type: decimal">
+      <li>Item A</li>
+      <li>Item B</li>
+      <li>Item C</li>
+    </ol>
+
+    ■ list-style-type: decimal-leading-zero
+
+    <ol class="sample_list" style="list-style-type: decimal-leading-zero">
+      <li>Item A</li>
+      <li>Item B</li>
+      <li>Item C</li>
+    </ol>
+
+    ■ list-style-type: lower-latin
+
+    <ol class="sample_list" style="list-style-type: lower-latin">
+      <li>Item A</li>
+      <li>Item B</li>
+      <li>Item C</li>
+    </ol>
+
+    ■ list-style-type: lower-alpha
+
+    <ol class="sample_list" style="list-style-type: lower-alpha">
+      <li>Item A</li>
+      <li>Item B</li>
+      <li>Item C</li>
+    </ol>
+
+    ■ list-style-type: upper-latin
+
+    <ol class="sample_list" style="list-style-type: upper-latin">
+      <li>Item A</li>
+      <li>Item B</li>
+      <li>Item C</li>
+    </ol>
+
+    ■ list-style-type: upper-alpha
+
+    <ol class="sample_list" style="list-style-type: upper-alpha">
+      <li>Item A</li>
+      <li>Item B</li>
+      <li>Item C</li>
+    </ol>
+
+- KEY: html.pps.list.ul
+  EXPLAIN: リスト ol(漢字)
+  BODY: |
+    ■ list-style-type: cjk-ideographic
+
+    <ol class="sample_list" style="list-style-type: cjk-ideographic">
+      <li>Item A</li>
+      <li>Item B</li>
+      <li>Item C</li>
+    </ol>
+
+    ■ list-style-type: hiragana
+
+    <ol class="sample_list" style="list-style-type: hiragana">
+      <li>Item A</li>
+      <li>Item B</li>
+      <li>Item C</li>
+    </ol>
+
+    ■ list-style-type: katakana
+
+    <ol class="sample_list" style="list-style-type: katakana">
+      <li>Item A</li>
+      <li>Item B</li>
+      <li>Item C</li>
+    </ol>
+
+    ■ list-style-type: hiragana-iroha
+
+    <ol class="sample_list" style="list-style-type: hiragana-iroha">
+      <li>Item A</li>
+      <li>Item B</li>
+      <li>Item C</li>
+    </ol>
+
+    ■ list-style-type: katakana-iroha
+
+    <ol class="sample_list" style="list-style-type: katakana-iroha">
+      <li>Item A</li>
+      <li>Item B</li>
+      <li>Item C</li>
+    </ol>
