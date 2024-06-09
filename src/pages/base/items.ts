@@ -157,8 +157,8 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS, codeKeys.React],
       },
       {
-        name: "React 型定義",
-        fileName: "🔺React/ReactTypeScript",
+        name: "⛔React 型定義",
+        fileName: "",
         codeKeyTypes: [codeKeys.JSTS, codeKeys.React],
       },
     ],

@@ -299,6 +299,14 @@
     // refs.current[idx].clientWidth
 
 #-------------------------------
+# forwardRef
+#-------------------------------
+- KEY: qw.useRef.forwardRef
+  EXPLAIN: forwardRef
+  BODY: |
+    作成中
+
+#-------------------------------
 # Hooks: useReducer
 #-------------------------------
 - KEY: qw.useReducer.boolean

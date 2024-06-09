@@ -1202,23 +1202,23 @@
     text/javascript(JavaScriptスクリプト)
     text/css(CSSファイル)
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.char
+  EXPLAIN: 【属性】char
   BODY: |
 #     ■ char= 桁揃え
 #       char 小数点 char 属性で指定した文字で揃える。テーブルのセルでのみ有効。作動しないケースが多い。
 #       CODE  <div class="c1">
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.contenteditable
+  EXPLAIN: 【属性】contenteditable
   BODY: |
 #     ■ contenteditable= 編集許可
 #       "true にすると HTMLのコンテンツをブラウザ上で編集することができるようになる。
 # true/false/inherit"
 #       <div contenteditable=true>編集可能テキスト</div>
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.contextmenu
+  EXPLAIN: 【属性】contextmenu
   BODY: |
 #     ■ contextmenu= 右Clickメニュ
 #       右クリックした際に表示されるコンテキストメニューを指定。作動しないケースが多い。
@@ -1229,8 +1229,8 @@
 #  </menu>
 # </form>"
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.crossorigin
+  EXPLAIN: 【属性】crossorigin
   BODY: |
 #     ■ crossorigin= CORS指定
 #       "CORS(Cross-Origin Resource Sharing) に関する属性
@@ -1263,16 +1263,16 @@
 
 #     ■ dir= 表示の方向制御
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.disabled
+  EXPLAIN: 【属性】disabled
   BODY: |
 #     ■ disabled 無効化
 #       "<textarea disabled rows=2 cols=50>
 # 編集不可内容
 # </textarea>"
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.draggable
+  EXPLAIN: 【属性】draggable
   BODY: |
 #     ■ draggable= ドラッグ可能
 #       draggable="true"でドラッグが可能になる。HTML5だが、使用可能
@@ -1303,23 +1303,34 @@
 # }
 # </script>"
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.dropzone
+  EXPLAIN: 【属性】dropzone
   BODY: |
 #     ■ dropzone= ドロップゾーン
 #       未詳
 
+- KEY: html.attr.hidden
+  EXPLAIN: 【属性】hidden
+  BODY: |
 #     ■ hidden 要素を隠蔽
 #       要素を隠しま
 #       "<div>AAA</div>
 # <div hidden>BBB</div>
 # <div>CCC</div>"
+
+- KEY: html.attr.hidefocus
+  EXPLAIN: 【属性】hidefocus
+  BODY: |
 #     ■ hidefocus= フォーカス隠蔽
 #       hidefocus="true"。非サポートブラウザ多数。
 #       "<button>OK</button><br>
 # <button hidefocus="true">OK</button><br>
 # <a href="xxx.htm">XXX</a><br>
 # <a href="xxx.htm" hidefocus="true">XXX</a><br>"
+
+- KEY: html.attr.inputmode
+  EXPLAIN: 【属性】inputmode
+  BODY: |
 #     ■ inputmode= 入力モード
 #       "input,textarea 要素に対する入力モード指定。HTML5.2で削除。実装例少ない。スタイルシートの ime-mode 参照。
 
@@ -1343,8 +1354,8 @@
 #   <input type="text" inputmode="tel">
 # </div>"
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.is
+  EXPLAIN: 【属性】is
   BODY: |
 #     ■ is= カスタマイズドビルトイン
 #       CODE  "<script>
@@ -1359,8 +1370,8 @@
 
 # <button is="plastic-button">Click Me!</button>"
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.itemscope
+  EXPLAIN: 【属性】itemscope
   BODY: |
 #     ■ itemscope スコープ(構造化データ)
 #       構造化データ(Microformats,RDFa,JSON-LD)のひとつ、Microdata に関連する属性群。正確な意味づけし、自動データ抽出を可能に。
@@ -1368,8 +1379,8 @@
 #    :
 # </div>"
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.itemtype
+  EXPLAIN: 【属性】itemtype
   BODY: |
 #     ■ itemtype 種別(構造化データ)
 #       CODE  "<div itemscope itemtype="http://schema.org/Movie">
@@ -1386,22 +1397,22 @@
 #     ■ itemprop 属性名(構造化データ)
 #       CODE
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.itemrel
+  EXPLAIN: 【属性】itemrel
   BODY: |
 #     ■ itemrel 疑似ID(構造化データ)
 #       要素の親子関係に無いけれども、属性値として扱いたい要素の ID を指定。ID は空白区切りで複数指定可。itemscope 属性を指定した要素でのみ指定可。
 #       CODE
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.lang
+  EXPLAIN: 【属性】lang
   BODY: |
 #     ■ lang= 言語
 #       "ja(日),zh(中),ko(韓),en(英),de(独),fr(仏),it(伊),ru(露)
 # en-US(米国英語)、ja-osaka(大阪弁)などの方言設定も可能"
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.language
+  EXPLAIN: 【属性】language
   BODY: |
 #     ■ language= スクリプト言語
 #       "language="JavaScript" (JavaScript)
@@ -1409,8 +1420,8 @@
 # language="VBScript" (VBScript)
 # language="VBS" (VBScript)"
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.nonce
+  EXPLAIN: 【属性】nonce
   BODY: |
 #     ■ nonce= 改竄チェック
 #       [HTML5.1] コンテンツセキュリティポリシー(CPS: Content Security Policy)に従い、Webページ上に悪意を持って埋め込まれたスクリプトの実行を抑制。
@@ -1424,8 +1435,8 @@
 # </article>
 # <script nonce="hUygTfgbgFcdRt5eDqpLfB6f==">正規のスクリプト</script>"
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.onbeforeunload
+  EXPLAIN: 【属性】onbeforeunload
   BODY: |
 #     ■ onbeforeunload= Unloadコール
 #       ページがアンロードされる前に呼ばれ、ページを離れてもよいか確認するダイアログが表示されます。ダイアログに表示するメッセージを return で返します。Firefox ではメッセージが表示されない
@@ -1436,8 +1447,8 @@
 # }
 # </script>"
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.onmessage
+  EXPLAIN: 【属性】onmessage
   BODY: |
 #     ■ onmessage= 受信ハンドラ
 #       postMessage() によるメッセージ受信時のハンドラを指定。Google Chrome や Opera では、ローカルファイルでは動作しません。http: か https: で始まるURLでアクセスしてください。
@@ -1459,8 +1470,8 @@
 #   postMessage('hoge' + count++);
 # },1000);"
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.onpopstate
+  EXPLAIN: 【属性】onpopstate
   BODY: |
 #     ■ onpopstate= hisotry遷移
 #       同一ページ内でhisotryを遷移した際に発行
@@ -1479,15 +1490,15 @@
 
 # <input type="button" onclick="history.back()" value="Back">"
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.ping
+  EXPLAIN: 【属性】ping
   BODY: |
 #     ■ ping= ping通知
 #       ping属性指定リンクをクリックで、ping属性指定のURLをコール。ロギング目的などで使用
 #       CODE  <a href="http://www.web.com/a.htm" ping="http://www.stats.com/log?a.htm">LINK</a>
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.rel
+  EXPLAIN: 【属性】rel
   BODY: |
 #     ■ rel= 関係
 #       "a,area,link の rel の指定値。HTML5で下記定義
@@ -1516,8 +1527,8 @@
 # <link rel="icon" href="image/favicon.png" type="image-x-icon">
 # <link rel="license" href="license.html">"
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.slot
+  EXPLAIN: 【属性】slot
   BODY: |
 #     ■ slot= スロット(Shadow DOM)
 #       Shadow DOM において、テンプレートのスロットとのマッピングを指定
@@ -1545,15 +1556,15 @@
 # }
 # </script>"
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.spellcheck
+  EXPLAIN: 【属性】spellcheck
   BODY: |
 #     ■ spellcheck= スペルチェック
 #       textarea などにユーザが入力した文章に対してスペルチェックを行うかどうかを true または false で指定します。スペルチェック結果の表示方法はブラウザにまかされます。例えば Opera では、単語の下に赤い波線
 #       <textarea spellcheck="true">This is a boook.</textarea>
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.tabindex
+  EXPLAIN: 【属性】tabindex
   BODY: |
 #     ■ tabindex= タブ順序
 #       TABキーで数値低順にフォーカス移動。tabindex=-1フォーカス拒否。
@@ -1563,8 +1574,8 @@
 #   <input type="text" tabindex="2">2<br>
 # </form>"
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.target
+  EXPLAIN: 【属性】target
   BODY: |
 #     ■ target= ターゲット
 #       "リンク先、フォーム結果をどのウィンドウ(フレーム)に表示するか指定。
@@ -1582,8 +1593,8 @@
 # //helpというフレームに
 # <a href="www.text.html" target="help">to Help</a>"
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.title
+  EXPLAIN: 【属性】title
   BODY: |
 #     ■ title= バルーンヘルプ
 #       バルーンヘルプを表示。特殊文字は要変換。
@@ -1591,8 +1602,8 @@
 #   このテキストのToolTipが表示される
 # </DIV>"
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.translate
+  EXPLAIN: 【属性】translate
   BODY: |
 #     ■ translate= 翻訳可否
 #       yes(default)/noを指定。no 指定でプログラムのソースコードなど自動翻訳したくない箇所を対象外に。
@@ -1604,22 +1615,22 @@
 # </code>
 # </pre>"
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.unselectable
+  EXPLAIN: 【属性】unselectable
   BODY: |
 #     ■ unselectable= 選択禁止
 #       コンテンツ選択禁止
 #       <div unselectable=on>選択できない文字列</div>
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.color
+  EXPLAIN: 【属性】color
   BODY: |
 #     ■ =color 色指定
 #       "color="#000000" RGB値
 # color="blue" 色名前"
 
-- KEY: html.attr.xxx
-  EXPLAIN: 【属性】xxx
+- KEY: html.attr.url
+  EXPLAIN: 【属性】url
   BODY: |
 
 #     ■ =url url

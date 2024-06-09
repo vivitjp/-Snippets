@@ -11,17 +11,24 @@ import { PageBody } from "../pages/base/PageBody"
 import { useSnippets } from "../library/hooks/useSnippets"
 import { Menu } from "./Menu"
 import { Top } from "./Top"
+import { useEffect, useRef } from "react"
 
 //------------------------------
 // Main
 //------------------------------
 export const Layout = () => {
+  const refBody = useRef<HTMLDivElement>(null)
+
   const selectedMenu = zooMenu((state) => state.selectedMenu)
   const { SnippetsStyleSelection, Snippets, isPending, CopyButton } =
     useSnippets(selectedMenu)
 
+  useEffect(() => {
+    if (refBody?.current) refBody.current.scrollIntoView({ behavior: "smooth" })
+  }, [refBody, isPending])
+
   return (
-    <Section data-testid="layout">
+    <Section data-testid="layout" ref={refBody}>
       <HeaderWrapper>
         <HeaderTitle>Sunabar Snippets</HeaderTitle>
         <HeaderOptions>
