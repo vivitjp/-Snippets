@@ -3,6 +3,127 @@
 # React Component Samples
 #-------------------------------
 
+- KEY: rc.button
+  EXPLAIN: Button
+  BODY: |
+    const handleClickButton = useCallback(
+      (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation()
+      },
+      []
+    )
+
+    <button onClick={handleClickButton} value="">
+      Submit
+    </button>
+
+- KEY: rc.input.text
+  EXPLAIN: Text
+  BODY: |
+    const handleChangeText = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.currentTarget.value
+        setText(value)
+      },
+      []
+    )
+
+    <input
+      type="text"
+      onChange={handleChangeText}
+      value={text}
+      placeholder="name"
+    />
+
+- KEY: rc.input.button
+  EXPLAIN: InputButton
+  BODY: |
+    const handleClickInputButton = useCallback(
+      (e: React.MouseEvent<HTMLInputElement>) => {
+        e.stopPropagation()
+      },
+      []
+    )
+
+    <input type="button" onClick={handleClick} value="Click" />
+
+- KEY: rc.input.checkbox
+  EXPLAIN: Checkbox
+  BODY: |
+    const handleChangeCheck = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.currentTarget.checked
+        setIsChecked(value)
+      },
+      []
+    )
+
+    <input
+      type="checkbox"
+      id={checkId}
+      onChange={handleChangeCheck}
+      checked={isChecked}
+    />
+    <label htmlFor={checkId}>On</label>
+
+- KEY: rc.input.radio
+  EXPLAIN: Radio
+  BODY: |
+    const handleChangeRadio = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = parseInt(e.currentTarget.value ?? "0")
+        setRadio(value)
+      },
+      []
+    )
+
+    <input
+      type="radio"
+      id={radioId1}
+      name="myRadio"
+      onChange={handleChangeRadio}
+      value={1}
+      checked={radio === 1}
+    />
+    <label htmlFor={radioId1}>1</label>
+
+- KEY: rc.select
+  EXPLAIN: Select
+  BODY: |
+    type Options = {
+      title: string
+      value: string
+    }
+
+    type Select = {
+      options: Options[]
+      handleChangeSelect: (e: React.ChangeEvent<HTMLSelectElement>) => void
+    }
+
+    const [selectedValue, setSelectedValue] = useState<number>(1)
+
+    const handleChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const value = parseInt(e.currentTarget.value ?? 1)
+      setSelectedValue(value)
+    }
+
+    const SelectSet = ({ options, onChange }: Select) => {
+      return (
+        <select onChange={handleChangeSelect}>
+          {!!options.length &&
+            options.map((n, index) => (
+              <option key={index} value={n.value} >
+                {n.title}
+              </option>
+            ))}
+        </select>
+      )
+    }
+
+#-------------------------------
+# カスタムコンポーネント
+#-------------------------------
+
 - KEY: qw.custom.input
   EXPLAIN: input カスタムコンポーネント
   BODY: |

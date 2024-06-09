@@ -6,6 +6,45 @@
 #-------------------------------
 # Div Row / Column
 #-------------------------------
+- KEY: pk.styled.basic
+  EXPLAIN: 書式
+  BODY: |
+    type Props = {
+      fontSize: CSSProperties['fontSize'];
+    };
+
+    ■ 書式 A
+    const A = styled.div`
+      ...
+    `
+
+    ■ 書式 B
+    const B = styled.div<Props>`
+      ${({ fontSize = "12px" }) => css`
+        fontSize: ${ fontSize };
+        ...
+      `}
+    `;
+
+    ■ 書式 C
+    const C = styled.div<Props>`
+      fontSize: ${({ fontSize = "12px" }) => ${fontSize}};
+      ...
+    `;
+
+    ■ 書式 D
+    const Div = styled.div.attrs<Props>((props) => ({
+      style: {
+        fontSize: fontSize,
+      },
+    }))<Props>`
+      padding: 10px;
+      border: 1px solid black;
+    `;
+
+#-------------------------------
+# Div Row / Column
+#-------------------------------
 - KEY: pk.styled.rowColumn
   EXPLAIN: row & column コンポーネント
   BODY: |

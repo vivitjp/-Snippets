@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 
 export const Details = styled.details`
   font-size: 14px;
@@ -11,7 +11,11 @@ export const Details = styled.details`
   box-shadow: 2px 2px 4px #eee;
 `
 
-export const DetailInside = styled.div`
+type Options = {
+  colCount: number
+}
+
+export const DetailInside = styled.div<Options>`
   font-size: 14px;
   font-family: "Courier Prime",  monospace;
   overflow: auto;
@@ -21,4 +25,8 @@ export const DetailInside = styled.div`
   width: 100%;
   line-height: 1.2rem;
   background-color:  #F9F9F9;
+
+  ${(props) => css`
+    column-count: ${props.colCount ?? 1};
+  `}
 `

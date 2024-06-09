@@ -6,94 +6,122 @@
 - KEY: reg.RegExp
   EXPLAIN: 正規表現
   BODY: |
-    const regexp = new RegExp( pattern[, flags] )
+    ■ インスタンス生成
+    const re = new RegExp(pattern[,flags])
 
     const target = 'ABCDEFG';
+    const re = /DEF/ig;
+    re.test(target);                              // true
 
-    const regexp = /DEF/ig;
-    regexp.test(target);       //true
-    regexp.compile(target);    //Deprecated
+    [NG] re.compile(target);                      // Deprecated
 
-    //コンストラクタへのパラメタ
-    const regexp = new RegExp('DEF', 'ig');
-    regexp.test(target);       //true
+    ■ コンストラクタへのパラメタ
+    const re = new RegExp('DEF', 'ig');
+    re.test(target);                              // true
+
+    // ■ 正規表現ベース
+    const hits1 = re.exec(target);                // ["ABC"] gフラグとの相性悪し
+
+    // ■ 文字列ベース
+    const hits2 = target.match(re);               // ["ABC", "ABC"]
 
 - KEY: reg.captureGroup
-  EXPLAIN: 名前付きキャプチャグループ
+  EXPLAIN: 名前付きキャプチャグループ [ES2018]
   BODY: |
     const target = '123 456 789';
-    const regexp = /(?<first>[0-9]+)\s(?<second>[0-9]+)/u;
+    const re = /(?<first>[0-9]+)\s(?<second>[0-9]+)/u;
 
-    const hits = regexp.exec(target);  //gフラグとの相性OK
-    hits.groups.first;                 //'123'
-    hits.groups.second;                //'456'
+    const hits1 = re.exec(target);                // ["123 456", "123", "456"]
+    console.log(hits1?.groups?.first);            // '123'
+    console.log(hits1?.groups?.second);           // '456'
 
-    const hits = target.match(regexp); //gフラグとの相性悪し
-    hits.groups.first;                 //'123'
-    hits.groups.second;                //'456'
+    const hits2 = target.match(re);               // gフラグとの相性悪し
+    console.log(hits2?.groups?.first);            // '123'
+    console.log(hits2?.groups?.second);           // '456'
 
 - KEY: reg.exec()
   EXPLAIN: 一致文字列取得
   BODY: |
     const target = '123 456 789';
-    const regexp = /[0-9]+/g;
+    const re = /[0-9]+/g;
 
-    //実行する度に内部indexが移動
-    let hit = regexp.exec(target);  // ["123"]
-    hit = regexp.exec(target);      // ["456"] 
-    hit = regexp.exec(target);      // ["789"]
-    hit = regexp.exec(target);      // null
+    ⭕ 実行する度に内部indexが移動
+    let hit = re.exec(target);                    // ["123"]
+    hit = re.exec(target);                        // ["456"] 
+    hit = re.exec(target);                        // ["789"]
+    hit = re.exec(target);                        // null
 
-    while(hit = regexp.exec(target)){ //イテレータもどき
-      hit;                          //["123"],["456"],["789"]
-      regexp.lastIndex;             //3,7,11
+    while(hit = re.exec(target)){                 // イテレータもどき
+      hit;                                        // ["123"],["456"],["789"]
+      re.lastIndex;                               // 3,7,11
     }
 
 - KEY: reg.test()
-  EXPLAIN: 一致:boolean
+  EXPLAIN: 一致Indexの移動
   BODY: |
     const target = 'table cable maple';
-    const regexp = new RegExp('ab*', 'g');
+    const re = new RegExp('ab*', 'g');
 
-    //実行する度に内部indexが移動
-    regexp.lastIndex;         //0
-    regexp.test(target);      //true
-    regexp.lastIndex;         //3
-    regexp.test(target);      //false
+    ⭕ 実行する度に内部indexが移動
+    re.lastIndex;                                 // 0
+    re.test(target);                              // true
+    re.lastIndex;                                 // 3
+    re.test(target);                              // false
 
 - KEY: reg.match()
   EXPLAIN: 一致:値
   BODY: |
     const target = "123 456 789";
-    const regexp = /[0-9]+/g;
+    const re = /[0-9]+/g;
 
-    let hit = target.match(regexp);      //['123','456','789']
+    let hit = target.match(re);                   // ['123','456','789']
+
+- KEY: reg.RegExp.replace
+  EXPLAIN: 置換
+  BODY: |
+    ■ 定義
+    const 結果 = 対象文字列.replace(正規表現, "置換文字列")
+
+    const target = 'AB ABC BCD';
+    const re = /AB/ig;
+    const replaced = target.replace(re, "")
+
+    ■ 置換コールバック
+    const target = 'AB ABC BCD';
+    const re = /AB/ig;
+    const replaced = target.replace(re, (substring?: string)=>{
+      if(substring) return `[${substring}]`
+      else return "null"
+    })
+    console.log(replaced)                         // "[AB] [AB]C BCD"
 
 - KEY: reg.str.matchAll2022
-  EXPLAIN: String2022での一致
+  EXPLAIN: matchAll 全一致 [ES2022]
   BODY: |
     const target = 'test1 test2';
-    const regexp = /t(e)(st(\d?))/g;
+    const re = /t(e)(st(\d?))/g;
 
-    const array = [...target.matchAll(regexp)];
-    array[0];     //["test1", "e", "st1", "1"]
-    array[1];     //["test2", "e", "st2", "2"]
+    const array = [...target.matchAll(re)];
+    array[0];                                     // ["test1", "e", "st1", "1"]
+    array[1];                                     // ["test2", "e", "st2", "2"]
 
     const target = 'table football, foosball';
-    const regexp = RegExp('foo[a-z]*','g');
+    const re = RegExp('foo[a-z]*','g');
 
-    const hits = target.matchAll(regexp);
-    console.log(hits);             //{} 空なので要注意
-    for (const hit of hits) {      //実際には存在
+    const hits = target.matchAll(re);
+    console.log(hits);                            // {} 空なので要注意
+    for (const hit of hits) {                     // 実際には存在
       let idx = hit.index;
       console.log(`${hit[0]}: ${idx}~${idx + hit[0].length - 1}`);
     }
 
-    const res = Array.from(target.matchAll(regexp), m => m[0]);
-    //["football", "foosball"]
+    const res = Array.from(                       // ["football", "foosball"]
+      target.matchAll(re),
+      m => m[0]
+    );
 
 - KEY: reg.flags
-  EXPLAIN: フラグ
+  EXPLAIN: フラグ一覧
   BODY: |
     g  global(複数マッチ)
     i  ignoreCase(大小文字区別なし)
@@ -103,59 +131,59 @@
     s  dotAll([.]がCR,LF,U+2028,U+2029など全文字マッチ)
 
 - KEY: reg.flag.m
-  EXPLAIN: 改行を行頭行末認識
+  EXPLAIN: m:改行を行頭行末認識
   BODY: |
     行頭(^)や行末($)が、改行(\n)後の行頭行末にもマッチング
 
     const target = 'ABC\nDEF\nGHI';
-    target.match(/ABC$/);        //null
-    target.match(/ABC$/m);       //["ABC"]
-    target.match(/^DEF/);        //null
-    target.match(/^DEF/m);       //["DEF"]
-    target.match(/^DEF$/);       //null
-    target.match(/^DEF$/m);      //["DEF"]
+    target.match(/ABC$/);                         // null
+    target.match(/ABC$/m);                        // ["ABC"]
+    target.match(/^DEF/);                         // null
+    target.match(/^DEF/m);                        // ["DEF"]
+    target.match(/^DEF$/);                        // null
+    target.match(/^DEF$/m);                       // ["DEF"]
 
 - KEY: reg.flag.u
-  EXPLAIN: サロゲーションペア
+  EXPLAIN: u:サロゲーションペア
   BODY: |
     U+10000以上のサロゲーションペア領域の文字も1文字
 
-    console.log('🧲'.match(/^.$/));  //null (2文字だから)
-    console.log('🧲'.match(/^.$/u)); //uフラグ(1文字として一致)
+    console.log('🧲'.match(/^.$/));               // null (2文字だから)
+    console.log('🧲'.match(/^.$/u));              // uフラグ(1文字として一致)
 
 - KEY: reg.flag.y
-  EXPLAIN: lastIndex位置固定
+  EXPLAIN: y:lastIndex位置固定
   BODY: |
     yフラグ: lastIndex の位置からから先頭マッチングで位置を固定(lastIndexが先に進まない)。
     gをつけても結果は一つ。挙動要注意
 
     const target = '123 456 789';
-    const regexp = /[0-9]+/gy;   //gフラグ + yフラグ
-    regexp.lastIndex = 7;        //lastIndex指定(位置固定)
+    const re = /[0-9]+/gy;                        // gフラグ + yフラグ
+    re.lastIndex = 7;                             // lastIndex指定(位置固定)
 
     let hit= null;
-    hit= regexp.exec(target)
-    console.log(hit, regexp.lastIndex);
-    hit= regexp.exec(target)
-    console.log(hit, regexp.lastIndex);
-    hit= regexp.exec(target)
-    console.log(hit, regexp.lastIndex);
-    hit= regexp.exec(target)
-    console.log(hit, regexp.lastIndex);
+    hit= re.exec(target);
+      console.log(hit, re.lastIndex);             // null, 0
+    hit= re.exec(target);
+      console.log(hit, re.lastIndex);             // ["123"], 3
+    hit= re.exec(target);
+      console.log(hit, re.lastIndex);             // null, 0
+    hit= re.exec(target);
+      console.log(hit, re.lastIndex);             // ["123"], 3
 
 - KEY: reg.flag.s
-  EXPLAIN: ドットを改行にも一致
+  EXPLAIN: s:ドットを改行にも一致
   BODY: |
     //.(ドット)を改行文字にも一致
     const target = "ABC\nDEF\nGHI";
-    const regexp = /.+/g;             //No sフラグ
-    for (const hit of target.matchAll(regexp)) {
-      console.log(hit, hit.index);    // ["ABC"],0 | ["DEF"],4 | ["GHI"],8 
+    const re = /.+/g;                             // No sフラグ
+    for (const hit of target.matchAll(re)) {
+      console.log(hit, hit.index);                // ["ABC"],0 | ["DEF"],4 | ["GHI"],8 
     }
 
-    const regexp = /.+/gs;           //sフラグ
-    for (const hit of target.matchAll(regexp)) {
-      console.log(hit, hit.index);   // [""ABC\nDEF\nGHI""] 0
+    const re = /.+/gs;                            // sフラグ
+    for (const hit of target.matchAll(re)) {
+      console.log(hit, hit.index);                // [""ABC\nDEF\nGHI""] 0
     }
 
 - KEY: reg.matching
@@ -187,58 +215,58 @@
 - KEY: reg.matching.x*?
   EXPLAIN: 最大最小Match(*)
   BODY: |
-    "<ABC><DEF>".match(/<.*>/)   //["<ABC><DEF>"]
-    "<ABC><DEF>".match(/<.*?>/)  //["<ABC>"]
+    "<ABC><DEF>".match(/<.*>/)                    // ["<ABC><DEF>"]
+    "<ABC><DEF>".match(/<.*?>/)                   // ["<ABC>"]
 
 - KEY: reg.matching.x+?
   EXPLAIN: 最大最小Match(+)
   BODY: |
-    "<ABC><DEF>".match(/<.+>/)   //["<ABC><DEF>"]
-    "<ABC><DEF>".match(/<.+?>/)  //["<ABC>"]
+    "<ABC><DEF>".match(/<.+>/)                    // ["<ABC><DEF>"]
+    "<ABC><DEF>".match(/<.+?>/)                   // ["<ABC>"]
 
 - KEY: reg.matching.x??
   EXPLAIN: 最大最小Match(?)
   BODY: |
-    "ABC".match(/AB?/)           //["AB"]
-    "ABC".match(/AB??/)          //["A"]
+    "ABC".match(/AB?/)                            // ["AB"]
+    "ABC".match(/AB??/)                           // ["A"]
 
 - KEY: reg.matching.postfix
   EXPLAIN: 先読み言明
   BODY: |
     const target = 'CAT CAS CAN';
 
-    const regexp = /(CA(?=S))/g;       //CASがある場合、CAにマッチ
-    const hit1 = target.match(regexp); //["CA"]
+    const re = /(CA(?=S))/g;                      // CASがある場合、CAにマッチ
+    const hit1 = target.match(re);                // ["CA"]
 
-    const regexp = /(CA(?=X))/g;       //CAXがある場合、CAにマッチ
-    const hit2 = target.match(regexp); //null
+    const re = /(CA(?=X))/g;                      // CAXがある場合、CAにマッチ
+    const hit2 = target.match(re);                // null
 
 - KEY: reg.matching.postfix.not
   EXPLAIN: 先読み言明(否定)
   BODY: |
     const target = 'CAT CAS';
 
-    const regexp = /(CA(?!S))/g;       //CASがある場合、CAにマッチせず
-    const hit1 = target.match(regexp); //["CA"] (CATにマッチ)
+    const re = /(CA(?!S))/g;                      // CASがある場合、CAにマッチせず
+    const hit1 = target.match(re);                // ["CA"] (CATにマッチ)
 
-    const regexp = /(CA(?!X))/g;       //CAXがない場合、CAにマッチ
-    const hit2 = target.match(regexp); //["CA", "CA"] (全部にマッチ)
+    const re = /(CA(?!X))/g;                      // CAXがない場合、CAにマッチ
+    const hit2 = target.match(re);                // ["CA", "CA"] (全部にマッチ)
 
 - KEY: reg.matching.prefix
   EXPLAIN: 後読み言明
   BODY: |
     const target = 'CAT CASE CAN CAST CAL';
 
-    const regexp = /((?<=CA)S[^\s]*)/g;  //直前のCAに続く S[^\s] にマッチ
-    const hit= target.match(regexp);     // ["SE", "ST"]
+    const re = /((?<=CA)S[^\s]*)/g;               // 直前のCAに続く S[^\s] にマッチ
+    const hit= target.match(re);                  //  ["SE", "ST"]
 
 - KEY: reg.matching.prefix.not
   EXPLAIN: 後読み言明(否定)
   BODY: |
     const target = 'CAT CASE MAST CAST RISK';
 
-    const regexp = /((?<!CA)S[^\s]*)/g;
-    const hit= target.match(regexp); // ["ST", "SK"]
+    const re = /((?<!CA)S[^\s]*)/g;
+    const hit= target.match(re); // ["ST", "SK"]
 
 - KEY: reg.specialChars
   EXPLAIN: 特殊文字
@@ -265,9 +293,9 @@
 - KEY: reg.specialChar.b
   EXPLAIN: 区切り文字
   BODY: |
-    "I like Java.".match(/\bJava\b/)       // ["Java"]
-    "I like JavaScript.".match(/\bJava\b/) // null
-    "I like JavaScript.".match(/\bJava/)   // ["Java"]
+    "I like Java.".match(/\bJava\b/)              // ["Java"]
+    "I like JavaScript.".match(/\bJava\b/)        // null
+    "I like JavaScript.".match(/\bJava/)          // ["Java"]
 
 - KEY: reg.specialChars.unicode
   EXPLAIN: 特殊文字(Unicode)
@@ -288,58 +316,58 @@
 - KEY: reg.sample.postalCode
   EXPLAIN: 郵便番号
   BODY: |
-    // 郵便番号(ハイフンなし)
-    const regexp = /^\d{7}$/
-    regexp.test("1234567".trim())  // true
-    regexp.test("1234567 ".trim()) // true
-    regexp.test("123456".trim())   // false
-    regexp.test("A123456".trim())  // false
+    ■ 郵便番号(ハイフンなし)
+    const re = /^\d{7}$/
+    re.test("1234567".trim())                     // true
+    re.test("1234567 ".trim())                    // true
+    re.test("123456".trim())                      // false
+    re.test("A123456".trim())                     // false
 
-    // 郵便番号(ハイフンあり)
-    const regexp = /^[0-9]{3}-[0-9]{4}$/
-    regexp.test("111-1111".trim())  // true
-    regexp.test("111-1111 ".trim()) // true
-    regexp.test("1111-111".trim())  // false
-    regexp.test("11A-1111".trim())  // false
+    ■ 郵便番号(ハイフンあり)
+    const re = /^[0-9]{3}-[0-9]{4}$/
+    re.test("111-1111".trim())                    // true
+    re.test("111-1111 ".trim())                   // true
+    re.test("1111-111".trim())                    // false
+    re.test("11A-1111".trim())                    // false
 
-    //郵便番号(ハイフン任意)
-    const regexp = /^[0-9]{3}-?[0-9]{4}$/
-    regexp.test("123-4567".trim())  // true
-    regexp.test("1234567".trim())   // true
-    regexp.test("1234-567".trim())  // false
-    regexp.test("1234A67".trim())   // false
+    ■ 郵便番号(ハイフン任意)
+    const re = /^[0-9]{3}-?[0-9]{4}$/
+    re.test("123-4567".trim())                    // true
+    re.test("1234567".trim())                     // true
+    re.test("1234-567".trim())                    // false
+    re.test("1234A67".trim())                     // false
 
 - KEY: reg.sample.phoneNumber
   EXPLAIN: 電話番号(固定)
   BODY: |
-    //電話番号(ハイフンあり)
-    const regexp = /\d{2,4}-\d{2,4}-\d{4}/
-    regexp.test("03-1234-5678".trim())   // true
-    regexp.test("030-2340-5678".trim())  // true
-    regexp.test("0301-240-5678".trim())  // true
-    regexp.test("0301-2400-567".trim())  // false
-    regexp.test("030-2340-5678 ".trim()) // true
-    regexp.test("030-2 40-5678".trim())  // false
+    ■ 電話番号(ハイフンあり)
+    const re = /\d{2,4}-\d{2,4}-\d{4}/
+    re.test("03-1234-5678".trim())                // true
+    re.test("030-2340-5678".trim())               // true
+    re.test("0301-240-5678".trim())               // true
+    re.test("0301-2400-567".trim())               // false
+    re.test("030-2340-5678 ".trim())              // true
+    re.test("030-2 40-5678".trim())               // false
 
-    //電話番号(ハイフンなし)
-    const regexp = /^(0{1}\d{9,10})$/
-    regexp.test("0312345678".trim())    // true
-    regexp.test("0312345A78 ".trim())   // false
-    regexp.test("03012345678 ".trim())  // true
-    regexp.test("031234568".trim())     // false
-    regexp.test("03-12345A78".trim())   // false
+    ■ 電話番号(ハイフンなし)
+    const re = /^(0{1}\d{9,10})$/
+    re.test("0312345678".trim())                  // true
+    re.test("0312345A78 ".trim())                 // false
+    re.test("03012345678 ".trim())                // true
+    re.test("031234568".trim())                   // false
+    re.test("03-12345A78".trim())                 // false
 
 - KEY: reg.sample.phoneNumberCell
   EXPLAIN: 電話番号(携帯)
   BODY: |
-    //携帯番号(ハイフンあり)1
-    const regexp = /^0[5789]0-[0-9]{4}-[0-9]{4}$/
-    regexp.test("080-1234-5678".trim())   // true
-    regexp.test("080-1234-5678 ".trim())  // true
-    regexp.test("080-123-45678 ".trim())  // false
+    ■ 携帯番号(ハイフンあり)1
+    const re = /^0[5789]0-[0-9]{4}-[0-9]{4}$/
+    re.test("080-1234-5678".trim())               // true
+    re.test("080-1234-5678 ".trim())              // true
+    re.test("080-123-45678 ".trim())              // false
 
-    //携帯番号(ハイフンあり)2
-    const regexp = /^(050|070|080|090)-\d{4}-\d{4}$/
-    regexp.test("080-1234-5678".trim())   // true
-    regexp.test("080-1234-5678 ".trim())  // true
-    regexp.test("060-1234-5678 ".trim())  // false
+    ■ 携帯番号(ハイフンあり)2
+    const re = /^(050|070|080|090)-\d{4}-\d{4}$/
+    re.test("080-1234-5678".trim())               // true
+    re.test("080-1234-5678 ".trim())              // true
+    re.test("060-1234-5678 ".trim())              // false

@@ -82,27 +82,3 @@
       const name = "ABC"
       return <MyCompo header={<Row>{name}</Row>} body={"ボディ"} />
     }
-
-- KEY: ts.react.
-  EXPLAIN:
-  BODY: |
-
-- KEY: ts.react.
-  EXPLAIN:
-  BODY: |
-
-- KEY: ts.react.
-  EXPLAIN:
-  BODY: |
-
-- KEY: ts.react.
-  EXPLAIN:
-  BODY: |
-
-- KEY: ts.react.
-  EXPLAIN:
-  BODY: |
-
-- KEY: ts.react.
-  EXPLAIN:
-  BODY: |

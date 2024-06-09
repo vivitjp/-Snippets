@@ -1,0 +1,14 @@
+# ----------------------------
+# HTML INPUT
+# ----------------------------
+
+- KEY: html.specialChars
+  EXPLAIN: 特殊文字
+  BODY: |
+    &amp; // &
+    &copy; // ©
+    &quot; // "
+    &apos; // '
+    &nbsp; // Space
+    &lt;   // <
+    &gt;   // >

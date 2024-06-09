@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react"
-import { Snippets } from "../../types/type"
+import { Options, Snippets } from "../../types/type"
 import { copyToClipboard } from "../utilities/copyToClipboard"
 import { makeSnippets } from "../utilities/makeSnippets"
 import { Column } from "../../common/styleDiv"
@@ -15,6 +15,7 @@ type SnippetsObject = {
   prefix: string
   scope?: string | undefined
   body: string[]
+  options?: Options
   codeKeyTypes?: CodeKeyType[]
 }
 
@@ -63,6 +64,10 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
           .map((n) => (!n ? " " : n))
           .join("\n")
 
+        // if (snippetsObject.options) {
+        //   console.log(snippetsObject.options)
+        // }
+
         const highlighted = syntaxHighlight({
           code,
           keyDefs,
@@ -76,7 +81,9 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
                 <DivTitle>■ {title}</DivTitle>
                 <DivPrefix>{snippetsObject.prefix}</DivPrefix>
               </SummaryWrapper>
-              <DetailInside>{highlighted}</DetailInside>
+              <DetailInside colCount={snippetsObject.options?.COLS || 1}>
+                {highlighted}
+              </DetailInside>
             </Details>
           </Column>
         )

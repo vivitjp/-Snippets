@@ -1,0 +1,71 @@
+# ----------------------------
+# CSS_CheatSheet
+# ----------------------------
+- KEY: css.cheatSheet
+  EXPLAIN: CheatSheet
+  BODY: |
+    CSS 値:         全 / 上下 左右 / 上 左右 下 / 上 右 下 左
+    ■all            initial / inherit / unset
+    ■X, Y(両方), P C(~最下層), P > C(すぐ下), P + C(最初のMatch弟), P ~ C(全弟)
+
+    ■display        none / inline / inline-block / block / list-item / ...
+    ■float          left / none / right
+    ■clear          left / right / both / none
+    ■position       static(通常:TLRB無視) / relative(TLRB調整) / fixed(不動) /
+                    absolute(親relative:win左上/以外：親左上からTLRB調整) /
+                    sticky(TOP:Pagetop / BOTTOM:PageBottom) /
+                    center(親static:win / 以外:親中央基準でTLRB調整)
+    ■ t/l/r/b       top/left/right/bottom
+                    px(絶対), %(親相対), em(親相対1em=100%), rem(ルート相対)
+    ■z-index        0
+    ■m/p            margin / padding 0px (センタリング)0 auto
+    ■box-sizing     [in]border-box / [out]content-box
+    ■width / height / max- / min- : 0px 
+    ■overflow(-x/-y) visible / auto / scroll / hidden
+    ■resize         none / both / horizontal / vertical
+    ■visivility     visible / hidden(空白) / collapse(TABLE詰める)
+    ■border         1px solid / dashed / dotted #000
+    ■border-radius  0px ★Safari用装飾解除 -webkit-appearance: none
+    ■background-color #000 / transparent
+    ■opacity        0.0(透明) - 1.0(不透明)
+    ■box-shadow     5px 5px 5px 5px rgba(0,0,0,0.4)
+                    ★水/垂/暈/広/色 ★ drop-shadowはfilter
+    ■cursor         auto / default / pointer / no-drop
+    ■pointer-events auto / none / (svg)stroke / fill;
+    ■user-select    all / auto / text / none / contain;
+    ■table-layout   auto / fixed;
+    ■border-collapse:collapse/separate;
+    ■empty-cells    show/hide;
+    ■font           bold large(150%) "ＭＳ 明朝"/"ＭＳ ゴシック";
+    ■font-family    serif / sans-serif / cursive / fantasy / monospace;
+    ■font-weight    normal(400) / bold(600);
+    ■line-height    normal / 15px / 1.2 / 200%;
+    ■text-align     start / end / left / right / center
+                    ★only block/inline-block
+    ■vertical-align baseline / top / middle / bottom
+                    ★only inline/inline-block/table.td
+    ■color          #000 / #ff0000 / red / rgb(255,0,0) / rgba(100%,0%,0%,0.5);
+                    hsl(0,100%,50%) / hsla(0,100%,50%,0.5) / transparent;
+    ■text-shadow    5px 5px 2px blue; ★水/垂/径/色
+    ■text-decoration none / underline / overline / line-through dotted red;
+    ■text-overflow  (cut)clip / (dot)ellipsis / "..."
+                    ★+ white-space:nowrap; overflow:hidden;
+    ■:after/:before div:after / :before{ content: '●'; }
+    ■@page{ size: A4 landscape; }; (前Pの最低行数)orphans / (次Pの最低行数)widows : 5;
+    ■page           page-break-before(-after): auto/always/left/right/avoid;
+                    page-break-inside:auto/avoid;
+    ■div[attr = "mid"](一致), =~(複数一致:SPC区切) *= (含), =^ (始), =$ (終), |= (一致 or "btn-xxx")
+    ■grid           display: grid; 
+                    grid-template: grid-template-rows / grid-template-columns
+                    ★ 1fr / 0px;
+                    grid-row: 1 / 2; grid-column: 2 / 3;
+                    grid-template-areas: "areaA areaB" "areaA areaC";
+                    grid-area: areaA;
+                    grid-auto-flow: column/row;  column-gap/row-gap: 7px;
+    ■flex           display: flex;
+                    flex-diretion: row/row-reverse/column/column-reverse;
+                    flex-wrap: wrap/nowrap;
+                    flex-flow: row wrap;
+                    justify-content:flex-start/flex-end/center/space-between;
+                    align-items: stretch/flex-start/flex-end/center/baseline;
+                    align-content: stretch/flex-start/flex-end/center/space-between/space-around

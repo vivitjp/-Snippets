@@ -146,6 +146,14 @@
     )
 
 #-------------------------------
+# Hooks: useId
+#-------------------------------
+- KEY: qw.useId
+  EXPLAIN: useId ユニークID生成
+  BODY: |
+    const xxxid = React.useId()
+
+#-------------------------------
 # Hooks: useState
 #-------------------------------
 - KEY: qw.useState.string

@@ -1,96 +1,1626 @@
-# ----------------------------
-# HTML INPUT
-# ----------------------------
+#                                                                                  # HTML INPUT
+#
+- KEY: html.quickStart
+  EXPLAIN: Quick Start
+  BODY: |
+    <!DOCTYPE html>
+    <html lang="jp">
+      <head>
+        <meta charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.00" />
 
-- KEY: html.specialChars
+        <title>Title</title>
+
+        <style>
+          div.cls_title {
+            font-size: 20px;
+          }
+
+          div#id_trg {
+            cursor: pointer;
+          }
+        </style>
+
+        <script type="text/javascript">
+          document.addEventListener('DOMContentLoaded', function () {
+            const trg = document.getElementById('id_trg');
+            trg.innerHTML = 'Click me';
+          });
+          document.addEventListener('click', function () {
+            const trg = document.getElementById('id_trg');
+            trg.innerHTML = 'Hello';
+          });
+        </script>
+      </head>
+
+      <body>
+        <div class="cls_title">Sample Title</div>
+        <div class="cls_title" id="id_trg"></div>
+      </body>
+    </html>
+
+- KEY: html.特殊文字
   EXPLAIN: 特殊文字
   BODY: |
-    &amp; // &
-    &copy; // ©
-    &quot; // "
-    &apos; // '
-    &nbsp; // Space
-    &lt;   // <
-    &gt;   // >
+    &lt;: 右大不等号
+    &gt;: 左大不等号
+    &amp;: アンパサンド
+    &quot;: ダブルクォート
+    &nbsp;: 空白文字
 
-- KEY: html.summary
-  EXPLAIN: Detail & Summary
+- KEY: html.root
+  EXPLAIN: Root タグまとめ
   BODY: |
+    ■ <!DOCTYPE>              HTMLバージョン宣言
+      
+      <!DOCTYPE html>
+
+    ■ <html>                  HyperText Markup Language
+      
+      <html lang="ja">
+
+    ■ <head>                  <title>, <meta>を含むヘッダ
+                              HTML5 互換のブラウザーではタグが省略されても <head> 要素を自動生成
+
+      <head>
+        <meta charset="utf-8">
+        <title>テスト</title>
+      </head>"
+
+      [JS] document.head      読み取り専用
+
+    ■ <title>                 <head>に内包。ブラウザのタブに表示される文字列
+
+      <title>文章タイトル</title>
+
+      [JS] document.title
+
+    ■ <body>                  document.body は文書の内容を持つ要素
+                              <body> の内容を持つ文書では <body> 要素を返す
+                              フレームセット文書では、これは最も外側の <frameset> 要素を返す
+                              body プロパティは設定が可能だが、文書に新しい body を設定すると、
+                              既存の <body> 要素の子ノード全削除
+      
+      <body>表示</body>
+
+      [JS] document.body
+
+- KEY: html.comment
+  EXPLAIN: コメント
+  BODY: |
+    <!-- -->  
+    <comment>
+
+- KEY: html.header
+  EXPLAIN: <h1> ヘッダ
+  BODY: |
+    <h1>ヘッドライン</h1>
+    <h2>ヘッドライン</h2>
+    <h3>ヘッドライン</h3>
+    <h4>ヘッドライン</h4>
+    <h5>ヘッドライン</h5>
+    <h6>ヘッドライン</h6>
+
+- KEY: html.hgroup
+  EXPLAIN: <hgroup> 非ヘッダーグループ
+  BODY: |
+    文書のセクションの、複数レベルの見出し
+
+    <hgroup id="doc-title">
+      <h1>HTML</h1>
+      <h2>Living Standard</h2>
+    </hgroup>
+
+- KEY: html.paragraph
+  EXPLAIN: <p> パラグラフ
+  BODY: |
+    <p>～</p>間には インライン要素 のみ内包可能と定義
+
+    <p align='right'>         align非推奨
+    <p>テキスト一行目。
+    テキスト二行目。</p>
+
+- KEY: html.section
+  EXPLAIN: <section> セクション
+  BODY: |
+    <section>
+      <h2>タイトル大</h2>
+      <p>コンテンツ</p>
+      <section>
+        <h3>タイトル中</h3>
+        <p>コンテンツ</p>
+      </section>
+    </section>
+
+- KEY: html.article
+  EXPLAIN: <article> アーティクル
+  BODY: |
+    投稿、記事など、ドキュメント、ページの完全自己完結型記事
+
+    <article>
+      <header>
+        <h3>記事タイトル</h3>
+      </header>
+      <section>
+        <h4>コメント</h4>
+        <p>記事の内容はこんなかんじやで!</p>
+      </section>
+      <footer>
+        <address>
+          メール:<a href="mailto:foo@hoo.com">foo@hoo.com</a>
+        </address>
+      </footer>
+    </article>
+
+- KEY: html.nav
+  EXPLAIN: <nav> ナビ
+  BODY: |
+    <nav class="cls_nav">
+      <ol>
+        <li class="cls_nav">
+          <a href="#">Top</a>
+        </li>
+        <li class="cls_nav">
+          <a href="#">Next</a>
+        </li>
+        <li class="cls_nav">
+          This Entry
+        </li>
+      </ol>
+    </nav>
+
+- KEY: html.header
+  EXPLAIN: <header> ヘッダー
+  BODY: |
+    <head>と混同しないように
+    <article> <section> などで意味的に使用
+    ただし、<address>、<footer>、他の <header> の子孫要素として配置しないこと
+
+    <header class="cls_header">
+      <h3>New Arrivals!</h2>
+    </header>
+
+- KEY: html.footer
+  EXPLAIN: <footer> フッター
+  BODY: |
+    <section>や<article>などの先頭に置かれる<header>の対としてのフッター
+
+    <footer class="cls_footer">
+      <h3>更新日:2020</h3>
+    </footer>
+
+- KEY: html.aside
+  EXPLAIN: <aside> サイド(余談)
+  BODY: |
+    文書のメインコンテンツと間接的な関係しか持っていない文書の部分を表現
+    サイドバーやコールアウトボックスなど
+
+    <aside>
+      <p>サイドメニューや注意書き</p>
+    </aside>
+
+- KEY: html.details.summary
+  EXPLAIN: <details><summary> 折りたたみ
+  BODY: |
+    ウィジェットがopen状態時に内容表示、ラベルは<summary>要素
+    クリックで、親の<details>要素を開閉
+
+    <style>
+      details[open]{ background-color: #EEE; }
+    </style>
+
     <details>
-      <summary>TITLE</summary>
-      TEXT CONTENT
+      <summary>タイトル</summary>
+      <p>内容表示部分をここに</p>
+      <details>
+        <summary>サブタイトル</summary>
+        詳細はここに表示する
+      </details>
     </details>
 
-- KEY: html.button
-  EXPLAIN: Button
+- KEY: html.main
+  EXPLAIN: <main> 主要内容
   BODY: |
-    <button onClick={handleClickButton} value="">
-      Submit
-    </button>
+    文書の<body>の主要な内容
+    hidden 属性が未指定の <main> 要素を2つ以上持つことはできない
 
-- KEY: html.input.text
-  EXPLAIN: Text
-  BODY: |
-    <input
-      type="text"
-      onChange={handleChangeText}
-      value={text}
-      placeholder="name"
-    />
+    <main role="main">
+      <p>ここに記事を書く</p>
+      <p>次の章がここに</p>
+    </main>"
 
-- KEY: html.input.button
-  EXPLAIN: InputButton
+- KEY: html.figure.figcaption
+  EXPLAIN: <figure><figcaption> Caption付Image
   BODY: |
-    <input type="button" onClick={handleClick} value="Click" />
+    キャプション文字列
 
-- KEY: html.input.checkbox
-  EXPLAIN: Checkbox
-  BODY: |
-    //const xxxid = React.useId()
-    <input
-      type="checkbox"
-      id={checkId}
-      onChange={handleChangeCheck}
-      checked={isChecked}
-    />
-    <label htmlFor={checkId}>On</label>
+    <figure>
+      <img src="sample.jpg">
+      <figcaption>写真説明</figcaption>
+    </figure>"
 
-- KEY: html.input.radio
-  EXPLAIN: Radio
-  BODY: |
-    //const xxxid = React.useId()
-    <input
-      type="radio"
-      id={radioId1}
-      name="myRadio"
-      onChange={handleChangeRadio}
-      value={1}
-      checked={radio === 1}
-    />
-    <label htmlFor={radioId1}>1</label>
+    <figure>
+      <img src="[IMAGE]sample.jpg" style="width:100%;">
+      <figcaption style="text-align:center">写真説明</figcaption>
+    </figure>"
 
-- KEY: html.select
-  EXPLAIN: Select
+- KEY: html.br
+  EXPLAIN: <br> 改行
   BODY: |
-    type Options = {
-      title: string
-      value: string
+    できるだけ使用を避け、文章単位をdiv,pなどで処理が推薦
+
+    ここで改行<br>次の行
+
+- KEY: html.nobr
+  EXPLAIN: <nobr> 改行禁止(非)
+  BODY: |
+    StyleSheet推奨スタイルシートの "white-space:no-wrap"
+    通常は横幅にあわせて自動的改行されるが、<nobr>～</nobr>内は改行しない
+
+- KEY: html.wbr
+  EXPLAIN: <wbr> 改行可能
+  BODY: |
+    改行可能箇所の明示(Word Break)
+    長い英単語などを改行する時に使用
+    長過ぎるパス名やURLにも使え、無理な改行で右に空白ができるのを避ける
+
+    世界一番長い英単語「super<wbr>califra<wbr>gilistic<wbr>expiali<wbr>docious」<br>
+    リンク:https://developer.<wbr>mozilla.<wbr>org/<wbr>ja/<wbr>docs/Web/API
+
+- KEY: html.a
+  EXPLAIN: <a> リンク
+  BODY: |
+    別ファイルへのリンク、名前付け、メール送信など
+
+    href                      =url
+    target                    =_top/_blank/_self/_parent
+    download                  // ダウンロード専用の意味
+    ping                      =url // クリックのロギングなどの目的
+    rel                       =next/previous/parentなどのリンク先との関係
+    hreflang                  =ja // リンク先の言語
+    type                      ='text/html' // リンク先の文書MIMEタイプ
+    referrerpolicy
+      no-referrer                      // 送信なし
+      no-referrer-when-downgrade       // httpsからhttpにダウングレード時には送信なし(デフォ)
+      same-origin                      // 同一オリジン間に送信
+      origin                           // オリジン情報(プロトコル＋FQDN＋ポート番号)送信
+      strict-origin                    // オリジン情報送信。ダウングレード時には送信なし
+      origin-when-cross-origin         // クロスオリジンでオリジン情報送信
+      strict-origin-when-cross-origin  // クロスオリジンでオリジン情報送信。ダウングレード時には送信なし
+      unsafe-url                       // 常に送信
+
+    <a href="http://www.test.com/index.html">index</a>
+    <a href="/updir/index.html">index</a>
+    <a href="/updir/">index</a>  // 暗黙のindex.html、updirがディレクトリなら最後の'/'を省略しない
+    <a href="#jump">ジャンプ</a>
+    <a id="jump">タイトル(ここに飛ぶ)</a>  //name="jump"はhtml5で廃止
+
+- KEY: html.base
+  EXPLAIN: <base> 基準URL
+  BODY: |
+    リンク先基準となる絶対URL、基準ターゲットウィンドウ(ターゲットフレーム)指定
+    <head>～</head>の中に指定。相対URLは使用不可
+
+    <head>
+      <title>タイトル</title>
+      <base href="http://www.test.com/">
+    </head>
+    <body>
+      <a href="index.html">XXX</a>    <-- http://www.test.com/index.htmlへのリンク
+    </body>
+
+- KEY: html.map.area
+  EXPLAIN: <map><area> マップ
+  BODY: |
+    イメージ上のクリックする場所によって別のリンク先にジャンプする機能
+    <map>と組み合わせて使用
+
+    <map name="maptest">
+      <area shape="rect" coords="11,16,63,54" href="../a.htm">
+      <area shape="poly" coords="73,50,159,50..." href="../b.htm">
+      <area shape="circle" coords="197,32,28" href="c.htm">
+      <area shape="default" href="d.htm">
+    </map>
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <li> リスト
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <ul> 順序無
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <ol> 順序有
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <dl> 定義リスト
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <dt> 定義語
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <dd> 定義説明
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <dir> ディレクトリ(非)
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <menu> メニュー(非)
+#
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <menuitem> アイテム(非)
+#
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <command> 略語(非)
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <form> フォーム
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <input> インプット
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <select> セレクト
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <optgroup> 選択肢グループ
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <option> 選択肢
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <textarea> 長文
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <button> ボタン
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <fieldset> 枠
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <legend> 枠名
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <label>
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <output> 結果(非)
+#
+
+- KEY: html.datalist
+  EXPLAIN: <datalist>[HTML5](非?)
+  BODY: |
+    ■ <datalist>
+
+    <label>
+      果物
+      <input name="fav_sports" list="fruits_list">
+      <datalist id="fruits_list">
+        <option value="オレンジ">
+        <option value="リンゴ">
+        <option value="バナナ">
+      </datalist>
+    </label>
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <table> テーブル
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <caption> キャプション
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <colgroup> カラムグループ
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <col> カラム設定
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <thead> テーブルヘッダ
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <tbody> テーブルボディ
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <tfoot> テーブルフッタ
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <tr> 行
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <th> テーブルヘッダ項目
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <td> テーブルデータ
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <font> スタイルシート推薦
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <b> 太字
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <i> イタリック
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <tt> テレタイプ文字(非)
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <u> 下線
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <s> 打ち消し線
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <strike> 打ち消し線(非)
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <big> やや大きく(非)
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <small> やや小さく
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <blink> 点滅(非)
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <basefont> 基本フォント(非)
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <address> eMailアドレス
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <blockquote> 引用
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <q> 短い引用括弧
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <ins> 挿入(下線付)
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <del> 削除(打消線付)
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <sub> 下付き
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <sup> 上付き
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <em> 強調+イタリック
+#       COLOR  em
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <strong> 強調
+#       COLOR  strong
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <acronym> 略語(非)
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <abbr> 略語(下線+Tip)
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <cite> 参照(イタリック)
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <dfn> 定義(下線+Tip)
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <code> コード(固定幅Font)
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <kbd> キーボード(フォント)
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <samp> サンプル(フォント)
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <var> 変数(イタリック)
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <mark> マーク(背景黄)
+#
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <data> データ定義(for JS)
+#
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <img> 画像
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <audio> 音
+#
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <video> 動画
+#
+
+- KEY: html.source
+  EXPLAIN: <source>
+  BODY: |
+    <video> や <audio> や <picture> の子要素
+    複数のメディアソース選択肢を指定
+
+    <audio src="xxx.mp3" autoplay></audio>
+
+    <audio autoplay>
+      <source src="xxx.mp3" type="audio/mp3">
+      <source src="xxx.wav" type="audio/wav">
+      <source src="xxx.ogg" type="audio/ogg" onerror="error()">
+    </audio>
+
+- KEY: html.track
+  EXPLAIN: <track> トラック情報
+  BODY: |
+    <video src="brave.webm">
+      <track kind="subtitles" src="brave.ja.vtt" srclang="ja" label="Japanese">
+      <track kind="subtitles" src="brave.en.vtt" srclang="en" label="English">
+      <track kind="subtitles" src="brave.de.vtt" srclang="de" label="Deutsch">
+    </video>
+
+- KEY: html.picture
+  EXPLAIN: <picture> ピクチャ
+  BODY: |
+    レスポンシブイメージを実現するための要素
+    <img> の代わりにブラウザの横幅などの条件に従い、他の画像を指定
+    <source> 要素をグルーピングするために用いる
+
+    <picture>
+      <source media="(min-width: 45em)" srcset="large.jpg">
+      <source media="(min-width: 32em)" srcset="med.jpg">
+      <img src="small.jpg" alt="The wolf runs through the snow.">
+    </picture>
+
+- KEY: html.applet
+  EXPLAIN: <applet> アプレット(廃止)
+  BODY: |
+    Java アプレット。HTML5で廃止、代わりに<object>を使用。
+
+- KEY: html.script
+  EXPLAIN: <script> スクリプト
+  BODY: |
+    主に JavaScript を実行するために使用
+    VBScript など別のスクリプトも実行可能
+
+- KEY: html.noscript
+  EXPLAIN: <noscript> JS未対応MSG
+  BODY: |
+    ブラウザで JavaScript が無効に設定されている場合のメッセージ
+
+- KEY: html.object
+  EXPLAIN: <object> オブジェクト
+  BODY: |
+    <applet><embed><bgsound><img>などの代わりの汎用的なタグ
+    パラメータ制御<param>
+    <object>の動作はブラウザやそのバージョン、プラグインなどで変動、要注意
+    現状ブラウザの対応は未完全?
+
+    <object data="xx.png" type="image/png" height=100 width=100>
+      <object data="xx.gif" type="image/gif" height=100 width=100>
+      </object>
+    </object>
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <param> Objectパラメータ
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <embed> Object埋めこみ
+#
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <noembed> 未対応MSG(非)
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <hr> 水平線
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <iframe> インラインフレーム
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <frame> フレーム(非)
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <frameset> フレームセット(非)
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <noframes> 未対応MSG(非)
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <layer> レイヤ(非)
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <ilayer> インラインレイヤ(非)
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <nolayer> 未対応MSG(非)
+
+- KEY: html.pre
+  EXPLAIN: <pre> 整形済みテキスト
+  BODY: |
+    pre は PREformatted text(整形済みテキスト) の略
+    ソースコードなどのスペースや改行をそのまま表示。
+    < や > や & は特殊文字なので &lt; &gt; &amp; に要変換
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <xmp> 例(非)
+#       <pre> と同様、ソースコード中のスペースや改行をそのまま表示
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <plaintext> テキスト(非)
+#       <pre> と同様、ソースコード中のスペースや改行をそのまま表示
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <listing> リスティング(非)
+#       <pre> と同様、ソースコード中のスペースや改行をそのまま表示
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <style> スタイル
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <span> インライン要素
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <div> ブロック要素
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <center> 中央揃え(非)
+#       スタイルシート: text-align の使用推奨
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <multicol> 段組み(非)
+#       スタイルシート: columns の使用推奨
+
+# - KEY: html.xxxxxx
+#   EXPLAIN: ZZZZZ
+#   BODY: |
+#     ■ <spacer> スペーサー(非)
+#       スタイルシート: margin,padding の使用推奨
+
+- KEY: html.bdo
+  EXPLAIN: <bdo> 国際化情報
+  BODY: |
+    bdo は、i18n BiDirectional Over-ride の略。
+    i18nは intarnationalization(国際化) のこと
+    i と n の間に 18個のアルファベットがあることから i18n
+    dir 属性は必須、ltr(left) または rtl(right) を指定。言語記述方向
+    単純に右から左に表示するには <html> や <div> や <span> などの dir 属性を用る
+    <bdo> を用いるのはごく稀なケース
+
+- KEY: html.bdi
+  EXPLAIN: <bdi> 双方向テキスト
+  BODY: |
+    <bdo>方向解釈のヘルプ
+
+- KEY: html.ruby
+  EXPLAIN: <ruby><rt><rb> ルビ
+  BODY: |
+    ■ <rt>
+    <ruby>                              // ルビ枠
+      紫陽花
+      <rt>あじさい</rt>                  // ルビ文字列
+    </ruby>
+
+    ■ <rb>
+    <ruby>
+      <rb>紫陽花</rb>                    // ルビ対象
+      <rt>あじさい</rt>
+    </ruby>
+
+    <ruby>
+      <rb>山</rb>                       // ルビ括弧
+      <rt>やま</rt>                     // ルビ文字列
+      <rb>田</rb>
+      <rt>だ</rt>
+    </ruby>
+
+    ■ <rp>
+    <ruby>
+      紫陽花
+      <rp>(</rp>                        // ルビ括弧
+      <rt>あじさい</rt>
+      <rp>)</rp>                        // ルビ括弧
+    </ruby>
+
+    ■ <rtc>
+    <ruby>
+      <rb>英</rb>
+      <rb>国</rb>
+      <rt>えい</rt>
+      <rt>こく</rt>
+      <rtc>United Kingdom</rtc>         // 意味上の注釈
+    </ruby>
+
+    ■ <rbc>
+    ルビボディコンテナ(Ruby Body Container)の略でルビ対象
+
+    <ruby>～</ruby> には、rbc要素(１つ)、rtc要素(1or2つ)を記述可能
+    rtc(1つめ)は横書き:上、縦書き:右
+    rtc(2つ目)は横書き:下、縦書き:左側
+
+    rbspan属性にはrb要素数指定            ★ HTML5では未採用
+
+    <ruby>
+      <rbc>                             // ルビ対象
+        <rb>田</rb>
+        <rb>中</rb>
+      </rbc>
+      <rtc>
+        <rt>た</rt>
+        <rt>なか</rt>
+      </rtc>
+      <rtc rbspan="2">                  // rb要素数指定
+        <rt>TANAKA</rt>
+      </rtc>
+    </ruby>
+
+- KEY: html.meta
+  EXPLAIN: <meta> メタ
+  BODY: |
+    ■ charset
+    <meta charset="UTF-8">
+    <meta charset="Shift_JIS">
+    <meta charset="euc-jp">
+    <meta charset="iso-2022-jp">
+
+    ■ name
+    <meta name="application-name" content="WebMail2">
+    <meta name="author" content="Tohoho">
+    <meta name="description" content="HTMLリファレンス">
+    <meta name="generator" content="Simple HTML Editor V2.5">
+    <meta name="keywords" content="HTML,CSS,JavaScript">
+    <meta name="referrer" content="no-referrer">
+
+- KEY: html.link
+  EXPLAIN: <link> リンク
+  BODY: |
+    <head>に記述、href属性で指定文書を参照
+
+    <link rel="stylesheet" href="sample.css" type="text/css">
+
+    <link href="red.css" rel="alternate stylesheet" type="text/css" title="赤系スタイル">
+
+# ■ <marquee> マーキー(非)
+#   スクロールする文字や画像を表示
+# ■ <isindex> 検索フォーム(非)
+#   検索語入力欄が表示
+# ■ <keygen> 鍵の作成(非)
+#
+#   フォームデータのセキュリティ強化
+# ■ <nextid> 次のID(非)
+#   古いタグ
+
+# ■ <server> SS JS(非)
+#   ServerSide JavaScript(古)
+
+- KEY: html.canvas
+  EXPLAIN: <canvas> キャンバス
+  BODY: |
+    <canvas id="cv1" width="140" height="100"></canvas>
+
+    <script>
+    window.onload = function() {
+      var cv = document.getElementById('cv1');
+      if (!cv) { return; }
+
+      var ct = cv.getContext('2d');           // 2Dコンテキスト
+      if (!ct) { return; }
+
+      ct.fillStyle = '#ffcccc';
+      ct.fillRect(0, 0, cv.width, cv.height); //矩形
+
+      ct.strokeStyle = '#ff0000';
+      ct.strokeRect(0, 0, cv.width, cv.height); //矩形
+
+      ct.beginPath();
+      ct.strokeStyle = '#ff0000';
+      ct.arc(70, 50, 40, 0, Math.PI * 2, false); //円
+      ct.stroke();
+
+      ct.beginPath();
+      ct.strokeStyle = '#0000ff';
+      ct.moveTo(0, 0);
+      ct.lineTo(140, 100); //線
+      ct.stroke();
     }
+    </script>
 
-    type Select = {
-      options: Options[]
-      onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
-    }
+- KEY: html.meter
+  EXPLAIN: <meter> メーター
+  BODY: |
+    最大値(max)への現在値(value)をグラフで
 
-    const SelectSet = ({ options, onChange }: Select) => {
-      return (
-        <select onChange={onChange}>
-          {!!options.length &&
-            options.map((n, index) => (
-              <option key={index} value={n.value} >
-                {n.title}
-              </option>
-            ))}
-        </select>
-      )
-    }
+    <meter min=0 max=100 value=70>70 / 100</meter>
+    <meter max=100 value=10 low=20 high=80>70 / 100</meter>
+    <meter max=100 value=50 low=20 high=80>70 / 100</meter>
+    <meter max=100 value=90 low=20 high=80>70 / 100</meter>
+
+- KEY: html.progress
+  EXPLAIN: <progress> 進捗状況
+  BODY: |
+    最大値(max)への現在値(value)をグラフで
+
+    <script>
+    window.onload = function() {
+        window.setInterval(function() {
+            var o = document.getElementById('prog1');
+            if (o.value == 100) {
+                o.value = 0;
+            } else {
+                o.value += 10;
+            }
+        }, 200);
+    };
+    </script>
+
+    <progress id="prog1" max=100 value=0></progress>
+
+- KEY: html.time
+  EXPLAIN: <time> 日時,時刻
+  BODY: |
+    記事の発行日時などを正確に判断することが可能
+
+    <time>2011-06-11</time>
+
+    <time datetime="2011-06-11">2011年6月11日</time>
+
+- KEY: html.template
+  EXPLAIN: <template> テンプレート
+  BODY: |
+    スクリプトで利用される要素のテンプレートを定義
+
+    <head>
+      <script>
+      var data = [
+        { name: 'Pillar', color: 'Ticked Tabby', sex: 'Female' },
+        { name: 'Hedral', color: 'Tuxedo', sex: 'Male' },
+      ];
+      </script>
+    </head>
+
+    <body>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th><th>Color</th><th>Sex</th></tr>
+          </tr>
+        </thead>
+        <tbody>
+          <template id="row">
+            <tr><td></td><td></td><td></td></tr>
+          </template>
+        </tbody>
+      </table>
+
+    <script>
+    window.onload = function() {
+      var template = document.querySelector('#row');
+      if (!'content' in template) {
+          return;
+      }
+      for (var i = 0; i < data.length; i += 1) {
+        var cat = data[i];
+        var clone = template.content.cloneNode(true);
+        var cells = clone.querySelectorAll('td');
+        cells[0].textContent = cat.name;
+        cells[1].textContent = cat.color;
+        cells[2].textContent = cat.sex;
+        template.parentNode.appendChild(clone);
+      }
+    };
+    </script>
+
+- KEY: html.slot
+  EXPLAIN: <slot> スロット(Shadow DOM)
+  BODY: |
+    Shadow DOM で置換対象枠を指定
+
+- KEY: html.dialog
+  EXPLAIN: <dialog> ダイアログ
+  BODY: |
+    JavaScript でダイアログの表示・クローズを制御可能
+    show() は通常モードでダイアログを表示
+    showModal() はモーダル
+    close() はダイアログを閉じる。
+    引数はダイアログの onclose イベントハンドラの this.returnValue 参照
+
+    <input 
+      type="button"
+      value="Show"
+      onclick="document.getElementById('dg1').show()"
+    >
+
+    <input
+      type="button"
+      value="ShowModal"
+      onclick="document.getElementById('dg1').showModal()"
+    >
+
+    <dialog id="dg1">
+      <p>Hello!</p>
+      <input
+        type="button"
+        value="Close"
+        onclick="document.getElementById('dg1').close()"
+      >
+    </dialog>
+
+#     ■ <math> MathML要素
+#
+
+#     ■ <svg> SVG要素
+#
+
+- KEY: html.attr.id.class
+  EXPLAIN: 【属性】id,class
+  BODY: |
+    id=値                               // id名
+    class=値                            // class名
+
+- KEY: html.attr.data
+  EXPLAIN: 【属性】data-NAME
+  BODY: |
+    data-NAME=値                        // 任意名の属性
+
+    <div data-insdate="2011-05-29">データ</div>
+
+- KEY: html.attr.name
+  EXPLAIN: 【属性】name
+  BODY: |
+    name=値                             // 名前
+
+    <h1><a name="gaiyou">概要</a></h1>"
+
+    <script>
+      function func() { alert(document.F1.T1.value) }
+    </script>
+    <form action="#" name="F1">
+      <input type="text" name="T1">
+      <input type="button" value="OK" onclick="func()">
+    </form>
+
+- KEY: html.attr.accesskey
+  EXPLAIN: 【属性】accesskey(非)
+  BODY: |
+    accesskey=値                        // アクセスキー(非)
+      ブラウザによっては動かない
+
+    <label for="t1" accesskey="b">ブラウザ名(<u>B</u>)：</label>
+    <input type="text" id="t1" name="BROWSER">
+
+- KEY: html.attr.autocapitalize
+  EXPLAIN: 【属性】autocapitaliz (Safari?)
+  BODY: |
+    autocapitalize=値                   // 大文字
+
+    input, textarea で iOS の Safari の英語入力モードで入力する際、最初の1文字目が大文字になる
+
+    autocapitalize=on/off/none          // オン/オフ
+    autocapitalize=sentences            // 文章毎にオン
+    autocapitalize=words                // 単語毎にオン
+    autocapitalize=characters           // 文字毎にオン"
+
+    <input type="text" autocapitalize="off" name="login_id">
+
+- KEY: html.attr.align
+  EXPLAIN: 【属性】align
+  BODY: |
+    align=left|center|right|justify     // アラインメント
+
+    h1,p,div,
+    table,caption,legend,col,colgroup,tbody,tr,th,td
+
+- KEY: html.attr.style
+  EXPLAIN: 【属性】style
+  BODY: |
+    style=CSS値                         // スタイル指定
+
+    <div style="color:blue">
+      スタイルシート指定
+    </div>
+
+- KEY: html.attr.MIMEtype
+  EXPLAIN: 【属性】MIME type
+  BODY: |
+    type=MIMEタイプ
+
+    a,area,link,embed,object,script,source,style
+
+    ■ MIMEタイプ
+    text/html(HTML文書)
+    text/plain(テキスト文書)
+    image/gif(GIF)
+    image/jpeg(JPEG)
+    text/javascript(JavaScriptスクリプト)
+    text/css(CSSファイル)
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ char= 桁揃え
+#       char 小数点 char 属性で指定した文字で揃える。テーブルのセルでのみ有効。作動しないケースが多い。
+#       CODE  <div class="c1">
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ contenteditable= 編集許可
+#       "true にすると HTMLのコンテンツをブラウザ上で編集することができるようになる。
+# true/false/inherit"
+#       <div contenteditable=true>編集可能テキスト</div>
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ contextmenu= 右Clickメニュ
+#       右クリックした際に表示されるコンテキストメニューを指定。作動しないケースが多い。
+#       "<div contextmenu="menu1">メニューA</div>
+#  <menu type="context" id="menu1">
+#   <menuitem label="Google" onclick="location.href='http://www.google.co.jp/'"></menuitem>
+#   <menuitem label="Yahoo" onclick="location.href='http://www.yahoo.co.jp/'"></menuitem>
+#  </menu>
+# </form>"
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ crossorigin= CORS指定
+#       "CORS(Cross-Origin Resource Sharing) に関する属性
+
+# img, script, audio, video, link要素で指定可能。同一生成元ポリシー(Same-Origin Policy)に対するで、異なったオリジン(プロトコル, サーバ名, ポート番号の組み合わせ)間で画像などを共有するために使用。
+
+# anonymous 認証情報不使用(Originヘッダ送信)
+# use-credintials 認証情報使用(Originヘッダ非送信)"
+#       CODE  "<script
+#   src="https://code.jquery.com/jquery-3.3.1.min.js"
+#   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+#   crossorigin="anonymous"></script>
+
+# <script>
+# window.onload = function(){
+#   var canvas = document.getElementById("canvas");
+#   var context = canvas.getContext("2d");
+#   var img = new Image();
+#   img.crossOrigin = "anonymous";
+#   img.src = "http://www.exapmple.com/sample.png"+"?"+new Date().getTime();
+#   img.onload = function() {
+#     context.drawImage(img, 40, 40);
+#     var base64 = canvas.toDataURL("image/png");
+#     // crossorigin無しだとエラー
+#   }
+# }
+# </script>
+
+# <canvas id="canvas" width=400 height=400></canvas>"
+
+#     ■ dir= 表示の方向制御
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ disabled 無効化
+#       "<textarea disabled rows=2 cols=50>
+# 編集不可内容
+# </textarea>"
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ draggable= ドラッグ可能
+#       draggable="true"でドラッグが可能になる。HTML5だが、使用可能
+#       CODE  "<div
+#   draggable="true"
+#   ondragstart="doDragStart(event)"
+# >Move</div>
+
+# <div class="dustbox"
+#   ondragover="doDragOver(event)"
+#   ondrop="doDrop(event, this)"
+# >Dustbox</div>
+
+# <script>
+# function doDragStart(event) {
+#   var name = event.target.innerHTML;
+#   event.dataTransfer.setData("text/plain", name);
+# }
+
+# function doDragOver(event) {
+#   event.preventDefault();
+# }
+
+# function doDrop(event, dustbox) {
+#   event.preventDefault();
+#   var name = event.dataTransfer.getData("text/plain");
+#   dustbox.innerHTML += (name + " ");
+# }
+# </script>"
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ dropzone= ドロップゾーン
+#       未詳
+
+#     ■ hidden 要素を隠蔽
+#       要素を隠しま
+#       "<div>AAA</div>
+# <div hidden>BBB</div>
+# <div>CCC</div>"
+#     ■ hidefocus= フォーカス隠蔽
+#       hidefocus="true"。非サポートブラウザ多数。
+#       "<button>OK</button><br>
+# <button hidefocus="true">OK</button><br>
+# <a href="xxx.htm">XXX</a><br>
+# <a href="xxx.htm" hidefocus="true">XXX</a><br>"
+#     ■ inputmode= 入力モード
+#       "input,textarea 要素に対する入力モード指定。HTML5.2で削除。実装例少ない。スタイルシートの ime-mode 参照。
+
+# none: 入力モードを指定しない(LS)
+# text: テキスト入力モード(LS)
+# tel: 電話番号入力モード(H5.1-5.1)
+# url: URL 入力モード(H5.1-5.1)
+# email: Eメールアドレス入力モード(H5.1-5.1)
+# numeric: 数値入力モード(H5.1-5.1)
+# decimal: 整数値入力モード(LS)
+# search: 検索語入力モード(LS)
+# verbatim: ラテン文字逐語モード(HTML 5.1の規定値)(H5.1-5.1)
+# latin: ラテン文字モード(H5.1-5.1)
+# latin-name: ラテン文字入力モード(名前入力用)(H5.1-5.1)
+# latin-prose: ラテン文字文章入力モード(H5.1-5.1)
+# full-width-latin: 全角ラテン文字入力モード(H5.1-5.1)
+# kana: 漢字変換ひらがな入力モード(H5.1-5.1)
+# kana-name: 漢字変換ひらがな入力モード(名前入力用)(H5.1-5.1)
+# katakana: カタカナ入力モード(H5.1-5.1)"
+#       CODE  "<div>TEL:
+#   <input type="text" inputmode="tel">
+# </div>"
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ is= カスタマイズドビルトイン
+#       CODE  "<script>
+# class AButton extends HTMLButtonElement {
+#   constructor() {
+#     super();
+#     this.addEventListener("click",()=>{ ... });
+#   }
+# }
+# customElements.define("a-button",AButton,{extends:"button"});
+# <script>
+
+# <button is="plastic-button">Click Me!</button>"
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ itemscope スコープ(構造化データ)
+#       構造化データ(Microformats,RDFa,JSON-LD)のひとつ、Microdata に関連する属性群。正確な意味づけし、自動データ抽出を可能に。
+#       CODE  "<div itemscope>
+#    :
+# </div>"
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ itemtype 種別(構造化データ)
+#       CODE  "<div itemscope itemtype="http://schema.org/Movie">
+#    :
+# </div>"
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ itemid ID(構造化データ)
+#       一意のグローバル識別子(例えば書籍の ISBN 番号)を示す URL/URN を指定
+#       CODE
+
+#     ■ itemprop 属性名(構造化データ)
+#       CODE
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ itemrel 疑似ID(構造化データ)
+#       要素の親子関係に無いけれども、属性値として扱いたい要素の ID を指定。ID は空白区切りで複数指定可。itemscope 属性を指定した要素でのみ指定可。
+#       CODE
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ lang= 言語
+#       "ja(日),zh(中),ko(韓),en(英),de(独),fr(仏),it(伊),ru(露)
+# en-US(米国英語)、ja-osaka(大阪弁)などの方言設定も可能"
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ language= スクリプト言語
+#       "language="JavaScript" (JavaScript)
+# language="JScript" (JavaScript)
+# language="VBScript" (VBScript)
+# language="VBS" (VBScript)"
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ nonce= 改竄チェック
+#       [HTML5.1] コンテンツセキュリティポリシー(CPS: Content Security Policy)に従い、Webページ上に悪意を持って埋め込まれたスクリプトの実行を抑制。
+#       CODE  "HTTP ヘッダ
+# Content-Security-Policy: script-src 'nonce-hUygTfgbgFcdRt5eDqpLfB6f==' 'strict-dynamic'
+
+# <article>
+#   ～悪意のある書き込み～
+#   <script>悪意のあるスクリプト</script>
+#   ～悪意のある書き込み～
+# </article>
+# <script nonce="hUygTfgbgFcdRt5eDqpLfB6f==">正規のスクリプト</script>"
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ onbeforeunload= Unloadコール
+#       ページがアンロードされる前に呼ばれ、ページを離れてもよいか確認するダイアログが表示されます。ダイアログに表示するメッセージを return で返します。Firefox ではメッセージが表示されない
+#       CODE  "<body onbeforeunload="return 'TEST'">
+# <script>
+# window.onbeforeunload = function(e){
+#   return "TEST";
+# }
+# </script>"
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ onmessage= 受信ハンドラ
+#       postMessage() によるメッセージ受信時のハンドラを指定。Google Chrome や Opera では、ローカルファイルでは動作しません。http: か https: で始まるURLでアクセスしてください。
+#       CODE  "<script>
+# function init() {
+#   var worker = new Worker('test.js');
+#   worker.onmessage = function(event){
+#     document.getElementById('result').innerHTML = event.data;
+#   };
+# }
+# </script>
+
+# <body onload="init()">
+#   <div id="result"></div>
+# </body>
+
+# var count = 0;
+# setInterval(function(){
+#   postMessage('hoge' + count++);
+# },1000);"
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ onpopstate= hisotry遷移
+#       同一ページ内でhisotryを遷移した際に発行
+#       CODE  "<script>
+# window.onload = function() {
+#   history.pushState({'page':1}, "page1", "?page=1");
+#   history.pushState({'page':2}, "page2", "?page=2");
+#   history.pushState({'page':3}, "page3", "?page=3");
+#   history.pushState({'page':4}, "page4", "?page=4");
+#   history.pushState({'page':5}, "page5", "?page=5");
+#   window.onpopstate = function(e) {
+#     alert(JSON.stringify(e.state));
+#   }
+# }
+# </script>
+
+# <input type="button" onclick="history.back()" value="Back">"
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ ping= ping通知
+#       ping属性指定リンクをクリックで、ping属性指定のURLをコール。ロギング目的などで使用
+#       CODE  <a href="http://www.web.com/a.htm" ping="http://www.stats.com/log?a.htm">LINK</a>
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ rel= 関係
+#       "a,area,link の rel の指定値。HTML5で下記定義
+
+# stylesheet スタイルシート(link要素)
+# prev ひとつ前の文書
+# next ひとつ次の文書。
+# alternate 代替文書
+# author 作者に関する文書
+# bookmark ブックマーク
+# help ヘルプ
+# icon アイコンファイル(link要素)
+# license ライセンス
+# nofollow 非推薦(a,area要素)
+# noreferrer HTTP Refereヘッダを非送信要求(a,area要素)
+# prefetch 先行キャッシュ
+# search 検索ページ
+# tag タグ(a,area要素)"
+#       CODE  "<link rel="stylesheet" href="css/style.html" type="text/css">
+# <link rel="prev" href="chapter1.html">
+# <link rel="next" href="chapter3.html">
+# <link rel="alternate" href="simple-format.html">
+# <link rel="author" href="author.html">
+# <link rel="bookmark" href="bookmark.html">
+# <link rel="help" href="help.html">
+# <link rel="icon" href="image/favicon.png" type="image-x-icon">
+# <link rel="license" href="license.html">"
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ slot= スロット(Shadow DOM)
+#       Shadow DOM において、テンプレートのスロットとのマッピングを指定
+#       CODE  "<template id="shadow-dom-template">
+#   Title: [ <slot name="title"></slot> ],
+#   Artist: [ <slot name="artist"></slot> ]
+# </template>
+
+# <div class="song">
+#   <span slot="title">Let it be</span>
+#   <span slot="artist">The Beatles</span>
+# </div>
+
+# <div class="song">
+#   <span slot="title">Scarborough Fair</span>
+#   <span slot="artist">Simon & Garfunkel</span>
+# </div>
+
+# <script>
+# var hostElements = document.getElementsByClassName("song");
+# for (var i = 0; i < hostElements.length; i++) {
+#   var rootElement = hostElements[i].attachShadow({mode: "open"});
+#   var templeteContent = document.getElementById("shadow-dom-template").content.cloneNode(true);
+#   rootElement.appendChild(templeteContent);
+# }
+# </script>"
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ spellcheck= スペルチェック
+#       textarea などにユーザが入力した文章に対してスペルチェックを行うかどうかを true または false で指定します。スペルチェック結果の表示方法はブラウザにまかされます。例えば Opera では、単語の下に赤い波線
+#       <textarea spellcheck="true">This is a boook.</textarea>
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ tabindex= タブ順序
+#       TABキーで数値低順にフォーカス移動。tabindex=-1フォーカス拒否。
+#       "<form action="#">
+#   <input type="text" tabindex="3">3<br>
+#   <input type="text" tabindex="1">1<br>
+#   <input type="text" tabindex="2">2<br>
+# </form>"
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ target= ターゲット
+#       "リンク先、フォーム結果をどのウィンドウ(フレーム)に表示するか指定。
+
+# ウィンドウ(フレーム)の名前:
+#   <frame>タグのname名前
+#   JavaScript の open() 第2引数
+#   アンダーバー(_)名
+#     _blank 新規ウィンドウ
+#     _self 自分自身ウィンドウ/フレーム
+#     _top 分割されたフレームを全解除表示
+#     _parent フレーム分割の1段だけ分割解除、その親フレームに表示"
+#       "<a href="www.test.html" target="_blank">TEST</a>
+
+# //helpというフレームに
+# <a href="www.text.html" target="help">to Help</a>"
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ title= バルーンヘルプ
+#       バルーンヘルプを表示。特殊文字は要変換。
+#       "<div title="これがヒントだよ">
+#   このテキストのToolTipが表示される
+# </DIV>"
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ translate= 翻訳可否
+#       yes(default)/noを指定。no 指定でプログラムのソースコードなど自動翻訳したくない箇所を対象外に。
+#       "<pre>
+# <code translate="no">
+# main() {
+#   printf("Hello world!");
+# }
+# </code>
+# </pre>"
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ unselectable= 選択禁止
+#       コンテンツ選択禁止
+#       <div unselectable=on>選択できない文字列</div>
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+#     ■ =color 色指定
+#       "color="#000000" RGB値
+# color="blue" 色名前"
+
+- KEY: html.attr.xxx
+  EXPLAIN: 【属性】xxx
+  BODY: |
+
+#     ■ =url url
+#       URL(Uniform Resource Locator)

@@ -28,18 +28,23 @@ export const menuItems: menuByCategories[] = [
     ],
   },
   {
-    category: "Html/CSS",
+    category: "Html",
     items: [
       {
-        name: "⛔HTML",
-        fileName: "",
-        codeKeyTypes: [],
+        name: "🔺HTML",
+        fileName: "html/HTML",
+        codeKeyTypes: [codeKeys.HTML],
       },
       {
-        name: "HTML(Topics)",
-        fileName: "html/HTML",
+        name: "🔺HTML(Topics)",
+        fileName: "html/HTMLTopics",
         codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS],
       },
+    ],
+  },
+  {
+    category: "CSS",
+    items: [
       {
         name: "⛔CSS",
         fileName: "",
@@ -47,8 +52,13 @@ export const menuItems: menuByCategories[] = [
       },
       {
         name: "CSS(Topics)",
-        fileName: "html/CSSTopics",
+        fileName: "css/CSSTopics",
         codeKeyTypes: [codeKeys.CSS],
+      },
+      {
+        name: "⛔SCSS",
+        fileName: "",
+        codeKeyTypes: [],
       },
       {
         name: "⛔CSS(Responsive)",
@@ -56,8 +66,13 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.CSS],
       },
       {
+        name: "CheatSheet",
+        fileName: "css/CheatSheet",
+        codeKeyTypes: [],
+      },
+      {
         name: "CSSColor:color",
-        fileName: "html/CSSColor",
+        fileName: "css/CSSColor",
         encodeRequired: false,
       },
     ],
@@ -65,6 +80,16 @@ export const menuItems: menuByCategories[] = [
   {
     category: "JavaScript",
     items: [
+      {
+        name: "Objects",
+        fileName: "JavaScript/JavaScriptObjects",
+        codeKeyTypes: [codeKeys.JSTS],
+      },
+      {
+        name: "Methods",
+        fileName: "JavaScript/JavaScriptMethods",
+        codeKeyTypes: [codeKeys.JSTS],
+      },
       {
         name: "Topics:js",
         fileName: "JavaScript/JSTopics",
@@ -131,10 +156,15 @@ export const menuItems: menuByCategories[] = [
         fileName: "React/ReactRouting",
         codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS, codeKeys.React],
       },
+      {
+        name: "React 型定義",
+        fileName: "🔺React/ReactTypeScript",
+        codeKeyTypes: [codeKeys.JSTS, codeKeys.React],
+      },
     ],
   },
   {
-    category: "React:State",
+    category: "React State",
     items: [
       {
         name: "🔺zustand:pk",
@@ -154,7 +184,7 @@ export const menuItems: menuByCategories[] = [
     ],
   },
   {
-    category: "React:Query",
+    category: "React Query",
     items: [
       {
         name: "SWR:pk",
@@ -169,7 +199,7 @@ export const menuItems: menuByCategories[] = [
     ],
   },
   {
-    category: "React:CSS",
+    category: "React CSS",
     items: [
       {
         name: "StyledCompo:pk",
@@ -207,7 +237,7 @@ export const menuItems: menuByCategories[] = [
   },
 
   {
-    category: "React:Other",
+    category: "React Misc",
     items: [
       {
         name: "ReactHookForm:pk",
@@ -245,11 +275,6 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [],
       },
       {
-        name: "⛔Webpack",
-        fileName: "",
-        codeKeyTypes: [],
-      },
-      {
         name: "環境変数",
         fileName: "/frameWork/nodejs/env",
         codeKeyTypes: [],
@@ -264,6 +289,11 @@ export const menuItems: menuByCategories[] = [
   {
     category: "Nodejs Bundlers",
     items: [
+      {
+        name: "⛔Webpack",
+        fileName: "",
+        codeKeyTypes: [],
+      },
       {
         name: "⛔Bun",
         fileName: "",
@@ -387,11 +417,17 @@ export const menuItems: menuByCategories[] = [
     category: "Database",
     items: [
       {
-        name: "mySQL",
+        name: "MySQL",
         fileName: "database/mySql",
         codeKeyTypes: [codeKeys.MySql],
         case_sensitive: false,
       },
+      // {
+      //   name: "MySQL Topics",
+      //   fileName: "database/mySqlTopics",
+      //   codeKeyTypes: [codeKeys.MySql],
+      //   case_sensitive: false,
+      // },
       {
         name: "MongoDB",
         fileName: "database/mongo",
@@ -517,10 +553,19 @@ export const menuItems: menuByCategories[] = [
     ],
   },
   {
-    category: "CS",
+    category: "Computer Science",
     items: [
       {
         name: "⛔デザインパターン",
+        fileName: "",
+      },
+    ],
+  },
+  {
+    category: "Office",
+    items: [
+      {
+        name: "⛔Excel Methods",
         fileName: "",
       },
     ],
