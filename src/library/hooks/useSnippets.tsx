@@ -60,10 +60,6 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
           .map((n) => (!n ? " " : n))
           .join("\n")
 
-        // if (snippetsObject.options) {
-        //   console.log(snippetsObject.options)
-        // }
-
         const highlighted = syntaxHighlight({
           code,
           codeKeyTypes,

@@ -24,7 +24,6 @@ export const syntaxHighlight = ({
   const mergedCodeKeyTypes = getMergedKeys(codeKeyTypes)
   if (!mergedCodeKeyTypes) return undefined
 
-  //console.log("length", keys.length)
   escaped.split("\n").forEach((line, idx) => {
     let result = line
 
@@ -35,7 +34,7 @@ export const syntaxHighlight = ({
         const re = new RegExp(`\\b${key}\\b`, case_sense)
         result = result.replaceAll(
           re,
-          `<span class="syntax" style="color:${color}">${switcher(key)}</span>`
+          `<span style="color:${color}">${switcher(key)}</span>`
         )
       })
     })
@@ -53,13 +52,13 @@ export const syntaxHighlight = ({
 const switcher = (key: string) => {
   switch (key) {
     case "style":
-      return "\u0073t-yle"
+      return "\u0073tyle"
     case "span":
-      return "\u0073p-an"
+      return "\u0073pan"
     case "class":
-      return "\u0063l-ass"
+      return "\u0063lass"
     case "id":
-      return "\u0069-d"
+      return "\u0069d"
     default:
       return key
   }

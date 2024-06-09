@@ -2,7 +2,7 @@ import { KeyDef } from "../getKey"
 
 export const keysHTML: KeyDef = {
   // ■ 属性(青)
-  // DodgerBlue: ["id", "class"],
+  DodgerBlue: ["id", "class"],
   Brown: [
     "a",
     "abbr",
