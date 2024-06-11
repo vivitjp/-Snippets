@@ -68,3 +68,81 @@ div.colorReversed {
   background-color: black;
   padding: 3px 10px;
 }
+
+ul,
+ol {
+  padding: 0px;
+  font-size: 0;
+  line-height: 0;
+}
+
+div.flexRow {
+  display: flex;
+  flex-flow: row;
+  gap: 50px;
+  padding: 5px;
+}
+
+details.htmlSample {
+  margin: 0;
+  padding: 5px 40px;
+  line-height: 1rem;
+  border: 1px solid #ccc;
+}
+
+summary.htmlSample {
+  margin: 0;
+  padding: 0;
+  line-height: 1rem;
+}
+
+summary.htmlSample::marker {
+  content: "🔘 ";
+  font-size: 1em;
+}
+
+fieldset.htmlSample {
+  padding: 10px;
+  line-height: 0;
+}
+
+label.htmlSample {
+  padding: 0;
+  line-height: 0.5rem;
+}
+
+ruby.htmlSample {
+  ruby-align: center;
+}
+
+article.htmlSample {
+  margin: 0;
+  padding: 0 20px;
+  line-height: 1rem;
+  border: 1px solid #ccc;
+}
+
+article.htmlSample > header {
+  margin: 0;
+  padding: 0 10px;
+  line-height: 1rem;
+  background-color: #eee;
+}
+
+article.htmlSample > section {
+  margin: 0;
+  padding: 0 10px;
+  line-height: 1rem;
+}
+
+article.htmlSample > footer {
+  margin: 0;
+  padding: 0 10px;
+  line-height: 1rem;
+  background-color: #eee;
+}
+
+figure.htmlSample {
+  text-align: center;
+  border: 1px solid #eee;
+}

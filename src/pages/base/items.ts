@@ -16,7 +16,7 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.HTML],
       },
       {
-        name: "🔺Purpose",
+        name: "🔺ByPurpose",
         fileName: "html/Purpose",
         codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS],
       },

@@ -13,6 +13,7 @@ export type YAMLData = {
   EXPLAIN?: string
   OPTIONS?: Options
   SAMPLE?: string
+  STYLE?: string
 }
 
 export type Snippets = {
@@ -22,6 +23,7 @@ export type Snippets = {
     body: string[]
     options?: Options
     sample?: string
+    style?: string
     codeKeyType?: CodeKeyType
   }
 }

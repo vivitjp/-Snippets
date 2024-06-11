@@ -20,24 +20,26 @@ export const syntaxHighlight = ({
 
   //  const pattern = /(<\/?[^>]+>)|([^<]+)/g
 
-  if (!codeKeyTypes?.length) return undefined
   const mergedCodeKeyTypes = getMergedKeys(codeKeyTypes)
-  if (!mergedCodeKeyTypes) return undefined
 
   escaped.split("\n").forEach((line, idx) => {
     let result = line
 
-    Object.entries(mergedCodeKeyTypes).forEach(([color, keys]) => {
-      if (!keys.length) return
+    if (mergedCodeKeyTypes) {
+      Object.entries(mergedCodeKeyTypes).forEach(([color, keys]) => {
+        if (!keys.length) return
 
-      keys.forEach((key) => {
-        const re = new RegExp(`\\b${key}\\b`, case_sense)
-        result = result.replaceAll(
-          re,
-          `<span style="color:${color}">${switcher(key)}</span>`
-        )
+        keys.forEach((key) => {
+          if (!key) return
+          const re = new RegExp(`\\b${key}\\b`, case_sense)
+          result = result.replaceAll(
+            re,
+            `<span style="color:${color}">${switcher(key)}</span>`
+          )
+        })
       })
-    })
+    }
+
     if (result.trim()) {
       rebuilt.push(
         <Pre key={idx} dangerouslySetInnerHTML={{ __html: result }} />

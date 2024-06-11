@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react"
 import { Options, Snippets } from "../../types/type"
 import { copyToClipboard } from "../utilities/copyToClipboard"
 import { makeSnippets } from "../utilities/makeSnippets"
-import { Column } from "../../common/styleDiv"
+import { Column, Row } from "../../common/styleDiv"
 import { Button } from "../../common/styleInput"
 import { syntaxHighlight } from "../syntaxHighlighter/syntaxHighlighter"
 import { useSelect } from "./useSelect"
@@ -17,6 +17,7 @@ type SnippetsObject = {
   body: string[]
   options?: Options
   sample?: string
+  style?: string
   codeKeyTypes?: KeyDef[]
 }
 
@@ -32,7 +33,12 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
   })
 
   useEffect(() => {
-    if (!selectedMenu?.fileName) return
+    // console.log("selectedMenu", selectedMenu)
+
+    if (!selectedMenu?.fileName) {
+      console.log("File Name", selectedMenu?.fileName)
+      return
+    }
     //Spinner Flag
 
     setIsPending(true)
@@ -43,7 +49,10 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
         scope: value,
       })
       setData(result)
-      if (!result) return
+      if (!result) {
+        console.log("File Data")
+        return
+      }
 
       //配列化
       const array = Object.entries(result ?? {}) as [string, SnippetsObject][]
@@ -77,7 +86,19 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
               <DetailInside colCount={snippetsObject.options?.COLS || 1}>
                 {highlighted}
               </DetailInside>
-              <>{snippetsObject.sample && <div>{snippetsObject.sample}</div>}</>
+              <>
+                {snippetsObject.style && <style>{snippetsObject.style}</style>}
+                {snippetsObject.sample && (
+                  <Row
+                    justifyContent="center"
+                    alignItems="center"
+                    marginTop="10px"
+                    padding="10px"
+                    boxShadow="0px 0px 5px rgba(0, 0, 0, 0.1)"
+                    dangerouslySetInnerHTML={{ __html: snippetsObject.sample }}
+                  />
+                )}
+              </>
             </Details>
           </Column>
         )

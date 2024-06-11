@@ -73,153 +73,187 @@
 
 - KEY: html.pps.list.ul
   EXPLAIN: リスト ul
+  SAMPLE: BODY
   BODY: |
-    ■ list-style-type: none
+    <div class="flexRow">
+      <ul style="list-style-type: none">
+        <li>Item A</li>
+        <li>Item B</li>
+        <li>Item C</li>
+      </ul>
 
-    <ul class="sample_list" style="list-style-type: none">
-      <li>Item A</li>
-      <li>Item B</li>
-      <li>Item C</li>
-    </ul>
+      <ul class="myUi" style="list-style-type: disc">
+        <li>Item A</li>
+        <li>Item B</li>
+        <li>Item C</li>
+      </ul>
 
-    ■ list-style-type: disc
+      <ul style="list-style-type: circle">
+        <li>Item A</li>
+        <li>Item B</li>
+        <li>Item C</li>
+      </ul>
 
-    <ul class="sample_list" style="list-style-type: disc">
-      <li>Item A</li>
-      <li>Item B</li>
-      <li>Item C</li>
-    </ul>
+      <ul style="list-style-type: square">
+        <li>Item A</li>
+        <li>Item B</li>
+        <li>Item C</li>
+      </ul>
+    </div>
 
-    ■ list-style-type: circle
-
-    <ul class="sample_list" style="list-style-type: circle">
-      <li>Item A</li>
-      <li>Item B</li>
-      <li>Item C</li>
-    </ul>
-
-    ■ list-style-type: square
-
-    <ul class="sample_list" style="list-style-type: square">
-      <li>Item A</li>
-      <li>Item B</li>
-      <li>Item C</li>
-    </ul>
-
-- KEY: html.pps.list.ul
+- KEY: html.pps.list.ol
   EXPLAIN: リスト ol
+  SAMPLE: BODY
   BODY: |
-    ■ list-style-type: lower-roman
+    <div class="flexRow">
+      <ol style="list-style-type: lower-roman">
+        <li>Item A</li>
+        <li>Item B</li>
+        <li>Item C</li>
+      </ol>
 
-    <ol class="sample_list" style="list-style-type: lower-roman">
-      <li>Item A</li>
-      <li>Item B</li>
-      <li>Item C</li>
-    </ol>
+      <ol style="list-style-type: upper-roman">
+        <li>Item A</li>
+        <li>Item B</li>
+        <li>Item C</li>
+      </ol>
 
-    ■ list-style-type: upper-roman
+      <ol style="list-style-type: lower-greek">
+        <li>Item A</li>
+        <li>Item B</li>
+        <li>Item C</li>
+      </ol>
 
-    <ol class="sample_list" style="list-style-type: upper-roman">
-      <li>Item A</li>
-      <li>Item B</li>
-      <li>Item C</li>
-    </ol>"
+    </div>
 
-    ■ list-style-type: lower-greek
-
-    <ol class="sample_list" style="list-style-type: lower-greek">
-      <li>Item A</li>
-      <li>Item B</li>
-      <li>Item C</li>
-    </ol>
-
-    ■ list-style-type: decimal
-
-    <ol class="sample_list" style="list-style-type: decimal">
-      <li>Item A</li>
-      <li>Item B</li>
-      <li>Item C</li>
-    </ol>
-
-    ■ list-style-type: decimal-leading-zero
-
-    <ol class="sample_list" style="list-style-type: decimal-leading-zero">
-      <li>Item A</li>
-      <li>Item B</li>
-      <li>Item C</li>
-    </ol>
-
-    ■ list-style-type: lower-latin
-
-    <ol class="sample_list" style="list-style-type: lower-latin">
-      <li>Item A</li>
-      <li>Item B</li>
-      <li>Item C</li>
-    </ol>
-
-    ■ list-style-type: lower-alpha
-
-    <ol class="sample_list" style="list-style-type: lower-alpha">
-      <li>Item A</li>
-      <li>Item B</li>
-      <li>Item C</li>
-    </ol>
-
-    ■ list-style-type: upper-latin
-
-    <ol class="sample_list" style="list-style-type: upper-latin">
-      <li>Item A</li>
-      <li>Item B</li>
-      <li>Item C</li>
-    </ol>
-
-    ■ list-style-type: upper-alpha
-
-    <ol class="sample_list" style="list-style-type: upper-alpha">
-      <li>Item A</li>
-      <li>Item B</li>
-      <li>Item C</li>
-    </ol>
-
-- KEY: html.pps.list.ul
-  EXPLAIN: リスト ol(漢字)
+- KEY: html.pps.list.ol.cjk
+  EXPLAIN: リスト ol(cjk)
+  SAMPLE: BODY
   BODY: |
-    ■ list-style-type: cjk-ideographic
+    <div class="flexRow">
+      <ol style="list-style-type: cjk-ideographic">
+        <li>Item A</li>
+        <li>Item B</li>
+        <li>Item C</li>
+      </ol>
 
-    <ol class="sample_list" style="list-style-type: cjk-ideographic">
-      <li>Item A</li>
-      <li>Item B</li>
-      <li>Item C</li>
-    </ol>
+      <ol style="list-style-type: hiragana">
+        <li>Item A</li>
+        <li>Item B</li>
+        <li>Item C</li>
+      </ol>
 
-    ■ list-style-type: hiragana
+      <ol style="list-style-type: katakana">
+        <li>Item A</li>
+        <li>Item B</li>
+        <li>Item C</li>
+      </ol>
 
-    <ol class="sample_list" style="list-style-type: hiragana">
-      <li>Item A</li>
-      <li>Item B</li>
-      <li>Item C</li>
-    </ol>
+      <ol style="list-style-type: hiragana-iroha">
+        <li>Item A</li>
+        <li>Item B</li>
+        <li>Item C</li>
+      </ol>
 
-    ■ list-style-type: katakana
+      <ol style="list-style-type: katakana-iroha">
+        <li>Item A</li>
+        <li>Item B</li>
+        <li>Item C</li>
+      </ol>
+    </div>
 
-    <ol class="sample_list" style="list-style-type: katakana">
-      <li>Item A</li>
-      <li>Item B</li>
-      <li>Item C</li>
-    </ol>
+- KEY: html.pps.details
+  EXPLAIN: 詳細折りたたみ要素
+  SAMPLE: BODY
+  BODY: |
+    <details class="htmlSample">
+        <summary class="htmlSample">タイトル</summary>
+        隠された内容はこちら
+    </details>
 
-    ■ list-style-type: hiragana-iroha
+- KEY: html.pps.details
+  EXPLAIN: 詳細折りたたみ要素(内包)
+  SAMPLE: BODY
+  BODY: |
+    <details class="htmlSample">
+      <summary class="htmlSample">質問</summary>
+      中国語で"馬上"の意味は何？
+      <ul>
+        <li>A. すぐに</li>
+        <li>B. そのうち</li>
+        <li>C. まだ</li>
+      </ul>
+      <details>
+        <summary>正解</summary>
+          A. すぐに
+      </details>
+    </details>
 
-    <ol class="sample_list" style="list-style-type: hiragana-iroha">
-      <li>Item A</li>
-      <li>Item B</li>
-      <li>Item C</li>
-    </ol>
+- KEY: html.pps.fieldset
+  EXPLAIN: タイトル付き枠
+  SAMPLE: BODY
+  BODY: |
+    <fieldset class="htmlSample">
+        <legend>次の選択肢から正しいものを選べ</legend>
 
-    ■ list-style-type: katakana-iroha
+        <label for="JavaScript" class="htmlSample">
+          <input type="radio" id="JavaScript" name="language">JavaScript
+        </label>
 
-    <ol class="sample_list" style="list-style-type: katakana-iroha">
-      <li>Item A</li>
-      <li>Item B</li>
-      <li>Item C</li>
-    </ol>
+        <label for="TypeScript" class="htmlSample">
+          <input type="radio" id="TypeScript" name="language">TypeScript
+        </label>
+
+        <label for="CoffeeScript" class="htmlSample">
+          <input type="radio" id="CoffeeScript" name="language">CoffeeScript
+        </label>
+    </fieldset>
+
+- KEY: html.pps.ruby
+  EXPLAIN: ルビ
+  SAMPLE: BODY
+  BODY: |
+    <ruby class="htmlSample">
+      <rb>明天</rb>
+      <rp>（</rp><rt>míng tiān</rt><rp>）</rp>
+    </ruby>
+
+- KEY: html.pps.article
+  EXPLAIN: 記事
+  SAMPLE: BODY
+  BODY: |
+    <article class="htmlSample">
+      <header>
+        <h3>吾輩は猫である。</h3>
+      </header>
+      <section>
+        <h4>名前はまだ無い。</h4>
+        <p>吾輩は猫である。名前はまだ無い。どこで生れたかとんと見当がつかぬ。
+        何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。
+        吾輩はここで始めて人間というものを見た。
+        しかもあとで聞くとそれは書生という人間中で一番獰悪な種族であったそうだ。
+        この書生というのは時々我々を捕えて煮て食うという話である。
+        しかしその当時は何という考もなかったから別段恐しいとも思わなかった。</p>
+      </section>
+      <footer>
+        <address>
+          メール:<a href="mailto:foo@hoo.com">foo@hoo.com</a>
+        </address>
+      </footer>
+    </article>
+
+- KEY: html.pps.figure
+  EXPLAIN: イメージ(キャプション付き)
+  SAMPLE: BODY
+  BODY: |
+    <figure class="htmlSample">
+      <img src="/assets/images/fuji.jpg" style="width:50%;">
+      <figcaption>富士山</figcaption>
+    </figure>
+
+- KEY: html.pps.flex
+  EXPLAIN: Flex
+  SAMPLE: BODY
+  BODY: |
+
+  
