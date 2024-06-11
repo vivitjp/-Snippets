@@ -6,24 +6,36 @@
 - KEY: reg.RegExp
   EXPLAIN: 正規表現
   BODY: |
-    ■ インスタンス生成
-    const re = new RegExp(pattern[,flags])
+    ■ 正規表現変数
+    const re: RegExp = new RegExp(pattern[,flags])     // クラス定義
+    const re: RegExp = new RegExp('AB', 'ig');         // クラスインスタンス
+    const re: RegExp = /AB/ig;                         // 記述
 
-    const target = 'ABCDEFG';
-    const re = /DEF/ig;
-    re.test(target);                              // true
+    ■ Deprecated
+    [NG] re.compile(target);
 
-    [NG] re.compile(target);                      // Deprecated
+    ■ 正規表現.test(文字列): boolean
+    const hits = /A/ig.test('ABA');                    // true
 
-    ■ コンストラクタへのパラメタ
-    const re = new RegExp('DEF', 'ig');
-    re.test(target);                              // true
+    ■ 正規表現.exec(文字列): RegExpExecArray | null
+    const hits = /A/ig.exec('ABA');                    // ["A"]  *gフラグとの相性悪し
 
-    // ■ 正規表現ベース
-    const hits1 = re.exec(target);                // ["ABC"] gフラグとの相性悪し
+    ■ 文字列.match(正規表現): RegExpExecArray | null
+    const hits = 'ABA'.match(/A/i);                    // ["A"]
+    const hits = 'ABA'.match(/A/ig);                   // ["A", "A"]
 
-    // ■ 文字列ベース
-    const hits2 = target.match(re);               // ["ABC", "ABC"]
+    ■ 文字列.matchAll(正規表現): IterableIterator<RegExpExecArray>型 *ES2021
+    [NG] const hits = 'ABA'.matchAll(/A/i);            // gフラグなしError
+    const hits = 'ABA'.matchAll(/A/ig);                // {}
+     => Array.from(hits)                               // [["A"], ["A"]] 
+
+    ■ 文字列.replace(正規表現): string
+    const replaced = 'ABA'.replace(/A/i, "X");         // "XBA"
+    const replaced = 'ABA'.replace(/A/ig, "X");        // "XBX"
+
+    ■ 文字列.replaceAll(正規表現): string *ES2021
+    [NG] const replaced = 'ABA'.replaceAll(/A/i, "X"); // gフラグなしError
+    const replaced = 'ABA'.replaceAll(/A/ig, "X");     // "XBX"
 
 - KEY: reg.captureGroup
   EXPLAIN: 名前付きキャプチャグループ [ES2018]
@@ -99,7 +111,7 @@
   EXPLAIN: matchAll 全一致 [ES2022]
   BODY: |
     const target = 'test1 test2';
-    const re = /t(e)(st(\d?))/g;
+    const re = /t(e)(st(\d?))/g;                  // g なしだとエラー!!
 
     const array = [...target.matchAll(re)];
     array[0];                                     // ["test1", "e", "st1", "1"]
