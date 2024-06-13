@@ -257,12 +257,17 @@ export const menuItems: menuByCategories[] = [
       {
         name: "環境変数",
         fileName: "/frameWork/nodejs/env",
-        codeKeyTypes: [],
+        codeKeyTypes: [codeKeys.Env],
       },
       {
-        name: "⛔Express",
-        fileName: "",
-        codeKeyTypes: [],
+        name: "🔺Express",
+        fileName: "/frameWork/nodejs/Express",
+        codeKeyTypes: [codeKeys.Express],
+      },
+      {
+        name: "Express Topics",
+        fileName: "/frameWork/nodejs/ExpressTopics",
+        codeKeyTypes: [codeKeys.Express],
       },
     ],
   },
@@ -279,25 +284,25 @@ export const menuItems: menuByCategories[] = [
         fileName: "",
         codeKeyTypes: [],
       },
-      {
-        name: "⛔Vite",
-        fileName: "",
-        codeKeyTypes: [],
-      },
     ],
   },
   {
-    category: "Nextjs",
+    category: "JS Framework:FE",
     items: [
       {
         name: "⛔Nextjs",
         fileName: "",
         codeKeyTypes: [],
       },
+      {
+        name: "🔺Vite",
+        fileName: "frameWork/front/vite",
+        codeKeyTypes: [],
+      },
     ],
   },
   {
-    category: "Nestjs",
+    category: "JS Framework:BE",
     items: [
       {
         name: "Nestjs",
@@ -545,8 +550,9 @@ export const menuItems: menuByCategories[] = [
     category: "Office",
     items: [
       {
-        name: "⛔Excel Methods",
-        fileName: "",
+        name: "🔺Excel関数",
+        fileName: "office/Excel",
+        codeKeyTypes: [],
       },
     ],
   },

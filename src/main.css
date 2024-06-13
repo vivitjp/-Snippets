@@ -1,6 +1,6 @@
 * {
   box-sizing: border-box;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-family: Consolas, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.2rem;
   color: #555;
@@ -37,13 +37,13 @@ dialog::backdrop {
 pre {
   margin: 0;
   font-family: Consolas, monospace;
-  font-size: 1rem;
+  font-size: 0.95rem;
   width: 100%;
 }
 
 span.syntax {
   font-family: Consolas, monospace;
-  font-size: 1rem;
+  font-size: 0.95rem;
 }
 
 span.syntaxQ {
@@ -86,19 +86,19 @@ div.flexRow {
 details.htmlSample {
   margin: 0;
   padding: 5px 40px;
-  line-height: 1rem;
+  line-height: 0.95rem;
   border: 1px solid #ccc;
 }
 
 summary.htmlSample {
   margin: 0;
   padding: 0;
-  line-height: 1rem;
+  line-height: 0.95rem;
 }
 
 summary.htmlSample::marker {
   content: "🔘 ";
-  font-size: 1em;
+  font-size: 0.95rem;
 }
 
 fieldset.htmlSample {
@@ -118,31 +118,101 @@ ruby.htmlSample {
 article.htmlSample {
   margin: 0;
   padding: 0 20px;
-  line-height: 1rem;
+  line-height: 0.95rem;
   border: 1px solid #ccc;
 }
 
 article.htmlSample > header {
   margin: 0;
   padding: 0 10px;
-  line-height: 1rem;
+  line-height: 0.95rem;
   background-color: #eee;
 }
 
 article.htmlSample > section {
   margin: 0;
   padding: 0 10px;
-  line-height: 1rem;
+  line-height: 0.95rem;
 }
 
 article.htmlSample > footer {
   margin: 0;
   padding: 0 10px;
-  line-height: 1rem;
+  line-height: 0.95rem;
   background-color: #eee;
 }
 
 figure.htmlSample {
   text-align: center;
   border: 1px solid #eee;
+}
+
+table.excel {
+  border-collapse: collapse;
+  border: 1px solid #aaa;
+}
+table.excel th {
+  padding: 3px 5px;
+  border: 1px solid #aaa;
+  background-color: #eee;
+}
+table.excel td {
+  padding: 3px 5px;
+  border: 1px solid #aaa;
+}
+
+div.div {
+  padding: 2px;
+}
+
+div.divCol {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 5px;
+  white-space: initial;
+}
+div.divCol > * {
+  white-space: initial;
+}
+
+div.divColBorder {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 5px;
+  white-space: initial;
+  border: 1px solid #aaa;
+  padding: 5px;
+}
+div.divColBorder > * {
+  white-space: initial;
+}
+
+div.divRow {
+  display: flex;
+  flex-flow: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 5px;
+  white-space: initial;
+}
+div.divRow > * {
+  white-space: initial;
+}
+
+div.divRowBorder {
+  display: flex;
+  flex-flow: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 5px;
+  white-space: initial;
+  border: 1px solid #aaa;
+  padding: 5px;
+}
+div.divRowBorder > * {
+  white-space: initial;
 }

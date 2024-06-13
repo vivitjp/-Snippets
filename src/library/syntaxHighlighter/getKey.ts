@@ -3,6 +3,9 @@ import { keysClassTransformer } from "./keys/ClassTransformer"
 import { keysClassValidator } from "./keys/ClassValidator"
 import { keysDOM } from "./keys/DOM"
 import { keysDocker } from "./keys/Docker"
+import { keysEnv } from "./keys/Env"
+import { keysExcel } from "./keys/Excel"
+import { keysExpress } from "./keys/Express"
 import { keysGit } from "./keys/Git"
 import { keysHTML } from "./keys/HTML"
 import { keysJSTS } from "./keys/JSTS"
@@ -51,8 +54,11 @@ export const codeKeys = {
   ClassValidator: "ClassValidator",
   ClassTransformer: "ClassTransformer",
   Nestjs: "Nestjs",
+  Express: "Express",
   Swagger: "Swagger",
   Unknown: "Unknown",
+  Env: "Env",
+  Excel: "Excel",
 } as const
 
 export const defaultSnippetsStyle = codeKeys.Unknown
@@ -83,7 +89,10 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   ClassValidator: keysClassValidator,
   ClassTransformer: keysClassTransformer,
   Nestjs: keysNestjs,
+  Express: keysExpress,
   Swagger: keysSwagger,
+  Env: keysEnv,
+  Excel: keysExcel,
 }
 
 export const getMergedKeys = (codeKeyTypes: string[] | undefined) => {

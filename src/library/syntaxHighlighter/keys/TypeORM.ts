@@ -100,7 +100,6 @@ export const keysTypeORM: KeyDef = {
   ],
   // ■ 緑
   ForestGreen: [
-    "",
     "select",
     "addSelect",
     "where",

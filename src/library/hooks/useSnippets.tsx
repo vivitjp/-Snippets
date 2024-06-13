@@ -94,6 +94,7 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
                     alignItems="center"
                     marginTop="10px"
                     padding="10px"
+                    gap="10px"
                     boxShadow="0px 0px 5px rgba(0, 0, 0, 0.1)"
                     dangerouslySetInnerHTML={{ __html: snippetsObject.sample }}
                   />

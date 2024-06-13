@@ -97,6 +97,7 @@ export const MenuGroupTitle = styled.summary`
     border-right: 1px solid var(--main-color);
     border-top: 1px solid var(--main-color);
   }
+  font-size: 0.8rem;
   font-weight: 600;
 `
 

@@ -1,0 +1,375 @@
+# ----------------------------
+# ExpressTopics
+# ----------------------------
+
+- KEY: express.install
+  EXPLAIN: バージョンとinstall
+  BODY: |
+    4.x API: 2024-06
+
+    npm install express
+
+- KEY: express.quickStart
+  EXPLAIN: Hello world
+  BODY: |
+    ■ サーバー側のコード(app.js)
+    var express = require('express');
+    var app = express();
+
+    // HTTPリクエストを受け取る部分
+    app.get('/', function (req, res) {
+      res.send('Hello World!');
+    });
+
+    // サーバーを起動する部分
+    var server = app.listen(3000, function () {
+      var host = server.address().address;
+      var port = server.address().port;
+      console.log('Example app listening at http://%s:%s', host, port);
+    });
+
+    ■ アクセス
+    node app.js
+    curl http://localhost:3000 -> Hello World!
+
+- KEY: express.genetator
+  EXPLAIN: express-generator
+  BODY: |
+    (sudo)npm install express-generator -g
+
+    express myapp                                 // ひな形生成
+
+      create : myapp
+      create : myapp/package.json
+      create : myapp/app.js
+      ...
+      create : myapp/bin
+      create : myapp/bin/www
+
+    cd myapp 
+    npm install                                   // 依存モジュールインストール
+    npm run start                                 // サーバー起動
+    // or
+    node bin/www                                  // サーバー起動
+
+- KEY: express.genetator.dir
+  EXPLAIN: generator ディレクトリ
+  BODY: |
+    .
+    ├── app.js                                    // expressサーバーの設定
+    ├── bin
+    │   └── www                                   // サーバーの起動
+    ├── package.json
+    ├── public                                    // 静的ファイル置き場
+    │   ├── images
+    │   ├── javascripts
+    │   └── stylesheets
+    │       └── style.css
+    ├── routes                                    // サーバー側のコントローラ
+    │   ├── index.js
+    │   └── users.js
+    └── views                                     // サーバー側で画面を作成する際のテンプレート
+        ├── error.jade
+        ├── index.jade
+        └── layout.jade
+
+- KEY: express.routing
+  EXPLAIN: Routing
+  BODY: |
+    var app = express();
+
+    app.get('/', (req, res)=>{ ... });             // GET URI/
+
+    app.post('/books', (req, res)=>{ ... });       // POST URI/books
+
+    app.put('/books/:id', (req, res)=>{ ... });    // PUT URI/books/1
+
+    app.delete('/books/:id', (req, res)=>{ ... }); // DELETE URI/books/1
+
+- KEY: express.Router
+  EXPLAIN: Router
+  BODY: |
+    ■ router.js: モジュール化
+
+    var app = express();
+    var router = express.Router();
+
+    router.get('/:id', (req, res) => {
+      ...
+    });
+
+    module.exports = router;
+
+    ■ app.js: モジュール利用
+
+    var router = require('./router');
+    app.use('/books', router);                    // URI/books/1
+
+- KEY: express.request.response
+  EXPLAIN: Request & Response
+  BODY: |
+    router.get('/', (req, res) => { ... });
+
+    req.body         request body            (KV, 要Middleware:body-parser)
+    req.cookies      cookie                  (KV, 要Middleware:cookie-parser)
+    req.params       url pathパラメータ       (KV) /books/:id => /books/1 => req.params.id=1
+    req.query        リクエストパラメータ      (KV) /books?order=asc => req.query.order=asc
+    req.get          HTTPヘッダー値
+    req.session      セッション               (KV, 要Middleware:express-session)
+
+    res.cookie       cookie付与
+    res.set          HTTPヘッダー付与
+    res.redirect     指定Pathへリダイレクト
+    res.render       テンプレートエンジン利用で画面生成して返却
+    res.sendStatus   ステータスコード返却      res.sendStatus(401).json({...})
+    res.json         jsonを返却              (Code:200)
+
+- KEY: express.middleware
+  EXPLAIN: Middleware
+  BODY: |
+    ■ handlerの基本I/F(エラーハンドラ除外)
+    function(req, res, next) {
+      // middlewareの処理
+      next();
+    }
+
+      例) myLogger
+      const myLogger = function(req, res, next) {
+        console.log('LOGGED')
+        next()
+      }
+
+    ■ 3種類のmiddleware
+    Application-level                             // Rootレベル
+    Router-level                                  // 特定routing
+    Error-handling                                // エラーハンドリング
+
+    ■ Application-level                           // Rootレベル
+    var app = express();
+    app.use(myLogger)                             // Middleware設置
+    app.get('/', (req, res) => {                  // 全Routingで反応
+      res.send('Hello World!')
+    })
+    app.listen(3000)
+
+    ■ Router-level                                // 特定routing
+    var router = express.Router();
+    router.get('/:id', myLogger, businessLogic)   // 'GET /:id'
+    router.get('books/:id', myLogger)             // 'GET books/:id'
+
+- KEY: express.middleware.newAttribute
+  EXPLAIN: Middleware(属性追加)
+  BODY: |
+    ■ app.js
+    const express = require('express')
+
+    ■ 内部Middleware定義
+    const requestTime = function(req, res, next) {
+      req.requestTime = Date.now()                // 属性&値: requestTime 追加
+      next()
+    }
+
+    const app = express()
+    app.use(requestTime)                          // Middleware設置
+
+    app.get('/', (req, res) => {
+      const responseText = `Hello World! Req at: ${req.requestTime}`
+      res.send(responseText)
+    })
+
+    app.listen(3000)
+
+- KEY: express.middleware.errorHandling
+  EXPLAIN: Middleware(エラーハンドリング)
+  BODY: |
+    ■ 外部Middleware定義
+    async function cookieValidator(cookies) {
+      try {
+        await externallyValidateCookie(cookies.testCookie)
+      } catch {
+        throw new Error('Invalid cookies')
+      }
+    }
+
+    ■ app.js
+    const express = require('express')
+    const cookieParser = require('cookie-parser')
+    const cookieValidator = require('./cookieValidator')
+
+    const app = express()
+
+    ■ 外部Middlewareを利用して
+    async function validateCookies(req, res, next) {
+      await cookieValidator(req.cookies)
+      next()
+    }
+
+    app.use(cookieParser())                       // Middleware設置
+    app.use(validateCookies)                      // Middleware設置
+    app.use((err, req, res, next) => {            // error handler
+      res.status(400).send(err.message)
+    })
+
+    app.listen(3000)
+
+- KEY: express.middleware.errorHandlers
+  EXPLAIN: Middleware(エラーハンドラー)
+  BODY: |
+    ■ エラーハンドリングの順番
+    app.use(logErrors);                           // エラーログ出力用
+    app.use('/api', clientErrorHandler);          // REST API用(/api の想定)
+    app.use(errorHandler);                        // エラーベージ表示用
+
+    ■ エラーログ出力
+    function logErrors(err, req, res, next) {
+      console.error(err.stack);
+      next(err);
+    }
+
+    ■ REST API用のレスポンス返却
+    function clientErrorHandler(err, req, res, next) {
+      res.status(500).json({
+        message: err.message,
+        error: err
+      });
+    }
+
+    ■ 画面用のレスポンス返却
+    function errorHandler(err, req, res, next) {
+      res.status(err.status || 500);
+      res.render('error', {
+        message: err.message,
+        error: err
+      });
+    }
+
+- KEY: express.middleware.parameters
+  EXPLAIN: Middleware(パラメタ付き)
+  BODY: |
+    ■ 外部Middleware定義(Factory関数)
+    module.exports = function (options) {
+      return function (req, res, next) {
+        // Implement the middleware function based on the options object
+        next()
+      }
+    }
+
+    ■ 利用
+    const mw = require('./my-middleware.js')
+
+    app.use(mw({ option1: '1', option2: '2' }))   // パラメタ付き
+
+- KEY: express.template.engine
+  EXPLAIN: テンプレートエンジン(Jade)
+  BODY: |
+    app.set('views', path.join(__dirname, '../app/views')); // テンプレート格納PATH
+    app.set('view engine', 'jade');               // エンジン指定
+
+- KEY: express.authentication
+  EXPLAIN: 認証(Passport)
+  BODY: |
+    Passport: node.jsの認証モジュールでデファクト
+
+    ■ パッケージ例
+    passport-local              Username and password
+    passport-twitter            Twitter
+    passport-facebook           Facebook
+    passport-google-oauth       Google
+
+    ■ Passportのフォルダ構成
+    passport全体の設定 => passport.js
+    個別のStrategyの設定 => passport/
+    認証フィルタはmiddleware化する
+
+    config/
+      app.js                    passportの初期化
+      passport.js               passportの全体的な設定 
+      passport/                 Strategyごとの認証ロジックの設定
+        local.js                Username and password認証用
+        twitter.js              twitter認証用
+      middlewares/
+        authorization.js        routingで利用する認証フィルタ
+
+    ■ Passport全体の設定(config/passport.js)
+    module.exports = () => {
+      passport.serializeUser((user, done) => {    // sessionにユーザー情報格納
+        done(null, user.id);
+      });
+      
+      passport.deserializeUser((id, done) => {    // sessionからユーザー情報復元
+        User.findById(id).exec((err, user) => {   // DBからユーザー取得
+          done(err, user)
+        });
+      });
+      
+      passport.use(require('./passport/local'));  // 利用strategy設定
+      ...
+    }
+
+    ■ Strategyの個別設定(config/passport/local.js)
+    var LocalStrategy = require('passport-local').Strategy; // Strategyロード
+
+    module.exports = new LocalStrategy({          // Strategyことの認証ロジックを追加する
+      // 認証ロジック
+    });
+
+    ■ ログインなど特定routing時の認証
+    app.post('/login', 
+      passport.authenticate('local', {
+        failureRedirect: '/login'                 // 認証失敗時
+      }),
+      function(req, res) {
+        res.redirect('/');                        // 認証成功時
+      }
+    );
+
+- KEY: express.dotenv
+  EXPLAIN: 環境変数(dotenv)
+  BODY: |
+    var app = express();
+
+    require('dotenv').config({                    // 環境(dev/prod)ごとにロード設定変更
+      path: 'config/environment/.env.' + app.get('env')
+    });
+
+- KEY: express.session
+  EXPLAIN: セッション
+  BODY: |
+    ■ オンメモリ
+    var app = express();
+    var session = require('express-session');
+
+    app.use(session({
+      secret: 'secret-key',
+      resave: false,
+      saveUninitialized: true
+    }));
+
+    Session IDがcookieに保存
+    デフォルトSession ID名: connect.sid
+
+    ■ Redis Session Store
+    var app = express();
+    var session = require('express-session');
+    var RedisStore = require('connect-redis')(session);  // Session Storeロード
+
+    app.use(session({
+      secret: 'secret-key',
+      resave: true,
+      saveUninitialized: true,
+      store: new RedisStore({                     // Session Storeの設定
+        url: <REDIS_URL>                          // redis://localhost:6379
+      })
+    }));
+
+- KEY: express.logging
+  EXPLAIN: ロギング(例:morgan)
+  BODY: |
+    var logger = require('morgan');
+    app.use(logger('dev'));                       // combined,common,dev,short,tiny
+
+    ■ 出力内容
+    PUT /api/articles/5621dc5633d2c52b7c166873 500 12.569 ms - 47
+    GET /new-post 200 771.074 ms - 1885
+    GET /stylesheets/style.css 200 13.891 ms - 102
+    GET /bower_components/bootstrap/dist/css/bootstrap-theme.min.css 200 18.804 ms - 23357

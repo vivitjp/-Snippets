@@ -36,5 +36,5 @@ export const keysGit: KeyDef = {
     "get-url",
   ],
   ForestGreen: ["Origin", "head"],
-  "#555": ["system", "global", "local", "list", "", "", "", ""],
+  "#555": ["system", "global", "local", "list"],
 }

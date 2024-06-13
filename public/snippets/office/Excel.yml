@@ -1,0 +1,99 @@
+# ----------------------------
+# Excel
+# ----------------------------
+
+- KEY: excel.search.vlookup
+  EXPLAIN: VLOOKUP関数(条件検索)
+  BODY: |
+
+- KEY: excel.search.xlookup
+  EXPLAIN: XLOOKUP関数(条件検索)
+  BODY: |
+    =XLOOKUP(検索値, 検索範囲, 戻り配列, [見つからない場合], [一致モード], [検索モード])
+
+    検索値               省略すると検索範囲に空白のセルを返す
+    検索範囲             検索する配列または範囲(複数の戻り値)
+    戻り配列             返す配列または範囲(複数の戻り値)
+    [見つからない場合]
+        一致せず： 指定[見つからない場合]テキストを返す
+        一致せず、[見つからない場合]がない場合： #N/A を返す
+    [一致モード]      一致の種類指定
+        0    完全一致    見つからない場合： #N/A を返す(既定)
+        -1   完全一致    見つからない場合： 次の小さなアイテムを返す
+        1    完全一致    見つからない場合： 次の大きなアイテムを返す
+        2    - * ? ～    特別な意味を持つワイルドカードの一致
+  SAMPLE: |
+    <div class="divColBorder">
+      <div class="div">
+        =XLOOKUP(F2,B2:B4,D2:D4)
+      </div>
+      <div class="divRow">
+        <div class="div">
+          ブラジル
+        </div>
+        <div class="div">
+          +55
+        </div>
+      </div>
+    </div>
+    <table class="excel">
+      <thead>
+        <th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2</td><td>インド</td><td>IN</td><td>+91</td><td></td><td>ブラジル</td>
+        </tr>
+        <tr>
+          <td>3</td><td>米国</td><td>US</td><td>+1</td><td></td><td></td>
+        </tr>
+        <tr>
+          <td>4</td><td>ブラジル</td><td>BR</td><td>+55</td><td></td><td></td>
+        </tr>
+      </tbody>
+    </table>
+
+- KEY: excel.if
+  EXPLAIN: 条件
+  BODY: |
+    ■ IF関数               条件
+    ■ IFS関数              複数条件
+    ■ IFERROR関数          エラー条件
+    ■ SUMIF関数            条件一致合計
+    ■ SUMIFS関数           複数条件合計
+    ■ COUNTIF関数          条件一致個数
+    ■ COUNTIFS関数         複数条件個数
+    ■ AND関数              AND条件
+    ■ OR関数               OR条件
+
+- KEY: excel.number
+  EXPLAIN: 数値
+  BODY: |
+    ■ SUM関数              選択セルの合計値
+    ■ PRODUCT関数          選択セルの掛け算
+    ■ MAX関数              最大値
+    ■ MIN関数              最小値
+    ■ AVERAGE関数          平均値
+    ■ ROUND関数            四捨五入
+    ■ ROUNDUP関数          切り上げる
+    ■ ROUNDDOWN関数        切り捨てる
+
+- KEY: excel.string
+  EXPLAIN: 文字列
+  BODY: |
+    ■ TEXT関数             値の書式変更
+    ■ CONCAT関数           文字列結合
+    ■ LEN関数              文字数
+    ■ LEFT関数             文字列を左から切り取り
+    ■ MID関数              文字列を中から切り取り
+    ■ RIGHT関数            文字列を右から切り取り
+
+- KEY: excel.date
+  EXPLAIN: 日付
+  BODY: |
+    ■ DATE関数             数値から日付データ作成
+    ■ TODAY関数            今日の日付
+    ■ EOMONTH関数          月末の日付
+    ■ YEAR関数             日付データから年抽出
+    ■ MONTH関数            日付データから月抽出
+    ■ DAY関数              日付データから日抽出
