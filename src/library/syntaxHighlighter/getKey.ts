@@ -22,6 +22,7 @@ import { keysReact } from "./keys/React"
 import { keysRegExp } from "./keys/RegExp"
 import { keysSwagger } from "./keys/Swagger"
 import { keysTS } from "./keys/TS"
+import { keysTSConfig } from "./keys/TSConfig"
 import { keysTypeORM } from "./keys/TypeORM"
 import { keysCurl } from "./keys/curl"
 import { keysNPM } from "./keys/npm"
@@ -59,6 +60,7 @@ export const codeKeys = {
   Unknown: "Unknown",
   Env: "Env",
   Excel: "Excel",
+  TSConfig: "TSConfig",
 } as const
 
 export const defaultSnippetsStyle = codeKeys.Unknown
@@ -93,6 +95,7 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   Swagger: keysSwagger,
   Env: keysEnv,
   Excel: keysExcel,
+  TSConfig: keysTSConfig,
 }
 
 export const getMergedKeys = (codeKeyTypes: string[] | undefined) => {

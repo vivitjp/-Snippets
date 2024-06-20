@@ -3,8 +3,8 @@
 # JS Framework Frontend
 #-------------------------------
 
-- KEY: fe.vite.config
-  EXPLAIN: vite.config.ts
+- KEY: fe.vite.hot.reload
+  EXPLAIN: ホットリロード修正
   BODY: |
     import { defineConfig } from "vite"
     import react from "@vitejs/plugin-react"
@@ -20,3 +20,8 @@
         },
       },
     })
+
+- KEY: fe.vite.config
+  EXPLAIN: TS config for Vite
+  BODY: |
+    tsconfig.node.json

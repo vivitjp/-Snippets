@@ -1,0 +1,58 @@
+---
+#-------------------------------
+# Node: Volta
+#-------------------------------
+
+- KEY: node.version.control
+  EXPLAIN: |
+    Volta: Nodeバージョン管理
+  BODY: |
+    ■ Node.js バージョン確認
+    $ node -v
+    v20.14.0
+
+    ■ Volta インストール
+    For Windows, download and run the Windows installer
+    https://docs.volta.sh/guide/getting-started
+
+    ■ Node.js インストール
+    volta install node@20.11.0                    // バージョン指定
+    volta install node                            // LTS バージョン自動
+
+    C:\Users\VIVIT\AppData\Local\Volta\tools\image\node\20.14.0\node.exe
+
+    ■ yarn インストール
+    volta install yarn
+
+    ■ 要注意 uninstall
+    node も yarn も uninstall に非対応
+
+- KEY: node.version.change
+  EXPLAIN: Volta Pin
+  BODY: |
+    ■ 指定バージョンの Node.js を使用
+    volta pin node@18.19
+    volta pin yarn@1.19
+
+- KEY: volta.command
+  EXPLAIN: Volta Commands
+  BODY: |
+    fetch         ツールをローカル マシンにフェッチ
+    install       ツールチェーンにツールをインストール
+    uninstall     ツールチェーンからツールをアンインストール
+    pin           ランタイム/パッケージマネージャー固定
+    list          現在のツールチェーン表示
+
+      $ volta list
+      ⚡️ Currently active tools:
+          Node: v20.14.0 (default)
+          Tool binaries available: NONE
+
+    completions   Volta 完了を生成
+    which         Volta が呼ぶ実際のバイナリ表示
+    setup         現在のユーザー/シェルに対して Volta 有効化
+    help          ヘルプ出力
+
+#-------------------------------
+# Node
+#-------------------------------

@@ -247,10 +247,10 @@
   BODY: |
     const target = 'CAT CAS CAN';
 
-    const re = /(CA(?=S))/g;                      // CASがある場合、CAにマッチ
+    const re = /(CA(?=S))/g;                      // CAに続く"S"がある場合、CAにマッチ
     const hit1 = target.match(re);                // ["CA"]
 
-    const re = /(CA(?=X))/g;                      // CAXがある場合、CAにマッチ
+    const re = /(CA(?=X))/g;                      // CAに続く"X"がある場合、CAにマッチ
     const hit2 = target.match(re);                // null
 
 - KEY: reg.matching.postfix.not
@@ -258,10 +258,10 @@
   BODY: |
     const target = 'CAT CAS';
 
-    const re = /(CA(?!S))/g;                      // CASがある場合、CAにマッチせず
+    const re = /(CA(?!S))/g;                      // CAに続く"S"がない場合、CAにマッチせず
     const hit1 = target.match(re);                // ["CA"] (CATにマッチ)
 
-    const re = /(CA(?!X))/g;                      // CAXがない場合、CAにマッチ
+    const re = /(CA(?!X))/g;                      // CAに続く"X"がない場合、CAにマッチ
     const hit2 = target.match(re);                // ["CA", "CA"] (全部にマッチ)
 
 - KEY: reg.matching.prefix
@@ -269,7 +269,7 @@
   BODY: |
     const target = 'CAT CASE CAN CAST CAL';
 
-    const re = /((?<=CA)S[^\s]*)/g;               // 直前のCAに続く S[^\s] にマッチ
+    const re = /((?<=CA)S[^\s]*)/g;               // CAに続く S[^\s] にマッチ
     const hit= target.match(re);                  //  ["SE", "ST"]
 
 - KEY: reg.matching.prefix.not
@@ -277,8 +277,8 @@
   BODY: |
     const target = 'CAT CASE MAST CAST RISK';
 
-    const re = /((?<!CA)S[^\s]*)/g;
-    const hit= target.match(re); // ["ST", "SK"]
+    const re = /((?<!CA)S[^\s]*)/g;               // CAに続かない S[^\s] にマッチ
+    const hit= target.match(re);                  // ["ST", "SK"]
 
 - KEY: reg.specialChars
   EXPLAIN: 特殊文字

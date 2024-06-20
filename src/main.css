@@ -161,11 +161,25 @@ table.excel td {
   border: 1px solid #aaa;
 }
 
+table.excel > tbody > tr > td:first-child {
+  background-color: #eee;
+}
+
+table.excel td.tdBorder {
+  padding: 3px 5px;
+  border: 2px solid #777;
+}
+
 div.div {
-  padding: 2px;
+  padding: 5px;
 }
 
-div.divCol {
+div.divBorder {
+  padding: 5px;
+  border: 1px solid #ccc;
+}
+
+div.col {
   display: flex;
   flex-flow: column;
   justify-content: center;
@@ -173,11 +187,11 @@ div.divCol {
   gap: 5px;
   white-space: initial;
 }
-div.divCol > * {
+div.col > * {
   white-space: initial;
 }
 
-div.divColBorder {
+div.colBorder {
   display: flex;
   flex-flow: column;
   justify-content: center;
@@ -187,11 +201,11 @@ div.divColBorder {
   border: 1px solid #aaa;
   padding: 5px;
 }
-div.divColBorder > * {
+div.colBorder > * {
   white-space: initial;
 }
 
-div.divRow {
+div.row {
   display: flex;
   flex-flow: row;
   justify-content: flex-start;
@@ -199,11 +213,11 @@ div.divRow {
   gap: 5px;
   white-space: initial;
 }
-div.divRow > * {
+div.row > * {
   white-space: initial;
 }
 
-div.divRowBorder {
+div.rowBorder {
   display: flex;
   flex-flow: row;
   justify-content: flex-start;
@@ -213,6 +227,6 @@ div.divRowBorder {
   border: 1px solid #aaa;
   padding: 5px;
 }
-div.divRowBorder > * {
+div.rowBorder > * {
   white-space: initial;
 }

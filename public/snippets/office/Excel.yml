@@ -5,61 +5,159 @@
 - KEY: excel.search.vlookup
   EXPLAIN: VLOOKUP関数(条件検索)
   BODY: |
+    =VLOOKUP (検索対象, 検索範囲, 戻り列Index, [検索の型])
+    戻り値: セル値(単独)
+
+    検索値          検索範囲の最初の列にあること
+    範囲            検索値と戻り値の範囲。名前付き範囲またはテーブル名
+    戻り列Index     戻り値列Index(左端列を1とする)
+    [検索の型]      1/TRUE    近似一致  最初列が並べ替えとの前提で検索(規定値 TRUE)
+                   0/FALSE   完全一致  完全一致検索
+  SAMPLE: |
+    <div class="row" style="align-items:flex-start">
+      <table class="excel">
+        <thead>
+          <th></th>       <th> A </th>      <th> B </th>   <th> C </th>   <th> D </th>
+        </thead>
+        <tbody>
+          <tr><td> 1 </td><td> 国家     </td><td> 番号 </td><td> 人口 </td><td> GDP </td></tr>
+          <tr><td> 2 </td><td> ブラジル </td><td> +55  </td><td> 0.3  </td><td>  3 </td></tr>
+          <tr><td> 3 </td><td> 米国     </td><td> +1   </td><td> 0.4  </td><td> 40 </td></tr>
+          <tr><td> 4 </td><td> 中国     </td><td> +91  </td><td> 1.35 </td><td> 16 </td></tr>
+          <tr><td> 5 </td><td> インド   </td><td> +86  </td><td> 1.4  </td><td> 12 </td></tr>
+        </tbody>
+      </table>
+      <div class="col">
+        <div class="row">
+          <div class="rowBorder"> =VLOOKUP("ブラジル",A2:D5,2) </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> +55 </div>
+        </div>
+      </div>
+    </div>
 
 - KEY: excel.search.xlookup
   EXPLAIN: XLOOKUP関数(条件検索)
   BODY: |
-    =XLOOKUP(検索値, 検索範囲, 戻り配列, [見つからない場合], [一致モード], [検索モード])
+    =XLOOKUP(検索値, 検索範囲, 戻り配列, [NotFound], [一致モード], [検索モード])
+    戻り値: セル値(行配列可)
 
-    検索値               省略すると検索範囲に空白のセルを返す
-    検索範囲             検索する配列または範囲(複数の戻り値)
-    戻り配列             返す配列または範囲(複数の戻り値)
-    [見つからない場合]
-        一致せず： 指定[見つからない場合]テキストを返す
-        一致せず、[見つからない場合]がない場合： #N/A を返す
-    [一致モード]      一致の種類指定
-        0    完全一致    見つからない場合： #N/A を返す(既定)
-        -1   完全一致    見つからない場合： 次の小さなアイテムを返す
-        1    完全一致    見つからない場合： 次の大きなアイテムを返す
-        2    - * ? ～    特別な意味を持つワイルドカードの一致
+    ・検索値         省略すると検索範囲に空白のセルを返す
+    ・検索範囲       検索する配列または範囲(複数の戻り値可)
+    ・戻り配列       返す配列または範囲(複数の戻り値可)
+
+    ・[NotFound]    一致せず： [NotFound]テキストを返す
+                    一致せず、[NotFound]がない場合： #N/A を返す
+
+    ・[一致モード]   0    完全一致でNotFound： #N/A を返す(既定)
+                   -1    完全一致でNotFound： 次の小さなアイテムを返す
+                    1    完全一致でNotFound： 次の大きなアイテムを返す
+                    2    - * ? ～  ワイルドカードの一致
+
+    ・[検索モード]   1    先頭から検索(既定)
+                   -1    末尾から逆方向に検索
+                    2    昇順バイナリ検索(非昇順=>無効)
+                   -2    降順バイナリ検索(非降順=>無効)
   SAMPLE: |
-    <div class="divColBorder">
-      <div class="div">
-        =XLOOKUP(F2,B2:B4,D2:D4)
-      </div>
-      <div class="divRow">
-        <div class="div">
-          ブラジル
+    <div class="row" style="align-items:flex-start">
+      <table class="excel">
+        <thead>
+          <th></th>       <th> A </th>      <th> B </th>   <th> C </th>   <th> D </th>
+        </thead>
+        <tbody>
+          <tr><td> 1 </td><td> 国家     </td><td> 番号 </td><td> 人口 </td><td> GDP </td></tr>
+          <tr><td> 2 </td><td> ブラジル </td><td> +55  </td><td> 0.3  </td><td>  3 </td></tr>
+          <tr><td> 3 </td><td> 米国     </td><td> +1   </td><td> 0.4  </td><td> 40 </td></tr>
+          <tr><td> 4 </td><td> 中国     </td><td> +91  </td><td> 1.35 </td><td> 16 </td></tr>
+          <tr><td> 5 </td><td> インド   </td><td> +86  </td><td> 1.4  </td><td> 12 </td></tr>
+        </tbody>
+      </table>
+      <div class="col">
+        <div class="row">
+          <div class="rowBorder"> =XLOOKUP("ブラジル",A2:A5,B2:B5) </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> +55 </div>
         </div>
-        <div class="div">
-          +55
+        <div class="row">
+          <div class="rowBorder"> =XLOOKUP(1.3,C2:C5,A2:A5,"NotFound") </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> NotFound </div>
+        </div>
+        <div class="row">
+          <div class="rowBorder"> =XLOOKUP(1.35,C2:C5,A2:A5) </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> 中国 </div>
+        </div>
+        <div class="row">
+          <div class="rowBorder"> =XLOOKUP(1.36,C2:C5,A2:A5,"",1) </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> ? </div>
         </div>
       </div>
     </div>
-    <table class="excel">
-      <thead>
-        <th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th>
-      </thead>
-      <tbody>
-        <tr>
-          <td>2</td><td>インド</td><td>IN</td><td>+91</td><td></td><td>ブラジル</td>
-        </tr>
-        <tr>
-          <td>3</td><td>米国</td><td>US</td><td>+1</td><td></td><td></td>
-        </tr>
-        <tr>
-          <td>4</td><td>ブラジル</td><td>BR</td><td>+55</td><td></td><td></td>
-        </tr>
-      </tbody>
-    </table>
+
+- KEY: excel.search.match
+  EXPLAIN: MATCH関数
+  BODY: |
+    =MATCH(検査値, 検査範囲, [照合の型])
+    戻り値: 列INDEX(指定範囲内のINDEX)
+
+    ・検索値        検査範囲の中で照合する値を指定
+    ・検索範囲      検索セル範囲
+    ・[照合の型]    1    検査値以下の最大の値を検索(要「昇順」配置)
+                   0    検査値と等しい最初の値を検索(任意順)
+                  -1    検査値以上の最小値を検索(要「降順」配置)
+  SAMPLE: |
+    <div class="row" style="align-items:flex-start">
+      <table class="excel">
+        <thead>
+          <th></th>       <th> A </th>      <th> B </th>   <th> C </th>   <th> D </th>
+        </thead>
+        <tbody>
+          <tr><td> 1 </td><td> 国家     </td><td> 番号 </td><td> 人口 </td><td> GDP </td></tr>
+          <tr><td> 2 </td><td> ブラジル </td><td> +55  </td><td> 0.3  </td><td>  3 </td></tr>
+          <tr><td> 3 </td><td> 米国     </td><td> +1   </td><td> 0.4  </td><td> 40 </td></tr>
+          <tr><td> 4 </td><td> 中国     </td><td> +91  </td><td> 1.35 </td><td> 16 </td></tr>
+          <tr><td> 5 </td><td> インド   </td><td> +86  </td><td> 1.4  </td><td> 12 </td></tr>
+        </tbody>
+      </table>
+      <div class="col">
+        <div class="row">
+          <div class="rowBorder"> =MATCH(0.4,C2:C5,0) </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> 2 (該当行index) </div>
+        </div>
+        <div class="row">
+          <div class="rowBorder"> =MATCH(0.5,C2:C5,0) </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> #N/A (該当なし) </div>
+        </div>
+        <div class="row">
+          <div class="rowBorder"> =MATCH(0.5,C2:C5,1) </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> 3 (該当なしで次の行index) </div>
+        </div>
+        <div class="row">
+          <div class="rowBorder"> =MATCH(0.5,C2:C5,-1) </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> 2 (該当なしで前の行index) </div>
+        </div>
+      </div>
+    </div>
 
 - KEY: excel.if
   EXPLAIN: 条件
   BODY: |
     ■ IF関数               条件
+      IF(論理式, [真値], [偽値])
+
     ■ IFS関数              複数条件
+      IFS(論理式1, 真値1, 論理式2, 真値2,…)
+
     ■ IFERROR関数          エラー条件
     ■ SUMIF関数            条件一致合計
+      SUMIF(範囲, 検索条件, [合計範囲])
+
     ■ SUMIFS関数           複数条件合計
     ■ COUNTIF関数          条件一致個数
     ■ COUNTIFS関数         複数条件個数

@@ -111,9 +111,9 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.JSTS],
       },
       {
-        name: "⛔TSConfig",
-        fileName: "",
-        codeKeyTypes: [],
+        name: "🔺TSConfig",
+        fileName: "TypeScript/TSConfig",
+        codeKeyTypes: [codeKeys.TSConfig, codeKeys.JSTS],
       },
     ],
   },
@@ -237,16 +237,36 @@ export const menuItems: menuByCategories[] = [
     ],
   },
   {
+    category: "JS Runtime",
+    items: [
+      {
+        name: "🔺Nodejs",
+        fileName: "JSRuntime/nodejs/Node",
+        codeKeyTypes: [],
+      },
+      {
+        name: "⛔Deno",
+        fileName: "",
+        codeKeyTypes: [],
+      },
+      {
+        name: "🔺Bun",
+        fileName: "JSRuntime/bun",
+        codeKeyTypes: [],
+      },
+    ],
+  },
+  {
     category: "Nodejs",
     items: [
       {
         name: "npm/yarn:ny",
-        fileName: "frameWork/nodejs/npm_yarn",
+        fileName: "JSRuntime/nodejs/npm_yarn",
         codeKeyTypes: [codeKeys.NPM],
       },
       {
         name: "npm:npm",
-        fileName: "frameWork/nodejs/npm",
+        fileName: "JSRuntime/nodejs/npm",
         codeKeyTypes: [codeKeys.NPM],
       },
       {
@@ -255,34 +275,29 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [],
       },
       {
-        name: "環境変数",
-        fileName: "/frameWork/nodejs/env",
-        codeKeyTypes: [codeKeys.Env],
-      },
-      {
-        name: "🔺Express",
-        fileName: "/frameWork/nodejs/Express",
-        codeKeyTypes: [codeKeys.Express],
-      },
-      {
-        name: "Express Topics",
-        fileName: "/frameWork/nodejs/ExpressTopics",
-        codeKeyTypes: [codeKeys.Express],
-      },
-    ],
-  },
-  {
-    category: "Nodejs Bundlers",
-    items: [
-      {
         name: "⛔Webpack",
         fileName: "",
         codeKeyTypes: [],
       },
       {
-        name: "⛔Bun",
+        name: "⛔Babel",
         fileName: "",
         codeKeyTypes: [],
+      },
+      {
+        name: "環境変数",
+        fileName: "/JSRuntime/nodejs/env",
+        codeKeyTypes: [codeKeys.Env],
+      },
+      {
+        name: "🔺Express",
+        fileName: "/JSRuntime/nodejs/Express",
+        codeKeyTypes: [codeKeys.Express],
+      },
+      {
+        name: "Express Topics",
+        fileName: "/JSRuntime/nodejs/ExpressTopics",
+        codeKeyTypes: [codeKeys.Express],
       },
     ],
   },
@@ -387,7 +402,7 @@ export const menuItems: menuByCategories[] = [
     category: "OS",
     items: [
       {
-        name: "Linux",
+        name: "Linux Command",
         fileName: "OS/LinuxCommand",
         codeKeyTypes: [codeKeys.Linux],
       },
@@ -441,13 +456,18 @@ export const menuItems: menuByCategories[] = [
     items: [
       {
         name: "Git",
-        fileName: "Project/Git",
+        fileName: "git/Git",
         codeKeyTypes: [codeKeys.Git],
       },
       {
         name: "⛔GitHub",
         fileName: "",
-        codeKeyTypes: [],
+        codeKeyTypes: [codeKeys.Git],
+      },
+      {
+        name: "🔺Husky",
+        fileName: "git/husky",
+        codeKeyTypes: [codeKeys.Git],
       },
     ],
   },

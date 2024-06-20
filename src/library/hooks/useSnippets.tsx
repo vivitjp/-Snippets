@@ -42,7 +42,7 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
     //Spinner Flag
 
     setIsPending(true)
-    ;(async () => {
+    void (async () => {
       //ファイルからデータ読み込み
       const result = await makeSnippets({
         file: `snippets/${selectedMenu.fileName}.yml`,
@@ -115,8 +115,8 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
 
   const [copied, setCopied] = useState<boolean>(false)
   const handleClickInputButton = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      copyToClipboard(JSON.stringify(data, undefined, 2))
+    async (e: React.MouseEvent<HTMLButtonElement>) => {
+      await copyToClipboard(JSON.stringify(data, undefined, 2))
       e.stopPropagation()
 
       setCopied(true)

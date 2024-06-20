@@ -1,0 +1,68 @@
+---
+#-------------------------------
+# husky
+#-------------------------------
+
+- KEY: husky.install
+  EXPLAIN: インストール
+  BODY: |
+    ■ husky Git
+    https://typicode.github.io/husky/
+
+    ■ husky & lint-staged
+    npm install -D husky lint-staged
+    yarn add --dev husky lint-staged
+
+    ■ husky 初期化
+    npx husky install
+
+      以下のファイルを生成
+      .husky/_/prepare-commit-msg
+      .husky/_/pre-commit                           // コミット前
+      .husky/_/pre-rebase
+      .husky/_/pre-push                             // プッシュ前
+      .husky/_/pre-auto-gc
+      .husky/_/pre-applypatch
+      .husky/_/post-rewrite
+      .husky/_/post-merge
+      .husky/_/post-commit
+      .husky/_/post-checkout
+      .husky/_/post-applypatch
+
+    ■ 手動生成(pre-commitフックの設定ファイル生成)
+    npx husky add .husky/pre-commit "npx lint-staged"
+
+- KEY: husky.setting
+  EXPLAIN: Husky 設定ファイル
+  BODY: |
+    ■ [pre-commit](必須)
+
+      #!/usr/bin/env sh
+      . "$(dirname -- "$0")/husky.sh"
+
+      npx lint-staged
+
+    ■ [package.json](必須)
+
+      "lint-staged": {
+        "*.{js,jsx,ts,tsx}": "npm run lint"
+      },
+
+    ■ [.lintstagedrc.js](必須)
+
+      const path = require('path');
+
+      const buildEslintCommand = (filenames) =>
+        `next lint --fix --file ${filenames
+          .map((f) => path.relative(process.cwd(), f))
+          .join(' --file ')}`;
+
+      module.exports = {
+        '*.{ts,tsx}': [
+          () => 'tsc --incremental false --noEmit', // 型チェック
+          buildEslintCommand,
+          
+          // Prettierフォーマット(必要に応じて)
+          // "prettier --write --ignore-path .gitignore './**/*.{js,jsx,ts,tsx,json,css}'",
+        ],
+      };
