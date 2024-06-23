@@ -61,7 +61,6 @@ type Slide = {
     | "linear"
     | "step-start"
     | "step-end"
-    | string
 } & Pick<CSSProperties, AttrPosition>
 
 type Div = Pick<

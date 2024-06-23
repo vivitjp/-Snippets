@@ -38,7 +38,7 @@ export const makeSnippets = async ({ file, scope }: Props) => {
   //Snippets Making
   const returnData: Snippets = {}
   try {
-    jsonData.forEach(({ KEY, BODY, EXPLAIN, OPTIONS, SAMPLE, STYLE }) => {
+    jsonData.forEach(({ KEY, BODY, EXPLAIN, OPTIONS, SAMPLE, STYLE, FOLD }) => {
       const key = EXPLAIN ?? KEY
       returnData[key] = {
         prefix: KEY,
@@ -54,6 +54,7 @@ export const makeSnippets = async ({ file, scope }: Props) => {
         }
       }
       if (STYLE) returnData[key].style = STYLE
+      if (FOLD) returnData[key].fold = FOLD.trim().split("\n")
     })
   } catch (error) {
     console.log("error")

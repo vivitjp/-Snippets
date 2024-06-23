@@ -43,7 +43,7 @@
     <div class="colorTr"><div class="colorName" style="color:DarkTurquoise">■ DarkTurquoise </div><div class="colorReversed" style="color:DarkTurquoise">■ DarkTurquoise </div></div>
 
 - KEY: color.green.dark
-  EXPLAIN: 緑系(暗)
+  EXPLAIN: 緑色系(暗)
   BODY: |
     <div class="colorTr"><div class="colorName" style="color:DarkOliveGreen">■ DarkOliveGreen </div><div class="colorReversed" style="color:DarkOliveGreen">■ DarkOliveGreen </div></div>
     <div class="colorTr"><div class="colorName" style="color:Olive">■ Olive </div><div class="colorReversed" style="color:Olive">■ Olive </div></div>
@@ -54,7 +54,7 @@
     <div class="colorTr"><div class="colorName" style="color:DarkGreen">■ DarkGreen </div><div class="colorReversed" style="color:DarkGreen">■ DarkGreen </div></div>
 
 - KEY: color.green.light
-  EXPLAIN: xxxx色系(明)
+  EXPLAIN: 緑色系(明)
   BODY: |
     <div class="colorTr"><div class="colorName" style="color:YellowGreen">■ YellowGreen </div><div class="colorReversed" style="color:YellowGreen">■ YellowGreen </div></div>
     <div class="colorTr"><div class="colorName" style="color:LimeGreen">■ LimeGreen </div><div class="colorReversed" style="color:LimeGreen">■ LimeGreen </div></div>

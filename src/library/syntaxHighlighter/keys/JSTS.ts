@@ -1,4 +1,4 @@
-import { KeyDef } from "../getKey"
+import { KeyDef } from "../../../types/type"
 
 export const keysJSTS: KeyDef = {
   // ■ 変数宣言

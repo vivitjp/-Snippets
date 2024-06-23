@@ -1,0 +1,9 @@
+---
+#-------------------------------
+# Lint Rules TypeScript
+#-------------------------------
+
+- KEY: lint.rules.ts.mode
+  EXPLAIN: TS URL for more
+  BODY: |
+    https://typescript-eslint.io/rules/

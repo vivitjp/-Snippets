@@ -1,25 +1,19 @@
-import { useCallback, useEffect, useState } from "react"
-import { Options, Snippets } from "../../types/type"
+import { useEffect, useState } from "react"
+import { Snippets } from "../../types/type"
 import { copyToClipboard } from "../utilities/copyToClipboard"
 import { makeSnippets } from "../utilities/makeSnippets"
 import { Column, Row } from "../../common/styleDiv"
 import { Button } from "../../common/styleInput"
 import { syntaxHighlight } from "../syntaxHighlighter/syntaxHighlighter"
 import { useSelect } from "./useSelect"
-import { DivPrefix, DivTitle, SummaryWrapper } from "./components/DivTitle"
+import {
+  DivPrefix,
+  DivTitle,
+  FoldTitle,
+  SummaryWrapper,
+} from "./components/DivTitle"
 import { MenuItemType } from "../../store/menuStore"
 import { DetailInside, Details } from "./components/Detail"
-import { KeyDef } from "../syntaxHighlighter/getKey"
-
-type SnippetsObject = {
-  prefix: string
-  scope?: string | undefined
-  body: string[]
-  options?: Options
-  sample?: string
-  style?: string
-  codeKeyTypes?: KeyDef[]
-}
 
 export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
   const [isPending, setIsPending] = useState(false)
@@ -55,10 +49,13 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
       }
 
       //配列化
-      const array = Object.entries(result ?? {}) as [string, SnippetsObject][]
+      const array = Object.entries(result ?? {})
       //Highlight
       const codeKeyTypes = selectedMenu?.codeKeyTypes
       //Highlightして JSX.Element[] に変換
+
+      //折りたたみ要素
+      let highlightedFold: JSX.Element[]
 
       const formatted = array.map(([title, snippetsObject], index) => {
         const code = (
@@ -69,12 +66,30 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
           .map((n) => (!n ? " " : n))
           .join("\n")
 
-        const highlighted = syntaxHighlight({
+        const highlightedBody = syntaxHighlight({
           code,
           codeKeyTypes,
           encodeRequired: selectedMenu.encodeRequired,
           case_sensitive: selectedMenu.case_sensitive,
         })
+
+        if (snippetsObject.fold) {
+          const foldCode = (
+            !snippetsObject.fold.at(-1)
+              ? snippetsObject.fold.splice(-1, 1)
+              : snippetsObject.fold
+          )
+            .map((n) => (!n ? " " : n))
+            .join("\n")
+
+          highlightedFold = syntaxHighlight({
+            code: foldCode,
+            codeKeyTypes,
+            encodeRequired: selectedMenu.encodeRequired,
+            case_sensitive: selectedMenu.case_sensitive,
+            bgColor: "Cornsilk",
+          })
+        }
 
         return (
           <Column key={index}>
@@ -84,8 +99,18 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
                 <DivPrefix>{snippetsObject.prefix}</DivPrefix>
               </SummaryWrapper>
               <DetailInside colCount={snippetsObject.options?.COLS || 1}>
-                {highlighted}
+                {highlightedBody}
               </DetailInside>
+              {highlightedFold?.length && (
+                <Details noShadow={true}>
+                  <SummaryWrapper>
+                    <FoldTitle>► Open Answer</FoldTitle>
+                  </SummaryWrapper>
+                  <DetailInside colCount={1} bgColor="Cornsilk">
+                    {highlightedFold}
+                  </DetailInside>
+                </Details>
+              )}
               <>
                 {snippetsObject.style && <style>{snippetsObject.style}</style>}
                 {snippetsObject.sample && (
@@ -96,7 +121,9 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
                     padding="10px"
                     gap="10px"
                     boxShadow="0px 0px 5px rgba(0, 0, 0, 0.1)"
-                    dangerouslySetInnerHTML={{ __html: snippetsObject.sample }}
+                    dangerouslySetInnerHTML={{
+                      __html: snippetsObject.sample,
+                    }}
                   />
                 )}
               </>
@@ -114,18 +141,15 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
   }
 
   const [copied, setCopied] = useState<boolean>(false)
-  const handleClickInputButton = useCallback(
-    async (e: React.MouseEvent<HTMLButtonElement>) => {
-      await copyToClipboard(JSON.stringify(data, undefined, 2))
-      e.stopPropagation()
+  const handleClickInputButton = (e: React.MouseEvent<HTMLButtonElement>) => {
+    void copyToClipboard(JSON.stringify(data, undefined, 2))
+    e.stopPropagation()
 
-      setCopied(true)
-      setTimeout(() => {
-        setCopied(false)
-      }, 500)
-    },
-    [data]
-  )
+    setCopied(true)
+    setTimeout(() => {
+      setCopied(false)
+    }, 500)
+  }
 
   const CopyButton = () => {
     return (

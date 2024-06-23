@@ -1,6 +1,10 @@
 import styled, { css } from "styled-components"
 
-export const Details = styled.details`
+type DetailOptions = {
+  noShadow?: boolean
+}
+
+export const Details = styled.details<DetailOptions>`
   font-size: 14px;
   font-family: "Courier Prime",  monospace;
   overflow: auto;
@@ -8,11 +12,15 @@ export const Details = styled.details`
   color: #666;
   padding: 10px;
   width: 100%;
-  box-shadow: 2px 2px 4px #eee;
+  ${(props) => css`
+    box-shadow: ${props.noShadow ? "none" : "2px 2px 4px #eee"};
+  `}
 `
 
 type Options = {
   colCount: number
+  bgColor?: string
+  padding?: string
 }
 
 export const DetailInside = styled.div<Options>`
@@ -21,12 +29,12 @@ export const DetailInside = styled.div<Options>`
   overflow: auto;
   white-space: pre;
   color: #666;
-  padding: 10px;
   width: 100%;
   line-height: 1.2rem;
-  background-color:  #F9F9F9;
-
+  
   ${(props) => css`
+    padding: ${props.padding ?? "10px"};
     column-count: ${props.colCount ?? 1};
+    background-color: ${props.bgColor ?? "#F9F9F9"}
   `}
 `

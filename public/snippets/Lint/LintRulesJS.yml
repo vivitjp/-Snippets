@@ -1,0 +1,383 @@
+---
+#-------------------------------
+# Lint Rules
+#-------------------------------
+
+- KEY: lint.rules.more
+  EXPLAIN: URL for more
+  BODY: |
+    https://eslint.org/docs/latest/rules/
+
+- KEY: lint.rules.array-callback-return
+  EXPLAIN: array-callback-return
+  BODY: |
+    ■ 誤
+    // example: convert ['a', 'b', 'c'] --> {a: 0, b: 1, c: 2}
+
+    var indexMap = myArray.reduce(function(memo, item, index) {
+      memo[item] = index;                         // no return
+    }, {});
+    // Error: cannot set property 'b' of undefined
+
+- KEY: lint.rules.constructor-super
+  EXPLAIN: constructor-super
+  BODY: |
+    ■ 誤
+    class A {
+      constructor() {
+        super();                                  // 継承なしのsuper()
+      }
+    }
+    class A extends B {
+      constructor() { }                           // throw a ReferenceError.
+    }
+  FOLD: |
+    ■ 正
+    class A {
+      constructor() { }
+    }
+    class B extends C {
+      constructor() {
+        super();
+      }
+    }
+
+- KEY: lint.rules.for-direction
+  EXPLAIN: for-direction
+  BODY: |
+    ■ 誤
+    for (var i = 0; i < 10; i--) {  }
+    for (var i = 10; i >= 0; i++) {  }
+    for (var i = 0; i > 10; i++) {  }
+    for (var i = 0; 10 > i; i--) {  }
+    const n = -2;
+    for (let i = 0; i < 10; i += n) {  }
+
+- KEY: lint.rules.getter-return
+  EXPLAIN: getter-return
+  BODY: |
+    ■ 誤
+    var p = {
+        get name(){
+            return "nicholas";
+        }
+    };
+  FOLD: |
+    ■ 誤
+    Object.defineProperty(p, "age", {
+        get: function (){
+            return 17;
+        }
+    });
+
+- KEY: lint.rules.no-async-promise-executor
+  EXPLAIN: no-async-promise-executor
+  BODY: |
+    ■ 誤
+    const foo = new Promise(async (resolve, reject) => {
+      readFile('foo.txt', function(err, result) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  FOLD: |
+    ■ 正
+    const foo = new Promise((resolve, reject) => {  // async不要
+      readFile('foo.txt', function(err, result) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+
+- KEY: lint.rules.no-await-in-loop
+  EXPLAIN: no-await-in-loop
+  BODY: |
+    ■ 誤
+    async function foo(things) {
+      const results = [];
+      for (const thing of things) {
+        results.push(await bar(thing));           // 遅延発生
+      }
+      return baz(results);
+    }
+  FOLD: |
+    ■ 正
+    async function foo(things) {
+      const results = [];
+      for (const thing of things) {
+        results.push(bar(thing));
+      }
+      return baz(await Promise.all(results));     // 並行処理
+    }
+
+- KEY: lint.rules.no-class-assign
+  EXPLAIN: no-class-assign
+  BODY: |
+    ■ 誤
+    class A { }
+    A = 0;
+  FOLD: |
+    ■ 正
+    let A = class A { }
+    A = 0; // A is a variable.
+
+- KEY: lint.rules.no-compare-neg-zero
+  EXPLAIN: no-compare-neg-zero
+  BODY: |
+    ■ 誤
+    if (x === -0) {                               // 0 使用すべし
+      // doSomething()...
+    }
+  FOLD: |
+    ■ 正
+    if (Object.is(x, -0)) {
+      // doSomething()...
+    }
+
+- KEY: lint.rules.no-cond-assign
+  EXPLAIN: no-cond-assign
+  BODY: |
+    ■ 誤
+    var x;
+    if (x = 0) {
+      var b = 1;
+    }
+
+    var setHeight = function (someNode) {
+      do {
+        someNode.height = "100px";
+      } while (someNode = someNode.parentNode);
+    }
+  FOLD: |
+    ■ 正
+    var x;
+    if (x === 0) {                                // ===
+      var b = 1;
+    }
+
+    var setHeight = function (someNode) {
+      do {
+        someNode.height = "100px";
+      } while (someNode === someNode.parentNode); // ===
+    }
+
+- KEY: lint.rules.no-const-assign
+  EXPLAIN: no-const-assign
+  BODY: |
+    ■ 誤
+    const a = 0;
+    a = 1;
+  FOLD: |
+    ■ 正
+    let a = 0;
+    a = 1;
+
+    for (const a in [1, 2, 3]) {                  // in
+      console.log(a);
+    }
+
+    for (const a of [1, 2, 3]) {                  // of
+      console.log(a);
+    }
+
+- KEY: lint.rules.no-constant-binary-expression
+  EXPLAIN: no-constant-binary-expression
+  BODY: |
+    ■ 誤
+    const value1 = +x == null;
+    const value2 = condition ? x : {} || DEFAULT;
+    const value3 = !foo == null;
+    const value4 = new Boolean(foo) === true;
+    const objIsEmpty = someObj === {};
+    const arrIsEmpty = someArr === [];
+    const shortCircuit1 = condition1 && false && condition2;
+    const shortCircuit2 = condition1 || true || condition2;
+    const shortCircuit3 = condition1 ?? "non-nullish" ?? condition2;
+  FOLD: |
+    ■ 正
+    const value1 = x == null;
+    const value2 = (condition ? x : {}) || DEFAULT;
+    const value3 = !(foo == null);
+    const value4 = Boolean(foo) === true;
+    const objIsEmpty = Object.keys(someObj).length === 0;
+    const arrIsEmpty = someArr.length === 0;
+
+- KEY: lint.rules.no-constant-condition
+  EXPLAIN: no-constant-condition
+  BODY: |
+    ■ 誤
+    if (false) { }
+    if (void x) { }
+    if (x &&= false) { }
+    if (class {}) { }
+    if (new Boolean(x)) { }
+    if (Boolean(1)) { }
+    if (undefined) { }
+    if (x ||= true) { }
+    for (;-2;) { }
+    while (typeof x) { }
+    do {  } while (x = -1);
+    var result = 0 ? a : b;
+    if(input === "hello" || "bye"){ }
+  FOLD: |
+    ■ 正
+    if (x === 0) {  }
+    for (;;) {  }
+    while (typeof x === "undefined") {  }
+    do {  } while (x);
+    var result = x !== 0 ? a : b;
+    if(input === "hello" || input === "bye"){  }
+
+- KEY: lint.rules.no-constructor-return
+  EXPLAIN: no-constructor-return
+  BODY: |
+    ■ 誤
+    class A {
+      constructor(a) {
+        this.a = a;
+        return a;                                 // NG
+      }
+    }
+    class B {
+      constructor(f) {
+        if (!f) {
+          return 'falsy';                         // NG
+        }
+      }
+    }
+  FOLD: |
+    ■ 正
+    class C {
+      constructor(c) {
+        this.c = c;
+      }
+    }
+
+    class D {
+      constructor(f) {
+        if (!f) {
+          return;                                 // OK. Flow control.
+        }
+        f();
+      }
+    }
+
+    class E {
+      constructor() {
+        return;                               // OK
+      }
+    }
+
+- KEY: lint.rules.no-control-regex
+  EXPLAIN: no-control-regex
+  BODY: |
+    ■ 誤
+    var pattern1 = /\x00/;
+    var pattern2 = /\x0C/;
+    var pattern3 = /\x1F/;
+    var pattern4 = /\u000C/;
+    var pattern5 = /\u{C}/u;
+    var pattern6 = new RegExp("\x0C");            // raw U+000C character in the pattern
+    var pattern7 = new RegExp("\\x0C");           // \x0C pattern
+  FOLD: |
+    ■ 正
+    var pattern1 = /\x20/;
+    var pattern2 = /\u0020/;
+    var pattern3 = /\u{20}/u;
+    var pattern4 = /\t/;
+    var pattern5 = /\n/;
+    var pattern6 = new RegExp("\x20");
+    var pattern7 = new RegExp("\\t");
+    var pattern8 = new RegExp("\\n");
+
+- KEY: lint.rules.no-debugger
+  EXPLAIN: no-debugger
+  BODY: |
+    ■ 誤
+    function isTruthy(x) {
+      debugger;                                 // debugger 不許可
+      return Boolean(x);
+    }
+
+- KEY: lint.rules.no-dupe-args
+  EXPLAIN: no-dupe-args
+  BODY: |
+    ■ 誤
+    function foo(a, b, a) {
+      console.log(a);
+    }
+
+    var bar = function (a, b, a) {
+      console.log(a);
+    };
+  FOLD: |
+    ■ 正
+    function foo(a, b, c) {
+      console.log(a);
+    }
+
+    var bar = function (a, b, c) {
+      console.log(a);
+    };
+- KEY: lint.rules.no-dupe-class-members
+  EXPLAIN: no-dupe-class-members
+  BODY: |
+    ■ 誤
+    class A {
+      bar() { }
+      bar() { }
+    }
+
+    class B {
+      bar() { }
+      get bar() { }
+    }
+  FOLD: |
+    ■ 正
+    class A {
+      bar() { }
+      car() { }
+    }
+
+    class B {
+      bar() { }
+      get car() { }
+    }
+
+- KEY: lint.rules.no-dupe-else-if
+  EXPLAIN: no-dupe-else-if
+  BODY: |
+    ■ 誤
+    if (isSomething(x)) {
+        foo();
+    } else if (isSomething(x)) {                  // 同じ条件
+        bar();
+    }
+  FOLD: |
+    ■ 正
+    if (isSomething(x)) {
+        foo();
+    } else if (isAnything(x)) {                   // 違う条件
+        bar();
+    }
+
+- KEY: lint.rules.no-dupe-keys
+  EXPLAIN: no-dupe-keys
+  BODY: |
+    ■ 誤
+    var foo = {
+        bar: "baz",
+        bar: "qux"
+    };
+  FOLD: |
+    ■ 正
+    var foo = {
+        bar: "baz",
+        car: "qux"
+    };

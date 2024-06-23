@@ -1,4 +1,4 @@
-import { KeyDef } from "../getKey"
+import { KeyDef } from "../../../types/type"
 
 export const keysClassValidator: KeyDef = {
   IndianRed: ["registerDecorator", "ValidationOptions", "ValidationArguments"],

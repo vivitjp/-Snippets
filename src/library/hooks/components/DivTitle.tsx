@@ -23,8 +23,14 @@ export const DivTitle = styled.div`
   line-height: 2rem;
 `
 
+export const FoldTitle = styled.div`
+  font-size: 12px;
+  color: #777;
+  line-height: 2rem;
+`
+
 export const DivPrefix = styled.div`
-  font-size: 18px;
+  font-size: 12px;
   margin-right: 10px;
   color: #777;
 `

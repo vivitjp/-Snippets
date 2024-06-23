@@ -472,12 +472,33 @@ export const menuItems: menuByCategories[] = [
     ],
   },
   {
-    category: "テスト",
+    category: "Lint",
     items: [
       {
-        name: "🔺Lint",
-        fileName: "Project/Lint",
+        name: "Lint",
+        fileName: "Lint/Lint",
+        codeKeyTypes: [codeKeys.Lint],
       },
+      {
+        name: "🔺JS Rules",
+        fileName: "Lint/LintRulesJS",
+        codeKeyTypes: [codeKeys.Lint],
+      },
+      {
+        name: "🔺TS Rules",
+        fileName: "Lint/LintRulesTS",
+        codeKeyTypes: [codeKeys.Lint],
+      },
+      {
+        name: "🔺React Rules",
+        fileName: "Lint/LintRulesReact",
+        codeKeyTypes: [codeKeys.Lint],
+      },
+    ],
+  },
+  {
+    category: "テスト",
+    items: [
       {
         name: "jest",
         fileName: "Test/Jest",

@@ -1,4 +1,4 @@
-import { KeyDef } from "../getKey"
+import { KeyDef } from "../../../types/type"
 
 export const keysPackageRHF: KeyDef = {
   // ■ Main(赤)

@@ -1,5 +1,3 @@
-import { CodeKeyType } from "../library/syntaxHighlighter/getKey"
-
 //------------------
 // 型
 //------------------
@@ -14,16 +12,24 @@ export type YAMLData = {
   OPTIONS?: Options
   SAMPLE?: string
   STYLE?: string
+  FOLD?: string
+}
+
+export type KeyDef = {
+  [index: string]: string[]
+}
+
+export type SnippetsObject = {
+  prefix: string
+  scope?: string | undefined
+  body: string[]
+  options?: Options
+  sample?: string
+  style?: string
+  fold?: string[]
+  codeKeyTypes?: KeyDef[]
 }
 
 export type Snippets = {
-  [x: string]: {
-    prefix: string
-    scope?: string
-    body: string[]
-    options?: Options
-    sample?: string
-    style?: string
-    codeKeyType?: CodeKeyType
-  }
+  [x: string]: SnippetsObject
 }

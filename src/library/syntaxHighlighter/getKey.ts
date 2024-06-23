@@ -1,3 +1,4 @@
+import { KeyDef } from "../../types/type"
 import { keysCSS } from "./keys/CSS"
 import { keysClassTransformer } from "./keys/ClassTransformer"
 import { keysClassValidator } from "./keys/ClassValidator"
@@ -11,6 +12,7 @@ import { keysHTML } from "./keys/HTML"
 import { keysJSTS } from "./keys/JSTS"
 import { keysJest } from "./keys/Jest"
 import { keysJotai } from "./keys/Jotai"
+import { keysLint } from "./keys/Lint"
 import { keysLinux } from "./keys/Linux"
 import { keysMongo } from "./keys/Mongo"
 import { keysMySql } from "./keys/MySql"
@@ -27,10 +29,6 @@ import { keysTypeORM } from "./keys/TypeORM"
 import { keysCurl } from "./keys/curl"
 import { keysNPM } from "./keys/npm"
 
-export type KeyDef = {
-  [index: string]: string[]
-}
-
 export const codeKeys = {
   CSS: "CSS",
   HTML: "HTML",
@@ -45,6 +43,7 @@ export const codeKeys = {
   Mongo: "Mongo",
   Docker: "Docker",
   Git: "Git",
+  Lint: "Lint",
   Jest: "Jest",
   Jotai: "Jotai",
   Linux: "Linux",
@@ -81,6 +80,7 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   Mongo: keysMongo,
   Docker: keysDocker,
   Git: keysGit,
+  Lint: keysLint,
   Jest: keysJest,
   Jotai: keysJotai,
   Linux: keysLinux,

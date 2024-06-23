@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import { getMergedKeys } from "./getKey"
 
 export type SyntaxHighlight = {
@@ -6,6 +6,7 @@ export type SyntaxHighlight = {
   codeKeyTypes?: string[]
   encodeRequired?: boolean
   case_sensitive?: boolean
+  bgColor?: string
 }
 
 export const syntaxHighlight = ({
@@ -13,6 +14,7 @@ export const syntaxHighlight = ({
   codeKeyTypes,
   encodeRequired = true,
   case_sensitive = true,
+  bgColor = "#F9F9F9",
 }: SyntaxHighlight) => {
   const escaped = encodeRequired ? escapeHtml(code) : code
   const rebuilt: JSX.Element[] = []
@@ -42,10 +44,18 @@ export const syntaxHighlight = ({
 
     if (result.trim()) {
       rebuilt.push(
-        <Pre key={idx} dangerouslySetInnerHTML={{ __html: result }} />
+        <Pre
+          key={idx}
+          dangerouslySetInnerHTML={{ __html: result }}
+          bgColor={bgColor}
+        />
       )
     } else {
-      rebuilt.push(<Pre key={idx}>&nbsp;</Pre>)
+      rebuilt.push(
+        <Pre key={idx} bgColor={bgColor}>
+          &nbsp;
+        </Pre>
+      )
     }
   })
   return rebuilt
@@ -84,6 +94,11 @@ function escapeHtml(str: string): string {
   return str.replace(HTML_ESCAPE_REPLACE_RE, replaceUnsafeChar)
 }
 
-const Pre = styled.pre`
-  background-color: #F9F9F9
+type Options = {
+  bgColor?: string
+}
+const Pre = styled.pre<Options>`
+  ${(props) => css`
+    background-color: ${props.bgColor ?? "#F9F9F9"}
+  `}
 `

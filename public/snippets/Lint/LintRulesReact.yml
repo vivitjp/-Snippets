@@ -1,0 +1,1316 @@
+---
+#-------------------------------
+# Lint React Rules
+#-------------------------------
+
+- KEY: lint.react
+  EXPLAIN: 定義 & URL for more
+  BODY: |
+    ■ https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules
+
+    ■ legacy: .eslintrc*
+    "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended"
+    ]
+    // "extends": ["eslint:all", "plugin:react/all"]  全部
+    "plugins": [
+      "react"
+    ]
+    "parserOptions": {
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    }
+    "rules": {
+      "react/jsx-uses-react": "error",
+      "react/jsx-uses-vars": "error",
+    }
+
+    ■ new: eslint.config.js
+    const react = require('eslint-plugin-react');
+    const globals = require('globals');
+
+    module.exports = [
+      …
+      {
+        files: ['**/*.{js,jsx,mjs,cjs,ts,tsx}'],
+        plugins: {
+          react,
+        },
+        languageOptions: {
+          parserOptions: {
+            ecmaFeatures: {
+              jsx: true,
+            },
+          },
+          globals: {
+            ...globals.browser,
+          },
+        },
+        rules: {
+          // ... any rules you want
+          'react/jsx-uses-react': 'error',
+          'react/jsx-uses-vars': 'error',
+        },
+        // ... others are omitted for brevity
+      },
+      …
+    ];
+
+    ■ Shareable configs
+      eslint-plugin-react/configs/all
+      eslint-plugin-react/configs/recommended
+      eslint-plugin-react/configs/jsx-runtime
+
+    const reactRecommended = require('eslint-plugin-react/configs/recommended');
+    module.exports = [
+      …
+      reactRecommended, // This is not a plugin object, but a shareable config object
+      …
+    ];
+
+    ■ Shareable configs オーバーライド(eslint.config.js)
+    const reactRecommended = require('eslint-plugin-react/configs/recommended');
+    const globals = require('globals');
+
+    module.exports = [
+      …
+      {
+        files: ['**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}'],
+        ...reactRecommended,
+      },
+      {
+        files: ['**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}'],
+        languageOptions: {
+          globals: {
+            ...globals.serviceworker,
+            ...globals.browser,
+          },
+        },
+      },
+      …
+    ];
+
+- KEY: lint.react.enabled
+  EXPLAIN: |
+    0="off" 1="warn" 2="error"
+  BODY: |
+    定義の <enabled> に該当する number|string
+
+- KEY: lint.react.recommended
+  EXPLAIN: Recommended 定義
+  BODY: |
+    rules: {                                      // "off"=0, "warn"=1, "error"=2
+      'react/display-name': 2,
+      'react/jsx-key': 2,
+      'react/jsx-no-comment-textnodes': 2,
+      'react/jsx-no-duplicate-props': 2,
+      'react/jsx-no-target-blank': 2,
+      'react/jsx-no-undef': 2,
+      'react/jsx-uses-react': 2,
+      'react/jsx-uses-vars': 2,
+      'react/no-children-prop': 2,
+      'react/no-danger-with-children': 2,
+      'react/no-deprecated': 2,
+      'react/no-direct-mutation-state': 2,
+      'react/no-find-dom-node': 2,
+      'react/no-is-mounted': 2,
+      'react/no-render-return-value': 2,
+      'react/no-string-refs': 2,
+      'react/no-unescaped-entities': 2,
+      'react/no-unknown-property': 2,
+      'react/no-unsafe': 0,
+      'react/prop-types': 2,
+      'react/react-in-jsx-scope': 2,
+      'react/require-render-return': 2,
+    },
+
+- KEY: lint.react.boolean-prop-naming
+  EXPLAIN: boolean-prop-naming
+  BODY: |
+    ■ 定義
+    "react/boolean-prop-naming": ["error", { "rule": "^(is|has)[A-Z]([A-Za-z0-9]?)+" }]
+
+    "react/boolean-prop-naming": [<enabled>, {
+      "propTypeNames": Array<string>,
+      "rule": <string>,
+      "message": <string>,
+      "validateNested": <boolean>
+    }]
+
+    ■ 誤
+    var Hello = createReactClass({
+      propTypes: {
+        enabled: PropTypes.bool
+      },
+      render: function() { return <div />; };
+    });
+
+    type Props = {
+      enabled: boolean
+    }
+    const Hello = (props: Props) => <div />;
+  FOLD: |
+    ■ 正
+    var Hello = createReactClass({
+      propTypes: {
+        isEnabled: PropTypes.bool                 // enabled => isEnabled
+      },
+      render: function() { return <div />; };
+    });
+
+    type Props = {
+      isEnabled: boolean                          // enabled => isEnabled
+    }
+    const Hello = (props: Props) => <div />;
+
+- KEY: lint.react.button-has-type
+  EXPLAIN: button-has-type
+  BODY: |
+    ボタンの HTML 要素の type 属性のデフォルト値は「submit」
+    多くの場合、予期しないページのリロードにつながる可能性あり
+    ボタン要素に明示的な type 属性を強制("button", "submit", "reset")
+
+    ■ 定義
+    "react/button-has-type": [<enabled>, {
+      "button": <boolean>,
+      "submit": <boolean>,
+      "reset": <boolean>
+    }]
+
+    ■ 誤
+    var Hello = <button>Hello</button>
+    var Hello = <button type="foo">Hello</button>
+    var Hello = <button type={foo}>Hello</button>
+
+    var Hello = React.createElement('button', {}, 'Hello')
+    var Hello = React.createElement('button', {type: 'foo'}, 'Hello')
+  FOLD: |
+    ■ 正
+    var Hello = <span>Hello</span>
+    var Hello = <span type="foo">Hello</span>
+    var Hello = <button type="button">Hello</button>
+    var Hello = <button type="submit">Hello</button>
+    var Hello = <button type="reset">Hello</button>
+    var Hello = <button type={condition ? "button" : "submit"}>Hello</button>
+
+    var Hello = React.createElement('span', {}, 'Hello')
+    var Hello = React.createElement('span', {type: 'foo'}, 'Hello')
+    var Hello = React.createElement('button', {type: 'button'}, 'Hello')
+    var Hello = React.createElement('button', {type: 'submit'}, 'Hello')
+    var Hello = React.createElement('button', {type: 'reset'}, 'Hello')
+    var Hello = React.createElement('button', {type: condition ? 'button' : 'submit'}, 'Hello')
+
+- KEY: lint.react.checked-requires-onchange-or-readonly
+  EXPLAIN: checked-requires-onchange-or-readonly
+  BODY: |
+    入力要素のチェックされたプロパティに対して onChange または readonly 属性を強制
+    checked プロパティと defaultChecked プロパティが一緒に使用された場合にも警告表示
+
+    ■ 誤
+    <input type="checkbox" checked />
+    <input type="checkbox" checked defaultChecked />
+    <input type="radio" checked defaultChecked />
+
+    React.createElement('input', { checked: false });
+    React.createElement('input', { type: 'checkbox', checked: true });
+    React.createElement('input', { type: 'checkbox', checked: true, defaultChecked: true });
+  FOLD: |
+    ■ 正
+    <input type="checkbox" checked onChange={() => {}} />
+    <input type="checkbox" checked readOnly />
+    <input type="checkbox" checked onChange readOnly />
+    <input type="checkbox" defaultChecked />
+
+    React.createElement('input', { type: 'checkbox', checked: true, onChange() {} });
+    React.createElement('input', { type: 'checkbox', checked: true, readOnly: true });
+    React.createElement('input', { type: 'checkbox', checked: true, onChange() {}, readOnly: true });
+    React.createElement('input', { type: 'checkbox', defaultChecked: true });
+
+- KEY: lint.react.default-props-match-prop-types
+  EXPLAIN: default-props-match-prop-types
+  BODY: |
+    defaultProps 内のすべての prop に必須ではない型定義があることを保証
+
+    ■ 誤
+    type Props = {
+      foo: string,
+      bar?: string
+    };
+
+    function MyStatelessComponent(props: Props) {
+      return <div>Hello {props.foo} {props.bar}</div>;
+    }
+
+    MyStatelessComponent.defaultProps = {
+      foo: "foo",
+      bar: "bar"
+    }
+  FOLD: |
+    ■ 正
+    type Props = {
+      foo: string,
+      bar?: string
+    };
+
+    function MyStatelessComponent(props: Props) {
+      return <div>Hello {props.foo} {props.bar}</div>;
+    }
+
+    MyStatelessComponent.defaultProps = {
+      bar: 'some default'
+    };
+
+- KEY: lint.react.destructuring-assignment
+  EXPLAIN: destructuring-assignment
+  BODY: |
+    ■ 定義
+    "react/destructuring-assignment": [<enabled>, 'always'/'never']
+
+    ■ 誤('always')
+    const MyComponent = (props) => {
+      return (<div id={props.id} />)
+    };
+    ■ 誤('never')
+    const MyComponent = ({id}) => {
+      return (<div id={id} />)
+    };
+  FOLD: |
+    ■ 正('always')
+    const MyComponent = ({id}) => {
+      return (<div id={id} />)
+    };
+    const MyComponent = (props, context) => {
+      const { id } = props;
+      return (<div id={id} />)
+    };
+    ■ 正('never')
+    const MyComponent = (props) => {
+      const { id } = props;
+      return (<div id={id} />)
+    };
+
+- KEY: lint.react.display-name
+  EXPLAIN: ☑️ display-name
+  BODY: |
+    ■ 定義
+    ☑️ recommended
+    "react/display-name": [
+      <enabled>, {
+        "ignoreTranspilerName": <boolean>,
+        "checkContextObjects": <boolean>
+      }
+    ]
+
+    ■ 誤
+    var Hello = createReactClass({
+      render: function() {
+        return <div>Hello {this.props.name}</div>;
+      }
+    });
+
+    const Hello = React.memo(({ a }) => {
+      return <>{a}</>
+    })
+
+    export default ({ a }) => {
+      return <>{a}</>
+    }
+  FOLD: |
+    ■ 正
+    var Hello = createReactClass({
+      displayName: 'Hello',
+      render: function() {
+        return <div>Hello {this.props.name}</div>;
+      }
+    });
+
+    const Hello = React.memo(function Hello({ a }) {
+      return <>{a}</>
+    })
+
+- KEY: lint.react.forbid-component-props
+  EXPLAIN: forbid-component-props
+  BODY: |
+    className、style 禁止
+    コンポーネント(例: <Foo />)にのみ適用され、DOM ノード (例: <div />) には非適用
+
+    ■ 定義
+    "react/forbid-component-props": [<enabled>, { "forbid": [<string>|<object>] }]
+
+    ■ 誤
+    <Hello className='foo' />
+    <Hello style={{color: 'red'}} />
+  FOLD: |
+    ■ 正
+    <Hello name='Joe' />
+    <div className='foo' />
+    <div style={{color: 'red'}} />
+
+- KEY: lint.react.forbid-dom-props
+  EXPLAIN: forbid-dom-props
+  BODY: |
+    props を要素に渡せなくなる
+    DOM ノード(例: <div />)にのみ適用され、コンポーネント(例: <Component />)には非適用
+
+    ■ 定義
+    "react/forbid-dom-props": [<enabled>, { "forbid": [<string>|<object>] }]
+
+    ■ 誤
+    "react/forbid-dom-props": [1, { "forbid": ["id"] }]
+    <div id='Joe' />
+
+    "react/forbid-dom-props": [1, { "forbid": ["style"] }]
+    <div style={{color: 'red'}} />
+  FOLD: |
+    ■ 正
+    "react/forbid-dom-props": [1, { "forbid": ["id"] }]
+    <Hello id='foo' />
+
+    "react/forbid-dom-props": [1, { "forbid": ["style"] }]
+    <Hello id={{color: 'red'}} />
+
+- KEY: lint.react.forbid-elements
+  EXPLAIN: forbid-elements
+  BODY: |
+    ■ 定義
+    "react/forbid-elements": [<enabled>, { "forbid": [<string|object>] }]
+
+    ■ 誤
+    "react/forbid-elements": [1, { "forbid": ["button"] }]
+    <button />
+    React.createElement('button');
+
+    "react/forbid-elements": [1, { "forbid": ["Modal"] }]
+    <Modal />
+    React.createElement(Modal);
+  FOLD: |
+    ■ 正
+    "react/forbid-elements": [1, { "forbid": ["button"] }]
+    <Button />
+
+    "react/forbid-elements": [1, { "forbid": [{ "element": "button" }] }]
+    <Button />
+
+- KEY: lint.react.forbid-foreign-prop-types
+  EXPLAIN: WIP-forbid-foreign-prop-types
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.forbid-prop-types
+  EXPLAIN: WIP-forbid-prop-types
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.function-component-definition
+  EXPLAIN: WIP-function-component-definition
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.hook-use-state
+  EXPLAIN: WIP-hook-use-state
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.iframe-missing-sandbox
+  EXPLAIN: WIP-iframe-missing-sandbox
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-boolean-value
+  EXPLAIN: WIP-jsx-boolean-value
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-child-element-spacing
+  EXPLAIN: WIP-jsx-child-element-spacing
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-closing-bracket-location
+  EXPLAIN: WIP-jsx-closing-bracket-location
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-closing-tag-location
+  EXPLAIN: WIP-jsx-closing-tag-location
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-curly-brace-presence
+  EXPLAIN: WIP-jsx-curly-brace-presence
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-curly-newline
+  EXPLAIN: WIP-jsx-curly-newline
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-curly-spacing
+  EXPLAIN: WIP-jsx-curly-spacing
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-equals-spacing
+  EXPLAIN: WIP-jsx-equals-spacing
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-filename-extension
+  EXPLAIN: WIP-jsx-filename-extension
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-first-prop-new-line
+  EXPLAIN: WIP-jsx-first-prop-new-line
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-fragments
+  EXPLAIN: WIP-jsx-fragments
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-handler-names
+  EXPLAIN: WIP-jsx-handler-names
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-indent-props
+  EXPLAIN: WIP-jsx-indent-props
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.rules.reajsx-indentct.
+  EXPLAIN: WIP-jsx-indent
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.rules.rjsx-key eact.
+  EXPLAIN: WIP-jsx-key
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-max-depth
+  EXPLAIN: WIP-jsx-max-depth
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-max-props-per-line
+  EXPLAIN: WIP-jsx-max-props-per-line
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.rules.reactjsx-newline .
+  EXPLAIN: WIP-jsx-newline
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.rules.reactjsx-no-bind .
+  EXPLAIN: WIP-jsx-no-bind
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-no-comment-textnodes
+  EXPLAIN: WIP-jsx-no-comment-textnodes
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-no-constructed-context-values
+  EXPLAIN: WIP-jsx-no-constructed-context-values
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-no-duplicate-props
+  EXPLAIN: WIP-jsx-no-duplicate-props
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-no-leaked-render
+  EXPLAIN: WIP-jsx-no-leaked-render
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-no-literals
+  EXPLAIN: WIP-jsx-no-literals
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-no-script-url
+  EXPLAIN: WIP-jsx-no-script-url
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-no-target-blank
+  EXPLAIN: WIP-jsx-no-target-blank
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.rules.reactjsx-no-undef.
+  EXPLAIN: WIP-jsx-no-undef
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-no-useless-fragment
+  EXPLAIN: WIP-jsx-no-useless-fragment
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-one-expression-per-line
+  EXPLAIN: WIP-jsx-one-expression-per-line
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-pascal-case
+  EXPLAIN: WIP-jsx-pascal-case
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-props-no-multi-spaces
+  EXPLAIN: WIP-jsx-props-no-multi-spaces
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-props-no-spreading
+  EXPLAIN: WIP-jsx-props-no-spreading
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-sort-default-props
+  EXPLAIN: WIP-jsx-sort-default-props
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-sort-props
+  EXPLAIN: WIP-jsx-sort-props
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-space-before-closing
+  EXPLAIN: WIP-jsx-space-before-closing
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-tag-spacing
+  EXPLAIN: WIP-jsx-tag-spacing
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-uses-react
+  EXPLAIN: WIP-jsx-uses-react
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-uses-vars
+  EXPLAIN: WIP-jsx-uses-vars
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.jsx-wrap-multilines
+  EXPLAIN: WIP-jsx-wrap-multilines
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.no-access-state-in-setstate
+  EXPLAIN: WIP-no-access-state-in-setstate
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.no-adjacent-inline-elements
+  EXPLAIN: WIP-no-adjacent-inline-elements
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.no-array-index-key
+  EXPLAIN: WIP-no-array-index-key
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.no-arrow-function-lifecycle
+  EXPLAIN: WIP-no-arrow-function-lifecycle
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.no-children-prop
+  EXPLAIN: WIP-no-children-prop
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.no-danger-with-children
+  EXPLAIN: WIP-no-danger-with-children
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.rules.reano-danger ct.
+  EXPLAIN: WIP-no-danger
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.no-deprecated
+  EXPLAIN: WIP-no-deprecated
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.no-did-mount-set-state
+  EXPLAIN: WIP-no-did-mount-set-state
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.no-did-update-set-state
+  EXPLAIN: WIP-no-did-update-set-state
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.no-direct-mutation-state
+  EXPLAIN: WIP-no-direct-mutation-state
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.no-find-dom-node
+  EXPLAIN: WIP-no-find-dom-node
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.no-invalid-html-attribute
+  EXPLAIN: WIP-no-invalid-html-attribute
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.no-is-mounted
+  EXPLAIN: WIP-no-is-mounted
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.no-multi-comp
+  EXPLAIN: WIP-no-multi-comp
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.rules.reactno-namespace.
+  EXPLAIN: WIP-no-namespace
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.no-object-type-as-default-prop
+  EXPLAIN: WIP-no-object-type-as-default-prop
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.no-redundant-should-component-update
+  EXPLAIN: WIP-no-redundant-should-component-update
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.no-render-return-value
+  EXPLAIN: WIP-no-render-return-value
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.rules.reactno-set-state.
+  EXPLAIN: WIP-no-set-state
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.no-string-refs
+  EXPLAIN: WIP-no-string-refs
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.no-this-in-sfc
+  EXPLAIN: WIP-no-this-in-sfc
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.rules.rno-typoseact.
+  EXPLAIN: WIP-no-typos
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.no-unescaped-entities
+  EXPLAIN: WIP-no-unescaped-entities
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.no-unknown-property
+  EXPLAIN: WIP-no-unknown-property
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.rules.reano-unsafe ct.
+  EXPLAIN: WIP-no-unsafe
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.no-unstable-nested-components
+  EXPLAIN: WIP-no-unstable-nested-components
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.no-unused-class-component-methods
+  EXPLAIN: WIP-no-unused-class-component-methods
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.no-unused-prop-types
+  EXPLAIN: WIP-no-unused-prop-types
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.no-unused-state
+  EXPLAIN: WIP-no-unused-state
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.no-will-update-set-state
+  EXPLAIN: WIP-no-will-update-set-state
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.prefer-es6-class
+  EXPLAIN: WIP-prefer-es6-class
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.prefer-exact-props
+  EXPLAIN: WIP-prefer-exact-props
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.prefer-read-only-props
+  EXPLAIN: WIP-prefer-read-only-props
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.prefer-stateless-function
+  EXPLAIN: WIP-prefer-stateless-function
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.rules.reaprop-typesct.
+  EXPLAIN: WIP-prop-types
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.react-in-jsx-scope
+  EXPLAIN: WIP-react-in-jsx-scope
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.require-default-props
+  EXPLAIN: WIP-require-default-props
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.require-optimization
+  EXPLAIN: WIP-require-optimization
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.require-render-return
+  EXPLAIN: WIP-require-render-return
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.self-closing-comp
+  EXPLAIN: WIP-self-closing-comp
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.rules.reasort-comp ct.
+  EXPLAIN: WIP-sort-comp
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.sort-default-props
+  EXPLAIN: WIP-sort-default-props
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.sort-prop-types
+  EXPLAIN: WIP-sort-prop-types
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.state-in-constructor
+  EXPLAIN: WIP-state-in-constructor
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.static-property-placement
+  EXPLAIN: WIP-static-property-placement
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.style-prop-object
+  EXPLAIN: WIP-style-prop-object
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+- KEY: lint.react.void-dom-elements-no-children
+  EXPLAIN: WIP-void-dom-elements-no-children
+  BODY: |
+    ■ 定義
+
+    ■ 誤
+
+  FOLD: |
+    ■ 正
+
+    ■ void-dom-elements-no-children  // automate doc generation with eslint-doc-ge
