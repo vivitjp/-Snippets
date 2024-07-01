@@ -7,7 +7,8 @@
     "build": "tsc && vite build",
     "lint_old": "eslint src --ext ts,tsx --report-unused-disable-directives --quiet",
     "lint": "eslint src/",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare": "husky"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "npm run lint"

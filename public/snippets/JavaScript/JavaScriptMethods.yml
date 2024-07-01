@@ -8,18 +8,29 @@
   BODY: |
     ■ ECMAScript 5.1 2009/12
     ■ ES2015(別名ES6) 2011/6
+      Core
+      Collection
+      Generator
+      Iterable
+      Promise
+      Proxy
+      Reflect
+      Symbol
+      Symbol.WellKnown
 
     ■ ES2016(別名ES7) 2016/6
-      Array.includes
+      Array.Include
       Exponentiation operator
 
     ■ ES2017(別名ES8) 2017/6
       Object.values/Object.entries
       String.padStart/String.padEnd
       Object.getOwnPropertyDescriptors
-      末尾カンマ許容
       Async/Await
       Shared memory and atomics
+      Intl
+      TypedArrays
+      末尾カンマ許容
 
     ■ ES2018(別名ES9) 2018/6
       オブジェクトのRest/Spread
@@ -30,6 +41,7 @@
       正規表現:後読み
       正規表現:uオプション
       for-await-of
+      Intl
 
     ■ ES2019(別名ES10)
       catch引数の不要化
@@ -52,6 +64,8 @@
       export * as ns from module
       import.meta
       Promise.allSettled
+      Symbol.wellknown
+      WeakRef
 
     ■ ES2021(別名ES12)
       ||= &&= ??=

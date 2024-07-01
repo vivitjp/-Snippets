@@ -17,7 +17,7 @@ export const Top = () => {
         return (
           <GroupRow key={index}>
             <Title width="20%">{menu.category}</Title>
-            <Row width="79%" justifyContent="flex-start" gap="5px">
+            <RowTop width="79%" justifyContent="flex-start" gap="5px">
               {menu.items.map((item) => {
                 const names = item.name.split(":")
                 return (
@@ -30,7 +30,7 @@ export const Top = () => {
                   </Item>
                 )
               })}
-            </Row>
+            </RowTop>
           </GroupRow>
         )
       })}
@@ -46,5 +46,9 @@ const Title = styled(Div)`
 const Item = styled(MenuItem)`
   width: unset;
   font-size: 15px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+`
+
+const RowTop = styled(Row)`
+  flex-wrap: wrap;
 `

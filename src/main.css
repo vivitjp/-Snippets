@@ -150,15 +150,18 @@ figure.htmlSample {
 table.excel {
   border-collapse: collapse;
   border: 1px solid #aaa;
+  table-layout: fixed;
 }
 table.excel th {
   padding: 3px 5px;
   border: 1px solid #aaa;
   background-color: #eee;
+  min-width: 50px;
 }
 table.excel td {
   padding: 3px 5px;
   border: 1px solid #aaa;
+  text-align: center;
 }
 
 table.excel > tbody > tr > td:first-child {

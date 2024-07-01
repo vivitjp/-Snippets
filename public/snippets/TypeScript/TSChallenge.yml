@@ -1,0 +1,14 @@
+---
+#-------------------------------
+# TSChallenge
+#-------------------------------
+- KEY: ts.challenge.url
+  EXPLAIN: URL
+  BODY: |
+    https://github.com/type-challenges/type-challenges
+
+- KEY: ts.challenge.
+  EXPLAIN: XXXXX
+  BODY: |
+
+  FOLD: |

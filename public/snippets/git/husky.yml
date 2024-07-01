@@ -14,7 +14,8 @@
     yarn add --dev husky lint-staged
 
     ■ husky 初期化
-    npx husky install
+    [DEP] npx husky install
+    npx husky init
 
       以下のファイルを生成
       .husky/_/prepare-commit-msg
@@ -32,8 +33,8 @@
     ■ 手動生成(pre-commitフックの設定ファイル生成)
     npx husky add .husky/pre-commit "npx lint-staged"
 
-- KEY: husky.setting
-  EXPLAIN: Husky 設定ファイル
+- KEY: husky.setting.pre-commit
+  EXPLAIN: 設定(pre-commit)
   BODY: |
     ■ [pre-commit](必須)
 
@@ -42,14 +43,35 @@
 
       npx lint-staged
 
+- KEY: husky.setting.package.json
+  EXPLAIN: 設定(package.json) 必須
+  BODY: |
     ■ [package.json](必須)
-
       "lint-staged": {
         "*.{js,jsx,ts,tsx}": "npm run lint"
       },
 
+- KEY: husky.setting.lintstagedrc
+  EXPLAIN: 設定(lintstagedrc) 必須
+  BODY: |
     ■ [.lintstagedrc.js](必須)
 
+    ■ Sample 1
+    export default {
+      '**/*.{ts,tsx}': [
+        () => 'tsc --incremental false --noEmit', // 型チェック
+      ],
+    };
+
+    ■ Sample 2 (Callback Samples)
+    export default {
+      '**/*.ts?(x)': () => 'tsc -p tsconfig.json --noEmit',
+      'src/**/*.{js,jsx,ts,tsx}': 'eslint --fix --no-ignore --max-warnings=0',
+      'src/**/*.{css,scss}': 'stylelint --fix',
+      'src/**/*': 'prettier --write --ignore-unknown'
+    }
+
+    ■ Sample 3 (Next Sample)
       const path = require('path');
 
       const buildEslintCommand = (filenames) =>

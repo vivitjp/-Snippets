@@ -52,6 +52,20 @@
     type U = number | string                 // or
     type I = number & string                 // and(この場合はnever)
 
+    ■ 注意
+    type A = { name:string }
+    type B = { age: number}
+    type OR = A | B   // { name:string } | { age: number}
+    type AND = A & B  // { name:string, age: number}
+
+    const or1: OR = { name: "john" }
+    const or2: OR = { age: 123 }
+    const or3: OR = { name: "john", age: 123 }
+
+    [NG] const and1: AND = { name: "john" }
+    [NG] const and2: AND = { age : 123 }
+    const and3: AND = { name: "john", age: 123 }
+
 - KEY: ts.const
   EXPLAIN: 定数&推論型
   BODY: |

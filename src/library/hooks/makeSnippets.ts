@@ -1,5 +1,5 @@
 import { YAMLData, Snippets } from "../../types/type"
-import { getLocalYmlFile } from "./getLocalYmlFile"
+import { getLocalYmlFile } from "../utilities/getLocalYmlFile"
 
 type Props = {
   file: string

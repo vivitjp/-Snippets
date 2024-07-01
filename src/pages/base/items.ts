@@ -16,7 +16,7 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.HTML],
       },
       {
-        name: "🔺ByPurpose",
+        name: "🔺目的別",
         fileName: "html/Purpose",
         codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS],
       },
@@ -81,9 +81,14 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.DOM],
       },
       {
-        name: "正規表現:reg",
+        name: "正規表現(JS)",
         fileName: "JavaScript/RegularExpression",
         codeKeyTypes: [codeKeys.RegExp],
+      },
+      {
+        name: "⛔JQuery to JS",
+        fileName: "",
+        codeKeyTypes: [],
       },
     ],
   },
@@ -111,9 +116,14 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.JSTS],
       },
       {
-        name: "🔺TSConfig",
+        name: "TSConfig",
         fileName: "TypeScript/TSConfig",
         codeKeyTypes: [codeKeys.TSConfig, codeKeys.JSTS],
+      },
+      {
+        name: "⛔TS Challenge",
+        fileName: "TypeScript/TSChallenge",
+        codeKeyTypes: [codeKeys.JSTS],
       },
     ],
   },
@@ -209,7 +219,7 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [],
       },
       {
-        name: "⛔Panda",
+        name: "⛔Pandas",
         fileName: "",
         codeKeyTypes: [],
       },
@@ -465,7 +475,7 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.Git],
       },
       {
-        name: "🔺Husky",
+        name: "Husky",
         fileName: "git/husky",
         codeKeyTypes: [codeKeys.Git],
       },
@@ -593,7 +603,7 @@ export const menuItems: menuByCategories[] = [
       {
         name: "🔺Excel関数",
         fileName: "office/Excel",
-        codeKeyTypes: [],
+        codeKeyTypes: [codeKeys.Excel],
       },
     ],
   },

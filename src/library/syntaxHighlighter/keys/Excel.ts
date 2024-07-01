@@ -1,22 +1,61 @@
 import { KeyDef } from "../../../types/type"
 
 export const keysExcel: KeyDef = {
-  // ■ Main(赤)
-  IndianRed: ["VLOOKUP", "XLOOKUP"],
-  // ■ 青
-  RoyalBlue: [
+  IndianRed: [
+    "KEY",
+    //Search
+    "VLOOKUP",
+    "XLOOKUP",
+    "MATCH",
+    "CHOOSE",
+    "FIND",
+    "FINDB",
+    "FILTER",
+    //セル
+    "ROW",
+    "ROWS",
+    "COLUMN",
+    "COLUMNS",
+    //式
+    "LET",
+    "LAMBDA",
+    "ISOMITTED",
+    "MAP",
+    "REDUCE",
+    "SCAN",
+    "MAKEARRAY",
+    "BYCOL",
+    "BYROW",
+    //条件
     "IF",
     "IFS",
+    "SWITCH",
     "IFERROR",
+    "IFNA",
     "SUMIF",
     "SUMIFS",
     "COUNTIF",
     "COUNTIFS",
     "AND",
     "OR",
-  ],
-  // ■ 緑
-  ForestGreen: [
+    "XOR",
+    "NOT",
+    //IS判定
+    "ISBLANK",
+    "ISERR",
+    "ISERROR",
+    "ISNA",
+    "ISREF",
+    "ISREF",
+    "ISFORMULA",
+    "ISLOGICAL",
+    "ISNONTEXT",
+    "ISTEXT",
+    "ISNUMBER",
+    "ISEVEN",
+    "ISODD",
+
+    //数値
     "SUM",
     "PRODUCT",
     "MAX",
@@ -25,12 +64,22 @@ export const keysExcel: KeyDef = {
     "ROUND",
     "ROUNDUP",
     "ROUNDDOWN",
+    "N",
+    //文字列
     "TEXT",
     "CONCAT",
     "LEN",
+    "LENB",
     "LEFT",
+    "LEFTB",
     "MID",
+    "MIDB",
     "RIGHT",
+    "RIGHTB",
+    "REPT",
+    "TEXTJOIN",
+    "TRIM",
+    //日付
     "DATE",
     "TODAY",
     "EOMONTH",
@@ -38,4 +87,8 @@ export const keysExcel: KeyDef = {
     "MONTH",
     "DAY",
   ],
+  RoyalBlue: ["LookupVector"],
+  ForestGreen: ["ResultVector", "LookupColumn"],
+  DarkOrange: ["ResultIndex"],
+  DarkOrchid: ["SearchMode", "matchMode", "matchingCondition"],
 }

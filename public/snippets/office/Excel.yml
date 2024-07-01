@@ -2,22 +2,70 @@
 # Excel
 # ----------------------------
 
-- KEY: excel.search.vlookup
-  EXPLAIN: VLOOKUP関数(条件検索)
+- KEY: excel.search.lookup
+  EXPLAIN: |
+    検索: LOOKUP()
   BODY: |
-    =VLOOKUP (検索対象, 検索範囲, 戻り列Index, [検索の型])
-    戻り値: セル値(単独)
+    =LOOKUP(KEY, LookupVector, ResultVector)
 
-    検索値          検索範囲の最初の列にあること
-    範囲            検索値と戻り値の範囲。名前付き範囲またはテーブル名
-    戻り列Index     戻り値列Index(左端列を1とする)
-    [検索の型]      1/TRUE    近似一致  最初列が並べ替えとの前提で検索(規定値 TRUE)
-                   0/FALSE   完全一致  完全一致検索
+        KEY            検索ワード: LookupVectorへの照合値
+        LookupVector   1行/1列のみの範囲指定(必須昇順ソート済)
+        ResultVector   1行/1列のみの範囲指定
   SAMPLE: |
-    <div class="row" style="align-items:flex-start">
+    <div class="row" style="align-items:flex-start;gap:20px">
       <table class="excel">
         <thead>
-          <th></th>       <th> A </th>      <th> B </th>   <th> C </th>   <th> D </th>
+          <th></th><th> A </th><th> B </th>
+        </thead>
+        <tbody>
+          <tr><td> 1 </td><td> 頻度 </td><td> 色 </td></tr>
+          <tr><td> 2 </td><td> 4.14 </td><td> 赤 </td></tr>
+          <tr><td> 3 </td><td> 4.19 </td><td> 橙 </td></tr>
+          <tr><td> 4 </td><td> 5.17 </td><td> 黄 </td></tr>
+          <tr><td> 5 </td><td> 5.77 </td><td> 緑 </td></tr>
+          <tr><td> 5 </td><td> 5.77 </td><td> 青 </td></tr>
+        </tbody>
+      </table>
+      <div class="col">
+        <div class="row">
+          <div class="rowBorder"> =LOOKUP(4.19, A2:A6, B2:B6) </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> 橙 </div>
+        </div>
+        <div class="row">
+          <div class="rowBorder"> =LOOKUP(5.75, A2:A6, B2:B6) </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> 黄 </div>
+        </div>
+        <div class="row">
+          <div class="rowBorder"> =LOOKUP(7.66, A2:A6, B2:B6) </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> 青 </div>
+        </div>
+        <div class="row">
+          <div class="rowBorder"> =LOOKUP(0, A2:A6, B2:B6) </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> #N/A </div>
+        </div>
+      </div>
+    </div>
+
+- KEY: excel.search.vlookup
+  EXPLAIN: |
+    検索: VLOOKUP()
+  BODY: |
+    =VLOOKUP(KEY, LookupVector, ResultINDEX, [SearchMode])
+
+        KEY            検索ワード: LookupVectorへの照合値、LookupVectorの最初の列にあること
+        LookupVector   KEYと戻り値の範囲。名前付き範囲またはテーブル名
+        ResultINDEX    列INDEX(LookupVectorの左端列が1)
+        [SearchMode]   1/TRUE    近似一致  最初列が並べ替え前提で検索(規定値 TRUE)
+                       0/FALSE   完全一致  完全一致検索
+  SAMPLE: |
+    <div class="row" style="align-items:flex-start;gap:20px">
+      <table class="excel">
+        <thead>
+          <th></th><th> A </th><th> B </th><th> C </th><th> D </th>
         </thead>
         <tbody>
           <tr><td> 1 </td><td> 国家     </td><td> 番号 </td><td> 人口 </td><td> GDP </td></tr>
@@ -29,40 +77,48 @@
       </table>
       <div class="col">
         <div class="row">
-          <div class="rowBorder"> =VLOOKUP("ブラジル",A2:D5,2) </div>
+          ● 国家名で番号を返す(完全一致検索)
+        </div>
+        <div class="row">
+          <div class="rowBorder"> =VLOOKUP("ブラジル", A2:D5, 2) </div>
           <div class="row"> ⇒ </div>
           <div class="rowBorder"> +55 </div>
+        </div>
+        <div class="row">
+          ● 人口でGDPを返す(近似一致検索)
+        </div>
+        <div class="row">
+          <div class="rowBorder"> =VLOOKUP(1.0, C2:D5, 2, 1) </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> 40 </div>
         </div>
       </div>
     </div>
 
 - KEY: excel.search.xlookup
-  EXPLAIN: XLOOKUP関数(条件検索)
+  EXPLAIN: |
+    検索: XLOOKUP()
   BODY: |
-    =XLOOKUP(検索値, 検索範囲, 戻り配列, [NotFound], [一致モード], [検索モード])
-    戻り値: セル値(行配列可)
+    =XLOOKUP(KEY, LookupVector, ResultVector, [NotFound], [matchMode], [SearchMode])
 
-    ・検索値         省略すると検索範囲に空白のセルを返す
-    ・検索範囲       検索する配列または範囲(複数の戻り値可)
-    ・戻り配列       返す配列または範囲(複数の戻り値可)
-
-    ・[NotFound]    一致せず： [NotFound]テキストを返す
-                    一致せず、[NotFound]がない場合： #N/A を返す
-
-    ・[一致モード]   0    完全一致でNotFound： #N/A を返す(既定)
-                   -1    完全一致でNotFound： 次の小さなアイテムを返す
-                    1    完全一致でNotFound： 次の大きなアイテムを返す
-                    2    - * ? ～  ワイルドカードの一致
-
-    ・[検索モード]   1    先頭から検索(既定)
-                   -1    末尾から逆方向に検索
-                    2    昇順バイナリ検索(非昇順=>無効)
-                   -2    降順バイナリ検索(非降順=>無効)
+        KEY            検索ワード: LookupVectorへの照合値、省略でLookupVectorに空セル
+        LookupVector   検索する配列または範囲(複数の戻り値可)
+        ResultVector   返す配列または範囲(複数の戻り値可)
+        [NotFound]     不一致： [NotFound]テキストを返す
+                       一致/[NotFound]がない： #N/A を返す
+        [matchMode]     0    完全一致でNotFound: #N/A を返す(既定)
+                       -1    完全一致でNotFound: 次の小さなアイテムを返す
+                        1    完全一致でNotFound: 次の大きなアイテムを返す
+                        2    - * ? ～  ワイルドカードの一致
+        [SearchMode]    1    先頭から検索(既定)
+                       -1    末尾から逆方向に検索
+                        2    昇順バイナリ検索(非昇順は無効)
+                       -2    降順バイナリ検索(非降順は無効)
   SAMPLE: |
-    <div class="row" style="align-items:flex-start">
+    <div class="row" style="align-items:flex-start;gap:20px">
       <table class="excel">
         <thead>
-          <th></th>       <th> A </th>      <th> B </th>   <th> C </th>   <th> D </th>
+          <th></th><th> A </th><th> B </th><th> C </th><th> D </th>
         </thead>
         <tbody>
           <tr><td> 1 </td><td> 国家     </td><td> 番号 </td><td> 人口 </td><td> GDP </td></tr>
@@ -73,45 +129,49 @@
         </tbody>
       </table>
       <div class="col">
+        <div class="row"> ● 国家名で番号を返す(完全一致検索) </div>
         <div class="row">
-          <div class="rowBorder"> =XLOOKUP("ブラジル",A2:A5,B2:B5) </div>
+          <div class="rowBorder"> =XLOOKUP("ブラジル", A2:A5, B2:B5) </div>
           <div class="row"> ⇒ </div>
           <div class="rowBorder"> +55 </div>
         </div>
+        <div class="row"> ● 人口で国家名を返す(完全一致検索 => 該当なし) </div>
         <div class="row">
-          <div class="rowBorder"> =XLOOKUP(1.3,C2:C5,A2:A5,"NotFound") </div>
+          <div class="rowBorder"> =XLOOKUP(1.3, C2:C5, A2:A5, "NotFound") </div>
           <div class="row"> ⇒ </div>
           <div class="rowBorder"> NotFound </div>
         </div>
+        <div class="row"> ● 人口で国家名を返す(完全一致検索) </div>
         <div class="row">
-          <div class="rowBorder"> =XLOOKUP(1.35,C2:C5,A2:A5) </div>
+          <div class="rowBorder"> =XLOOKUP(1.35, C2:C5, A2:A5) </div>
           <div class="row"> ⇒ </div>
           <div class="rowBorder"> 中国 </div>
         </div>
+        <div class="row"> ● 人口で国家名を返す(完全一致検索 => 次の大きなアイテム) </div>
         <div class="row">
-          <div class="rowBorder"> =XLOOKUP(1.36,C2:C5,A2:A5,"",1) </div>
+          <div class="rowBorder"> =XLOOKUP(1.36, C2:C5, A2:A5, "", 1) </div>
           <div class="row"> ⇒ </div>
-          <div class="rowBorder"> ? </div>
+          <div class="rowBorder"> インド </div>
         </div>
       </div>
     </div>
 
 - KEY: excel.search.match
-  EXPLAIN: MATCH関数
+  EXPLAIN: |
+    検索: MATCH()
   BODY: |
-    =MATCH(検査値, 検査範囲, [照合の型])
-    戻り値: 列INDEX(指定範囲内のINDEX)
+    =MATCH(KEY, LookupVector, [照合の型])
 
-    ・検索値        検査範囲の中で照合する値を指定
-    ・検索範囲      検索セル範囲
-    ・[照合の型]    1    検査値以下の最大の値を検索(要「昇順」配置)
-                   0    検査値と等しい最初の値を検索(任意順)
-                  -1    検査値以上の最小値を検索(要「降順」配置)
+        KEY            検索ワード: LookupVectorへの照合値
+        LookupVector   検索セル範囲
+        [照合の型]      1  KEY「以下」の最大値INDEX取得(必須昇順ソート済)
+                       0  KEYと等しい最初の値INDEX取得(任意順)
+                      -1  KEY「以上」の最小値INDEX取得(必須降順ソート済)
   SAMPLE: |
-    <div class="row" style="align-items:flex-start">
+    <div class="row" style="align-items:flex-start;gap:20px">
       <table class="excel">
         <thead>
-          <th></th>       <th> A </th>      <th> B </th>   <th> C </th>   <th> D </th>
+          <th></th><th> A </th><th> B </th><th> C </th><th> D </th>
         </thead>
         <tbody>
           <tr><td> 1 </td><td> 国家     </td><td> 番号 </td><td> 人口 </td><td> GDP </td></tr>
@@ -122,76 +182,1111 @@
         </tbody>
       </table>
       <div class="col">
+        <div class="row"> ● 人口で行INDEXを返す(最初の完全一致値INDEX) </div>
         <div class="row">
-          <div class="rowBorder"> =MATCH(0.4,C2:C5,0) </div>
+          <div class="rowBorder"> =MATCH(0.4, C2:C5, 0) </div>
           <div class="row"> ⇒ </div>
-          <div class="rowBorder"> 2 (該当行index) </div>
+          <div class="rowBorder"> 2(行目) </div>
         </div>
+        <div class="row"> ● 人口で行INDEXを返す(完全一致なし) </div>
         <div class="row">
-          <div class="rowBorder"> =MATCH(0.5,C2:C5,0) </div>
+          <div class="rowBorder"> =MATCH(0.5, C2:C5, 0) </div>
           <div class="row"> ⇒ </div>
           <div class="rowBorder"> #N/A (該当なし) </div>
         </div>
+        <div class="row"> ● 人口で行INDEXを返す(KEY以下の最大値INDEX) </div>
         <div class="row">
-          <div class="rowBorder"> =MATCH(0.5,C2:C5,1) </div>
+          <div class="rowBorder"> =MATCH(0.5, C2:C5, 1) </div>
           <div class="row"> ⇒ </div>
-          <div class="rowBorder"> 3 (該当なしで次の行index) </div>
+          <div class="rowBorder"> 2(行目: 0.5以下で最大値INDEX) </div>
         </div>
+        <div class="row"> ● 人口で行INDEXを返す(降順ではないので無効) </div>
         <div class="row">
-          <div class="rowBorder"> =MATCH(0.5,C2:C5,-1) </div>
+          <div class="rowBorder"> =MATCH(0.5, C2:C5, -1) </div>
           <div class="row"> ⇒ </div>
-          <div class="rowBorder"> 2 (該当なしで前の行index) </div>
+          <div class="rowBorder"> 4(無効値) </div>
         </div>
       </div>
     </div>
 
+- KEY: excel.search.choose
+  EXPLAIN: |
+    検索: CHOOSE()
+  BODY: |
+    =CHOOSE(INDEX, 値1, [値2], ...) => 値(配列INDEXによる)
+
+        INDEX
+          1: 値1, 2:値2, ...
+          1未満, 最後値より大きい: #VALUE!
+          小数部がある: 切り捨て整数値使用
+
+    ■ 例
+    SUM(CHOOSE(2,A1:A10,B1:B10,C1:C10)) = SUM(B1:B10)
+  SAMPLE: |
+    <div class="row" style="align-items:flex-start;gap:20px">
+      <table class="excel">
+        <thead>
+          <th></th><th> A </th><th> B </th>
+        </thead>
+        <tbody>
+          <tr><td> 1 </td><td>  順序  </td><td> アイテム </td></tr>
+          <tr><td> 2 </td><td> 1 番目 </td><td> クギ </td></tr>
+          <tr><td> 3 </td><td> 2 番目 </td><td> ネジ </td></tr>
+          <tr><td> 4 </td><td> 3 番目 </td><td> ナット </td></tr>
+          <tr><td> 5 </td><td> 4 番目 </td><td> ボルト </td></tr>
+        </tbody>
+      </table>
+      <div class="col">
+        <div class="row">
+          <div class="rowBorder"> =CHOOSE(2, A2, A3, A4, A5) </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> 2 番目 </div>
+        </div>
+        <div class="row">
+          <div class="rowBorder"> =CHOOSE(4, B2, B3, B4, B5) </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> ボルト </div>
+        </div>
+        <div class="row">
+          <div class="rowBorder"> =CHOOSE(3, "Wide", 115, "world", 8) </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> world </div>
+        </div>
+        <div class="row"> ● 範囲指定NG </div>
+        <div class="row">
+          <div class="rowBorder"> =CHOOSE(3, A2:A5) </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> #NUM! </div>
+        </div>
+      </div>
+    </div>
+
+- KEY: excel.search.find
+  EXPLAIN: |
+    検索: FIND()/FINDB()
+  BODY: |
+    =FIND(KEY, 対象, [開始位置])
+    =FINDB(KEY, 対象, [開始位置])
+
+        KEY            検索ワード: LookupVectorへの照合値
+        対象           対象文字列
+        [開始位置]     省略すると 1 指定
+
+        FIND: 既定言語に関係なく、1バイト文字も 2バイト文字も、各文字が常に1つ
+        FINDB: 各2バイト文字(日中韓)が2つとしてカウント
+  SAMPLE: |
+    <div class="row" style="align-items:flex-start;gap:20px">
+      <table class="excel">
+        <thead>
+          <th></th><th> A </th>
+        </thead>
+        <tbody>
+          <tr><td> 1 </td><td>  アイテム  </td></tr>
+          <tr><td> 2 </td><td> セラミック絶縁器 #123 </td></tr>
+        </tbody>
+      </table>
+      <div class="col">
+        <div class="row">
+          <div class="rowBorder"> =FIND("#",A2) </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> 10 </div>
+        </div>
+        <div class="row">
+          <div class="rowBorder"> =FINDB("#",A2) </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> 18 </div>
+        </div>
+        <div class="row">
+          <div class="rowBorder"> =MID(A2,1,FIND(" #",A2,1)-1) </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> セラミック絶縁器 </div>
+        </div>
+      </div>
+    </div>
+
+- KEY: excel.search.filter
+  EXPLAIN: |
+    検索: FILTER()
+  BODY: |
+    =FILTER(LookupVector, LookupColumn=KEY, "NOT_FOUND") =>
+
+        LookupVector        名前付き範囲またはテーブル名
+        LookupColumn        KEYマッチング列
+        KEY                 検索ワード: LookupColumnへの照合値
+
+        LookupVectorのカラム数 = 戻りカラム数
+  SAMPLE: |
+    <div class="row" style="align-items:flex-start;gap:20px">
+      <table class="excel">
+        <thead>
+          <th></th><th> A </th><th> B </th><th> C </th><th> D </th>
+        </thead>
+        <tbody>
+          <tr><td> 1 </td><td> 名称 </td><td> 産地 </td><td> 抽出 </td><td>  </td></tr>
+          <tr>
+            <td> 2 </td><td> りんご </td><td> 青森 </td>
+            <td style="background-color:Linen"> りんご </td>
+            <td style="background-color:Ivory"> 青森 </td>
+          </tr>
+          <tr>
+            <td> 3 </td><td> みかん </td><td> 愛媛 </td>
+            <td style="background-color:Ivory"> りんご </td>
+            <td style="background-color:Ivory"> 長野 </td>
+          </tr>
+          <tr><td> 4 </td><td> りんご </td><td> 長野 </td><td>  </td><td>  </td></tr>
+          <tr><td> 5 </td><td> ぶどう </td><td> 山梨 </td><td>  </td><td>  </td></tr>
+        </tbody>
+      </table>
+      <div class="col">
+        <div class="row">
+          <div class="rowBorder" style="background-color:Linen"> C2 </div>
+          <div class="rowBorder"> =FILTER(A2:B5,B2:B5="りんご") </div>
+        </div>
+      </div>
+    </div>
+
+# ----------------------------
+# CELL
+# ----------------------------
+- KEY: excel.cell.cell
+  EXPLAIN: |
+    セル: CELL()
+  BODY: |
+    =CELL("row", A30)        1  A30の行番号
+    =CELL("col", AA1)       27  AA1の列番号(数値)
+
+    ■ 検査タイプ
+      "address"               セル番地の絶対値
+      "col"                   セル列番号(数値)
+      "row"                   セル行番号
+      "contents"              セル値(Not数式)
+      "type"                  データタイプ: b:空白, l:文字列定数, v:値
+
+    ■ 検査タイプ(Web Excelなどでは未サポート)
+      "color"                 負の数を色で表す書式設定済: 1、以外: 0
+      "filename"              ファイルのフル パス名(ワークシート未保: 空白文字列(""))
+      "format"                表示形式文字列
+      "parentheses"           正の値(or全値)をカッコで囲む書式設定済: 1、以外: 0
+      "prefix"                Alignment 左(') 右(") 中央(^) 両揃え(¥) 以外空白文字列("")
+      "protect"               セルが未ロック: 0、ロック: 1
+
+- KEY: excel.cell.row
+  EXPLAIN: |
+    セル: ROW()
+  BODY: |
+    =ROW()                   2  式が入力されたセルの行番号
+    =ROW(C10)               10  指定セル参照の行番号
+
+- KEY: excel.cell.rows
+  EXPLAIN: |
+    セル: ROWS()
+  BODY: |
+    =ROWS(C1:E4)             4  指定したセル範囲の行数
+    =ROWS({1,2,3;4,5,6})     2  配列定数の行数
+
+- KEY: excel.cell.column
+  EXPLAIN: |
+    セル: COLUMN()
+  BODY: |
+    =COLUMN()                2  式が入力されたセルの列番号
+    =COLUMN(B13)             2  B=2
+    =COLUMN(B2:D2)       2 3 4  B=2,C=3,D=4
+
+- KEY: excel.cell.columns
+  EXPLAIN: |
+    セル: COLUMNS()
+  BODY: |
+    =COLUMNS(C1:E4)          3
+    =COLUMNS({1,2,3;4,5,6})  3
+
+# ----------------------------
+# Formula
+# ----------------------------
+- KEY: excel.formula.let
+  EXPLAIN: |
+    式: LET()
+  BODY: |
+    =LET(変数名1,値1,[変数名2,値2,...,] 式)
+
+    ■ 例
+    =LET(x, 5, SUM(x,1))      6
+  SAMPLE: |
+    <div class="row" style="align-items:flex-start;gap:20px">
+      <table class="excel">
+        <thead>
+          <th></th><th> A </th><th> B </th>
+        </thead>
+        <tbody>
+          <tr><td> 1 </td><td> 1 </td><td style="background-color:Linen"> 2 </td></tr>
+          <tr><td> 2 </td><td> 2 </td><td style="background-color:Linen"> 3 </td></tr>
+          <tr><td> 3 </td><td> 3 </td><td style="background-color:Linen"> 4 </td></tr>
+        </tbody>
+      </table>
+      <div class="col">
+        <div class="row">
+          <div class="rowBorder" style="background-color:Linen"> B1 </div>
+          <div class="rowBorder"> =LET(x,A1,SUM(x,1)) </div>
+        </div>
+        <div class="row">
+          <div class="rowBorder" style="background-color:Linen"> B2 </div>
+          <div class="rowBorder"> =LET(x,A2,SUM(x,1)) </div>
+        </div>
+        <div class="row">
+          <div class="rowBorder" style="background-color:Linen"> B3 </div>
+          <div class="rowBorder"> =LET(x,A3,SUM(x,1)) </div>
+        </div>
+      </div>
+    </div>
+
+- KEY: excel.formula.LAMBDA
+  EXPLAIN: |
+    式: LAMBDA()
+  BODY: |
+    =LAMBDA([変数1, 変数2, ...,] 式)
+
+    セルに式を書き込んでも使用できない
+    「名前マネージャー」に登録して利用する
+
+    ■ 「名前マネージャー」への登録例
+      名前:     ToCelsius
+      対象:     ブック
+      コメント: 華氏温度を摂氏に変換する
+      参照先:   =LAMBDA(temp, (5/9)*(Temp-32))
+
+    =LAMBDA(104)              40
+
+    ■ 即時関数(登録なしで実行)
+    =LAMBDA(temp, (5/9)*(Temp-32))(104)  => 40
+
+- KEY: excel.formula.isomitted
+  EXPLAIN: |
+    式: ISOMITTED()
+  BODY: |
+    =LAMBDA(変数, IF(ISOMITTED(変数),MESSAGE, 式)) => 値/MESSAGE
+
+      LAMBDA関数内で変数の有無をチェック、なければエラーメッセージを表示する
+      GoogleSpreadSheetでは未サポート
+
+    ■ 例
+    =LAMBDA(x,y, IF(ISOMITTED(y),"第2引数なし",x+y))
+
+- KEY: excel.formula.map
+  EXPLAIN: |
+    式: MAP()
+  BODY: |
+    =MAP(範囲, LAMBDA([変数1,変数2,...,] 式)) => 一括置換(複数)
+
+      指定範囲にコールバック関数(Lambda式)を与えて値を処理
+      指定範囲分の戻り値がある
+
+    ■ 例
+    =MAP(A1:C2, LAMBDA(a, IF(a>4,a*a,a)))  A1:C2 内の値を一括計算、置換
+  SAMPLE: |
+    <div class="row" style="align-items:flex-start;gap:20px">
+      <table class="excel">
+        <thead>
+          <th></th><th> A </th><th> B </th>
+        </thead>
+        <tbody>
+          <tr><td> 1 </td><td> 1 </td><td style="background-color:Linen"> 2 </td></tr>
+          <tr><td> 2 </td><td> 2 </td><td style="background-color:Ivory"> 3 </td></tr>
+          <tr><td> 3 </td><td> 3 </td><td style="background-color:Ivory"> 4 </td></tr>
+        </tbody>
+      </table>
+      <div class="col">
+        <div class="row">
+          <div class="rowBorder" style="background-color:Linen"> B1 </div>
+          <div class="rowBorder"> =MAP(A1:A3,LAMBDA(a,a+1)) </div>
+        </div>
+      </div>
+    </div>
+
+- KEY: excel.formula.reduce
+  EXPLAIN: |
+    式: REDUCE()
+  BODY: |
+    =REDUCE([開始値], 配列, LAMBDA(累積変数, 変数, 式)) => 値(単数)
+
+      指定範囲にコールバック関数(Lambda式)を与えて値を【累積】処理
+      Lambda式のパラメタ形式は固定
+      戻り値は一つ
+
+    ■ 例
+    =REDUCE(1, A1:A10, LAMBDA(a, b, IF(b>50, a*b, a)))
+  SAMPLE: |
+    <div class="row" style="align-items:flex-start;gap:20px">
+      <table class="excel">
+        <thead>
+          <th></th><th> A </th><th> B </th>
+        </thead>
+        <tbody>
+          <tr><td> 1 </td><td> 1 </td><td style="background-color:Linen"> 6 </td></tr>
+          <tr><td> 2 </td><td> 2 </td><td style="background-color:Linen"> 16 </td></tr>
+          <tr><td > 3 </td><td> 3 </td><td>  </td></tr>
+        </tbody>
+      </table>
+      <div class="col">
+        <div class="row">
+          <div class="rowBorder" style="background-color:Linen"> B1 </div>
+          <div class="rowBorder"> =REDUCE(,A1:A3,LAMBDA(a,n,a+n)) </div>
+        </div>
+        <div class="row">
+          <div class="rowBorder" style="background-color:Linen"> B2 </div>
+          <div class="rowBorder"> =REDUCE(10,A1:A3,LAMBDA(a,n,a+n)) </div>
+        </div>
+      </div>
+    </div>
+
+- KEY: excel.formula.scan
+  EXPLAIN: |
+    式: SCAN()
+  BODY: |
+    =SCAN([開始値], 配列, LAMBDA(累積変数, 変数, 式)) => 値(複数)
+
+    指定範囲にコールバック関数(Lambda式)を与えて値を【累積】処理
+    Lambda式のパラメタ形式は固定
+    指定範囲分の戻り値がある
+  SAMPLE: |
+    <div class="row" style="align-items:flex-start;gap:20px">
+      <table class="excel">
+        <thead>
+          <th></th><th> A </th><th> B </th>
+        </thead>
+        <tbody>
+          <tr><td> 1 </td><td> a </td><td style="background-color:Linen"> a </td></tr>
+          <tr><td> 2 </td><td> b </td><td style="background-color:Ivory"> ab </td></tr>
+          <tr><td> 3 </td><td> c </td><td style="background-color:Ivory"> abc </td></tr>
+        </tbody>
+      </table>
+      <div class="col">
+        <div class="row">
+          <div class="rowBorder" style="background-color:Linen"> B1 </div>
+          <div class="rowBorder"> =SCAN(,A1:A3,LAMBDA(a,n,a&n)) </div>
+        </div>
+      </div>
+    </div>
+
+- KEY: excel.formula.makearray
+  EXPLAIN: |
+    式: MAKEARRAY()
+  BODY: |
+    =MAKEARRAY(行数, 列数, LAMBDA(行変数,列変数,式)) => 配列
+
+      行数 x 列数のセルを値で埋める
+      Lambda式のパラメタ形式は固定
+
+    ■ 例
+    =MAKEARRAY(2, 2, LAMBDA(x,y, x*y))
+  SAMPLE: |
+    <div class="row" style="align-items:flex-start;gap:20px">
+      <table class="excel">
+        <thead>
+          <th></th><th> A </th><th> B </th>
+        </thead>
+        <tbody>
+          <tr>
+            <td> 1 </td>
+            <td style="background-color:Linen"> 1 </td>
+            <td style="background-color:Ivory"> 2 </td>
+          </tr>
+          <tr>
+            <td> 2 </td>
+            <td style="background-color:Ivory"> 2 </td>
+            <td style="background-color:Ivory"> 4 </td>
+          </tr>
+          <tr>
+            <td> 3 </td>
+            <td style="background-color:Ivory"> 3 </td>
+            <td style="background-color:Ivory"> 6 </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="col">
+        <div class="row">
+          <div class="rowBorder" style="background-color:Linen"> A1 </div>
+          <div class="rowBorder"> =MAKEARRAY(3,2,LAMBDA(x,y,x*y)) </div>
+        </div>
+      </div>
+    </div>
+
+- KEY: excel.formula.bycol
+  EXPLAIN: |
+    式: BYCOL()
+  BODY: |
+    =BYCOL(範囲, LAMBDA(カラム配列,式)) => 配列(カラム数分)
+
+      範囲のカラムごとに集約的な計算を実施
+      Lambda式のパラメタ形式は固定
+
+    ■ 例
+    =BYCOL(A1:B3, LAMBDA(n,MAX(n)))
+  SAMPLE: |
+    <div class="row" style="align-items:flex-start;gap:20px">
+      <table class="excel">
+        <thead>
+          <th></th><th> A </th><th> B </th>
+        </thead>
+        <tbody>
+          <tr><td> 1 </td><td> 1 </td><td> 7 </td></tr>
+          <tr><td> 2 </td><td> 5 </td><td> 4 </td></tr>
+          <tr><td> 3 </td><td> 2 </td><td> 6 </td></tr>
+          <tr>
+            <td> 4 </td>
+            <td style="background-color:Linen"> 5 </td>
+            <td style="background-color:Ivory"> 7 </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="col">
+        <div class="row">
+          <div class="rowBorder" style="background-color:Linen"> A4 </div>
+          <div class="rowBorder"> =BYCOL(A1:B3, LAMBDA(n,MAX(n))) </div>
+        </div>
+      </div>
+    </div>
+
+- KEY: excel.formula.byrow
+  EXPLAIN: |
+    式: BYROW()
+  BODY: |
+    =BYROW(範囲, LAMBDA(行配列,式)) => 配列(行数分)
+
+      範囲の行ごとに集約的な計算を実施
+      Lambda式のパラメタ形式は固定
+
+    ■ 例
+    =BYROW(A1:B3, LAMBDA(n,MAX(n)))
+  SAMPLE: |
+    <div class="row" style="align-items:flex-start;gap:20px">
+      <table class="excel">
+        <thead>
+          <th></th><th> A </th><th> B </th><th> C </th>
+        </thead>
+        <tbody>
+          <tr><td> 1 </td><td> 1 </td><td> 7 </td><td style="background-color:Linen"> 7 </td></tr>
+          <tr><td> 2 </td><td> 5 </td><td> 4 </td><td style="background-color:Ivory"> 5 </td></tr>
+          <tr><td> 3 </td><td> 2 </td><td> 6 </td><td style="background-color:Ivory"> 6 </td></tr>
+        </tbody>
+      </table>
+      <div class="col">
+        <div class="row">
+          <div class="rowBorder" style="background-color:Linen"> C1 </div>
+          <div class="rowBorder"> =BYROW(A1:B3, LAMBDA(n,MAX(n)))  </div>
+        </div>
+      </div>
+    </div>
+
+# ----------------------------
+# IF
+# ----------------------------
 - KEY: excel.if
-  EXPLAIN: 条件
+  EXPLAIN: |
+    ⬜条件関数🔺
   BODY: |
-    ■ IF関数               条件
-      IF(論理式, [真値], [偽値])
+    ■ IF()                    
 
-    ■ IFS関数              複数条件
-      IFS(論理式1, 真値1, 論理式2, 真値2,…)
+      =IF(論理式, 真値, 偽値)
+      =IF(A1=1,"OK","NG")
 
-    ■ IFERROR関数          エラー条件
-    ■ SUMIF関数            条件一致合計
-      SUMIF(範囲, 検索条件, [合計範囲])
+    ■ IFS()
 
-    ■ SUMIFS関数           複数条件合計
-    ■ COUNTIF関数          条件一致個数
-    ■ COUNTIFS関数         複数条件個数
-    ■ AND関数              AND条件
-    ■ OR関数               OR条件
+      =IFS(論理式1, 真値1, [,論理式2, 真値2]...)
+      =IFS(A1=1,"A",A1=2,"B")   *該当なし=> #N/A
 
+    ■ SWITCH()                
+
+      =SWITCH(式, 値1, 戻り値1[, 値2, 戻り値2]...[,既定値])
+      =SWITCH(A1, 1,"A",2,"B",3,"C","X")
+
+    ■ IFERROR()               
+
+      =IFEEROR(論理式, エラー文字列)
+        エラー: #N/A、#VALUE!、#REF!、#DIV/0!、#NUM!、#NAME?、#NULL!
+      =IFERROR(A2/B2, "計算エラー")  * B2=0 => MSG表示、A2="" => 0
+
+    ■ IFNA()
+
+      =IFNA(値, NAエラー文字列) *#N/A のみ
+
+    ■ AND()                   
+
+      =AND(論理式1 [,論理式2]...)
+
+    ■ OR()                    
+
+      =OR(論理式1 [,論理式2]...)
+
+    ■ XOR()                   
+
+      =XOR(論理式1 [,論理式2]...)
+
+    ■ NOT()                   
+
+      =NOT(論理式)
+
+- KEY: excel.if.sumif
+  EXPLAIN: |
+    条件: SUMIF()
+  BODY: |
+    =SUMIF(LookupVector, matchingCondition [,ResultVector])
+
+        LookupVector: 範囲から条件一致する値を合計
+        matchingCondition: 検索条件
+        ResultVector: 合計範囲あればその値を合計
+
+    ■ 例
+    =SUMIF(A2:A5,">100")           100以上の値の合計
+    =SUMIF(A2:A5,">100",B2:B5)     100以上の値で、合計範囲の値を合計
+    =SUMIF(A2:A5,"100",B2:B5)      100に完全一致する値の合計(注意! "="なし)
+    =SUMIF(A2:A5,">=" & C2,B2:B5)  一致条件を指定セル値で
+  SAMPLE: |
+    <div class="row" style="align-items:flex-start;gap:20px">
+      <table class="excel">
+        <thead>
+          <th></th><th> A </th><th> B </th><th> C </th>
+        </thead>
+        <tbody>
+          <tr><td> 1 </td><td> 価格 </td><td> 手数料 </td><td> </td></tr>
+          <tr><td> 2 </td><td> 100 </td><td> 10 </td><td> 150 </td></tr>
+          <tr><td> 3 </td><td> 150 </td><td> 15 </td><td> </td></tr>
+          <tr><td> 4 </td><td>  80 </td><td> 10 </td><td> </td></tr>
+          <tr><td> 5 </td><td> 200 </td><td> 20 </td><td> </td></tr>
+        </tbody>
+      </table>
+      <div class="col">
+        <div class="row">
+          <div class="rowBorder"> =SUMIF(A2:A5,">100") </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> 350 </div>
+        </div>
+        <div class="row">
+          <div class="rowBorder"> =SUMIF(A2:A5,">100",B2:B5) </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> 35 </div>
+        </div>
+        <div class="row">
+          <div class="rowBorder"> =SUMIF(A2:A5,"100",B2:B5) </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> 10 </div>
+        </div>
+        <div class="row">
+          <div class="rowBorder"> =SUMIF(A2:A5,">=" & C2,B2:B5) </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> 35 </div>
+        </div>
+      </div>
+    </div>
+
+- KEY: excel.if.sumifs
+  EXPLAIN: |
+    条件: SUMIFS()🔺
+  BODY: |
+
+- KEY: excel.if.countif
+  EXPLAIN: |
+    条件: COUNTIF()🔺
+  BODY: |
+
+- KEY: excel.if.countifs
+  EXPLAIN: |
+    条件: COUNTIFS()🔺
+  BODY: |
+
+# ----------------------------
+# IS
+# ----------------------------
+- KEY: excel.is
+  EXPLAIN: |
+    ⬜判定関数
+  BODY: |
+    全メソッドの戻り値: TRUE/FALSE
+    ■ ISBLANK()               CELL番地空白判定
+
+      =ISBLANK(A2)
+
+    ■ ISERR()                 エラー(#N/A)判定
+
+      =ISERR(A6)
+
+    ■ ISERROR()               エラー(#REF!)判定
+
+      =ISERROR(A4)
+
+    ■ ISNA()                  エラー(#N/A)判定
+
+      =ISNA(A4)
+
+    ■ ISREF()                 CELL番地有効判定
+
+      =ISREF(G8) => TRUE
+      =ISREF(XYZ1) => FALSE
+
+    ■ ISFORMULA()             式(か値か)判定    
+
+      =ISFORMULA(A1)
+
+    ■ ISLOGICAL()             論理値判定        
+
+      =ISLOGICAL(A1)
+
+    ■ ISNONTEXT()             Non文字列判定     
+
+      =ISNONTEXT(A3)
+
+    ■ ISTEXT()                文字列判定        
+      
+      =ISTEXT(A3)
+
+    ■ ISNUMBER()              数値判定          
+
+      =ISNUMBER(A1)
+
+    ■ ISEVEN()                偶数値判定        
+
+      =ISEVEN(A1)
+
+    ■ ISODD()                 奇数値判定
+
+      =ISODD(A1)
+
+# ----------------------------
+# NUMBER
+# ----------------------------
 - KEY: excel.number
-  EXPLAIN: 数値
+  EXPLAIN: |
+    ⬜数値関数🔺
   BODY: |
-    ■ SUM関数              選択セルの合計値
-    ■ PRODUCT関数          選択セルの掛け算
-    ■ MAX関数              最大値
-    ■ MIN関数              最小値
-    ■ AVERAGE関数          平均値
-    ■ ROUND関数            四捨五入
-    ■ ROUNDUP関数          切り上げる
-    ■ ROUNDDOWN関数        切り捨てる
+    ■ SUM()                   選択セルの合計値
+    ■ PRODUCT()               選択セルの掛け算
+    ■ MAX()                   最大値
+    ■ MIN()                   最小値
+    ■ AVERAGE()               平均値
 
-- KEY: excel.string
-  EXPLAIN: 文字列
+- KEY: excel.number.round
+  EXPLAIN: |
+    数値: ROUND()
   BODY: |
-    ■ TEXT関数             値の書式変更
-    ■ CONCAT関数           文字列結合
-    ■ LEN関数              文字数
-    ■ LEFT関数             文字列を左から切り取り
-    ■ MID関数              文字列を中から切り取り
-    ■ RIGHT関数            文字列を右から切り取り
+    =ROUND(数値, 桁数)
 
+        桁数
+          正の数: 小数点以下が四捨五入
+          0:     最も近い整数として四捨五入
+          負の数: 整数部分 が四捨五入
+
+    * 数値を特定の倍数(0.5 単位など)に四捨五入: MROUND 関数
+
+    ■ 例
+    =ROUND(2.15, 1)           2.2
+    =ROUND(2.149, 1)          2.1
+    =ROUND(-1.475, 2)         -1.48
+    =ROUND(21.4, 0)           21
+    =ROUND(21.5, 0)           22
+    =ROUND(-21.4, 0)          -21
+    =ROUND(-21.5, 0)          -22
+    =ROUND(21.5, -1)          20
+    =ROUND(626.3, -3)         1000
+    =ROUND(1.98, -1)          0
+    =ROUND(-50.55, -2)        -100
+
+- KEY: excel.number.roundup
+  EXPLAIN: |
+    数値: ROUNDUP()
+  BODY: |
+    =ROUNDUP(数値, 桁数)
+
+        桁数
+          正の数: 小数点以下で切り上げ
+          0:     最も近い整数として切り上げ
+          負の数: 整数部分 が切り上げ
+
+    ■ 例
+    =ROUNDUP(3.1415, 3)       3.142
+    =ROUNDUP(-3.141, 1)       -3.2
+    =ROUNDUP(3.2,0)           4
+    =ROUNDUP(76.9,0)          77
+    =ROUNDUP(31415.9, -2)     31500
+
+- KEY: excel.number.rounddown
+  EXPLAIN: |
+    数値: ROUNDDOWN()
+  BODY: |
+    =ROUNDDOWN(数値, 桁数)
+
+        桁数
+          正の数: 小数点以下で切り捨て
+          0:     最も近い整数として切り捨て
+          負の数: 整数部分 が切り捨て
+
+    ■ 例
+    =ROUNDDOWN(3.2, 0)          3
+    =ROUNDDOWN(76.9,0)         76
+    =ROUNDDOWN(3.1415, 3)   3.141
+    =ROUNDDOWN(-3.14, 1)     -3.1
+    =ROUNDDOWN(1415.9, -2)   1400
+
+- KEY: excel.number.n
+  EXPLAIN: |
+    数値: N()
+  BODY: |
+    =N(値)
+
+    ■ 例
+    =N(123)                   123    数値そのまま
+    =N(2024/07/02)            45475  日付のシリアル値
+    =N(TRUE)                  1
+    =N(FALSE)                 0
+    =N(#DIV/0!)               #DIV/0!  エラー値
+    =N("Hello")               0
+
+# ----------------------------
+# STRING
+# ----------------------------
+- KEY: excel.string.text
+  EXPLAIN: |
+    文字列: TEXT()
+  BODY: |
+    =TEXT(値, フォーマット文字列)
+
+    ■ 例
+    =TEXT(1234.567,"$#,##0.00")   $1,234.57
+    =TEXT(TODAY(),"MM/DD/YY")     03/14/12
+    =TEXT(TODAY(),"DDDD")         月曜日
+    =TEXT(NOW(),"H:MM AM/PM")     1:29 午後
+    =TEXT(0.285,"0.0%")           28.5%
+    =TEXT(4.34 ,"# ?/?")          4 1/3
+    =TRIM(TEXT(0.34,"# ?/?"))     1/3
+    =TEXT(12200000,"0.00E+00")    1.22E+07
+    =TEXT(1234567898,"[<=9999999]###-####;(###) ###-####")   (123) 456-7898
+    =TEXT(1234,"0000000")         0001234
+
+- KEY: excel.string.concat
+  EXPLAIN: |
+    文字列: CONCAT()
+  BODY: |
+    =CONCAT(TEXT1 [,TEXT2]...) => 文字列(連結済)
+
+        最大 253 のテキスト引数が設定可能
+        結果文字列が 32767 文字(セル上限)超過で CONCAT #VALUE!
+
+    ■ 例
+    =CONCAT(B1, B2)           個別指定
+    =CONCAT(B2:C8)            範囲指定
+
+- KEY: excel.string.textjoin
+  EXPLAIN: |
+    文字列: TEXTJOIN()
+  BODY: |
+    =TEXTJOIN(区切り記号, ignore_empty, 文字列1 [,文字列2]...)
+
+    ■ 例
+    =TEXTJOIN(" ", TRUE, "A", "", "", "B")    "A B"(スペース3)
+    =TEXTJOIN("&", TRUE, "A", "", "", "B")    "A&B"
+    =TEXTJOIN(" ", FALSE, "A", "", "", "B")   "A   B"(スペース3)
+
+- KEY: excel.string.len
+  EXPLAIN: |
+    文字列: LEN()/LENB()
+  BODY: |
+    =LEN(文字列)
+    =LENB(文字列)
+
+    ■ 例
+    =LEN("A B")               3
+    =LEN("いろはにほへと")     7
+    =LENB("いろはにほへと")    14
+
+- KEY: excel.string.mid
+  EXPLAIN: |
+    文字列: MID()/MIDB()
+  BODY: |
+    =MID(文字列, 開始位置(1~), 文字数)
+    =MIDB(文字列, 開始位置(1~), バイト数)
+
+    ■ 例1
+    =MID("Hello 世界",1,5)     "Hello"
+    =MID("Hello 世界",1,100)   "Hello"
+    =MID("Hello 世界",100,100) ""
+    =MID("Hello 世界",-1,5)    #NUM!
+    =MID("Hello 世界",-1,-1)   #NUM!
+
+    ■ 例2 (FIND()との組み合わせ)
+    A1:"Hello 世界"
+    ="[" & MID(A1, 1, FIND(" ", A1, 1)) & "]"    [Hello ]
+    ="[" & MID(A1, 1, FIND(" ", A1, 1)-1) & "]"  [Hello]
+
+- KEY: excel.string.left
+  EXPLAIN: |
+    文字列: LEFT()/LEFTB()🔺
+  BODY: |
+
+- KEY: excel.string.right
+  EXPLAIN: |
+    文字列: RIGHT()/RIGHTB()🔺
+  BODY: |
+
+- KEY: excel.string.rept
+  EXPLAIN: |
+    文字列: REPT()
+  BODY: |
+    =REPT(文字列, 繰り返し回数)
+
+    ■ 例
+    =REPT("*", 3)            "***"
+
+# ----------------------------
+# DATE
+# ----------------------------
 - KEY: excel.date
-  EXPLAIN: 日付
+  EXPLAIN: |
+    ⬜日付関数🔺
   BODY: |
-    ■ DATE関数             数値から日付データ作成
-    ■ TODAY関数            今日の日付
-    ■ EOMONTH関数          月末の日付
-    ■ YEAR関数             日付データから年抽出
-    ■ MONTH関数            日付データから月抽出
-    ■ DAY関数              日付データから日抽出
+    ■ DATE()                  数値から日付データ作成
+    ■ TODAY()                 今日の日付
+    ■ EOMONTH()               月末の日付
+    ■ YEAR()                  日付データから年抽出
+    ■ MONTH()                 日付データから月抽出
+    ■ DAY()                   日付データから日抽出
+
+# ----------------------------
+# MATRIX
+# ----------------------------
+- KEY: excel.cell.matrix
+  EXPLAIN: |
+    [マトリックス] 列セルとINDEXのマトリックス
+  OPTIONS:
+    COLS: 9
+  BODY: |
+    A: 1
+    B: 2
+    C: 3
+    D: 4
+    E: 5
+    F: 6
+    G: 7
+    H: 8
+    I: 9
+    J: 10
+    K: 11
+    L: 12
+    M: 13
+    N: 14
+    O: 15
+    P: 16
+    Q: 17
+    R: 18
+    S: 19
+    T: 20
+    U: 21
+    V: 22
+    W: 23
+    X: 24
+    Y: 25
+    Z: 26
+    AA: 27
+    AB: 28
+    AC: 29
+    AD: 30
+    AE: 31
+    AF: 32
+    AG: 33
+    AH: 34
+    AI: 35
+    AJ: 36
+    AK: 37
+    AL: 38
+    AM: 39
+    AN: 40
+    AO: 41
+    AP: 42
+    AQ: 43
+    AR: 44
+    AS: 45
+    AT: 46
+    AU: 47
+    AV: 48
+    AW: 49
+    AX: 50
+    AY: 51
+    AZ: 52
+    BA: 53
+    BB: 54
+    BC: 55
+    BD: 56
+    BE: 57
+    BF: 58
+    BG: 59
+    BH: 60
+    BI: 61
+    BJ: 62
+    BK: 63
+    BL: 64
+    BM: 65
+    BN: 66
+    BO: 67
+    BP: 68
+    BQ: 69
+    BR: 70
+    BS: 71
+    BT: 72
+    BU: 73
+    BV: 74
+    BW: 75
+    BX: 76
+    BY: 77
+    BZ: 78
+    CA: 79
+    CB: 80
+    CC: 81
+    CD: 82
+    CE: 83
+    CF: 84
+    CG: 85
+    CH: 86
+    CI: 87
+    CJ: 88
+    CK: 89
+    CL: 90
+    CM: 91
+    CN: 92
+    CO: 93
+    CP: 94
+    CQ: 95
+    CR: 96
+    CS: 97
+    CT: 98
+    CU: 99
+    CV: 100
+    CW: 101
+    CX: 102
+    CY: 103
+    CZ: 104
+    DA: 105
+    DB: 106
+    DC: 107
+    DD: 108
+    DE: 109
+    DF: 110
+    DG: 111
+    DH: 112
+    DI: 113
+    DJ: 114
+    DK: 115
+    DL: 116
+    DM: 117
+    DN: 118
+    DO: 119
+    DP: 120
+    DQ: 121
+    DR: 122
+    DS: 123
+    DT: 124
+    DU: 125
+    DV: 126
+    DW: 127
+    DX: 128
+    DY: 129
+    DZ: 130
+    EA: 131
+    EB: 132
+    EC: 133
+    ED: 134
+    EE: 135
+    EF: 136
+    EG: 137
+    EH: 138
+    EI: 139
+    EJ: 140
+    EK: 141
+    EL: 142
+    EM: 143
+    EN: 144
+    EO: 145
+    EP: 146
+    EQ: 147
+    ER: 148
+    ES: 149
+    ET: 150
+    EU: 151
+    EV: 152
+    EW: 153
+    EX: 154
+    EY: 155
+    EZ: 156
+    FA: 157
+    FB: 158
+    FC: 159
+    FD: 160
+    FE: 161
+    FF: 162
+    FG: 163
+    FH: 164
+    FI: 165
+    FJ: 166
+    FK: 167
+    FL: 168
+    FM: 169
+    FN: 170
+    FO: 171
+    FP: 172
+    FQ: 173
+    FR: 174
+    FS: 175
+    FT: 176
+    FU: 177
+    FV: 178
+    FW: 179
+    FX: 180
+    FY: 181
+    FZ: 182
+    GA: 183
+    GB: 184
+    GC: 185
+    GD: 186
+    GE: 187
+    GF: 188
+    GG: 189
+    GH: 190
+    GI: 191
+    GJ: 192
+    GK: 193
+    GL: 194
+    GM: 195
+    GN: 196
+    GO: 197
+    GP: 198
+    GQ: 199
+    GR: 200
+    GS: 201
+    GT: 202
+    GU: 203
+    GV: 204
+    GW: 205
+    GX: 206
+    GY: 207
+    GZ: 208
+    HA: 209
+    HB: 210
+    HC: 211
+    HD: 212
+    HE: 213
+    HF: 214
+    HG: 215
+    HH: 216
+    HI: 217
+    HJ: 218
+    HK: 219
+    HL: 220
+    HM: 221
+    HN: 222
+    HO: 223
+    HP: 224
+    HQ: 225
+    HR: 226
+    HS: 227
+    HT: 228
+    HU: 229
+    HV: 230
+    HW: 231
+    HX: 232
+    HY: 233
+    HZ: 234

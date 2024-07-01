@@ -16,7 +16,8 @@
     const person: Partial<Person> = {
       name: "John",
     }
-    console.log(person) //{ firstName: 'John' }
+  FOLD: |
+    type Partial<T> = { [P in keyof T]?: T[P] | undefined; }
 
 - KEY: ts.Util.Required<T>
   EXPLAIN: 必須に変換
@@ -28,6 +29,8 @@
     const person: Required<Person> = {
       name: 'John', //NG age is missing
     }
+  FOLD: |
+    type Required<T> = { [P in keyof T]-?: T[P]; }
 
 - KEY: ts.Util.Readonly<T>
   EXPLAIN: readonlyに変換
@@ -39,6 +42,8 @@
       name: "John",
     }
     person.name = "Smith" //NG
+  FOLD: |
+    type Readonly<T> = { readonly [P in keyof T]: T[P]; }
 
 - KEY: ts.Util.Record<K,T>
   EXPLAIN: K名:T型のレコード型作成
@@ -48,6 +53,8 @@
     }
     type People = Record<number, Person>
     const people: People = { 0: { name: "John" }, 1: { name: "Karen" } }
+  FOLD: |
+    type Record<K extends keyof any, T> = { [P in K]: T; }
 
 - KEY: ts.Util.Pick<T,K>
   EXPLAIN: T型からK[Key]選択
@@ -62,6 +69,8 @@
       { name: "John", age: 32 },
       { name: "Steve", age: 45 },
     ]
+  FOLD: |
+    type Pick<T, K extends keyof T> = { [P in K]: T[P]; }
 
 - KEY: ts.Util.Omit<T,K>
   EXPLAIN: T型からK[Key]排除
@@ -73,6 +82,8 @@
     }
     type PersonName = Omit<Person, "address" | "age">
     const people: PersonName[] = [{ name: "John" }, { name: "Steve" }]
+  FOLD: |
+    type Omit<T, K extends keyof any> = { [P in Exclude<keyof T, K>]: T[P]; }
 
 - KEY: ts.Util.Exclude<T,U>
   EXPLAIN: T[型/Key]からU[型/Key]除外
@@ -88,6 +99,8 @@
 
     type Excluded1 = Exclude<keyof TypeA, keyof TypeB> // "name"
     type Excluded2 = Exclude<string | number | boolean, string | boolean> // number
+  FOLD: |
+    type Exclude<T, U> = T extends U ? never : T
 
 - KEY: ts.Util.Extract<T,U>
   EXPLAIN: T[型/Key]とU[型/Key]の重複
@@ -103,6 +116,8 @@
 
     type Extracted1 = Extract<keyof A, keyof B> // "id"
     type Extracted2 = Extract<string | number | boolean, string | boolean> // string | boolean
+  FOLD: |
+    type Extract<T, U> = T extends U ? T : never
 
 - KEY: ts.Util.NonNullable<T>
   EXPLAIN: null/undefined 除外
@@ -112,6 +127,8 @@
       name: string | undefined
     }
     type ANonNU = NonNullable<A["id"]> // number
+  FOLD: |
+    type NonNullable<T> = T & {}
 
 - KEY: ts.Util.DeepNonNullable<T>
   EXPLAIN: 再帰的にnull/undefined 除外
@@ -131,11 +148,13 @@
       }|undefined
     }
     type ANonNU = DeepNonNullable<A>
+  FOLD: |
 
 - KEY: ts.Util.Maybe<T>
   EXPLAIN: Apolloで定義 undefined/null追加
   BODY: |
     type Maybe<T> = { [P in keyof T]: P | undefined | null }
+  FOLD: |
 
 - KEY: ts.Util.Parameters<T>
   EXPLAIN: メソッド引数の型群を取得
@@ -143,6 +162,9 @@
     const funcA = (text: string, num: number) => { }
     type A1 = Parameters<typeof funcA> // [string, number]
     type A2 = Parameters<typeof funcA>[number] // string | number
+  FOLD: |
+    type Parameters<T extends (...args: any) => any>
+      = T extends (...args: infer P) => any ? P : never
 
 - KEY: ts.Util.ConstructorParameters<T>
   EXPLAIN: コンストラクタの属性型群取得
@@ -156,18 +178,60 @@
       }
     }
     type A = ConstructorParameters<typeof Person> // [string, number]
+  FOLD: |
+    type ConstructorParameters<T extends abstract new (...args: any) => any>
+      = T extends abstract new (...args: infer P) => any ? P : never
 
 - KEY: ts.Util.ReturnType<T>
   EXPLAIN: メソッドの戻り値型
   BODY: |
     const func2 = (): number => 1
     type A = ReturnType<typeof func2> // number
+  FOLD: |
+    type ReturnType<T extends (...args: any) => any> 
+      = T extends (...args: any) => infer R ? R : any
 
 - KEY: ts.Util.Awaited<T>
   EXPLAIN: 非同期awaitの戻り値
   BODY: |
     type A = Awaited<Promise<string>> //string
     type B = Awaited<Promise<Promise<number>>> //number
+  FOLD: |
+    type Awaited<T> = T extends null | undefined ? T : T extends object & {
+        then(onfulfilled: infer F, ...args: infer _): any;
+    } ? F extends (value: infer V, ...args: infer _) => any ? Awaited<...> : never : T
+
+- KEY: ts.Util.InstanceType<T>
+  EXPLAIN: インスタンス型
+  BODY: |
+    class C {
+      x = 0;
+      y = 0;
+    }
+    type T0 = InstanceType<typeof C>;             = C
+    type T1 = InstanceType<any>;                  = any
+    type T2 = InstanceType<never>;                = never
+    type T3 = InstanceType<string>;               = any
+         * 'string' does not satisfy the constraint 'abstract new (...args: any) => any'
+    type T4 = InstanceType<Function>;             = any
+         * 'Function' does not satisfy the constraint 'abstract new (...args: any) => any'
+         * 'Function' provides no match for the signature 'new (...args: any): any'
+  FOLD: |
+    type InstanceType<T extends abstract new (...args: any) => any> 
+      = T extends abstract new (...args: any) => infer R ? R : any
+
+- KEY: ts.Util.NoInfer<T>
+  EXPLAIN: 型推論ブロック
+  BODY: |
+    function createStreetLight<C extends string>(
+      colors: C[],
+      defaultColor?: NoInfer<C>,
+    ) { }
+
+    createStreetLight(["red", "yellow", "green"], "red");   // OK
+    createStreetLight(["red", "yellow", "green"], "blue");  // Error
+  FOLD: |
+    type NoInfer<T> = intrinsic
 
 #-------------------------------
 # object Literal

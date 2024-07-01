@@ -22,7 +22,6 @@ export const getLocalYmlFile = async ({
   const content = decodeUint8Array({ data: rawData, code })
 
   if (content) {
-    // eslint-disable-next-line
     const decodedJson = yamlParse(content)
     //console.log("Data Resolved")
     return Promise.resolve(decodedJson)
