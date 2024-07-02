@@ -33,6 +33,10 @@
     ■ 手動生成(pre-commitフックの設定ファイル生成)
     npx husky add .husky/pre-commit "npx lint-staged"
 
+    ■ DIR内の構成
+    .husky/husky.sh             // 中身が空?
+    .husky/pre-commit
+
 - KEY: husky.setting.pre-commit
   EXPLAIN: 設定(pre-commit)
   BODY: |

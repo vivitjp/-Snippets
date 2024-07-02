@@ -20,8 +20,7 @@ export const makeSnippets = async ({ file, scope }: Props) => {
     const key = EXPLAIN ?? KEY
 
     if (keys.has(key)) {
-      if (!dupKeys.length)
-        dupKeys.push("■ 以下の EXPLAIN or KEY に重複があります")
+      if (!dupKeys.length) dupKeys.push("■ 以下の EXPLAIN or KEY に重複があり")
       dupKeys.push(key)
     } else {
       keys.add(key)
