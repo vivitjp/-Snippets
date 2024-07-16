@@ -1548,6 +1548,9 @@
     追加: 指定ターゲットの API
     ["dom","dom.iterable","esnext"]            esnext: 最新ECMAScript
 
+      ★ TS Playground での設定方法。以下の行を先頭に追加
+         // @lib: dom,esnext
+
     ■ コード内指定
     /// <reference lib="esnext" />             * 単独指定
     ["a", "i", "u"].toReversed();

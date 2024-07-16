@@ -3,7 +3,7 @@
 # Node: Volta
 #-------------------------------
 
-- KEY: node.version.control
+- KEY: node.volta.version.control
   EXPLAIN: |
     Volta: Nodeバージョン管理
   BODY: |
@@ -27,14 +27,14 @@
     ■ 要注意 uninstall
     node も yarn も uninstall に非対応
 
-- KEY: node.version.change
+- KEY: node.volta.version.change
   EXPLAIN: Volta Pin
   BODY: |
     ■ 指定バージョンの Node.js を使用
     volta pin node@18.19
     volta pin yarn@1.19
 
-- KEY: volta.command
+- KEY: node.volta.command
   EXPLAIN: Volta Commands
   BODY: |
     fetch         ツールをローカル マシンにフェッチ
@@ -54,5 +54,18 @@
     help          ヘルプ出力
 
 #-------------------------------
-# Node
+# Node: Volta
 #-------------------------------
+
+- KEY: node.nvm.version.control
+  EXPLAIN: |
+    nvm: Nodeバージョン管理
+  BODY: |
+    ■ インストール
+    nvm: https://github.com/coreybutler/nvm-windows/releases
+
+    > nvm version                       PowerShell使用
+    1.1.11
+    > nvm install 16.13.2
+    > nvm use 16.13.2
+    Now using node v16.13.2 (64-bit)

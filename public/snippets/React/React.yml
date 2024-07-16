@@ -1,6 +1,6 @@
 ---
 #-------------------------------
-# React
+# React Snippets
 #-------------------------------
 
 #-------------------------------
@@ -304,7 +304,8 @@
 - KEY: qw.useRef.forwardRef
   EXPLAIN: forwardRef
   BODY: |
-    作成中
+    React Component 参照
+    qw.custom.inputRef
 
 #-------------------------------
 # Hooks: useReducer
@@ -452,9 +453,10 @@
 - KEY: qw.Hooks.renderHooks
   EXPLAIN: レンダーHooks
   BODY: |
-    // いわゆる React版 Closure で、ステート描画コンポーネントをメソッドに持つ
+    // ステート描画コンポーネントメソッドを持つ Closure
     type UseChecks = [boolean, () => JSX.Element]
 
+    // Hooks の宣言時にパラメタをもたせると動的変更に対処できない
     export const useChecks = (labels: readonly string[]): UseChecks => {
       const [checkList, setCheckList] = useState(() => labels.map(() => false))
 
@@ -464,6 +466,7 @@
 
       const isAllChecked = checkList.every((x) => x)
 
+      // メソッドへのパラメタを考慮すべし
       const renderChecks = () => (
         <Checks checkList={checkList} labels={labels} handler={handleCheck} />
       )

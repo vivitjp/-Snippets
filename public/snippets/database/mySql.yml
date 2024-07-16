@@ -560,6 +560,30 @@
     ----------------------
     CALL <NAME>(PARAM,...);
 
+    ■ サンプル(Procedure)
+    DROP PROCEDURE IF EXISTS <PROC_NAME>;
+    DELIMITER //
+    CREATE PROCEDURE <PROC_NAME>(IN <PARAM> <型:VARCHAR(10)>)
+    BEGIN
+      SET @TEMP = (SELECT FUNC(<PARAM>, 0));
+      
+      INSERT INTO <COLUMNS> VALUES (<PARAM>, TEMP)
+      ON DUPLICATE KEY UPDATE ...
+    END;
+    //
+    DELIMITER ;
+
+    ■ サンプル(Trigger)
+    DROP TRIGGER IF EXISTS <TRIGGER_NAME>;
+    DELIMITER //
+    CREATE TRIGGER <TRIGGER_NAME>
+    AFTER INSERT ON <TABLE> FOR EACH ROW
+    BEGIN
+      call <PROC_NAME>(NEW.id);
+    END;
+    //
+    DELIMITER ;
+
 - KEY: mysql.statement.func
   EXPLAIN: 関数
   BODY: |
@@ -572,6 +596,23 @@
     delimiter ;
     ----------------------
     SELECT <NAME>(PARAM,...);
+
+    ■ サンプル
+    DROP FUNCTION IF EXISTS function_name;
+    DELIMITER //
+    CREATE FUNCTION function_name(ID VARCHAR(50), PARAM TINYINT) 
+      RETURNS <BIGINT> DETERMINISTIC
+    BEGIN
+      SET @RESULT = (
+        SELECT max(<COLUMN>) as <ALIAS>
+        FROM <TABLE>
+        WHERE <CONDITION>
+        GROUP BY <COLUMN>
+      );
+      RETURN @RESULT;
+    END;
+    //
+    DELIMITER ;
 
 - KEY: mysql.statement.trigger
   EXPLAIN: トリガー

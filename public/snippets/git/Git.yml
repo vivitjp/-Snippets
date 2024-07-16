@@ -4,84 +4,115 @@
 #-------------------------------
 
 - KEY: git.config
-  EXPLAIN: 設定
+  EXPLAIN: config(設定)
   BODY: |
-    git config --list/-l                       # 表示
-      # 優先順位は、system < global < local
-    ----------------------------------------------
-    git config -l | grep "KEYWORD"             # 特定キーワード行のみ表示
-    ----------------------------------------------
-    # system(全ユーザの全リポジトリ: /etc/gitconfig)
+    git config --list/-l                # 表示
+                                        # 優先順位は、system < global < local
+    git config -l | grep "KEYWORD"      # 特定キーワード行のみ表示(bash)
+
+    ■ system(全ユーザの全リポジトリ: /etc/gitconfig)
+
     git config --system user.name <value>
     git config --system user.email <email>
-    ----------------------------------------------
-    # global(現ユーザ: ~/.gitconfig, ~/.config/git/config) <-- MAIN
+
+    ■ global(現ユーザ: ~/.gitconfig, ~/.config/git/config) <-- MAIN
+
     git config --global user.name <value>
     git config --global user.email <email>
-    ----------------------------------------------
-    # local(現リポジトリ: .git/config)
+
+    ■ local(現リポジトリ: .git/config)
+
     git config --local user.name <value>
     git config --local user.email <email>
-    ----------------------------------------------
-    # git -c <KEY>=<VALUE> commit ...
+
+    ■ git -c <KEY>=<VALUE> commit ...
+
     git -c user.name=<value> -c user.email=<email> commit -m "test"
 
 - KEY: git.remote
-  EXPLAIN: リモートリポジトリ
+  EXPLAIN: remote(リモートリポジトリ)=origin
   BODY: |
-    git remote                                 # リモートリポジトリ名
-    git remote -v                              # リモートリポジトリ名(URL)
-      #  origin  https://github.com/vivitjp/-Snippets.git (fetch)
-      #  origin  https://github.com/vivitjp/-Snippets.git (push)
-    git remote show                            # remote 表示
-      #  origin
-    git remote add <repository> <URL>          # リモートリポジトリ追加
-    git remote rm <repository>                 # リモートリポジトリ削除
+    git remote                          # リモートリポジトリ名
+    git remote show                     # remote 表示
 
-- KEY: git.remote.origin
-  EXPLAIN: リモートリポジトリ(origin)
-  BODY: |
-    # origin: リモートリポジトリのURLの別名
-    -------------------------------------------------------------------
-    git remote show origin                     # origin 情報
-      #* remote origin
-      #  Fetch URL: https://<user>:<git_TOKEN>@github.com/<user>/<repository>.git
-      #  Push  URL: https://<user>:<git_TOKEN>@github.com/<user>/<repository>.git
-      #  HEAD branch: main
-      #  ...
-    -------------------------------------------------------------------
-    1) origin設定1
-    git remote add origin <URL>/<R>.git        # origin 追加(すでにある場合はError)
+        origin
+
+    git remote -v                       # リモートリポジトリ名(URL)
+
+        origin  https://vivitjp:ghp_tjjDq...@github.com/vivitjp/-Snippets.git (fetch)
+        origin  https://vivitjp:ghp_tjjDq...@github.com/vivitjp/-Snippets.git (push)
+
+          * origin: リモートリポジトリのURLの別名
+
+    git remote show origin              # origin 情報
+
+          * remote origin
+            Fetch URL: https://vivitjp:ghp_tjjDq...@github.com/vivitjp/-Snippets.git
+            Push  URL: https://vivitjp:ghp_tjjDq...@github.com/vivitjp/-Snippets.git
+            HEAD branch: main
+            Remote branches:
+              main            tracked
+              vivitjp-patch-1 tracked
+            Local branch configured for 'git pull':
+              main merges with remote main
+            Local ref configured for 'git push':
+              main pushes to main (up to date)
+
+    ■ リモートリポジトリ追加
+    git remote add <repository> <URL>    # リモートリポジトリ追加
+    git remote add origin <URL>/<R>.git  # origin 追加(すでにある場合はError)
+
     git remote add origin https://<user>:<git_TOKEN>@github.com/<user>/<repository>.git
     git remote add origin https://<user>@github.com/<user>/<repository>.git
-    git remote rm origin                       # origin 削除(すでにある場合は一度削除)
-    -------------------------------------------------------------------
-    2) origin設定2
-    git remote get-url origin                  # origin 取得
-      # https://github.com/<user>/<repository>.git
+
+    ■ リモートリポジトリ削除
+    git remote rm <repository>          # リモートリポジトリ削除
+    git remote rm origin                # origin 削除(すでにある場合は一度削除)
+
+    ■ origin 取得
+    git remote get-url origin           # origin 取得
+
+        https://vivitjp:ghp_tjjDq...@github.com/vivitjp/-Snippets.git
+        https://github.com/<user>/<repository>.git
+
+    ■ origin 設定
     git remote set-url origin git@github.com:<user>/<repository>.git # origin 設定
 
 - KEY: git.remote.upstream
-  EXPLAIN: 上流ブランチ(upstream)
+  EXPLAIN: upstream(上流ブランチ)
   BODY: |
-    # upstream: 上流ブランチ(「手動」設定)
+    ■ upstream
+
+      あるローカルブランチが、履歴を追跡するように設定したリモートブランチの事
+
     git branch -vv
-      # * main 4319100  [origin/main] ...最新コミット名...
-      #   <LocalBranch> [<remote>/<upstreamBranch>]
-    git fetch upstream                                      # 
-    ---------------------------------------------------------------
-    1) upstream設定1: branch
-    # [<branch>]省略すると現ブランチが対象
-    git branch --set-upstream-to=origin/<branch> [<branch>] # originへの連携
-    git branch -u origin/<branch> [<branch>]                # =
-    git branch --unset-upstream [<branch>]                  # originへの連携解除
-    -------------------------------------------------------------------
-    2) upstream設定2: remote
-    git remote add upstream git://github.com/<user>/<repository>.git   # upstream設定
+
+        feature/01 d44fc9a udpate
+        * main       428d5c4 [origin/main] more
+
+    git fetch upstream
+
+        設定されていない場合
+          fatal: 'upstream' does not appear to be a git repository
+          fatal: Could not read from remote repository.
+          Please make sure you have the correct access rights and the repository exists.
+        この場合でも git fetch origin は動作する
+        * Originとの違いが明瞭でない
+
+    ■ 設定: branch(originへの連携)       # [<branch>]省略すると現ブランチが対象
+    git branch -u(--set-upstream-to)=origin/<branch> [<branch>]
+
+    ■ 削除: branch(originへの連携解除)
+    git branch --unset-upstream [<branch>]
+
+    ■ 設定: remote
+    git remote add upstream git://github.com/<user>/<repository>.git
+
+    ■ 削除: remote
     git remote rm upstream
 
 - KEY: git.HEAD
-  EXPLAIN: 現ブランチの先頭
+  EXPLAIN: HEAD(現ブランチの先頭)
   BODY: |
     HEAD^    # 1つ前の HEAD
     HEAD~    # 1つ前の HEAD
@@ -90,108 +121,188 @@
     HEAD~2   # 2つ前の HEAD
 
 - KEY: git.clone
-  EXPLAIN: クローン
+  EXPLAIN: clone(クローン)
   BODY: |
-    git clone <URL> <directory>     # 指定ディレクトリにclone作成
+    git clone <URL> <directory>         # 指定ディレクトリにclone作成
+
+    ■ PAT を使用して clone
+    自分の gitHub アカウントでPAT(Personal access tokens classic)作成
+    token: ghp_ddgh5545e...のような形式
+
+    git clone https://<user_name>:<PAT>@github.com/<account>/<repositry>.git .
 
 - KEY: git.fetch.diff
-  EXPLAIN: 情報取得
+  EXPLAIN: fetch(情報取得), diff(差分)
   BODY: |
-    git fetch                       # リモートレポジトリの情報更新
-    * git reset --hard HEAD         # fetch 取消
-    git diff origin/<branch>        # ローカルとの差分表示
+    ■ 1) fetchで情報取得
+    git fetch                           # リモートレポジトリの情報更新
+    * git reset --hard HEAD             # fetch 取消
+
+    ■ 2) ローカルとの差分表示
+    git diff origin/<branch>
+
+    ■ 3) 現コードとの比較
+    git diff COMMIT_NUMBER
 
 - KEY: git.branch
-  EXPLAIN: ブランチ
+  EXPLAIN: branch(ブランチ)
   BODY: |
-    git branch -v                              # branch名 最新コミット
-    git branch --all                           # ローカル・リモート含め、全ブランチ
-    git branch --contains                      # 現ブランチの名前
-    git branch -m <new_name>                   # 現ブランチの名前変更
-    git branch -m <branch> <new_name>          # 指定ブランチの名前変更
-    git branch -d/-D <branch>                  # ブランチ削除(-D:強制)
-    git branch -d <branch>                     # ローカルブランチ削除
-    * git push -d/-D --remote origin/<branch>  # リモートブランチ削除
+    ■ 情報取得
+    git branch -v                       # branch名 最新コミット
+    git branch --all                    # ローカル・リモート含め、全ブランチ
 
-- KEY: git.checkout
-  EXPLAIN: ブランチ変更
+    git branch --contains               # 現ブランチの名前表示
+
+    ■ 名称変更
+    git branch -m <new_name>            # 現ブランチの名前変更
+    git branch -m <branch> <new_name>   # 指定ブランチの名前変更
+
+    ■ 削除(ローカル)
+    git branch -d/-D <branch>           # -D:強制
+
+    ■ 削除(リモート) * branch 不使用
+    git push -d/-D --remote origin/<branch>
+
+- KEY: git.checkout.switch
+  EXPLAIN: switch/checkout(ブランチ変更・作成)
   BODY: |
-    git checkout <branch>       # ブランチ変更
-    git checkout -b <branch>    # ブランチ作成と変更
-    git checkout -              # 直前のブランチに変更
+    git checkout <branch>               # ブランチ変更(OLD)
+    git checkout -b <branch>            # ブランチ作成と変更
+    git checkout -                      # 直前のブランチに変更
+
+    git switch <branch>                 # ブランチ変更(推奨)
 
 - KEY: git.add
-  EXPLAIN: indexing
+  EXPLAIN: add(indexing)
   BODY: |
-    git add .                   # カレントDIRの全ファイル追加
-    * git reset                 # 全ステージング取消
+    git add .                           # カレントDIRの全ファイル追加
+
+    ■ Indexing 取り消し
+    git reset                           # 全ステージング取消
 
 - KEY: git.commit
-  EXPLAIN: コミット
+  EXPLAIN: commit(コミット)
   BODY: |
-    git commit -m "message"          # コミット
-    git commit --amend -m "message"  # 直前のコミット修正
-    * git reset --soft HEAD^         # コミット取消
-    * git reset --mixed HEAD^        # コミット,Index取消
-    * git reset --hard HEAD^         # コミット,Index,変更取消
-    * git revert HEAD^               # コミット履歴を残して取消
-    * git revert HEAD^ -n            # コミット履歴を残して,Indexまで取消
+    git commit -m "message"             # コミット
+    git commit --amend -m "message"     # 直前のコミット修正
 
-- KEY: git.pull
-  EXPLAIN: Originコミット取得
-  BODY: |
-    git pull origin <branch>         # 正式パラメタ
-      # 
-    git pull                         # origin変更をローカルにマージ
-    * git merge --abort              # マージ取消
-    * git reset --hard HEAD          # マージ直前のHEADに戻る(ログ削除)
+    ■ 参考) コミット履歴残さずに取消
+    git reset --soft HEAD^              # コミット取消
+    git reset --mixed HEAD^             # コミット, Index取消
+    git reset --hard HEAD^              # コミット, Index, 変更取消
 
-- KEY: git.push
-  EXPLAIN: Originにコミット書き込み
+    ■ 参考) コミット履歴残しつつ取消
+    git revert HEAD^                    # コミット履歴を残して取消
+    git revert HEAD^ -n                 # コミット履歴を残して,Indexまで取消
+
+- KEY: git.pull.origin
+  EXPLAIN: pull origin(リモートからマージ)
   BODY: |
-    git push origin HEAD             # リモートにローカルのレポジトリを書き込む
-    git push origin <branch>         # リモートに変更を書き込む(f:強制)
-    git push [-f]                    # リモートに変更を書き込む(f:強制)
-    * git reset --soft HEAD~         # リセット
-    * git revert HEAD                # 取消用のコミットを別途作成(記録)
+    ■ origin差分をローカルにマージ
+    git pull origin <branch>            # 正式
+    git pull                            # 通常簡易で
+
+    ■ 取り消し
+    git merge --abort                   # マージ取消
+    git reset --hard HEAD               # マージ直前のHEADに戻る(ログ削除)
+
+    ■ originへ書き込み
+    git push origin HEAD                # リモートにローカルのレポジトリを書き込む
+    git push origin <branch>            # リモートに変更を書き込む(f:強制)
+    git push [-f]                       # リモートに変更を書き込む(f:強制)
+
+    git reset --soft HEAD~              # リセット
+    git revert HEAD                     # 取消用のコミットを別途作成(記録)
 
 - KEY: git.status
-  EXPLAIN: 前回コミットとの比較
+  EXPLAIN: status(前コミットとの比較)
   BODY: |
-    git status -s                  # -s:簡易表示
+    git status -s                       # -s:簡易表示
+
+        On branch main
+        Your branch is up to date with 'origin/main'.
+
+        Changes not staged for commit:
+          (use "git add/rm <file>..." to update what will be committed)        
+          (use "git restore <file>..." to discard changes in working directory)
+                modified:   package.json
+                deleted:    public/snippets/JSRuntime/nodejs/Node.yml
+                modified:   public/snippets/React/React.yml
+                modified:   public/snippets/React/ReactComponent.yml
+                deleted:    public/snippets/React/ReactTypeScript.yml
 
 - KEY: git.merge
-  EXPLAIN: マージ
+  EXPLAIN: merge(ブランチ間マージ)
   BODY: |
-    git merge <B>                  # 指定ブランチを現ブランチにマージ
-    * git merge --abort            # コンフリクト編集前
-    * git reset --hard HEAD        # コンフリクト編集後
-    * git reset --hard ORIG_HEAD   # マージ前の段階に戻る
+    git merge <B>                       # 指定ブランチを現ブランチにマージ
+
+    ■ 取り消し
+    git merge --abort                   # コンフリクト編集前
+    git reset --hard HEAD               # コンフリクト編集後
+    git reset --hard ORIG_HEAD          # マージ前の段階に戻る
 
 - KEY: git.rebase
   EXPLAIN: ベース変更
   BODY: |
-    git rebase <B>                 # 最新コミットをbaseにする
+    git rebase <B>                      # 最新コミットをbaseにする
 
 - KEY: git.log.reflog
-  EXPLAIN: ログ
+  EXPLAIN: log/reflog(ログ)
   BODY: |
-    git log --oneline              # ログ表示(一行で)
-    git reglog                     # ログ表示
+    ■ git log                           # ログ表示(一行で)
+
+      commit 428d5c461c3eb0d7488e038e58a3eff7705c55f4 (HEAD -> main, origin/main)
+      Author: vivitjp <vivitkawamura@gmail.com>
+      Date:   Wed Jul 3 06:24:17 2024 +0900
+
+          more
+      ...
+
+    ■ git log --oneline                 # ログ表示(一行で)
+
+      428d5c4 (HEAD -> main, origin/main) more
+      f16c9c6 updated
+      f826570 update
+      6db4722 正規表現修正
+      328ed61 fix bugs
+
+    ■ git log --oneline --grep "key"    # ログ表示(一行で)
+
+      f16c9c6 key
+      75a366f key
+      bd08b3f key
+      2c13082 key
+
+    ■ git reflog                        # ログ表示
+
+      428d5c4 (HEAD -> main, origin/main) HEAD@{0}: commit: more
+      f16c9c6 HEAD@{1}: reset: moving to HEAD~
+      494e72b HEAD@{2}: commit: more
+      f16c9c6 HEAD@{3}: commit: updated
+      75a366f HEAD@{4}: reset: moving to HEAD
+      75a366f HEAD@{5}: reset: moving to HEAD
+      75a366f HEAD@{6}: reset: moving to HEAD
+      75a366f HEAD@{7}: reset: moving to HEAD
 
 - KEY: git.rm
-  EXPLAIN: 削除
+  EXPLAIN: rm(ファイル削除)
   BODY: |
-    git rm <FILE>                  # ファイル削除
-    git rm --cached <FILE>         # コミット済みファイルをリポジトリから削除
+    git rm <FILE>                       # ファイル削除
+    git rm --cached <FILE>              # コミット済みファイルをリポジトリから削除
 
 - KEY: git.tag
-  EXPLAIN: タグ
+  EXPLAIN: tag(タグ)
   BODY: |
-    git tag v1.0                   # タグ追加
+    git tag                             # 表示
+
+      v1.0
+      v1.1
+
+    git tag v1.0                        # タグ追加
 
 - KEY: git.errors.push.permission
-  EXPLAIN: エラー(push)
+  EXPLAIN: |
+    エラー: push
   BODY: |
     > git push
     remote: Permission to <user>/<repository>.git denied to <git user name>.

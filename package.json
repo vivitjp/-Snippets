@@ -5,7 +5,7 @@
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build",
-    "lint_old": "eslint src --ext ts,tsx --report-unused-disable-directives --quiet",
+    "lint_old": "eslint src --ext ts,tsx --quiet",
     "lint": "eslint src/",
     "preview": "vite preview",
     "prepare": "husky"

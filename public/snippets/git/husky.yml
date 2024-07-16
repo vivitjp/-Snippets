@@ -34,16 +34,16 @@
     npx husky add .husky/pre-commit "npx lint-staged"
 
     ■ DIR内の構成
-    .husky/husky.sh             // 中身が空?
+    .husky/husky.sh             // 中身が空
     .husky/pre-commit
 
 - KEY: husky.setting.pre-commit
   EXPLAIN: 設定(pre-commit)
   BODY: |
-    ■ [pre-commit](必須)
+    ■ [pre-commit]
 
       #!/usr/bin/env sh
-      . "$(dirname -- "$0")/husky.sh"
+      . "$(dirname -- "$0")/husky.sh"   # 中身が空
 
       npx lint-staged
 
@@ -92,3 +92,25 @@
           // "prettier --write --ignore-path .gitignore './**/*.{js,jsx,ts,tsx,json,css}'",
         ],
       };
+
+- KEY: git.action.pre-commit
+  EXPLAIN: Git Action による pre-commit
+  BODY: |
+    ■ [.git/hooks/pre-commit]
+
+    huskyを使用せずに、git action による
+
+    #!/bin/bash
+    cd ./src         # Target Directory
+
+    targetFiles=$(git diff --staged --relative --name-status --diff-filter=AM  | grep -E "\.(ts|tsx|js|jsx|json|md)" | sed -e "s/^.*\t//")
+    yarn run eslint ${targetFiles}
+    if [ $? != "0" ] ; then
+        exit 1
+    fi
+
+    BRANCH=$(git symbolic-ref HEAD | sed -e "s|^refs/heads/||")
+    if [ $BRANCH = "develop" ] || [ $BRANCH = "main" ]; then
+        echo "${BRANCH}へのコミットは禁止です"
+        exit 1
+    fi

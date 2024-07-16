@@ -142,15 +142,15 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS, codeKeys.React],
       },
       {
-        name: "Routing:qw",
+        name: "🔺Routing",
         fileName: "React/ReactRouting",
         codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS, codeKeys.React],
       },
-      {
-        name: "⛔React 型定義",
-        fileName: "",
-        codeKeyTypes: [codeKeys.JSTS, codeKeys.React],
-      },
+      // {
+      //   name: "🔺React 型定義",
+      //   fileName: "React/ReactTypeScript",
+      //   codeKeyTypes: [codeKeys.JSTS, codeKeys.React],
+      // },
     ],
   },
   {
@@ -250,8 +250,8 @@ export const menuItems: menuByCategories[] = [
     category: "JS Runtime",
     items: [
       {
-        name: "🔺Nodejs",
-        fileName: "JSRuntime/nodejs/Node",
+        name: "🔺Nodejs(Topics)",
+        fileName: "JSRuntime/nodejs/NodeTopics",
         codeKeyTypes: [],
       },
       {
@@ -271,12 +271,17 @@ export const menuItems: menuByCategories[] = [
     items: [
       {
         name: "npm/yarn:ny",
-        fileName: "JSRuntime/nodejs/npm_yarn",
+        fileName: "JSRuntime/nodejs/npm/npm_yarn",
         codeKeyTypes: [codeKeys.NPM],
       },
       {
         name: "npm:npm",
-        fileName: "JSRuntime/nodejs/npm",
+        fileName: "JSRuntime/nodejs/npm/npm",
+        codeKeyTypes: [codeKeys.NPM],
+      },
+      {
+        name: "module管理史",
+        fileName: "JSRuntime/nodejs/npm/npm _history",
         codeKeyTypes: [codeKeys.NPM],
       },
       {
@@ -315,9 +320,9 @@ export const menuItems: menuByCategories[] = [
     category: "JS Framework:FE",
     items: [
       {
-        name: "⛔Nextjs",
-        fileName: "",
-        codeKeyTypes: [],
+        name: "🔺Nextjs",
+        fileName: "frameWork/front/Nextjs",
+        codeKeyTypes: [codeKeys.Nextjs],
       },
       {
         name: "🔺Vite",
@@ -601,7 +606,7 @@ export const menuItems: menuByCategories[] = [
     category: "Office",
     items: [
       {
-        name: "🔺Excel関数",
+        name: "Excel関数",
         fileName: "office/Excel",
         codeKeyTypes: [codeKeys.Excel],
       },

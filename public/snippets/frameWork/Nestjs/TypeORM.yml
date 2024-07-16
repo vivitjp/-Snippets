@@ -680,6 +680,20 @@
     // =INSERT INTO user VALUES (id=1, name='John'), (id=2, name='Karen')
     //  ON CONFLICT(id) DO UPDATE name = EXCLUDED.name
 
+      //サンプル
+      async upsert(data: Partial<DataGeneral>): Promise<boolean> {
+        try {
+          const result: InsertResult = await this.repoGeneral.upsert(
+            { ...data }, //SQL:values
+            { conflictPaths: ['name'] }, //重複チェックカラム **Unique Index化必須!
+          );
+          return true;       //!!result?.raw?.affectedRows; true しか返さない
+        } catch (error) {
+          console.log(error?.sqlMessage);
+          throw error;
+        }
+      }
+
     ■ Delete/Remove
     await manager.delete(User, 1)                 // Delete By Id
     await manager.delete(User, [1, 2, 3])         // Transactional

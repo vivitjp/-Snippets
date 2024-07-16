@@ -1,0 +1,501 @@
+---
+#-------------------------------
+# Nextjs
+#-------------------------------
+
+- KEY: nextjs.overview
+  EXPLAIN: Nextjs 概説
+  BODY: |
+    Next.jsを使うべき5つの理由 + 実装Tips
+    https://qiita.com/Yuki_Oshima/items/5c0dfd8f7af8fb76af8f
+
+    ■ SSR/SSG
+    ■ ファイルベースルーティング
+    ■ 開発サーバの部分的な高速リロード(Fast Refresh)
+    ■ 画像最適化
+    ■ ゼロコンフィグ
+
+- KEY: nextjs.install
+  EXPLAIN: インストール
+  BODY: |
+    ■ インストール
+    npx create-next-app@latest          // インストール後の npm/yarn 使用を決定
+    yarn create next-app
+
+    Need to install the following packages:
+    create-next-app@14.2.5
+    Ok to proceed? (y) y
+
+    √ What is your project named? ... next13
+    √ Would you like to use TypeScript? ... No / Yes
+    √ Would you like to use ESLint? ... No / Yes
+    √ Would you like to use Tailwind CSS? ... No / Yes
+    √ Would you like to use `src/` directory? ... No / Yes
+    √ Would you like to use App Router? (recommended) ... No / Yes
+    √ Would you like to customize the default import alias (@/*)? ... No / Yes
+    Creating a new Next.js app in B:\@Next\next_13\next13.
+
+    Using npm.
+    Initializing project with template: app-tw 
+
+    Installing dependencies:
+    - react    
+    - react-dom
+    - next
+
+    Installing devDependencies:
+    - typescript
+    - @types/node
+    - @types/react
+    - @types/react-dom
+    - postcss
+    - tailwindcss
+    - eslint
+    - eslint-config-next
+
+    Success! Created next13 at B:\@Next\next_13\next13
+
+    ■ 開発環境の立ち上げ
+    npm run dev
+    yarn dev
+
+    ■ ブラウザ確認
+    http://localhost:3000
+
+- KEY: nextjs.package.json
+  EXPLAIN: package.json
+  BODY: |
+    {
+      "name": "next13",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint"
+      },
+      "dependencies": {
+        "next": "14.2.5",
+        "react": "^18",
+        "react-dom": "^18"
+      },
+      "devDependencies": {
+        "@types/node": "^20",
+        "@types/react": "^18",
+        "@types/react-dom": "^18",
+        "eslint": "^8",
+        "eslint-config-next": "14.2.5",
+        "postcss": "^8",
+        "tailwindcss": "^3.4.1",
+        "typescript": "^5"
+      }
+    }
+
+- KEY: nextjs.directory
+  EXPLAIN: 基本ファイル
+  BODY: |
+    ./
+      app/                              // Top
+        dir1/                           // URL sub dir
+          page.tsx                      // 各 sub dir のデフォルトページ
+        globals.css                     // 共通CSS
+        layout.tsx                      // Root HTML
+        not-found.tsx                   // 404 Error ページ
+        page.tsx                        // Root ページ
+      components/
+        atoms/
+      utilities/
+      hooks/
+      node_modules/                     // モジュール
+      public/                           // output
+      next-env.d.ts
+      next.config.mjs
+      ...その他コンフィグ
+
+- KEY: nextjs.root.env
+  EXPLAIN: |
+    Root: .env
+  BODY: |
+    ■ サーバーサイド
+      [.env]
+      ENDPOINT='https://example.com/'
+
+      [page.tsx]
+      const endPoint = process.env.ENDPOINT || '';
+
+    ■ クライアントサイド
+
+      * AWSでの認証時には注意: パラメータストアを利用すること
+
+      [.env]
+      NEXT_PUBLIC_ENDPOINT='https://example.com/'
+
+      [page.tsx]
+      const endPoint = process.env.NEXT_PUBLIC_ENDPOINT || '';
+
+- KEY: nextjs.app.router.v13
+  EXPLAIN: AppRouter(v13~) 構成
+  BODY: |
+    ■ 13以前
+    ./
+      src/                              // Root
+        ├── page.tsx                    // /
+        └── hello
+            ├── page.tsx                // /hello?id=123
+            └── [id].tsx                // /hello/123
+
+    ■ 13以後(appの場合)
+    ./
+      app/                              // Root
+        ├── global-error.tsx            // Root Error Page
+        ├── layout.tsx                  // Root Layout(HTML/BODY)
+        ├── page.tsx                    // /
+        └── hello                       
+            ├── error.tsx               // /hello Level Error Page
+            ├── layout.tsx              // /hello Level Layout(Section)
+            ├── page.tsx                // /hello?id=123
+            └── [id]
+                ├── page.tsx            // /hello/123
+                └── [name]      
+                    └── page.tsx        // /hello/123/john
+
+- KEY: nextjs.app.router.query
+  EXPLAIN: AppRouter Query
+  BODY: |
+    ■ DIR: ./app/hello/page.tsx
+    ■ URL: http://localhost:3000/hello?id=123
+    ■ コード
+      "use client"                      // useSearchParams に必須
+
+      import { useSearchParams } from "next/navigation"
+
+      export default function XXX() {   // 関数名は任意
+        const searchParams = useSearchParams()
+        const id = searchParams.get("id")
+
+        return (
+          <div> Hello TOP {id} </div>
+        )
+      }
+
+    ■ 注: "use client"
+
+    ・useSearchParams などの hooks は client 側での実装なので "use client" 必須
+    ・ない場合の Error
+
+        × You're importing a component that needs useSearchParams.
+        It only works in a Client Component but none of its parents are 
+        marked with "use client", so they're Server Components by default.
+
+- KEY: nextjs.app.router.dynamic.single
+  EXPLAIN: AppRouter 動的Routing(引数-単数)
+  BODY: |
+    ■ DIR: ./app/hello/[id]/page.tsx    // 13以前とは形式異なる
+    ■ URL: http://localhost:3000/hello/123
+
+    ■ コード
+      type Props = {
+        params: { id: string }          // paramsは既定属性
+      }
+
+      export default function Hello({ params }: Props) {
+        const { id } = params
+
+        return (
+          <div> Hello {id} </div>
+        )
+      }
+
+- KEY: nextjs.app.router.dynamic.multiple
+  EXPLAIN: AppRouter 動的Routing(引数-複数)
+  BODY: |
+    ■ DIR: ./app/hello/[id]/[name]/page.tsx
+    ■ URL: http://localhost:3000/hello/123/john
+
+    ■ コード
+      type Props = {
+        params: { id: string; name: string }  // paramsは既定属性
+      }
+
+      export default function Hello({ params }: Props) {
+        const { id, name } = params
+
+        return (
+          <div> Hello {id} {name} </div>
+        )
+      }
+
+- KEY: nextjs.app.router.dynamic.array
+  EXPLAIN: AppRouter 動的Routing(引数-配列) 必須
+  BODY: |
+    ■ DIR: ./app/patha/[...ids]/page.tsx            // 一重[...引数]
+    ■ URL: http://localhost:3000/patha/abc/123/efg  // OK: 複数の連続するパラメタ
+    ■ URL: http://localhost:3000/patha/             // NG: NOパラメタ
+
+    ■ コード
+      type Props = {
+        params: { ids: string[] }     // paramsは既定属性 & 引数(例:ids) 必須
+      }
+      export default function PathA({ params }: Props) {
+        return (
+          <div> PATH-A: {params.ids.join("-")} </div>
+        )
+      }
+
+- KEY: nextjs.app.router.dynamic.array
+  EXPLAIN: AppRouter 動的Routing(引数-配列) Optional
+  BODY: |
+    ■ DIR: ./app/pathb/[[...ids]]/page.tsx          // 二重[[...引数]]
+    ■ URL: http://localhost:3000/pathb/abc/123/efg  // OK: 複数の連続するパラメタ
+    ■ URL: http://localhost:3000/pathb/             // OK: NOパラメタ
+
+    ■ コード
+    type Props = {
+      params: { ids?: string[] }        // paramsは既定属性 & 引数(例:ids) Optional
+    }
+    export default function PathB({ params }: Props) {
+      return (
+        <div> PATH-B: {params.ids?.join("-") || "unknown"} </div>
+      )
+    }
+
+- KEY: nextjs.layout.root
+  EXPLAIN: |
+    Layout: Root(HTML)
+  BODY: |
+    ■ Root Layout(HTML: Server Component By default)
+
+    import type { Metadata } from "next";
+    import { Inter } from "next/font/google";
+    import "./globals.css";
+
+    const inter = Inter({ subsets: ["latin"] });
+
+    export const metadata: Metadata = {
+      title: "Next Sample 13",
+      description: "Generated by create next app",
+    };
+
+    export default function RootLayout({ children }: Readonly<{
+      children: React.ReactNode;
+    }>) {
+      return (
+        <html lang="ja">                // Root Level には HTML & Body
+          <body className={inter.className}>
+            <div>Root Layout</div>
+            <div>{children}</div>
+          </body>
+        </html>
+      );
+    }
+
+- KEY: nextjs.layout.pages
+  EXPLAIN: |
+    Layout: Pages
+  BODY: |
+    ■ 各Page の nested Layout(Server Component By default)
+    pages.tsx と同じフォルダ内にあり、pagesを wrap する
+
+    export default function DashboardLayout({
+      children,
+    }: {
+      children: React.ReactNode
+    }) {
+      return <section>{children}</section>
+    }
+
+- KEY: nextjs.css.global
+  EXPLAIN: |
+    CSS: global(Tailwind Sample)
+  BODY: |
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+
+    :root {
+      --foreground-rgb: 0, 0, 0;
+      --background-start-rgb: 214, 219, 220;
+      --background-end-rgb: 255, 255, 255;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --foreground-rgb: 255, 255, 255;
+        --background-start-rgb: 0, 0, 0;
+        --background-end-rgb: 0, 0, 0;
+      }
+    }
+
+    body {
+      color: rgb(var(--foreground-rgb));
+      background: linear-gradient(
+        to bottom,
+        transparent,
+        rgb(var(--background-end-rgb))
+      )
+      rgb(var(--background-start-rgb));
+    }
+
+    @layer utilities {
+      .text-balance {
+        text-wrap: balance;
+      }
+    }
+
+- KEY: nextjs.not.found
+  EXPLAIN: |
+    Not Found
+  BODY: |
+    ■ DIR: ./app/not-found.tsx          // Server Compo
+
+    ■ コード(同期)
+      import Link from 'next/link';
+
+      export default function NotFound() {
+        return (
+          <div>
+            <h2>Not Found</h2>
+            <Link href='/'>Return Home</Link>
+          </div>
+        );
+      }
+
+    ■ コード(非同期)
+      import Link from 'next/link'
+      import { headers } from 'next/headers'
+      
+      export default async function NotFound() {
+        const headersList = headers()
+        const domain = headersList.get('host')
+        const data = await getSiteData(domain)
+
+        return (
+          <div>
+            <h2>Not Found: {data.name}</h2>
+            <p>View <Link href="/blog">all posts</Link></p>
+          </div>
+        )
+      }
+
+- KEY: nextjs.error.root
+  EXPLAIN: |
+    🔺 Error: Root
+  BODY: |
+    ■ Global Error(優先)
+
+    ■ DIR: ./app/global-error.tsx       // Client Compo
+
+- KEY: nextjs.error.pages
+  EXPLAIN: |
+    Error: 各Page
+  BODY: |
+    ■ DIR: ./app/<SUB>/error.tsx        // 各/<SUB> 以下の Client Compo
+
+    "use client"                      // Client Components
+    import { useEffect } from "react"
+
+    export default function Error({ error, reset }: {
+      error: Error & { digest?: string }
+      reset: () => void
+    }) {
+      useEffect(() => {
+        console.error(error)
+      }, [error])
+
+      return (
+        <div>
+          <h2>Local Error</h2>
+          <button onClick={ ()=>reset() }>  // ReRender
+            Try again
+          </button>
+        </div>
+      )
+    }
+
+- KEY: nextjs.api
+  EXPLAIN: |
+    🔺 API
+  BODY: |
+
+- KEY: nextjs.link
+  EXPLAIN: Link(next/link)
+  BODY: |
+    ■ リンク
+    import Link from 'next/link';
+
+    export default function Navbar() {  // Server Component
+      return (
+        <nav>
+          <Link href="/about"><a>About</a></Link>
+        </nav>
+      );
+    }
+
+    ■ typedRoutes(v13~)                 //Routeの型補完
+
+    [next.config.mjs]
+    /** @type {import('next').NextConfig} */
+    const nextConfig = {
+      experimental: {
+        typedRoutes: true,
+      },
+    };
+    export default nextConfig;
+
+- KEY: nextjs.link.
+  EXPLAIN: Link(next/link) + usePathname
+  BODY: |
+    ■ 自身のpath取得
+    'use client'                        // Client Component
+
+    import { usePathname } from 'next/navigation'
+    import Link from 'next/link'
+
+    export function Links() {
+      const pathname = usePathname()
+
+      return (
+        <nav>
+          <Link className={`link ${pathname === "/" ? "active" : ""}`} href="/">
+            Home/
+          </Link>
+          <Link
+            className={`link ${pathname === "/hello" ? "active" : ""}`}
+            href="/hello"
+          >
+            Hello/
+          </Link>
+        </nav>
+      )
+    }
+
+- KEY: nextjs.navigation
+  EXPLAIN: |
+    useRouter(next/navigation: v13~)
+  BODY: |
+    ■ DIR: ./app/login/page.tsx
+    ■ URL: http://localhost:3000/login
+
+    ■ コード
+    "use client"                        // Hooks には必須
+
+        // import { useRouter } from "next/router"  ★DEPRECATED
+        // Error: NextRouter was not mounted.
+
+    import { useRouter } from "next/navigation"
+
+    export default function Login() {
+      const router = useRouter()
+
+      const id = 456
+      const login = () => {
+        router.push(`/hello/${id}`)     //引数付きの遷移
+      }
+
+      return (
+        <div>
+          <button onClick={login}>Log In</button>
+        </div>
+      )
+    }

@@ -348,6 +348,15 @@
 # ----------------------------
 # CELL
 # ----------------------------
+
+- KEY: excel.cell.count
+  EXPLAIN: |
+    セル: COUNT()
+  BODY: |
+    =COUNT(範囲1[,範囲2])      範囲内のセル数
+    =COUNT(A2:A3)             2
+    =COUNT(A2:A3, B2:B3)      4
+
 - KEY: excel.cell.cell
   EXPLAIN: |
     セル: CELL()
@@ -372,32 +381,42 @@
 
 - KEY: excel.cell.row
   EXPLAIN: |
-    セル: ROW()
+    セル: ROW() ROWS()
   BODY: |
+    指定セル番地の行番号取得
+
     =ROW()                   2  式が入力されたセルの行番号
     =ROW(C10)               10  指定セル参照の行番号
 
-- KEY: excel.cell.rows
-  EXPLAIN: |
-    セル: ROWS()
-  BODY: |
+    指定セル範囲の行数
+
     =ROWS(C1:E4)             4  指定したセル範囲の行数
     =ROWS({1,2,3;4,5,6})     2  配列定数の行数
 
 - KEY: excel.cell.column
   EXPLAIN: |
-    セル: COLUMN()
+    セル: COLUMN() COLUMNS()
   BODY: |
+    指定セル番地の列番号取得
+
     =COLUMN()                2  式が入力されたセルの列番号
     =COLUMN(B13)             2  B=2
     =COLUMN(B2:D2)       2 3 4  B=2,C=3,D=4
 
-- KEY: excel.cell.columns
-  EXPLAIN: |
-    セル: COLUMNS()
-  BODY: |
+    指定セル範囲の列数
+
     =COLUMNS(C1:E4)          3
     =COLUMNS({1,2,3;4,5,6})  3
+
+- KEY: excel.cell.offset
+  EXPLAIN: |
+    セル: OFFSET()
+  BODY: |
+    =OFFSET(基準参照, 移動行数, 移動列数, [範囲高], [範囲幅])
+    =OFFSET(A1,2,2)           C3 への参照
+    =OFFSET(A1,2,2,2,2)       C3, C4, D3, D4 への配列参照(表示先に既に値があるとエラー)
+
+    =SUM(OFFSET(A7,1,1,2,2))  戻り配列の値合計
 
 # ----------------------------
 # Formula
@@ -681,7 +700,7 @@
 # ----------------------------
 - KEY: excel.if
   EXPLAIN: |
-    ⬜条件関数🔺
+    ⬜条件関数
   BODY: |
     ■ IF()                    
 
@@ -707,31 +726,36 @@
     ■ IFNA()
 
       =IFNA(値, NAエラー文字列) *#N/A のみ
+      =IFNA(VLOOKUP(E2,A1:C11,3,0), "Not Found") 
 
     ■ AND()                   
 
       =AND(論理式1 [,論理式2]...)
+      =IF(AND(A2>0,B2<100),TRUE, FALSE)
 
     ■ OR()                    
 
       =OR(論理式1 [,論理式2]...)
+      =IF(OR(A2>0,B2<100),TRUE, FALSE)
 
     ■ XOR()                   
 
       =XOR(論理式1 [,論理式2]...)
+      =IF(XOR(A6>50,B2<100),TRUE,FALSE)
 
     ■ NOT()                   
 
       =NOT(論理式)
+      =IF(NOT(A6>50),TRUE,FALSE)
 
 - KEY: excel.if.sumif
   EXPLAIN: |
     条件: SUMIF()
   BODY: |
-    =SUMIF(LookupVector, matchingCondition [,ResultVector])
+    =SUMIF(LookupVector, condition [,ResultVector])
 
         LookupVector: 範囲から条件一致する値を合計
-        matchingCondition: 検索条件
+        condition: 検索条件
         ResultVector: 合計範囲あればその値を合計
 
     ■ 例
@@ -779,18 +803,125 @@
 
 - KEY: excel.if.sumifs
   EXPLAIN: |
-    条件: SUMIFS()🔺
+    条件: SUMIFS()
   BODY: |
+    =SUMIFS(ResultVector, LookupVector1, condition1, [LookupVector2, condition2,]...)
+
+        ResultVector: 合計範囲
+        LookupVector: 範囲から条件一致する値を合計
+        condition: 検索条件
+
+    ■ 例
+    =SUMIFS(A2:A5, B2:B5, "=*りんご", C2:C5, "秋")
+    =SUMIFS(A2:A5, B2:B5, "<>りんご", C2:C5, "秋")
+  SAMPLE: |
+    <div class="row" style="align-items:flex-start;gap:20px">
+      <table class="excel">
+        <thead>
+          <th></th><th> A </th><th> B </th><th> C </th>
+        </thead>
+        <tbody>
+          <tr><td> 1 </td><td> 価格 </td><td> 果物    </td><td> 季節 </td></tr>
+          <tr><td> 2 </td><td> 100 </td><td> りんご   </td><td> 秋 </td></tr>
+          <tr><td> 3 </td><td> 300 </td><td> なし     </td><td> 秋 </td></tr>
+          <tr><td> 4 </td><td> 250 </td><td> ぶどう   </td><td> 夏 </td></tr>
+          <tr><td> 5 </td><td> 180 </td><td> 青りんご </td><td> 冬 </td></tr>
+        </tbody>
+      </table>
+      <div class="col">
+        <div class="row">
+          <div class="rowBorder"> =SUMIFS(A2:A5,B2:B5,"=*りんご",C2:C5,"秋") </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> 150 </div>
+        </div>
+        <div class="row">
+          <div class="rowBorder"> =SUMIFS(A2:A5,B2:B5,"<>りんご",C2:C5,"秋") </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> 300 </div>
+        </div>
+      </div>
+    </div>
 
 - KEY: excel.if.countif
   EXPLAIN: |
-    条件: COUNTIF()🔺
+    条件: COUNTIF()
   BODY: |
+    =COUNTIF(LookupVector, condition)
+
+        LookupVector: 範囲から条件一致する値を合計
+        condition: 検索条件
+
+    ■ 例
+    =COUNTIF(B2:B5, "*りんご")
+    =COUNTIF(A2:A5, ">200")
+  SAMPLE: |
+    <div class="row" style="align-items:flex-start;gap:20px">
+      <table class="excel">
+        <thead>
+          <th></th><th> A </th><th> B </th><th> C </th>
+        </thead>
+        <tbody>
+          <tr><td> 1 </td><td> 価格 </td><td> 果物    </td><td> 季節 </td></tr>
+          <tr><td> 2 </td><td> 100 </td><td> りんご   </td><td> 秋 </td></tr>
+          <tr><td> 3 </td><td> 300 </td><td> なし     </td><td> 秋 </td></tr>
+          <tr><td> 4 </td><td> 250 </td><td> ぶどう   </td><td> 夏 </td></tr>
+          <tr><td> 5 </td><td> 180 </td><td> 青りんご </td><td> 冬 </td></tr>
+        </tbody>
+      </table>
+      <div class="col">
+        <div class="row">
+          <div class="rowBorder"> =COUNTIF(B2:B5, "*りんご") </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> 2 </div>
+        </div>
+        <div class="row">
+          <div class="rowBorder"> =COUNTIF(A2:A5, ">200") </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> 2 </div>
+        </div>
+      </div>
+    </div>
 
 - KEY: excel.if.countifs
   EXPLAIN: |
-    条件: COUNTIFS()🔺
+    条件: COUNTIFS()
   BODY: |
+    =COUNTIFS(LookupVector1, condition1, [LookupVector2, condition12,]...)
+
+        ResultVector: 合計範囲
+        LookupVector: 範囲から条件一致する値を合計
+        condition: 検索条件
+
+    ■ 例
+    =COUNTIFS(A2:A5, ">150", B2:B5, "*りんご")
+    =COUNTIFS(A2:A5, ">250", B2:B5, "<>*りんご")
+  SAMPLE: |
+    <div class="row" style="align-items:flex-start;gap:20px">
+      <table class="excel">
+        <thead>
+          <th></th><th> A </th><th> B </th><th> C </th>
+        </thead>
+        <tbody>
+          <tr><td> 1 </td><td> 価格 </td><td> 果物    </td><td> 季節 </td></tr>
+          <tr><td> 2 </td><td> 100 </td><td> りんご   </td><td> 秋 </td></tr>
+          <tr><td> 3 </td><td> 300 </td><td> なし     </td><td> 秋 </td></tr>
+          <tr><td> 4 </td><td> 250 </td><td> ぶどう   </td><td> 夏 </td></tr>
+          <tr><td> 5 </td><td> 180 </td><td> 青りんご </td><td> 冬 </td></tr>
+        </tbody>
+      </table>
+      <div class="col">
+        <div class="row">
+          <div class="rowBorder"> =COUNTIFS(A2:A5, ">150", B2:B5, "*りんご") </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> 1 </div>
+        </div>
+        <div class="row">
+          <div class="rowBorder"> =COUNTIFS(A2:A5, ">250", B2:B5, "<>*りんご") </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> 1 </div>
+        </div>
+      </div>
+    </div>
 
 # ----------------------------
 # IS
@@ -800,67 +931,98 @@
     ⬜判定関数
   BODY: |
     全メソッドの戻り値: TRUE/FALSE
-    ■ ISBLANK()               CELL番地空白判定
+    ■ ISBLANK(CELL参照)       CELL番地空白判定
+     =ISBLANK(A2)
 
-      =ISBLANK(A2)
+    ■ ISERR(CELL参照)         エラー(#N/A)判定
+     =ISERR(A6)
 
-    ■ ISERR()                 エラー(#N/A)判定
+    ■ ISERROR(CELL参照)       エラー(#REF!)判定
+     =ISERROR(A4)
 
-      =ISERR(A6)
+    ■ ISNA(CELL参照)          エラー(#N/A)判定
+     =ISNA(A4)
 
-    ■ ISERROR()               エラー(#REF!)判定
+    ■ ISREF(CELL参照)         CELL番地有効判定
+     =ISREF(G8) => TRUE
+     =ISREF(XYZ1) => FALSE
 
-      =ISERROR(A4)
+    ■ ISFORMULA(CELL参照)     式(か値か)判定    
+     =ISFORMULA(A1)
 
-    ■ ISNA()                  エラー(#N/A)判定
+    ■ ISLOGICAL(CELL参照)     論理値判定        
+     =ISLOGICAL(A1)
 
-      =ISNA(A4)
+    ■ ISNONTEXT(CELL参照)     Non文字列判定     
+     =ISNONTEXT(A3)
 
-    ■ ISREF()                 CELL番地有効判定
+    ■ ISTEXT(CELL参照)        文字列判定        
+     =ISTEXT(A3)
 
-      =ISREF(G8) => TRUE
-      =ISREF(XYZ1) => FALSE
+    ■ ISNUMBER(CELL参照)      数値判定          
+     =ISNUMBER(A1)
 
-    ■ ISFORMULA()             式(か値か)判定    
+    ■ ISEVEN(CELL参照)        偶数値判定        
+     =ISEVEN(A1)
 
-      =ISFORMULA(A1)
-
-    ■ ISLOGICAL()             論理値判定        
-
-      =ISLOGICAL(A1)
-
-    ■ ISNONTEXT()             Non文字列判定     
-
-      =ISNONTEXT(A3)
-
-    ■ ISTEXT()                文字列判定        
-      
-      =ISTEXT(A3)
-
-    ■ ISNUMBER()              数値判定          
-
-      =ISNUMBER(A1)
-
-    ■ ISEVEN()                偶数値判定        
-
-      =ISEVEN(A1)
-
-    ■ ISODD()                 奇数値判定
-
-      =ISODD(A1)
+    ■ ISODD(CELL参照)         奇数値判定
+     =ISODD(A1)
 
 # ----------------------------
 # NUMBER
 # ----------------------------
 - KEY: excel.number
   EXPLAIN: |
-    ⬜数値関数🔺
+    ⬜数値関数
   BODY: |
-    ■ SUM()                   選択セルの合計値
-    ■ PRODUCT()               選択セルの掛け算
-    ■ MAX()                   最大値
-    ■ MIN()                   最小値
-    ■ AVERAGE()               平均値
+    ■ ABS(数)                 絶対値(範囲指定不可)
+     =ABS(A2)
+
+    ■ AVERAGE(数1[,数2]...)   平均値
+     =AVERAGE(A2:A6)
+     =AVERAGE(1,2,3)
+     =AVERAGE({1,2,3})
+
+    ■ SUM(範囲1[,範囲2])       選択セルの全合計値
+     =SUM(A2:A6)
+     =SUM(A2:A6, B1:B2)       
+     =SUM(1,2,3)              6
+     =SUM({1,2,3})            6
+     =SUM({1,2,3},{1,2,3})    12
+
+    ■ MAX(範囲1[,範囲2])       最大値
+    ■ MIN(範囲1[,範囲2])       最小値
+     =MAX(A2:A6)
+     =MAX(A2:A6, B1:B2)       
+     =MAX(1,2,3)              3
+     =MAX({1,2,3})            3
+     =MAX({1,2,3},{1,2,3})    3
+
+    ■ PRODUCT(範囲)           選択セルの掛け算
+     =PRODUCT(A2:A6)
+     =PRODUCT(A2:A6, B1:B2)   
+     =PRODUCT(1,2,3)            6
+     =PRODUCT({1,2,3})          6
+     =PRODUCT({1,2,3},{1,2,3})  36
+
+    ■ CEILING(数[,桁])        切り上げ
+     =CEILING(A2)
+     =CEILING(A2:A3)          Error
+     =CEILING(2.5, 1)         3
+     =CEILING(2.5, -2)        Error(両方が同じサイン)
+     =CEILING(1.55, 0.1)      1.6
+     =CEILING(0.234, 0.01)    0.24
+     =CEILING(-2.5, -2)       -4
+     =CEILING(-2.5, 2)        -2
+
+    ■ FLOOR(数[,桁])          切り捨て
+     =FLOOR(A2)
+     =FLOOR(A2:A3)            Error
+     =FLOOR(3.7, 2)           2
+     =FLOOR(1.58, 0.1)        1.5
+     =FLOOR(0.234, 0.01)      0.23
+     =FLOOR(-2.5, -2)         -2
+     =FLOOR(2.5, -2)          Error(両方が同じサイン)
 
 - KEY: excel.number.round
   EXPLAIN: |
@@ -1016,13 +1178,25 @@
 
 - KEY: excel.string.left
   EXPLAIN: |
-    文字列: LEFT()/LEFTB()🔺
+    文字列: LEFT()/LEFTB()
   BODY: |
+    =LEFT(文字列, 文字数)
+    =LEFTB(文字列, バイト数)
+
+    =LEFT("世界の歴史",5)      "世界の歴史"
+    =LEFTB("世界の歴史",5)     "世界の"(文字が切れない)
+    =LEFTB("世界の歴史",6)     "世界の"
 
 - KEY: excel.string.right
   EXPLAIN: |
-    文字列: RIGHT()/RIGHTB()🔺
+    文字列: RIGHT()/RIGHTB()
   BODY: |
+    =RIGHT(文字列, 文字数)
+    =RIGHTB(文字列, バイト数)
+
+    =RIGHT("世界の歴史",2)     "歴史"
+    =RIGHTB("世界の歴史",3)    "歴史"(文字が切れない)
+    =RIGHTB("世界の歴史",4)    "歴史"
 
 - KEY: excel.string.rept
   EXPLAIN: |
@@ -1038,14 +1212,55 @@
 # ----------------------------
 - KEY: excel.date
   EXPLAIN: |
-    ⬜日付関数🔺
+    ⬜日付関数
   BODY: |
-    ■ DATE()                  数値から日付データ作成
-    ■ TODAY()                 今日の日付
-    ■ EOMONTH()               月末の日付
-    ■ YEAR()                  日付データから年抽出
-    ■ MONTH()                 日付データから月抽出
-    ■ DAY()                   日付データから日抽出
+    ■ DATE(年,月,日)             数値から日付データ作成
+     =DATE(2012,5,2)            2012/5/2
+     =DATE("2001-12-1")         #N/A!
+     =DATE("2001/12/1")         #N/A!
+     =DATE(1,1,1)               1901/1/1
+     =DATE(10,1,1)              1910/1/1
+     =DATE(100,1,1)             2000/1/1
+
+    ■ TODAY()                   今日の日付
+     =TODAY()                   2020/1/1
+
+    ■ EOMONTH(日付, 月数)        加算月末の日付
+     =EOMONTH("2013/05/20",0)   2013/5/31
+     =EOMONTH("2013/05/20",1)   2013/6/30
+
+    ■ YEAR()                    日付データから年抽出
+     =YEAR("2001/12/1")         2001
+     =YEAR(2001,12,1)           #N/A!
+     =YEAR("1/12/1")            2001
+     =YEAR("10/12/1")           2010
+     =YEAR("100/12/1")          #NUM!
+     =YEAR("2001-12-1")         2001
+     =YEAR("1-12-1")            2001
+     =YEAR("10-12-1")           2010
+     =YEAR("100-12-1")          #NUM!
+
+    ■ MONTH()                   日付データから月抽出
+     =MONTH("2001/12/1")        12
+     =MONTH(2001,12,1)          #N/A!
+     =MONTH("1/12/1")           12
+     =MONTH("10/12/1")          12
+     =MONTH("100/12/1")         #NUM!
+     =MONTH("2001-12-1")        12
+     =MONTH("1-12-1")           12
+     =MONTH("10-12-1")          12
+     =MONTH("100-12-1")         #NUM!
+
+    ■ DAY()                     日付データから日抽出
+     =DAY("2001/12/1")          1
+     =DAY(2001,12,1)            #N/A!
+     =DAY("1/12/1")             1
+     =DAY("10/12/1")            1
+     =DAY("100/12/1")           #NUM!
+     =DAY("2001-12-1")          1
+     =DAY("1-12-1")             1
+     =DAY("10-12-1")            1
+     =DAY("100-12-1")           #NUM!
 
 # ----------------------------
 # MATRIX

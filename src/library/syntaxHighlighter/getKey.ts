@@ -17,6 +17,7 @@ import { keysLinux } from "./keys/Linux"
 import { keysMongo } from "./keys/Mongo"
 import { keysMySql } from "./keys/MySql"
 import { keysNestjs } from "./keys/Nestjs"
+import { keysNextjs } from "./keys/Nextjs"
 import { keysPackage } from "./keys/Package"
 import { keysPackageRHF } from "./keys/PackageRHF"
 import { keysPython } from "./keys/Python"
@@ -54,6 +55,7 @@ export const codeKeys = {
   ClassValidator: "ClassValidator",
   ClassTransformer: "ClassTransformer",
   Nestjs: "Nestjs",
+  Nextjs: "Nextjs",
   Express: "Express",
   Swagger: "Swagger",
   Unknown: "Unknown",
@@ -91,6 +93,7 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   ClassValidator: keysClassValidator,
   ClassTransformer: keysClassTransformer,
   Nestjs: keysNestjs,
+  Nextjs: keysNextjs,
   Express: keysExpress,
   Swagger: keysSwagger,
   Env: keysEnv,

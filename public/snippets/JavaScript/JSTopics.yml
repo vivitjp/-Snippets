@@ -213,34 +213,34 @@
 - KEY: js.array.method.make.arrange
   EXPLAIN: 配列・Index/生成/変更
   BODY: |
-    arr.at(index)                 //要素取得(2022)
-    Array.of(1,2,3)               //配列もどきから配列生成
-    Array.from(文字列,Map,Set)     //配列生成
-    arr.fill(値)                  //全上書き(破壊的)
-    arr.flat(深さ数値)             //配列: 多重配列のフラット化
-    arr.flatMap(value=>value)     //配列: 多重配列のフラット化
-    arr.concat(配列)              //配列合体
-    arr.join(配列)                 //文字列化
+    arr.at(index)                       //要素取得(2022)
+    Array.of(1,2,3)                     //配列もどきから配列生成
+    Array.from(文字列,Map,Set)          //配列生成
+    arr.fill(値)                        //全上書き(破壊的)
+    arr.flat(深さ数値)                   //配列: 多重配列のフラット化
+    arr.flatMap(value=>value)           //配列: 多重配列のフラット化
+    arr.concat(配列)                    //配列合体
+    arr.join(配列)                      //文字列化
     -----------------------------------------------------------
     result = arr.with(index, value) //2023 指定Index要素の置換で新配列を戻す
 
 - KEY: js.array.method.pushPop
   EXPLAIN: 配列・挿入/取得
   BODY: |
-    arr.pop()            //最後の要素取得(破壊的)
-    arr.push(value)      //末尾に追加(破壊的)
-    arr.shift()          //最初の要素取得(破壊的)
-    arr.unshift(value)   //先頭に追加(破壊的)
+    arr.pop()                           //最後の要素取得(破壊的)
+    arr.push(value)                     //末尾に追加(破壊的)
+    arr.shift()                         //最初の要素取得(破壊的)
+    arr.unshift(value)                  //先頭に追加(破壊的)
 
 - KEY: js.array.method.sort
   EXPLAIN: 配列・ソート
   BODY: |
-    arr.sort((a,b)=>a-b)               //昇順ソート(破壊的)
-    arr.sort((a,b)=>b-a)               //降順ソート(破壊的)
-    arr.reverse()                      //逆ソート(破壊的)
+    arr.sort((a,b)=>a-b)                //昇順ソート(破壊的)
+    arr.sort((a,b)=>b-a)                //降順ソート(破壊的)
+    arr.reverse()                       //逆ソート(破壊的)
     -----------------------------------------------------------
-    sorted = arr.toSorted((a,b)=>a-b)  //昇順ソート(2023)
-    sorted = arr.toReversed()          //逆ソート(2023)
+    sorted = arr.toSorted((a,b)=>a-b)   //昇順ソート(2023)
+    sorted = arr.toReversed()           //逆ソート(2023)
 
 - KEY: js.array.method.toString
   EXPLAIN: 配列・文字列化
@@ -300,6 +300,25 @@
 #-------------------------------
 # Set & Map
 #-------------------------------
+
+- KEY: js.map.array2Map
+  EXPLAIN: Array->Map 型エラーに注意
+  BODY: |
+    ■ [NG] Array => Map 生成
+    const data = [["A","M1"],["B","M2"]];  
+
+    [NG] 型エラー: Type 'string[]' is not assignable to type 'readonly [unknown, unknown]'
+
+    const map1 = new Map(data);             // [NG] 型エラー
+    const map2 = new Map(Array.from(data)); // [NG] 型エラー
+    const map3 = new Map(data.map(n=>n));   // [NG] 型エラー
+
+    ■ [OK] Array => Map 生成
+    const data = [["A","M1"],["B","M2"]] as const; <----- [OK] 注意
+
+    const map1 = new Map(data);             // [OK]
+    const map2 = new Map(Array.from(data)); // [OK]
+    const map3 = new Map(data.map(n=>n));   // [OK]
 
 - KEY: js.map.set2map
   EXPLAIN: Obj->Set->Map
@@ -386,15 +405,3 @@
   EXPLAIN: jsonの構造表現
   BODY: |
     JSON.stringify(obj, undefined, 3)
-
-#-------------------------------
-#
-#-------------------------------
-
-# - KEY: xxxxx
-#   EXPLAIN:
-#   BODY: |
-
-# - KEY: xxxxx
-#   EXPLAIN:
-#   BODY: |
