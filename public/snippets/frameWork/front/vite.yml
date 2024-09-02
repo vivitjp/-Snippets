@@ -2,6 +2,12 @@
 #-------------------------------
 # JS Framework Frontend
 #-------------------------------
+- KEY: fe.vite.install
+  EXPLAIN: インストール
+  BODY: |
+    ■ Project
+    npm create vite
+    [NG] yarn create vite               // Lib Error
 
 - KEY: fe.vite.hot.reload
   EXPLAIN: ホットリロード修正

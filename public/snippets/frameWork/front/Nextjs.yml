@@ -31,7 +31,7 @@
     √ Would you like to use ESLint? ... No / Yes
     √ Would you like to use Tailwind CSS? ... No / Yes
     √ Would you like to use `src/` directory? ... No / Yes
-    √ Would you like to use App Router? (recommended) ... No / Yes
+    √ Would you like to use App Router? (recommended) ... No / Yes  <---- * app or src
     √ Would you like to customize the default import alias (@/*)? ... No / Yes
     Creating a new Next.js app in B:\@Next\next_13\next13.
 
@@ -140,25 +140,54 @@
     ■ 13以前
     ./
       src/                              // Root
-        ├── page.tsx                    // /
-        └── hello
-            ├── page.tsx                // /hello?id=123
-            └── [id].tsx                // /hello/123
+        └── pages/
+            ├── index.tsx               // root: / 
+            └── hello/
+                ├── page.tsx            // /hello?id=123
+                └── [id].tsx            // /hello/123
 
     ■ 13以後(appの場合)
     ./
-      app/                              // Root
-        ├── global-error.tsx            // Root Error Page
-        ├── layout.tsx                  // Root Layout(HTML/BODY)
-        ├── page.tsx                    // /
-        └── hello                       
-            ├── error.tsx               // /hello Level Error Page
-            ├── layout.tsx              // /hello Level Layout(Section)
-            ├── page.tsx                // /hello?id=123
-            └── [id]
-                ├── page.tsx            // /hello/123
-                └── [name]      
-                    └── page.tsx        // /hello/123/john
+      app/                              // 名称指定: Root
+        ├── page.tsx                    // 名称指定: export default コンポーネント
+        ├── layout.tsx                  // 名称指定: Root Layout(HTML/BODY)
+        ├── loading.tsx                 // 名称指定: Root Loading Component
+        ├── template.tsx                // 名称指定: 共通UI定義(ページ遷移で毎回レンダリング)
+        ├── global-error.tsx            // 名称指定: Root Error Page
+        ├── hello/                      // PATH: /hello
+        │   ├── error.tsx               // 名称指定: /hello Level Error Page
+        │   ├── layout.tsx              // 名称指定: /hello Level Layout(Section)
+        │   ├── loading.tsx             // 名称指定: /Hello Loading
+        │   ├── page.tsx                // 名称指定(デフォルトファイル)
+        │   ├── template.tsx            // 名称指定: 共通UI定義
+        │   └── [id]/                   // 引数: /hello/123
+        │       ├── page.tsx
+        │       └── [name]/             // 引数: /hello/123/john
+        │           └── page.tsx
+        ├── address/                    // PATH: /address
+        │   ├── page.tsx                // 名称指定
+        │   └── _components             // プライベートpath(ルーティング非対象)
+        │       └── partsA.tsx
+        ├── patha/                      // PATH: /patha
+        │   └── [...ids].tsx            // 引数(MUST)
+        ├── pathb/                      // PATH: /pathb
+        │   └── [[...ids]].tsx          // 引数(OPTIONAL)
+        ├── (myGroup)/                  // グループ化: Routing path から除外
+        │   ├── group1/                 // PATH: /group1
+        │   │   └── page.tsx
+        │   └── group2/                 // PATH: /group2
+        │       └── page.tsx
+        ├── api/                        // 名称任意
+        │   └── name/                   // API PATH /api/name
+        │       └── route.tsx           // 名称指定: API route file(GET,POST,...)
+        ├── segment/                    // 名称任意
+        │   ├── @seg/                   // Parallel Routes Slot
+        │   │   └── page.tsx
+        │   └── layout.tsx              // レイアウトの引数として @seg 呼び出し(場所注意)
+        ├── _components/                // コンポーネント(プライベート)
+        │   ├── atom/
+        │   ├── molecules/
+        │   └── organism/
 
 - KEY: nextjs.app.router.query
   EXPLAIN: AppRouter Query
@@ -180,7 +209,6 @@
       }
 
     ■ 注: "use client"
-
     ・useSearchParams などの hooks は client 側での実装なので "use client" 必須
     ・ない場合の Error
 
@@ -251,59 +279,90 @@
     ■ URL: http://localhost:3000/pathb/             // OK: NOパラメタ
 
     ■ コード
-    type Props = {
-      params: { ids?: string[] }        // paramsは既定属性 & 引数(例:ids) Optional
-    }
-    export default function PathB({ params }: Props) {
-      return (
-        <div> PATH-B: {params.ids?.join("-") || "unknown"} </div>
-      )
-    }
+      type Props = {
+        params: { ids?: string[] }        // paramsは既定属性 & 引数(例:ids) Optional
+      }
+      export default function PathB({ params }: Props) {
+        return (
+          <div> PATH-B: {params.ids?.join("-") || "unknown"} </div>
+        )
+      }
 
 - KEY: nextjs.layout.root
   EXPLAIN: |
-    Layout: Root(HTML)
+    FILE: layout.tsx(root HTML)
   BODY: |
     ■ Root Layout(HTML: Server Component By default)
 
-    import type { Metadata } from "next";
-    import { Inter } from "next/font/google";
-    import "./globals.css";
+      import type { Metadata } from "next";
+      import { Inter } from "next/font/google";
+      import "./globals.css";
 
-    const inter = Inter({ subsets: ["latin"] });
+      const inter = Inter({ subsets: ["latin"] });
 
-    export const metadata: Metadata = {
-      title: "Next Sample 13",
-      description: "Generated by create next app",
-    };
+      export const metadata: Metadata = {
+        title: "Next Sample 13",
+        description: "Generated by create next app",
+      };
 
-    export default function RootLayout({ children }: Readonly<{
-      children: React.ReactNode;
-    }>) {
-      return (
-        <html lang="ja">                // Root Level には HTML & Body
-          <body className={inter.className}>
-            <div>Root Layout</div>
-            <div>{children}</div>
-          </body>
-        </html>
-      );
-    }
+      export default function RootLayout({ children }: Readonly<{
+        children: React.ReactNode;
+      }>) {
+        return (
+          <html lang="ja">                // Root Level には HTML & Body
+            <body className={inter.className}>
+              <div>Root Layout</div>
+              <div>{children}</div>
+            </body>
+          </html>
+        );
+      }
 
 - KEY: nextjs.layout.pages
   EXPLAIN: |
-    Layout: Pages
+    FILE: layout.tsx(sub paths)
   BODY: |
     ■ 各Page の nested Layout(Server Component By default)
     pages.tsx と同じフォルダ内にあり、pagesを wrap する
 
-    export default function DashboardLayout({
-      children,
-    }: {
-      children: React.ReactNode
-    }) {
-      return <section>{children}</section>
-    }
+      export default function DashboardLayout({
+        children,
+      }: {
+        children: React.ReactNode
+      }) {
+        return <section>{children}</section>
+      }
+
+- KEY: nextjs.layout.parallel.routes
+  EXPLAIN: |
+    Layout: Parallel Routes
+  BODY: |
+    ■ Tree
+      sub/                              // Sub path
+        ├── layout.tsx                  // sub Layout
+        └── @segA                       // segment dir
+            └ page.tsx                  // segment page
+
+    ■ [sub/@segA/page.tsx]
+      export default function page() {
+        return <div>Segment A</div>
+      }
+
+    ■ [sub/layout.tsx]
+      export default function RootLayout({
+        children,
+        seg1,                           // segment 自動取り込み
+      }: Readonly<{
+        children: React.ReactNode
+        seg1: React.ReactNode
+      }>) {
+        return (
+          <body className={inter.className}>
+            {seg1}
+            <div>{children}</div>
+          </body>
+        )
+      }
 
 - KEY: nextjs.css.global
   EXPLAIN: |
@@ -378,6 +437,30 @@
         )
       }
 
+- KEY: nextjs.loading
+  EXPLAIN: |
+    Loading Component(自動表示)
+  BODY: |
+    ■ Loading(Root & Local)
+
+    同レベルPATHのpageが読み込むコンポーネントの表示に遅延が発生
+    自動で読み込まれて表示
+
+    [/app/loading.tsx]                  // Root Level
+    "use client"
+    import { Circles } from "react-loader-spinner"
+
+    export default function Loading() {
+      return (
+        <Circles
+          height="100"
+          width="100"
+          color="#eee8aa"
+          visible={true}
+        />
+      )
+    }
+
 - KEY: nextjs.error.root
   EXPLAIN: |
     🔺 Error: Root
@@ -414,9 +497,30 @@
     }
 
 - KEY: nextjs.api
-  EXPLAIN: |
-    🔺 API
+  EXPLAIN: API Route
   BODY: |
+    ■ route.tsx                         必須 API ファイル名
+    ./
+      app/
+        ├── layout.tsx
+        ├── sub
+        │   └── api/                    // 名称任意
+        │       └── route.tsx           // GET /sub/api/
+        └── api/                        // 名称任意
+            └── address/
+                └── route.tsx           // GET /api/address/
+
+    ■ [route.tsx]                       // * index.tsx は無効
+    export async function GET() {
+      const URL = "https://vivit-mock-company.vercel.app/10"
+      const res = await fetch(URL, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      const data = await res.json()
+      return Response.json({ data })
+    }
 
 - KEY: nextjs.link
   EXPLAIN: Link(next/link)
@@ -427,13 +531,19 @@
     export default function Navbar() {  // Server Component
       return (
         <nav>
-          <Link href="/about"><a>About</a></Link>
+          <Link href="/about">About</Link>
         </nav>
       );
     }
 
-    ■ typedRoutes(v13~)                 //Routeの型補完
+    ■ 出力(#hash link でスクロール)
+    <Link href="/dashboard#settings">Settings</Link>
+    生成: <a href="/dashboard#settings">Settings</a>
 
+    ■ スクロールOff
+    <Link href="/dashboard" scroll={false}> Dashboard </Link>
+
+    ■ typedRoutes(v13~)                 // Routeの型補完
     [next.config.mjs]
     /** @type {import('next').NextConfig} */
     const nextConfig = {
@@ -443,11 +553,11 @@
     };
     export default nextConfig;
 
-- KEY: nextjs.link.
+- KEY: nextjs.link.usePathname
   EXPLAIN: Link(next/link) + usePathname
   BODY: |
-    ■ 自身のpath取得
-    'use client'                        // Client Component
+    ■ コンポーネントのpath取得
+    'use client'                        // ★Client Component
 
     import { usePathname } from 'next/navigation'
     import Link from 'next/link'
@@ -457,20 +567,17 @@
 
       return (
         <nav>
-          <Link className={`link ${pathname === "/" ? "active" : ""}`} href="/">
-            Home/
-          </Link>
           <Link
-            className={`link ${pathname === "/hello" ? "active" : ""}`}
-            href="/hello"
+            className={`link ${pathname === "/" ? "active" : ""}`}
+            href="/"
           >
-            Hello/
+            Home/
           </Link>
         </nav>
       )
     }
 
-- KEY: nextjs.navigation
+- KEY: nextjs.useRouter
   EXPLAIN: |
     useRouter(next/navigation: v13~)
   BODY: |
@@ -480,22 +587,169 @@
     ■ コード
     "use client"                        // Hooks には必須
 
-        // import { useRouter } from "next/router"  ★DEPRECATED
-        // Error: NextRouter was not mounted.
-
-    import { useRouter } from "next/navigation"
+    import { useRouter } from "next/navigation" // 新パッケージ
+    // import { useRouter } from "next/router"  ★DEPRECATED
 
     export default function Login() {
       const router = useRouter()
 
       const id = 456
       const login = () => {
-        router.push(`/hello/${id}`)     //引数付きの遷移
+        router.push(`/hello/${id}`)                  //引数付きの遷移
+        router.push('/dashboard', { scroll: false }) //Scroll Off
       }
 
       return (
         <div>
           <button onClick={login}>Log In</button>
         </div>
+      )
+    }
+
+- KEY: nextjs.redirect
+  EXPLAIN: redirect
+  BODY: |
+    ■ コード
+    [app/person/[id]/page.tsx]
+    import { redirect } from 'next/navigation'
+
+    export default async function Profile({ params }: { params: { id: string } }) {
+      const personId = await fetchPersonId(params.id)
+      if (!personId) redirect('/login')
+      ...
+    }
+
+    ■ 注意
+    ・デフォルト: 307(一時リダイレクト)
+    ・サーバー アクションで: 303(See Other)
+        POSTの結果として成功ページにリダイレクト
+    ・try/catch ブロックの外側で呼び出すこと
+    ・レンダリングプロセス中にクライアント コンポーネントでコール可能
+    ・イベントハンドラーではコール不可: 代わりに useRouter フック使用可
+    ・絶対 URL(外部リンク) もOK
+    ・レンダリング プロセスの前にリダイレクト: next.config.js またはミドルウェア使用
+
+- KEY: nextjs.history.pushState
+  EXPLAIN: window.history.pushState
+  BODY: |
+    ■ pushState
+    ページをリロードせずにブラウザの履歴スタックを更新するメソッド
+
+    ■ 定義
+    pushState(state, unused)
+    pushState(state, unused, url)
+
+      state: firefoxには16MBの制限
+      第2引数は未使用(歴史的意義)
+      url: 相対/絶対PATH
+
+    ■ 考察
+    pushState() の呼び出しは window.location = "#foo" とほぼ同じ
+
+    現在の URL と同一オリジンにある、あらゆる URL にすることが可能
+    (比較) window.location: ハッシュのみを変更したのであれば同じ文書にとどまる
+
+    URL 変更は非必須
+    (比較) window.location = "#foo"; 現ハッシュが #foo でない場合のみ新規の履歴項目作成
+
+    履歴項目に任意のデータ(state)関連づけ可能
+    (比較) ハッシュアプローチ: state を短い文字列にエンコードする必要あり
+
+
+    ■ コード
+    const state = { page_id: 1, user_id: 5 };
+    const url = "hello.html";
+    history.pushState(state, "", [url]);
+
+    ■ コード(クエリパラメタの変更)
+    const url = new URL(location);
+    url.searchParams.set("foo", "bar");
+    history.pushState({}, "", url);
+
+    ■ コード
+    'use client'
+    import { useSearchParams } from 'next/navigation'
+
+    export default function SortProducts() {
+      const searchParams = useSearchParams()
+
+      function updateSorting(sortOrder: string) {
+        const params = new URLSearchParams(searchParams.toString())
+        params.set('sort', sortOrder)
+        window.history.pushState(null, '', `?${params.toString()}`)
+      }
+
+      return (
+        <>
+          <button onClick={() => updateSorting('asc')}>Sort 正順</button>
+          <button onClick={() => updateSorting('desc')}>Sort 逆順</button>
+        </>
+      )
+    }
+
+- KEY: nextjs.history.replaceState
+  EXPLAIN: window.history.replaceState
+  BODY: |
+    ■ replaceState
+    ブラウザの履歴スタック上の現在のエントリを置き換え
+    前の状態に戻ることはできない
+
+    ■ 定義
+    replaceState(state, unused)
+    replaceState(state, unused, url)
+
+      state=null 可
+      第2引数は未使用(歴史的意義)
+      新しい URL は現在の URL と同じオリジン => オリジン違うと例外発生
+
+    ■ コード
+    const stateObj = { foo: "bar" };
+    history.pushState(stateObj, "", "bar.html");
+
+    ■ コード
+    'use client'
+
+    import { usePathname } from 'next/navigation'
+
+    export function LocaleSwitcher() {
+      const pathname = usePathname()
+
+      function switchLocale(locale: string) {
+        const newPath = `/${locale}${pathname}`
+        window.history.replaceState(null, '', newPath)
+      }
+
+      return (
+        <>
+          <button onClick={() => switchLocale('en')}>English</button>
+          <button onClick={() => switchLocale('fr')}>French</button>
+        </>
+      )
+    }
+
+- KEY: nextjs.image
+  EXPLAIN: Image
+  BODY: |
+    ■ 画像フォルダ
+
+    /app/...
+    /public/
+
+    ■ Image タグ使用
+      width, height, alt など必須項目あり
+
+    import Image from "next/image"
+    export default function Images() {
+      return (
+        <Image src="/image/mount.jpg" width={500} height={500} alt="image" />
+      )
+    }
+
+    ■ 静的Import(注意: pathが public から開始)
+
+    import mt from "/public/image/mt1.jpg"
+    export default function Images() {
+      return (
+        <Image src={mt} alt="image" />
       )
     }

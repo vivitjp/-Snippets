@@ -112,21 +112,43 @@
 - KEY: ts.typeof.keyof
   EXPLAIN: 型取得とKV
   BODY: |
+    ■ 配列から型作成
     const x = ["A", "B", "C"] as const
+
     type Keys = (typeof x)[number]           // "A"|"B"|"C"
     type Y = typeof x[0|1]                   // "A" | "B"
 
+    ■ 配列からオブジェクト型作成
+    const keys = ["A", "B", "C"] as const 
+    type Keys = { [K in typeof keys[number]] : number }
+
+    const values:Keys = { "A": 1, "B": 2, "C": 3 }
+
+    ■ オブジェクトから型作成時の比較(const有無)
     const o = { a: "A", b: "B" }
+
     type X = typeof o                        // {a:number;b:number;}
     type K = keyof X                         // "a" | "b"
     type Y = keyof typeof o                  // "a" | "b"
     type B = (typeof o)[keyof typeof o]      // string
 
     const o = { a: "A", b: "B" } as const
+
     type X = typeof o                        // { readonly a:"A"; readonly b:"B"; }
     type K = keyof X                         // "a" | "b"
     type Y = keyof typeof o                  // "a" | "b"
     type B = (typeof o)[keyof typeof o]      // "A" | "B"
+
+    ■ 配列からENUM作成
+    const array = ["A", "B", "C", "D"] as const
+    const ENUM_型式 = makeEnum(array);
+
+    function makeEnum<T extends readonly string[]>(定数配列: T) {
+      return 定数配列.filter(Boolean).reduce(
+      (acc, cur) => ({ ...acc, [cur]: cur }),
+      {} as {[key in typeof 定数配列[number]]: string}
+      );
+    }
 
 - KEY: ts.indexing
   EXPLAIN: 添字アクセス

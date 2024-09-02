@@ -235,6 +235,11 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.keysPackageRHF],
       },
       {
+        name: "🔺Chakra",
+        fileName: "ReactPackage/Chakra",
+        codeKeyTypes: [],
+      },
+      {
         name: "Storybook(v6):pk",
         fileName: "ReactPackage/Storybook",
         codeKeyTypes: [
@@ -310,8 +315,8 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.Express],
       },
       {
-        name: "Express Topics",
-        fileName: "/JSRuntime/nodejs/ExpressTopics",
+        name: "Express API",
+        fileName: "/JSRuntime/nodejs/ExpressAPI",
         codeKeyTypes: [codeKeys.Express],
       },
     ],
@@ -448,6 +453,7 @@ export const menuItems: menuByCategories[] = [
         fileName: "database/mongo",
         codeKeyTypes: [codeKeys.Mongo, codeKeys.Python],
         case_sensitive: false,
+        encodeRequired: false,
       },
       {
         name: "⛔PostgreSQL",

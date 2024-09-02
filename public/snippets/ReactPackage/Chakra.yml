@@ -1,0 +1,65 @@
+- KEY: chakra.setting
+  EXPLAIN: Provider設定
+  BODY: |
+    ■ [src/pages/_app.tsx]
+    import { theme } from "~/theme";
+    import { ChakraProvider } from "@chakra-ui/react";
+
+    return (
+      <ChakraProvider theme={theme}>
+        <Component {...pageProps} />
+      </ChakraProvider>
+    );
+
+    ■ [src/pages/theme.tsx]
+    import { extendTheme } from "@chakra-ui/react";
+
+    export const theme = extendTheme({
+      colors: {
+        primary: "black",
+        secondary: "#777",
+        lightgray: {
+          primary: "#999",
+          secondary: "#AAA",
+        },
+        label: "#AAA",
+        error: "red",
+        disabled: "#F7F7F7",
+      },
+      components: {
+        Checkbox: {
+          baseStyle: {
+            icon: {
+              color: "#4E4E4E",
+              background: "white",
+              borderColor: "gray.300",
+              _checked: {
+                background: "white",
+                borderColor: "gray.300",
+              },
+            },
+            control: {
+              border: "2px",
+              borderColor: "gray.300",
+              background: "white",
+              borderRadius: "base",
+              _checked: {
+                borderColor: "#4E4E4E",
+                background: "white",
+                _hover: {
+                  background: "white",
+                  borderColor: "#4E4E4E",
+                },
+              },
+              _hover: {
+                background: "white",
+              },
+            },
+            label: {
+              fontWeight: "medium",
+              color: "gray.900",
+            },
+          },
+        },
+      },
+    });

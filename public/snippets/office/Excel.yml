@@ -2,6 +2,45 @@
 # Excel
 # ----------------------------
 
+- KEY: excel.search.index
+  EXPLAIN: |
+    検索: INDEX()
+  BODY: |
+    =INDEX(LookupVector, RowIndex[, ColumnIndex])
+
+        LookupVector   複数行列の範囲指定
+        RowIndex       行Index
+        ColumnIndex    列Index
+
+  SAMPLE: |
+    <div class="row" style="align-items:flex-start;gap:20px">
+      <table class="excel">
+        <thead>
+          <th></th><th> A </th><th> B </th>
+        </thead>
+        <tbody>
+          <tr><td> 1 </td><td> 頻度 </td><td> 色 </td></tr>
+          <tr><td> 2 </td><td> 4.14 </td><td> 赤 </td></tr>
+          <tr><td> 3 </td><td> 4.19 </td><td> 橙 </td></tr>
+          <tr><td> 4 </td><td> 5.17 </td><td> 黄 </td></tr>
+          <tr><td> 5 </td><td> 5.77 </td><td> 緑 </td></tr>
+        </tbody>
+      </table>
+      <div class="col">
+        <div class="row">
+          <div class="rowBorder"> =INDEX(A2:B:5, 2, 2) </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> 橙 </div>
+        </div>
+        <div class="row">
+          <div class="rowBorder"> =INDEX(A2:B:5, 2) </div>
+          <div class="row"> ⇒ </div>
+          <div class="rowBorder"> 4.19 </div>
+          <div class="rowBorder"> 橙 </div>
+        </div>
+      </div>
+    </div>
+
 - KEY: excel.search.lookup
   EXPLAIN: |
     検索: LOOKUP()
@@ -23,7 +62,7 @@
           <tr><td> 3 </td><td> 4.19 </td><td> 橙 </td></tr>
           <tr><td> 4 </td><td> 5.17 </td><td> 黄 </td></tr>
           <tr><td> 5 </td><td> 5.77 </td><td> 緑 </td></tr>
-          <tr><td> 5 </td><td> 5.77 </td><td> 青 </td></tr>
+          <tr><td> 6 </td><td> 3.23 </td><td> 青 </td></tr>
         </tbody>
       </table>
       <div class="col">
