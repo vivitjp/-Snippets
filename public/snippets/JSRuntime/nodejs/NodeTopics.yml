@@ -54,7 +54,7 @@
     help          ヘルプ出力
 
 #-------------------------------
-# Node: Volta
+# Node: NVM
 #-------------------------------
 
 - KEY: node.nvm.version.control

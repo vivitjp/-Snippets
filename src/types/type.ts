@@ -1,18 +1,33 @@
 //------------------
 // 型
+
+import { CSSProperties } from "react"
+
+type TDAlign = "center" | "justify" | "left" | "right" | "char" | undefined
+
 //------------------
 export type Options = {
   COLS?: number
 }
 
 export type YAMLData = {
-  KEY: string
-  BODY: string
-  EXPLAIN?: string
-  OPTIONS?: Options
-  SAMPLE?: string
-  STYLE?: string
-  FOLD?: string
+  KEY: string // Snippets Key
+  EXPLAIN?: string // Snippets タイトル
+  BODY: string // Snippets 本体
+  //------------------------------------
+  OPTIONS?: Options // カラム数設定 {COLS:n}
+  SAMPLE?: string // HTML
+  STYLE?: string // CSS style
+  FOLD?: string // 折りたたみ
+  TABLE?: {
+    // テーブル
+    OPTION?: {
+      WIDTH?: CSSProperties["width"]
+      ALIGN?: TDAlign[]
+      HAS_TITLE?: boolean // BODYの最初の行がタイトルかどうか
+    }
+    BODY: string
+  }
 }
 
 export type KeyDef = {
@@ -27,6 +42,14 @@ export type SnippetsObject = {
   sample?: string
   style?: string
   fold?: string[]
+  table?: {
+    options?: {
+      width?: CSSProperties["width"]
+      align?: TDAlign[]
+      hasTitle?: boolean // BODYの最初の行がタイトルかどうか
+    }
+    body: string[]
+  }
   codeKeyTypes?: KeyDef[]
 }
 

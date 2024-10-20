@@ -256,3 +256,40 @@ export const Range = styled(NumberRange)<Div>`
     color: var(--main-color);
   `}
 `
+
+type Table = Pick<
+  CSSProperties,
+  AttrPadding | AttrMargin | AttrBorder | AttrShadow | AttrColor
+> &
+  Custom
+
+export const Table = styled.table<Table>`
+  ${(props) => css`
+    width: ${props.width ?? "200px"};
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+  `}
+`
+
+export const THead = styled.thead`
+  border: 1px solid #ccc;
+`
+
+export const TH = styled.th`
+  border: 1px solid #ccc;
+`
+
+export const TBody = styled.tbody`
+  border: 1px solid #ccc;
+`
+
+export const TR = styled.tr`
+  border: 1px solid #ccc;
+`
+export const TD = styled.td`
+  ${(props) => css`
+    border: 1px solid #ccc;
+    text-align: ${props.align ?? "center"};
+    padding: 5px:
+  `}
+`

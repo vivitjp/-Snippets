@@ -375,8 +375,8 @@ export const menuItems: menuByCategories[] = [
     category: "クラウド",
     items: [
       {
-        name: "⛔AWS",
-        fileName: "",
+        name: "🔺AWS",
+        fileName: "cloud/AWS",
         codeKeyTypes: [],
       },
     ],
@@ -526,9 +526,9 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.Jest],
       },
       {
-        name: "⛔RTL",
-        fileName: "",
-        codeKeyTypes: [codeKeys.Jest],
+        name: "RTL(React Testing Library)",
+        fileName: "Test/RTL",
+        codeKeyTypes: [codeKeys.Jest, codeKeys.RTL],
       },
       {
         name: "⛔Cypress",

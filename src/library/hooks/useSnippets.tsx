@@ -2,7 +2,17 @@ import { useEffect, useState } from "react"
 import { Snippets } from "../../types/type"
 import { copyToClipboard } from "../utilities/copyToClipboard"
 import { makeSnippets } from "./makeSnippets"
-import { Column, Row } from "../../common/styleDiv"
+import {
+  Column,
+  Div,
+  Row,
+  Table,
+  TBody,
+  TD,
+  TH,
+  THead,
+  TR,
+} from "../../common/styleDiv"
 import { Button } from "../../common/styleInput"
 import { syntaxHighlight } from "../syntaxHighlighter/syntaxHighlighter"
 import { useSelect } from "./useSelect"
@@ -97,12 +107,12 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
                   {/* <DivPrefix>{snippetsObject.prefix}</DivPrefix> */}
                 </SummaryWrapper>
 
-                {/* 🔴highlightedBody(options) */}
+                {/* 🔴[OPTIONS.COLS] highlightedBody(options) */}
                 <DetailInside colCount={snippetsObject.options?.COLS || 1}>
                   {highlightedBody}
                 </DetailInside>
 
-                {/* 🔴折りたたみ(Details & Summary) */}
+                {/* 🔴[FOLD] 折りたたみ(Details & Summary) */}
                 {highlightedFold?.length && (
                   <Details noShadow={true}>
                     <SummaryWrapper>
@@ -114,25 +124,65 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
                   </Details>
                 )}
 
-                {/* 🔴HTML サンプル(style & sample) */}
-                <>
-                  {snippetsObject.style && (
-                    <style>{snippetsObject.style}</style>
-                  )}
-                  {snippetsObject.sample && (
-                    <Row
-                      justifyContent="flex-start"
-                      alignItems="center"
-                      marginTop="10px"
-                      padding="10px"
-                      gap="10px"
-                      boxShadow="0px 0px 5px rgba(0, 0, 0, 0.1)"
-                      dangerouslySetInnerHTML={{
-                        __html: snippetsObject.sample,
-                      }}
-                    />
-                  )}
-                </>
+                {/* 🔴[STYLE & SAMPLE] HTML サンプル(style & sample) */}
+                {snippetsObject.style && <style>{snippetsObject.style}</style>}
+                {snippetsObject.sample && (
+                  <Row
+                    justifyContent="flex-start"
+                    alignItems="center"
+                    marginTop="10px"
+                    padding="10px"
+                    gap="10px"
+                    boxShadow="0px 0px 5px rgba(0, 0, 0, 0.1)"
+                    dangerouslySetInnerHTML={{
+                      __html: snippetsObject.sample,
+                    }}
+                  />
+                )}
+
+                {/* 🔴[TABLE] テーブル */}
+                {snippetsObject?.table && (
+                  <Div padding={"10px"}>
+                    <Table
+                      width={snippetsObject?.table.options?.width || "300px"}
+                    >
+                      {snippetsObject?.table.options?.hasTitle && (
+                        <THead>
+                          <TR>
+                            {snippetsObject?.table.body?.[0]
+                              ?.split("\t")
+                              .map((th, index) => (
+                                <TH key={index}>{th}</TH>
+                              ))}
+                          </TR>
+                        </THead>
+                      )}
+                      <TBody>
+                        {snippetsObject?.table.body
+                          ?.splice(1)
+                          .map((line, i) => {
+                            console.log(snippetsObject?.table?.options)
+                            return (
+                              <TR key={i}>
+                                {line?.split("\t").map((td, j) => (
+                                  <TD
+                                    key={`${i}-${j}`}
+                                    align={
+                                      snippetsObject?.table?.options?.align?.[
+                                        j
+                                      ] || "center"
+                                    }
+                                  >
+                                    {td.trim()}
+                                  </TD>
+                                ))}
+                              </TR>
+                            )
+                          })}
+                      </TBody>
+                    </Table>
+                  </Div>
+                )}
               </Details>
             </Column>
           )

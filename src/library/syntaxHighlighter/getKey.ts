@@ -21,6 +21,7 @@ import { keysNextjs } from "./keys/Nextjs"
 import { keysPackage } from "./keys/Package"
 import { keysPackageRHF } from "./keys/PackageRHF"
 import { keysPython } from "./keys/Python"
+import { keysRTL } from "./keys/RTL"
 import { keysReact } from "./keys/React"
 import { keysRegExp } from "./keys/RegExp"
 import { keysSwagger } from "./keys/Swagger"
@@ -46,6 +47,7 @@ export const codeKeys = {
   Git: "Git",
   Lint: "Lint",
   Jest: "Jest",
+  RTL: "RTL",
   Jotai: "Jotai",
   Linux: "Linux",
   MySql: "MySql",
@@ -84,6 +86,7 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   Git: keysGit,
   Lint: keysLint,
   Jest: keysJest,
+  RTL: keysRTL,
   Jotai: keysJotai,
   Linux: keysLinux,
   MySql: keysMySql,
