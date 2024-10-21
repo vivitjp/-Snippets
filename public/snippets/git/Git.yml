@@ -29,6 +29,27 @@
 
     git -c user.name=<value> -c user.email=<email> commit -m "test"
 
+- KEY: git.first.steps
+  EXPLAIN: |
+    最初の一歩: Repository
+  BODY: |
+    1) ローカルにレポジトリ作成
+
+      git init
+
+    2) 現在、local git から gitHub へ publish する
+
+      A) VSCode の publish ボタンを押す
+
+      B) gitHub CLI を使用して publish する
+
+        gh repo create --source=. --public
+
+      C) 先に gitHub にブランチを作成して origin をセットする
+
+        git remote add origin https://vivitjp:ghp_xxxxxxx@github.com/vivitjp/git_test1.git
+        git push -u origin
+
 - KEY: git.remote
   EXPLAIN: remote(リモートリポジトリ)=origin
   BODY: |
