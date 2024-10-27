@@ -1,5 +1,10 @@
-- KEY: chakra.setting
-  EXPLAIN: Provider設定
+- KEY: chakra.install
+  EXPLAIN: install URL
+  BODY: |
+    https://www.chakra-ui.com/docs/get-started/frameworks/next-app
+
+- KEY: chakra.setting.pages.provider
+  EXPLAIN: Provider 設定(pages)
   BODY: |
     ■ [src/pages/_app.tsx]
     import { theme } from "~/theme";
@@ -11,6 +16,9 @@
       </ChakraProvider>
     );
 
+- KEY: chakra.setting.pages.extendTheme
+  EXPLAIN: extendTheme 設定サンプル
+  BODY: |
     ■ [src/pages/theme.tsx]
     import { extendTheme } from "@chakra-ui/react";
 

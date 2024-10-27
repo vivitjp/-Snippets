@@ -62,6 +62,20 @@
     ■ ブラウザ確認
     http://localhost:3000
 
+- KEY: nextjs.install.old
+  EXPLAIN: インストール(古バージョン)
+  BODY: |
+    $ npx create-next-app@13 --use-npm
+
+    npmでバージョン確認
+    https://www.npmjs.com/package/create-next-app?activeTab=versions
+
+    15.0.0-rc.1       rc
+    15.0.2-canary.2   canary
+    15.0.1            latest
+    13.5.7            next-13 <-- npx create-next-app@13 --use-npm
+    14.1.1            next-12-3-2
+
 - KEY: nextjs.package.json
   EXPLAIN: package.json
   BODY: |

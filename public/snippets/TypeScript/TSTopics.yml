@@ -4,6 +4,31 @@
 #-------------------------------
 
 #-------------------------------
+# ENUM
+#-------------------------------
+- KEY: ts.enum.maker
+  EXPLAIN: makeEnum:const配列からenum(Object)作成
+  BODY: |
+    function makeEnum<T extends readonly string[]>(const配列: T) {
+        return const配列.filter(Boolean).reduce(
+        (acc, cur) => {
+            return { ...acc, [cur]: cur };
+        },
+        {} as {
+            [key in typeof const配列[number]]: string;
+        }
+        );
+    }
+
+    const Enum型式 = makeEnum(["A", "B", "C", "D"] as const);
+    // const Enum型式: {
+    //     A: string;
+    //     B: string;
+    //     C: string;
+    //     D: string;
+    // }
+
+#-------------------------------
 # union
 #-------------------------------
 - KEY: ts.union.fromObject

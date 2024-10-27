@@ -405,3 +405,80 @@
   EXPLAIN: jsonの構造表現
   BODY: |
     JSON.stringify(obj, undefined, 3)
+
+#-------------------------------
+# Null, Undefined,...
+#-------------------------------
+- KEY: js.json.infinite
+  EXPLAIN: infinite/undefined/null
+  BODY: |
+    isFinite(1)                         //True
+    isFinite(Number(""))                //=> 0 True
+    isFinite(Number(null))              //=> 0 True
+    isFinite(1/0)                       //False
+    isFinite(Number(1/0))               //False
+    isFinite(Number(undefined))         //False
+
+    Number("")                          // 0
+    Number(0)                           // 0
+    Number(null)                        // 0
+    Number(undefined)                   // NaN
+    Number(NaN)                         // NaN
+    Number("A")                         // NaN
+
+    String(1 / 1)                       // 1
+    String(1 / Number(""))              // "Infinity"
+    String(1 / Number(undefined) || "") // ""
+    String((1 / Number(null) || "")     // "Infinity"
+
+    1/0 < 0                             // false
+    1/0 < 1                             // false
+    1/0 === Infinity                    // true
+    1/0 === 1/0                         // true
+
+    String(1/0)                         // "Infinity"
+    Number(1/0) / 1                     // Infinity
+    Number(1/0) / 0                     // Infinity
+
+    1/0)                                // Infinity
+    1/(1/0)                             // 0
+    1 / (1/0) || ""                     // ""
+    1*(1/0) || ""                       // Infinity
+    1+(1/0) || ""                       // Infinity
+    1-(1/0) || ""                       // -Infinity
+    isFinite(1/0)                       // false
+    String(1/0)                         // "Inifinity"
+    Number(String(1/0))                 // Inifinity
+
+- KEY: js.json.Validity
+  EXPLAIN: Validity 検査
+  BODY: |
+    const isValid = (value: unknown|unknown[]): boolean => {
+        const valueArray =(Array.isArray(value)) ? value : [value]
+        for(const item of valueArray){
+            const numValue = Number(item);
+            if(item === null ||
+            item === undefined ||
+            isNaN(numValue) ||
+            !isFinite(numValue)) return false
+        }
+        return true
+    };
+
+    console.log(isValid(1))
+    console.log(isValid("0"))
+    console.log(isValid("1"))
+    console.log(isValid("1.5"))
+    console.log(isValid(""))
+    console.log(isValid(["0", "1", "1.5", ""]))
+
+    console.log(isValid(null))
+    console.log(isValid(undefined))
+    console.log(isValid(NaN))
+    console.log(isValid("A"))
+    console.log(isValid("１"))
+    console.log(isValid(["0", "1", "1.5", undefined]))
+    console.log(isValid(["0", "1", "1.5", NaN]))
+    console.log(isValid(["0", "1", "1.5", null]))
+    console.log(isValid(["0", "1", "1.5", Infinity]))
+    console.log(isValid([null, undefined, NaN, "A", "1A", "１"]))

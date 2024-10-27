@@ -174,7 +174,7 @@
     const c:S = { a:1, b:2, c:3 }
 
 - KEY: ts.mapped.types
-  EXPLAIN: Keyの集合(in)
+  EXPLAIN: Mapped Types(in)
   BODY: |
     type A = number | string
     type X = { [key in A]: number }
@@ -184,6 +184,17 @@
 
     const o: B = { a: 1, b: "a" }
     type Z = { [key in keyof typeof o]: number }  //{ a:number, b:number }
+
+    ■ 比較
+    type Sample = "A" | "B"
+    type ObjA = {[name in Sample]: number}
+    type ObjB = Record<Sample, number>
+
+    const objA1:ObjA = { "A": 1 }
+    const objA2:ObjA = { "A": 1, "B": 2 }
+
+    const objB1:ObjB = { "A": 1 }
+    const objB2:ObjB = { "A": 1, "B": 2 }
 
 - KEY: ts.alias(as)
   EXPLAIN: エイリアス
