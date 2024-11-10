@@ -14,6 +14,9 @@
       npm ls [-g] --depth=0
       yarn [Global] list --depth=0
 
+      *use bash
+      npm list --depth=0 | grep XXX
+
     ■ binの場所
       npm bin [-g]
       yarn [Global] bin

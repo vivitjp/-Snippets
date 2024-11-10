@@ -102,7 +102,7 @@
   BODY: |
     ■ data と error data の構造が違う。取得時の添字の型に注意
 
-    type Phases = "phase1" | "phase2";
+    type Section = "section1" | "section2";
     type Attrs = "name" | "age";
 
     const defaultData = {
@@ -111,25 +111,25 @@
     };
     type DefaultDataHidden = typeof defaultData;
 
-    type Data = Partial<Record<`${Phases}.${Attrs}`, string>>;
+    type Data = Partial<Record<`${Section}.${Attrs}`, string>>;
     const data: Data = {
-      "phase1.name": "John",
-      "phase1.age": "Tokyo",
-      "phase2.name": "Jim",
-      "phase2.age": "LA",
+      "section1.name": "John",
+      "section1.age": "Tokyo",
+      "section2.name": "Jim",
+      "section2.age": "LA",
     };
 
     type ErrorDataHidden = Record<
-      Phases,
+      Section,
       Record<keyof DefaultDataHidden, { message: string }>
     >;
 
     const errorData: ErrorDataHidden = {
-      phase1: {
+      section1: {
         name: { message: "Must be String" },
         age: { message: "Must be Number" },
       },
-      phase2: {
+      section2: {
         name: { message: "Must be String" },
         age: { message: "Must be Number" },
       },
@@ -143,11 +143,11 @@
       type DefaultDataKeys = keyof DefaultData;
 
       type DataKeys = keyof typeof data;
-      const phases = ["phase1", "phase2"];
+      const section = ["section1", "section2"];
 
-      phases.forEach((phase) => {
-        const keyName = "name" as DefaultDataKeys;                              //添字の型
-        const res1 = data?.[`${phase}.${keyName}` as DataKeys] || "Unknown";
+      section.forEach((section) => {
+        const keyName = "name" as DefaultDataKeys;     //添字の型
+        const res1 = data?.[`${section}.${keyName}` as DataKeys] || "Unknown";
         console.log(keyName, res1);
       });
     }
@@ -160,10 +160,10 @@
       const dataKeys = Object.keys(data);
 
       dataKeys.forEach((key) => {
-        const [phase, attr] = key.split(".");
-        const [phase, attr] = key.split(".") as [Phases, keyof DefaultData] ;   //添字の型
-        const res1 = errorData?.[phase]?.[attr]?.message || "Unknown";
-        console.log(phase, attr, res1);
+        const [section, attr] = key.split(".");
+        const [section, attr] = key.split(".") as [Section, keyof DefaultData] ;   //添字の型
+        const res1 = errorData?.[section]?.[attr]?.message || "Unknown";
+        console.log(section, attr, res1);
       });
     }
 
@@ -172,7 +172,7 @@
 #-------------------------------
 
 - KEY: pk.rhf.byContext.parent
-  EXPLAIN: 1) By Context 親
+  EXPLAIN: 1親) By Context 親
   BODY: |
     import { useForm, SubmitHandler, FormProvider } from "react-hook-form"
     import { ChildByContext } from "./ChildByContext"
@@ -203,7 +203,7 @@
     }
 
 - KEY: pk.rhf.byContext.child
-  EXPLAIN: 1) By Context 子
+  EXPLAIN: 1子) By Context 子
   BODY: |
     import { useFormContext } from "react-hook-form"
 
@@ -224,7 +224,7 @@
 #-------------------------------
 
 - KEY: pk.rhf.byPram.parent
-  EXPLAIN: 2) By Parameter 親
+  EXPLAIN: 2親) By Parameter 親
   BODY: |
     import { useForm, SubmitHandler } from "react-hook-form"
     import { ChildByMethod } from "./ChildByMethod"
@@ -255,7 +255,7 @@
     }
 
 - KEY: pk.rhf.byPram.child
-  EXPLAIN: 2) By Parameter 子
+  EXPLAIN: 2子) By Parameter 子
   BODY: |
     import { UseFormReturn } from "react-hook-form"
     import { SimpleType } from "./RHFByMethod"
@@ -281,7 +281,7 @@
 #-------------------------------
 
 - KEY: pk.rhf.byControl.parent
-  EXPLAIN: 3) By Control 親
+  EXPLAIN: 3親) By Control 親
   BODY: |
     import { SubmitHandler, useForm, useWatch } from "react-hook-form"
     import { SampleControlInput } from "./SampleControlInput"
@@ -401,7 +401,7 @@
     }
 
 - KEY: pk.rhf.byControl.child
-  EXPLAIN: 3) By Control 子
+  EXPLAIN: 3子) By Control 子
   BODY: |
     import { Controller, Path, UseFormReturn } from "react-hook-form"
     import { Input as ChakraInput } from "@chakra-ui/react"
@@ -557,5 +557,139 @@
             <Submit value={"OK"} />
           </Row>
         </form>
+      )
+    }
+
+#-------------------------------
+# Generic Organism
+#-------------------------------
+- KEY: pk.rhf.generic.organism.a
+  EXPLAIN: ジェネリック(Organism) A:子
+  BODY: |
+    ■ Organism Component A
+
+    export type PersonA = {
+      name: string
+      age: string
+    }
+
+    type Props<T extends PersonA> = {
+      methods: UseFormReturn<T>
+    }
+
+    //なんでも受けいられるので型をEnumで自律制御する必要あり
+    const items: (keyof PersonA)[] = ["name", "age"] as const
+    const eItems = makeEnum(items)
+
+    export const SectionPersonA = <T extends PersonA>({ methods }: Props<T>) => {
+      const watchName = useWatch({
+        control: methods.control,
+        name: "name" as Path<T>,
+      })
+
+      useEffect(() => {
+        methods.setValue("age" as Path<T>, watchName)
+      }, [watchName])
+
+      return (
+        <Flex>
+          // keyName で型上書き（ただし）
+          <MyInput methods={methods} keyName={eItems.name as Path<T>} />
+          <MyInput methods={methods} keyName={eItems.age as Path<T>} />
+        </Flex>
+      )
+    }
+
+    ■ SectionAddress 省略
+
+- KEY: pk.rhf.generic.organism.a
+  EXPLAIN: ジェネリック(Organism) A:親
+  BODY: |
+    import { useForm } from "react-hook-form"
+    import { Button, Flex } from "@chakra-ui/react"
+    import { PersonA, SectionPersonA } from "./SectionPersonA"
+    import { SectionAddress, type Address } from "./SectionAddress"
+
+    const defaultValues: PersonA & Address = {
+      name: "1-john A",
+      age: "1-202 A",
+      city: "1-tokyo A",
+      zip: "1-895 A",
+    }
+
+    export const SetAA = () => {
+      const methods = useForm<PersonA & Address>({ defaultValues, mode: "onBlur" })
+
+      const handleLog = () => {
+        console.log(methods.getValues())
+      }
+
+      return (
+        <Flex flexFlow={"column"} justifyContent={"flex-start"}>
+          <SectionPersonA methods={methods} />
+          <SectionAddress methods={methods} />
+          <Button onClick={handleLog}>Log</Button>
+        </Flex>
+      )
+    }
+
+#-------------------------------
+# Generic Organism
+#-------------------------------
+- KEY: pk.rhf.generic.organism.b
+  EXPLAIN: ジェネリック(Organism) B:子
+  BODY: |
+    export type PersonA = {
+      name: string
+      age: string
+    }
+
+    type Props = {
+      methods: UseFormReturn<PersonA>
+    }
+
+    export const SectionPersonA = ({ methods }: Props) => {
+      const watchName = useWatch({
+        control: methods.control,
+        name: "name" as Path<PersonA>,
+      })
+
+      useEffect(() => {
+        methods.setValue("age" as Path<PersonA>, watchName)
+      }, [watchName])
+
+      return (
+        <Flex>
+          <MyInput methods={methods} keyName={"name"} />
+          <MyInput methods={methods} keyName={"age"} />
+        </Flex>
+      )
+    }
+    ■ SectionAddress 省略
+
+- KEY: pk.rhf.generic.organism.b
+  EXPLAIN: ジェネリック(Organism) A:親
+  BODY: |
+    const defaultValues: PersonA & Address = {
+      name: "2-john A",
+      age: "2-202 A",
+      city: "2-tokyo A",
+      zip: "2-895 A",
+    }
+
+    export const SetBA = () => {
+      const methods = useForm<PersonA & Address>({ defaultValues, mode: "onBlur" })
+
+      const handleLog = () => {
+        console.log(methods.getValues())
+      }
+
+      return (
+        <Flex flexFlow={"column"} justifyContent={"flex-start"}>
+          // methodsの型を上書き
+          <SectionPersonA methods={methods as unknown as UseFormReturn<PersonA>} />
+          <SectionAddress methods={methods as unknown as UseFormReturn<Address>} />
+          <Button onClick={handleLog}>Log</Button>
+        </Flex>
       )
     }

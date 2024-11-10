@@ -12,6 +12,9 @@ export type Options = {
 
 export type YAMLData = {
   KEY: string // Snippets Key
+  //------------------------------------
+  CATEGORY?: string // カテゴリタイトル
+  //------------------------------------
   EXPLAIN?: string // Snippets タイトル
   BODY: string // Snippets 本体
   //------------------------------------
@@ -37,6 +40,7 @@ export type KeyDef = {
 export type SnippetsObject = {
   prefix: string
   scope?: string | undefined
+  category?: string
   body: string[]
   options?: Options
   sample?: string

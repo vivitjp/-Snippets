@@ -9,108 +9,126 @@
     ■ husky Git
     https://typicode.github.io/husky/
 
-    ■ husky & lint-staged
-    npm install -D husky lint-staged
-    yarn add --dev husky lint-staged
-
-    ■ husky 初期化
-    [DEP] npx husky install
-    npx husky init
-
-      以下のファイルを生成
-      .husky/_/prepare-commit-msg
-      .husky/_/pre-commit                           // コミット前
-      .husky/_/pre-rebase
-      .husky/_/pre-push                             // プッシュ前
-      .husky/_/pre-auto-gc
-      .husky/_/pre-applypatch
-      .husky/_/post-rewrite
-      .husky/_/post-merge
-      .husky/_/post-commit
-      .husky/_/post-checkout
-      .husky/_/post-applypatch
-
-    ■ 手動生成(pre-commitフックの設定ファイル生成)
-    npx husky add .husky/pre-commit "npx lint-staged"
-
-    ■ DIR内の構成
-    .husky/husky.sh             // 中身が空
-    .husky/pre-commit
+- KEY: husky.setting.title
+  CATEGORY: 設定
 
 - KEY: husky.setting.pre-commit
   EXPLAIN: 設定(pre-commit)
   BODY: |
     ■ [pre-commit]
 
-      #!/usr/bin/env sh
-      . "$(dirname -- "$0")/husky.sh"   # 中身が空
+#-------------------------------
+# husky
+#-------------------------------
 
-      npx lint-staged
+# - KEY: husky.install
+#   EXPLAIN: インストール
+#   BODY: |
+#     ■ husky Git
+#     https://typicode.github.io/husky/
 
-- KEY: husky.setting.package.json
-  EXPLAIN: 設定(package.json) 必須
-  BODY: |
-    ■ [package.json](必須)
-      "lint-staged": {
-        "*.{js,jsx,ts,tsx}": "npm run lint"
-      },
+#     ■ husky & lint-staged
+#     npm install -D husky lint-staged
+#     yarn add --dev husky lint-staged
 
-- KEY: husky.setting.lintstagedrc
-  EXPLAIN: 設定(lintstagedrc) 必須
-  BODY: |
-    ■ [.lintstagedrc.js](必須)
+#     ■ husky 初期化
+#     [DEP] npx husky install
+#     npx husky init
 
-    ■ Sample 1
-    export default {
-      '**/*.{ts,tsx}': [
-        () => 'tsc --incremental false --noEmit', // 型チェック
-      ],
-    };
+#       以下のファイルを生成
+#       .husky/_/prepare-commit-msg
+#       .husky/_/pre-commit                           // コミット前
+#       .husky/_/pre-rebase
+#       .husky/_/pre-push                             // プッシュ前
+#       .husky/_/pre-auto-gc
+#       .husky/_/pre-applypatch
+#       .husky/_/post-rewrite
+#       .husky/_/post-merge
+#       .husky/_/post-commit
+#       .husky/_/post-checkout
+#       .husky/_/post-applypatch
 
-    ■ Sample 2 (Callback Samples)
-    export default {
-      '**/*.ts?(x)': () => 'tsc -p tsconfig.json --noEmit',
-      'src/**/*.{js,jsx,ts,tsx}': 'eslint --fix --no-ignore --max-warnings=0',
-      'src/**/*.{css,scss}': 'stylelint --fix',
-      'src/**/*': 'prettier --write --ignore-unknown'
-    }
+#     ■ 手動生成(pre-commitフックの設定ファイル生成)
+#     npx husky add .husky/pre-commit "npx lint-staged"
 
-    ■ Sample 3 (Next Sample)
-      const path = require('path');
+#     ■ DIR内の構成
+#     .husky/husky.sh             // 中身が空
+#     .husky/pre-commit
 
-      const buildEslintCommand = (filenames) =>
-        `next lint --fix --file ${filenames
-          .map((f) => path.relative(process.cwd(), f))
-          .join(' --file ')}`;
+# - KEY: husky.setting.pre-commit
+#   EXPLAIN: 設定(pre-commit)
+#   BODY: |
+#     ■ [pre-commit]
 
-      module.exports = {
-        '*.{ts,tsx}': [
-          () => 'tsc --incremental false --noEmit', // 型チェック
-          buildEslintCommand,
-          
-          // Prettierフォーマット(必要に応じて)
-          // "prettier --write --ignore-path .gitignore './**/*.{js,jsx,ts,tsx,json,css}'",
-        ],
-      };
+#       #!/usr/bin/env sh
+#       . "$(dirname -- "$0")/husky.sh"   # 中身が空
 
-- KEY: git.action.pre-commit
-  EXPLAIN: Git Action による pre-commit
-  BODY: |
-    ■ [.git/hooks/pre-commit]
+#       npx lint-staged
 
-    huskyを使用せずに、git action による
+# - KEY: husky.setting.package.json
+#   EXPLAIN: 設定(package.json) 必須
+#   BODY: |
+#     ■ [package.json](必須)
+#       "lint-staged": {
+#         "*.{js,jsx,ts,tsx}": "npm run lint"
+#       },
 
-    #!/bin/bash
-    cd ./src         # Target Directory
+# - KEY: husky.setting.lintstagedrc
+#   EXPLAIN: 設定(lintstagedrc) 必須
+#   BODY: |
+#     ■ [.lintstagedrc.js](必須)
 
-    targetFiles=$(git diff --staged --relative --name-status --diff-filter=AM  | grep -E "\.(ts|tsx|js|jsx|json|md)" | sed -e "s/^.*\t//")
-    yarn run eslint ${targetFiles}
-    if [ $? != "0" ] ; then
-        exit 1
-    fi
+#     ■ Sample 1
+#     export default {
+#       '**/*.{ts,tsx}': [
+#         () => 'tsc --incremental false --noEmit', // 型チェック
+#       ],
+#     };
 
-    BRANCH=$(git symbolic-ref HEAD | sed -e "s|^refs/heads/||")
-    if [ $BRANCH = "develop" ] || [ $BRANCH = "main" ]; then
-        echo "${BRANCH}へのコミットは禁止です"
-        exit 1
-    fi
+#     ■ Sample 2 (Callback Samples)
+#     export default {
+#       '**/*.ts?(x)': () => 'tsc -p tsconfig.json --noEmit',
+#       'src/**/*.{js,jsx,ts,tsx}': 'eslint --fix --no-ignore --max-warnings=0',
+#       'src/**/*.{css,scss}': 'stylelint --fix',
+#       'src/**/*': 'prettier --write --ignore-unknown'
+#     }
+
+#     ■ Sample 3 (Next Sample)
+#       const path = require('path');
+
+#       const buildEslintCommand = (filenames) =>
+#         `next lint --fix --file ${filenames
+#           .map((f) => path.relative(process.cwd(), f))
+#           .join(' --file ')}`;
+
+#       module.exports = {
+#         '*.{ts,tsx}': [
+#           () => 'tsc --incremental false --noEmit', // 型チェック
+#           buildEslintCommand,
+
+#           // Prettierフォーマット(必要に応じて)
+#           // "prettier --write --ignore-path .gitignore './**/*.{js,jsx,ts,tsx,json,css}'",
+#         ],
+#       };
+
+# - KEY: git.action.pre-commit
+#   EXPLAIN: Git Action による pre-commit
+#   BODY: |
+#     ■ [.git/hooks/pre-commit]
+
+#     huskyを使用せずに、git action による
+
+#     #!/bin/bash
+#     cd ./src         # Target Directory
+
+#     targetFiles=$(git diff --staged --relative --name-status --diff-filter=AM  | grep -E "\.(ts|tsx|js|jsx|json|md)" | sed -e "s/^.*\t//")
+#     yarn run eslint ${targetFiles}
+#     if [ $? != "0" ] ; then
+#         exit 1
+#     fi
+
+#     BRANCH=$(git symbolic-ref HEAD | sed -e "s|^refs/heads/||")
+#     if [ $BRANCH = "develop" ] || [ $BRANCH = "main" ]; then
+#         echo "${BRANCH}へのコミットは禁止です"
+#         exit 1
+#     fi

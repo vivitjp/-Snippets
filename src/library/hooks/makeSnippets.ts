@@ -38,13 +38,26 @@ export const makeSnippets = async ({ file, scope }: Props) => {
   const returnData: Snippets = {}
   try {
     jsonData.forEach(
-      ({ KEY, BODY, EXPLAIN, OPTIONS, SAMPLE, STYLE, FOLD, TABLE }) => {
+      ({
+        KEY,
+        BODY,
+        EXPLAIN,
+        CATEGORY,
+        OPTIONS,
+        SAMPLE,
+        STYLE,
+        FOLD,
+        TABLE,
+      }) => {
         const key = EXPLAIN ?? KEY
         returnData[key] = {
           prefix: KEY,
           body: BODY?.trim().split("\n"),
         }
         if (scope) returnData[key].scope = scope
+
+        //■ CATEGORY
+        if (CATEGORY) returnData[key].category = CATEGORY
 
         //■ OPTIONS
         if (OPTIONS) returnData[key].options = OPTIONS

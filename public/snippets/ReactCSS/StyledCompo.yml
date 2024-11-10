@@ -3,6 +3,45 @@
 # Package: Styled Component
 #-------------------------------
 
+- KEY: pk.styled.install
+  EXPLAIN: Styled-Components インストール
+  BODY: |
+    ■ インストール時にバージョンの整合性に注意
+      環境によって型エラーが出たりする
+
+    ■ "next": "13.4.4",
+    "styled-components": "^6.1.1",
+    "@types/styled-components": "^5.1.30",
+
+    ■ "vite": "^4.3.2",
+    "styled-components": "5.3.6",
+    "@types/styled-components": "^5.1.26",
+
+#-------------------------------
+# error 解消
+#-------------------------------
+- KEY: pk.styled.error
+  EXPLAIN: エラー解消
+  BODY: |
+    styled-components: unknown prop の警告を解消する2つの方法
+
+    ■ Errorコード
+    const StyledCopy = styled.p`
+      text-align: ${({ align }) => `${align}`};
+    `;
+
+    ■ 修正コード
+    const StyledCopy = styled.p`
+      text-align: ${({ $align }) => `${$align}`};
+    `;
+
+    ■ 使用
+    const Copy = ({ align = 'center', children, ...props }) => (
+      <StyledCopy {...props} align={align}>
+        {children}
+      </StyledCopy>
+    );
+
 #-------------------------------
 # Div Row / Column
 #-------------------------------

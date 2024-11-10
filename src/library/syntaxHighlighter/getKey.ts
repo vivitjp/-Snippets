@@ -1,5 +1,6 @@
 import { KeyDef } from "../../types/type"
 import { keysCSS } from "./keys/CSS"
+import { keysChakra } from "./keys/Chakra"
 import { keysClassTransformer } from "./keys/ClassTransformer"
 import { keysClassValidator } from "./keys/ClassValidator"
 import { keysDOM } from "./keys/DOM"
@@ -49,6 +50,7 @@ export const codeKeys = {
   Jest: "Jest",
   RTL: "RTL",
   Jotai: "Jotai",
+  Chakra: "Chakra",
   Linux: "Linux",
   MySql: "MySql",
   Curl: "Curl",
@@ -102,6 +104,7 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   Env: keysEnv,
   Excel: keysExcel,
   TSConfig: keysTSConfig,
+  Chakra: keysChakra,
 }
 
 export const getMergedKeys = (codeKeyTypes: string[] | undefined) => {

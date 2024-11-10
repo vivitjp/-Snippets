@@ -35,14 +35,19 @@ export const SelectSet = <T,>({
   )
 }
 
-const Select = styled.select<CSSProperties>`
-  width: ${({ width = 160 }) => `${width}px`};
-  height: ${({ height = 40 }) => `${height}px`};
+const Select = styled.select<{
+  $width?: CSSProperties["width"]
+  $height?: CSSProperties["height"]
+  $fontSize?: CSSProperties["fontSize"]
+}>`
+  width: ${({ $width = 160 }) => `${$width}px`};
+  height: ${({ $height = 40 }) => `${$height}px`};
   padding: 0;
   padding-left: 10px;
   border: 1px solid #aaa;
   background-color: white;
   border-radius: 5px;
   box-shadow: 0 0 5px #eee;
-  font-size: ${({ fontSize }) => `${fontSize ? `${fontSize}px` : "inherit"}`};
+  font-size: ${({ $fontSize }) =>
+    `${$fontSize ? `${$fontSize}px` : "inherit"}`};
 `

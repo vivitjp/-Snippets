@@ -235,9 +235,9 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.keysPackageRHF],
       },
       {
-        name: "🔺Chakra",
+        name: "Chakra",
         fileName: "ReactPackage/Chakra",
-        codeKeyTypes: [],
+        codeKeyTypes: [codeKeys.Chakra],
       },
       {
         name: "Storybook(v6):pk",

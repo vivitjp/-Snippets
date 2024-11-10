@@ -1,4 +1,5 @@
-import styled, { CSSProperties, css } from "styled-components"
+import { CSSProperties } from "react"
+import styled, { css } from "styled-components"
 
 type AttrPosition = "position" | "top" | "bottom" | "right" | "left" | "zIndex"
 type AttrFlex =
@@ -158,11 +159,11 @@ export const Column = styled(Div)`
 `
 
 export const Row = styled(Div)`
-  ${(props) => css`
+  ${({ justifyContent, alignItems }) => css`
     display: flex;
     flex-direction: row;
-    justify-content: ${props.justifyContent ?? "flex-start"};
-    align-items: ${props.alignItems ?? "flex-start"};
+    justify-content: ${justifyContent ?? "flex-start"};
+    align-items: ${alignItems ?? "flex-start"};
   `}
 `
 export const Section = styled(Div)`

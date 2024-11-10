@@ -767,3 +767,93 @@
         <Image src={mt} alt="image" />
       )
     }
+
+- KEY: nextjs.style
+  EXPLAIN: Next の Style 比較
+  BODY: |
+    ■ 種類
+    StyledComponent
+    CSS Modules
+    Styled JSX
+    Sass/SCSS
+    Tailwind CSS
+
+    ■ StyledComponent
+
+      import styled from 'styled-components';
+
+      const Title = styled.h1`
+        color: green;
+      `;
+
+      function Component() {
+        return <Title>Hello, World!</Title>;
+      }
+
+      export default Component;
+
+    ■ CSS Modules
+
+      【styles/Button.module.css】
+      .error {
+        color: white;
+        background-color: red;
+      }
+
+      【components/Button.js】
+      import styles from './Button.module.css'
+
+      export function Button() {
+        return (
+          <button className={styles.error}>
+            Delete
+          </button>
+        )
+      }
+
+    ■ Styled JSX
+
+      function Button() {
+        return (
+          <>
+            <button>Click me</button>
+            <style jsx>{`
+              button {
+                background-color: blue;
+                color: white;
+              }
+            `}</style>
+          </>
+        )
+      }
+
+    ■ Sass/SCSS
+
+      【styles/Button.module.scss】
+      $primary-color: blue;
+
+      .button {
+        background-color: $primary-color;
+        color: white;
+        
+        &:hover {
+          background-color: darken($primary-color, 10%);
+        }
+      }
+
+      【components/Button.js】
+      import styles from './Button.module.scss'
+
+      export function Button() {
+        return <button className={styles.button}>Click me</button>
+      }
+
+    ■ Tailwind CSS
+
+      function Button() {
+        return (
+          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Click me
+          </button>
+        )
+      }
