@@ -77,6 +77,20 @@
       },
     });
 
+- KEY: chakra.components.style.title
+  CATEGORY: |
+    CSS Style
+
+- KEY: chakra.setting.style.sample
+  EXPLAIN: Style 定義
+  BODY: |
+    ■
+    import { Box } from "@chakra-ui/react"
+
+    <Box m={2}>Tomato</Box>             => theme.space[2]
+    <Box maxW="960px" mx="auto" />
+    <Box m={[2, 3]} />                  `8px`,`12px`,～
+
 - KEY: chakra.components.layout.title
   CATEGORY: |
     コンポーネント: Layout
@@ -1025,10 +1039,10 @@
     <Tabs isFitted variant='enclosed'>
     <Tabs size='md' variant='enclosed'>
     <Tabs variant='soft-rounded' colorScheme='green'>
+    <Tabs onChange={(idx) => {...}} defaultIndex={initialTab}>
       <TabList>
         <Tab>One</Tab>
         <Tab>Two</Tab>
-        <Tab>Three</Tab>
       </TabList>
 
       <TabPanels>
@@ -1038,11 +1052,26 @@
         <TabPanel>
           <p>two!</p>
         </TabPanel>
-        <TabPanel>
-          <p>three!</p>
-        </TabPanel>
       </TabPanels>
     </Tabs>
+
+    ■ 動的タブ変更サンプル
+    function ControlledExample() {
+      const [tabIndex, setTabIndex] = useState(0)
+      const handleTabsChange =(index)=>{ setTabIndex(index)}
+      return (
+        <Tabs index={tabIndex} onChange={handleTabsChange}>
+          <TabList>
+            <Tab>One</Tab>
+            <Tab>Two</Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel> <p>Click</p> </TabPanel>
+            <TabPanel> <p>Yeah</p>  </TabPanel>
+          </TabPanels>
+        </Tabs>
+      )
+    }
 
 - KEY: chakra.components.disclosure.VisuallyHidden
   EXPLAIN: Visually Hidden
@@ -1317,6 +1346,9 @@
 - KEY: chakra.hooks.useBoolean
   EXPLAIN: useBoolean
   BODY: |
+    オン、オフ、トグル関数でブール値管理
+
+    ■ サンプル
     function Example() {
       const [flag, setFlag] = useBoolean()
 
@@ -1333,6 +1365,10 @@
 - KEY: chakra.hooks.useBreakpointValue
   EXPLAIN: useBreakpointValue
   BODY: |
+    responsive オブジェクトから現在のブレークポイントの値を返す
+    デフォルトでSSRで向けに構築(メディアクエリでは誤った値が一瞬表示)
+
+    ■ サンプル
     function Example() {
       const variant = useBreakpointValue(
         {
@@ -1340,8 +1376,8 @@
           md: 'solid',
         },
         {
-          // Breakpoint to use when mediaqueries cannot be used, 
-          // such as in server-side rendering(Defaults to 'base')
+          // SSRなど、メディアクエリが使用できない場合のブレークポイント
+          // (Defaults to 'base')
           fallback: 'md',
         },
       )
@@ -1356,9 +1392,16 @@
       )
     }
 
+    クライアント側でレンダリングされる場合は ssr 引数を利用、初レンダリングで正しい値を取得
+
+    ■ サンプル
+    const buttonSize = useBreakpointValue({ base: 'sm', lg: 'md' }, { ssr: false })
+    const breakpoint = useBreakpoint({ ssr: false })
+
 - KEY: chakra.hooks.useClipboard
   EXPLAIN: useClipboard
   BODY: |
+
     function Example() {
       const placeholder = 'text to be copied...'
       const { onCopy, value, setValue, hasCopied } = useClipboard('')
@@ -1398,130 +1441,325 @@
       )
     }
 
-    ■ useMemo を使用しないのはなぜですか?
+    ■ useMemo を使用しないのはなぜか?
 
-    React のドキュメントには、エンジンが以前にメモ化した値の一部を「忘れ」て次回のレンダリング時に再計算することを選択する可能性があるため、useMemo なしでも動作するようにコードを記述し、パフォーマンスを最適化するために useMemo を追加する必要があると記載されています。useMemo は、依存関係に基づいて値を再計算する必要がある場合にのみ使用してください。
+    メモ化済の値の一部を「忘れ」て次レンダリング時に再計算する可能性があり、useMemo なしでも動作させ、パフォーマンス最適化のために useMemo を追加すべし。useMemo は、依存関係に基づいて値を再計算する必要がある場合にのみ使用すべし。
 
     ■ useStateを使用しない理由
 
-    これは定数として機能しますが、意味的に間違っており、必要のないレデューサー処理によりコストがかかります。
+    定数として機能するが意味的に間違いで、不必要なレデューサー処理によりコスト高
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+- KEY: chakra.hooks.useControllableProp
+  EXPLAIN: |
+    Hooks: useControllableProp
+  BODY: |
+    const [isControlled, value] = useControllableProp(propValue, stateValue)
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+    function Example() {
+      const [value, setValue] = useControllableState({ defaultValue: 40 })
+      return (
+        <div>
+          <Button onClick={() => setValue(value + 1)}>+</Button>
+          <Box as='span' w='200px' mx='24px'>
+            {value}
+          </Box>
+          <Button onClick={() => setValue(value - 1)}>-</Button>
+        </div>
+      )
+    }
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+- KEY: chakra.hooks.useDimensions
+  EXPLAIN: |
+    Hooks: useDimensions
+  BODY: |
+    function example() {
+      const elementRef = useRef()
+      const dimensions = useDimensions(elementRef)
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+      return (
+        <Box ref={elementRef} color='white' width='fit-content' bg='blue.700' p={4}>
+          <Heading>
+            <code>borderBox</code> dimensions
+          </Heading>
+          <List>
+            <ListItem>
+              The Width: {dimensions && dimensions.borderBox.width}
+            </ListItem>
+            <ListItem>
+              The x coordinate: {dimensions && dimensions.borderBox.x}
+            </ListItem>
+          </List>
+        </Box>
+      )
+    }
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+- KEY: chakra.hooks.useDisclosure
+  EXPLAIN: |
+    Hooks: useDisclosure
+  BODY: |
+    ■ isOpen, onOpen, onClose
+    function Example() {
+      const { isOpen, onOpen, onClose } = useDisclosure()
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+      return (
+        <>
+          <Button onClick={onOpen}>Open Drawer</Button>
+          <Drawer placement='right' onClose={onClose} isOpen={isOpen}>
+            <DrawerOverlay />
+            <DrawerContent>
+              <DrawerHeader borderBottomWidth='1px'>Basic Drawer</DrawerHeader>
+              <DrawerBody>
+                <p>Some contents...</p>
+                <p>Some contents...</p>
+                <p>Some contents...</p>
+              </DrawerBody>
+            </DrawerContent>
+          </Drawer>
+        </>
+      )
+    }
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+    ■ getDisclosureProps, getButtonProps
+    function Basic() {
+      const { getDisclosureProps, getButtonProps } = useDisclosure()
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+      const buttonProps = getButtonProps()
+      const disclosureProps = getDisclosureProps()
+      return (
+        <>
+          <Button {...buttonProps}>Toggle Me</Button>
+          <Text {...disclosureProps} mt={4}>
+            This text is being visibly toggled hidden and shown by the button.
+            <br />
+            (Inspect these components to see the rendered attributes)
+          </Text>
+        </>
+      )
+    }
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+- KEY: chakra.hooks.useMediaQuery
+  EXPLAIN: |
+    Hooks: useMediaQuery
+  BODY: |
+    const [isLargerThan800] = useMediaQuery('(min-width: 800px)')
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+    // ssr-friendly media query with fallback
+    const [isLargerThan800] = useMediaQuery('(min-width: 800px)', {
+      ssr: true,
+      fallback: false, // return false on the server, and re-evaluate on the client side
+    })
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+    function Example() {
+      const [isLargerThan1280] = useMediaQuery('(min-width: 1280px)')
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+      return (
+        <Text>
+          {isLargerThan1280 ? 'larger than 1280px' : 'smaller than 1280px'}
+        </Text>
+      )
+    }
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+- KEY: chakra.hooks.useMergeRefs
+  EXPLAIN: |
+    Hooks: useMergeRefs
+  BODY: |
+    複数の ref を単一の ref にマージ
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+    ■ 外部と内部の ref を連結
+    function Example({ ref, ...props }) {
+      const internalRef = React.useRef()
+      const refs = useMergeRefs(internalRef, ref)
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+      return (
+        <div {...props} ref={refs}>
+          A div with multiple refs.
+        </div>
+      )
+    }
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+    ■ 本体と外部の ref を連結
+    function Example({ ref, ...props }) {
+      const outsideRef = React.useRef()
+      const { isOpen, onOpen, onClose } = useDisclosure()
+      const { popperRef, referenceRef } = usePopper()
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+      useOutsideClick({
+        ref: outsideRef,
+        handler: () => isOpen && onClose(),
+      })
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+      const buttonEl = useMergeRefs(outsideRef, referenceRef)
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+      return (
+        <>
+          <button ref={buttonEl} onClick={onOpen}>
+            Click me to see the popover
+          </button>
+          {isOpen && (
+            <Box ref={popperRef} bg='green'>
+              Click outside to close me
+            </Box>
+          )}
+        </>
+      )
+    }
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+- KEY: chakra.hooks.useOutsideClick
+  EXPLAIN: |
+    Hooks: useOutsideClick
+  BODY: |
+    参照要素の外側でイベントが発生するとコールされる
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+    function Example() {
+      const ref = React.useRef()
+      const [isModalOpen, setIsModalOpen] = React.useState(false)
+      useOutsideClick({
+        ref: ref,
+        handler: () => setIsModalOpen(false),
+      })
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+      return (
+        <>
+          {isModalOpen ? (
+            <div ref={ref}>
+              👋 Hey, I'm a modal. Click anywhere outside of me to close.
+            </div>
+          ) : (
+            <button onClick={() => setIsModalOpen(true)}>Open Modal</button>
+          )}
+        </>
+      )
+    }
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+- KEY: chakra.hooks.usePrefersReducedMotion
+  EXPLAIN: |
+    Hooks: usePrefersReducedMotion
+  BODY: |
+    ユーザーがモーションの軽減を好むかどうかを示すブール値を返す
+    ブラウザの window.matchMedia に依存
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+    import { Image, keyframes, usePrefersReducedMotion } from '@chakra-ui/react'
+    import logo from './logo.svg'
+
+    const spin = keyframes`
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    `
+
+    function Example() {
+      const prefersReducedMotion = usePrefersReducedMotion()
+
+      const animation = prefersReducedMotion
+        ? undefined
+        : `${spin} infinite 20s linear`
+
+      return <Image animation={animation} src={logo} {...props} />
+    }
+
+- KEY: chakra.hooks.useTheme
+  EXPLAIN: |
+    Hooks: useTheme
+  BODY: |
+    コンテキストからテーマ オブジェクトを取得
+
+    function Example() {
+      const theme = useTheme()
+      return <div>{/* Do something with the theme */}</div>
+    }
+
+- KEY: chakra.hooks.useToken
+  EXPLAIN: |
+    Hooks: useToken
+  BODY: |
+    テーマからデザイントークンを解決
+    sx prop と テーマ トークン で記述も可能
+
+    function Example() {
+      const [red100, blue200] = useToken(
+        // key: `theme.colors`
+        'colors',
+        // subkey(s): `theme.colors.red.100`
+        ['red.100', 'blue.200'],
+      )
+
+      return (
+        <Box p={4} boxShadow={`inset 0 4px 0 ${red100}, 0 0 8px ${blue200}`}>
+          <Code>useToken</Code> to create a <Code>boxShadow</Code>
+        </Box>
+      )
+    }
+
+- KEY: chakra.hooks.xxx
+  EXPLAIN: |
+    Hooks: xxx
+  BODY: |
+
+- KEY: chakra.hooks.xxx
+  EXPLAIN: |
+    Hooks: xxx
+  BODY: |
+
+- KEY: chakra.hooks.xxx
+  EXPLAIN: |
+    Hooks: xxx
+  BODY: |
+
+- KEY: chakra.hooks.xxx
+  EXPLAIN: |
+    Hooks: xxx
+  BODY: |
+
+- KEY: chakra.hooks.xxx
+  EXPLAIN: |
+    Hooks: xxx
+  BODY: |
+
+- KEY: chakra.hooks.xxx
+  EXPLAIN: |
+    Hooks: xxx
+  BODY: |
+
+- KEY: chakra.hooks.xxx
+  EXPLAIN: |
+    Hooks: xxx
+  BODY: |
+
+- KEY: chakra.hooks.xxx
+  EXPLAIN: |
+    Hooks: xxx
+  BODY: |
+
+- KEY: chakra.hooks.xxx
+  EXPLAIN: |
+    Hooks: xxx
+  BODY: |
+
+- KEY: chakra.hooks.xxx
+  EXPLAIN: |
+    Hooks: xxx
+  BODY: |
+
+- KEY: chakra.hooks.xxx
+  EXPLAIN: |
+    Hooks: xxx
+  BODY: |
+
+- KEY: chakra.hooks.xxx
+  EXPLAIN: |
+    Hooks: xxx
+  BODY: |
+
+- KEY: chakra.hooks.xxx
+  EXPLAIN: |
+    Hooks: xxx
+  BODY: |
+
+- KEY: chakra.hooks.xxx
+  EXPLAIN: |
+    Hooks: xxx
+  BODY: |
+
+- KEY: chakra.hooks.xxx
+  EXPLAIN: |
+    Hooks: xxx
+  BODY: |

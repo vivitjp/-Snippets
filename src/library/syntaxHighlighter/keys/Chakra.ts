@@ -180,14 +180,31 @@ export const keysChakra: KeyDef = {
   // ■ 青
   ForestGreen: ["useBoolean", "useBreakpointValue", "useClipboard", "useConst"],
 
-  // ■ ゴールド
-  Goldenrod: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-  // ■ オレンジ
-  DarkOrange: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-  // ■ グレー
-  "#555": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-  // ■ 青緑
-  CadetBlue: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+  // // ■ ゴールド
+  // Goldenrod: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+  // // ■ オレンジ
+  // DarkOrange: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+  // // ■ グレー
+  // "#555": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+  // // ■ 青緑
+  // CadetBlue: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
   // ■ 紫
-  DarkOrchid: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+  DarkOrchid: [
+    "useBoolean",
+    "useBreakpointValue",
+    "useClipboard",
+    "useConst",
+    "useControllableProp",
+    "useDimensions",
+    "useDisclosure",
+    "useMediaQuery",
+    "useMergeRefs",
+    "useOutsideClick",
+    "usePrefersReducedMotion",
+    "",
+    "",
+    "",
+    "",
+    "",
+  ],
 }

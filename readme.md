@@ -46,3 +46,7 @@ _イタリック_
 本文本文本文[^注釈]
 
 [^注釈]: public\snippets\document\more.md
+
+Removed: 2024-11-17
+"@types/styled-components": "^5.1.26",
+"styled-components": "5.3.6",

@@ -8,90 +8,150 @@
     ■ React Hook Formを1年以上運用してきたちょっと良く使うためのTips
     https://zenn.dev/yuitosato/articles/292f13816993ef
 
-- KEY: pk.rhf.keywords
-  EXPLAIN: 引数とメソッド
+- KEY: chakra.components.api.title
+  CATEGORY: API
+
+- KEY: pk.rhf.api.useForm
+  EXPLAIN: API useForm
   BODY: |
-    ■ useForm
     const method = useForm({
-      mode,                  // onChange | onBlur | onSubmit | onTouched | all
-      reValidateMode,        // Validation strategy after submitting behaviour.
-      defaultValues,         // フォームのデフォルト値
-      values,                // フォーム値を更新するためのリアクティブな値
-      errors,                // フォームエラーを更新するためのリアクティブエラー
-      resetOptions,          // 新しいフォーム値の更新中にフォーム状態の更新をリセットするオプション
-      criteriaMode,          // すべての検証エラーを表示するか、一度に 1 つずつ表示
-      shouldFocusError,      // 組み込みのフォーカス管理を有効または無効にします
-      delayError,            // エラーが即座に表示されるのを遅らせます
-      shouldUseNativeValidation, // ブラウザ組み込みのフォーム制約 API を使用
-      shouldUnregister,      // アンマウント後の入力登録解除を有効または無効に
+      mode,                             // onChange | onBlur | onSubmit | onTouched | all
+      reValidateMode,                   // Validation strategy after submitting behaviour.
+      defaultValues,                    // フォームのデフォルト値
+      values,                           // フォーム値を更新するためのリアクティブな値
+      errors,                           // フォームエラーを更新するためのリアクティブエラー
+      resetOptions,                     // 新しいフォーム値の更新中にフォーム状態の更新をリセットするオプション
+      criteriaMode,                     // すべての検証エラーを表示するか、一度に 1 つずつ表示
+      shouldFocusError,                 // 組み込みのフォーカス管理を有効または無効にします
+      delayError,                       // エラーが即座に表示されるのを遅らせます
+      shouldUseNativeValidation,        // ブラウザ組み込みのフォーム制約 API を使用
+      shouldUnregister,                 // アンマウント後の入力登録解除を有効または無効に
     });
 
-    ■ mode
-      mode: onChange | onBlur | onSubmit | onTouched | all
-
-    ■ method
-    const {
-      register,              // フォームフィールド登録
-      handleSubmit,          // フォームの送信処理
-      reset,                 // フォームリセット
-      watch,                 // フィールド値監視
-      control,               // Controller で使用
-      setValue,              // フィールド値設定(個別)
-      getValues,             // フィールド値取得(全体)
-      formState,             // フォームステート(dirty, isSubmitted, touched, submitCount, error...)
-      -----------------
-      trigger,               // 子コンポーネントへの引数
-      setFocus,              // ref.current.focus() の代用
+- KEY: pk.rhf.api.method
+  EXPLAIN: API method
+  BODY: |
+    method: {
+      register,                         // フォームフィールド登録
       unregister,
+      -----------------
+      handleSubmit,                     // フォームの送信処理
+      reset,                            // フォームリセット
+      watch,                            // フィールド値監視
+      control,                          // Controller で使用
+      -----------------
+      setValue,                         // フィールド値設定(個別)
+      getValues,                        // フィールド値取得(全体)
+      -----------------
+      formState,                        // フォームステート
+      getFieldState,
+      -----------------
+      trigger,                          // 子コンポーネントへの引数
+      setFocus,                         // ref.current.focus() の代用
+      -----------------
       clearErrors,
       setError,
-      getFieldState,
       resetField,
-    } = method
-
-    ■ formState
-    errors                    // object
-    defaultValues             // object
-    isValid                   // boolean
-    isDirty                   // boolean
-    dirtyFields               // object
-    touchedFields             // object
-    isSubmitted               // boolean
-    isSubmitSuccessful        // boolean
-    isSubmitting              // boolean
-    isLoading                 // boolean
-    submitCount               // number
-    isValidating              // boolean
-    validatingFields          // boolean
-
-    ■ field
-    type field = {
-      value,                  // コンポーネント値
-      ref,                    // Reactのref
-      name,                   // (String) 登録名
-      onChange,               // (Function) 変更イベントメソッド
-      onBlur,                 // (Function) ロストフォーカスイベントメソッド
-    },
-
-    ■ fieldState
-    type fieldState = {
-      invalid,                // (Boolean) 全入力値のバリディティ
-      isTouched,              // (Boolean) 一度でもタッチされたか
-      isDirty,                // (Boolean) 入力が変更されたか
-      error,                  // (Object) エラー情報
     }
 
-- KEY: pk.rhf.vlidation
+- KEY: pk.rhf.api.method.formState
+  EXPLAIN: API method formState
+  BODY: |
+    ■ formState: {
+      defaultValues                     // object
+      errors                            // object
+      isValid                           // boolean
+      isDirty                           // boolean
+      disabled                          // boolean
+
+      dirtyFields                       // object
+      touchedFields                     // object
+      validatingFields                  // boolean
+
+      isLoading                         // boolean ロード中
+      isSubmitting                      // boolean サブミット中
+      isValidating                      // boolean バリデーション中
+      isSubmitSuccessful                // boolean サブミットOK
+      isSubmitted                       // boolean サブミット終了
+      submitCount                       // number  サブミット回数
+    }
+
+    ■ field: {
+      value,                            // コンポーネント値
+      ref,                              // Reactのref
+      name,                             // String: 登録名
+      onChange,                         // Function: 変更イベントメソッド
+      onBlur,                           // Function: ロストフォーカスイベントメソッド
+    },
+
+    ■ fieldState: {
+      invalid,                          // Boolean: 全入力値のValidity
+      isTouched,                        // Boolean: 一度でもタッチされたか
+      isDirty,                          // Boolean: 入力が変更されたか
+      error,                            // Object: エラー情報
+    }
+
+- KEY: pk.rhf.form.onSubmit
+  EXPLAIN: form onSubmit
+  BODY: |
+    export default function App() {
+      const { register, handleSubmit } = useForm<FormValues>()
+      const onSubmit: SubmitHandler<FormValues> = async(data)=>{ //非同期バージョン
+        try {
+          // await fetch()
+          // console.log(data)
+        } catch (e) { ... }
+      };
+
+      return (
+        <form onSubmit = { handleSubmit(onSubmit) }>
+            * handleSubmitがコールされると直ぐに Validation が走る
+            * すべての Validity が true になったら初めて onSubmit がコールされる
+            * onSubmit ではデータの出力のみを扱う
+          <input {...register("firstName")} />
+          ...
+          <input type="submit" />
+        </form>
+      )
+    }
+
+- KEY: pk.rhf.validation
   EXPLAIN: バリデーション
   BODY: |
-    required      (共通)   required: "必須項目"
-    min           (number) min: { value: 1, message: "1以上の数値" },
-    max           (number) 
-    minLength     (string) minLength: { value: 4, message: "4文字以上必須" },
-    maxLength     (string) 
-    pattern       (string) { value: /^[a-zA-Z0-9]+$/, message: '半角英数字のみ' }
-    validate      (共通) 
-    valueAsNumber (型チェック) valueAsNumber: true,
+    required            // boolean      必須項目
+    disabled            // boolean      不要項目
+
+    ■ 一般
+    min                 // number       { min: 1, message: "1以上の数値" }
+    max                 // number 
+    minLength           // string       { minLength: 4, message: "4文字以上必須" }
+    maxLength           // string 
+    pattern             // 正規表現      { pattern: /^[a-zA-Z0-9]+$/, message: '半角英数字のみ' }
+
+    ■ 型変換(validation前に動作)
+    valueAsNumber       // boolean      型変換:数値
+    valueAsDate         // boolean      型変換:日付
+    setValueAs          // Function     { setValueAs: v => parseInt(v) }
+
+    ■ pattern           // Function
+    {...register("test", { pattern: /[A-Za-z]{3}/, message: '半角英数字のみ' })}
+
+    ■ validate(単数)    // Function
+    {...register("test", { validate: (value, formValues) => value === '1' })}
+
+    ■ validate(複数)    // { Key1:Function, Key2:Function,... }
+    {...register("test1", {
+      validate: {
+        positive:       v => parseInt(v) > 0,
+        lessThanTen:    v => parseInt(v) < 10,
+        validateNumber: (_, values) => !!(values.number1 + values.number2), 
+        checkUrl:       async () => await fetch(),
+      }
+    })}
+
+- KEY: pk.rhf.event
+  EXPLAIN: Event
+  BODY: |
 
 #-------------------------------
 # Data 構造
@@ -170,6 +230,8 @@
 #-------------------------------
 # By Context
 #-------------------------------
+- KEY: pk.rhf.byContext.title
+  CATEGORY: By Context
 
 - KEY: pk.rhf.byContext.parent
   EXPLAIN: 1親) By Context 親
@@ -222,6 +284,8 @@
 #-------------------------------
 # By Parameter
 #-------------------------------
+- KEY: pk.rhf.byPram.title
+  CATEGORY: By Parameter
 
 - KEY: pk.rhf.byPram.parent
   EXPLAIN: 2親) By Parameter 親
@@ -279,6 +343,8 @@
 #-------------------------------
 # By Control
 #-------------------------------
+- KEY: pk.rhf.byControl.title
+  CATEGORY: By Control
 
 - KEY: pk.rhf.byControl.parent
   EXPLAIN: 3親) By Control 親
@@ -445,6 +511,8 @@
 #-------------------------------
 # Generic Parent
 #-------------------------------
+- KEY: pk.rhf.generic.title
+  CATEGORY: Generic Components
 
 - KEY: pk.rhf.generic.parent
   EXPLAIN: ジェネリック 親
@@ -563,7 +631,10 @@
 #-------------------------------
 # Generic Organism
 #-------------------------------
-- KEY: pk.rhf.generic.organism.a
+- KEY: pk.rhf.generic.organism.a.title
+  CATEGORY: ジェネリック(Organism) A
+
+- KEY: pk.rhf.generic.organism.a.child
   EXPLAIN: ジェネリック(Organism) A:子
   BODY: |
     ■ Organism Component A
@@ -602,7 +673,7 @@
 
     ■ SectionAddress 省略
 
-- KEY: pk.rhf.generic.organism.a
+- KEY: pk.rhf.generic.organism.a.parent
   EXPLAIN: ジェネリック(Organism) A:親
   BODY: |
     import { useForm } from "react-hook-form"
@@ -636,7 +707,10 @@
 #-------------------------------
 # Generic Organism
 #-------------------------------
-- KEY: pk.rhf.generic.organism.b
+- KEY: pk.rhf.generic.organism.b.title
+  CATEGORY: ジェネリック(Organism) B
+
+- KEY: pk.rhf.generic.organism.b.child
   EXPLAIN: ジェネリック(Organism) B:子
   BODY: |
     export type PersonA = {
@@ -667,8 +741,8 @@
     }
     ■ SectionAddress 省略
 
-- KEY: pk.rhf.generic.organism.b
-  EXPLAIN: ジェネリック(Organism) A:親
+- KEY: pk.rhf.generic.organism.b.parent
+  EXPLAIN: ジェネリック(Organism) B:親
   BODY: |
     const defaultValues: PersonA & Address = {
       name: "2-john A",
