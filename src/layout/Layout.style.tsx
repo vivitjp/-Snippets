@@ -126,17 +126,17 @@ export const MenuItem = styled.div<MenuItem>`
     text-decoration: none;
     font-size: 0.8rem;
     width: 100%;
-    color: #999;
+    color: #555;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    cursor: default;
+    cursor: pointer;
     ${
       isPending &&
       css`
-      color: #555;
+      color: #999;
+      cursor: default;
       :hover {
-        cursor: pointer;
         color: var(--main-color);
       }
     `

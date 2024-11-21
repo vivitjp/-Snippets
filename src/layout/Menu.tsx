@@ -4,8 +4,6 @@ import {
   GroupBody,
   MenuGroupTitle,
   MenuItem,
-  MenuItemGroup,
-  MenuItemGroupItems,
   MenuNav,
 } from "./Layout.style"
 import { MenuItemType, zooMenu } from "../store/menuStore"
@@ -35,16 +33,17 @@ export const Menu = () => {
                       onClick={
                         item.fileName ? () => handleMenu(item) : undefined
                       }
-                      isPending={!!item.fileName}
+                      isPending={!item.fileName}
                     >
-                      {names.length > 1 ? (
+                      {names.length > 1 ? names[0] : item.name}
+                      {/* names[0]
                         <MenuItemGroup>
                           <MenuItemGroupItems>{names[0]}</MenuItemGroupItems>
                           <MenuItemGroupItems>{names[1]}</MenuItemGroupItems>
                         </MenuItemGroup>
                       ) : (
                         item.name
-                      )}
+                      )} */}
                     </MenuItem>
                   )
                 })}

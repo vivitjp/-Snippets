@@ -49,20 +49,20 @@ type Custom = {
   m?: number //margin size
 }
 
-type Slide = {
-  closedWidth: string //閉まったsize
-  openedWidth: string //開いたsize
-  duration?: string //持続時間
-  delay?: string //遅延時間
-  easing?: //easing関数
-  | "ease"
-    | "ease-in-out"
-    | "ease-in"
-    | "ease-out"
-    | "linear"
-    | "step-start"
-    | "step-end"
-} & Pick<CSSProperties, AttrPosition>
+// type Slide = {
+//   closedWidth: string //閉まったsize
+//   openedWidth: string //開いたsize
+//   duration?: string //持続時間
+//   delay?: string //遅延時間
+//   easing?: //easing関数
+//   | "ease"
+//     | "ease-in-out"
+//     | "ease-in"
+//     | "ease-out"
+//     | "linear"
+//     | "step-start"
+//     | "step-end"
+// } & Pick<CSSProperties, AttrPosition>
 
 type Div = Pick<
   CSSProperties,
@@ -164,97 +164,6 @@ export const Row = styled(Div)`
     flex-direction: row;
     justify-content: ${justifyContent ?? "flex-start"};
     align-items: ${alignItems ?? "flex-start"};
-  `}
-`
-export const Section = styled(Div)`
-  ${(props) => css`
-    display: flex;
-    width: ${props.width ?? "100%"};
-    flex-direction: ${props.flexDirection ?? "column"};
-    gap: ${props.gap ?? "10px"};
-    overflow: ${props.overflow ?? "hidden"};
-  `}
-`
-
-export const SlideWidth = styled(Div)<Slide>`
-  ${(props) => css`
-    position: ${props.position ?? "fixed"};
-    ${props.top && `top: ${props.top}`};
-    ${props.right && `right: ${props.right}`};
-    ${props.bottom && `bottom: ${props.bottom}`};
-    ${props.left && `left: ${props.left}`};
-    display: flex;
-    flex-direction: column;
-    width: ${props.closedWidth};
-    transition: width ${props.duration ?? "0.5s"}
-      ${props.easing ?? "ease-in-out"} ${props.delay ?? "250ms"};
-    &:hover {
-      width: ${props.openedWidth};
-    }
-    box-shadow: 2px 2px 10px #0004;
-    overflow: hidden;
-  `}
-`
-
-export const Title = styled.div<Div>`
-  ${(props) => css`
-    :before {
-      content: "■";
-      margin-right: 5px;
-      color: ${props.color ?? "var(--main-color)"};
-    }
-  `}
-`
-
-export const Span = styled.span`
-  margin: 0;
-  padding: 0;
-  font-size: inherit;
-`
-
-export const SpanRed = styled.span`
-  margin: 0;
-  padding: 0;
-  color: var(--main-color);
-  font-size: inherit;
-`
-
-const NumberRange = ({
-  step,
-  range: [min, max],
-  value,
-  onChange,
-  ...args
-}: {
-  step: number
-  range: [number, number]
-  value: number
-  onChange: React.ChangeEventHandler<HTMLInputElement>
-}) => {
-  return (
-    <input
-      {...args}
-      onChange={onChange}
-      type="range"
-      step={`${step}`}
-      min={min}
-      max={max}
-      value={value}
-    />
-  )
-}
-
-export const Range = styled(NumberRange)<Div>`
-  ${(props) => css`
-    width: ${props.width ?? "200px"};
-    font-size: ${props.width ?? "200px"};
-    height: 36px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1.2rem;
-    text-align: center;
-    color: var(--main-color);
   `}
 `
 

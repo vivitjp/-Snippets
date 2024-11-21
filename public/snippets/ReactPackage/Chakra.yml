@@ -1401,7 +1401,9 @@
 - KEY: chakra.hooks.useClipboard
   EXPLAIN: useClipboard
   BODY: |
+    クリップボードへのコンテンツのコピーを処理します
 
+    ■ サンプル
     function Example() {
       const placeholder = 'text to be copied...'
       const { onCopy, value, setValue, hasCopied } = useClipboard('')
@@ -1430,6 +1432,9 @@
 - KEY: chakra.hooks.useConst
   EXPLAIN: useConst
   BODY: |
+    useConst は初期化して定数値を返す。useMemo とは異なり常に同値を返し、初期化子が関数の場合は1回だけ呼び出す。
+
+    ■ サンプル
     function Example() {
       const mountTime = useConst(() => new Date().toTimeString())
       const obj = useConst({ a: Math.random() })
@@ -1443,35 +1448,81 @@
 
     ■ useMemo を使用しないのはなぜか?
 
-    メモ化済の値の一部を「忘れ」て次レンダリング時に再計算する可能性があり、useMemo なしでも動作させ、パフォーマンス最適化のために useMemo を追加すべし。useMemo は、依存関係に基づいて値を再計算する必要がある場合にのみ使用すべし。
+    メモ化済の値の一部を「忘れ」て次レンダリング時に再計算する可能性があり、
+    useMemo なしでも動作させ、パフォーマンス最適化のために useMemo を追加すべし。
+    useMemo は、依存関係に基づいて値を再計算する必要がある場合にのみ使用すべし。
 
-    ■ useStateを使用しない理由
+    ■ useState を使用しない理由
 
     定数として機能するが意味的に間違いで、不必要なレデューサー処理によりコスト高
 
-- KEY: chakra.hooks.useControllableProp
-  EXPLAIN: |
-    Hooks: useControllableProp
+- KEY: chakra.hooks.useControllableState
+  EXPLAIN: useControllableState/useControllableProp
   BODY: |
-    const [isControlled, value] = useControllableProp(propValue, stateValue)
+    ■ useControllableState
 
+    任意のコンポーネントが controlled/uncontrolled を処理できるようにし、
+    内部 state 制御を提供。
+    ほとんどの Chakra コンポーネントは、useControllableState を使用して、
+    制御状態と非制御状態の両方のシナリオをシームレスに管理します。
+
+    const [value, setValue] = useControllableState(options)
+
+    ■ サンプル
+    ● uncontrolled
     function Example() {
       const [value, setValue] = useControllableState({ defaultValue: 40 })
       return (
         <div>
           <Button onClick={() => setValue(value + 1)}>+</Button>
-          <Box as='span' w='200px' mx='24px'>
-            {value}
-          </Box>
+          <Box> {value} </Box>
           <Button onClick={() => setValue(value - 1)}>-</Button>
         </div>
       )
     }
 
+    ● controlled
+    function Example() {
+      const [value, setValue] = React.useState(40)
+
+      // 使用意義は？
+      const [internalValue, setInternalValue] = useControllableState({
+        value,
+        onChange: setValue,
+      })
+
+      return (
+        <div>
+          <Button onClick={() => setInternalValue(value + 1)}>+</Button>
+          <Box> {internalValue} </Box>
+          <Button onClick={() => setInternalValue(value - 1)}>-</Button>
+        </div>
+      )
+    }
+
+    ■ useControllableProp
+
+    prop 値と state 値を指定すると、controlled/uncontrolledを判断、計算値も返す。
+    controlled の場合は prop 値を返す。
+    uncontrolled の場合は state value を返す。
+
+    const [isControlled, value] = useControllableProp(propValue, stateValue)
+
 - KEY: chakra.hooks.useDimensions
-  EXPLAIN: |
-    Hooks: useDimensions
+  EXPLAIN: useDimensions
   BODY: |
+    ボックスモデルに基づいて参照要素の寸法を測定
+
+    ■ Return
+      marginBox   top, right, bottom, left, width, height, x, y, center (x, y)
+      borderBox   top, right, bottom, left, width, height, x, y, center (x, y)
+      paddingBox  top, right, bottom, left, width, height, x, y, center (x, y)
+      contentBox  top, right, bottom, left, width, height, x, y, center (x, y)
+      border      top, right, bottom, left
+      padding     top, right, bottom, left
+      margin      top, right, bottom, left
+
+    ■ サンプル
     function example() {
       const elementRef = useRef()
       const dimensions = useDimensions(elementRef)
@@ -1494,10 +1545,11 @@
     }
 
 - KEY: chakra.hooks.useDisclosure
-  EXPLAIN: |
-    Hooks: useDisclosure
+  EXPLAIN: useDisclosure
   BODY: |
-    ■ isOpen, onOpen, onClose
+    オープン、クローズ、切り替えを処理。Modal、AlertDialog、Drawer など制御
+
+    ■ サンプル: isOpen, onOpen, onClose
     function Example() {
       const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -1519,7 +1571,7 @@
       )
     }
 
-    ■ getDisclosureProps, getButtonProps
+    ■ サンプル: getDisclosureProps, getButtonProps
     function Basic() {
       const { getDisclosureProps, getButtonProps } = useDisclosure()
 
@@ -1538,15 +1590,16 @@
     }
 
 - KEY: chakra.hooks.useMediaQuery
-  EXPLAIN: |
-    Hooks: useMediaQuery
+  EXPLAIN: useMediaQuery
   BODY: |
+    単/複数のメディアクエリ一致を検出
+
     const [isLargerThan800] = useMediaQuery('(min-width: 800px)')
 
     // ssr-friendly media query with fallback
     const [isLargerThan800] = useMediaQuery('(min-width: 800px)', {
       ssr: true,
-      fallback: false, // return false on the server, and re-evaluate on the client side
+      fallback: false, // return false on the server, re-evaluate on the client side
     })
 
     function Example() {
@@ -1560,12 +1613,11 @@
     }
 
 - KEY: chakra.hooks.useMergeRefs
-  EXPLAIN: |
-    Hooks: useMergeRefs
+  EXPLAIN: useMergeRefs
   BODY: |
     複数の ref を単一の ref にマージ
 
-    ■ 外部と内部の ref を連結
+    ■ サンプル：外部と内部の ref を連結
     function Example({ ref, ...props }) {
       const internalRef = React.useRef()
       const refs = useMergeRefs(internalRef, ref)
@@ -1577,7 +1629,7 @@
       )
     }
 
-    ■ 本体と外部の ref を連結
+    ■ サンプル：本体と外部の ref を連結
     function Example({ ref, ...props }) {
       const outsideRef = React.useRef()
       const { isOpen, onOpen, onClose } = useDisclosure()
@@ -1605,11 +1657,11 @@
     }
 
 - KEY: chakra.hooks.useOutsideClick
-  EXPLAIN: |
-    Hooks: useOutsideClick
+  EXPLAIN: useOutsideClick
   BODY: |
     参照要素の外側でイベントが発生するとコールされる
 
+    ■ サンプル
     function Example() {
       const ref = React.useRef()
       const [isModalOpen, setIsModalOpen] = React.useState(false)
@@ -1632,12 +1684,12 @@
     }
 
 - KEY: chakra.hooks.usePrefersReducedMotion
-  EXPLAIN: |
-    Hooks: usePrefersReducedMotion
+  EXPLAIN: usePrefersReducedMotion
   BODY: |
     ユーザーがモーションの軽減を好むかどうかを示すブール値を返す
     ブラウザの window.matchMedia に依存
 
+    ■ サンプル
     import { Image, keyframes, usePrefersReducedMotion } from '@chakra-ui/react'
     import logo from './logo.svg'
 
@@ -1657,23 +1709,23 @@
     }
 
 - KEY: chakra.hooks.useTheme
-  EXPLAIN: |
-    Hooks: useTheme
+  EXPLAIN: useTheme
   BODY: |
     コンテキストからテーマ オブジェクトを取得
 
+    ■ サンプル
     function Example() {
       const theme = useTheme()
       return <div>{/* Do something with the theme */}</div>
     }
 
 - KEY: chakra.hooks.useToken
-  EXPLAIN: |
-    Hooks: useToken
+  EXPLAIN: useToken
   BODY: |
     テーマからデザイントークンを解決
     sx prop と テーマ トークン で記述も可能
 
+    ■ サンプル
     function Example() {
       const [red100, blue200] = useToken(
         // key: `theme.colors`
@@ -1689,77 +1741,262 @@
       )
     }
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+- KEY: chakra.hooks.components.title
+  CATEGORY: Components Hooks
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+- KEY: chakra.hooks.components.useCheckbox
+  EXPLAIN: useCheckbox
+  BODY: |
+    チェックボックス機能、状態、フォーカス管理提供
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+    ■ サンプル
+    function Example() {
+      const CustomCheckbox = (props) => {
+        const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } =
+          useCheckbox(props)
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+        return (
+          <chakra.label display='flex' {...htmlProps}>
+            <input {...getInputProps()} />
+            <Flex {...getCheckboxProps()} >
+              {state.isChecked && <Box />}
+            </Flex>
+            <Text {...getLabelProps()}>
+              Click me
+            </Text>
+          </chakra.label>
+        )
+      }
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+      return (<CustomCheckbox />)
+    }
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+- KEY: chakra.hooks.components.useCheckboxGroup
+  EXPLAIN: useCheckboxGroup
+  BODY: |
+    チェックボックスのグループのstate管理ロジック提供
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+    ■ サンプル
+    function Example() {
+      function CustomCheckbox(props) {
+        const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } =
+          useCheckbox(props)
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+        return (
+          <chakra.label {...htmlProps}>
+            <input {...getInputProps()} hidden />
+            <Flex {...getCheckboxProps()}>
+              {state.isChecked && <Box />}
+            </Flex>
+            <Text {...getLabelProps()}>
+              Click me for {props.value}
+            </Text>
+          </chakra.label>
+        )
+      }
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+      const { value, getCheckboxProps } = useCheckboxGroup({
+        defaultValue: ['2'],
+      })
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+      return (
+        <Stack>
+          <Text>The selected checkboxes are: {value.sort().join(' and ')}</Text>
+          <CustomCheckbox {...getCheckboxProps({ value: '1' })} />
+          <CustomCheckbox {...getCheckboxProps({ value: '2' })} />
+          <CustomCheckbox {...getCheckboxProps({ value: '3' })} />
+        </Stack>
+      )
+    }
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+- KEY: chakra.hooks.components.useRadio
+  EXPLAIN: useRadio
+  BODY: |
+    radio 機能, カスタムradioコンポーネントに state, focus 管理提供
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+    ■ サンプル
+    function Example() {
+      const CustomRadio = (props) => {
+        const { image, ...radioProps } = props
+        const { state, getInputProps, getRadioProps, htmlProps, getLabelProps } =
+          useRadio(radioProps)
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+        return (
+          <chakra.label {...htmlProps}>
+            <input {...getInputProps({})} />
+            <Box {...getRadioProps()} bg={state.isChecked ? 'green.200' : 'transparent'}>
+              <Image src={image} rounded='full' {...getLabelProps()} />
+            </Box>
+          </chakra.label>
+        )
+      }
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+      return (<CustomRadio image={url} />)
+    }
 
-# - KEY: chakra.hooks.xxx
-#   EXPLAIN: |
-#     Hooks: xxx
-#   BODY: |
+- KEY: chakra.hooks.components.useRadioGroup
+  EXPLAIN: useRadioGroup
+  BODY: |
+    radio グループのstate管理ロジック提供
+
+    ■ サンプル
+    function Example() {
+      function CustomRadio(props) {
+        const { image, ...radioProps } = props
+        const { state, getInputProps, getRadioProps, htmlProps, getLabelProps } =
+          useRadio(radioProps)
+
+        return (
+          <chakra.label {...htmlProps}>
+            <input {...getInputProps({})} hidden />
+            <Box
+              {...getRadioProps()}
+              bg={state.isChecked ? 'green.200' : 'transparent'}
+            >
+              <Image src={image} {...getLabelProps()} />
+            </Box>
+          </chakra.label>
+        )
+      }
+
+      const toast = useToast()
+
+      const avatars = [
+        { name: 'Kat', image: 'url/44.jpg' },
+        { name: 'Kevin', image: 'url/86.jpg' },
+      ]
+
+      const handleChange = (value) => {
+        toast({
+          title: `Changed: ${value}!`,
+          status: 'success',
+          duration: 2000,
+        })
+      }
+
+      const { value, getRadioProps, getRootProps } = useRadioGroup({
+        defaultValue: 'Kevin',
+        onChange: handleChange,
+      })
+
+      return (
+        <Stack {...getRootProps()}>
+          <Text>The selected radio is: {value}</Text>
+          <HStack>
+            {avatars.map((avatar) => {
+              return (
+                <CustomRadio
+                  key={avatar.name}
+                  image={avatar.image}
+                  {...getRadioProps({ value: avatar.name })}
+                />
+              )
+            })}
+          </HStack>
+        </Stack>
+      )
+    }
+
+- KEY: chakra.hooks.components.useSlider
+  EXPLAIN: useSlider
+  BODY: |
+    スライダー機能、カスタム スライダー コンポーネントの state, focus 提供
+
+    ■ サンプル
+    import Actions from "./Actions";
+    import Instructions from "./Instructions";
+    type Props = {
+      stepByNumber: number;
+      stepToNumber: number;
+    };
+
+    export default function App({stepByNumber, stepToNumber}: Props) {
+      const { 
+        state, actions, getInnerTrackProps, getInputProps, getMarkerProps, 
+        getRootProps, getThumbProps, getTrackProps
+      } = useSlider({ min: 0, max: 100, stepByNumber, stepToNumber });
+
+      const { onKeyDown: onThumbKeyDown, ...thumbProps } = getThumbProps();
+      
+      const markers = []
+
+      for (let i = 1; i <= 3; i++) {
+        markers.push(getMarkerProps({ value: i * 25 }))
+      }
+      
+      return (
+        <Box>
+          <Flex>
+            <Instructions stepByNumber={stepByNumber} />
+            <Actions actions={actions} stepToNumber={stepToNumber} />
+          </Flex>
+          <chakra.div {...getRootProps()}>
+            <input {...getInputProps()} hidden />
+            {markers.map((markerProps, index) => {
+              const value = String((index + 1) * 25) + '%';
+              return <Badge {...markerProps}> {value} </Badge>
+            })}
+            <Box {...getTrackProps()}>
+              <Box {...getInnerTrackProps()} />
+            </Box>
+            <Box onKeyDown={(e) => {
+                if (e.code === "ArrowRight") actions.stepUp(stepByNumber);
+                else if (e.code === "ArrowLeft") actions.stepDown(stepByNumber);
+                else onThumbKeyDown(e);
+              }} {...thumbProps}>
+              <Flex>
+                <Text>{state.value}</Text>
+              </Flex>
+            </Box>
+          </chakra.div>
+        </Box>
+      );
+    };
+
+    [./Actions.tsx]----------------------------------------------
+    import { Button } from "@chakra-ui/react";
+    type Props = {
+      actions: {
+        stepUp(step?: number): void;
+        stepDown(step?: number): void;
+        reset(): void;
+        stepTo(value: number): void;
+      };
+      stepToNumber: number;
+    };
+
+    const Actions = ({ actions, stepToNumber }: Props) => {
+      return (
+        <>
+          <Button onClick={() => actions.stepTo(stepToNumber)}>
+            Step to {stepToNumber}
+          </Button>
+          <Button onClick={() => actions.reset()}>
+            Reset to 0
+          </Button>
+        </>
+      );
+    };
+    export default Actions;
+
+    [./Instructions.tsx]-----------------------------------------
+    type Props = {
+        stepByNumber: number;
+    };
+
+    const Instructions = ({ stepByNumber }: Props) => {
+      return (
+        <Text>
+          Use <Kbd>&#8592;</Kbd> or <Kbd>&#8594;</Kbd>
+          <Text>to step by {stepByNumber}</Text>
+        </Text>
+      );
+    };
+    export default Instructions;
+
+- KEY: chakra.hooks.components.useRangeSlider
+  EXPLAIN: useRangeSlider
+  BODY: |
+    スライダー機能、カスタム スライダー コンポーネントの state, focus 提供
+
+    ■ サンプル 省略

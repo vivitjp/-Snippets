@@ -71,7 +71,7 @@ export const PageBody = ({ Snippets, isPending }: Props) => {
 const BodySection = styled.section`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
   width: 100%;
 `
 const BodyTitleWrapper = styled.div`
