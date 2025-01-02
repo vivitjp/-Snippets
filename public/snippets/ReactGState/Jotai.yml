@@ -2,9 +2,33 @@
 #-------------------------------
 # Package: Storybook
 #-------------------------------
+- KEY: pk.jotai.atom.title
+  CATEGORY: |
+    atom
 
-- KEY: pk.jotai.atom
-  EXPLAIN: atom 定義
+- KEY: pk.jotai.atom.signature
+  EXPLAIN: atom 型
+  BODY: |
+    ● Basic
+    function atom<Value>(initialValue: Value): PrimitiveAtom<Value>
+
+    ● 読み取り専用
+    function atom<Value>(read: (get: Getter) => Value): Atom<Value>
+
+    ● 派生 atom(読み取り/書き込み)
+    function atom<Value, Args extends unknown[], Result>(
+      read: (get: Getter) => Value,
+      write: (get: Getter, set: Setter, ...args: Args) => Result,
+    ): WritableAtom<Value, Args, Result>
+
+    ● 派生 atom(書き込み専用)
+    function atom<Value, Args extends unknown[], Result>(
+      read: Value,
+      write: (get: Getter, set: Setter, ...args: Args) => Result,
+    ): WritableAtom<Value, Args, Result>
+
+- KEY: pk.jotai.atom.basic
+  EXPLAIN: atom 基礎
   BODY: |
     import { atom } from "jotai"
 
@@ -14,11 +38,67 @@
     export const citiesAtom = atom(["東京", "京都", "大阪"])
     export const citySelectedAtom = atom("")
 
-    // 派生 Atom(他のAtomの値を加工)
-    export const doubledOrigAtom = atom(0)
-    export const doubledCountAtom = atom((get) => get(doubledOrigAtom) * 2)
+- KEY: pk.jotai.atom.onMount
+  EXPLAIN: onMount
+  BODY: |
+    const anAtom = atom(1)
+    anAtom.onMount = (setAtom) => {
+      console.log('atom is mounted in provider')
+      
+      setAtom(c => c + 1)               // increment count on mount
+      return () => { ... }              // return optional onUnmount function
+    }
 
-    // Get & Set
+    const Component = () => {
+      useAtom(anAtom)                   // マウント時にコール
+      useAtomValue(anAtom)              // マウント時にコール
+
+      useSetAtom(anAtom)                // マウント時にコールされない
+      useAtomCallback(                  // マウント時にコールされない
+        useCallback((get) => get(anAtom), []),
+      )
+      ...
+    }
+
+- KEY: pk.jotai.atom.derived
+  EXPLAIN: 派生 atom
+  BODY: |
+    他の atom の値を加工
+    export const doubledCountAtom = atom((get) => get(numberAtom) * 2)
+    export const uppercaseAtom    = atom((get) => get(textAtom).toUpperCase())
+
+    ■ 値atom
+    const priceAtom = atom(10)
+
+    ■ 読み取り専用
+    const readOnlyAtom = atom((get) => get(priceAtom) * 2)
+
+    ■ 書き込み専用
+    const writeOnlyAtom = atom(
+      null,                             // `null` 書き込み専用
+      (get, set, update) => {           // 引数あり
+        set(priceAtom, get(priceAtom) - update.discount) // `update`: 単一値 for updating this atom
+        // or we can pass a function as the second parameter the function will be invoked,
+        // receiving the atom's current value as its first parameter
+        set(priceAtom, (price) => price - update.discount) // 
+      },
+    )
+
+    ■ 読み取り/書き込み
+    const readWriteAtom = atom(
+      (get) => get(priceAtom) * 2,      // 読み取り
+      (get, set, newPrice) => {
+        set(priceAtom, newPrice / 2)    // 複数の atoms 書き込み可能
+      },
+    )
+
+- KEY: pk.jotai.atom.get.set
+  EXPLAIN: Get, Set & 引数
+  BODY: |
+    Get: 他の atom 値を取得
+    Set: 他の atom に値を代入
+    引数: methodsの引数を設定
+
     export const addingCountDerivedAtom = atom(
       (get) => get(countDerivedAtom),                  // Get(null にすれば WriteOnly)
       (get, set, num: number) => {                     // Method(複数不可)
@@ -26,15 +106,25 @@
       }
     )
 
-    //非同期fetch: 即時コール
+- KEY: pk.jotai.atom.async
+  EXPLAIN: 非同期
+  BODY: |
+    ■ 非同期fetch: 即時コール
+
     export const urlAtom = atom("http://localhost:5099/posts")
+
     export const fetchUrlAtom = atom(async (get) => {
       const response = await fetch(get(urlAtom))
       return await response.json()
     })
 
-    //非同期fetch: Lazyコール
+- KEY: pk.jotai.atom.async.lazy
+  EXPLAIN: 非同期(Lazy)
+  BODY: |
+    ■ 非同期fetch: Lazyコール
+
     export const fetchDataAtom = atom("")
+
     export const fetchUrlLazyAtom = atom(
       (get) => get(fetchDataAtom),
       async (get, set) => {
@@ -43,32 +133,111 @@
       }
     )
 
-- KEY: pk.jotai.
-  EXPLAIN: 親子サンプル
+- KEY: pk.jotai.atom.render
+  EXPLAIN: Renderメソッド内での宣言
   BODY: |
-    ■ Atoms
-    import { atom } from "jotai"
-     
-    export const countAtom = atom(0)
-    export const countDerivedAtom = atom(0)
+    レンダーコンポーネント内で宣言する場合は useMemo を使用
+    const Component = ({ value }) => {
+      const valueAtom = useMemo(() => atom({ value }), [value])
+      // ...
+    }
 
-    ■ 親
-    import { useAtom } from "jotai"
-    import { countAtom } from "./atoms"
-    import { Counter } from "./components/Counter"
+- KEY: pk.jotai.atom.signal
+  EXPLAIN: Abort Control
+  BODY: |
+    ● 読み取り専用
+    const readOnlyDerivedAtom = atom(
+      async (get, { signal }) => { ... },  // signalで動作中断
+    )
 
-    const Component = () => {
-      const [count] = useAtom(countAtom)
+    ● 派生非同期
+    const writableDerivedAtom = atom(
+      async (get, { signal }) => { ... },  // signalで動作中断
+      (get, set, arg) => { ... },
+    )
 
+    ● フルサンプル
+    import { Suspense } from 'react'
+    import { atom, useAtom } from 'jotai'
+
+    const userIdAtom = atom(1)
+    const userAtom = atom(async (get, { signal }) => {
+      const userId = get(userIdAtom)
+      const response = await fetch(
+        `https://jsonplaceholder.typicode.com/users/${userId}?_delay=2000`,
+        { signal },
+      )
+      return response.json()
+    })
+
+    const Controls = () => {
+      const [userId, setUserId] = useAtom(userIdAtom)
       return (
-        <Row>
-          <Counter />
-          <Div> カウント: {count} </Div>
-        </Row>
+        <div>
+          User Id: {userId}
+          <button onClick={() => setUserId((c) => c - 1)}>Prev</button>
+          <button onClick={() => setUserId((c) => c + 1)}>Next</button>
+        </div>
       )
     }
 
-    ■ 子
+    const UserName = () => {
+      const [user] = useAtom(userAtom)
+      return <div>User name: {user.name}</div>
+    }
+
+    const App = () => (
+      <>
+        <Controls />
+        <Suspense fallback="Loading...">
+          <UserName />
+        </Suspense>
+      </>
+    )
+
+    export default App
+
+- KEY: pk.jotai.useAtom.title
+  CATEGORY: |
+    useAtom
+
+- KEY: pk.jotai.useAtom.methods
+  EXPLAIN: メソッド
+  BODY: |
+    ● atoms
+      const countAtom = atom(0)
+      const flagAtom = atom(false)
+
+    ● [VALUE, SETTER] useAtom(anAtom)
+      const [count, setCount] = useAtom(countAtom)
+
+    ● [VALUE] useAtomValue(anAtom)
+      const count = useAtomValue(countAtom)    // VALUE
+
+    ● [SETTER] useSetAtom(anAtom)
+      const setFlag = useSetAtom(flagAtom)     // SETTER
+      const handle = () => setFlag(true)
+
+    ● [VALUE,SETTER] useAtomValue(anAtom),useSetAtom(anAtom)
+      const count = useAtomValue(countAtom)    // VALUE
+      const setCount = useSetAtom(countAtom)   // SETTER
+      const handle = () => setCount(count+1)
+
+    ● [VALUE] useAtomCallback
+    useAtomCallback(
+      useCallback((get) => get(anAtom), []),
+    )
+
+- KEY: pk.jotai.parent.child
+  EXPLAIN: 親子サンプル
+  BODY: |
+    ■ [atoms.ts]
+    import { atom } from "jotai"
+      
+    export const countAtom = atom(0)
+    export const countDerivedAtom = atom(0)
+
+    ■ 子コンポーネント
     import { useAtom } from "jotai"
     import { countAtom } from "../atoms"
 
@@ -87,5 +256,53 @@
           <Input defaultValue={value} onChange={handleOnChange} />
           <Button onClick={handleSetValue}>セット</Button>
         </Row>
+      )
+    }
+
+    ■ 親コンポーネント
+    import { useAtom } from "jotai"
+    import { countAtom } from "./atoms"
+    import { Counter } from "./components/Counter"
+
+    const Component = () => {
+      const [count] = useAtom(countAtom)
+
+      return (
+        <Row>
+          <Counter />
+          <Div> カウント: {count} </Div>
+        </Row>
+      )
+    }
+
+- KEY: pk.jotai.excel.chained
+  EXPLAIN: Excelスタイル連鎖更新
+  BODY: |
+    Excelの連鎖参照を実現
+
+    [atoms.ts]
+    import { atom } from "jotai"
+    export const atom_A = atom(0)
+    export const atom_B = atom((get) => get(atom_A) * 2)
+    export const atom_C = atom((get) => get(atom_B) * 2)
+
+    [ExcelChainedReaction.tsx]
+    const ExcelChainedReaction = () => {
+      const [cell_A, setCell_A] = useAtom(atom_A)
+      const [cell_B] = useAtom(atom_B)
+      const [cell_C] = useAtom(atom_C)
+
+      const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setCell_A(Number(e.currentTarget.value))
+      }
+
+      return (
+        <Flex>
+          <Flex>
+            <Input defaultValue={cell_A} onChange={handleOnChange} />
+          </Flex>
+          <Box> {cell_B} </Box>
+          <Box> {cell_C} </Box>
+        </Flex>
       )
     }

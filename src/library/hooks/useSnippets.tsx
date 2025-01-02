@@ -69,8 +69,6 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
       let debugIndex = 0
       try {
         const formatted = array.map(([title, snippetsObject], index) => {
-          console.log(snippetsObject)
-
           if (snippetsObject.category) {
             return (
               <CategoryWrapper key={index}>

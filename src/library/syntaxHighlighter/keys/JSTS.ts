@@ -31,7 +31,16 @@ export const keysJSTS: KeyDef = {
     "readonly",
   ],
   // ■ JS オブジェクト
-  SteelBlue: ["String", "Object", "Uint32Array", "Date", "Map", "Set"],
+  SteelBlue: [
+    "String",
+    "Object",
+    "Uint32Array",
+    "Date",
+    "Map",
+    "WeakMap",
+    "Set",
+    "WeakSet",
+  ],
   // ■ TS 型
   RoyalBlue: [
     "number",
@@ -52,6 +61,8 @@ export const keysJSTS: KeyDef = {
     "fetch",
     "then",
     "map",
+    "set",
+    "get",
     "forEach",
     "reduce",
     "reduceRight",
@@ -144,5 +155,5 @@ export const keysJSTS: KeyDef = {
 
   // ■ Inactive Words
 
-  "#999": ["toSliced"],
+  "#999": ["toSliced", "console.log"],
 }

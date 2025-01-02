@@ -6,6 +6,8 @@
 #-------------------------------
 # protoType
 #-------------------------------
+- KEY: js.protoType.title
+  CATEGORY: プロトタイプ
 
 - KEY: js.protoType.method
   EXPLAIN: ProtoType 追加
@@ -21,8 +23,72 @@
     }
 
 #-------------------------------
+# Class
+#-------------------------------
+- KEY: js.class.title
+  CATEGORY: クラス(Class)
+
+- KEY: js.class.private
+  EXPLAIN: プライベートプロパティ
+  BODY: |
+    ■ Static版
+
+    const Foo1 = (() => {
+      function privateStaticMethod (string) { console.log(string); }
+
+      return class Foo1 {
+        bar () { privateStaticMethod('Hello, World!'); }
+      };
+    })();
+    new Foo1().bar();
+
+    ■ Instance版1
+
+    const Foo2 = (() => {
+      var privateMap = new WeakMap;
+
+      return class Foo2 {
+        constructor (message) {
+          const privateObject = Object.create(null);
+          privateObject.message = message;
+          privateMap.set(this, privateObject);
+        }
+
+        bar () { console.log(privateMap.get(this).message); }
+      };
+    })();
+
+    new Foo2('Hello, World!').bar();
+    new Foo2('Hello, JavaScript!').bar();
+
+    ■ Instance版2
+
+    const createPivateMap = () => {
+      const wm = new WeakMap;
+      return function (key /* [, value] */) {
+        return wm.has(key) ? wm.get(key) : wm.set(key, arguments[1]);
+      };
+    };
+
+    const Foo3 = (() => {
+      var pm = createPivateMap();
+
+      return class Foo3 {
+        constructor (message) {
+          pm(this, {message: message});
+        }
+        bar () { console.log(pm(this).message); }
+      };
+    })();
+
+    new Foo3('Hello, World!').bar();
+    new Foo3('Hello, JavaScript!').bar();
+
+#-------------------------------
 # Object
 #-------------------------------
+- KEY: js.obj.title
+  CATEGORY: オブジェクト(Object)
 
 - KEY: js.obj.isObject
   EXPLAIN: Object判定関数
@@ -120,6 +186,8 @@
 #-------------------------------
 # Array
 #-------------------------------
+- KEY: js.array.title
+  CATEGORY: 配列(Array)
 
 - KEY: js.array.sequence
   EXPLAIN: 連番配列作成
@@ -248,10 +316,6 @@
     arr.toLocaleString() //文字列化
     arr.toString()       //文字列化
 
-#-------------------------------
-# Array ランダム化
-#-------------------------------
-
 - KEY: js.array.function.shuffle
   EXPLAIN: シャッフルアルゴリズム
   BODY: |
@@ -268,6 +332,8 @@
 #-------------------------------
 # Map (Array & Object)
 #-------------------------------
+- KEY: js.map.title
+  CATEGORY: Map & Set
 
 - KEY: js.map.obj2map
   EXPLAIN: Object->Map
@@ -349,9 +415,83 @@
     const noDupArrayIte = Array.from(noDupSet, ([v1,v2])=>[v1, v2]);
     const noDupMap = new Map(noDupArrayIte);      // これもNG!
 
+- KEY: js.map.weakMap1
+  EXPLAIN: Map と WeakMap 比較(key 単位のスコープ分割)
+  BODY: |
+    ■ Map
+    var map = new Map();
+    function sample3 () {
+      var obj = {};
+      map.set(obj, 1);
+      console.log(map.get(obj));        // 1
+    }
+    sample3();                          // obj は map から参照され、メモリから解放されない
+
+    ■ WeakMap
+    var wm = new WeakMap();
+    function foo () {
+      var bar = {};
+      wm.set(bar, 1);
+      console.log(wm.get(bar));
+    }
+    function hello () {
+      var world = {};
+      wm.set(world, 2);
+      console.log(wm.get(world));
+    }
+    foo();         // 1
+    hello();       // 2 (1はスコープ外=メモリは開放されていない！)
+
+- KEY: js.map.weakMap2
+  EXPLAIN: WeakMap(WeakMap 単位のスコープ分割)
+  BODY: |
+    const object = {};
+    function foo () {
+      const wm1 = new WeakMap([[object, 1]]);
+      console.log(wm1.get(object));     // 1
+    }
+    function bar () {
+      const wm2 = new WeakMap([[object, 2]]);
+      console.log(wm2.get(object));     // 2
+    }
+    foo();
+    bar();
+
+- KEY: js.map.weakMap2
+  EXPLAIN: WeakMap 比較
+  BODY: |
+    WeakMap 比較
+  TABLE:
+    OPTION:
+      ALIGN:
+        - left
+        - center
+        - center
+        - left
+      HAS_TITLE: true
+      WIDTH: 90%
+    BODY: |
+      プロパティ/機能 	Map 	WeakMap 	機能説明
+      *.prototype.constructor	〇	〇	インスタンス生成元のコンストラクタ(書き換え可能)
+      *.prototype.size	〇	×	要素数
+      *.prototype.delete()	〇	〇	対要素削除
+      *.prototype.get()	〇	〇	要素を返す
+      *.prototype.has()	〇	〇	要素の存在判定
+      *.prototype.set()	〇	〇	[key,value]を要素に格納
+      *.prototype.clear()	〇	×	全要素を削除
+      *.prototype.entries()	〇	×	[key,value]を持つItelator
+      *.prototype.forEach()	〇	×	定義順で要素を列挙
+      *.prototype.keys()	〇	×	keyを持つItelator
+      *.prototype.values()	〇	×	valueを持つItelator
+      *.prototype[@@iterator]()	〇	×	要素列挙時に実行されるIterator関数
+      *.prototype[@@toStringTag]()	〇	〇	インスタンスに与えられるオブジェクト種を表す名前
+      弱参照	×	〇	keyオブジェクト参照が切れた時、WeakMap 上からも要素を削除
+
 #-------------------------------
 # 乱数
 #-------------------------------
+- KEY: js.random.title
+  CATEGORY: 乱数
 
 - KEY: js.number.randomDigit
   EXPLAIN: ランダム数(桁)
@@ -368,7 +508,7 @@
     }
 
 - KEY: js.string.randomValueID
-  EXPLAIN: ランダム文字列(*useMemo必須)
+  EXPLAIN: ランダム文字列(Reactの場合 useMemo 必須)
   BODY: |
     const randStr1 = useMemo(() => window.crypto.randomUUID(), [])
     const typedArray = new Uint32Array(6)
@@ -377,6 +517,8 @@
 #-------------------------------
 # 時間計測
 #-------------------------------
+- KEY: js.performance.title
+  CATEGORY: 処理時間
 
 - KEY: js.function.performance
   EXPLAIN: 処理時間計測
@@ -401,6 +543,9 @@
 #-------------------------------
 # JSON
 #-------------------------------
+- KEY: js.json.title
+  CATEGORY: JSON
+
 - KEY: js.json
   EXPLAIN: jsonの構造表現
   BODY: |
@@ -482,3 +627,65 @@
     console.log(isValid(["0", "1", "1.5", null]))
     console.log(isValid(["0", "1", "1.5", Infinity]))
     console.log(isValid([null, undefined, NaN, "A", "1A", "１"]))
+
+#-------------------------------
+# ID
+#-------------------------------
+- KEY: js.id.packages
+  CATEGORY: ID 生成 Packages
+
+- KEY: js.id.list
+  EXPLAIN: ID 生成パッケージの生成時間比較
+  BODY: |
+    参照: https://qiita.com/okm-uv/items/0b84c75e7524640dab11
+
+    crypto.randomUUID         21,119,429 ops/sec
+    uuid v4                   20,368,447 ops/sec ●
+    @napi-rs/uuid             11,493,890 ops/sec
+    uid/secure                 8,409,962 ops/sec
+    @lukeed/uuid               6,871,405 ops/sec
+    nanoid                     5,652,148 ops/sec ●
+    customAlphabet             3,565,656 ops/sec
+    secure-random-string         394,201 ops/sec
+    uid-safe.sync                393,176 ops/sec
+    cuid                         208,131 ops/sec ●
+    shortid                       49,916 ops/sec
+
+- KEY: js.id.format
+  EXPLAIN: 各フォーマットと特徴
+  BODY: |
+    ■ UUID (v4)
+
+      36文字、128ビット(16進数の文字32個、乱数122ビット)
+      Rがランダム、4が固定、rが2ビットだけ固定
+
+      RRRRRRRR-RRRR-4RRR-rRRR-RRRRRRRRRRRR
+
+    ■ NanoID
+
+      21文字、乱数126ビット
+      UUIDの問題「生成結果の文字列が長い」を解決
+
+      V1StGXR8_Z5jdHi6B-myT
+
+    ■ ULID
+
+      UUIDの問題(長い,ソート不可)を解消
+      16進数ではなく英数字
+      前半48bit:timestamp(~10889年)、後半80bit:ランダム
+      1.21*(10**24)個/msまでソート可能性維持
+
+      01AN4Z07BY79KA1307SR9X4MV3
+
+    ■ CUID
+
+      スケーラブル、水平方向のスケーラビリティ
+      パフォーマンスが良い
+
+      ch72gsb320000udocl363eofy
+      c - h72gsb32 - 0000 - udoc - l363eofy
+        c:        固定値
+        h72gsb32: timestamp
+        0000:     Counter
+        udoc :    クライアントのfingerprint(複数クライアント間でも衝突回避)
+        l363eofy: ランダム
