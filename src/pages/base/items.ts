@@ -86,6 +86,11 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.RegExp],
       },
       {
+        name: "ライブラリ",
+        fileName: "JavaScript/Libraries",
+        codeKeyTypes: [codeKeys.JSTS],
+      },
+      {
         name: "⛔JQuery to JS",
         fileName: "",
         codeKeyTypes: [],
@@ -615,6 +620,11 @@ export const menuItems: menuByCategories[] = [
         name: "Excel関数",
         fileName: "office/Excel",
         codeKeyTypes: [codeKeys.Excel],
+      },
+      {
+        name: "Excel2JS関数",
+        fileName: "office/ExcelJS",
+        codeKeyTypes: [codeKeys.Excel, codeKeys.JSTS],
       },
     ],
   },

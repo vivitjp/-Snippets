@@ -1,0 +1,61 @@
+# ----------------------------
+# Excel
+# ----------------------------
+- KEY: excelJS.search.category
+  CATEGORY: search 検索
+
+- KEY: excelJS.search.vlookup
+  EXPLAIN: |
+    検索: vlookup
+  BODY: |
+    const vlookup = <T extends unknown>({
+      比較値,
+      lookupVector,
+      比較column,
+      出力column,
+      searchMode = true, // default
+    }: vlookup<T>) => {
+      //比較値の値型により、数値か文字列比較か自動検出
+      const 比較mode = /^(0|[1-9]\d*)(\.\d*)?$/.test(比較値.replace(",","")) ? "number" : "string"
+
+      return (
+        lookupVector.find((tableRow) => {
+          if (比較mode === "number") {
+            return searchMode
+              ? Number(tableRow[比較column]) <= Number(比較値)
+              : Number(tableRow[比較column]) === Number(比較値);
+          } else {
+            //文字列比較は完全一致のみ
+            return tableRow[比較column] === 比較値;
+          }
+        })?.[出力column] || ""
+      );
+    };
+
+    //テスト用共通引数
+    const Params = {
+      lookupVector: TBOM_TABLE.reverse(), //比較値：ソート済(大->小)
+      比較column: "DO検索用",
+      出力column: "DO値",
+    } as const
+
+    console.log("数値として比較");
+    console.log(vlookup<TABLE_型>({ 比較値: "12", ...Params }));
+    console.log(vlookup<TABLE_型>({ 比較値: "10", ...Params }));
+    console.log(vlookup<TABLE_型>({ 比較値: "20", ...Params }));
+    console.log(vlookup<TABLE_型>({ 比較値: "41", ...Params }));
+    console.log(vlookup<TABLE_型>({ 比較値: "70", ...Params }));
+    console.log(vlookup<TABLE_型>({ 比較値: "100", ...Params }));
+    console.log(vlookup<TABLE_型>({ 比較値: "200", ...Params }));
+    console.log(vlookup<TABLE_型>({ 比較値: "300", ...Params }));
+
+    console.log("文字列として比較");
+
+    console.log(vlookup<TABLE_型>({ 比較値: "12", ...Params, searchMode:false }));
+    console.log(vlookup<TABLE_型>({ 比較値: "10", ...Params, searchMode:false }));
+    console.log(vlookup<TABLE_型>({ 比較値: "20", ...Params, searchMode:false }));
+    console.log(vlookup<TABLE_型>({ 比較値: "41", ...Params, searchMode:false }));
+    console.log(vlookup<TABLE_型>({ 比較値: "70", ...Params, searchMode:false }));
+    console.log(vlookup<TABLE_型>({ 比較値: "100", ...Params, searchMode:false }));
+    console.log(vlookup<TABLE_型>({ 比較値: "200", ...Params, searchMode:false }));
+    console.log(vlookup<TABLE_型>({ 比較値: "300", ...Params, searchMode:false }));

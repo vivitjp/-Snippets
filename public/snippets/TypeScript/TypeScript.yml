@@ -49,22 +49,57 @@
 - KEY: ts.type.and.or
   EXPLAIN: 型操作
   BODY: |
-    type U = number | string                 // or
-    type I = number & string                 // and(この場合はnever)
+    ■ 単体
+    type U = number | string            // or
+    type I = number & string            // and(この場合はnever)
 
-    ■ 注意
     type A = { name:string }
     type B = { age: number}
-    type OR = A | B   // { name:string } | { age: number}
-    type AND = A & B  // { name:string, age: number}
+    type OR = A | B                     // { name:string } | { age: number}
+    type AND = A & B                    // { name:string, age: number}
 
-    const or1: OR = { name: "john" }
-    const or2: OR = { age: 123 }
-    const or3: OR = { name: "john", age: 123 }
+    const or1: A | B = { name: "john" }
+    const or2: A | B = { age: 123 }
+    const or3: A | B = { name: "john", age: 123 }
 
-    [NG] const and1: AND = { name: "john" }
-    [NG] const and2: AND = { age : 123 }
-    const and3: AND = { name: "john", age: 123 }
+    [NG] const and1: A & B = { name: "john" }
+    [NG] const and2: A & B = { age : 123 }
+    const and3: A & B = { name: "john", age: 123 }
+
+    ■ 複合体
+    type A = { name:string, add: string }
+    type B = { city:string, zip: string }
+
+    // OR
+    const OK1: A | B = { name: "A", add:"B" } // A を満たす
+    const OK2: A | B = { city: "A", zip:"B" } // B を満たす
+    const OK3: A | B = { name: "A", add:"B", city: "A" } // ⭕少なくとも A を満たす
+    const OK4: A | B = { name: "A", add:"B", city: "A", zip:"B" } // 両方を満たす
+
+    //[NG] const NG: A | B = { name: "A", city:"B" } // 混用
+    //[NG] const NG: A | B = { city: "A", add:"B" }  // 混用
+
+    // AND
+    //[NG] const NG: A & B = { name: "A", add:"B" }  // 不足
+    //[NG] const NG: A & B = { city: "A", zip:"B" }  // 不足
+    //[NG] const NG: A & B = { name: "A", add:"B", city: "A" }  // 不足
+    const OK6: A & B = { name: "A", add:"B", city: "A", zip:"B" } // 両方を満たす
+
+    ■ 多層オブジェクト(同一原理)
+    type P = { id: string, X: A | B }
+
+    const OK11: P = { id: "1", X: { name: "A", add:"B" } } // A を満たす
+    const OK12: P = { id: "1", X: { city: "A", zip:"B" } } // B を満たす
+    const OK13: P = { id: "1", X: { name: "A", add:"B", city: "A" } } // ⭕少なくとも A を満たす
+    const OK14: P = { id: "1", X: { name: "A", add:"B", city: "A", zip:"B" } } // 両方を満たす
+
+    ■ 関数引数でも同様
+    function func(props: A | B) { ... }
+
+    const a = func({name:"A", add: "A"})
+    const b = func({city:"A", zip: "A"})
+    const c = func({name:"A", city: "A"}) //NG
+    const d = func({name:"A", add: "A", city: "A"}) //OK!! 要注意
 
 - KEY: ts.const
   EXPLAIN: 定数&推論型
@@ -455,7 +490,7 @@
     }
 
     // 型ガード関数:Type Predicate
-    //「props is ABC」は戻り値の型ではない
+    //「props is ABC」は戻り値の型ではない => 必ず boolean を返すこと
     const isABC3 = (props: ABC | XYZ): props is ABC => {
       return !!(props as ABC).a
     }

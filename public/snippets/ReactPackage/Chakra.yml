@@ -4,7 +4,7 @@
     ■ v3(2024-10)が登場した
     https://www.chakra-ui.com/docs/get-started/frameworks/next-app
 
-    ■ 現状では v2 が主流
+    ■ 現状(2024)では v2 が主流
     "@chakra-ui/react": "^2.10.3",
     "@emotion/react": "^11.13.3",
 

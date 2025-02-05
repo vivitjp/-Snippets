@@ -488,6 +488,42 @@
       弱参照	×	〇	keyオブジェクト参照が切れた時、WeakMap 上からも要素を削除
 
 #-------------------------------
+# 日付
+#-------------------------------
+- KEY: js.date
+  CATEGORY: Date 日付
+
+- KEY: js.json.format
+  EXPLAIN: 日付フォーマット
+  BODY: |
+    export const getFormatDate = (targetDate: Date) => {
+      return targetDate.toLocaleDateString("ja-JP", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    };
+
+- KEY: js.json.excel
+  EXPLAIN: Excel日付 vs JS日付
+  BODY: |
+    const DAY_MS = 24 * 60 * 60 * 1000; //日数とミリ秒を変換する係数
+    const UNIX_EXCEL_DIFF = 70 * 365 + 17 + 1 + 1; //「1900/1/0」～「1970/1/1」 (日数)
+    const UTC_JST_DIFF = 9 * 60 * 60 * 1000; //UTCとJSTの時差 (ミリ秒)
+
+    ■ UnixTime -> ExcelDateSerial
+    export function convertUnixTime2ExcelDateSerial(unixTimeMS: number) {
+      return (unixTimeMS + UTC_JST_DIFF) / DAY_MS + UNIX_EXCEL_DIFF;
+    }
+
+    ■ ExcelDateSerial -> UnixTime
+    export function convertExcelDateSerial2UnixTime(excelDataSerial: number) {
+      return (excelDataSerial - UNIX_EXCEL_DIFF) * DAY_MS - UTC_JST_DIFF;
+    }
+
+#-------------------------------
 # 乱数
 #-------------------------------
 - KEY: js.random.title
@@ -550,9 +586,10 @@
   EXPLAIN: jsonの構造表現
   BODY: |
     JSON.stringify(obj, undefined, 3)
+    JSON.parse(jsonObject)
 
 #-------------------------------
-# Null, Undefined,...
+# JSON: Null, Undefined,...
 #-------------------------------
 - KEY: js.json.infinite
   EXPLAIN: infinite/undefined/null
@@ -627,6 +664,55 @@
     console.log(isValid(["0", "1", "1.5", null]))
     console.log(isValid(["0", "1", "1.5", Infinity]))
     console.log(isValid([null, undefined, NaN, "A", "1A", "１"]))
+
+#-------------------------------
+# JSON: CSV => JSON
+#-------------------------------
+- KEY: js.json.csv
+  EXPLAIN: csv => json
+  BODY: |
+    //改善の余地が大きい（最初の行のヘッダ有無確認必要）
+    const convertCsv2Json = (text: string, headers: string[], div = "\t") => {
+      
+      //数字の1,000,000桁区切りコンマを削除
+      const re = new RegExp(",", "ig"); 
+
+      const jsonArr: { [key: string]: string }[] = [];
+      text
+        .split("\n")
+        .filter(Boolean)
+        .forEach((line) => {
+          const obj: { [key: string]: string } = {};
+
+          line.split(div).forEach((v, i) => {
+            //文字と数値の違いで挙動を変えること
+            obj[headers[i]] = v.trim().replace(re, "");
+          });
+          jsonArr.push(obj);
+        });
+      return jsonArr;
+    };
+
+    // SAMPLE
+    const TABLE_TITLE_配列 = ["DO検索用", "検索エリア", "DO値"] as const;
+    type TABLE_KEY = (typeof TABLE_TITLE_配列)[number];
+    type TABLE_型 = Record<TABLE_KEY, string>;
+
+    const TABLE_DATA = `
+    0	1	≦20
+    20	2	20～40
+    40	3	40～50
+    50	4	50～60
+    60	5	60～100
+    100	6	100～140
+    140	7	140～200
+    200	8	≧200
+    `;
+
+    const TBOM_TABLE = c2j(
+      TABLE_DATA,
+      TABLE_TITLE_配列 as unknown as string[],
+    ) as TABLE_型[];
 
 #-------------------------------
 # ID

@@ -1,6 +1,8 @@
 # ----------------------------
 # Excel
 # ----------------------------
+- KEY: excel.search.category
+  CATEGORY: Excel 検索
 
 - KEY: excel.search.index
   EXPLAIN: |
@@ -387,6 +389,8 @@
 # ----------------------------
 # CELL
 # ----------------------------
+- KEY: excel.cell.category
+  CATEGORY: Excel Cell
 
 - KEY: excel.cell.count
   EXPLAIN: |
@@ -460,6 +464,9 @@
 # ----------------------------
 # Formula
 # ----------------------------
+- KEY: excel.formula.category
+  CATEGORY: Excel Formula
+
 - KEY: excel.formula.let
   EXPLAIN: |
     式: LET()
@@ -737,6 +744,9 @@
 # ----------------------------
 # IF
 # ----------------------------
+- KEY: excel.if.category
+  CATEGORY: Excel If
+
 - KEY: excel.if
   EXPLAIN: |
     ⬜条件関数
@@ -965,6 +975,9 @@
 # ----------------------------
 # IS
 # ----------------------------
+- KEY: excel.is.category
+  CATEGORY: Excel Is
+
 - KEY: excel.is
   EXPLAIN: |
     ⬜判定関数
@@ -1010,6 +1023,9 @@
 # ----------------------------
 # NUMBER
 # ----------------------------
+- KEY: excel.number.category
+  CATEGORY: Excel Number
+
 - KEY: excel.number
   EXPLAIN: |
     ⬜数値関数
@@ -1142,6 +1158,9 @@
 # ----------------------------
 # STRING
 # ----------------------------
+- KEY: excel.string.category
+  CATEGORY: Excel String
+
 - KEY: excel.string.text
   EXPLAIN: |
     文字列: TEXT()
@@ -1249,6 +1268,9 @@
 # ----------------------------
 # DATE
 # ----------------------------
+- KEY: excel.date.category
+  CATEGORY: Excel Date
+
 - KEY: excel.date
   EXPLAIN: |
     ⬜日付関数
@@ -1304,6 +1326,9 @@
 # ----------------------------
 # MATRIX
 # ----------------------------
+- KEY: excel.matrix.category
+  CATEGORY: Excel Matrix
+
 - KEY: excel.cell.matrix
   EXPLAIN: |
     [マトリックス] 列セルとINDEXのマトリックス
