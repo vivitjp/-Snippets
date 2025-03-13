@@ -47,7 +47,22 @@ const Item = styled(MenuItem)`
   width: unset;
   font-size: 15px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  cursor: ${(props) => (props.isPending ? "pointer" : "default")};
+  color : ${(props) => (props.isPending ? "#333" : "#aaa")};
+  &:hover {
+    color: ${(props) => (props.isPending ? "var(--main-color)" : "#aaa")};
+  }
 `
+
+/* color: DodgerBlue;
+color: CornflowerBlue;
+color: SteelBlue;
+color: RoyalBlue;
+color: Blue;
+color: MediumBlue;
+color: DarkBlue;
+color: Navy;
+color: MidnightBlue; */
 
 const RowTop = styled(Row)`
   flex-wrap: wrap;

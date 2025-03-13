@@ -36,6 +36,7 @@ export const makeSnippets = async ({ file, scope }: Props) => {
 
   //Snippets Making
   const returnData: Snippets = {}
+
   try {
     jsonData.forEach(
       ({

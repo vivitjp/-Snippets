@@ -172,7 +172,7 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.JSTS, codeKeys.Jotai],
       },
       {
-        name: "Recoil:pk",
+        name: "Recoil(開発中止)",
         fileName: "ReactGState/Recoil",
         codeKeyTypes: [codeKeys.Package],
       },
@@ -393,16 +393,19 @@ export const menuItems: menuByCategories[] = [
         name: "Python:py",
         fileName: "Python/Python",
         codeKeyTypes: [codeKeys.Python],
+        encodeRequired: false,
       },
       {
         name: "Lib List:py",
         fileName: "Python/PythonLibs",
         codeKeyTypes: [],
+        encodeRequired: false,
       },
       {
         name: "Lib Sample:py",
         fileName: "Python/PythonLibSamples",
         codeKeyTypes: [codeKeys.Python],
+        encodeRequired: false,
       },
     ],
   },

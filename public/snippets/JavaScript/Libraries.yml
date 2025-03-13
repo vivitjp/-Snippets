@@ -14,8 +14,23 @@
   BODY: |
     https://www.npmjs.com/
 
+- KEY: js.libraries.formulajs
+  EXPLAIN: |
+    エクセル: formulajs
+  BODY: |
+    Microsoft Excelフォーミュラ関数のJavaScriptの実装を構築
+
+    officail: https://formulajs.info/
+    github: 
+    npm:    https://www.npmjs.com/package/@formulajs/formulajs
+    cdn:    <script src="https://cdn.jsdelivr.net/npm/jstat@1.9.2/dist/jstat.min.js"></script>
+
+    // Install
+    npm i @formulajs/formulajs
+
 - KEY: js.libraries.simple-statistics
-  EXPLAIN: simple-statistics
+  EXPLAIN: |
+    統計: simple-statistics
   BODY: |
     github: https://github.com/simple-statistics/simple-statistics
     URL:    https://simple-statistics.github.io/docs/
