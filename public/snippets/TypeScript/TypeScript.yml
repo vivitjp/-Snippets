@@ -46,60 +46,40 @@
         case "B": return ...
         default: let _ng:never = props       // 警告
 
-- KEY: ts.type.and.or
-  EXPLAIN: 型操作
+- KEY: ts.type.andOr
+  EXPLAIN: 型(AND/OR)
   BODY: |
-    ■ 単体
-    type U = number | string            // or
-    type I = number & string            // and(この場合はnever)
+    type P = { name:string, age: number }
+    type A = { city:string, zip: string }
 
-    type A = { name:string }
-    type B = { age: number}
-    type OR = A | B                     // { name:string } | { age: number}
-    type AND = A & B                    // { name:string, age: number}
+    ■ AND[ & ] 🛑両方を満たす
 
-    const or1: A | B = { name: "john" }
-    const or2: A | B = { age: 123 }
-    const or3: A | B = { name: "john", age: 123 }
+    const NG: P & A = { name: "Eve", age: 18 }                          // ❌ 不足
+    const NG: P & A = { city: "Paris", zip:"03" }                       // ❌ 不足
+    const NG: P & A = { name: "Eve", age: 18, city: "Paris" }           // ❌ 不足
+    const OK: P & A = { name: "Eve", age: 18, city: "Paris", zip:"03" } // ⭕両方を満たす
 
-    [NG] const and1: A & B = { name: "john" }
-    [NG] const and2: A & B = { age : 123 }
-    const and3: A & B = { name: "john", age: 123 }
+    ■ OR[ | ] 🛑どちらか一方を満たす(排他的ORではないので両方でもOK)
 
-    ■ 複合体
-    type A = { name:string, add: string }
-    type B = { city:string, zip: string }
+    const OK: P | A = { name: "Eve", age: 18 }                          // ⭕ P を満たす
+    const OK: P | A = { city: "Paris", zip:"03" }                       // ⭕ A を満たす
+    const OK: P | A = { name: "Eve", age: 18, city: "Paris" }           // ⭕ 少なくとも P を満たす
+    const OK: P | A = { name: "Eve", age: 18, city: "Paris", zip:"03" } // ⭕ 両方を満たす
+    const NG: P | A = { name: "Eve", city:"Eve" }                       // ❌ 混用
+    const NG: P | A = { city: "Paris", age: 18 }                        // ❌ 混用
 
-    // OR
-    const OK1: A | B = { name: "A", add:"B" } // A を満たす
-    const OK2: A | B = { city: "A", zip:"B" } // B を満たす
-    const OK3: A | B = { name: "A", add:"B", city: "A" } // ⭕少なくとも A を満たす
-    const OK4: A | B = { name: "A", add:"B", city: "A", zip:"B" } // 両方を満たす
+    ■ XOR 🛑排他的OR(Utility活用)
 
-    //[NG] const NG: A | B = { name: "A", city:"B" } // 混用
-    //[NG] const NG: A | B = { city: "A", add:"B" }  // 混用
+    type PartialNever<T> = { [X in keyof T]?: never | undefined; }
+    type OP = P & PartialNever<A>
+    type OA = A & PartialNever<P>
 
-    // AND
-    //[NG] const NG: A & B = { name: "A", add:"B" }  // 不足
-    //[NG] const NG: A & B = { city: "A", zip:"B" }  // 不足
-    //[NG] const NG: A & B = { name: "A", add:"B", city: "A" }  // 不足
-    const OK6: A & B = { name: "A", add:"B", city: "A", zip:"B" } // 両方を満たす
-
-    ■ 多層オブジェクト(同一原理)
-    type P = { id: string, X: A | B }
-
-    const OK11: P = { id: "1", X: { name: "A", add:"B" } } // A を満たす
-    const OK12: P = { id: "1", X: { city: "A", zip:"B" } } // B を満たす
-    const OK13: P = { id: "1", X: { name: "A", add:"B", city: "A" } } // ⭕少なくとも A を満たす
-    const OK14: P = { id: "1", X: { name: "A", add:"B", city: "A", zip:"B" } } // 両方を満たす
-
-    ■ 関数引数でも同様
-    function func(props: A | B) { ... }
-
-    const a = func({name:"A", add: "A"})
-    const b = func({city:"A", zip: "A"})
-    const c = func({name:"A", city: "A"}) //NG
-    const d = func({name:"A", add: "A", city: "A"}) //OK!! 要注意
+    const OK: OP | OA = { name: "Eve", age: 18 }                          // ⭕ P を満たす
+    const OK: OP | OA = { city: "Paris", zip:"03" }                       // ⭕ A を満たす
+    const OK: OP | OA = { name: "Eve", age: 18, city: "Paris" }           // ❌ 排他的 OR
+    const OK: OP | OA = { name: "Eve", age: 18, city: "Paris", zip:"03" } // ❌ 排他的 OR
+    const NG: OP | OA = { name: "Eve", city:"Eve" }                       // ❌ 混用
+    const NG: OP | OA = { city: "Paris", age: 18 }                        // ❌ 混用
 
 - KEY: ts.const
   EXPLAIN: 定数&推論型

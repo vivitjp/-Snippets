@@ -632,6 +632,16 @@ export const menuItems: menuByCategories[] = [
     ],
   },
   {
+    category: "他言語",
+    items: [
+      {
+        name: "🔺Fortran",
+        fileName: "languages/Fortran",
+        codeKeyTypes: [],
+      },
+    ],
+  },
+  {
     category: "ユビキタス",
     items: [
       {

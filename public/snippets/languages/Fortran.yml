@@ -1,0 +1,48 @@
+# ----------------------------
+# Excel
+# ----------------------------
+- KEY: fortran.general
+  CATEGORY: コンパイラ & 環境
+
+- KEY: fortran.compiler
+  EXPLAIN: コンパイラ
+  BODY: |
+    ■ linux インストール
+    > sudo apt install gfortran
+
+    ■ コンパイル
+    > gfortran hello.f90
+    > ./a.out
+    > gfortran -o hello hello.f90         // 実行ファイル名指定
+    > ./hellog
+
+- KEY: fortran.vscode
+  EXPLAIN: VSCode 環境
+  BODY: |
+    A
+
+- KEY: fortran.sample.code1
+  EXPLAIN: |
+    サンプルコード1
+  BODY: |
+    subroutine hello()
+      print *, "HELLO"
+    end subroutine
+
+- KEY: fortran.sample.code2
+  EXPLAIN: |
+    サンプルコード2
+  BODY: |
+    1
+
+- KEY: fortran.sample.code3
+  EXPLAIN: |
+    サンプルコード3
+  BODY: |
+    2
+
+- KEY: fortran.sample.code4
+  EXPLAIN: |
+    サンプルコード4
+  BODY: |
+    3

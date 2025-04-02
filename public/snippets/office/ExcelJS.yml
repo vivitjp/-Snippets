@@ -1,6 +1,21 @@
 # ----------------------------
 # Excel
 # ----------------------------
+- KEY: excelJS.general
+  CATEGORY: 関数比較
+
+- KEY: excelJS.math.log
+  EXPLAIN: |
+    関数: LOG関数名が紛らわしいので注意
+  BODY: |
+    Excel: LOG(X)      が10の対数を求める関数
+    JS: Math.log10(X)  指定数の底が 10 の対数を返す
+
+    Excel: NL(X)       が自然対数を求める関数
+    JS: Math.log(X)    指定数の自然対数を返す
+
+    関数: NL
+
 - KEY: excelJS.search.category
   CATEGORY: search 検索
 
