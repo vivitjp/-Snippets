@@ -7,6 +7,7 @@ import { keysDOM } from "./keys/DOM"
 import { keysDocker } from "./keys/Docker"
 import { keysEnv } from "./keys/Env"
 import { keysExcel } from "./keys/Excel"
+import { keysExcelVBS } from "./keys/ExcelVBS"
 import { keysExpress } from "./keys/Express"
 import { keysGit } from "./keys/Git"
 import { keysHTML } from "./keys/HTML"
@@ -65,6 +66,7 @@ export const codeKeys = {
   Unknown: "Unknown",
   Env: "Env",
   Excel: "Excel",
+  ExcelVBS: "ExcelVBS",
   TSConfig: "TSConfig",
 } as const
 
@@ -103,6 +105,7 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   Swagger: keysSwagger,
   Env: keysEnv,
   Excel: keysExcel,
+  ExcelVBS: keysExcelVBS,
   TSConfig: keysTSConfig,
   Chakra: keysChakra,
 }

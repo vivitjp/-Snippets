@@ -15,7 +15,11 @@
   },
   "dependencies": {
     "@chakra-ui/react": "2",
+    "@emotion/babel-preset-css-prop": "^11.12.0",
+    "@emotion/css": "^11.13.5",
+    "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "framer-motion": "^12.6.3",
     "ml-regression-multivariate-linear": "^2.0.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

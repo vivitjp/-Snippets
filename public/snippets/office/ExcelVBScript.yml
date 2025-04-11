@@ -1,0 +1,126 @@
+# ----------------------------
+# Excel VBScript
+# ----------------------------
+- KEY: ExcelVBScript.general
+  CATEGORY: Excel VBScript Topics
+
+- KEY: ExcelVBScript.detectHalfKatakana
+  EXPLAIN: |
+    アクティブシートの半角カタカナを検出
+  BODY: |
+    function main(workbook: ExcelScript.Workbook) {
+      //計算式シートが単一の場合
+      const selectedSheet = workbook.getActiveWorksheet();
+      const usedRange = selectedSheet.getUsedRange()  // string[][]
+      const resultSet = new Set<string>()
+
+      const found = usedRange.getValues().find(n=> {
+        n.forEach(m=>{
+          const res = m.toString().match(/[ｦ-ﾟ]+/img) as string[]   // [ｦ-ﾟ] 半角カタカナ
+          if (res) { res.forEach((s) => { resultSet.add(s) }) }
+        })
+      })
+      console.log(Array.from(resultSet))
+    }
+
+- KEY: ExcelVBScript.registerName
+  EXPLAIN: |
+    「名前の管理」登録
+  BODY: |
+    function main(workbook: ExcelScript.Workbook) {
+
+      const rowIndexFrom = 89               // 開始行
+      const rowIndexTo = 97                 // 終了行
+      const colIndexLambdaName = "AF"       // 名前          FUNC_NAME
+      const colIndexLambdaFormula = "AG"    // 式            FUNC_NAME(A, B, A+B)
+      const colIndexTargetCell = "AH"       // ターゲットセル AC100
+      const colIndexFormulaWithParam = "AI" // 式（引数あり） FUNC_NAME(AC98,AC99)
+
+      //現在開いている計算式シート
+      // const selectedSheet = workbook.getActiveWorksheet();
+
+      //計算式シートを名前で指定
+      const SheetCalc = "TARGET_SHEET"
+      const selectedSheet = workbook.getWorksheet(SheetCalc)
+
+      const FORMULA = true                  // 「名前の管理」に式登録
+      const CELL = false                    // 「該当セル」に式登録
+      const FORMULA_OR_CELL = FORMULA       // ★ここを切り替える
+      const REMAINS_ONLY = false            // true:既存を上書きせず
+
+      let currentName = ""
+
+      if (FORMULA_OR_CELL){
+        //「名前の管理」登録
+        try{
+          for (let i = rowIndexFrom; i <= rowIndexTo; i++){
+            const lambdaName = String(selectedSheet.getRange(`${colIndexLambdaName}${i}`).getValue())
+            currentName = lambdaName
+            const lambdaFormula = String(selectedSheet.getRange(`${colIndexLambdaFormula}${i}`).getValue())
+
+            if (!lambdaName || !lambdaFormula) continue;
+            const res = workbook.getNamedItem(lambdaName)
+            if (REMAINS_ONLY){
+              if (!res) {
+                workbook.addNamedItem(lambdaName, `=${lambdaFormula}`);
+                console.log(i)
+              }
+            }else{
+              if (res) res.delete()
+              console.log(lambdaName)
+              workbook.addNamedItem(lambdaName, `=${lambdaFormula}`);
+            }
+          }
+        }catch(err){
+          console.log("Failed for ", currentName, ": ", err);
+        }
+      }else{
+        //「該当セル」に式登録
+        try {
+          for (let i = rowIndexFrom; i <= rowIndexTo; i++) {
+            const lambdaName = String(selectedSheet.getRange(`${colIndexLambdaName}${i}`).getValue())
+            currentName = lambdaName
+            const lambdaFormula = String(selectedSheet.getRange(`${colIndexLambdaFormula}${i}`).getValue())
+            const targetCell = String(selectedSheet.getRange(`${colIndexTargetCell}${i}`).getValue())
+            const formulaWithParam = String(selectedSheet.getRange(`${colIndexFormulaWithParam}${i}`).getValue())
+
+            if (!lambdaName || !lambdaFormula) continue;
+            const res = workbook.getNamedItem(lambdaName)
+            if (!res) {
+              console.log("ERROR Not Registered", lambdaName)
+            }
+            if (!targetCell || !formulaWithParam) {
+              console.log("ERROR Cell", i, targetCell, formulaWithParam)
+            }else{
+
+              //シート+セル (シート名!セル番地)
+              if (targetCell.indexOf("!")>0){
+                const [alterTargetsSeetName, alterTargetCell] = targetCell.split("!")
+                if (!alterTargetsSeetName || !alterTargetCell){
+                  console.log("ERROR Alter Name or Cell", i, targetCell, formulaWithParam)
+                  continue
+                }
+                const alterTargetSheet = workbook.getWorksheet(alterTargetsSeetName)
+                if (!alterTargetSheet) {
+                  console.log("ERROR Alter Sheet", i, targetCell, formulaWithParam)
+                  continue
+                }
+                alterTargetSheet
+                  .getRange(`${alterTargetCell}`)
+                  .setValue(`=${formulaWithParam}`);
+              }
+
+              //ターゲットセル (セル番地)
+              else{
+                selectedSheet
+                  .getRange(`${targetCell}`)
+                  .setValue(`=${formulaWithParam}`);
+                }
+              }
+              console.log(i)
+            };
+        } catch (err) {
+          console.log("Failed for ", currentName, ": ", err);
+        }
+      }
+    }

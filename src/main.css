@@ -57,15 +57,17 @@ div.colorTr {
   gap: 5px;
 }
 div.colorName {
-  font-size: 18px;
+  font-size: 14px;
   width: 250px;
   padding: 3px 10px;
+  color: white;
   background-color: white;
 }
 div.colorReversed {
-  font-size: 18px;
+  font-size: 14px;
   width: 250px;
-  background-color: black;
+  color: #333;
+  background-color: #333;
   padding: 3px 10px;
 }
 

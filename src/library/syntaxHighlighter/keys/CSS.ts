@@ -61,6 +61,8 @@ export const keysCSS: KeyDef =
       "flex-wrap",
       "flex-flow",
       "gap",
+      "important",
+      "styled", //Emotion
     ],
     // ■ オレンジ
     darkOrange: [

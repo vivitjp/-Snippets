@@ -625,6 +625,11 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.Excel],
       },
       {
+        name: "Excel VBScript",
+        fileName: "office/ExcelVBScript",
+        codeKeyTypes: [codeKeys.ExcelVBS],
+      },
+      {
         name: "Excel2JS関数",
         fileName: "office/ExcelJS",
         codeKeyTypes: [codeKeys.Excel, codeKeys.JSTS],

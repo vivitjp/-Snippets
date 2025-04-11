@@ -70,16 +70,16 @@
 
     ■ XOR 🛑排他的OR(Utility活用)
 
-    type PartialNever<T> = { [X in keyof T]?: never | undefined; }
-    type OP = P & PartialNever<A>
-    type OA = A & PartialNever<P>
+    type XOR<T> = { [X in keyof T]?: never | undefined; }
+    type XP = P & XOR<A>
+    type XA = A & XOR<P>
 
-    const OK: OP | OA = { name: "Eve", age: 18 }                          // ⭕ P を満たす
-    const OK: OP | OA = { city: "Paris", zip:"03" }                       // ⭕ A を満たす
-    const OK: OP | OA = { name: "Eve", age: 18, city: "Paris" }           // ❌ 排他的 OR
-    const OK: OP | OA = { name: "Eve", age: 18, city: "Paris", zip:"03" } // ❌ 排他的 OR
-    const NG: OP | OA = { name: "Eve", city:"Eve" }                       // ❌ 混用
-    const NG: OP | OA = { city: "Paris", age: 18 }                        // ❌ 混用
+    const OK: XP | XA = { name: "Eve", age: 18 }                          // ⭕ P を満たす
+    const OK: XP | XA = { city: "Paris", zip:"03" }                       // ⭕ A を満たす
+    const NG: XP | XA = { name: "Eve", age: 18, city: "Paris" }           // ❌ 排他的 OR
+    const NG: XP | XA = { name: "Eve", age: 18, city: "Paris", zip:"03" } // ❌ 排他的 OR
+    const NG: XP | XA = { name: "Eve", city:"Eve" }                       // ❌ 混用
+    const NG: XP | XA = { city: "Paris", age: 18 }                        // ❌ 混用
 
 - KEY: ts.const
   EXPLAIN: 定数&推論型

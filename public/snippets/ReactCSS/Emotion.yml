@@ -2,8 +2,10 @@
 #-------------------------------
 # Emotion
 #-------------------------------
-
 - KEY: pk.emotion.package
+  CATEGORY: パッケージ & インストール
+
+- KEY: pk.emotion.packages
   EXPLAIN: Package
   BODY: |
     https://qiita.com/cheez921/items/1d13545f8a0ea46beb51
@@ -15,7 +17,7 @@
     @emotion/styled
         styled-component っぽい記法で書くことができるEmotionパッケージ。
         (筆者はstyled-componentから乗り換える人用のパッケージだと思っています)
-    @emotion/core
+    [NG] @emotion/core
         @emotion/core はEmotion 11で @emotion/react に改名したため、忘れ去ってください。
         参考：https://emotion.sh/docs/emotion-11#package-renaming
     @emotion/babel-preset-css-prop
@@ -27,8 +29,57 @@
     @emotion/server
         サーバー側レンダリングするAPI
 
-- KEY: pk.emotion.style.object
-  EXPLAIN: オブジェクトスタイル
+- KEY: pk.emotion.install
+  EXPLAIN: インストール
+  BODY: |
+    "@emotion/babel-preset-css-prop": "^11.12.0",
+    "@emotion/css": "^11.13.5",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "framer-motion": "^12.6.3",
+
+- KEY: pk.emotion.styled.category
+  CATEGORY: Styled 宣言
+
+- KEY: pk.emotion.style.object.styled
+  EXPLAIN: Styled 宣言と上書き
+  BODY: |
+    const EmotionStyled = styled(Input)`
+      font-size: 20px;
+      color: red;
+    `
+
+    ■ 用法
+    <EmotionStyled {...props} />
+
+    ■ CSS属性の上書き => 効果なし
+    <EmotionStyled {...props} color={"blue"} />
+
+    ■ CSS属性の上書き => 効果あり
+    <EmotionStyled {...props} color={"blue !important"} />
+
+- KEY: pk.emotion.css.category
+  CATEGORY: CSS 宣言
+
+- KEY: pk.emotion.css
+  EXPLAIN: CSS 宣言と上書き
+  BODY: |
+    const EmotionCSS = css`
+      font-size: 20px;
+      color: red;
+    `
+
+    ■ 用法
+    <Input value="Hello" css={EmotionCSS} {...props} />
+
+    ■ CSS属性の上書き => 効果なし
+    <Input value="Hello" css={EmotionCSS} {...props} color={"green"}/>
+
+    ■ CSS属性の上書き => 効果あり
+    <Input value="Hello" css={EmotionCSS} {...props} color={"green !important"}/>
+
+- KEY: pk.emotion.css.object
+  EXPLAIN: CSS オブジェクトスタイル
   BODY: |
     const objectStyle = css({
       maxWidth: '400px',
@@ -39,8 +90,8 @@
       },
     });
 
-- KEY: pk.emotion.style.object.expand
-  EXPLAIN: オブジェクト拡張
+- KEY: pk.emotion.css.object.expand
+  EXPLAIN: CSS オブジェクト拡張
   BODY: |
     const marginBottom = css({
       marginBottom: '16px'
@@ -51,8 +102,8 @@
       padding: '16px'
     })
 
-- KEY: pk.emotion.style.string
-  EXPLAIN: ストリングスタイル
+- KEY: pk.emotion.css.string
+  EXPLAIN: CSS ストリングスタイル
   BODY: |
     const stringStyle = css`
       max-width: 400px;
@@ -69,8 +120,8 @@
       </div>
     )
 
-- KEY: pk.emotion.style.string.expand
-  EXPLAIN: ストリング拡張
+- KEY: pk.emotion.css.string.expand
+  EXPLAIN: CSS ストリング拡張
   BODY: |
     const marginBottom = css`
       margin-bottom: 16px
@@ -81,8 +132,8 @@
       padding: 16px;
     `
 
-- KEY: pk.emotion.style.string.child
-  EXPLAIN: ストリング入れ子
+- KEY: pk.emotion.css.string.child
+  EXPLAIN: CSS ストリング入れ子
   BODY: |
     const listStyle = css`
       li {
@@ -96,8 +147,8 @@
       </ul>
     );
 
-- KEY: pk.emotion.style.string.child
-  EXPLAIN: ストリング親指定
+- KEY: pk.emotion.css.string.child
+  EXPLAIN: CSS ストリング親指定
   BODY: |
     const item = css`
       ul & {
@@ -116,8 +167,8 @@
       </>
     );
 
-- KEY: pk.emotion.param
-  EXPLAIN: 引数として
+- KEY: pk.emotion.css.param
+  EXPLAIN: CSS 引数として
   BODY: |
     const buttonWrapperStyle = css`
       background-color: #ddd;
@@ -132,8 +183,8 @@
       <button className={className}>{children}</button>
     )
 
-- KEY: pk.emotion.paramArray
-  EXPLAIN: 引数(配列)として
+- KEY: pk.emotion.css.paramArray
+  EXPLAIN: CSS 引数(配列)として
   BODY: |
     const marginBottom = css`
       margin-bottom: 16px
@@ -147,8 +198,8 @@
       <div css={[marginBottom, style]}>{/* */}</div> 
     )
 
-- KEY: pk.emotion.mediaQuery
-  EXPLAIN: メディアクエリ
+- KEY: pk.emotion.css.mediaQuery
+  EXPLAIN: CSS メディアクエリ
   BODY: |
     type breakpointsType = {
       id: 'tablet' | 'pc';
@@ -189,3 +240,57 @@
         padding: 20,
       },
     });
+
+- KEY: pk.emotion.css.global
+  EXPLAIN: CSS グローバル
+  BODY: |
+    import { Global, css } from '@emotion/core'
+
+    const global = css`
+      * {
+        margin: 0;
+        padding: 0;
+      }
+    `
+
+    render(
+      <Global styles={global}/>
+    )
+
+- KEY: pk.emotion.css.animation
+  EXPLAIN: CSS アニメーション Component
+  BODY: |
+    使用Package: react-intersection-observer
+    https://www.npmjs.com/package/react-intersection-observer
+
+    const text = css`
+      color: hotpink;
+      opacity: 0;
+      transform: translateY(-10px);
+    `
+
+    const fadeIn = keyframes`
+      100% {
+        opacity: 1
+        transform: translateY(0);
+      }
+    `
+
+    const animation = css`
+      animation: ${fadeIn} 1s ease-out both;
+    `
+
+    const Component = () => {
+      const [ref, inView] = useInView({
+        rootMargin: '10px',
+        threshold: 0,
+      })
+
+      return (
+        <p ref={ref} css={[text, inView && animation]}>
+          animation
+        </p>
+      )
+    }
+
+    export default Component
