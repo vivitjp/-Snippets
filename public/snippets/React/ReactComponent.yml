@@ -2,6 +2,9 @@
 #-------------------------------
 # React Component
 #-------------------------------
+- KEY: ts.react.Component.category
+  CATEGORY: React Component
+
 - KEY: ts.react.funcComponent
   EXPLAIN: 関数コンポーネント
   BODY: |
@@ -43,6 +46,8 @@
 #-------------------------------
 # React Component Samples
 #-------------------------------
+- KEY: ts.react.Component.Samples.category
+  CATEGORY: React Component Samples
 
 - KEY: rc.button
   EXPLAIN: Button
@@ -170,6 +175,8 @@
 #-------------------------------
 # カスタムコンポーネント
 #-------------------------------
+- KEY: ts.react.Component.Custom.category
+  CATEGORY: React Component Custom Samples
 
 - KEY: qw.custom.input
   EXPLAIN: input カスタムコンポーネント
@@ -234,9 +241,66 @@
       }
     )
 
+- KEY: qw.custom.inputRef.fileUpload
+  EXPLAIN: input+Ref ファイルアップロード
+  BODY: |
+    import { Box, Button, Flex } from "@chakra-ui/react";
+    import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from "react";
+
+    export const FileUploadButton = ({
+      setSavedData,
+      type = ".txt",
+    }: {
+      setSavedData: Dispatch<SetStateAction<string | undefined>>;
+      type?: string;
+    }) => {
+      const refInput = useRef<HTMLInputElement>(null);
+      const handleButton = () => {
+        refInput.current?.click();
+      };
+      const [msg, setMsg] = useState("");
+
+      const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files || e.target.files.length === 0) {
+          console.error("保存データファイル選択");
+          return;
+        }
+
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const content = event.target?.result;
+          try {
+            setSavedData(content as string);
+            setMsg("ロードされました");
+          } catch (error) {
+            console.error(error);
+            setMsg("ロード失敗しました");
+          }
+        };
+        reader.readAsText(file);
+      };
+
+      return (
+        <Flex alignItems={"center"}>
+          <Button onClick={handleButton}>保存データファイル使用</Button>
+          <input
+            ref={refInput}
+            hidden={true}
+            type="file"
+            accept={type}
+            onChange={handleFileChange}
+          />
+          <Box ml={5}>{msg}</Box>
+        </Flex>
+      );
+    };
+
 #-------------------------------
 # まとめコンポーネント
 #-------------------------------
+- KEY: ts.react.Component.Wrapper.category
+  CATEGORY: React Component Wrapper Samples
 
 - KEY: qw.custom.joiner
   EXPLAIN: 複数コンポーネントのまとめ

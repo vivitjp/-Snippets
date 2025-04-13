@@ -173,6 +173,10 @@
     git branch --all                    # ローカル・リモート含め、全ブランチ
 
     git branch --contains               # 現ブランチの名前表示
+    git branch --merged                 # マージ済みのブランチ表示
+    git branch --no-merged              # マージされていないブランチ表示
+    git branch -vv                      # 現ブランチの情報表示
+    git branch -vvv                     # 現ブランチの情報表示(詳細)
 
     ■ 名称変更
     git branch -m <new_name>            # 現ブランチの名前変更
@@ -197,6 +201,8 @@
   EXPLAIN: add(indexing)
   BODY: |
     git add .                           # カレントDIRの全ファイル追加
+    git add -A                          # カレントDIRの全ファイル追加(削除も含む)
+    git add -u                          # カレントDIRの変更ファイル追加(削除も含む)
 
     ■ Indexing 取り消し
     git reset                           # 全ステージング取消
@@ -207,6 +213,7 @@
     git commit -m "message"             # コミット
     git commit --amend -m "message"     # 直前のコミット修正
 
+
     ■ 参考) コミット履歴残さずに取消
     git reset --soft HEAD^              # コミット取消
     git reset --mixed HEAD^             # コミット, Index取消
@@ -215,6 +222,23 @@
     ■ 参考) コミット履歴残しつつ取消
     git revert HEAD^                    # コミット履歴を残して取消
     git revert HEAD^ -n                 # コミット履歴を残して,Indexまで取消
+
+- KEY: git.cherrypick
+  EXPLAIN: cherrypick(特定コミットを適用)
+  BODY: |
+    git cherry-pick <commit>                    # 特定コミットを適用
+    git cherry-pick <commit>..<commit>          # 複数コミットを一斉に適用(最初と最後のコミット)
+    git cherry-pick <commit>^..HEAD             # 特定コミットからHEADまで適用
+    git cherry-pick <commit>^..<commit>         # 特定コミットから特定コミットまで適用
+    git cherry-pick <commit>^..<commit>^        # 特定コミットから特定コミットまで適用
+    git cherry-pick <commit>^..<commit>^..HEAD  # 特定コミットから特定コミットまで適用
+    git cherry-pick <commit>^..<commit>^..HEAD^ # 特定コミットから特定コミットまで適用
+
+    ■ 取り消し
+    git cherry-pick --abort             # コンフリクト編集前
+    git reset --hard HEAD               # コンフリクト編集後
+    git reset --hard ORIG_HEAD          # マージ前の段階に戻る
+    git reset --hard <commit>           # 特定コミットに戻る
 
 - KEY: git.pull.origin
   EXPLAIN: pull origin(リモートからマージ)
@@ -240,27 +264,30 @@
   BODY: |
     git status -s                       # -s:簡易表示
 
-        On branch main
-        Your branch is up to date with 'origin/main'.
+      On branch main
+      Your branch is up to date with 'origin/main'.
 
-        Changes not staged for commit:
-          (use "git add/rm <file>..." to update what will be committed)        
-          (use "git restore <file>..." to discard changes in working directory)
-                modified:   package.json
-                deleted:    public/snippets/JSRuntime/nodejs/Node.yml
-                modified:   public/snippets/React/React.yml
-                modified:   public/snippets/React/ReactComponent.yml
-                deleted:    public/snippets/React/ReactTypeScript.yml
+      Changes not staged for commit:
+        (use "git add/rm <file>..." to update what will be committed)        
+        (use "git restore <file>..." to discard changes in working directory)
+              modified:   package.json
+              deleted:    public/snippets/JSRuntime/nodejs/Node.yml
+              modified:   public/snippets/React/React.yml
+              modified:   public/snippets/React/ReactComponent.yml
+              deleted:    public/snippets/React/ReactTypeScript.yml
 
 - KEY: git.merge
   EXPLAIN: merge(ブランチ間マージ)
   BODY: |
     git merge <B>                       # 指定ブランチを現ブランチにマージ
+    git merge --no-ff <B>               # マージコミットを作成する(マージコミットを残す)
+    git merge --squash <B>              # マージコミットを作成しない(マージコミットを残さない)
 
     ■ 取り消し
     git merge --abort                   # コンフリクト編集前
     git reset --hard HEAD               # コンフリクト編集後
     git reset --hard ORIG_HEAD          # マージ前の段階に戻る
+    git reset --hard <commit>           # 特定コミットに戻る
 
 - KEY: git.rebase
   EXPLAIN: ベース変更
@@ -315,11 +342,17 @@
   EXPLAIN: tag(タグ)
   BODY: |
     git tag                             # 表示
+    git tag -l                          # 表示
+    git tag -l "v1.*"                   # v1.0, v1.1
 
       v1.0
       v1.1
 
     git tag v1.0                        # タグ追加
+    git tag -a v1.0 -m "message"        # タグ追加(メッセージ)
+    git tag -a v1.0 -m "message" <commit> # タグ追加(メッセージ, コミット指定)
+    git tag -d v1.0                     # タグ削除
+    git tag -d v1.0 <commit>            # タグ削除(コミット指定)
 
 - KEY: git.errors.push.permission
   EXPLAIN: |

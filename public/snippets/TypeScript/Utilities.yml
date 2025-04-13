@@ -6,6 +6,9 @@
 #-------------------------------
 # Utilities
 #-------------------------------
+- KEY: ts.Utilities.category
+  CATEGORY: Utilities
+
 - KEY: ts.Util.Partial<T>
   EXPLAIN: |
     Partial<T>: オプショナルに変換
@@ -14,9 +17,7 @@
       name: string
       age: number
     }
-    const person: Partial<Person> = {
-      name: "John",
-    }
+    const person: Partial<Person> = { name: "John" }
   FOLD: |
     type Partial<T> = { [P in keyof T]?: T[P] | undefined; }
 
@@ -146,6 +147,109 @@
   FOLD: |
     type NonNullable<T> = T & {}
 
+#-------------------------------
+# 関数 Utilities
+#-------------------------------
+- KEY: ts.Function.category
+  CATEGORY: 関数 Utilities
+
+- KEY: ts.Util.Parameters<T>
+  EXPLAIN: |
+    Parameters<T>: メソッドの引数型取得
+  BODY: |
+    const funcA = (text: string, num: number) => { }
+    type A1 = Parameters<typeof funcA> // [string, number]
+    type A2 = Parameters<typeof funcA>[number] // string | number
+  FOLD: |
+    type Parameters<T extends (...args: any) => any>
+      = T extends (...args: infer P) => any ? P : never
+
+- KEY: ts.Util.ReturnType<T>
+  EXPLAIN: |
+    ReturnType<T>: メソッドの戻り型取得
+  BODY: |
+    const func2 = (): number => 1
+    type A = ReturnType<typeof func2> // number
+  FOLD: |
+    type ReturnType<T extends (...args: any) => any> 
+      = T extends (...args: any) => infer R ? R : any
+
+- KEY: ts.Util.Awaited<T>
+  EXPLAIN: |
+    Awaited<T>: 非同期awaitの戻り型取得
+  BODY: |
+    ■ 非同期関数の戻り型Promise<string> から Promise を除去
+
+    type A = Awaited<Promise<string>> //string
+    type B = Awaited<Promise<Promise<number>>> //number
+  FOLD: |
+    type Awaited<T> = T extends null | undefined ? T : T extends object & {
+        then(onfulfilled: infer F, ...args: infer _): any;
+    } ? F extends (value: infer V, ...args: infer _) => any ? Awaited<...> : never : T
+
+- KEY: ts.Util.NoInfer<T>
+  EXPLAIN: |
+    NoInfer<T>: 型推論ブロック
+  BODY: |
+    function getColor<C extends string>(
+      colors: C[],
+      defaultColor?: NoInfer<C>,
+    ) { }
+
+    getColor(["red", "yellow", "green"], "red");   // OK
+    getColor(["red", "yellow", "green"], "blue");  // Error
+  FOLD: |
+    type NoInfer<T> = intrinsic
+
+#-------------------------------
+# Class Utilities
+#-------------------------------
+- KEY: ts.Class.category
+  CATEGORY: Class Utilities
+
+- KEY: ts.Util.ConstructorParameters<T>
+  EXPLAIN: |
+    ConstructorParameters<T>: コンストラクタの属性型群取得
+  BODY: |
+    class Person {
+      name: string
+      age: number
+      constructor(name: string, age: number) {
+        this.name = name
+        this.age = age
+      }
+    }
+    type A = ConstructorParameters<typeof Person> // [string, number]
+  FOLD: |
+    type ConstructorParameters<T extends abstract new (...args: any) => any>
+      = T extends abstract new (...args: infer P) => any ? P : never
+
+- KEY: ts.Util.InstanceType<T>
+  EXPLAIN: |
+    InstanceType<T>: インスタンス型
+  BODY: |
+    class C {
+      x = 0;
+      y = 0;
+    }
+    type T0 = InstanceType<typeof C>;             = C
+    type T1 = InstanceType<any>;                  = any
+    type T2 = InstanceType<never>;                = never
+    type T3 = InstanceType<string>;               = any
+         * 'string' does not satisfy the constraint 'abstract new (...args: any) => any'
+    type T4 = InstanceType<Function>;             = any
+         * 'Function' does not satisfy the constraint 'abstract new (...args: any) => any'
+         * 'Function' provides no match for the signature 'new (...args: any): any'
+  FOLD: |
+    type InstanceType<T extends abstract new (...args: any) => any> 
+      = T extends abstract new (...args: any) => infer R ? R : any
+
+#-------------------------------
+# カスタム Utilities
+#-------------------------------
+- KEY: ts.Utilities.カスタム.category
+  CATEGORY: カスタム Utilities
+
 - KEY: ts.Util.DeepNonNullable<T>
   EXPLAIN: |
     DeepNonNullable<T>: 再帰的に null/undefined 除外(カスタムUtility)
@@ -174,94 +278,11 @@
     type Maybe<T> = { [P in keyof T]: P | undefined | null }
   FOLD: |
 
-- KEY: ts.Util.Parameters<T>
-  EXPLAIN: |
-    Parameters<T>: メソッドの引数型取得
-  BODY: |
-    const funcA = (text: string, num: number) => { }
-    type A1 = Parameters<typeof funcA> // [string, number]
-    type A2 = Parameters<typeof funcA>[number] // string | number
-  FOLD: |
-    type Parameters<T extends (...args: any) => any>
-      = T extends (...args: infer P) => any ? P : never
-
-- KEY: ts.Util.ConstructorParameters<T>
-  EXPLAIN: |
-    ConstructorParameters<T>: コンストラクタの属性型群取得
-  BODY: |
-    class Person {
-      name: string
-      age: number
-      constructor(name: string, age: number) {
-        this.name = name
-        this.age = age
-      }
-    }
-    type A = ConstructorParameters<typeof Person> // [string, number]
-  FOLD: |
-    type ConstructorParameters<T extends abstract new (...args: any) => any>
-      = T extends abstract new (...args: infer P) => any ? P : never
-
-- KEY: ts.Util.ReturnType<T>
-  EXPLAIN: |
-    ReturnType<T>: メソッドの戻り型取得
-  BODY: |
-    const func2 = (): number => 1
-    type A = ReturnType<typeof func2> // number
-  FOLD: |
-    type ReturnType<T extends (...args: any) => any> 
-      = T extends (...args: any) => infer R ? R : any
-
-- KEY: ts.Util.Awaited<T>
-  EXPLAIN: |
-    Awaited<T>: 非同期awaitの戻り型取得
-  BODY: |
-    ■ 非同期関数の戻り型Promise<string> から Promise を除去
-
-    type A = Awaited<Promise<string>> //string
-    type B = Awaited<Promise<Promise<number>>> //number
-  FOLD: |
-    type Awaited<T> = T extends null | undefined ? T : T extends object & {
-        then(onfulfilled: infer F, ...args: infer _): any;
-    } ? F extends (value: infer V, ...args: infer _) => any ? Awaited<...> : never : T
-
-- KEY: ts.Util.InstanceType<T>
-  EXPLAIN: |
-    InstanceType<T>: インスタンス型
-  BODY: |
-    class C {
-      x = 0;
-      y = 0;
-    }
-    type T0 = InstanceType<typeof C>;             = C
-    type T1 = InstanceType<any>;                  = any
-    type T2 = InstanceType<never>;                = never
-    type T3 = InstanceType<string>;               = any
-         * 'string' does not satisfy the constraint 'abstract new (...args: any) => any'
-    type T4 = InstanceType<Function>;             = any
-         * 'Function' does not satisfy the constraint 'abstract new (...args: any) => any'
-         * 'Function' provides no match for the signature 'new (...args: any): any'
-  FOLD: |
-    type InstanceType<T extends abstract new (...args: any) => any> 
-      = T extends abstract new (...args: any) => infer R ? R : any
-
-- KEY: ts.Util.NoInfer<T>
-  EXPLAIN: |
-    NoInfer<T>: 型推論ブロック
-  BODY: |
-    function getColor<C extends string>(
-      colors: C[],
-      defaultColor?: NoInfer<C>,
-    ) { }
-
-    getColor(["red", "yellow", "green"], "red");   // OK
-    getColor(["red", "yellow", "green"], "blue");  // Error
-  FOLD: |
-    type NoInfer<T> = intrinsic
-
 #-------------------------------
 # object Literal
 #-------------------------------
+- KEY: ts.objectLiteral.category
+  CATEGORY: Key名(オブジェクトリテラル)
 
 - KEY: ts.objectLiteral.Util.Union
   EXPLAIN: |

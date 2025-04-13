@@ -33,7 +33,7 @@ export const CategoryWrapper = styled.div`
     padding-bottom: 5px;
     margin-top: 10px;
     margin-bottom: -10px;
-    color: #555;
+    color: Firebrick;
     font-size: 24px;
     font-weight: 500;
     border-bottom: 1px solid #999;

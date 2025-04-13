@@ -2,12 +2,20 @@
 #-------------------------------
 # MySQL
 #-------------------------------
+- KEY: mysql.command.title
+  CATEGORY: コマンド
 
 - KEY: mysql.command
   EXPLAIN: コマンド
   BODY: |
     mysql -u [username] -p [password] [database] // 接続
     mysqldump -u [username] -p [database] > data_backup.sql // DBのデータ書き出し
+
+#-------------------------------
+# データベース
+#-------------------------------
+- KEY: mysql.db.title
+  CATEGORY: データベース
 
 - KEY: mysql.db
   EXPLAIN: テーブル作成
@@ -24,6 +32,12 @@
   BODY: |
     EXPLAIN <query>;         // 実行計画
     EXPLAIN ANALYZE <query>; // 実行結果
+
+#-------------------------------
+# テーブル
+#-------------------------------
+- KEY: mysql.table.title
+  CATEGORY: テーブル
 
 - KEY: mysql.table.create
   EXPLAIN: テーブル定義
@@ -100,6 +114,25 @@
     ALTER TABLE <table> CHANGE <colA> <colB> 型;             // カラム型＆名同時変更
     ALTER TABLE <table> DROP COLUMN <col>;                   // カラム削除
     DROP TABLE <table>;                                      // テーブル削除
+
+#-------------------------------
+# ビュー
+#-------------------------------
+- KEY: mysql.view.title
+  CATEGORY: ビュー
+
+- KEY: mysql.view
+  EXPLAIN: ビュー
+  BODY: |
+    //INSERT/UPDATE/DELETE も条件次第で可能
+    CREATE OR REPLACE VIEW <view> AS SELECT ... ORDER BY <col>;
+    DROP VIEW <view>;
+
+#-------------------------------
+# クエリ
+#-------------------------------
+- KEY: mysql.query.title
+  CATEGORY: クエリ
 
 - KEY: mysql.query
   EXPLAIN: クエリ
@@ -238,12 +271,11 @@
     // ラテラル導出
     SELECT ...,p FROM t1, LATERAL (SELECT p FROM t2 WHERE t1.id=t2.t1id) t2;
 
-- KEY: mysql.view
-  EXPLAIN: ビュー
-  BODY: |
-    //INSERT/UPDATE/DELETE も条件次第で可能
-    CREATE OR REPLACE VIEW <view> AS SELECT ... ORDER BY <col>;
-    DROP VIEW <view>;
+#-------------------------------
+# 操作(更新,更新,削除)
+#-------------------------------
+- KEY: mysql.manip.title
+  CATEGORY: 操作(更新,更新,削除)
 
 - KEY: mysql.insert
   EXPLAIN: 挿入(or更新)
@@ -265,6 +297,12 @@
   BODY: |
     DELETE FROM <schema>.<table> WHERE condition;  // 削除
     TRUNCATE TABLE <schema>.<table>;               // (テーブル内全データ)削除
+
+#-------------------------------
+# 比較
+#-------------------------------
+- KEY: mysql.compare.title
+  CATEGORY: 比較
 
 - KEY: mysql.compare.signs
   EXPLAIN: 比較記号
@@ -332,6 +370,12 @@
     REGEXP_SUBSTR('abc def ghi', '[a-z]+')       => abc
     REGEXP_SUBSTR('abc def ghi', '[a-z]+', 1, 3) => ghi
 
+#-------------------------------
+# 集約,結合,集計
+#-------------------------------
+- KEY: mysql.group.title
+  CATEGORY: 集約,結合,集計
+
 - KEY: mysql.group
   EXPLAIN: 集約
   BODY: |
@@ -380,6 +424,12 @@
     // 指定Colごとに集計
     SUM(profit) OVER(PARTITION BY <col> [ORDER BY <col>]) AS <alias>
 
+#-------------------------------
+# 構文
+#-------------------------------
+- KEY: mysql.syntax.title
+  CATEGORY: 構文
+
 - KEY: mysql.if.case
   EXPLAIN: 条件節
   BODY: |
@@ -409,6 +459,12 @@
       IFNULL(NULL, 10)   => 10
       IFNULL(1/0, 10)    => 10
       IFNULL(1/0, 'yes') => 'yes'
+
+#-------------------------------
+# 型 & 関数
+#-------------------------------
+- KEY: mysql.type.title
+  CATEGORY: 型 & 関数
 
 - KEY: mysql.type.number
   EXPLAIN: 型(数)
@@ -546,6 +602,12 @@
     DECLARE xid INT;
     SELECT xname, id INTO newname, xid FROM table1 WHERE xname = xname;
     SELECT newname;
+
+#-------------------------------
+# 型 & 関数
+#-------------------------------
+- KEY: mysql.statement.title
+  CATEGORY: PROCEDURE, FUNCTION, TRIGGER
 
 - KEY: mysql.statement.proc
   EXPLAIN: プロセス

@@ -2,6 +2,9 @@
 #-------------------------------
 # TypeScript 2024
 #-------------------------------
+- KEY: ts.TypeScript.category
+  CATEGORY: TypeScript 型
+
 - KEY: ts.types
   EXPLAIN: 型(プリミティブ型)
   BODY: |
@@ -45,6 +48,12 @@
         case "A": return ...
         case "B": return ...
         default: let _ng:never = props       // 警告
+
+- KEY: ts.type.Builtin
+  EXPLAIN: Primitive & Builtin リスト
+  BODY: |
+    type Primitive = number | string | boolean | bigint | symbol | undefined | null
+    type Builtin = Primitive | Function | Date | Error | RegExp
 
 - KEY: ts.type.andOr
   EXPLAIN: 型(AND/OR)
@@ -115,7 +124,7 @@
     [NG] const a4 = { a: "1", b:2 } as A     //型Error
     [NG] const a5 = <A>{ a: 1, b:2 }         //型Error
 
-    ■ satisfies(型指定:v4.9)
+    ■ satisfies(型指定:v4.9)                  // Widening(string化)を防ぐなど
     const a6 = {
       a: 1, b: 2
     } satisfies A                            //{ a: number; b: number; }
@@ -125,7 +134,7 @@
     } as const satisfies A                   //{ readonly a: 1; readonly b: 2; }
 
 - KEY: ts.typeof.keyof
-  EXPLAIN: 型取得とKV
+  EXPLAIN: Key取得
   BODY: |
     ■ 配列から型作成
     const x = ["A", "B", "C"] as const
@@ -145,7 +154,7 @@
     type X = typeof o                        // {a:number;b:number;}
     type K = keyof X                         // "a" | "b"
     type Y = keyof typeof o                  // "a" | "b"
-    type B = (typeof o)[keyof typeof o]      // string
+    type B = (typeof o)[keyof typeof o]      // string <= Widening
 
     ■ オブジェクトから型作成時(const有)
     const o = { a: "A", b: "B" } as const
@@ -157,16 +166,16 @@
 
     ■ 配列からENUM作成
     const array = ["A", "B", "C", "D"] as const
-    const ENUM_型式 = makeEnum(array);
+    const ENUM = makeEnum(array);
 
-    function makeEnum<T extends readonly string[]>(定数配列: T) {
-      return 定数配列.filter(Boolean).reduce(
+    function makeEnum<T extends readonly string[]>(配列: T) {
+      return 配列.filter(Boolean).reduce(
       (acc, cur) => ({ ...acc, [cur]: cur }),
-      {} as {[key in typeof 定数配列[number]]: string}
+      {} as {[key in typeof 配列[number]]: string}
       );
     }
 
-- KEY: ts.typeof.keyof
+- KEY: ts.typeof.keyof.Record比較
   EXPLAIN: 型取得とKV(MappedType & Record<> 比較)
   BODY: |
     ■ Object型宣言
@@ -279,6 +288,9 @@
 #-------------------------------
 # Generics
 #-------------------------------
+- KEY: ts.generics.category
+  CATEGORY: ジェネリクス
+
 - KEY: ts.generics.type
   EXPLAIN: ジェネリクス(型宣言)
   BODY: |
@@ -381,6 +393,9 @@
 #-------------------------------
 # Function
 #-------------------------------
+- KEY: ts.function.category
+  CATEGORY: 関数
+
 - KEY: ts.function
   EXPLAIN: 関数(引数型,戻り値型)
   BODY: |
@@ -523,6 +538,8 @@
 #-------------------------------
 # Class
 #-------------------------------
+- KEY: ts.class.category
+  CATEGORY: Class
 
 - KEY: ts.class.variables
   EXPLAIN: クラス変数
@@ -646,177 +663,14 @@
     A.f(3)                                   // Static関数(インスタンス化不要)
 
 #-------------------------------
-# Utilities
-#-------------------------------
-
-- KEY: ts.utilities.Record
-  EXPLAIN: オブジェクト生成
-  BODY: |
-    type MyRecord<K extends PropertyKey, T>
-      = {[P in K]: T}
-
-    type Sample = "a"|"b"
-    type Record1 = Record<Sample, string>
-    type Record2 = MyRecord<Sample, string>
-      = { a: string; b: string; }
-
-- KEY: ts.utilities.Required
-  EXPLAIN: 必須化
-  BODY: |
-    type MyRequired<T> = { [P in keyof T]-?: T[P] | undefined }
-
-    type Sample = {a:string; b:number}
-    type Req1 = Required<Sample>
-    type Req2 = MyRequired<Sample>
-      = { a: string; b: string; }
-
-- KEY: ts.utilities.Partial
-  EXPLAIN: オプショナル化
-  BODY: |
-    type MyPartial<T> = {[P in keyof T]?: T[P] | undefined}
-
-    type Sample = {a:string; b:number}
-    type Par1 = Partial<Sample>
-    type Par2 = MyPartial<Sample>
-      = { a: string; b: string; }
-
-- KEY: ts.utilities.Readonly
-  EXPLAIN: 読み取り専用化
-  BODY: |
-    type MyReadonly<T> = {readonly [P in keyof T]-?: T[P]}
-
-    type Sample = {a:string; b:number}
-    type Par1 = Readonly<Sample>
-    type Par2 = MyReadonly<Sample>
-      = { readonly a: string; readonly b: string; }
-
-- KEY: ts.utilities.Pick
-  EXPLAIN: Keyで抽出
-  BODY: |
-    type MyPick<T, K extends keyof T> = {[P in K]: T[P]}
-
-    type Sample = {a:string; b:number}
-    type Pick1 = Pick<Sample, "a">
-    [NG] Pick<Sample, "a"|"c">               //"c" 存在せず NG
-    type Pick2 = MyPick<Sample, "a">
-
-- KEY: ts.utilities.Omit
-  EXPLAIN: Keyで除外
-  BODY: |
-    type MyOmit<T, K> = {[P in Exclude<keyof T, K>]:T[P]}
-
-    type Sample = {a:string; b:number}
-
-    type Omit1 = Omit<Sample, "a">
-    type Omit2 = Omit<Sample, "a"|"c">       //"c"存在せずともOK
-
-    type Omit3 = MyOmit<Sample, "a">
-    type Omit4 = MyOmit<Sample, "a"|"c">     //"c"存在せずともOK
-      = { b: number }
-
-- KEY: ts.utilities.Exclude
-  EXPLAIN: Key配列から除外
-  BODY: |
-    Exclude<T, U>      // キー除外
-    = T extends U ? never:T
-      <keyof T,"a"|"c"> ⇨ "b"
-
-    Extract<T, U>      // キー抽出
-    = T extends U ? T:never
-      <keyof T,"a"|"c"> ⇨ "a"
-    NonNullable<T>      // null|undefined キー除外
-    = T & {}
-      <string|null|undefined> ⇨ string
-
-- KEY: ts.utilities.ReturnType
-  EXPLAIN: 関数戻り値
-  BODY: |
-    type MyReturnType<T extends Function>
-    = T extends (...a:any) => infer R ? R:any
-
-    const func = (param:number): string => param.toLocaleString()
-
-    type myRet1 = ReturnType<typeof func>
-    type myRet2 = MyReturnType<typeof func>
-
-- KEY: ts.utilities.Parameters
-  EXPLAIN: 関数引数
-  BODY: |
-    type MyParameters<T extends Function>
-    = T extends (...a: infer P) => any ? P : never
-
-    const func = (param:number): string => param.toLocaleString()
-
-    type myParam1 = Parameters<typeof func>
-    type myParam2 = MyParameters<typeof func>
-
-- KEY: ts.utilities.This
-  EXPLAIN: 関数This
-  BODY: |
-    ThisParameterType<T>
-    OmitThisParameter<T>
-    ThisType<T>
-
-- KEY: ts.utilities.constructor
-  EXPLAIN: コンストラクタ
-  BODY: |
-    type MyConstructorParameters<T extends abstract new (...a:any)=>any>
-    = T extends abstract new (...a:infer P)
-    => any ? P : never
-
-    class X{
-      a:number
-      constructor(a:number){
-        this.a = a
-      }
-    }
-
-    type myConst1 = ConstructorParameters<typeof func>
-    type myConst2 = MyConstructorParameters<typeof func>
-    //  [a: number]
-
-- KEY: ts.utilities.instance
-  EXPLAIN: インスタンス
-  BODY: |
-    InstanceType<T>
-
-- KEY: ts.utilities.string
-  EXPLAIN: 文字列操作
-  BODY: |
-    Uppercase<StringType>                    = intrinsic
-    Lowercase<StringType>                    = intrinsic
-    Capitalize<StringType>                   = intrinsic
-    Uncapitalize<StringType>                 = intrinsic
-
-    type B = Uppercase<"hello">              // "HELLO"
-    type C = Lowercase<"HELLO">              // "hello"
-    type D = Capitalize<"hello">             // "Hello"
-    type E = Uncapitalize<"HELLO">           // "hELLO"
-
-- KEY: ts.utilities.stringMapped
-  EXPLAIN: 文字列 Mapped Type
-  BODY: |
-    function toUpperCase<T extends string>(str: T) {
-        type Mapped = Uppercase<T>;
-        return str.toUpperCase() as Mapped;
-    }
-    const str = toUpperCase("abcd");         // "ABCD"
-
-- KEY: ts.utilities.templateLiteral
-  EXPLAIN: テンプレートリテラル
-  BODY: |
-    type MyID<S extends string> = `id-${Lowercase<S>}`
-    type Y = MyID<A>                         // "id-hello"
-
-    type A = "abcd" extends `ab${infer S}` ? S : never; // "cd"
-    type B = "aaaa" extends `ab${infer S}` ? S : never; // never
-
-#-------------------------------
 # By Version
 #-------------------------------
+- KEY: ts.version.category
+  CATEGORY: New Versionの更新機能
 
 - KEY: ts.ver5.3.import
-  EXPLAIN: import型
+  EXPLAIN: |
+    v5.3: import型
   BODY: |
     ■ 5.3 静的/動的 import type
     import o from "a.json" with {type:"json"}
@@ -824,10 +678,11 @@
     const o = await import("a.json", { with:{type:"json"} });
 
 - KEY: ts.ver5.3.unknown
-  EXPLAIN: unkonwn型
+  EXPLAIN: |
+    v5.3: unkonwn型
   BODY: |
     ■ 5.3 unkonwn型 check
-    const value:unknown = "a"
+    const value: unknown = "a"
     if(typeof(value)==="string")
       const s:string = value;                // (安全)代入
 

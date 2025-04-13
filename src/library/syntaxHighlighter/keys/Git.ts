@@ -25,6 +25,7 @@ export const keysGit: KeyDef = {
     "tag",
     "clone",
     "diff",
+    "switch",
   ],
   CadetBlue: ["github.com"],
   Coral: [

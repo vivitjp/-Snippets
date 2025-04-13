@@ -4,22 +4,10 @@
 #-------------------------------
 
 #-------------------------------
-# 型
-#-------------------------------
-
-- KEY: qw.type.useState
-  EXPLAIN: useStateの型
-  BODY: |
-    React.Dispatch<React.SetStateAction<string>>
-
-- KEY: qw.type.useRef
-  EXPLAIN: useRefの型
-  BODY: |
-    React.RefObject<HTMLInputElement>
-
-#-------------------------------
 # Basic Components
 #-------------------------------
+- KEY: qw.FC.title
+  CATEGORY: Props
 
 - KEY: qw.FC.noProps
   EXPLAIN: コンポーネント
@@ -48,9 +36,6 @@
       return <div>{xxxx}</div>
     }
 
-#-------------------------------
-# Component Props
-#-------------------------------
 - KEY: qw.type.ComponentProps
   EXPLAIN: コンポーネントの基本Props型
   BODY: |
@@ -62,6 +47,9 @@
 #-------------------------------
 # Handler
 #-------------------------------
+- KEY: qw.handler.title
+  CATEGORY: ハンドラ
+
 - KEY: qw.handle
   EXPLAIN: ハンドラ(シンプル)
   BODY: |
@@ -146,16 +134,12 @@
     )
 
 #-------------------------------
-# Hooks: useId
-#-------------------------------
-- KEY: qw.useId
-  EXPLAIN: useId ユニークID生成
-  BODY: |
-    const xxxid = React.useId()
-
-#-------------------------------
 # Hooks: useState
 #-------------------------------
+- KEY: qw.hooks.useState.title
+  CATEGORY: |
+    Hooks: useState
+
 - KEY: qw.useState.string
   EXPLAIN: useState(文字列)
   BODY: |
@@ -184,6 +168,10 @@
 #-------------------------------
 # useEffect
 #-------------------------------
+- KEY: qw.hooks.useEffect.title
+  CATEGORY: |
+    Hooks: useEffect
+
 - KEY: qw.useEffect
   EXPLAIN: useEffect(シンプル)
   BODY: |
@@ -279,6 +267,10 @@
 #-------------------------------
 # Hooks: useRef
 #-------------------------------
+- KEY: qw.hooks.useRef.title
+  CATEGORY: |
+    Hooks: useRef & forwardRef
+
 - KEY: qw.useRef.input
   EXPLAIN: useRef(input)
   BODY: |
@@ -301,15 +293,46 @@
 #-------------------------------
 # forwardRef
 #-------------------------------
+
 - KEY: qw.useRef.forwardRef
   EXPLAIN: forwardRef
   BODY: |
     React Component 参照
     qw.custom.inputRef
 
+    ■ サンプル
+    type Props = {
+      text: string
+      setText: React.Dispatch<React.SetStateAction<string>>
+      title: string
+    } & React.ComponentPropsWithRef<"input">
+
+    export const InputRef = forwardRef<HTMLInputElement, Props>(
+      ({ text, setText, title, ...args }, ref) => {
+        const id = useId()
+
+        ■ ハンドラ
+        const handleChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
+          const value = e.currentTarget.value
+          setText(value)
+        }
+
+        return (
+          <div>
+            <label htmlFor={id}>{title}</label>
+            <input {...args} id={id} ref={ref} onChange={handleChangeText} />
+          </div>
+        )
+      }
+    )
+
 #-------------------------------
 # Hooks: useReducer
 #-------------------------------
+- KEY: qw.hooks.useReducer.title
+  CATEGORY: |
+    Hooks: useReducer
+
 - KEY: qw.useReducer.boolean
   EXPLAIN: useReducer で flip関数
   BODY: |
@@ -355,6 +378,10 @@
 #-------------------------------
 # Hooks: useContext
 #-------------------------------
+- KEY: qw.hooks.context.title
+  CATEGORY: |
+    Hooks: context
+
 - KEY: qw.context.1.createContext
   EXPLAIN: useContext コンテキスト定義
   BODY: |
@@ -418,12 +445,29 @@
     }
 
 #-------------------------------
+# Hooks: useId
+#-------------------------------
+- KEY: qw.hooks.other.title
+  CATEGORY: |
+    Hooks: その他
+
+- KEY: qw.useId
+  EXPLAIN: useId ユニークID生成
+  BODY: |
+    const xxxid = React.useId()
+
+#-------------------------------
 # Custom Hooks
 #-------------------------------
+- KEY: qw.hooks.customHooks.title
+  CATEGORY: |
+    Hooks: カスタムHook
+
 - KEY: qw.Hooks.custom
-  EXPLAIN: カスタムHook
+  EXPLAIN: |
+    カスタムHook: Closure
   BODY: |
-    // いわゆる React版 Closure
+    ■ Closure
     import { useCallback, useState } from "react"
 
     export type UseXXX<T> = {
@@ -450,8 +494,9 @@
 #-------------------------------
 # Render Hooks
 #-------------------------------
-- KEY: qw.Hooks.renderHooks
-  EXPLAIN: レンダーHooks
+- KEY: qw.Hooks.customHooks.renderHooks
+  EXPLAIN: |
+    カスタムHook: レンダーHooks
   BODY: |
     // ステート描画コンポーネントメソッドを持つ Closure
     type UseChecks = [boolean, () => JSX.Element]

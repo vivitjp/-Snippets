@@ -175,7 +175,7 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
                           {snippetsObject?.table.body
                             ?.splice(1)
                             .map((line, i) => {
-                              console.log(snippetsObject?.table?.options)
+                              //console.log(snippetsObject?.table?.options)
                               return (
                                 <TR key={i}>
                                   {line?.split("\t").map((td, j) => (

@@ -2,6 +2,8 @@
 #-------------------------------
 # Pandas  https://qiita.com/fujine/items/dbe2f5e4101d6299ff12
 #-------------------------------
+- KEY: py.lib.pandas.title
+  CATEGORY: Pandas
 
 - KEY: py.lib.pandas.install
   EXPLAIN: Pandas(インストール)
