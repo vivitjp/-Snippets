@@ -9,24 +9,16 @@
 - KEY: ts.enum.maker
   EXPLAIN: makeEnum:const配列からenum(Object)作成
   BODY: |
-    function makeEnum<T extends readonly string[]>(const配列: T) {
-        return const配列.filter(Boolean).reduce(
-        (acc, cur) => {
-            return { ...acc, [cur]: cur };
-        },
-        {} as {
-            [key in typeof const配列[number]]: string;
-        }
+    function makeEnum<T extends readonly string[]>(配列: T) {
+        return 配列.filter(Boolean).reduce(
+        (acc, cur) => ({ ...acc, [cur]: cur }),
+        //{} as { [key in typeof 配列[number]]: string;}
+        {} as Record<typeof 配列[number],string>
         );
     }
 
     const Enum型式 = makeEnum(["A", "B", "C", "D"] as const);
-    // const Enum型式: {
-    //     A: string;
-    //     B: string;
-    //     C: string;
-    //     D: string;
-    // }
+    => Enum型式: { A: string; B: string; C: string; D: string; }
 
 #-------------------------------
 # union
@@ -267,7 +259,7 @@
 
     ■ XOR 🛑排他的OR(Utility活用)
 
-    type XOR<T> = { [X in keyof T]?: never | undefined; }
+    type XOR<T> = { [X in keyof T]?: never; }
     type XP = P & XOR<A>
     type XA = A & XOR<P>
 
@@ -282,7 +274,7 @@
 # Literal Join
 #-------------------------------
 - KEY: ts.literal.keyJoin
-  EXPLAIN: ReactHookFormでの複層オブジェクト対応
+  EXPLAIN: ReactHookForm での複層オブジェクト対応
   BODY: |
     ■ ReactHookFormでのKeyが複数Keyの合成になった場合の対処
 

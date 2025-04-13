@@ -7,7 +7,8 @@
 # Utilities
 #-------------------------------
 - KEY: ts.Util.Partial<T>
-  EXPLAIN: オプショナルに変換
+  EXPLAIN: |
+    Partial<T>: オプショナルに変換
   BODY: |
     interface Person {
       name: string
@@ -20,7 +21,8 @@
     type Partial<T> = { [P in keyof T]?: T[P] | undefined; }
 
 - KEY: ts.Util.Required<T>
-  EXPLAIN: 必須に変換
+  EXPLAIN: |
+    Required<T>: 必須に変換
   BODY: |
     interface Person {
       name?: string
@@ -33,7 +35,8 @@
     type Required<T> = { [P in keyof T]-?: T[P]; }
 
 - KEY: ts.Util.Readonly<T>
-  EXPLAIN: readonlyに変換
+  EXPLAIN: |
+    Readonly<T>: readonlyに変換
   BODY: |
     interface Person {
       name: string
@@ -46,18 +49,27 @@
     type Readonly<T> = { readonly [P in keyof T]: T[P]; }
 
 - KEY: ts.Util.Record<K,T>
-  EXPLAIN: K名:T型のレコード型作成
+  EXPLAIN: |
+    Record<K,T>: { K名: T型 }のレコード型作成
   BODY: |
-    interface Person {
-      name: string
-    }
-    type People = Record<number, Person>
-    const people: People = { 0: { name: "John" }, 1: { name: "Karen" } }
+    type Attribute = Record<string, number>
+    const attr: Attribute = {"A": 1}
+
+    const person = ["name", "age"] as const
+
+    type People = Record<typeof person[number], string>
+    const people: People = { name: "John", age: "18" }
+
+    ■ 同義の型宣言
+    type PeopleMap = {[K in typeof person[number]]: string}
+    const peopleMap: PeopleMap = { name: "John", age: "18" }
+
   FOLD: |
     type Record<K extends keyof any, T> = { [P in K]: T; }
 
 - KEY: ts.Util.Pick<T,K>
-  EXPLAIN: T型からK[Key]選択
+  EXPLAIN: |
+    Pick<T,K>: T型 から T[K] 選択
   BODY: |
     interface Person {
       name: string
@@ -73,7 +85,8 @@
     type Pick<T, K extends keyof T> = { [P in K]: T[P]; }
 
 - KEY: ts.Util.Omit<T,K>
-  EXPLAIN: T型からK[Key]排除
+  EXPLAIN: |
+    Omit<T,K>: T型 から T[K] 排除
   BODY: |
     interface Person {
       name: string
@@ -85,8 +98,9 @@
   FOLD: |
     type Omit<T, K extends keyof any> = { [P in Exclude<keyof T, K>]: T[P]; }
 
-- KEY: ts.Util.Exclude<T,U>
-  EXPLAIN: T[型/Key]からU[型/Key]除外
+- KEY: ts.Util.Exclude<Keys,K>
+  EXPLAIN: |
+    Exclude<Keys,K>: Keys から K 除外 (Key操作のみ)
   BODY: |
     interface TypeA {
       id: number
@@ -97,13 +111,14 @@
       address: string
     }
 
-    type Excluded1 = Exclude<keyof TypeA, keyof TypeB> // "name"
-    type Excluded2 = Exclude<string | number | boolean, string | boolean> // number
+    type Excluded1 = Exclude<keyof TypeA, keyof TypeB> // 重複する "id" を削除
+    type Excluded2 = Exclude<string | number | boolean, string | boolean> // 残り: number
   FOLD: |
-    type Exclude<T, U> = T extends U ? never : T
+    type Exclude<Keys,K> = Keys extends K ? never : Keys
 
-- KEY: ts.Util.Extract<T,U>
-  EXPLAIN: T[型/Key]とU[型/Key]の重複
+- KEY: ts.Util.Extract<Keys,K>
+  EXPLAIN: |
+    Extract<Keys,K>: Keys から K 抽出 (Key操作のみ)
   BODY: |
     interface A {
       id: number
@@ -114,13 +129,14 @@
       address: string
     }
 
-    type Extracted1 = Extract<keyof A, keyof B> // "id"
-    type Extracted2 = Extract<string | number | boolean, string | boolean> // string | boolean
+    type Extracted1 = Extract<keyof A, keyof B> // 重複する "id" を抽出
+    type Extracted2 = Extract<string | number | boolean, string | Function> // 抽出: string
   FOLD: |
-    type Extract<T, U> = T extends U ? T : never
+    type Extract<Keys,K> = Keys extends K ? Keys : never
 
 - KEY: ts.Util.NonNullable<T>
-  EXPLAIN: null/undefined 除外
+  EXPLAIN: |
+    NonNullable<T>: null/undefined 除外
   BODY: |
     interface A {
       id?: number | null
@@ -131,7 +147,8 @@
     type NonNullable<T> = T & {}
 
 - KEY: ts.Util.DeepNonNullable<T>
-  EXPLAIN: 再帰的にnull/undefined 除外
+  EXPLAIN: |
+    DeepNonNullable<T>: 再帰的に null/undefined 除外(カスタムUtility)
   BODY: |
     type Primitive = number|string|boolean|bigint|symbol|undefined|null
     type Builtin = Primitive | Function | Date | Error | RegExp
@@ -151,13 +168,15 @@
   FOLD: |
 
 - KEY: ts.Util.Maybe<T>
-  EXPLAIN: Apolloで定義 undefined/null追加
+  EXPLAIN: |
+    Maybe<T>: undefined/null追加(ApolloGraphQLカスタムUtility)
   BODY: |
     type Maybe<T> = { [P in keyof T]: P | undefined | null }
   FOLD: |
 
 - KEY: ts.Util.Parameters<T>
-  EXPLAIN: メソッド引数の型群を取得
+  EXPLAIN: |
+    Parameters<T>: メソッドの引数型取得
   BODY: |
     const funcA = (text: string, num: number) => { }
     type A1 = Parameters<typeof funcA> // [string, number]
@@ -167,7 +186,8 @@
       = T extends (...args: infer P) => any ? P : never
 
 - KEY: ts.Util.ConstructorParameters<T>
-  EXPLAIN: コンストラクタの属性型群取得
+  EXPLAIN: |
+    ConstructorParameters<T>: コンストラクタの属性型群取得
   BODY: |
     class Person {
       name: string
@@ -183,7 +203,8 @@
       = T extends abstract new (...args: infer P) => any ? P : never
 
 - KEY: ts.Util.ReturnType<T>
-  EXPLAIN: メソッドの戻り値型
+  EXPLAIN: |
+    ReturnType<T>: メソッドの戻り型取得
   BODY: |
     const func2 = (): number => 1
     type A = ReturnType<typeof func2> // number
@@ -192,8 +213,11 @@
       = T extends (...args: any) => infer R ? R : any
 
 - KEY: ts.Util.Awaited<T>
-  EXPLAIN: 非同期awaitの戻り値
+  EXPLAIN: |
+    Awaited<T>: 非同期awaitの戻り型取得
   BODY: |
+    ■ 非同期関数の戻り型Promise<string> から Promise を除去
+
     type A = Awaited<Promise<string>> //string
     type B = Awaited<Promise<Promise<number>>> //number
   FOLD: |
@@ -202,7 +226,8 @@
     } ? F extends (value: infer V, ...args: infer _) => any ? Awaited<...> : never : T
 
 - KEY: ts.Util.InstanceType<T>
-  EXPLAIN: インスタンス型
+  EXPLAIN: |
+    InstanceType<T>: インスタンス型
   BODY: |
     class C {
       x = 0;
@@ -221,15 +246,16 @@
       = T extends abstract new (...args: any) => infer R ? R : any
 
 - KEY: ts.Util.NoInfer<T>
-  EXPLAIN: 型推論ブロック
+  EXPLAIN: |
+    NoInfer<T>: 型推論ブロック
   BODY: |
-    function createStreetLight<C extends string>(
+    function getColor<C extends string>(
       colors: C[],
       defaultColor?: NoInfer<C>,
     ) { }
 
-    createStreetLight(["red", "yellow", "green"], "red");   // OK
-    createStreetLight(["red", "yellow", "green"], "blue");  // Error
+    getColor(["red", "yellow", "green"], "red");   // OK
+    getColor(["red", "yellow", "green"], "blue");  // Error
   FOLD: |
     type NoInfer<T> = intrinsic
 
@@ -238,7 +264,8 @@
 #-------------------------------
 
 - KEY: ts.objectLiteral.Util.Union
-  EXPLAIN: OLの組み合わせ
+  EXPLAIN: |
+    Key名(オブジェクトリテラル)の連結
   BODY: |
     type Id = "A" | "B"
     type Kind = "X" | "Y"
@@ -246,19 +273,22 @@
     const newId: NewId = "A_id" // 'B_id', 'X_id', 'Y_id'
 
 - KEY: ts.objectLiteral.Util.Uppercase<T>
-  EXPLAIN: OLの大文字化
+  EXPLAIN: |
+    Uppercase<T>: Key名(オブジェクトリテラル)の大文字化
   BODY: |
     type A = "name"
     type C = Uppercase<A> //"NAME"
 
 - KEY: ts.objectLiteral.Util.Lowercase<T>
-  EXPLAIN: OLの小文字化
+  EXPLAIN: |
+    Lowercase<T>: Key名(オブジェクトリテラル)の小文字化
   BODY: |
     type A = "NAME"
     type S = Lowercase<A> //"name"
 
 - KEY: ts.objectLiteral.Util.Capitalize<T>
-  EXPLAIN: OLの先頭文字の大文字化
+  EXPLAIN: |
+    Capitalize<T>: Key名(オブジェクトリテラル)の先頭文字の大文字化
   BODY: |
     type A1 = "name"
     type S1 = Capitalize<A1> //"Name"
@@ -267,7 +297,8 @@
     type S3 = Capitalize<Lowercase<A2>> //"Name"
 
 - KEY: ts.objectLiteral.Util.Uncapitalize<T>
-  EXPLAIN: OLの先頭文字の小文字化
+  EXPLAIN: |
+    Uncapitalize<T>: Key名(オブジェクトリテラル)の先頭文字の小文字化
   BODY: |
     type A1 = "Name"
     type S1 = Uncapitalize<A1> //"name"

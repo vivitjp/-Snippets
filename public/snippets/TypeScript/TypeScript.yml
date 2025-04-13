@@ -139,7 +139,7 @@
 
     const values:Keys = { "A": 1, "B": 2, "C": 3 }
 
-    ■ オブジェクトから型作成時の比較(const有無)
+    ■ オブジェクトから型作成時(const無)
     const o = { a: "A", b: "B" }
 
     type X = typeof o                        // {a:number;b:number;}
@@ -147,9 +147,10 @@
     type Y = keyof typeof o                  // "a" | "b"
     type B = (typeof o)[keyof typeof o]      // string
 
+    ■ オブジェクトから型作成時(const有)
     const o = { a: "A", b: "B" } as const
 
-    type X = typeof o                        // { readonly a:"A"; readonly b:"B"; }
+    type X = typeof o                        // { readonly a:"A"; readonly b:"B"; } ⭕
     type K = keyof X                         // "a" | "b"
     type Y = keyof typeof o                  // "a" | "b"
     type B = (typeof o)[keyof typeof o]      // "A" | "B"
@@ -163,6 +164,47 @@
       (acc, cur) => ({ ...acc, [cur]: cur }),
       {} as {[key in typeof 定数配列[number]]: string}
       );
+    }
+
+- KEY: ts.typeof.keyof
+  EXPLAIN: 型取得とKV(MappedType & Record<> 比較)
+  BODY: |
+    ■ Object型宣言
+    type Section = { tech: string, sales: string }
+    type Person = { name:string, age: number }
+
+    ■ MappedType + Record<>
+    type SecPersonA = {[P in keyof Section]?: Partial<Record<keyof Person, Function>> }
+
+    const secPersonA1:SecPersonA  = {
+        tech: {name:()=>{}, age:()=>{}},
+        sales: {name:()=>{}}
+    }
+
+    const secPersonA2:SecPersonA  = {
+        tech: {name:()=>{}, age:()=>{}},
+        //sales: {name:()=>{}} 部分使用OK
+    }
+
+    ■ Record<> + Record<>
+    type SecPersonB = Partial<Record<keyof Section, Partial<Record<keyof Person, Function>>>>
+
+    const secPersonB1:SecPersonB  = {
+        tech: {name:()=>{}, age:()=>{}},
+        sales: {name:()=>{}}
+    }
+
+    const secPersonB2:SecPersonB  = {
+        tech: {name:()=>{}, age:()=>{}},
+        //sales: {name:()=>{}} 部分使用OK
+    }
+
+    ■ Record<> + Object型宣言{}
+    type SecPersonC = Partial<Record<keyof Section, {func?:Function, name?:string, }>>
+
+    const secPersonC1:SecPersonC  = {
+        tech: {name:"john", func:()=>{}},
+        sales: {func:()=>{}}
     }
 
 - KEY: ts.indexing
@@ -188,8 +230,8 @@
       = Record<PropertyKey, number>          * PropertyKey=string,number,symbol
     const c:S = { a:1, b:2, c:3 }
 
-- KEY: ts.mapped.types
-  EXPLAIN: Mapped Types(in)
+- KEY: ts.mappedTypes
+  EXPLAIN: Mapped Types([key in T])
   BODY: |
     type A = number | string
     type X = { [key in A]: number }
@@ -200,7 +242,10 @@
     const o: B = { a: 1, b: "a" }
     type Z = { [key in keyof typeof o]: number }  //{ a:number, b:number }
 
-    ■ 比較
+- KEY: ts.mapped.lookupTypes.mappedTypes
+  EXPLAIN: MappedType & Record<> 比較
+  BODY: |
+    ■ MappedType & Record<> 比較
     type Sample = "A" | "B"
     type ObjA = {[name in Sample]: number}
     type ObjB = Record<Sample, number>
