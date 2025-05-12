@@ -144,6 +144,7 @@
 - KEY: git.clone
   EXPLAIN: clone(クローン)
   BODY: |
+    git clone <URL>                     # カレントディレクトリにclone作成
     git clone <URL> <directory>         # 指定ディレクトリにclone作成
 
     ■ PAT を使用して clone
@@ -196,6 +197,12 @@
     git checkout -                      # 直前のブランチに変更
 
     git switch <branch>                 # ブランチ変更(推奨)
+    git switch -                        # 直前のブランチに変更
+    git switch -b <new_branch>          # 新しいブランチ作成して変更
+    git switch -c <new_branch>          # 新しいブランチ作成して変更
+    git switch -C <new_branch>          # 新しいブランチ強制作成して変更
+    git switch --detach <commit>        # コミットを指定して変更
+    git switch --detach <branch>        # ブランチを指定して変更
 
 - KEY: git.add
   EXPLAIN: add(indexing)
@@ -212,7 +219,6 @@
   BODY: |
     git commit -m "message"             # コミット
     git commit --amend -m "message"     # 直前のコミット修正
-
 
     ■ 参考) コミット履歴残さずに取消
     git reset --soft HEAD^              # コミット取消
@@ -250,14 +256,16 @@
     ■ 取り消し
     git merge --abort                   # マージ取消
     git reset --hard HEAD               # マージ直前のHEADに戻る(ログ削除)
+    git reset --soft HEAD~              # リセット
+    git revert HEAD                     # 取消用のコミットを別途作成(記録)
 
     ■ originへ書き込み
     git push origin HEAD                # リモートにローカルのレポジトリを書き込む
     git push origin <branch>            # リモートに変更を書き込む(f:強制)
     git push [-f]                       # リモートに変更を書き込む(f:強制)
 
-    git reset --soft HEAD~              # リセット
-    git revert HEAD                     # 取消用のコミットを別途作成(記録)
+    ■ push と set-upstreamを同時に実行
+    git push -u(--set-upstream) origin <branch>
 
 - KEY: git.status
   EXPLAIN: status(前コミットとの比較)
@@ -298,16 +306,12 @@
   EXPLAIN: log/reflog(ログ)
   BODY: |
     ■ git log                           # ログ表示(一行で)
-
       commit 428d5c461c3eb0d7488e038e58a3eff7705c55f4 (HEAD -> main, origin/main)
       Author: vivitjp <vivitkawamura@gmail.com>
       Date:   Wed Jul 3 06:24:17 2024 +0900
-
-          more
       ...
 
     ■ git log --oneline                 # ログ表示(一行で)
-
       428d5c4 (HEAD -> main, origin/main) more
       f16c9c6 updated
       f826570 update
@@ -315,14 +319,12 @@
       328ed61 fix bugs
 
     ■ git log --oneline --grep "key"    # ログ表示(一行で)
-
       f16c9c6 key
       75a366f key
       bd08b3f key
       2c13082 key
 
     ■ git reflog                        # ログ表示
-
       428d5c4 (HEAD -> main, origin/main) HEAD@{0}: commit: more
       f16c9c6 HEAD@{1}: reset: moving to HEAD~
       494e72b HEAD@{2}: commit: more
@@ -344,7 +346,6 @@
     git tag                             # 表示
     git tag -l                          # 表示
     git tag -l "v1.*"                   # v1.0, v1.1
-
       v1.0
       v1.1
 
@@ -358,6 +359,7 @@
   EXPLAIN: |
     エラー: push
   BODY: |
+    ■ push エラー
     > git push
     remote: Permission to <user>/<repository>.git denied to <git user name>.
     fatal: unable to access 'https://github.com/<user>/<repository>.git/': The requested URL returned error: 403
@@ -366,3 +368,6 @@
     2) Origin 削除: git remote rm origin
     3) Origin 追加: git remote add origin https://<user>:<ghp_TOKEN>@github.com/<user>/<repository>.git
     4) git branch --set-upstream-to=origin/main main
+
+    ■ push と set-upstreamを同時に実行
+    git push -u(--set-upstream) origin <branch_name>

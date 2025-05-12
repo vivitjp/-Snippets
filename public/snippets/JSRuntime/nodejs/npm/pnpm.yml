@@ -1,0 +1,51 @@
+---
+#-------------------------------
+# pnpm
+#-------------------------------
+
+- KEY: pnpm.install
+  EXPLAIN: インストール
+  BODY: |
+    ■ Windows PowerShell
+    Invoke-WebRequest https://get.pnpm.io/install.ps1 -UseBasicParsing | Invoke-Expression
+
+    ■ POSIX (Linux, macOS, WSL)
+    curl -fsSL https://get.pnpm.io/install.sh | sh -
+    wget -qO- https://get.pnpm.io/install.sh | sh -
+
+    ■ インストール
+    npm install -g pnpm
+    # or
+    corepack enable pnpm
+
+    ■ バージョン確認
+    pnpm -v
+
+    ■ Volta を入れている場合
+    volta install pnpm
+
+      # error: Could not create shared environment for package 'pnpm'
+      開発者モードをオンにしてからnpm install -g pnpmを実行する
+      success: installed pnpm@10.8.1 with executables: pnpm, pnpx
+
+    volta pin pnpm@latest
+
+- KEY: pnpm.init.run
+  EXPLAIN: 初期化と実行
+  BODY: |
+    ■ package.json 作成
+    pnpm init                           // 初期化
+    pnpm init -y                        // [-y] 全質問にYES
+
+    ■ Packages インストール
+    pnpm install                        // インストール
+    pnpm install --save-dev             // 開発用依存関係のインストール
+    pnpm install --save                 // 本番用依存関係のインストール
+    pnpm install --save-exact           // バージョンを固定してインストール
+    pnpm install --save-optional        // オプションの依存関係のインストール
+    pnpm install --save-peer            // ピア依存関係のインストール
+    pnpm install --save-optional        // オプションの依存関係のインストール
+
+    ■ 実行
+    pnpm run dev                        // 開発サーバー起動
+    pnpm run build                      // ビルド

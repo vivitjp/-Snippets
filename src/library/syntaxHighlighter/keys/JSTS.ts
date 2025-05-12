@@ -60,6 +60,7 @@ export const keysJSTS: KeyDef = {
   Crimson: [
     "fetch",
     "then",
+    "catch",
     "map",
     "set",
     "get",

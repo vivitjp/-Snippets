@@ -2,6 +2,8 @@
 #-------------------------------
 # Nextjs
 #-------------------------------
+- KEY: nextjs.title
+  CATEGORY: install & config
 
 - KEY: nextjs.overview
   EXPLAIN: Nextjs 概説
@@ -106,8 +108,32 @@
       }
     }
 
+- KEY: nextjs.root.env
+  EXPLAIN: |
+    Root: .env 環境変数
+  BODY: |
+    ■ サーバーサイド
+      [.env]
+      ENDPOINT='https://example.com/'
+
+      [page.tsx]
+      const endPoint = process.env.ENDPOINT || '';
+
+    ■ クライアントサイド
+
+      * AWSでの認証時には注意: パラメータストアを利用すること
+
+      [.env]
+      NEXT_PUBLIC_ENDPOINT='https://example.com/'
+
+      [page.tsx]
+      const endPoint = process.env.NEXT_PUBLIC_ENDPOINT || '';
+
+- KEY: nextjs.directory.title
+  CATEGORY: ディレクトリ構成
+
 - KEY: nextjs.directory
-  EXPLAIN: 基本ファイル
+  EXPLAIN: 構成(古バージョン)
   BODY: |
     ./
       app/                              // Top
@@ -127,29 +153,8 @@
       next.config.mjs
       ...その他コンフィグ
 
-- KEY: nextjs.root.env
-  EXPLAIN: |
-    Root: .env
-  BODY: |
-    ■ サーバーサイド
-      [.env]
-      ENDPOINT='https://example.com/'
-
-      [page.tsx]
-      const endPoint = process.env.ENDPOINT || '';
-
-    ■ クライアントサイド
-
-      * AWSでの認証時には注意: パラメータストアを利用すること
-
-      [.env]
-      NEXT_PUBLIC_ENDPOINT='https://example.com/'
-
-      [page.tsx]
-      const endPoint = process.env.NEXT_PUBLIC_ENDPOINT || '';
-
 - KEY: nextjs.app.router.v13
-  EXPLAIN: AppRouter(v13~) 構成
+  EXPLAIN: 構成 AppRouter(v13~)
   BODY: |
     ■ 13以前
     ./
@@ -302,6 +307,9 @@
         )
       }
 
+- KEY: nextjs.layout.title
+  CATEGORY: レイアウト
+
 - KEY: nextjs.layout.root
   EXPLAIN: |
     FILE: layout.tsx(root HTML)
@@ -378,43 +386,8 @@
         )
       }
 
-- KEY: nextjs.css.global
-  EXPLAIN: |
-    CSS: global(Tailwind Sample)
-  BODY: |
-    @tailwind base;
-    @tailwind components;
-    @tailwind utilities;
-
-    :root {
-      --foreground-rgb: 0, 0, 0;
-      --background-start-rgb: 214, 219, 220;
-      --background-end-rgb: 255, 255, 255;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --foreground-rgb: 255, 255, 255;
-        --background-start-rgb: 0, 0, 0;
-        --background-end-rgb: 0, 0, 0;
-      }
-    }
-
-    body {
-      color: rgb(var(--foreground-rgb));
-      background: linear-gradient(
-        to bottom,
-        transparent,
-        rgb(var(--background-end-rgb))
-      )
-      rgb(var(--background-start-rgb));
-    }
-
-    @layer utilities {
-      .text-balance {
-        text-wrap: balance;
-      }
-    }
+- KEY: nextjs.other.title
+  CATEGORY: 各種 Predefined FD
 
 - KEY: nextjs.not.found
   EXPLAIN: |
@@ -768,8 +741,46 @@
       )
     }
 
-- KEY: nextjs.style
-  EXPLAIN: Next の Style 比較
+- KEY: nextjs.css.global
+  EXPLAIN: |
+    CSS: global(Tailwind Sample)
+  BODY: |
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+
+    :root {
+      --foreground-rgb: 0, 0, 0;
+      --background-start-rgb: 214, 219, 220;
+      --background-end-rgb: 255, 255, 255;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --foreground-rgb: 255, 255, 255;
+        --background-start-rgb: 0, 0, 0;
+        --background-end-rgb: 0, 0, 0;
+      }
+    }
+
+    body {
+      color: rgb(var(--foreground-rgb));
+      background: linear-gradient(
+        to bottom,
+        transparent,
+        rgb(var(--background-end-rgb))
+      )
+      rgb(var(--background-start-rgb));
+    }
+
+    @layer utilities {
+      .text-balance {
+        text-wrap: balance;
+      }
+    }
+
+- KEY: nextjs.css.style
+  EXPLAIN: CSS Style 比較
   BODY: |
     ■ 種類
     StyledComponent

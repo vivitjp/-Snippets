@@ -20,7 +20,7 @@ export const Menu = () => {
       <>
         {menuItems.map((menu, index) => {
           return (
-            <Group open key={index}>
+            <Group key={index}>
               <MenuGroupTitle data-testid="group-title">
                 {menu.category}
               </MenuGroupTitle>
@@ -36,14 +36,6 @@ export const Menu = () => {
                       isPending={!item.fileName}
                     >
                       {names.length > 1 ? names[0] : item.name}
-                      {/* names[0]
-                        <MenuItemGroup>
-                          <MenuItemGroupItems>{names[0]}</MenuItemGroupItems>
-                          <MenuItemGroupItems>{names[1]}</MenuItemGroupItems>
-                        </MenuItemGroup>
-                      ) : (
-                        item.name
-                      )} */}
                     </MenuItem>
                   )
                 })}

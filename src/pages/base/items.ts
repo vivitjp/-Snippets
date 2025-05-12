@@ -8,90 +8,182 @@ type menuByCategories = {
 
 export const menuItems: menuByCategories[] = [
   {
-    category: "Html",
+    category: "Git",
     items: [
       {
-        name: "🔺HTML",
-        fileName: "html/HTML",
-        codeKeyTypes: [codeKeys.HTML],
+        name: "Git",
+        fileName: "git/Git",
+        codeKeyTypes: [codeKeys.Git],
       },
       {
-        name: "🔺目的別",
-        fileName: "html/Purpose",
-        codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS],
+        name: "GitHub",
+        fileName: "",
+        codeKeyTypes: [codeKeys.Git],
+      },
+      {
+        name: "Husky",
+        fileName: "git/husky",
+        codeKeyTypes: [codeKeys.Git],
       },
     ],
   },
   {
-    category: "CSS",
+    category: "クラウド",
     items: [
       {
-        name: "⛔CSS",
-        fileName: "",
-        codeKeyTypes: [],
-      },
-      {
-        name: "CSS(Topics)",
-        fileName: "css/CSSTopics",
-        codeKeyTypes: [codeKeys.CSS],
-      },
-      {
-        name: "⛔SCSS",
-        fileName: "",
-        codeKeyTypes: [],
-      },
-      {
-        name: "⛔CSS(Responsive)",
-        fileName: "",
-        codeKeyTypes: [codeKeys.CSS],
-      },
-      {
-        name: "CheatSheet",
-        fileName: "css/CheatSheet",
-        codeKeyTypes: [],
-      },
-      {
-        name: "CSSColor:color",
-        fileName: "css/CSSColor",
-        encodeRequired: false,
+        name: "🔺Cloud",
+        fileName: "cloud/Cloud",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
       },
     ],
   },
   {
-    category: "JavaScript",
+    category: "AWS",
     items: [
       {
-        name: "Objects",
-        fileName: "JavaScript/JavaScriptObjects",
-        codeKeyTypes: [codeKeys.JSTS],
+        name: "AWS",
+        fileName: "aws/AWS",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
       },
       {
-        name: "Methods",
-        fileName: "JavaScript/JavaScriptMethods",
-        codeKeyTypes: [codeKeys.JSTS],
+        name: "🔺SDK",
+        fileName: "aws/SDK",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
       },
       {
-        name: "Topics:js",
-        fileName: "JavaScript/JSTopics",
-        codeKeyTypes: [codeKeys.JSTS],
+        name: "CLI",
+        fileName: "",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
       },
       {
-        name: "DOM:dom",
-        fileName: "JavaScript/DOM",
-        codeKeyTypes: [codeKeys.DOM],
+        name: "🔺SystemManager",
+        fileName: "aws/SystemManagers",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
       },
       {
-        name: "正規表現(JS)",
-        fileName: "JavaScript/RegularExpression",
-        codeKeyTypes: [codeKeys.RegExp],
+        name: "IAM",
+        fileName: "aws/IAM",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
       },
       {
-        name: "ライブラリ",
-        fileName: "JavaScript/Libraries",
-        codeKeyTypes: [codeKeys.JSTS],
+        name: "VPC",
+        fileName: "aws/VPC",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
       },
       {
-        name: "⛔JQuery to JS",
+        name: "Lambda",
+        fileName: "aws/Lambda",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "🔺Amplify",
+        fileName: "aws/Amplify",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "AppSync",
+        fileName: "",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "🔺Aurora",
+        fileName: "aws/Aurora",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "CloudFormation",
+        fileName: "",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "CloudWatch",
+        fileName: "",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "🔺CloudFront",
+        fileName: "aws/CloudFront",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "Cognito",
+        fileName: "",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "🔺EC2",
+        fileName: "aws/EC2",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "🔺ECS",
+        fileName: "aws/ECS",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "EventBridge",
+        fileName: "",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "S3",
+        fileName: "",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "Step Functions",
+        fileName: "",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+    ],
+  },
+  {
+    category: "Docker",
+    items: [
+      {
+        name: "docker",
+        fileName: "OS/Docker",
+        codeKeyTypes: [codeKeys.Docker],
+        case_sensitive: false,
+      },
+      {
+        name: "dockerCompose",
+        fileName: "",
+        codeKeyTypes: [codeKeys.Docker],
+        case_sensitive: false,
+      },
+    ],
+  },
+  {
+    category: "Linux",
+    items: [
+      {
+        name: "Linux",
+        fileName: "OS/Linux",
+        codeKeyTypes: [codeKeys.Linux],
+      },
+      {
+        name: "Shell",
         fileName: "",
         codeKeyTypes: [],
       },
@@ -101,22 +193,22 @@ export const menuItems: menuByCategories[] = [
     category: "TypeScript",
     items: [
       {
-        name: "TypeScript:ts",
+        name: "TypeScript",
         fileName: "TypeScript/TypeScript",
         codeKeyTypes: [codeKeys.JSTS],
       },
       {
-        name: "Topics:ts",
+        name: "TS Topics",
         fileName: "TypeScript/TSTopics",
         codeKeyTypes: [codeKeys.JSTS],
       },
       {
-        name: "Utilities:ts",
+        name: "TS Utilities",
         fileName: "TypeScript/Utilities",
         codeKeyTypes: [codeKeys.JSTS, codeKeys.TS],
       },
       {
-        name: "非同期:js",
+        name: "TS 非同期",
         fileName: "TypeScript/Async",
         codeKeyTypes: [codeKeys.JSTS],
       },
@@ -126,33 +218,72 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.TSConfig, codeKeys.JSTS],
       },
       {
-        name: "⛔TS Challenge",
+        name: "TS Challenge",
         fileName: "TypeScript/TSChallenge",
         codeKeyTypes: [codeKeys.JSTS],
       },
     ],
   },
-
+  {
+    category: "JavaScript",
+    items: [
+      {
+        name: "JS Objects",
+        fileName: "JavaScript/JavaScriptObjects",
+        codeKeyTypes: [codeKeys.JSTS],
+      },
+      {
+        name: "JS Methods",
+        fileName: "JavaScript/JavaScriptMethods",
+        codeKeyTypes: [codeKeys.JSTS],
+      },
+      {
+        name: "JS Topics",
+        fileName: "JavaScript/JSTopics",
+        codeKeyTypes: [codeKeys.JSTS],
+      },
+      {
+        name: "JS DOM",
+        fileName: "JavaScript/DOM",
+        codeKeyTypes: [codeKeys.DOM],
+      },
+      {
+        name: "JS 正規表現",
+        fileName: "JavaScript/RegularExpression",
+        codeKeyTypes: [codeKeys.RegExp],
+      },
+      {
+        name: "JS ライブラリ",
+        fileName: "JavaScript/Libraries",
+        codeKeyTypes: [codeKeys.JSTS],
+      },
+      {
+        name: "JQuery to JS",
+        fileName: "",
+        codeKeyTypes: [],
+      },
+    ],
+  },
   {
     category: "React",
     items: [
       {
-        name: "React:qw",
+        name: "React",
         fileName: "React/React",
         codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS, codeKeys.React],
       },
       {
-        name: "Component:qw",
+        name: "React Component",
         fileName: "React/ReactComponent",
         codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS, codeKeys.React],
       },
       {
-        name: "🔺Routing",
+        name: "React 🔺Routing",
         fileName: "React/ReactRouting",
         codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS, codeKeys.React],
       },
       // {
-      //   name: "🔺React 型定義",
+      //   name: "🔺React 型定義", ⚠
       //   fileName: "React/ReactTypeScript",
       //   codeKeyTypes: [codeKeys.JSTS, codeKeys.React],
       // },
@@ -162,12 +293,12 @@ export const menuItems: menuByCategories[] = [
     category: "React State",
     items: [
       {
-        name: "🔺zustand:pk",
+        name: "🔺Zustand",
         fileName: "ReactGState/zustand",
         codeKeyTypes: [codeKeys.JSTS, codeKeys.React],
       },
       {
-        name: "Jotai:pk",
+        name: "Jotai",
         fileName: "ReactGState/Jotai",
         codeKeyTypes: [codeKeys.JSTS, codeKeys.Jotai],
       },
@@ -178,26 +309,26 @@ export const menuItems: menuByCategories[] = [
       },
     ],
   },
-  {
-    category: "React Query",
-    items: [
-      {
-        name: "SWR:pk",
-        fileName: "ReactQuery/SWR",
-        codeKeyTypes: [
-          codeKeys.HTML,
-          codeKeys.JSTS,
-          codeKeys.React,
-          codeKeys.Package,
-        ],
-      },
-    ],
-  },
+  // {
+  //   category: "React Query",
+  //   items: [
+  //     {
+  //       name: "SWR:pk",
+  //       fileName: "ReactQuery/SWR",
+  //       codeKeyTypes: [
+  //         codeKeys.HTML,
+  //         codeKeys.JSTS,
+  //         codeKeys.React,
+  //         codeKeys.Package,
+  //       ],
+  //     },
+  //   ],
+  // },
   {
     category: "React CSS",
     items: [
       {
-        name: "StyledCompo:pk",
+        name: "StyledCompo",
         fileName: "ReactCSS/StyledCompo",
         codeKeyTypes: [
           codeKeys.CSS,
@@ -208,7 +339,7 @@ export const menuItems: menuByCategories[] = [
         ],
       },
       {
-        name: "Emotion:pk",
+        name: "Emotion",
         fileName: "ReactCSS/Emotion",
         codeKeyTypes: [
           codeKeys.CSS,
@@ -219,12 +350,12 @@ export const menuItems: menuByCategories[] = [
         ],
       },
       {
-        name: "⛔Tailwind",
+        name: "Tailwind",
         fileName: "",
         codeKeyTypes: [],
       },
       {
-        name: "⛔Pandas",
+        name: "Pandas",
         fileName: "",
         codeKeyTypes: [],
       },
@@ -232,7 +363,7 @@ export const menuItems: menuByCategories[] = [
   },
 
   {
-    category: "React Misc",
+    category: "React 他",
     items: [
       {
         name: "ReactHookForm:pk",
@@ -245,7 +376,7 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.Chakra],
       },
       {
-        name: "Storybook(v6):pk",
+        name: "Storybook(v6)",
         fileName: "ReactPackage/Storybook",
         codeKeyTypes: [
           codeKeys.HTML,
@@ -257,16 +388,26 @@ export const menuItems: menuByCategories[] = [
     ],
   },
   {
-    category: "JS Runtime",
+    category: "Vue",
+    items: [
+      {
+        name: "🔺Vue",
+        fileName: "vue/Vue",
+        codeKeyTypes: [codeKeys.HTML, codeKeys.Vue],
+      },
+      {
+        name: "🔺Nuxt",
+        fileName: "vue/Nuxt",
+        codeKeyTypes: [codeKeys.HTML, codeKeys.Vue],
+      },
+    ],
+  },
+  {
+    category: "Nodejs",
     items: [
       {
         name: "🔺Nodejs(Topics)",
         fileName: "JSRuntime/nodejs/NodeTopics",
-        codeKeyTypes: [],
-      },
-      {
-        name: "⛔Deno",
-        fileName: "",
         codeKeyTypes: [],
       },
       {
@@ -277,57 +418,7 @@ export const menuItems: menuByCategories[] = [
     ],
   },
   {
-    category: "Nodejs",
-    items: [
-      {
-        name: "npm/yarn:ny",
-        fileName: "JSRuntime/nodejs/npm/npm_yarn",
-        codeKeyTypes: [codeKeys.NPM],
-      },
-      {
-        name: "npm:npm",
-        fileName: "JSRuntime/nodejs/npm/npm",
-        codeKeyTypes: [codeKeys.NPM],
-      },
-      {
-        name: "module管理史",
-        fileName: "JSRuntime/nodejs/npm/npm _history",
-        codeKeyTypes: [codeKeys.NPM],
-      },
-      {
-        name: "⛔pnpm",
-        fileName: "",
-        codeKeyTypes: [],
-      },
-      {
-        name: "⛔Webpack",
-        fileName: "",
-        codeKeyTypes: [],
-      },
-      {
-        name: "⛔Babel",
-        fileName: "",
-        codeKeyTypes: [],
-      },
-      {
-        name: "環境変数",
-        fileName: "/JSRuntime/nodejs/env",
-        codeKeyTypes: [codeKeys.Env],
-      },
-      {
-        name: "🔺Express",
-        fileName: "/JSRuntime/nodejs/Express",
-        codeKeyTypes: [codeKeys.Express],
-      },
-      {
-        name: "Express API",
-        fileName: "/JSRuntime/nodejs/ExpressAPI",
-        codeKeyTypes: [codeKeys.Express],
-      },
-    ],
-  },
-  {
-    category: "JS Framework:FE",
+    category: "Nextjs,Vite",
     items: [
       {
         name: "🔺Nextjs",
@@ -342,7 +433,7 @@ export const menuItems: menuByCategories[] = [
     ],
   },
   {
-    category: "JS Framework:BE",
+    category: "Nestjs,ORM",
     items: [
       {
         name: "Nestjs",
@@ -358,6 +449,11 @@ export const menuItems: menuByCategories[] = [
         name: "TypeORM",
         fileName: "frameWork/Nestjs/TypeORM",
         codeKeyTypes: [codeKeys.TypeORM],
+      },
+      {
+        name: "🔺Prisma",
+        fileName: "frameWork/Nestjs/Prisma",
+        codeKeyTypes: [codeKeys.Prisma],
       },
       {
         name: "ClassValidator",
@@ -377,126 +473,57 @@ export const menuItems: menuByCategories[] = [
     ],
   },
   {
-    category: "クラウド",
+    category: "パッケージ管理",
     items: [
       {
-        name: "🔺AWS",
-        fileName: "cloud/AWS",
-        codeKeyTypes: [],
-      },
-    ],
-  },
-  {
-    category: "Python",
-    items: [
-      {
-        name: "Python:py",
-        fileName: "Python/Python",
-        codeKeyTypes: [codeKeys.Python],
-        encodeRequired: false,
+        name: "npm/yarn",
+        fileName: "JSRuntime/nodejs/npm/npm_yarn",
+        codeKeyTypes: [codeKeys.NPM],
       },
       {
-        name: "Lib List:py",
-        fileName: "Python/PythonLibs",
-        codeKeyTypes: [],
-        encodeRequired: false,
+        name: "npm",
+        fileName: "JSRuntime/nodejs/npm/npm",
+        codeKeyTypes: [codeKeys.NPM],
       },
       {
-        name: "Lib Sample:py",
-        fileName: "Python/PythonLibSamples",
-        codeKeyTypes: [codeKeys.Python],
-        encodeRequired: false,
-      },
-    ],
-  },
-  {
-    category: "Docker",
-    items: [
-      {
-        name: "docker",
-        fileName: "OS/Docker",
-        codeKeyTypes: [codeKeys.Docker],
-        case_sensitive: false,
+        name: "🔺pnpm",
+        fileName: "JSRuntime/nodejs/npm/pnpm",
+        codeKeyTypes: [codeKeys.NPM],
       },
       {
-        name: "⛔dockerCompose",
-        fileName: "",
-        codeKeyTypes: [codeKeys.Docker],
-        case_sensitive: false,
-      },
-    ],
-  },
-  {
-    category: "OS",
-    items: [
-      {
-        name: "Linux Command",
-        fileName: "OS/LinuxCommand",
-        codeKeyTypes: [codeKeys.Linux],
+        name: "module管理史",
+        fileName: "JSRuntime/nodejs/npm/npm _history",
+        codeKeyTypes: [codeKeys.NPM],
       },
       {
-        name: "⛔Shell",
-        fileName: "",
-        codeKeyTypes: [],
-      },
-    ],
-  },
-  {
-    category: "Database",
-    items: [
-      {
-        name: "MySQL",
-        fileName: "database/mySql",
-        codeKeyTypes: [codeKeys.MySql],
-        case_sensitive: false,
-      },
-      // {
-      //   name: "MySQL Topics",
-      //   fileName: "database/mySqlTopics",
-      //   codeKeyTypes: [codeKeys.MySql],
-      //   case_sensitive: false,
-      // },
-      {
-        name: "MongoDB",
-        fileName: "database/mongo",
-        codeKeyTypes: [codeKeys.Mongo, codeKeys.Python],
-        case_sensitive: false,
-        encodeRequired: false,
-      },
-      {
-        name: "⛔PostgreSQL",
+        name: "Webpack",
         fileName: "",
         codeKeyTypes: [],
       },
       {
-        name: "⛔GraphQL",
+        name: "Babel",
         fileName: "",
         codeKeyTypes: [],
       },
       {
-        name: "⛔Redis",
+        name: "Turbopack",
         fileName: "",
         codeKeyTypes: [],
       },
-    ],
-  },
-  {
-    category: "Git管理",
-    items: [
       {
-        name: "Git",
-        fileName: "git/Git",
-        codeKeyTypes: [codeKeys.Git],
+        name: "環境変数",
+        fileName: "/JSRuntime/nodejs/env",
+        codeKeyTypes: [codeKeys.Env],
       },
       {
-        name: "⛔GitHub",
-        fileName: "",
-        codeKeyTypes: [codeKeys.Git],
+        name: "Express",
+        fileName: "/JSRuntime/nodejs/Express",
+        codeKeyTypes: [codeKeys.Express],
       },
       {
-        name: "Husky",
-        fileName: "git/husky",
-        codeKeyTypes: [codeKeys.Git],
+        name: "Express API",
+        fileName: "/JSRuntime/nodejs/ExpressAPI",
+        codeKeyTypes: [codeKeys.Express],
       },
     ],
   },
@@ -539,14 +566,128 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.Jest, codeKeys.RTL],
       },
       {
-        name: "⛔Cypress",
+        name: "Cypress",
         fileName: "",
         codeKeyTypes: [],
       },
       {
-        name: "⛔Playwright",
+        name: "Playwright",
         fileName: "",
         codeKeyTypes: [],
+      },
+    ],
+  },
+
+  {
+    category: "Python",
+    items: [
+      {
+        name: "Python:py",
+        fileName: "Python/Python",
+        codeKeyTypes: [codeKeys.Python],
+        encodeRequired: false,
+      },
+      {
+        name: "Lib List:py",
+        fileName: "Python/PythonLibs",
+        codeKeyTypes: [],
+        encodeRequired: false,
+      },
+      {
+        name: "Lib Sample:py",
+        fileName: "Python/PythonLibSamples",
+        codeKeyTypes: [codeKeys.Python],
+        encodeRequired: false,
+      },
+    ],
+  },
+  {
+    category: "Database",
+    items: [
+      {
+        name: "MySQL",
+        fileName: "database/mySql",
+        codeKeyTypes: [codeKeys.MySql],
+        case_sensitive: false,
+      },
+      // {
+      //   name: "MySQL Topics",
+      //   fileName: "database/mySqlTopics",
+      //   codeKeyTypes: [codeKeys.MySql],
+      //   case_sensitive: false,
+      // },
+      {
+        name: "MongoDB",
+        fileName: "database/mongo",
+        codeKeyTypes: [codeKeys.Mongo, codeKeys.Python],
+        case_sensitive: false,
+        encodeRequired: false,
+      },
+      {
+        name: "🔺PostgreSQL",
+        fileName: "database/PostgreSQL",
+        codeKeyTypes: [codeKeys.MySql],
+      },
+      {
+        name: "GraphQL",
+        fileName: "",
+        codeKeyTypes: [],
+      },
+      {
+        name: "Redis",
+        fileName: "",
+        codeKeyTypes: [],
+      },
+    ],
+  },
+  {
+    category: "Html",
+    items: [
+      {
+        name: "🔺HTML",
+        fileName: "html/HTML",
+        codeKeyTypes: [codeKeys.HTML],
+      },
+      {
+        name: "🔺HTML目的別",
+        fileName: "html/Purpose",
+        codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS],
+      },
+    ],
+  },
+  {
+    category: "CSS",
+    items: [
+      {
+        name: "CSS",
+        fileName: "",
+        codeKeyTypes: [],
+      },
+      {
+        name: "CSS(Topics)",
+        fileName: "css/CSSTopics",
+        codeKeyTypes: [codeKeys.CSS],
+      },
+      {
+        name: "SCSS",
+        fileName: "",
+        codeKeyTypes: [],
+      },
+      {
+        name: "CSS(Responsive)",
+        fileName: "",
+        codeKeyTypes: [codeKeys.CSS],
+      },
+      {
+        name: "CheatSheet",
+        fileName: "css/CheatSheet",
+        codeKeyTypes: [],
+        idInitialOpened: true,
+      },
+      {
+        name: "CSSColor:color",
+        fileName: "css/CSSColor",
+        encodeRequired: false,
       },
     ],
   },
@@ -563,15 +704,15 @@ export const menuItems: menuByCategories[] = [
         fileName: "WebAPI/SVG",
       },
       {
-        name: "window:win",
+        name: "window",
         fileName: "WebAPI/window",
       },
       {
-        name: "⛔LocalStorage",
+        name: "LocalStorage",
         fileName: "",
       },
       {
-        name: "⛔IndexedDB",
+        name: "IndexedDB",
         fileName: "",
       },
     ],
@@ -602,20 +743,20 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.Curl],
       },
       {
-        name: "⛔Cookie",
+        name: "Cookie",
         fileName: "",
       },
     ],
   },
-  {
-    category: "Computer Science",
-    items: [
-      {
-        name: "⛔デザインパターン",
-        fileName: "",
-      },
-    ],
-  },
+  // {
+  //   category: "Computer Science",
+  //   items: [
+  //     {
+  //       name: "デザインパターン",
+  //       fileName: "",
+  //     },
+  //   ],
+  // },
   {
     category: "Office",
     items: [
@@ -636,16 +777,16 @@ export const menuItems: menuByCategories[] = [
       },
     ],
   },
-  {
-    category: "他言語",
-    items: [
-      {
-        name: "🔺Fortran",
-        fileName: "languages/Fortran",
-        codeKeyTypes: [],
-      },
-    ],
-  },
+  // {
+  //   category: "他言語",
+  //   items: [
+  //     {
+  //       name: "🔺Fortran",
+  //       fileName: "languages/Fortran",
+  //       codeKeyTypes: [],
+  //     },
+  //   ],
+  // },
   {
     category: "ユビキタス",
     items: [

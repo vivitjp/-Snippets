@@ -1,0 +1,636 @@
+---
+#-------------------------------
+# Lambda関数の基本
+#-------------------------------
+- KEY: aws.lambda.category
+  CATEGORY: Lambda関数の基本
+
+- KEY: aws.Lambda.概論
+  EXPLAIN: |
+    Lambda関数
+  BODY: |
+    ■ サポート言語
+      • Python, Node.js, .NET, Go, Java, Ruby, Custom Runtime
+
+    ■ Lambda関数は
+      • コード実行のサーバー管理の必要がなく、イベントに応じて自動的にスケール
+      • AWS Lambdaは、サーバーレスアーキテクチャを実現するためのサービス
+      • AWS Lambdaで実行されるコードの単位で、イベントソースからのイベントをトリガーにして実行
+      • AWS Management Console、AWS CLI、AWS SDKで作成
+      • AWS Lambdaの管理コンソールからも作成可能
+      • それぞれ隔離されたコンテナで実行され、1コンテナで1つのLambda関数が実行される
+      • 関数メソッドをハンドラーとして指定、ハンドラ内ではパラメタとしてイベントデータ(JSON)を受け取る
+      • コードは依存関係も含めてビルド、パッケージングしてZIPファイルに圧縮してアップロード
+      • ULしたコードはS3に暗号化して保存され、Lambda関数の実行時にS3から取得
+      • ユーザがS3にアップロードしてARNで指定することも可能
+      • Lambda関数の実行時間はデフォルト3秒から最大900秒(15分)まで、実行時間を超えるとタイムアウト
+
+- KEY: aws.Lambda.アプリケーションの管理
+  EXPLAIN: |
+    アプリケーションの管理
+  BODY: |
+    ■ AWS Serverless Application Repository
+      • AWS Serverless Application Repositoryは、AWS Lambdaのアプリケーションを管理するためのサービス
+
+    ■ AWS CloudFormation
+      • リソース定義とプロビジョニング自動化
+
+    ■ AWS SAM(Serverless Application Model)
+      • サーバーレスアプリケーション定義とデプロイのためのフレームワーク
+      • AWS CloudFormationの拡張(従来のCloudFormationテンプレートをSAMテンプレートに変換可能)
+
+    ■ AWS CLI & AWS SAM CLI
+      • コマンドラインツール
+      • デプロイパッケージのアップロードやテンプレート更新
+      • AWS SAM CLIはテンプレート検証、ローカル開発、テスト、デバッグが可能
+
+- KEY: aws.Lambda.同時実行数制限
+  EXPLAIN: |
+    同時実行数制限と自動スケーリング
+  BODY: |
+    ■ 同時実行数制限
+      • Lambda関数の同時実行数はデフォルト1000、アカウント単位で制限されている
+        • エラー: スロットリングエラー(429)
+        • 非同期の場合、15~30分はバーストとして許容される
+        • 同時実行数の制限はAWS Lambdaのサービスクォータで確認可能
+      • 同時実行数の見積
+        • 同時実行数 = (1秒あたりのリクエスト数) × (Lambda関数の平均実行時間)
+        • 例: 1秒あたり100リクエスト、平均実行時間が0.5秒の場合、50同時実行数必要 
+        • ポーリングベースについては別途考慮
+
+    ■ 自動スケーリング
+      • Lambda関数は自動的にスケール
+      • 同時実行数の制限があるため、リクエスト数が多い場合はスロットリングエラー発生
+      • 初期レベルでバーストした場合、負荷が落ち着くまで、あるいは同時実行の制限に達するまで、1分ごとに500ずつ実行
+        • 初期値はリージョンによって異なる(緩和不可)
+          例: us-east-1は500、ap-northeast-1は1000
+
+- KEY: aws.Lambda.サポートイベントソース
+  EXPLAIN: |
+    サポートイベントソースと呼び出し(トリガー)
+  BODY: |
+    ■ サポートイベントソース
+      • Amazon S3                           非同期
+      • Amazon DynamoDB Streams             同期 (ポーリングベース: DynamoDB Streams)
+      • Amazon Simple Notification Service  非同期
+      • Amazon Simple Email Service         非同期
+      • Amazon Simple Queue Service         同期 (ポーリングベース: 非ストリームベース)
+      • AWS CloudFormation                  同期
+      • Amazon CloudWatch Logs              同期
+      • Amazon CloudWatch イベント           非同期
+      • Amazon API Gateway                  同期
+      • Amazon CloudFront                   同期
+
+    ■ 呼び出し(トリガー)
+      • Lambda関数をトリガーするイベントソースを指定することができる
+      • トリガーはAWSサービスからのイベントをLambda関数に送信するためのもの
+      • カスタムAPPによるトリガー、AWS CLIなどによる手動実行時に呼び出しタイプを指定
+      • イベントソースがAWSサービスの場合、事前にタイプ指定して変更不可
+      • 非同期呼び出し
+        • InvocationType: Event
+        • レスポンスはリクエストが正常に受付されたかどうかのみ
+      • 同期呼び出し
+        • InvocationType: RequestResponse
+        • 実行完了後にレスポンスを返し、内容はLambda関数の戻り値
+
+    ■ リトライ
+      • 非同期呼び出し
+        • 自動的に2回までリトライ(最大で6分間隔)され、その後イベントは破棄
+        • リトライには遅延あり(指数バックオフ・アルゴリズム)
+      • 同期呼び出し
+        • リトライなし、エラーが発生した場合はレスポンス・ヘッダにエラーコードが返される
+        • パーミッション、IAMロールの設定ミスなどによるエラー:
+          • 場合はリトライされず、特定のステータスコードが返される
+
+- KEY: aws.Lambda.VPC内で実行する場合
+  EXPLAIN: |
+    VPC内で実行する場合(トリガー)
+  BODY: |
+    ■ VPC内で実行する場合
+      • VPCのサブネットとセキュリティグループを指定
+      • Lambda関数はVPC内のリソースにアクセスできる反面: 
+        • インターネットアクセスは不可になる
+        • Public IPアドレスが持てない
+        • インターネットアクセスが必要な場合、VPC NAT Gateway使用
+      • ENI(Elastic Network Interface(ENI)使用
+        • Lambda関数の実行時にENIを作成、実行終後、ENIは削除される
+        • VPC内リソースへのアクセスに、IAMロール(AWSLambdaVPCAccessExecutionRole)指定
+        • 任意のアドレス指定は不可
+        • ENI作成時間により初回実行時にレイテンシー(10s~60s程度)が発生する
+        • ENIは複数のLambda関数で共有される
+
+- KEY: aws.Lambda.アクセス許可
+  EXPLAIN: |
+    アクセス許可(トリガー)
+  BODY: |
+    ■ アクセス許可(管理ポリシー)
+      • Lambda関数の実行に必要なIAMロール指定(AWSリソースにアクセスする許可)
+      • 管理ポリシー例:
+        • AWSLambdaBasicExecutionRole      CloudWatch Logsへの書き込み
+        • AWSLambdaVPCAccessExecutionRole  VPCアクセスのためのENI管理アクセス
+        • AWSLambdaDynamoDBExecutionRole   DynamoDBへのアクセス
+        • AWSLambdaSQSQueueExecutionRole   SQSへのアクセス
+
+    ■ アクセス許可(リソースポリシー)
+      • Lambda関数のリソースポリシーを設定することで、AWSサービスやユーザにLambda関数の実行許可
+      • リソースポリシーはIAMロールではなく、Lambda関数に直接アタッチされるポリシー
+      • リソースポリシー例:
+        • S3バケットからのLambda関数の呼び出しを許可するポリシー
+        • API GatewayからのLambda関数の呼び出しを許可するポリシー
+        • SNSからのLambda関数の呼び出しを許可するポリシー
+
+- KEY: aws.Lambda.Lambda関数のライフサイクル
+  EXPLAIN: |
+    Lambda関数のライフサイクル
+  BODY: |
+    1 ENI作成                     VPC使用時のみ10~30s(Durationには含まれない)
+    2 コンテナ作成                 S3からのダウンロードと展開(Durationには含まれない)
+    3 デプロイパッケージのロード
+    4 デプロイパッケージの展開
+    5 ランタイム起動と初期化        グローバルスコープ処理含む(Durationには含まれない)
+    6 関数実行                     Durationに含まれる(実行時間)
+    7 コンテナ破棄
+
+    ■ コールドスタート & ウォームスタート
+      • 1~6 まで全実行するのがコールドスタート(毎回実行)
+      • 作成コンテナ再利用ではウォームスタート(初回実行後、一定時間内に再実行)
+
+    ■ コールドスタートが起こる条件
+      • コンテナない場合
+      • Lambda関数の初回実行時
+      • Lambda関数のコード変更時(コンテナ作り直し)
+      • Lambda関数のVPC設定変更時(コンテナ作り直し)
+      • Lambda関数の同時実行数制限を超えた場合(ENI作成)
+      • Lambda関数のアイドル時間が長い場合(ENI削除)
+
+    ■ 対策
+      • Lambda関数のアイドル時間を短くする(多くが無駄!)
+        • 定期的にLambda関数を実行する(CloudWatch Eventsなど)
+        • Lambda関数のアイドル時間を短くすることで、コールドスタートを減らす
+
+    ■ バックグラウンドプロセスの凍結と再開
+      • Lambda関数終了時にバックグラウンドプロセスがある場合、凍結される
+      • 凍結されたバックグラウンドプロセスは、次回関数を呼び出した際に再開
+        • ただし、コンテナが再利用される場合のみで保証なし(この挙動に依存しないこと)
+
+- KEY: aws.Lambda.制限事項
+  EXPLAIN: |
+    制限事項
+  BODY: |
+    ■ 緩和可能
+      • 同時実行数制限(デフォルト1000)
+      • 関数とレイヤーストレージ(75GB)
+
+    ■ 緩和不可
+      • メモリ(128MB~10GB)
+      • タイムアウト(1s~900s)
+      • 環境変数(4KB)
+      • 関数リソースポリシー(20KB?)
+      • 関数レイヤー(5レイヤー)
+      • 呼び出しペイロード(同期 6MB, 非同期 256KB)
+      • パッケージサイズ(zipの直UL 50MB, 解凍時 250MB, コンソールからのアップロード 3MB)
+      • テストイベント(10)
+      • /tmp ディレクトリのストレージ(512MB)
+      • ファイルの説明(1024)
+      • 実行プロセス/スレッド数(1024)
+      • VPC内でのENI作成時間(10s~60s程度)
+      • VPC内でのENI数(5~10個程度)
+
+#-------------------------------
+# Lambda関数の使い方
+#-------------------------------
+- KEY: aws.lambda.Lambda関数の使い方.category
+  CATEGORY: Lambda関数の使い方
+
+- KEY: aws.Lambda.Lambda関数の使い方.概論
+  EXPLAIN: |
+    基本
+  BODY: |
+    ■ ハンドラー
+      • AWS Lambdaが呼び出すメソッドのエントリーポイント(実行開始点)
+      • Lambda関数のコード内で定義必要
+      • イベントデータ(パラメタ)を受け取る
+      • Lambda関数の実行結果を返す
+
+    ■ コンテキスト
+      • Lambda関数の実行環境に関する情報オブジェクト(2つ目の引数)
+      • 実行時間、メモリサイズ、リクエストIDなどの情報
+        • 実行時間を取得する場合、context.get_remaining_time_in_millis()を使用  
+      • 関数実行中に取得可能(実行完了後は取得不可)
+      • コールバックを使用する場合、コールバックの第1引数に渡される
+      • コールバックメソッドの挙動制御
+        • 第1引数にエラーオブジェクトを渡すことで、関数実行を終了させる
+        • 第2引数に結果を渡すことで、関数の実行結果を返す
+        • コールバックメソッドを使用しない場合、return文で結果を返す
+        • コールバックメソッドを使用する場合、return文は使用しない
+
+    ■ ロギング
+      • AWS LambdaはCloudWatch Logsにログを出力を出力可能
+      • ロググループ名: /aws/lambda/<関数名>
+      • ログストリーム名: <YYYY/MM/DD>/<関数名>/<リクエストID>
+      • ログストリームはLambda関数の実行ごとに作成
+
+    ■ 例外
+      • Lambda関数内で例外が発生した場合、AWS Lambdaは自動的にエラーをキャッチ
+      • エラーはCloudWatch Logsに出力される
+      • エラーが発生した場合、Lambda関数の実行は終了し、エラーコードが返される
+      • エラーコードはAWS Lambdaの管理コンソールから確認可能
+      • エラーコードはAWS CLIやAWS SDKを使用して取得可能
+
+- KEY: aws.Lambda.Lambda関数の使い方.実装の基本
+  EXPLAIN: |
+    実装の基本
+  BODY: |
+    ■ ステートレス
+      • Lambda関数はステートレスである必要がある
+      • ステートレスとは、関数の実行に必要な情報を関数内に保持しないこと
+      • ステートレスでない場合、Lambda関数の実行結果が異なる可能性がある 
+
+    ■ ローカルファイルへのアクセス
+      • Lambda関数内でローカルファイルにアクセスする場合、/tmpディレクトリを使用
+      • /tmpディレクトリは512MBまで使用可能
+      • /tmpディレクトリはLambda関数の実行ごとに初期化される
+
+    ■ 永続化
+      • Lambda関数内で永続化する場合、Amazon S3やDynamoDBを使用
+      • Amazon S3やDynamoDBはAWS Lambdaから直接アクセス可能
+
+- KEY: aws.Lambda.Lambda関数の使い方.Lambda関数の作成
+  EXPLAIN: |
+    マネジメントコンソールからのLambda関数の作成
+  BODY: |
+    ■ マネジメントコンソールからのLambda関数の作成
+      • AWS Management ConsoleからLambda関数を作成する場合、以下の手順で作成可能
+        1. AWS Management Consoleにログイン
+        2. Lambdaサービスを選択
+        3. 「関数の作成」をクリック
+        4. 「一から作成」を選択
+        5. 関数名、ランタイム、ロールを指定
+        6. 「関数の作成」をクリック
+
+    ■ 設計図の使用
+      • 設計図はAWS Lambdaのサンプルコードを元に作成されたテンプレート
+      • 設計図を使用することで、Lambda関数の作成が簡単になる
+      • 設計図はAWS Management ConsoleからLambda関数を作成する際に選択可能
+
+- KEY: aws.Lambda.Lambda関数の使い方.デプロイパッケージ
+  EXPLAIN: |
+    デプロイパッケージ
+  BODY: |
+    ■ デプロイパッケージ
+      • ZIPファイルに圧縮してアップロードする必要がある
+      • ZIPファイルは依存関係も含めてビルド、パッケージングしてアップロード
+      • 依存関係の含め方は言語によって異なる
+        • Node.js: 依存ライブラリはnode_modulesに格納したZIPファイルをアップロード
+        • Python: 依存ライブラリはsite-packagesに格納したZIPファイルをアップロード
+      • 依存ライブラリに対してグローバルな読み取り権限(0444)が必要
+
+    ■ 制限
+      • AWS Management Consoleからアップロードする場合、3MBまで
+      • MAXサイズは50MBまで(解凍後のサイズは250MBまで)。
+      • 50MBを超える場合、S3にアップロードしてARN指定
+      • 解凍後のサイズは250MBまで
+
+- KEY: aws.Lambda.Lambda関数の使い方.マネジメントコンソール
+  EXPLAIN: |
+    マネジメントコンソール
+  BODY: |
+    ■ スロットリング
+      • ネットワーク
+        • 非VPC: 実行時にENIを作成せず、スロットリング非発生
+        • VPC内: ENI作成で、スロットリング発生
+      • 同時実行数
+        • 予約されていないアカウントの同時実行の使用
+        • 同時実行の予約: 100
+      • デバッグとエラー処理
+        • DLQ(Dead Letter Queue) リソース: 関数実行に失敗した場合、SNSやSQSにメッセージを送信
+      • 監査とコンプライアンス
+        • AWS CloudTrail: Lambda関数の実行履歴を記録
+        • AWS Config: Lambda関数の設定変更を記録
+
+- KEY: aws.Lambda.Lambda関数の使い方.環境変数
+  EXPLAIN: |
+    環境変数
+  BODY: |
+    ■ 環境変数
+      • 環境変数はLambda関数の実行時に取得可能
+      • 環境変数はLambda関数の実行ごとに初期化される
+      • バージョニング利用時は環境変数もスナップショットされる
+      • 4KBまでのサイズ制限あり
+      • 環境変数はAWS Management Consoleから設定可能
+      • 文字は[a-zA-Z]で始まり、英数字とアンダースコアのみ使用可能で、文字コードは UTF-8
+
+    ■ 暗号化
+      • AWS KMS(Key Management Service)を使用して暗号化可能
+      • KMSで暗号化され、Lambda関数の実行時に復号化される
+      • KMSで暗号化されているため、IAMポリシーでアクセス制御可能
+      • 復号化はLambda関数の実行時に行われる
+
+    ■ Node.js サンプル
+      • let region = process.env.AWS_REGION
+      • let bucket = process.env.BUCKET_NAME
+      • let key = process.env.KEY_NAME
+      • let value = process.env.VALUE_NAME
+      • let secret = process.env.SECRET_NAME
+
+- KEY: aws.Lambda.Lambda関数の使い方.予約済み環境変数
+  EXPLAIN: |
+    予約済み環境変数
+  TABLE:
+    OPTION:
+      ALIGN:
+        - left
+        - left
+      HAS_TITLE: false
+      WIDTH:
+        - 40%
+    BODY: |
+      ■ 予約済み環境変数
+      _HANDLER	関数に設定されているハンドラの場所。
+      AWS_DEFAULT_REGION	Lambda 関数が実行されるデフォルトの AWS リージョン。
+      AWS_REGION	Lambda 関数が実行される AWS リージョン。定義されている場合、この値は AWS_DEFAULT_REGION を上書きします。
+      AWS_EXECUTION_ENV	AWS_Lambda_ (例: AWS_Lambda_java8) のプレフィックスが付いたランタイム識別子。この環境変数は OS 専用ランタイム (provided ランタイムファミリー) には定義されていません。
+      AWS_LAMBDA_FUNCTION_NAME	関数の名前。
+      AWS_LAMBDA_FUNCTION_MEMORY_SIZE	関数で使用できるメモリの量 (MB 単位)。
+      AWS_LAMBDA_FUNCTION_VERSION	実行される関数のバージョン。
+      AWS_LAMBDA_INITIALIZATION_TYPE	関数の初期化タイプ。
+      AWS_LAMBDA_LOG_GROUP_NAME。AWS_LAMBDA_LOG_STREAM_NAME	Amazon CloudWatch Logs グループの名前と関数のストリーム。AWS_LAMBDA_LOG_GROUP_NAME および AWS_LAMBDA_LOG_STREAM_NAME の環境変数は Lambda SnapStart 関数では使用できません。
+      AWS_ACCESS_KEY。AWS_ACCESS_KEY_ID。AWS_SECRET_ACCESS_KEY。AWS_SESSION_TOKEN	関数の実行ロールから取得したアクセスキー。
+      AWS_LAMBDA_RUNTIME_API	(カスタムランタイム) ランタイム API のホストおよびポート。
+      LAMBDA_TASK_ROOT	Lambda 関数コードへのパス。
+      LAMBDA_RUNTIME_DIR	ランタイムライブラリへのパス。
+      ■ 予約されていない環境変数
+      LANG	ランタイムのロケール (en_US.UTF-8)。
+      PATH	実行パス (/usr/local/bin:/usr/bin/:/bin:/opt/bin)。
+      LD_LIBRARY_PATH	システムライブラリのパス (/var/lang/lib:/lib64:/usr/lib64:$LAMBDA_RUNTIME_DIR:$LAMBDA_RUNTIME_DIR/lib:$LAMBDA_TASK_ROOT:$LAMBDA_TASK_ROOT/lib:/opt/lib)。
+      NODE_PATH	(Node.js) Node.js ライブラリのパス (/opt/nodejs/node12/node_modules/:/opt/nodejs/node_modules:$LAMBDA_RUNTIME_DIR/node_modules)。
+      PYTHONPATH	(Python) Python ライブラリパス ($LAMBDA_RUNTIME_DIR)。
+      TZ	環境のタイムゾーン (:UTC)。実行環境は、システムクロックを同期するために NTP を使用します。
+
+- KEY: aws.Lambda.Lambda関数の使い方.バージョニング
+  EXPLAIN: |
+    バージョニング
+  BODY: |
+    • 各バージョンには一意のARNが付与される
+    • 関数作成/更新時に自動的にバージョンが付与される
+    • PublishVersionを使用してバージョン公開
+    • バージョンは1から始まり、1ずつ増加、最大1000
+    • バージョン発行までは $LATEST が使用される
+    • 特定バージョンに対してエイリアスを作成可能(番号でなく名前指定)
+    • 特定バージョンを指定して関数を呼び出すことができる
+      • 例: arn:aws:lambda:us-east-1:123456789012:function:my-function:1     <-- バージョン番号
+      • 例: arn:aws:lambda:us-east-1:123456789012:function:my-function:PROD  <-- エイリアス名
+
+- KEY: aws.Lambda.Lambda関数の使い方.Layers
+  EXPLAIN: |
+    Layers
+  BODY: |
+    • Lambda関数のコードを「分離管理」する機能
+    • Lambda関数の「コード」と「依存ライブラリ」を分離管理可能
+    • Lambda関数のコードはLambda Layersに格納され、Lambda関数から参照される
+    • Lambda Layersは最大5つ、最大75GBまで使用可能
+    • AWS Management Console、AWS CLI、AWS SDKから作成可能
+    • 共通コンポーネントをZIPファイルに圧縮して「Lambda Layers」としてアップロード
+    • Lambda LayersはLambda関数の実行時に自動的にマウントされる
+    • Layersはimmutable(不変)で、バージョン管理される
+    • 指定バージョンが削除/利用権限剥奪時、それを利用する関数は稼働するが、新規作成は不可
+
+    ■ マネジメントコンソール「レイヤーの作成」
+    「Lambda」->「Layers」->「レイヤーの作成」
+    • 名前: 任意の名前を指定
+    • 説明: 任意の説明を指定
+    • コードエントリタイプ: ZIPファイル/S3バケット指定
+    • アップロード: ZIPファイル/S3バケット指定
+    • ランタイム: 対応するランタイムを指定(Node.js, Python, ... + バージョン)
+
+    ■ マネジメントコンソール「関数にレイヤーを追加」
+    「Lambda」->「Layers」->「関数にレイヤーを追加」
+    • レイヤー選択
+      • リストからレイヤーを選択
+      • レイヤーARNを指定
+    • 関数の「Configuration」から「Layers」を確認
+
+    ■ 注意点
+    • /opt の下に指定した順番で展開
+    • /opt の下に各言語の依存を解決する固有のPATHが設定される
+      • node.js: /opt/nodejs/node_modules
+      • Lambda関数のコードは/var/taskに展開される
+
+- KEY: aws.Lambda.Lambda関数の使い方.タグ付け
+  EXPLAIN: |
+    グループ化とフィルタリング
+  BODY: |
+    • タグは最大50個まで付与可能
+    • タグは最大128バイトまでの文字列
+    • 請求に含まれるLambda関数のリストをグループ化
+    • コンソールとAWS CLIからLambda関数をフィルタリング
+
+- KEY: aws.Lambda.Lambda関数の使い方.モニタリング
+  EXPLAIN: |
+    モニタリング
+  BODY: |
+    • AWS CloudWatchを使用してLambda関数のメトリクスを収集
+    • Lambda関数のメトリクスはCloudWatchに自動的に送信される
+    • CloudWatch LogsにLambda関数のログを出力可能
+    • CloudWatch LogsはAWS Management Consoleから確認可能
+    • CloudWatch LogsはAWS CLIやAWS SDKを使用して取得可能
+  TABLE:
+    OPTION:
+      ALIGN:
+        - left
+        - center
+        - left
+      HAS_TITLE: true
+      WIDTH:
+        - 30%
+        - 10%
+    BODY: |
+      項目	単位	意味
+      Invocations	count	Lambda関数の呼び出し回数(課金対象と同等)
+      Duration	ms	Lambda関数の実行時間(課金は100ms単位で切り上げ)。コールドスタートのLambda起動までは含まない
+      Errors	count	Lambda関数のエラー回数(Throttlesと内部エラーは除く)
+      Throttles	count	Lambda関数のスロットリング回数(制限緩和のエビデンスになる)
+      IteratorAge	ms	(Kinesis/DynamoDBストリームのみ) イテレータの年齢
+      DeadLetterErrors	count	Dead Letter Queueの書き込み失敗回数
+      ConcurrentExecutions	count	同時実行数
+      UnreservedConcurrentExecutions	count	予約されていない同時実行数
+
+- KEY: aws.Lambda.CloudWatch
+  EXPLAIN: |
+    CloudWatch の ログ出力
+  BODY: |
+    実行ログが CloudWatch Logs に出力される
+
+    exports.handler = function(event, context){
+        console.log('Received event:');
+        console.log(JSON.stringify(event, null, 2));
+        var bucket = event.Records[0].s3.bucket.name;
+        var key = event.Records[0].s3.object.key;
+        console.log('Bucket: ' + bucket);
+        console.log('Key: ' + key);
+    };
+
+- KEY: aws.Lambda.Schedule実行
+  EXPLAIN: |
+    Schedule 実行
+  BODY: |
+    • AWS Lambdaは定期的に実行可能
+    • AWS CloudWatch Eventsを使用して定期的にLambda関数を実行可能
+    • AWS CloudWatch EventsはAWS Management Consoleから設定可能
+    • AWS CloudWatch EventsはAWS CLIやAWS SDKを使用して設定可能
+    • AWS CloudWatch EventsはAWS Lambda関数をトリガーとして実行可能
+
+    ■ マネジメントコンソール「トリガーの設定」
+    • ルール: 新規ルールの作成
+    • ルール名: 任意の名前を指定
+    • ルールの説明: 任意の説明を指定
+    • ルールのタイプ: 
+      • イベントパターン
+      • スケジュール式を選択
+
+    ■ スケジュール式の例
+      • rate(5 minutes)                 5分ごとに実行
+      • rate(1 hour)                    1時間ごとに実行
+      • rate(7 days)                    7日ごとに実行
+      • cron(0 12 * * ? *)              毎日12時に実行
+      • cron(0 10 * * ? *)              毎日午前10時に実行
+      • cron(0 18 ? * MON-FRI *)        月～金、毎日午後6時に実行
+
+#-------------------------------
+# Lambda関数の使い方
+#-------------------------------
+- KEY: aws.lambda.カスタムランタイム.category
+  CATEGORY: カスタム・ランタイム
+
+- KEY: aws.Lambda.カスタムランタイム
+  EXPLAIN: |
+    カスタム・ランタイム
+  BODY: |
+    • Linux 互換のランタイムを指定することで任意の言語を実行
+    • 先に公式サポートを確認
+      AWS LambdaはLinux互換のカスタムランタイムをサポート
+      https://github.com/awslabs
+
+    ■ bootstrap
+    • エントリポイントとなる実行ファイル
+    • Runtime HTTP API と 実行関数の間をつなぐインターフェース
+    • レスポンスとエラーハンドリング、コンテキスト作成と関数実行を行う
+    • 関数実行時にパッケージ内/Layer内の bootstrap を実行
+    • 存在しないとエラーになる
+
+    ■ 例: コンパイル言語 fortran
+    • Lambdaはまず"bootstrap"という名前のスクリプトを探し、存在すればそれを実行
+    • Fortranのようなコンパイル言語では bootstrap スクリプトと実行バイナリをzipに入れる
+    • あるいは Layer に登録してもOK
+    • bootstrap から実行バイナリを実行
+
+- KEY: aws.Lambda.カスタムランタイムbootstrap実装
+  EXPLAIN: |
+    bootstrap実装
+  BODY: |
+    ■ Initialization Tasks(請求/タイムアウト対象)
+
+      • 環境変数の読み取り
+      • 関数で設定されたハンドラの取得(FILE_NAME.METHOD_NAME)
+        • LAMBDA_TASK_ROOT: Lambda関数コードへのパス
+        • AWS_LAMBDA_RUNTIME_API: Lambda Runtime APIのホスト名とポート番号
+      • 関数の初期化
+        • ハンドラ読み込み、初期化、グローバル変数の初期化
+        • SDKクラインアント、DB接続、HTTPクライアントの初期化(再利用対象)
+      • エラーハンドリング
+
+    ■ Processing Tasks(イベント待ち受けループ)
+
+      • イベントの取得
+        • next invocation APIを使用して次イベント取得
+        • イベントはJSON形式で取得
+      • コンテキストオブジェクト作成
+        • イベントデータを元にコンテキストオブジェクト作成
+        • コンテキストオブジェクトにはLambda関数の実行環境に関する情報が含まれる
+      • 関数のハンドラを呼び出し(イベント処理)
+        • イベントとコンテキスオブジェクトをハンドラに渡す
+      • レスポンスのハンドリング
+        • レスポンスはJSON形式で取得
+        • レスポンスボディには関数の実行結果が含まれる
+        • レスポンスヘッダにはリクエストIDが含まれる
+        • Invocation Response APIを使用してレスポンスをポスト
+      • エラーハンドリング
+        • エラー発生時、Invocation Error APIを使用してエラーをポスト
+      • クリーンアップ
+        • Lambda関数の実行が終了したら、クリーンアップ処理を実行
+        • DB接続のクローズ、HTTPクライアントのクローズなど
+        • 他サービスへデータ送信、次イベント処理前の追加処理など
+
+- KEY: aws.Lambda.カスタムランタイムbootstrapサンプル
+  EXPLAIN: |
+    bootstrapサンプル(shell script)
+  BODY: |
+    #!/bin/sh
+    set -ueo pipefail
+
+    # 初期化 - 関数ハンドラロード
+    source $LAMBDA_TASK_ROOT/"$(echo $_HANDLER | cut -d. f1).sh"
+
+    # 実行
+    while true
+    do
+      HEADERS="$(mktemp)"
+
+      # イベント取得
+      EVENT_DATA=$(curl -sS -LD "$HEADERS" -X GET "http://${AWS_LAMBDA_RUNTIME_API}/2018-06-01/runtime/invocation/next")
+      REQUEST_ID=$(grep -Fi Lambda-Runtime-Aws-Request-Id "$HEADERS" | tr -d '[:space:]' | cut -d: -f2)
+
+      # ハンドラ関数実行
+      RESPONSE=$($(echo "$_HANDLER" | cut -d. -f2) "$EVENT_DATA")
+
+      # レスポンス送信
+      curl -X POST "http://${AWS_LAMBDA_RUNTIME_API}/2018-06-01/runtime/invocation/$REQUEST_ID/response" -d "$RESPONSE"
+    done
+
+- KEY: aws.Lambda.カスタムランタイム.interface
+  EXPLAIN: |
+    カスタムランタイムのための HTTP API
+  BODY: |
+    API メソッド
+    • 次の呼び出し
+    • 呼び出しレスポンス
+    • 初期化エラー
+    • 呼び出しエラー
+
+    ■ 次の呼び出し
+      • PATH: /runtime/invocation/next
+      • メソッド: GET
+      • ランタイムは、このメッセージを Lambda に送信、呼び出しイベントをリクエスト
+      • レスポンス本文: 
+        • 呼び出しのペイロード(関数トリガーのイベントデータを含む JSON ドキュメント)が含まれる。
+      • レスポンスヘッダー: 
+        • Lambda-Runtime-Aws-Request-Id
+            リクエスト ID
+            関数の呼び出しをトリガーしたリクエストを識別
+            例: 8476a536-e9f4-11e8-9739-2dfe598c3fcd
+        • Lambda-Runtime-Deadline-Ms
+            関数がタイムアウトした日付 (Unix 時間のミリ秒)
+            例: 1542409706888
+        • Lambda-Runtime-Invoked-Function-Arn
+            呼び出しで指定されている Lambda 関数、バージョン、またはエイリアスの ARN
+            例: arn:aws:lambda:us-east-2:123456789012:function:custom-runtime
+        • Lambda-Runtime-Trace-Id - AWS X-Ray トレースヘッダー。
+            例: Root=1-5bef4de7-ad49b0e87f6ef6c87fc2e700;Parent=9a9197af755a6419;Sampled=1
+        • Lambda-Runtime-Client-Context
+            AWS Mobile SDK の呼び出しにおいて、クライアントアプリケーションおよびデバイスに関するデータ
+        • Lambda-Runtime-Cognito-Identity
+            AWS Mobile SDK からの呼び出しの場合は、Amazon Cognito ID プロバイダーに関するデータ
+
+      • 応答遅延の可能性があり、GET リクエストにタイムアウトを設定しないこと
+          Lambda がランタイムをブートストラップする時と、返すイベントがランタイムにあるときとの間に、
+          ランタイムプロセスが数秒間停止する可能性あり
+      • リクエスト ID は、Lambda 内の呼び出しを追跡
+          レスポンス送信時に呼び出しを指定する場合に使用
+      • トレースヘッダーには、トレース ID、親 ID、サンプリングデシジョンが含まれます。
+          リクエストがサンプリングされている場合、リクエストが Lambda、またはアップストリームサービスによってサンプリングされた場合、
+          ランタイムは、_X_AMZN_TRACE_ID をヘッダーの値に設定します。
+          X-Ray SDK はこの値を読み込んで ID を取得し、リクエストを追跡するかどうかを判断します。
+
+    ■ 呼び出しレスポンス
+    ■ 初期化エラー
+    ■ 呼び出しエラー

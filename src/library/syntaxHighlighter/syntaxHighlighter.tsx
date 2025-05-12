@@ -36,18 +36,23 @@ export const syntaxHighlight = ({
           const re = new RegExp(`\\b${key}\\b`, case_sense)
           result = result.replaceAll(
             re,
-            `<span style="color:${color}">${switcher(key)}</span>`
+            (match: string) =>
+              `<span style="color:${color}">${switcher(match)}</span>`
           )
         })
       })
     }
 
     if (result.trim()) {
+      const isSubTitle = result.indexOf("■") > -1
       rebuilt.push(
         <Pre
           key={idx}
           dangerouslySetInnerHTML={{ __html: result }}
-          bgColor={bgColor}
+          bgColor={isSubTitle ? "white" : bgColor}
+          // fontSize={isSubTitle ? "1.05em" : undefined}
+          // fontWeight={isSubTitle ? "bold" : undefined}
+          subTitle={isSubTitle ? true : false}
         />
       )
     } else {
@@ -96,9 +101,19 @@ function escapeHtml(str: string): string {
 
 type Options = {
   bgColor?: string
+  fontSize?: string
+  fontWeight?: string
+  subTitle?: boolean
 }
 const Pre = styled.pre<Options>`
   ${(props) => css`
-    background-color: ${props.bgColor ?? "#F9F9F9"}
+    background-color: ${props.bgColor ?? "#F9F9F9"};
+    font-weight: ${props.subTitle ? "bold" : "normal"};
+    text-decoration: ${props.subTitle ? "subTitle" : "none"};
+    border-bottom: ${props.subTitle ? "1px solid #ccc" : "none"};
+    padding: ${props.subTitle ? "0.7em 0.5em 0 0.5em" : undefined};
+    margin-left: ${props.subTitle ? "-0.7em" : undefined};
+    margin-bottom: ${props.subTitle ? "0.2em" : undefined};
+    width: ${props.subTitle ? "calc(100% + 1.4em)" : undefined};
   `}
 `

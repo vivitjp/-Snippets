@@ -1,0 +1,262 @@
+---
+#-------------------------------
+# Amplify
+#-------------------------------
+- KEY: aws.Amplify.category
+  CATEGORY: Amplify
+
+- KEY: aws.Amplify
+  EXPLAIN: 概説
+  BODY: |
+    Aall-in-one:
+      CloudFront
+      S3
+      AppSync
+      DynamoDB
+
+    対応:
+      JS(React,Angular,Vue)
+      Mac
+      Android
+
+    Web Document
+      https://docs.amplify.aws/react/
+
+- KEY: aws.Amplify.backend
+  EXPLAIN: 開発フロー(バックエンド)
+  BODY: |
+    ■ ローカル端末にAmplify CLI のインストール
+    > npm install -g @aws-amplify/cli
+    > amplify --version
+
+    ■ 設定: Amplify CLI の初期セットアップ
+    > amplify configure
+
+      使用リージョン、クレデンシャル、
+
+    ■ プロジェクトのルートディレクトリで初期化コマンドを実⾏
+    > amplify init
+
+      ・プロジェクト名
+      ・環境名(production/staging/develop/test ..etc)
+      ・使⽤するプラットーフォーム(プログラム⾔語/フレームワーク)
+      ・プロジェクトが使⽤するプロファイル情報
+      ・使⽤するエディタ
+      ・プロジェクトのディレクトリ情報..等
+
+      Specify the AWS Region
+      ? region:  ap-northeast-1
+      Specify the username of the new IAM user:
+      ? user name:  amplify-8ZcOy
+      Complete the user creation using the AWS console
+      https://console.aws.amazon.com/iam/home?region=undefined#/users$new?step=final&
+      accessKey&userNames=amplify-8ZcOy&permissionType=policies&
+      policies=arn:aws:iam::aws:policy%2FAdministratorAccess
+      Press Enter to continue
+
+      [Browser] ウィザード形式の IAMユーザー 追加ページが表示
+
+        アクセスの種類: プログラムによるアクセス
+        アクセス許可の設定
+        タグの追加(オプション)
+          -> ユーザーの作成
+          ユーザ名、アクセスキーID、シークレットアクセスキー
+
+      [CLI] に戻る
+      Enter the access key of the newly created user:
+      ? accessKeyId:  XXXXXXXXXXXX**********
+      ? secretAccessKey:  XXXXXXXXXXXXXXXXXXXX********************
+      This would update/create the AWS Profile in your local machine
+      ? Profile Name:  amplify-8ZcOy
+
+      Successfully set up the new user. <- 設定完了
+
+      > aws configure list --profile amplify-8ZcOy
+
+            Name                    Value             Type    Location
+            ----                    -----             ----    --------
+        profile            amplify-8ZcOy           manual    --profile
+      access_key     ****************XXXX shared-credentials-file
+      secret_key     ****************XXXX shared-credentials-file
+          region           ap-northeast-1      config-file    ~/.aws/config
+
+    ■ コマンド完了後、ルートディレクトリに /amplify 作成される
+    /amplify
+    /node_modules
+    /public
+    /src
+    .dot files
+    package.json
+
+    ■ バックエンドの設定追加（対話）
+    > amplify add <カテゴリ名>
+    > amplify add api                 // api 構築
+
+      ・api カテゴリの設定項⽬の例
+      ・REST API or GraphQL ?
+      ・API のスキーマ
+      ・パブリックに公開するAPI か︖認証が必要なAPI か︖..等
+
+    ■ 既存カテゴリの更新、削除
+    > amplify update <カテゴリ名>
+    > amplify remove <カテゴリ名>
+
+    ■ ステータス
+    > amplify status
+
+      Current Environment: dev
+      | Category | Resource name | Operation | Provider plugin   |
+      | -------- | ------------- | --------- | ----------------- |
+      | Storage  | s4354vdcs...  | Create    | awscloudformation | <-- 未反映
+      | Api      | blackbelt     | Update    | awscloudformation | <-- 未反映
+      | Auth     | gbsjfjfldk..  | No Change | awscloudformation |
+
+    ■ 反映
+    add/update/remove コマンド実行後、設定をバックエンドに反映させる必要あり
+    > amplify push
+
+      バックエンド反映後に、エンドポイントの設定ファイルが出⼒される
+      アプリケーションはこの設定ファイルを読み込んでバックエンドに接続する
+
+      /aws-exports.js
+
+- KEY: aws.Amplify.frontend
+  EXPLAIN: 開発フロー(フロントエンド)
+  BODY: |
+    Amplify Framework でApplication実装
+    > npm install aws-amplify
+
+    ■ (OLD) コードをコピー＆ペース、npm installで依存パッケージ
+    demo-amplify-js-app
+      /src
+         /app.js
+      index.html
+      package.json
+      webpack.config.js
+
+    npm start
+    http://localhost:8080
+
+    ■ 初期化
+    > amplify init
+
+      Note: It is recommended to run this command from the root of your app directory
+      ? Enter a name for the project: demo-amplify-js-app
+      ? Enter a name for the environment: prod
+      ? Choose your default editor: Visual Studio Code
+      ? Choose the type of app that you're building javascript
+      Please tell us about your project
+      ? What javascript framework are you using: none
+      ? Source Directory Path: src
+      ? Distribution Directory Path: dist
+      ? Build Command:  npm.cmd run-script build
+      ? Start Command: npm.cmd run-script start
+      Using default provider  awscloudformation
+
+      For more information on AWS Profiles, see:
+      https://docs.aws.amazon.com/cli/latest/userguide/cli-multiple-profiles.html
+
+      ? Do you want to use an AWS profile? Yes
+      ? Please choose the profile you want to use amplify-8ZcOy
+      Adding backend environment dev to AWS Amplify Console app: xxxxxxxxxxxxxx
+      - Initializing project in the cloud...
+
+      // 省略
+
+      Your project has been successfully initialized and connected to the cloud!
+
+      Some next steps:
+      "amplify status" will show you what you've added already and if it's locally configured or deployed
+      "amplify add <category>" will allow you to add features like user login or a backend API
+      "amplify push" will build all your local backend resources and provision it in the cloud
+      “amplify console” to open the Amplify Console and view your project status
+      "amplify publish" will build all your local backend and frontend resources
+          (if you have hosting category added) and provision it in the cloud
+
+      Pro tip:
+      Try "amplify add api" to create a backend API and then "amplify publish" to deploy everything
+
+    ■ initで作成されるAWSのリソース
+
+      Amplify Console       demo-amplify-js-app                                 アプリケーション作成
+      CloudFormation        amplify-demo-amplify-js-app-prod-213624             Stack作成
+      S3                    amplify-demo-amplify-js-app-prod-213624-deployment  デプロイ用バケット作成
+      Roles                 amplify-demo-amplify-js-app-prod-213624-authRole    ロール
+                            amplify-demo-amplify-js-app-prod-213624-unauthRole
+
+    ■ init後のプロジェクト
+
+      demo-amplify-js-app
+        /amplify                        <--- add
+          /.config
+            local-aws-info.json
+            local-env-info.json
+            project-config.json
+          /#current-cloud-backend
+            amplify-meta.json
+          /backend
+            amplify-meta.json
+            backend-config.json
+          teram-provider-info.json
+        /dist
+        /node_modules
+        /src
+          app.js
+          aws-exports.js                <--- add
+        .gitignore                      <--- add
+        index.html
+        package.json
+        package-lock.json
+        webpack.config.js
+
+    ■ プロジェクトのgit管理(.gitignore)
+
+      # amplify
+      amplify/\#current-cloud-backend
+      amplify/.config/local-*
+      amplify/mock-data
+      amplify/backend/amplify-meta.json
+      amplify/backend/awscloudformation
+      build/
+      dist/
+      node_modules/
+      aws-exports.js
+      awsconfiguration.json
+      amplifyconfiguration.json
+      amplify-build-config.json
+      amplify-gradle-config.json
+      amplifyxc.config
+
+    ■ add api 作成後のプロジェクト
+
+      demo-amplify-js-app
+      /amplify
+        /.config
+          local-aws-info.json
+          local-env-info.json
+          project-config.json
+        /#current-cloud-backend
+          amplify-meta.json
+        /backend
+          ---------------------------------ここが追加される
+          /api                          <--- add
+            /todo                       <--- amplify add apiで指定したAPI名
+              /build
+              /resolvers
+              /stacks
+                CustomResources.json
+              parameters.json
+              schema.graphql            <--- GraphQLのスキーマファイル 
+              transform.config.json
+          ---------------------------------
+          amplify-meta.json
+          backend-config.json           <--- modify
+        teram-provider-info.json
+      /dist
+      /node_modules
+      ...
+
+- KEY: aws.Amplify.deploy
+  EXPLAIN: 開発フロー(デプロイ)
+  BODY: |
+    3) デプロイ

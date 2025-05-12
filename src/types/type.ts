@@ -25,7 +25,7 @@ export type YAMLData = {
   TABLE?: {
     // テーブル
     OPTION?: {
-      WIDTH?: CSSProperties["width"]
+      WIDTH?: CSSProperties["width"][]
       ALIGN?: TDAlign[]
       HAS_TITLE?: boolean // BODYの最初の行がタイトルかどうか
     }
@@ -48,7 +48,7 @@ export type SnippetsObject = {
   fold?: string[]
   table?: {
     options?: {
-      width?: CSSProperties["width"]
+      width?: CSSProperties["width"][]
       align?: TDAlign[]
       hasTitle?: boolean // BODYの最初の行がタイトルかどうか
     }

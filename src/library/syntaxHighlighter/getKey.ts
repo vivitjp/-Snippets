@@ -1,4 +1,5 @@
 import { KeyDef } from "../../types/type"
+import { keysAWSCloud } from "./keys/AWSCloud"
 import { keysCSS } from "./keys/CSS"
 import { keysChakra } from "./keys/Chakra"
 import { keysClassTransformer } from "./keys/ClassTransformer"
@@ -22,6 +23,7 @@ import { keysNestjs } from "./keys/Nestjs"
 import { keysNextjs } from "./keys/Nextjs"
 import { keysPackage } from "./keys/Package"
 import { keysPackageRHF } from "./keys/PackageRHF"
+import { keysPrisma } from "./keys/Prisma"
 import { keysPython } from "./keys/Python"
 import { keysRTL } from "./keys/RTL"
 import { keysReact } from "./keys/React"
@@ -30,6 +32,7 @@ import { keysSwagger } from "./keys/Swagger"
 import { keysTS } from "./keys/TS"
 import { keysTSConfig } from "./keys/TSConfig"
 import { keysTypeORM } from "./keys/TypeORM"
+import { keysVue } from "./keys/Vue"
 import { keysCurl } from "./keys/curl"
 import { keysNPM } from "./keys/npm"
 
@@ -59,6 +62,7 @@ export const codeKeys = {
   TypeORM: "TypeORM",
   ClassValidator: "ClassValidator",
   ClassTransformer: "ClassTransformer",
+  Prisma: "Prisma",
   Nestjs: "Nestjs",
   Nextjs: "Nextjs",
   Express: "Express",
@@ -68,6 +72,8 @@ export const codeKeys = {
   Excel: "Excel",
   ExcelVBS: "ExcelVBS",
   TSConfig: "TSConfig",
+  Vue: "Vue",
+  AWSCloud: "AWSCloud",
 } as const
 
 export const defaultSnippetsStyle = codeKeys.Unknown
@@ -97,6 +103,7 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   Curl: keysCurl,
   NPM: keysNPM,
   TypeORM: keysTypeORM,
+  Prisma: keysPrisma,
   ClassValidator: keysClassValidator,
   ClassTransformer: keysClassTransformer,
   Nestjs: keysNestjs,
@@ -108,6 +115,8 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   ExcelVBS: keysExcelVBS,
   TSConfig: keysTSConfig,
   Chakra: keysChakra,
+  Vue: keysVue,
+  AWSCloud: keysAWSCloud,
 }
 
 export const getMergedKeys = (codeKeyTypes: string[] | undefined) => {

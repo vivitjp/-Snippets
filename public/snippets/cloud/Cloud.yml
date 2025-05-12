@@ -1,0 +1,77 @@
+---
+- KEY: cloud.general
+  EXPLAIN: Cloud 全般
+  BODY: |
+    ■ AWS 
+    Amazon Web Service                  詳細は別途参照
+
+    ■ Google(GCP)
+    Google Cloud Platform               Google社：GCP、BigQuery、Cloud Functions、Cloud Run、Cloud Storage
+    Google Cloud Functions              サーバーレスアプリケーション
+    Google Cloud Run                    コンテナ化されたアプリケーションの実行
+
+    ■ Microsoft(Azure)
+    Microsoft Azure Functions           サーバーレスアプリケーション
+    Microsoft Azure App Service         Web アプリケーションのホスティング
+    Microsoft Azure SQL Database        リレーショナルデータベース
+    Microsoft Azure Storage             オブジェクトストレージ
+    Microsoft Azure Cosmos DB           NoSQL データベース
+    Microsoft Azure CDN                 コンテンツ配信ネットワーク (CDN)
+
+    ■ Cloudflare                        Cloudflare社：CDN、DNS、WAF、DDoS 対策、SSL、Load Balancer
+    Cloudflare Workers                  サーバーレスアプリケーション
+    Cloudflare Pages                    JAMstack サイトのホスティング
+
+- KEY: cloud.PssS
+  EXPLAIN: PaaSアーキテクチャ(メジャー以外)
+  BODY: |
+    ■ フロンエンド
+    Vercel          vercel.com/         NextJSの開発元、料金高め
+    Cloudflare      www.cloudflare.com/ 料金が安く、個人開発でよく使われる
+    Netlify         www.netlify.com/    GatsbyJSの開発元(React-Based Framework)
+
+    ■ バックエンド
+    Render          render.com/
+    Fly.io          fly.io/             (東京リージョンあり)
+    Railway         railway.app/
+    Koyeb           www.koyeb.com/      (東京リージョンあり)
+    Cyclic          www.cyclic.sh/
+    Deta            deta.space/
+
+    ■ データベース
+    □RDB系
+    PlanetScale     planetscale.com/    MySQLベース
+    Neon            neon.tech/          PostgreSQLベース
+    Turso           turso.tech/         SQLiteベース
+
+    □NoSQL系
+    MongoDB Atlas   www.mongodb.Cosmos  MongoDBベース
+    Neo4j           neo4j.com/          グラフデータベース
+
+    ■ AWS vs
+    Storage          S3                 Cloudflare R2
+    認証認可          Cognito            Auth0, Clerk
+    キャッシュサーバ   Elasticache        Upstash
+    メール            SES                Sendgrid, Resend
+    GraphQL          AppSync            Hasura Cloud
+    DWH              Redshift           Snowflake
+
+- KEY: cloud.services
+  EXPLAIN: Cloud サービス
+  BODY: |
+    SaaS (Software as a Service)        ソフトウェアをサービスとして提供
+    PaaS (Platform as a Service)        APP開発に必要なプラットフォーム提供
+    IaaS (Infrastructure as a Service)  =IaS インフラ(サーバー、ネットワーク、ストレージ)提供
+
+    HaaS (Hardware as a Service)        ハードウェアをサービスとして提供
+    FaaS (Function as a Service)        特定の機能やロジックをサービスとして提供
+    IDaaS (Identity as a Service)       ID管理やアクセス管理をサービスとして提供
+
+# - KEY: cloud.general
+#   EXPLAIN: Cloud 全般
+#   BODY: |
+
+# - KEY: cloud.general
+#   EXPLAIN: Cloud 全般
+#   BODY: |
+

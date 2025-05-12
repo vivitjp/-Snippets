@@ -469,7 +469,10 @@
         - center
         - left
       HAS_TITLE: true
-      WIDTH: 90%
+      WIDTH:
+        - 30%
+        - 12%
+        - 12%
     BODY: |
       プロパティ/機能 	Map 	WeakMap 	機能説明
       *.prototype.constructor	〇	〇	インスタンス生成元のコンストラクタ(書き換え可能)
@@ -486,6 +489,34 @@
       *.prototype[@@iterator]()	〇	×	要素列挙時に実行されるIterator関数
       *.prototype[@@toStringTag]()	〇	〇	インスタンスに与えられるオブジェクト種を表す名前
       弱参照	×	〇	keyオブジェクト参照が切れた時、WeakMap 上からも要素を削除
+
+#-------------------------------
+# 置換
+#-------------------------------
+- KEY: js.replace
+  CATEGORY: 置換
+
+- KEY: js.replace.replaceAll
+  EXPLAIN: replaceAllのオーバーロード
+  BODY: |
+    let sample = "abc aws AWSS AWS DEC"
+    const re = new RegExp(`\\baws\\b`, "ig") // \\b は単語のみの検索
+
+    // 第2引数は置換文字列
+    const result1 = sample.replaceAll(re, "*AWS*")
+    console.log(result1)  // "abc *AWS* AWSS *AWS* DEC" 
+
+    // 第2引数は置換CB関数(結果に対し、CaseSensitiveな挙動可能)
+    const result2 = sample.replaceAll(re, (match:string)=>{ return `[${match}]` })
+    console.log(result2)  // "abc [aws] AWSS [AWS] DEC"
+
+    // 置換CB関数の型
+    function replacer(match:string, regexpMatch1:number, regexpMatch2:string) {
+      console.log(match)        // 一致:  "aws"
+      console.log(regexpMatch1) // index: 4
+      console.log(regexpMatch2) // 全文
+      return `[${match}]`;
+    }
 
 #-------------------------------
 # 日付

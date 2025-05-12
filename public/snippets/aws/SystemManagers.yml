@@ -1,0 +1,59 @@
+---
+#-------------------------------
+# AWS
+#-------------------------------
+- KEY: aws.SystemManagers.category
+  CATEGORY: システムマネージャー
+
+- KEY: aws.SystemManagers.parameterStore
+  EXPLAIN: |
+    パラメータストア
+  BODY: |
+    • AWS CLIやSDKを使用して、プログラムから簡単にアクセス可能
+    • AWS LambdaやEC2インスタンスなどからもアクセス可能
+  TABLE:
+    OPTION:
+      ALIGN:
+        - left
+        - left
+      WIDTH:
+        - 30%
+      HAS_TITLE: false
+    BODY: |
+      情報の保管単位	"/dev/os-users"のような階層型のパラメータに保管可能。パラメータには1つまたは複数の値を保管可能。パラメータと値は1:1または1:n
+      保管された情報の暗号化	暗号化され、KMSに保存
+      保管された情報へのAPIアクセス	可能
+      APIアクセス時のRate limit	1 秒間に最大 1,000 件のリクエストサポート
+      保管された情報へのアクセス制御	IAMポリシーで制御可能
+      連携可能なAWSサービス	多数(参照)
+      保管された情報のバージョニング	複数バージョンを保持可能。1パラメータにつき100(参照)
+      保管された情報の使用状況の監査・監視	CloudTrail、CloudWatch、SNSを活用して監査・監視可能
+      シークレット情報の自動更新	Parameter Storeの機能としては不可。AWS CLIやLambda等を活用して作り込みすることで対応可能
+      利用料金	無料、但し、暗号化に利用されるKMSにてCMK(カスタマーマスターキー: ユーザ生成キー)利用時、KMSのAPI呼び出し料金が必要
+
+- KEY: aws.SystemManagers.SecretsManager
+  EXPLAIN: |
+    Secrets Manager
+  BODY: |
+    • AWS Systems Managerの機能の一つ
+    • パラメータストアよりも高機能
+    • コストがかかる
+  TABLE:
+    OPTION:
+      ALIGN:
+        - left
+        - left
+      WIDTH:
+        - 30%
+      HAS_TITLE: false
+    BODY: |
+      情報の保管単位	dev/db-string"のような階層型のシークレットに保管可能。 **シークレットには、1つまたは複数の「キーと値のペア」を保管可能。 **シークレットと、「キーと値のペア」は1:1または1:n
+      保管された情報の暗号化	暗号化され、KMSに保存
+      保管された情報へのAPIアクセス	可能
+      APIアクセス時のRate limit	700 Req/sec。※DescribeSecret、GetSecretValueの場合(参照)
+      保管された情報へのアクセス制御	IAMポリシーで制御可能
+      連携可能なAWSサービス	RDS for MySQL、PostgreSQL、Auroraの認証情報保存を標準サポート。(Secrets Managerの設定画面上で、対象のRDSを選択可能)。AWS CLIやSDKを通じてEC2やECS、Labmda等と連携可能
+      保管された情報のバージョニング	複数バージョンを保持可能。内部的には1シークレットにつき約100保持可能。だが、バージョンに付与できるラベルの最大数は20(参照)。
+      保管された情報の使用状況の監査・監視	CloudTrail、CloudWatch、SNSを活用して監査・監視可能
+      シークレット情報の自動更新	RDS for MySQL、PostgreSQL、Auroraの認証情報自動更新を標準サポート。他DBの接続情報やAPIキー等は Parameter Storeが提供するLambdaスクリプトカスタマイズで対応
+      利用料金	有料。シークレット 1 件あたり 0.40 USD/月。10,000 回の API コールあたり 0.05 USD。更に、Parameter Storeと同様、KMSの暗号化にCMKを利用する場合、KMSのAPI呼び出し料金が必要

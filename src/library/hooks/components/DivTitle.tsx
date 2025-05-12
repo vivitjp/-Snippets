@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components"
+import styled from "styled-components"
 
 export const DivTitleWrapper = styled.div`
   display: flex;
@@ -27,24 +27,27 @@ export const SummaryWrapper = styled.summary`
 // `
 
 export const CategoryWrapper = styled.div`
-  ${() => css`
-    width: 100%;
-    padding-left: 5px;
-    padding-bottom: 5px;
-    margin-top: 10px;
-    margin-bottom: -10px;
-    color: Firebrick;
-    font-size: 24px;
-    font-weight: 500;
-    border-bottom: 1px solid #999;
-  `}
+  width: 100%;
+  padding-left: 5px;
+  padding-bottom: 5px;
+  margin-top: 10px;
+  margin-bottom: -10px;
+  color: #333;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 2rem;
+  border-bottom: 1px solid #999;
 `
 
 export const DivTitle = styled.div`
   font-size: 18px;
-  color: #555;
-  line-height: 2rem;
-`
+  color: Firebrick;
+  border-left: 5px solid Firebrick;
+  border-bottom: 1px solid Firebrick;
+  line-height: 1.8rem;
+  padding-left: 10px;
+  width : 100%;
+  `
 
 export const FoldTitle = styled.div`
   font-size: 12px;

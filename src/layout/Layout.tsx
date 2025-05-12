@@ -42,7 +42,11 @@ export const Layout = () => {
         <Playground data-testid="playground">
           <>
             {selectedMenu ? (
-              <PageBody Snippets={Snippets} isPending={isPending} />
+              <PageBody
+                Snippets={Snippets}
+                isPending={isPending}
+                isInitialOpened={selectedMenu.idInitialOpened}
+              />
             ) : (
               <Top />
             )}

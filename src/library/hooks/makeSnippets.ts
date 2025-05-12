@@ -13,26 +13,26 @@ export const makeSnippets = async ({ file, scope }: Props) => {
   if (!jsonData) return
 
   //Preflight 検査
-  const keys = new Set<string>()
-  const dupKeys: string[] = []
+  // const keys = new Set<string>()
+  // const dupKeys: string[] = []
 
-  jsonData.forEach(({ KEY, EXPLAIN }) => {
-    const key = EXPLAIN ?? KEY
+  // jsonData.forEach(({ KEY, EXPLAIN }) => {
+  //   const key = EXPLAIN ?? KEY
 
-    if (keys.has(key)) {
-      if (!dupKeys.length) dupKeys.push("■ 以下の EXPLAIN or KEY に重複があり")
-      dupKeys.push(key)
-    } else {
-      keys.add(key)
-    }
-  })
-  if (dupKeys.length) {
-    console.log("重複あり")
-    dupKeys.forEach((key, val) => {
-      console.log("K:", key, "V:", val)
-    })
-    return
-  }
+  //   if (keys.has(key)) {
+  //     if (!dupKeys.length) dupKeys.push("■ 以下の EXPLAIN or KEY に重複があり")
+  //     dupKeys.push(key)
+  //   } else {
+  //     keys.add(key)
+  //   }
+  // })
+  // if (dupKeys.length) {
+  //   console.log("重複あり")
+  //   dupKeys.forEach((key, val) => {
+  //     console.log("K:", key, "V:", val)
+  //   })
+  //   return
+  // }
 
   //Snippets Making
   const returnData: Snippets = {}
@@ -81,12 +81,14 @@ export const makeSnippets = async ({ file, scope }: Props) => {
         //■ TABLE
         if (TABLE) {
           returnData[key].table = {
-            body: TABLE.BODY.trim().split("\n"),
+            body: TABLE.BODY.trim()
+              .split("\n")
+              .map((n) => n.replaceAll("\\n", "\n")),
             options: TABLE.OPTION
               ? {
-                  width: TABLE.OPTION.WIDTH || "600px",
+                  width: TABLE.OPTION.WIDTH || [],
                   align: TABLE.OPTION.ALIGN || [],
-                  hasTitle: TABLE.OPTION.HAS_TITLE || true,
+                  hasTitle: TABLE.OPTION.HAS_TITLE,
                 }
               : undefined,
           }

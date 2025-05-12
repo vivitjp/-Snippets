@@ -2,49 +2,88 @@
 #-------------------------------
 # ZZZZZZZZZZZ
 #-------------------------------
-
-#-------------------------------
-# xxxxxxx
-#-------------------------------
-- ENTRY:
-  KEY: qw.XXXXXX
-  EXPLAIN:
-  BODY: |
+- KEY: qw.XXXXXX.category
+  CATEGORY: XXXXXX
 
 - ENTRY:
   KEY: qw.XXXXXX
   EXPLAIN:
   BODY: |
+    ■ ABC
 
-#-------------------------------
-# xxxxxxx
-#-------------------------------
+- ENTRY:
+  KEY: qw.XXXXXX
+  EXPLAIN: |
+    ■ DEF
+  TABLE:
+    OPTION:
+      ALIGN:
+        - left
+        - center
+        - center
+        - left
+      HAS_TITLE: true
+      WIDTH:
+        - 25%
+        - 25%
+        - 25%
+        - 25%
+    BODY: |
+      プロパティ/機能 	Map 	WeakMap 	機能説明
+      *.prototype.constructor	〇	〇	インスタンス生成元のコンストラクタ(書き換え可能)
+      *.prototype.size	〇	×	要素数
+      *.prototype.delete()	〇	〇	対要素削除
+
+- ENTRY:
+  KEY: qw.XXXXXX
+  EXPLAIN:
+  OPTIONS:
+    COLS: 2
+  BODY: |
+    インターネットゲートウェイ
+    サブネット
+    仮想ルータ
+    ルートテーブル
+    VPC Peering
+    NAT ゲートウェイ
+
+- ENTRY:
+  KEY: qw.XXXXXX
+  EXPLAIN:
+  BODY: |
+    ┌────┬───────────────────┐
+    │    │                   │
+    ├────┼───────────────────┤
+    │    │                   │
+    └────┴───────────────────┘
+
+    ┌────┬───────────────────┐
+    │    │                   │
+    └────┴───────────────────┘
+
+    ┌─────────────────────┬───────────────────┐
+    │                     │                   │
+    └─────────────────────┴───────────────────┘
+
+    ┌─────────────────────────────────────────┐
+    │                                         │
+    └─────────────────────────────────────────┘
+
+    TOP
+     ├── AAA
+     ├── BBB
+     │    └── B1
+     ├── CCC
+     │    ├── C1
+     │    └── C2
+     │         └── C21
+     └── DDD
+
 - ENTRY:
   KEY: qw.XXXXXX
   EXPLAIN:
   BODY: |
 
-- ENTRY:
-  KEY: qw.XXXXXX
-  EXPLAIN:
-  BODY: |
-
-#-------------------------------
-# xxxxxxx
-#-------------------------------
-- ENTRY:
-  KEY: qw.XXXXXX
-  EXPLAIN:
-  BODY: |
-
-- ENTRY:
-  KEY: qw.XXXXXX
-  EXPLAIN:
-  BODY: |
-
-#-------------------------------
-# xxxxxxx
-#-------------------------------
 - ENTRY:
   KEY: qw.XXXXXX
   EXPLAIN:

@@ -1,0 +1,955 @@
+---
+#-------------------------------
+# AWS
+#-------------------------------
+
+- KEY: aws.service.main
+  EXPLAIN: Amazon Web Services メジャーサービス
+  BODY: |
+    ■ Security, Identity & Compliance
+      ► AWS Identity and Access Management(IAM)   AWS リソースへのアクセスをセキュアに制御
+      ► Amazon Cognito                            ユーザー認証、承認、ユーザー管理
+      ► AWS Secrets Manager                       シークレットの管理
+      ► AWS Key Management Service(KMS)           暗号化キーの管理
+      ► AWS GuardDuty                             AWS リソースの脅威検出
+
+    ■ Networking & Content Delivery
+      ► Amazon Virtual Private Cloud(VPC)         仮想プライベートクラウド
+      ► Amazon CloudFront                         コンテンツ配信ネットワーク(CDN)
+      ► Amazon API Gateway                        API の作成、公開、セキュリティ、認証、モニタリング
+      ► Amazon Elastic Load Balancing(ELB)        トラフィック分散
+        Amazon Route 53                           DNS サービス
+        Amazon App Mesh                           マイクロサービスのネットワーク管理
+
+    ■ Compute
+      ► Amazon Elastic Compute Cloud(EC2)         クラウド内の仮想サーバー
+      ► AWS Lambda                                サーバーに煩わされずにコードを実行
+      ► AWS Batch                                 大規模なバッチ処理を実行
+        Amazon Lightsail                          簡単に仮想サーバーを立ち上げる
+        Amazon Elastic Beanstalk                  アプリケーションのデプロイと管理
+        App Runner                                コンテナ化されたアプリケーションのデプロイと管理 
+
+    ■ App-Integration
+      ► AWS Step Functions                        分散型アプリケーションの調整
+      ► Amazon EventBridge                        SaaS アプリと AWS のサービス向けサーバーレスイベントバス
+      ► Amazon Simple Notification Service(SNS)   Pub/sub、SMS、E メール、およびモバイルプッシュ通知
+      ► Amazon Simple Queue Service(SQS)          マネージド型メッセージキュー
+      ► Amazon AppFlow                            AWS のアプリケーション統合サービス
+        AWS AppSync                               GraphQL API の構築と管理
+
+    ■ Container
+      ► Amazon Elastic Container Service(ECS)     Dockerコンテナ管理のコンテナオーケストレーション
+      ► Amazon Fargate                            サーバーレスコンテナサービス
+      ► Amazon Elastic Container Registry(ECR)    Dockerコンテナイメージのフルマネージドなレジストリ
+        Amazon Elastic Kubernetes Service(EKS)    Kubernetesコンテナ管理のコンテナオーケストレーション  
+
+    ■ Storage 
+      ► Amazon Simple Storage Service(S3)         静的ウェブサイト,オブジェクトストレージ(永続的)
+      ► Amazon Simple Storage Service Glacier     データアーカイブストレージ
+      ► Amazon Elastic Block Store(EBS)           EC2 インスタンス用のブロックストレージ(永続的)
+      ► Amazon Elastic File System(EFS)           EC2 インスタンス用のファイルストレージ(永続的)
+        AWS Snowball                              データ転送サービス
+        AWS Backup                                AWS リソースのバックアップ
+
+    ■ Database
+      ► Amazon Relational Database Service(RDS)   リレーショナルデータベース
+      ► Amazon Aurora                             MySQL/PostgreSQL 互換のリレーショナルデータベース
+        Amazon DynamoDB                           NoSQL データベース
+        Amazon DocumentDB                         MongoDB 互換のフルマネージド型ドキュメントデータベース
+        Amazon Neptune                            フルマネージド型グラフデータベース
+        Amazon MemoryDB                           Redis 互換のフルマネージド型インメモリデータベース
+        Amazon ElastiCache                        Redis と Memcached のフルマネージド型インメモリデータストア
+
+    ■ Frontend Web Mobile
+      ► AWS Amplify                               フルスタックのモバイルおよび Web アプリケーションの構築
+
+    ■ Management & Governance
+      ► AWS CloudTrail                            AWS リソースの API コールの監査
+      ► AWS CloudFormation                        AWS リソースのプロビジョニングと管理
+      ► Amazon CloudWatch                         AWS リソースとアプリケーションの監視
+      ► AWS Systems Manager(SSM)                  AWS リソースの運用管理
+        AWS Auto Scaling                          AWS リソースの自動スケーリング
+        AWS Management Console                    AWS リソースの管理
+        AWS User Notifications                    AWS リソースの変更通知
+        AWS Config                                AWS リソースの設定変更の監視 
+
+    ■ Cloud-Financial-Management
+      ► AWS Budgets                               コストと使用量の予算を設定
+      ► AWS Cost Explorer                         コストと使用量の可視化
+      ► AWS Cost and Usage Report                 コストと使用量の詳細なレポート
+        AWS Billing Conductor                     複雑な請求書を簡素化
+
+    ■ Developer-Tools
+        Tools and SDKs                            AWS CLI、AWS SDK、AWS Cloud Development Kit (CDK)
+        Amazon CodeCommit                         Git リポジトリ
+        Amazon CodeBuild                          ソースコードをビルド
+        Amazon CodeDeploy                         アプリケーションのデプロイ
+        Amazon CodePipeline                       CI/CD パイプライン
+        AWS Cloud9                                ブラウザベースの統合開発環境
+        AWS X-Ray                                 分散トレーシング
+        AWS CodeArtifact                          ソフトウェアパッケージのリポジトリ
+
+- KEY: aws.abbreviation.icon
+  EXPLAIN: アイコン一覧
+  SAMPLE: |
+    <style>
+      div.group_title { display: flex; align-items: center; font-size: 16px; font-weight: bold; }
+      div.group_title:before { content: "■"; margin-right: 5px; color: #777; }
+      div.icon_column { display: flex; flex-direction: column; gap: 10px; }
+      div.icon_row    { display: flex; flex-direction: row;    gap: 20px; }
+      div.icon        { display: flex; flex-direction: row;    align-items: center; }
+      img.icon        { display: flex; flex-direction: row;    width: 60px; height:60px; }
+
+      .tooltip {
+        position: relative; /* ツールチップの位置の基準に */
+        cursor: pointer; /* カーソルを当てたときにポインターに */
+      }
+
+      /* ツールチップのテキスト */
+      .tooltip-text {
+        opacity: 0; /* はじめは隠しておく */
+        visibility: hidden; /* はじめは隠しておく */
+        position: absolute; /* 絶対配置 */
+        left: 50%; /* 親に対して中央配置 */
+        transform: translateX(-50%); /* 親に対して中央配置 */
+        bottom: -30px; /* 親要素下からの位置 */
+        display: inline-block;
+        padding: 5px; /* 余白 */
+        white-space: nowrap; /* テキストを折り返さない */
+        font-size: 0.8rem; /* フォントサイズ */
+        line-height: 1.3; /* 行間 */
+        background: #333; /* 背景色 */
+        color: #fff; /* 文字色 */
+        border-radius: 3px; /* 角丸 */
+        transition: 0.3s ease-in; /* アニメーション */
+      }
+
+      /* ホバー時にツールチップの非表示を解除 */
+      .tooltip:hover .tooltip-text {
+        opacity: 1;
+        visibility: visible;
+      }
+    </style>
+
+    <div class="icon_column">
+      <div class="icon_column">
+        <div class="group_title">Security, Identity & Compliance</div>
+        <div class="icon_row">
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Security-Identity-Compliance/Identity_and_Access_Management.png"/>
+              <span class="tooltip-text"> AWS Identity and Access Management(IAM) </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Security-Identity-Compliance/Cognito.png"/>
+              <span class="tooltip-text"> Amazon Cognito </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Security-Identity-Compliance/Secrets_Manager.png"/>
+              <span class="tooltip-text"> AWS Secrets Manager </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Security-Identity-Compliance/Key_Management_Service.png"/>
+              <span class="tooltip-text"> AWS Key Management Service(KMS) </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Security-Identity-Compliance/GuardDuty.png"/>
+              <span class="tooltip-text"> AWS GuardDuty </span>
+            </div>
+        </div>  
+      </div>
+     
+      <div class="icon_column">
+        <div class="group_title">Networking & Content Delivery</div>
+        <div class="icon_row">
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Networking-Content-Delivery/Virtual_Private_Cloud.png"/>
+              <span class="tooltip-text"> Amazon Virtual Private Cloud(VPC) </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Networking-Content-Delivery/CloudFront.png"/>
+              <span class="tooltip-text"> Amazon CloudFront </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Networking-Content-Delivery/API_Gateway.png"/>
+              <span class="tooltip-text"> Amazon API Gateway </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Networking-Content-Delivery/Elastic_Load_Balancing.png"/>
+              <span class="tooltip-text"> Amazon Elastic Load Balancing(ELB) </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Networking-Content-Delivery/Route_53.png"/>
+              <span class="tooltip-text"> Amazon Route 53 </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Networking-Content-Delivery/App_Mesh.png"/>
+              <span class="tooltip-text"> Amazon App Mesh </span>
+            </div>
+        </div>  
+      </div>
+
+      <div class="icon_column">
+        <div class="group_title">Compute</div>
+        <div class="icon_row">
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Compute/EC2.png"/>
+              <span class="tooltip-text"> Amazon Elastic Compute Cloud(EC2) </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Compute/App_Runner.png"/>
+              <span class="tooltip-text"> App Runner </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Compute/Batch.png"/>
+              <span class="tooltip-text"> AWS Batch </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Compute/Elastic_Beanstalk.png"/>
+              <span class="tooltip-text"> Amazon Elastic Beanstalk </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Compute/Lambda.png"/>
+              <span class="tooltip-text"> AWS Lambda </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Compute/Lightsail.png"/>
+              <span class="tooltip-text"> Amazon Lightsail </span>
+            </div>
+        </div>  
+      </div>
+
+      <div class="icon_column">
+        <div class="group_title">App-Integration</div>
+        <div class="icon_row">
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/App-Integration/Step_Functions.png"/>
+              <span class="tooltip-text"> AWS Step Functions </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/App-Integration/EventBridge.png"/>
+              <span class="tooltip-text"> Amazon EventBridge </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/App-Integration/Simple_Notification_Service.png"/>
+              <span class="tooltip-text"> Amazon Simple Notification Service(SNS) </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/App-Integration/Simple_Queue_Service.png"/>
+              <span class="tooltip-text"> Amazon Simple Queue Service(SQS) </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/App-Integration/AppFlow.png"/>
+              <span class="tooltip-text"> Amazon AppFlow </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/App-Integration/AppSync.png"/>
+              <span class="tooltip-text"> AWS AppSync </span>
+            </div>
+        </div>  
+      </div>
+
+      <div class="icon_column">
+        <div class="group_title">Container</div>
+        <div class="icon_row">
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Containers/Elastic_Container_Service.png"/>
+              <span class="tooltip-text"> Amazon Elastic Container Service(ECS) </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Containers/Fargate.png"/>
+              <span class="tooltip-text"> Amazon Fargate </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Containers/Elastic_Container_Registry.png"/>
+              <span class="tooltip-text"> Amazon Elastic Container Registry(ECR) </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Containers/Elastic_Kubernetes_Service.png"/>
+              <span class="tooltip-text"> Amazon Elastic Kubernetes Service(EKS) </span>
+            </div>
+        </div>  
+      </div>
+
+      <div class="icon_column">
+        <div class="group_title">Storage</div>
+        <div class="icon_row">
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Storage/Simple_Storage_Service.png"/>
+              <span class="tooltip-text"> Amazon Simple Storage Service(S3) </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Storage/Simple_Storage_Service_Glacier.png"/>
+              <span class="tooltip-text"> Amazon Simple Storage Service Glacier </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Storage/Elastic_Block_Store.png"/>
+              <span class="tooltip-text"> Amazon Elastic Block Store(EBS) </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Storage/EFS.png"/>
+              <span class="tooltip-text"> Amazon Elastic File System(EFS) </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Storage/Snowball.png"/>
+              <span class="tooltip-text"> AWS Snowball </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Storage/Backup.png"/>
+              <span class="tooltip-text"> AWS Backup </span>
+            </div>
+        </div>  
+      </div>
+
+      <div class="icon_column">
+        <div class="group_title">Database</div>
+        <div class="icon_row">
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Database/RDS.png"/>
+              <span class="tooltip-text"> Amazon Relational Database Service(RDS) </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Database/Aurora.png"/>
+              <span class="tooltip-text"> Amazon Aurora </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Database/DynamoDB.png"/>
+              <span class="tooltip-text"> Amazon DynamoDB </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Database/DocumentDB.png"/>
+              <span class="tooltip-text"> Amazon DocumentDB </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Database/Neptune.png"/>
+              <span class="tooltip-text"> Amazon Neptune </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Database/MemoryDB.png"/>
+              <span class="tooltip-text"> Amazon MemoryDB </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Database/ElastiCache.png"/>
+              <span class="tooltip-text"> Amazon ElastiCache </span>
+            </div>
+        </div>  
+      </div>
+
+      <div class="icon_column">
+        <div class="group_title">Frontend Web Mobile</div>
+        <div class="icon_row">
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Front-End-Web-Mobile/Amplify.png"/>
+              <span class="tooltip-text"> AWS Amplify </span>
+            </div>
+        </div>  
+      </div>
+      
+      <div class="icon_column">
+        <div class="group_title">Management & Governance</div>
+        <div class="icon_row">
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Management-Governance/CloudTrail.png"/>
+              <span class="tooltip-text"> AWS CloudTrail </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Management-Governance/CloudFormation.png"/>
+              <span class="tooltip-text"> AWS CloudFormation </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Management-Governance/CloudWatch.png"/>
+              <span class="tooltip-text"> Amazon CloudWatch </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Management-Governance/Systems_Manager.png"/>
+              <span class="tooltip-text"> AWS Systems Manager(SSM) </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Management-Governance/Auto_Scaling.png"/>
+              <span class="tooltip-text"> AWS Auto Scaling </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Management-Governance/Management_Console.png"/>
+              <span class="tooltip-text"> AWS Management Console </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Management-Governance/User_Notifications.png"/>
+              <span class="tooltip-text"> AWS User Notifications </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Management-Governance/Config.png"/>
+              <span class="tooltip-text"> AWS Config </span>
+            </div>
+        </div>  
+      </div>
+
+      <div class="icon_column">
+        <div class="group_title">Cloud-Financial-Management</div>
+        <div class="icon_row">
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Cloud-Financial-Management/Budgets.png"/>
+              <span class="tooltip-text"> AWS Budgets </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Cloud-Financial-Management/Cost_Explorer.png"/>
+              <span class="tooltip-text"> AWS Cost Explorer </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Cloud-Financial-Management/Cost_and_Usage_Report.png"/>
+              <span class="tooltip-text"> AWS Cost and Usage Report </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Cloud-Financial-Management/Billing_Conductor.png"/>
+              <span class="tooltip-text"> AWS Billing Conductor </span>
+            </div>
+        </div>  
+      </div>
+
+      <div class="icon_column">
+        <div class="group_title">Developer-Tools</div>
+        <div class="icon_row">
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Developer-Tools/Tools_and_SDKs.png"/>
+              <span class="tooltip-text"> Tools and SDKs </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Developer-Tools/CodeCommit.png"/>
+              <span class="tooltip-text"> Amazon CodeCommit </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Developer-Tools/CodeBuild.png"/>
+              <span class="tooltip-text"> Amazon CodeBuild </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Developer-Tools/CodeDeploy.png"/>
+              <span class="tooltip-text"> Amazon CodeDeploy </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Developer-Tools/CodePipeline.png"/>
+              <span class="tooltip-text"> Amazon CodePipeline </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Developer-Tools/Cloud9.png"/>
+              <span class="tooltip-text"> AWS Cloud9 </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Developer-Tools/X_Ray.png"/>
+              <span class="tooltip-text"> AWS X-Ray </span>
+            </div>
+            <div class="icon tooltip">
+              <img class="icon" src="snippets/aws/icons/Developer-Tools/CodeArtifact.png"/>
+              <span class="tooltip-text"> AWS CodeArtifact </span>
+            </div>
+        </div>  
+      </div>
+    </div>
+
+#-------------------------------
+# 略語
+#-------------------------------
+- KEY: aws.abbreviation
+  EXPLAIN: 略語
+  BODY: |
+    ARN     Amazon Resource Name                      [IAM]
+    AZ      Available Zone                            [VPC]
+    ACL     Network Access Control List               [IAM,VPC]
+    CIDR    Classless Inter-Domain Routing            [VPC]
+    DLQ     Dead Letter Queue                         [SQS,Lambda]
+    DNS     Domain Name System                        [VPC]
+    DXGW    Direct Connect Gateway                    [VPC]
+    ENI     Elastic Network Interface                 [VPC]
+    IDS     Intrusion Detection System                [VPC]
+    IGW     Internet Gateway                          [VPC]
+    IPS     Intrusion Prevention System               [VPC]
+    KMS     AWS Key Management Service                [Lambda]
+    LSN     Log Sequence Number                       [Aurora]
+    MFA     Multi-Factor Authentication               [IAM]
+    MAU     Monthly Active User                       [Cognito]
+    NAT     =NAPT: Network Address Port Translation   [VPC]
+    OAC     Origin Access Control                     [CloudFront]
+    OIDC    OpenID Connect                            [IAM]
+    RSP     Route Server Peer                         [IAM]
+    SAM     Serverless Application Model              [Lambda]
+    SAML    Security Assertion Markup Language        [IAM]
+    SCP     Service Control Policy                    [IAM]
+    SSO     Single Sign On                            [IAM]
+    STS     Security Token Service                    [IAM]
+    TSC     Temporary Security Credentials            [IAM]
+    VIF     Virtual Interface                         [VPC]
+    VGW     Virtual Private Gateway                   [VPC]
+    WAF     Web Application Firewall                  [CloudFront]
+
+#-------------------------------
+# リージョン
+#-------------------------------
+- KEY: aws.region.az
+  EXPLAIN: リージョン & AZ(アベイラビリティーゾーン)
+  BODY: |
+    • リージョンとは、データセンターがある「地域」
+    • 世界各地にあり、リージョン間は、それぞれ完全に分離
+    • 利用できるリージョンは、AWSアカウントによって異なる
+    • AWSグローバル、AWS GovCloud、AWS中国はアカウントが分離され、選べるリージョンも異なる
+    • AZ(アベイラビリティーゾーン)とは、リージョン毎に複数のデータセンターで構成された独立した場所
+    • 1つのインスタンスで障害が発生しても他AZのインスタンスが起動するように設計されている
+    • AZ間はリージョン間と同様に分離されるも、同リージョン内のAZ間は互いに接続され可用性を高めている
+    • リージョン毎にサービス内容や料金が違う
+    • 別のAWSリージョンへ簡単に変更できる
+    • リージョン変更には、変更元インスタンスのスナップショットやイメージをコピー、変更先でインスタンスを起動
+
+    • 価格比較
+      ap-northeast-1 アジアパシフィック (東京)	0.0152	131%
+      ap-southeast-1 アジアパシフィック (シンガポール)	0.0146	126%
+      ap-southeast-2 アジアパシフィック (シドニー)	0.0146	126%
+      ap-northeast-2 アジアパシフィック (ソウル)	0.0144	124%
+      us-west-1 米国西部 (北カリフォルニア)	0.0138	119%
+      eu-west-2 欧州 (ロンドン)	0.0132	114%
+      eu-west-3 EU (パリ)	0.0132	114%
+      ca-central-1 カナダ (中部)	0.0128	110%
+      us-east-1 米国東部（バージニア北部）	0.0116	100%
+      us-east-2 米国東部 (オハイオ)	0.0116	100%
+      us-west-2 米国西部 (オレゴン)	0.0116	100%
+
+    • レイテンシー比較(東京から)
+      ap-northeast-1 アジアパシフィック (東京)	不明
+      ap-northeast-2 アジアパシフィック (ソウル)	39.32 ms
+      ap-southeast-1 アジアパシフィック (シンガポール)	75.03 ms
+      us-west-2 米国西部 (オレゴン)	102.77 ms
+      us-west-1 米国西部 (北カリフォルニア)	120.59 ms
+      ap-southeast-2 アジアパシフィック (シドニー)	136.44 ms
+      us-east-2 米国東部 (オハイオ)	155.33 ms
+      us-east-1 米国東部（バージニア北部）	160.83 ms
+      ca-central-1 カナダ (中部)	161.98 ms
+      eu-west-2 欧州 (ロンドン)	242.56 ms
+      eu-west-3 EU (パリ)	251.81 ms
+
+#-------------------------------
+# 開発環境
+#-------------------------------
+- KEY: aws.dev.methods
+  EXPLAIN: |
+    開発環境
+  BODY: |
+    ■ AWS マネジメントコンソール(GUI)
+
+      • 視覚的に操作・管理できるGUI！
+      メリット:   直感的な操作、学習コストの低さ、即時性
+      デメリット: 手動操作の負担、操作再現性の低さ、スケーラビリティの制限
+
+    ■ AWS CLI(Command Line Interface)
+
+      • Linux環境下、コマンドによる管理
+      メリット:   自動化の容易さ、高い再現性、詳細な操作が可能
+      デメリット: 習コストの高さ、視覚的な情報不足、初期設定の手間
+
+    ■ AWS SDK(Software Development Kit)
+
+      • 各プログラミング言語からAWSのサービスを操作・管理
+      メリット:   高度な自動化と統合、多言語対応、柔軟性
+      デメリット: プログラミングスキルの必要性、開発・保守の負担、初期設定の複雑さ
+
+    ■ AWS CDK(Cloud Development Kit)
+
+      • プログラミング言語(TS,Python,...)でAWSリソースを定義
+      • AWS CloudFormation を通じてデプロイ
+      • オープンソースのソフトウェア開発フレームワーク
+      • プログラム内でテストコードも書ける
+
+      • 前提条件      
+        • CDKで実装するリソースについて、コンソール画面で実際に作業した経験
+        • CloudFormationの概念
+        • オブジェクト指向（クラス、コンストラクター、オーバーライド、インターフェース等の概念）
+        • TypeScriptおよびPython等CDKを使用するためのプログラミング言語
+
+      • High Level Construct（L2）でS3バケットを定義しているサンプルコード
+      
+        import { App, Stack, StackProps } from 'aws-cdk-lib';
+        import * as s3 from 'aws-cdk-lib/aws-s3';
+
+        class HelloCdkStack extends Stack {
+          constructor(scope: App, id: string, props?: StackProps) {
+            super(scope, id, props);
+
+            new s3.Bucket(this, 'MyFirstBucket', {
+              versioned: true
+            });
+          }
+        }
+
+        const app = new App();
+        new HelloCdkStack(app, "HelloCdkStack");
+
+      • サーバレースの Amazon ECS (Fargate)
+
+        import { Duration, Stack, StackProps } from 'aws-cdk-lib';
+        import { Construct } from 'constructs';
+        import * as ec2 from 'aws-cdk-lib/aws-ec2';
+        import * as ecs from 'aws-cdk-lib/aws-ecs';
+        import * as ecs_patterns from "aws-cdk-lib/aws-ecs-patterns";
+
+        constructor(scope: Construct, id: string, props?: StackProps) {
+          super(scope, id, props);
+
+          const vpc = new ec2.Vpc(this, "MyVpc", {
+            maxAzs: 3                   // Default is all AZs in region
+          });
+
+          const cluster = new ecs.Cluster(this, "MyCluster", {
+            vpc: vpc
+          });
+
+          // Create a load-balanced Fargate service and make it public
+          new ecs_patterns.ApplicationLoadBalancedFargateService(this, "MyFargateService", {
+            cluster: cluster,           // Required
+            cpu: 512,                   // Default is 256
+            desiredCount: 6,            // Default is 1
+            taskImageOptions: { image: ecs.ContainerImage.fromRegistry("amazon/amazon-ecs-sample") },
+            memoryLimitMiB: 2048,       // Default is 512
+            publicLoadBalancer: true    // Default is false
+          });
+        }
+
+#-------------------------------
+# 資格
+#-------------------------------
+- KEY: aws.資格
+  EXPLAIN: |
+    資格
+  BODY: |
+    ■ FOUNDATIONAL(初心者)
+
+    • AWS Certified Cloud Practitioner
+
+      AWSやクラウドサービス、用語など基礎的な知識を持つことを証明する資格
+      技術的に高度な内容はそれほど多くなく入門レベル
+
+    ■ ASSOCIATE(1年程度のAWS環境の使用経験)
+
+    • AWS Certified Solutions Architect - Associate
+
+      システム構築やデプロイの基礎知識から、データベース、ストレージ、ネットワーク
+      AWS環境の設計や提案を行うSEやコンサルタント向け
+      基礎を含め幅広く学べる内容なので経験の浅いエンジニアにもおすすめ
+
+    • AWS Certified Sysops Administrator - Associate
+
+      AWSの運用担当者向けの資格
+      安全で適切なシステム開発・運用を行うためのAWSワークロードやネットワーク、セキュリティーサービスなど
+
+    • AWS Certified Developer - Associate
+
+      AWSの開発担当者向け
+      AWS環境でのクラウドベースアプリケーションの開発とデプロイ、デバッグなど
+
+    • AWS Certified Data Engineer - Associate
+
+      データエンジニアやデータアーキテクト向け
+      データ関連のAWSサービスやデータモデルの設計、データ品質の確保、データライフサイクルの管理など
+
+    ■ PROFESSIONAL(実務経験が2年以上の上級者向け)
+
+    • AWS Certified Solutions Architect - Professional
+
+      より複雑で多様な環境でAWSアプリケーションの設計やデプロイ、評価を行う知識
+
+    • AWS Certified DevOps Engineer - Professional
+
+      高度な開発知識と運用知識や、最新の運用・開発プロセスの理解
+
+    ■ SPECIALTY(専門カテゴリ: 専門分野での経験が5年以上)
+
+    • AWS Certified Advanced Networking - Specialty
+
+      高度なネットワーク構築を行うエンジニア向け
+      AWSに特化したネットワークの知識
+
+    • AWS Certified Machine Learning - Specialty
+
+      機械学習エンジニアやデータサイエンティストなど、AI開発に携わるエンジニア向け
+
+    • AWS Certified Security - Specialty
+
+      セキュリティーエンジニア向け
+      AWSにおける専門的なデータ分類やデータ保護メカニズム、データ暗号化方法などのセキュリティーソリューションに関する知識
+
+#-------------------------------
+# 不用意な課金ポイント & 無料枠
+#-------------------------------
+- KEY: aws.課金.category
+  CATEGORY: 課金と無料枠
+
+- KEY: aws.不用意な課金ポイント
+  EXPLAIN: |
+    不用意な課金ポイント
+  BODY: |
+    ■ 異なるリージョン
+      • 無料枠はリージョンごとに適用
+      • 東京リージョンで無料枠を利用している場合、他のリージョンで同サービス利用で課金
+      【⛔対策】リージョンを常に確認
+
+    ■ EC2
+      • EIP(Elastic IP)
+        • EC2の動的ローバルIPアドレス(パブリックIPアドレス）を固定
+        • EC2インスタンスに関連付けている場合のみ無料
+        • アタッチされていないEIPを確保していると課金
+        【⛔対策】アクションから「解放」を選んでEIPを削除すること
+
+      • スナップショット
+        • EC2インスタンスのバックアップ
+        • スナップショットを作成した場合、スナップショットのストレージに課金
+        【⛔対策】EC2コンソールの左側の「スナップショット」から確認
+
+      • Elastic Load Balancing
+        • EC2インスタンスのトラフィックを分散するためのサービス
+        • ELBを作成した場合、ELBのストレージに課金
+        【⛔対策】EC2コンソールの左側の「ロードバランサー」から確認
+
+      • 無料枠のEC2を複数起動
+        • 無料枠のEC2インスタンス作成時
+          • EBSをルートボリュームとするEC2インタンス作成
+          • ルートデバイスタイプ:EBS を 8GiBでプロビジョニング
+          • EBSボリュームの無料枠(12ヶ月無料枠): 30GiB
+          • EBSボリュームに対する課金体系
+            • アタッチされているEC2インスタンスの運用状況に左右されない
+            • データが維持される限りボリューム使用量が発生
+        【⛔対策】EBSボリュームの合計が30GiBを超えないようにする
+
+    ■ RDS
+      • スナップショット
+        • RDSインスタンスのバックアップ
+        • スナップショットを作成した場合、スナップショットのストレージに課金
+        【⛔対策】RDSコンソールの左側の「スナップショット」から確認
+
+      • 停止したRDSの再起動
+        • Running(起動), Stopped(停止)ストレージ料金発生
+        • Running時は別途(時間あたり)料金発生
+        • Stopped(停止)状態は最大で7日間 -> Running(起動)になる
+        【⛔対策】保存したい場合はイメージ作成してからインスタンス削除
+
+    ■ 【⛔無料枠対策】
+      • Billing & Cost Management Dashboard でコスト管理
+        • 「AWS マネージメントコンソール」
+        • 「マイ請求ダッシュボード」
+        • 「使用状況別の上位無料利用枠サービス」
+        • 「Billingの設定」
+          • 「無料利用枠の使用のアラートの受信」にメールアドレスを登録
+          • 「請求アラートを受け取る」も利用
+
+    ■ 【⛔有料枠対策】
+      • 「AWS Budgets」で請求額に対してアラートを設定
+        • 「Budgets」選択
+        • 「Create budget」選択
+        • 「コスト予算」選択
+        • 「予算の設定」
+          • 名前: 任意の名前
+          • 予算額: $10 など
+
+- KEY: aws.無料枠
+  EXPLAIN: |
+    無料枠: 12ヶ月無料枠
+  BODY: |
+    ■ URL
+    https://aws.amazon.com/jp/free/
+
+    AWSアカウントを新規作成した日から1年間有効な無料枠
+
+    ■ EC2インスタンス
+      • 750時間/月 無料
+      • 使用リソース制限
+        • Linux、RHEL t2.micro/t3.micro インスタンス
+        • Windows t2.micro/t3.micro インスタンス
+
+    ■ S3ストレージ
+      • 5GB/月 無料
+      • 標準ストレージクラス
+      • 20,000 GETリクエスト/月 無料
+      • 2,000 PUTリクエスト/月 無料
+      • 15GBのデータ転送/月 無料
+
+    ■ Amazon RDS  
+      • MySQL、PostgreSQL、MariaDB、または SQL Server
+      • 750時間/月 無料
+      • シングル AZ db.t2.micro、db.t3.micro、db.t4g.micro インスタンス使用時間
+      • 20GB の汎用 (SSD) データベースストレージ
+      • 20GB のデータベースバックアップおよび DB スナップショット用ストレージ
+
+    ■ Amazon DynamoDB
+      • NoSQL データベース
+      • 25GB/月 無料
+      • 25の読み取りキャパシティーユニット(RCU)
+      • 25の書き込みキャパシティーユニット(WCU)
+      • 2.5M のストレージ
+      • 最大2億/月リクエストの処理可能
+
+    ■ Amazon OpenSearch Service
+      • 750 時間
+      • single-AZ t2.small.search または t3.small.search インスタンス1か月
+      • インタラクティブなログ分析
+      • リアルタイムのアプリケーションのモニタリング
+      • ウェブサイト検索などの実行を簡単にするマネージドサービス
+      • 750 時間/月の single-AZ t2.small.search または t3.small.search インスタンス
+      • 1 か月あたり 10 GB のオプションの EBS ストレージ (マグネティックまたは汎用)
+
+    ■ Amazon API Gateway
+      • 100 万/月の API コール受信数
+      • スケールを問わない API の公開、維持、監視、保護
+      • 100 万回の API コール受信/月
+
+    ■ Amazon EFS
+      • Amazon EC2インスタンス用共有ファイルストレージサービス
+      • 5 GBのストレージ
+
+    ■ EBS(Elastic Block Storage)
+      • 汎用SSD/SDD
+      • EC2インスタンス用ブロックレベルストレージボリューム
+      • 30 GB の Amazon EBS
+      • 200 万 I/O (EBS Magnetic の場合)
+      • 1 GB のスナップショットストレージ
+
+    ■ Amazon SES
+      • 3,000件のメッセージ/月
+      • コスト効率に優れたクラウドでのメールサービスです。
+      • 送信Eメール、受信Eメール、Virtual Deliverability Manager 送信 E メール処理を含む
+
+    ■ AWS Amplify ホスティング
+      • 静的ウェブサイトとSSRのための CI/CD & ホスティングサービス
+      • 構築とデプロイ:      1,000 分/月の構築時間
+      • データストレージ:     5 GB/月 保存
+      • データ転送 (OUT):    15 GB/月 を提供
+      • リクエスト数 (SSR):   500,000 件/月のリクエスト
+      • リクエスト期間 (SSR): 100 GB/月 時間
+
+    ■ Elastic Load Balancing
+      • 着信トラフィックを複数 Amazon EC2 インスタンスへ自動分散
+      • 750 時間/月のロードバランサー時間分
+      • 15 GB の Classic Load Balancer でのデータ処理
+      • 15 LCU の Application Load Balancer 使用
+
+    ■ AWS AppSync
+      • GraphQL API 開発、セキュア化、実行
+      • 250,000 件/月のクエリまたはデータ変更オペレーション
+      • 250,000 件/月のリアルタイム更新
+      • 600,000 接続/月
+
+- KEY: aws.無期限無料枠
+  EXPLAIN: |
+    無料枠: 無期限無料枠
+  BODY: |
+    ■ AWS Lambda  
+      • 1,000,000 リクエスト/月 無料
+      • 最大320万秒/月のコンピューティング時間
+
+    ■ Amazon CodeWhisperer
+      • コード提案
+      • 個人のお客様は無料で使用可能
+      • Individual Tier のコード提案
+      • IDE とコマンドラインのための AI 搭載生産性向上ツール
+      • IDE に Amazon Q チャットを搭載 (プレビュー)
+      • 50 回のセキュリティスキャン (1 ユーザーあたり、1 か月あたり)
+      • リファレンストラッキング
+      • コマンドライン統合
+      • AWS ビルダー ID による認証
+
+    ■ Amazon SNS
+      • プッシュメッセージングサービス
+      • 100 万件の発行
+      • 10 万件の HTTP/S 配信
+      • 1,000 件のメール配信
+
+    ■ Amazon CloudWatch
+      • AWS のクラウドリソースとアプリケーションをモニタリング
+      • 10 カスタムメトリクスおよび 10 アラーム
+      • 100 万件の API リクエスト
+      • 5 GB のログデータの取り込みおよび 5 GB のログデータのアーカイブ
+      • 毎月最大 50 メトリクスのダッシュボード 3 個
+
+    ■ Amazon CloudFront
+      • 1 TBのデータ送信
+      • コンテンツ配信CDNサービス
+      • 1 TB のデータ転送(アウト)
+      • 1,000 万件の HTTP および HTTPS リクエスト
+      • 200 万件の CloudFront 関数呼び出し
+
+    ■ Amazon Cognito
+      • 50,000 MAU(Monthly Active User)/月
+      • ユーザーのサインアップ、サインイン、およびアクセスコントロール
+      • 10 GB のクラウド同期ストレージ(サインアップから 12 か月が有効期限)
+      • 毎月 1,000,000 回の同期操作(サインアップから 12 か月が有効期限)
+
+    ■ Amazon Glacier (Glacier API のみ)
+      • 長期的なオブジェクトストレージ
+      • 10 GB/月の Amazon Glacier データ取得が無料
+      • Glacier APIを利用したスタンダードの取得にのみ適用
+
+    ■ Amazon SQS
+      • コンピュータ間メッセージ格納ためのスケーラブルなキュー
+      • 100 万件のリクエスト
+
+    ■ AWS CodeBuild
+      • クラウドでのコード構築とテスト
+      • 合計 100 ビルド分/月(general1.small, arm1.small使用)
+
+    ■ AWS Step Functions
+      • 分散アプリケーションのコンポーネントをコーディネート
+      • 4,000 回の状態遷移/月
+
+    ■ AWS CloudFormation
+      • クラウドインフラストラクチャリソースをコードでモデル化してプロビジョン
+      • 1,000 件のハンドラーオペレーション/月/アカウント
+      • 1,000件/月を超えるハンドラーオペレーションあたり 0.0009 USD*
+      • 30 秒を超えるハンドラーオペレーション期間は *0.00008 USD/秒
+      • データ転送: 標準の AWS データ転送料金で課金
+
+#-------------------------------
+# 基礎知識
+#-------------------------------
+- KEY: aws.基礎知識.category
+  CATEGORY: 基礎知識
+
+- KEY: aws.基礎知識.ARN
+  EXPLAIN: |
+    ARN(Amazon Resource Name)
+  BODY: |
+    • AWSリソースを一意に識別するための名前
+    • リソースの種類、リージョン、アカウントID、リソース名などを組み合わせた文字列
+    • ARNはAWSの各サービスで使用される
+    • ARNの形式はサービスによって異なるが、一般的な形式は以下の通り
+
+    ■ 基本形式
+    [arn:partition:service:region:account-id:resource]
+    [arn:partition:service:region:account-id:resourcetype/resource]
+    [arn:partition:service:region:account-id:resourcetype:resource]
+
+    • partition: 基本的にAWS
+    • service: AWS製品名
+    • region: リソースがあるリージョン(リージョン関係ないもの省略)
+    • account-id: AWSアカウントID
+    • resource/resourcetype: サービスによって異なる("/" or ":"区切り)
+
+    ■ EC2
+    [arn:aws:ec2:region:account-id:instance/instance-id]
+    [arn:aws:ec2:region:account-id:volume/volume-id]
+
+    arn:aws:ec2:us-east-1::image/ami-1a2b3c4d      //アカウント省略で::
+    arn:aws:ec2:us-east-1:123456789012:instance/*
+    arn:aws:ec2:us-east-1:123456789012:volume/vol-1a2b3c4d
+    arn:aws:ec2:us-east-1:123456789012:volume/vol-1a2b3c4d?versionId=1234567890abcdef0
+
+    ■ S3
+    [arn:aws:s3:::bucket_name]                     //リージョン、アカウントは不要
+    [arn:aws:s3:::bucket_name/key_name]
+
+    arn:aws:s3:::my_corporate_bucket/*             //ポリシーARN指定: ワイルドカード(*)使用
+    arn:aws:s3:::my_corporate_bucket/my_folder/*
+    arn:aws:s3:::my_corporate_bucket/my_folder/my_file.txt
+    arn:aws:s3:::my_corporate_bucket/my_folder/my_file.txt?versionId=1234567890abcdef0
+    arn:aws:s3:::my_corporate_bucket/my_folder/my_file.txt?versionId=1234567890abcdef0&partNumber=1
+
+    ■ RDS
+    [arn:aws:rds:region:account-id:db:db-instance-name]
+    [arn:aws:rds:region:account-id:cluster:db-cluster-name]
+
+    arn:aws:rds:us-east-1:123456789012:db:mydb
+    arn:aws:rds:us-east-1:123456789012:db:mydb?version=1.0.00
+    arn:aws:rds:us-east-1:123456789012:cluster:mydb-cluster //AuroraのクラスターARN
+    arn:aws:rds:us-east-1:123456789012:cluster:mydb-cluster?version=1.0.00
+    arn:aws:rds:us-east-1:123456789012:cluster:mydb-cluster?version=1.0.00&partNumber=1
+    arn:aws:rds:us-east-1:123456789012:cluster:mydb-cluster?version=1.0.00&partNumber=1&snapshotId=snapshot-1234567890abcdef0

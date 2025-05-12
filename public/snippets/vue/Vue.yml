@@ -1,0 +1,183 @@
+---
+#-------------------------------
+# JavaScript
+#-------------------------------
+
+#-------------------------------
+# Async
+#-------------------------------
+
+- KEY: vue.install
+  EXPLAIN: インストール
+  BODY: |
+    npm install vue@3.2.47 vue-router@4.1.6 vuex@4.0.2 vue-i18n@9.2.0
+
+- KEY: vue.example.title
+  CATEGORY: Examples
+
+- KEY: vue.example.git
+  EXPLAIN: GitHub URL
+  BODY: |
+    https://github.com/nuxt/examples
+    Nuxtのサンプルだが、Vueの基本的使い方はこのページに記す
+
+    ref()                               // useRef に相当
+    useState()                          // useState に相当
+    computed()
+    watch()                             // useWatch に相当
+    useFetch()
+    useAsyncData()
+    useRoute()
+    useRouter()
+    useHead()
+    useMeta()
+    useCookie()
+    useRequestEvent()
+    useRequestHeaders()
+    useRequestBody()
+    useRequestQuery()
+    useRequestMethod()
+
+    v-model                             // value Model
+    v-bind
+    v-if
+    v-else
+    v-else-if
+    v-show
+    v-for
+    v-on
+    v-slot
+    v-pre
+    v-cloak
+    v-once
+    v-html
+    v-text
+    v-bind:class
+    v-bind:style
+    v-bind:key
+    v-bind:slot
+    v-bind:ref
+    v-bind:is
+    v-bind:for
+    v-bind:slot-scope
+    v-bind:once
+    v-bind:cloak
+    v-bind:html
+    v-bind:text
+
+- KEY: vue.example.hello-world
+  EXPLAIN: |
+    変数の使い方
+  BODY: |
+    [/app.vue]
+
+    ■ Script
+    <script setup lang="ts">            // setup: props等の解決が行われた時点で実行
+    const version = 2 + 1
+    </script>
+
+    ■ HTML
+    <template>
+      <div class="hello">Hello Nuxt {{ version }}!</div>
+    </template>
+
+    ■ CSS
+    <style scoped>                      // スコープ付(id変換)
+    .hello {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 3rem;
+      padding: 2rem;
+    }
+    </style>
+
+- KEY: vue.example.useState
+  EXPLAIN: |
+    state-management: useState() & イベントハンドラ
+  BODY: |
+    [/app.vue]
+
+    ■ Script
+    <script setup>
+    const counter1 = useState('counter1', () => Math.round(Math.random() * 1000))
+    const counter2 = useState('counter2', () => 123)
+    </script>
+
+    ■ HTML
+    <template>
+      <NuxtExample dir="features/state-management">
+        <p>Counter1: {{ counter1 }}</p>
+        <div class="flex gap-2 my-4">
+          <UButton @click="counter1--"> - </UButton>
+          <UButton @click="counter1++"> + </UButton>
+        </div>
+
+        <p>Counter1*2: {{ counter1 * 2 }}</p>
+
+        <p>Counter2: {{ counter2 }}</p>
+        <div class="flex gap-2 my-4">
+          <UButton @click="counter2--"> - </UButton>
+          <UButton @click="counter2++"> + </UButton>
+        </div>
+
+        <p>不正 Counter: {{ counter }}</p>   //  undefined
+      </NuxtExample>
+    </template>
+
+- KEY: vue.example.auto-imports
+  EXPLAIN: |
+    auto-imports: ref()
+  BODY: |
+    ■ examples\features\auto-imports\app.vue
+
+    <script setup>
+    const index = ref(0)
+    const person = ref({ name: 'John', addr:""})
+
+    function hello() {
+      console.log(index.value, person.value.name, person.value.addr)
+    }
+    </script>
+
+    <template>
+      <NuxtExample dir="features/auto-imports">
+        <h1>Demo with auto imports</h1>
+        <form class="flex flex-col gap-2" @submit.prevent="hello">  
+          // submit.prevent: submit時にページ遷移せずに hello() を実行
+          <CustomInput v-model="index" class="input w-32" />
+          <CustomInput v-model="person.name" class="input w-32" />
+          <CustomInput v-model="person.addr" class="input w-32" placeholder="City"/>
+          <UButton type="submit"> Save </UButton>
+        </form>
+      </NuxtExample>
+    </template>
+
+    <style scoped>
+    .input {
+      border: 1px solid #ccc;
+    }
+    </style>
+
+    ■ examples\features\auto-imports\components\CustomInput.vue
+
+    <script setup>
+    defineProps(['modelValue', 'title'])
+    defineEmits(['update:modelValue'])
+    </script>
+
+    <template>
+      <input
+        :value="modelValue"
+        :placeholder="title"
+        @input="$emit('update:modelValue', $event.target.value)"
+      />
+    </template>
+
+# - KEY: vue.
+#   EXPLAIN: |
+
+#   BODY: |
+
+# - KEY: vue.
+#   EXPLAIN: |
+
+#   BODY: |

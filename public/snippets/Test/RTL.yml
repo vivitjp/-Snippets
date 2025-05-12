@@ -208,20 +208,28 @@
     ◯◯◯ByAltText
   TABLE:
     OPTION:
-      WIDTH: 50%
+      WIDTH:
+        - 15%
+        - 13%
+        - 13%
+        - 13%
+        - 13%
       HAS_TITLE: true
       ALIGN:
         - left
         - center
+        - center
+        - center
+        - center
+        - left
     BODY: |
-      No	Match	1 Match	1+ Match	Await?	備考
-      getBy	      throw	return	throw	No	
-      findBy	    throw	return	throw	Yes	非同期
-      queryBy	    null	return	throw	No	NULL Check
-      -
-      getAllBy	  throw	array	array	No	
-      findAllBy	  throw	array	array	Yes	非同期
-      queryAllBy	[]	array	array	No	NULL Check
+      接頭辞	不一致	シングルMatch	複数Match	Await?	備考
+      get	      throw	return	throw	No	
+      find	    throw	return	throw	Yes	非同期
+      query	    null	return	throw	No	NULL Check のみに使用
+      getAll	  throw	array	array	No	配列
+      findAll	  throw	array	array	Yes	配列、非同期
+      queryAll	[]	array	array	No	配列、NULL Check のみに使用
 
 - KEY: RTL.Queries.ByTestId
   EXPLAIN: ByTestId

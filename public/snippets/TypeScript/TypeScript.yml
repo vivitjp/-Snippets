@@ -32,7 +32,7 @@
     const s:string = a;                      // (危険)代入OK
     const o:object = a;                      // (危険)代入OK
 
-    ■ unknown
+    ■ unknown型
     const a:unknown = 10;
     const i:number = a;                      // (安全)Error
     const s:string = a;                      // (安全)Error
@@ -40,7 +40,7 @@
     if(typeof(a)==="string")                 // 型Check:v5.3
       const s:string = a;                    // (安全)代入可
 
-    ■ never
+    ■ never型                                // Genericで多用される 
     type A={ a:"A" }
     type B={ a:"B" }
     const f=(props:A|B)=>{
@@ -62,14 +62,12 @@
     type A = { city:string, zip: string }
 
     ■ AND[ & ] 🛑両方を満たす
-
     const NG: P & A = { name: "Eve", age: 18 }                          // ❌ 不足
     const NG: P & A = { city: "Paris", zip:"03" }                       // ❌ 不足
     const NG: P & A = { name: "Eve", age: 18, city: "Paris" }           // ❌ 不足
     const OK: P & A = { name: "Eve", age: 18, city: "Paris", zip:"03" } // ⭕両方を満たす
 
     ■ OR[ | ] 🛑どちらか一方を満たす(排他的ORではないので両方でもOK)
-
     const OK: P | A = { name: "Eve", age: 18 }                          // ⭕ P を満たす
     const OK: P | A = { city: "Paris", zip:"03" }                       // ⭕ A を満たす
     const OK: P | A = { name: "Eve", age: 18, city: "Paris" }           // ⭕ 少なくとも P を満たす
@@ -78,7 +76,6 @@
     const NG: P | A = { city: "Paris", age: 18 }                        // ❌ 混用
 
     ■ XOR 🛑排他的OR(Utility活用)
-
     type XOR<T> = { [X in keyof T]?: never | undefined; }
     type XP = P & XOR<A>
     type XA = A & XOR<P>
@@ -254,7 +251,6 @@
 - KEY: ts.mapped.lookupTypes.mappedTypes
   EXPLAIN: MappedType & Record<> 比較
   BODY: |
-    ■ MappedType & Record<> 比較
     type Sample = "A" | "B"
     type ObjA = {[name in Sample]: number}
     type ObjB = Record<Sample, number>
@@ -433,7 +429,6 @@
 - KEY: ts.function.callback
   EXPLAIN: 関数Callback引数のパラメタ数
   BODY: |
-    ■ Callback引数のパラメタ数
     const f = (x: (a: number) => void) => {}
     f(() => {})                              // パラメタ少ない場合はPASS!
     f((a: number) => {})                     // パラメタ数一致: OK
@@ -548,7 +543,7 @@
       c: number // 変数はpublicのみ
     }
 
-    // ■ Access Modifier
+    // Access Modifier
     // private      スコープ: そのClass
     // protected    スコープ: そのClassと継承先Classのみ
     // public       スコープ: インスタンスからアクセス可能
@@ -670,26 +665,24 @@
 
 - KEY: ts.ver5.3.import
   EXPLAIN: |
-    v5.3: import型
+    v5.3 静的/動的 import type
   BODY: |
-    ■ 5.3 静的/動的 import type
     import o from "a.json" with {type:"json"}
 
     const o = await import("a.json", { with:{type:"json"} });
 
 - KEY: ts.ver5.3.unknown
   EXPLAIN: |
-    v5.3: unkonwn型
+    v5.3: unkonwn型 check
   BODY: |
-    ■ 5.3 unkonwn型 check
     const value: unknown = "a"
     if(typeof(value)==="string")
       const s:string = value;                // (安全)代入
 
 - KEY: ts.ver5.2.classDispose
-  EXPLAIN: Instance削除時実行
+  EXPLAIN: |
+    v5.2 Instance削除時実行
   BODY: |
-    ■ 5.2 Instance削除時実行
     class AFile implements Disposable {
       ...
       //class instance 
@@ -707,9 +700,10 @@
     }
 
 - KEY: ts.ver5.2.methodDispose
-  EXPLAIN: Function削除時実行
+  EXPLAIN: |
+    v5.2 Function削除時の実行
   BODY: |
-    ■ 5.2 Function削除時の実行(同期)
+    ■ 同期
     function log(id:string): Disposable {
       ...
       return { 
@@ -719,7 +713,7 @@
       }
     }
 
-    ■ 5.2 Function削除時の実行(非同期)
+    ■ 非同期
     function log(id:string): AsyncDisposable {
       ...
       return {
@@ -730,9 +724,9 @@
     }
 
 - KEY: ts.ver5.2.decoratorMetadata
-  EXPLAIN: デコレータメタデータ
+  EXPLAIN: |
+    v5.2 Decorator Metadata
   BODY: |
-    ■ 5.2 Decorator Metadata
     interface X {
       name: string;
       metadata: Record<PropertyKey, unknown>;
@@ -757,9 +751,9 @@
      = { "bar":true,"baz":true,"foo":true }
 
 - KEY: ts.ver5.2.TupleType
-  EXPLAIN: タプル型
+  EXPLAIN: |
+    v5.2 Tuple
   BODY: |
-    ■ 5.2 Tuple
     type T1<T> = [T, T]                      // no-named
     type T2<T> = [f:T, s:T]                  // named
     type T3<T> = [f:T, s:T, rest:...T[]]
@@ -767,12 +761,12 @@
     type X = [a:string, b:string]
     type Y = [number, number]
     type Z = [...Label, ...NoLabel]
-           = [number, number, string, string]
+    = [number, number, string, string]
 
 - KEY: ts.ver5.1.methodReturn
-  EXPLAIN: 関数戻り値(undefined)
+  EXPLAIN: |
+    v5.1 Function Returns Undefined
   BODY: |
-    ■ 5.1 Function Returns Undefined
     割愛
 
 - KEY: ts.ver5.0.decorator.types
@@ -785,13 +779,14 @@
     パラメータ  Parameter Decorators
 
 - KEY: ts.ver5.0.decorator.IIFE
-  EXPLAIN: デコレータ(class関数)
+  EXPLAIN: |
+    v5.0 即時関数による定義
   BODY: |
-    // 設定が不必要
+    ■ 設定が不必要
     tsconfig.json
       "experimentalDecorators": false        // true でエラー
-    -----------------------------------------
-    //即時関数による定義
+
+    ■ 即時関数による定義
     function decoLog(orgMethod:any, _context:any){
       return (function(this: any, ...args:any[]){
         console.log(_context)             
@@ -828,12 +823,14 @@
     // Print:5 "Method Called"
 
 - KEY: ts.ver5.0.decorator
-  EXPLAIN: デコレータ(コール順)
+  EXPLAIN: |
+    v5.0 デコレータのコール順
   BODY: |
-    // 設定が必要
+    ■ 設定
     tsconfig.json
       "experimentalDecorators": true
-    -----------------------------------------
+
+    ■ デコレータのコール順
     function first() {
       console.log("first(): factory evaluated");
       return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
@@ -856,7 +853,8 @@
     }
 
 - KEY: ts.ver5.0.generic.const
-  EXPLAIN: ジェネリック・定数
+  EXPLAIN: |
+    v5.0 ジェネリック・定数
   BODY: |
     type A = { a: readonly string[] };
 
@@ -872,7 +870,8 @@
     const res2 = cFunc({ a: ["A", "B"] });   // readonly ["A", "B"]
 
 - KEY: ts.ver4.9.satisfies
-  EXPLAIN: Widening防止
+  EXPLAIN: |
+    v4.9 Widening防止
   BODY: |
     ■ Widening防止
     type A = { x:string; y:number; }
@@ -904,7 +903,8 @@
     const c = z.a[0];                        // 添字処理:OK
 
 - KEY: ts.4.9.classAccessor
-  EXPLAIN: アクセッサ
+  EXPLAIN: |
+    v4.9 アクセッサ
   BODY: |
     class X {
       accessor a: string;                    // accessor
@@ -917,13 +917,15 @@
     x.a = "b"                                // set setA()
 
 - KEY: ts.4.9.NaN
-  EXPLAIN: NaNの挙動
+  EXPLAIN: |
+    v4.9 NaNの挙動
   BODY: |
     NaN == NaN, NaN === NaN                  // Before: false
     NaN == NaN, NaN === NaN                  // After : true
 
 - KEY: ts.4.8.unknown
-  EXPLAIN: Unknown型
+  EXPLAIN: |
+    v4.8 Unknown型
   BODY: |
     const x:unknown
     const y:{}|null|undefined

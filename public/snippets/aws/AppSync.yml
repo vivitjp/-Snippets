@@ -1,0 +1,12 @@
+---
+#-------------------------------
+# AWS
+#-------------------------------
+- KEY: aws.AppSync.category
+  CATEGORY: AppSync
+
+- KEY: aws.AppSync.xxxxx
+  EXPLAIN: |
+    xxxxxx
+  BODY: |
+    ■ xxxxx

@@ -1,0 +1,12 @@
+---
+#-------------------------------
+# AWS
+#-------------------------------
+- KEY: aws.Cognito.category
+  CATEGORY: Cognito
+
+- KEY: aws.Cognito.xxxxx
+  EXPLAIN: |
+    xxxxxx
+  BODY: |
+    ■ xxxxx

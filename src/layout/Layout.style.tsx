@@ -134,7 +134,7 @@ export const MenuItem = styled.div<MenuItem>`
     ${
       isPending &&
       css`
-      color: #999;
+      color: #BBB;
       cursor: default;
       :hover {
         color: var(--main-color);

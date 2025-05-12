@@ -1,0 +1,12 @@
+---
+#-------------------------------
+# AWS
+#-------------------------------
+- KEY: aws.StepFunctions.category
+  CATEGORY: StepFunctions
+
+- KEY: aws.StepFunctions.xxxxx
+  EXPLAIN: |
+    xxxxxx
+  BODY: |
+    ■ xxxxx

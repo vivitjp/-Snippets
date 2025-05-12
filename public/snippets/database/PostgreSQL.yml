@@ -1,0 +1,234 @@
+---
+#-------------------------------
+# PostgreSQL
+#-------------------------------
+
+- KEY: postgreSQL.vs.mySQL
+  EXPLAIN: PostgreSQL vs MySQL
+  BODY: |
+    ■ 共通テーブル式（CTE）
+
+      CTEは、ユーザがSELECT、INSERT、UPDATE、DELETE文の中で参照できる一時的な結果セットです。
+
+    ■ 地理情報システム（GIS）と空間参照システム（SRS）
+
+      GISは、空間および地理データを取得、保存、分析します。SRSは空間上の位置を特定するための座
+      標系を定義します。PostgreSQLはこの機能をPostGIS拡張で提供しています。MySQLは組み込みで
+      提供しています。
+
+    ■ JSON との互換性
+
+      MySQLはJavaScript Object Notation (JSON)をサポートするようになりました。しかし、JSONB
+      をサポートするプラットフォームはまだPostgreSQLだけです。JSONBは、重複するキーを削除し、
+      余分な空白をなくしたバイナリバージョンです。
+
+    ■ マルチバージョン同時実行制御（MVCC）
+
+      MVCCは複数のトランザクションが競合することなく同時に同じデータにアクセスすることを可能に
+      します。一般的に、PostgreSQLはMVCC操作をより効率的に処理することで知られています。
+
+    ■ ウィンドウ関数
+
+      これらは、現在の行に関連するテーブル行の集合を横断して計算することができます。
+
+    ■ 宣言的パーティショニング： 
+
+      これはテーブルをより小さく管理しやすいテーブルに分割することができますが、1つのテーブル
+      として扱われます。PostgreSQL 10ではこの機能が追加され、テーブルの分割が容易になりました。
+      MySQLはこの機能をCREATE TABLEとPARTITION BY構文で提供しています。
+
+    ■ 論理レプリケーション
+
+      これは、挿入、更新、削除のようなイベントに基づいてデータの変更を複製することを可能にします。
+
+    ■ 半同期レプリケーション
+
+      このレプリケーション方法では、少なくとも1つのスレーブがデータの受信を確認した後にのみ、
+      トランザクションがコミットされたとみなされます。MySQLはこの機能を使用して、より優れた
+      データ整合性をサポートしています。PostgreSQLは現在、この機能を外部ツールで提供しています。
+
+    ■ ACIDの特性
+
+      どちらもACIDに準拠したシステムです。しかし、MyISAMのようにACIDをサポートしていないMySQL
+      ストレージエンジンもある。MySQLでACID準拠が必要な場合は、InnoDBをお試しください。
+
+    ■ バックアップとリカバリ
+
+      どちらもバックアップとリカバリ機能を提供します。PostgreSQLに付属するバックアップと
+      リカバリ・ツールは、その高い効率性で知られています。
+
+    ■ クロスプラットフォーム
+
+      MySQLもPostgreSQLもクロスプラットフォームのソリューションです。しかし、PostgreSQLは
+      UNIXベースのシステムでのパフォーマンス最適化機能で有名です。
+
+    ■ 拡張とプラグイン
+
+      どちらも拡張可能で、数多くの拡張機能やプラグインが利用できます。しかし、PostgreSQLは、
+      PostGISやその空間データ機能のような幅広い追加モジュールにより、その拡張性でより有名です。
+
+    ■ 外部キー
+
+      どちらも外部キー制約を許します。しかし、MySQLのMyISAMストレージエンジンにはありません。
+
+    ■ インデックス
+
+      PostgreSQLとMySQLはどちらも異なるインデックス作成技術をサポートしています。しかし、
+      PostgreSQLにはMySQLにはない高度なインデックス型（GINやGiSTなど）があります。
+
+    ■ 標準SQLデータ型
+
+      標準SQLデータ型（INTEGERやVARCHARなど）はMySQLでもPostgreSQLでも使用できます。しかし、
+      PostgreSQLは配列やhstoreなど、より幅広いデータ型をサポートしています。
+
+    ■ ストアドプロシージャ
+
+      どちらもストアドプロシージャをサポートしています。しかし、MySQLのルーチン構文に比べ、
+      PostgreSQLはPL/pgSQL言語によってより完全なサポートを提供しています。PL/pgSQL言語を
+      使用することで、PostgreSQLのユーザは、独自のユースケースに適合するストアドプロシージャ
+      をより創造的に開発することができます。
+
+    ■ トリガ
+
+      どちらもトリガの使用をサポートしています。しかし、トリガに関しては、PostgreSQLの方が
+      より柔軟です。
+
+    ■ ビュー（マテリアライズド・ビュー）
+
+      ビューの作成はどちらでも可能です。しかし、PostgreSQLにはマテリアライズド・ビューが
+      あります。マテリアライズドビューは、高価で計算量の多い問い合わせの結果をキャッシュし、
+      定期的に結果を更新できるようにします。これは、高速なデータアクセスが必要な場合に便利です。
+
+- KEY: postgreSQL.package
+  EXPLAIN: Package
+  BODY: |
+    ■ Windows
+    17 	2022, 2019
+    16 	2022, 2019
+    15 	2019, 2016
+    14 	2019, 2016
+    13 	2019, 2016
+
+    ■ Ubuntsu
+    postgresql-client-17 	client libraries and client binaries
+    postgresql-17 	core database server
+    postgresql-doc-17 	documentation
+    libpq-dev 	libraries and headers for C language frontend development
+    postgresql-server-dev-17 	libraries and headers for C language backend development
+
+- KEY: postgreSQL.install
+  EXPLAIN: Install
+  BODY: |
+    sudo apt update
+    sudo apt install postgresql-17 postgresql-client-17 postgresql-doc-17 libpq-dev postgresql-server-dev-17
+
+    PATH: /usr/local/pgsql/bin/
+
+- KEY: postgreSQL.db.create
+  EXPLAIN: Database 作成と削除
+  BODY: |
+    ■ DB 作成
+    createdb <db_name>
+    sudo -u postgres createdb <db_name>
+    sudo -u postgres psql -c "CREATE DATABASE <db_name>;"
+
+    ■ 作成サンプル
+    CREATE DATABASE <db_name>
+      WITH OWNER <owner_name>
+      ENCODING 'UTF8'
+      TABLESPACE pg_default
+      LC_COLLATE 'ja_JP.UTF-8'
+      LC_CTYPE 'ja_JP.UTF-8'
+      TEMPLATE template0;
+
+    ■ DB 削除
+    dropdb <db_name>
+    sudo -u postgres dropdb <db_name>
+    psql -U postgres -d <db_name> -c "DROP DATABASE <db_name>;"
+
+- KEY: postgreSQL.db.access
+  EXPLAIN: アクセス,バージョン,ヘルプ,終了
+  BODY: |
+    ■ アクセス
+    psql <db_name>
+    psql -U <user_name> -d <db_name> -h <host_name> -p <port_number>
+    psql -U postgres -d postgres -h localhost -p 5432
+
+      psql (16.4)
+      Type "help" for help.
+      mydb=>
+
+    ■ バージョン
+    mydb=> SELECT version();
+
+    ■ ヘルプ
+    mydb=> \h
+    mydb=> \h CREATE TABLE
+
+    ■ 終了
+    mydb=> \q
+
+- KEY: postgreSQL.table.create
+  EXPLAIN: テーブルの作成と削除
+  BODY: |
+    ■ テーブル作成
+    CREATE TABLE <table_name> (
+      index         SERIAL,
+      column_name1  integer,
+      column_name2  text,
+      column_name3  numeric,
+    );
+
+    ■ テーブル削除
+    DROP TABLE <table_name>;
+    DROP TABLE IF EXISTS <table_name>;  // 存在しない場合はエラーを出さない
+    DROP TABLE <table_name> RESTRICT;   // 依存するオブジェクトがある場合は削除しない
+    DROP TABLE <table_name> CASCADE;    // 依存するオブジェクトも削除
+
+- KEY: postgreSQL.db.create.sql
+  EXPLAIN: テーブルの作成 詳細
+  BODY: |
+    ■ テーブル作成
+    CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ]
+    TABLE [ IF NOT EXISTS ] 
+    table_name ( [
+      { column_name data_type 
+        [ STORAGE { PLAIN | EXTERNAL | EXTENDED | MAIN | DEFAULT } ]
+        [ COMPRESSION compression_method ]
+        [ COLLATE collation ]
+        [ 🔵column_constraint [ ... ] ]
+        | table_constraint
+        | LIKE source_table [ 🟢like_option ... ]
+      }
+      [, ... ]
+    ] )
+    [ INHERITS ( parent_table [, ... ] ) ]
+    [
+      PARTITION BY { RANGE | LIST | HASH } (
+        { column_name | ( expression ) }
+        [ COLLATE collation ]
+        [ opclass ]
+        [, ... ]
+      )
+    ]
+    [ USING method ]
+    [ WITH ( storage_parameter [= value] [, ... ] ) | WITHOUT OIDS ]
+    [ ON COMMIT { PRESERVE ROWS | DELETE ROWS | DROP } ]
+    [ TABLESPACE tablespace_name ]
+
+    【🔵column_constraint】
+    [ CONSTRAINT constraint_name ]
+    { NOT NULL | NULL |
+      CHECK ( expression ) [ NO INHERIT ] |
+      DEFAULT default_expr |
+      GENERATED ALWAYS AS ( generation_expr ) STORED |
+      GENERATED { ALWAYS | BY DEFAULT } AS IDENTITY [ ( sequence_options ) ] |
+      UNIQUE [ NULLS [ NOT ] DISTINCT ] 🟣index_parameters |
+      PRIMARY KEY index_parameters |
+      REFERENCES reftable [ ( refcolumn ) ] [ MATCH FULL | MATCH PARTIAL | MATCH SIMPLE ]
+        [ ON DELETE referential_action ] [ ON UPDATE referential_action ] }
+    [ DEFERRABLE | NOT DEFERRABLE ] [ INITIALLY DEFERRED | INITIALLY IMMEDIATE ]
+
+    【🟢like_option】
+    { INCLUDING | EXCLUDING }
+    { COMMENTS | COMPRESSION | CONSTRAINTS | DEFAULTS | GENERATED | IDENTITY | INDEXES | STATISTICS | STORAGE | ALL }

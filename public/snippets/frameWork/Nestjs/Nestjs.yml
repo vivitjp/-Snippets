@@ -2,6 +2,8 @@
 #-------------------------------
 # Nestjs
 #-------------------------------
+- KEY: nest.basic.title
+  CATEGORY: Install & Setup
 
 - KEY: nest.install
   EXPLAIN: インストール
@@ -97,6 +99,9 @@
       "sourceRoot": "src"
     }
 
+- KEY: nest.dir.title
+  CATEGORY: 構成
+
 - KEY: nest.dir.root
   EXPLAIN: ルート(bootstrap)
   BODY: |
@@ -154,6 +159,9 @@
       providers: [AppService],
     })
     export class AppModule {}
+
+- KEY: nest.sample.title
+  CATEGORY: 構成 サンプル
 
 - KEY: nest.sample.main
   EXPLAIN: main.ts
@@ -250,6 +258,9 @@
       // act? でなくとも、default: false の指定があれば SQL はinsert OK
       // TS と SQL 必須項目は別物
     }
+
+- KEY: nest.sample.Service.title
+  CATEGORY: 構成 Service サンプル
 
 - KEY: nest.sample.service
   EXPLAIN: Service
@@ -470,6 +481,9 @@
         throw error;
       }
     }
+
+- KEY: nest.sample.controller.title
+  CATEGORY: 構成 Controller サンプル
 
 - KEY: nest.sample.controller
   EXPLAIN: controllerの基礎

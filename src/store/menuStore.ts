@@ -6,6 +6,7 @@ export type MenuItemType = {
   codeKeyTypes?: string[]
   encodeRequired?: boolean
   case_sensitive?: boolean
+  idInitialOpened?: boolean
 }
 
 type Menu = {
@@ -13,6 +14,7 @@ type Menu = {
   subDir: string | undefined
   setMenu: (menu: MenuItemType) => void
 }
+
 export const zooMenu = create<Menu>()((set) => ({
   selectedMenu: undefined,
   subDir: undefined,

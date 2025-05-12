@@ -62,7 +62,7 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
       //Highlight
       const codeKeyTypes = selectedMenu?.codeKeyTypes
       //Highlightして JSX.Element[] に変換
-
+      let highlightedBody: JSX.Element[] = []
       //折りたたみ要素
       let highlightedFold: JSX.Element[]
 
@@ -77,20 +77,24 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
             )
           } else {
             debugIndex = index
-            const code = (
-              !snippetsObject.body.at(-1)
-                ? snippetsObject.body.splice(-1, 1)
-                : snippetsObject.body
-            )
-              .map((n) => (!n ? " " : n))
-              .join("\n")
+            if (snippetsObject.body) {
+              const code = (
+                !snippetsObject.body.at(-1)
+                  ? snippetsObject.body.splice(-1, 1)
+                  : snippetsObject.body
+              )
+                .map((n) => (!n ? " " : n))
+                .join("\n")
 
-            const highlightedBody = syntaxHighlight({
-              code,
-              codeKeyTypes,
-              encodeRequired: selectedMenu.encodeRequired,
-              case_sensitive: selectedMenu.case_sensitive,
-            })
+              highlightedBody = syntaxHighlight({
+                code,
+                codeKeyTypes,
+                encodeRequired: selectedMenu.encodeRequired,
+                case_sensitive: selectedMenu.case_sensitive,
+              })
+            } else {
+              highlightedBody = []
+            }
 
             if (snippetsObject.fold) {
               const foldCode = (
@@ -120,9 +124,11 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
                   </SummaryWrapper>
 
                   {/* 🔴[OPTIONS.COLS] highlightedBody(options) */}
-                  <DetailInside colCount={snippetsObject.options?.COLS || 1}>
-                    {highlightedBody}
-                  </DetailInside>
+                  {!!highlightedBody.length && (
+                    <DetailInside colCount={snippetsObject.options?.COLS || 1}>
+                      {highlightedBody}
+                    </DetailInside>
+                  )}
 
                   {/* 🔴[FOLD] 折りたたみ(Details & Summary) */}
                   {highlightedFold?.length && (
@@ -156,10 +162,8 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
 
                   {/* 🔴[TABLE] テーブル */}
                   {snippetsObject?.table && (
-                    <Div padding={"10px"}>
-                      <Table
-                        width={snippetsObject?.table.options?.width || "300px"}
-                      >
+                    <Div padding={"10px"} width={"100%"}>
+                      <Table width="100%">
                         {snippetsObject?.table.options?.hasTitle && (
                           <THead>
                             <TR>
@@ -173,23 +177,29 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
                         )}
                         <TBody>
                           {snippetsObject?.table.body
-                            ?.splice(1)
+                            ?.splice(
+                              snippetsObject?.table.options?.hasTitle ? 1 : 0
+                            )
                             .map((line, i) => {
-                              //console.log(snippetsObject?.table?.options)
                               return (
                                 <TR key={i}>
-                                  {line?.split("\t").map((td, j) => (
+                                  {line?.split("\t").map((td, j) =>
+                                    // prettier-ignore
                                     <TD
                                       key={`${i}-${j}`}
-                                      align={
-                                        snippetsObject?.table?.options?.align?.[
-                                          j
-                                        ] || "center"
-                                      }
+                                      width={snippetsObject?.table?.options?.width?.[j] || "auto"}
+                                      align={snippetsObject?.table?.options?.align?.[j] || "center"}
                                     >
-                                      {td.trim()}
+                                      {td.trim().split("。").map((n, k) => {
+                                        return n && (
+                                          <span key={`${i}-${j}-${k}`}>
+                                            {n}
+                                            <br />
+                                          </span>
+                                        )
+                                      })}
                                     </TD>
-                                  ))}
+                                  )}
                                 </TR>
                               )
                             })}

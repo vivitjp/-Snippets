@@ -1,0 +1,152 @@
+---
+#-------------------------------
+# CloudFront
+#-------------------------------
+- KEY: aws.CloudFront.category
+  CATEGORY: CloudFront
+
+- KEY: aws.CloudFront.xxxxx
+  EXPLAIN: |
+    xxxxxx
+  BODY: |
+    ■ xxxxx
+
+- KEY: aws.CloudFront.category.静的ウェブサイトホスティング
+  CATEGORY: CloudFrontによる静的 WebHosting
+
+- KEY: aws.CloudFront.静的ウェブサイトホスティング.構成
+  EXPLAIN: |
+    構成
+  BODY: |
+    ■ 構成
+                       ┌───────────────────────────┐
+                       │ AWS                       │
+                       │  ┌────────────┐  ┌──────┐ │
+    User ── Internet ──┼──┤ CloudFront ├──┤  S3  │ │
+                       │  │   (CDN)    │  │      │ │
+                       │  └────────────┘  └──────┘ │
+                       └───────────────────────────┘
+
+    ■ CloudFrontとS3の間の通信
+      • HTTPSで暗号化
+      • CloudFrontからS3バケットにアクセス: OAC利用
+      • S3fがCloudFrontからのアクセスを許可: バケットポリシー
+
+- KEY: aws.CloudFront.静的ウェブサイトホスティング.OAC
+  EXPLAIN: |
+    OAC(Origin Access Control)作成
+  BODY: |
+    • ダッシュボードから[CloudFront]を選択
+    • メニューから[オリジンアクセス]を選択
+    • [コントロール設定を作成]をクリック
+
+    ■ コントロール設定の作成
+      • 名前: OACの名前を指定
+      • 署名動作
+        • [リクエストに署名しない]
+        • [署名リクエスト(推奨)]を選択
+          • 署名の有効期限: 1時間(3600秒)
+          • 認証ヘッダを上書きしない: OFF
+      • オリジンタイプ
+        • [S3]を選択
+
+- KEY: aws.CloudFront.静的ウェブサイトホスティング.ディストリビューション作成
+  EXPLAIN: |
+    CloudFront「ディストリビューション」の作成
+  BODY: |
+    • ダッシュボードから[CloudFront]を選択
+    • メニューから[ディストリビューション]を選択
+    • [ディストリビューションの作成]をクリック
+
+    ■ [画面]ディストリビューションを作成
+      • オリジンドメイン
+        • 作成したS3のバケット名を含むドメイン名
+      • オリジンパス・オプション
+      • 名前
+        • オリジンドメイン名を指定(同じでよい)
+      • オリジンアクセス
+        • [Public] 
+        • [Origin Access Control settings](推奨)を選択
+        • [Legacy Access Identity]
+
+    ■ デフォルトのキャッシュビヘイビア
+      • パスパターン
+        • デフォルト(*)
+      • オブジェクトを自動的に圧縮
+        • Yes 選択
+      • ビューワー
+        • ビューワープロトコルポリシー  
+          • HTTP to HTTPS
+          • Redirect HTTP to HTTPS
+          • HTTPS only
+      • 許可された HTTPメソッド
+        • GET, HEAD
+        • GET, HEAD, OPTIONS
+        • GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE
+      • WAF(Web Application Firewall)
+        • [セキュリティ保護を有効にする] <=ランディングページなた必要
+        • [セキュリティ保護を有効にしない]
+
+    ■ 画面 [新しいディストリビューションが正常に作成されました]
+      [S3バケットポリシーを更新する必要があります]
+      • [ポリシーをコピー]をクリック
+      {
+        "Version": "2008-10-17",
+        "Id": "PolicyForCloudFrontPrivateContent",
+        "Statement": [
+          {
+            "Sid": "AllowCloudFrontServicePrincipal",
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "cloudfront.amazonaws.com"
+            },
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::20231210tekitobucket--us-west-2/*",
+            "Condition": {
+              "StringEquals": {
+                "AWS:SourceArn": "arn:aws:cloudfront::YOUR_ACCOUNT_ID:distribution/ENW7MC67VLORD"
+              }
+            }
+          }
+        ]
+      }
+
+- KEY: aws.CloudFront.静的ウェブサイトホスティング.S3バケットポリシー更新
+  EXPLAIN: |
+    S3バケットポリシー更新
+  BODY: |
+    • S3バケットにcloudfrontのアクセスを許可
+    ■ ダッシュボードから[S3]を選択
+      • メニューから[バケット]を選択
+      • バケット名をクリック
+      • [アクセス許可]をクリック
+      • [バケットポリシー]をクリック
+      • [編集]をクリック
+      • コピーしたポリシーを貼り付けて、[保存]をクリック
+
+- KEY: aws.CloudFront.静的ウェブサイトホスティング.ページ作成
+  EXPLAIN: |
+    indexページ作成
+  BODY: |
+    ■ ダッシュボードから[S3]を選択
+      • メニューから[バケット]を選択
+      • バケット名をクリック
+      • [オブジェクト]をクリック
+      • [アップロード]をクリック
+      • [ファイルの追加]をクリック
+      • index.htmlを選択して、[アップロード]をクリック
+
+    ■ アクセス
+      例: https://<ID>.cloudfront.net/index.html
+
+- KEY: aws.CloudFront.静的ウェブサイトホスティング.罠
+  EXPLAIN: |
+    「罠」
+  BODY: |
+    ■ httpでしかアクセスできない
+      • CloudFrontを使うことで、HTTPSでアクセス可能
+      • S3バケットはHTTPでしかアクセスできない
+      • CloudFront←→S3の通信はHTTP
+
+    ■ バケットを公開しなければならない
+      • バケットの公開が必須(公式仕様)

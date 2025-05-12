@@ -1,0 +1,196 @@
+---
+#-------------------------------
+# JavaScript
+#-------------------------------
+
+#-------------------------------
+# Async
+#-------------------------------
+
+- KEY: Nuxt.install
+  EXPLAIN: インストール & プロジェクト作成
+  BODY: |
+    ■ インストール
+    npm install Nuxt@3.2.47 Nuxt-router@4.1.6 Nuxtx@4.0.2 Nuxt-i18n@9.2.0
+
+    ■ プロジェクト作成
+    npx nuxi init nuxt3-app
+    cd nuxt3-app
+    npm install
+    npm run dev                         // ローカルサーバー起動
+
+- KEY: Nuxt.
+  EXPLAIN: |
+    実際のインストール
+  BODY: |
+    PS B:\@Vue01> npx nuxi init vue01
+    Need to install the following packages:
+    nuxi@3.25.0
+    Ok to proceed? (y) y
+
+            .d$b.
+          i$$A$$L  .d$b
+        .$$F` `$$L.$$A$$.
+        j$$'    `4$$:` `$$.
+      j$$'     .4$:    `$$.
+      j$$`     .$$:      `4$L
+    :$$:____.d$$:  _____.:$$:
+    `4$$$$$$$$P` .i$$$$$$$$P`
+
+    ℹ Welcome to Nuxt!
+    ℹ Creating a new project in vue01.
+
+    ✔ Which package manager would you like to use?
+    npm
+    ◐ Installing dependencies...
+    npm warn deprecated inflight@1.0.6:
+    ...
+    npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+
+    > postinstall
+    > nuxt prepare
+
+    ℹ Nuxt collects completely anonymous data about usage.
+      This will help us improve Nuxt developer experience over time.
+      Read more on https://github.com/nuxt/telemetry
+
+    ✔ Are you interested in participating?
+    No
+
+    ✔ Types generated in .nuxt
+    added 807 packages, and audited 809 packages in 5m
+    ...
+    Run `npm audit` for details.
+    ✔ Installation completed.
+    ✔ Initialize git repository?
+    Yes
+    ℹ Initializing git repository...
+
+    Initialized empty Git repository in B:/@Vue01/vue01/.git/
+
+    ✔ Would you like to install any of the official modules?
+    @nuxt/eslint – Project-aware, easy-to-use, extensible and future-proof ESLint integration,
+     @nuxt/test-utils – Test utilities for Nuxt, @nuxt/ui – The Intuitive UI Library powered 
+     by Reka UI and Tailwind CSS
+    ℹ Resolved @nuxt/eslint, @nuxt/test-utils, @nuxt/ui, adding modules...
+    ℹ Installing @nuxt/eslint@1.3.0, @nuxt/test-utils@3.17.2, @nuxt/ui@3.0.2 as dependencies
+
+    added 283 packages, and audited 1092 packages in 1m
+    ...
+    npm audit fix
+    Run `npm audit` for details.
+
+    ℹ Adding @nuxt/eslint to the modules
+    ℹ Adding @nuxt/test-utils to the modules
+    ℹ Adding @nuxt/ui to the modules
+    ✔ ESLint config file created at B:/@Vue01/vue01/eslint.config.mjs
+    ℹ If you have .eslintrc or .eslintignore files, you might want to migrate them to the new config file
+    ℹ Nuxt Icon server bundle mode is set to local
+    ✔ Types generated in vue01/.nuxt
+    ✨ Nuxt project has been created with the v3 template. Next steps:
+    › cd vue01
+    › Start development server with npm run dev
+    PS B:\@Vue01>
+
+- KEY: Nuxt.installed.packagesJson
+  EXPLAIN: |
+    Packages.json
+  BODY: |
+    {
+      "name": "nuxt-app",
+      "private": true,
+      "type": "module",
+      "scripts": {
+        "build": "nuxt build",
+        "dev": "nuxt dev",
+        "generate": "nuxt generate",
+        "preview": "nuxt preview",
+        "postinstall": "nuxt prepare",
+        "typecheck": "nuxi typecheck",
+      },
+      "dependencies": {
+        "@nuxt/eslint": "^1.3.0",
+        "@nuxt/test-utils": "^3.17.2",
+        "@nuxt/ui": "^3.0.2",
+        "eslint": "^9.25.0",
+        "nuxt": "^3.16.2",
+        "typescript": "^5.8.3",
+        "vue": "^3.5.13",
+        "vue-router": "^4.5.0"
+      }
+    }
+
+    // 本番用ファイルを書き出すとき
+    % yarn generate:production
+    % yarn generate:production --no-ssr
+    % yarn generate:production --no-cache
+    % yarn generate:production --no-cache --no-ssr
+    % yarn generate:production --no-cache --no-ssr --no-build
+    % yarn generate:production --no-cache --no-ssr --no-build --no-purge
+    % yarn generate:production --no-cache --no-ssr --no-build --no-purge --no-zip
+
+- KEY: Nuxt.installed.directory
+  EXPLAIN: |
+    ディレクトリ構成
+  BODY: |
+    .nuxt                               // Nuxt のビルドファイル
+    .output                             // Nuxt のビルドファイル
+    .env                                // 環境変数                   
+    .gitignore                          // Gitignore              
+    .nuxtignore                         // Nuxtignore               
+    .nuxtrc                             // Nuxt の設定ファイル                      
+    app.vue                             // アプリケーションのルートコンポーネント                 
+    app.config.ts                       // アプリケーションの設定ファイル        
+    error.vue                           // エラーページのルートコンポーネント               
+    nuxt.config.ts                      // Nuxt の設定ファイル              
+    package.json                        // パッケージの設定ファイル        
+    tsconfig.json                       // TypeScript の設定ファイル              
+
+    assets/                             // アセットファイル
+    components/                         // Vue コンポーネント      
+    composables/                        // Vue のコンポーザブルファイル    
+    content/                            // コンテ ンツファイル      
+    layouts/                            // レイアウトファイル     
+    middleware/                         // ミドルウェアファイル       
+    modules/                            // モジュールファイル  
+    node_modules/                       // Node.js のモジュールファイル  
+    pages/                              // ページファイル   
+    plugins/                            // プラグインファイル   
+    public/                             // 公開ファイル 
+    server/                             // サーバーファイル  
+    shared/                             // 共有ファイル   
+    utils/                              // ユーティリティファイル
+
+- KEY: Nuxt.property.config
+  EXPLAIN: |
+    nuxt.config.ts
+  BODY: |
+    import { defineNuxtConfig } from 'nuxt3'
+
+    export default defineNuxtConfig({
+      app: {
+        head: {
+          title: 'My Nuxt App',
+          // ベースのディレクトリ
+          baseURL: process.env.NUXT_APP_BASE_URL,
+          meta: [
+            { name: 'description', content: 'My Nuxt App' },
+            { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+          ],
+        },
+      },
+      srcDir: 'src/',
+      css: ['~/assets/css/main.css'],
+      modules: ['@nuxtjs/tailwindcss'],
+      buildModules: ['@nuxt/typescript-build'],
+      typescript: {
+        // 型を常にチェック
+        // memo:動作が重い場合はfalseへ変更
+        typeCheck: true
+      },
+    })
+
+# - KEY: Nuxt.
+#   EXPLAIN: |
+
+#   BODY: |

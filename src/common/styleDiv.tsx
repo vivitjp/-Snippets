@@ -169,15 +169,17 @@ export const Row = styled(Div)`
 
 type Table = Pick<
   CSSProperties,
-  AttrPadding | AttrMargin | AttrBorder | AttrShadow | AttrColor
+  AttrPadding | AttrMargin | AttrBorder | AttrShadow | AttrColor | AttrSize
 > &
   Custom
 
 export const Table = styled.table<Table>`
   ${(props) => css`
     width: ${props.width ?? "200px"};
+    max-width: ${props.maxWidth ?? "100%"};
     border: 1px solid #ccc;
     border-collapse: collapse;
+    table-layout: auto;
   `}
 `
 
@@ -200,6 +202,8 @@ export const TD = styled.td`
   ${(props) => css`
     border: 1px solid #ccc;
     text-align: ${props.align ?? "center"};
-    padding: 5px:
+    padding: 3px;
+    overflow-wrap : break-word;
+    white-space: normal;
   `}
 `

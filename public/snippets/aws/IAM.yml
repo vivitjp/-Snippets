@@ -1,0 +1,898 @@
+---
+#-------------------------------
+# IAM
+#-------------------------------
+- KEY: aws.iam.category
+  CATEGORY: IAM 概要と機能
+
+- KEY: aws.iam.概要
+  EXPLAIN: 概要
+  BODY: |
+    • AWSリソースをセキュアに操作するために、認証・認可の仕組みを提供するマネージドサービス
+    • 各AWSリソースに対して別々のアクセス権限をユーザー毎に付与できる
+    • 多要素認証(Multi-Factor Authentication:MFA)によるセキュリティの強化
+    • 一時的な認証トークンを用いた権限の委任
+    • 他のIDプロバイダーで認証されたユーザーにAWSリソースへの一時的なアクセス
+    • 世界中のAWSリージョンで同じアイデンティティと権限を利用可能
+    • データ変更は結果整合性を保ちながら全リージョンに伝搬
+    • AWS IAM自体の利用は無料
+
+- KEY: aws.iam.resourceAccess
+  EXPLAIN: |
+    AWSリソースにアクセスするしくみ
+  BODY: |
+    ■ プリンシパル
+
+        ユーザー
+        ロール
+        アプリケーション
+    ↓
+    ■ 認証
+
+        Authentication
+        AWS STS (Security Token Service)
+        MFA Token
+    ↓
+    ■ リクエスト
+
+        アクション
+        リソース
+        プリンシパル
+        環境データ
+        リソースデータ
+    ↓
+    ■ 認可
+
+        IDベースポリシー (Permissions)
+        リソースベースポリシー (Resource-based policy)
+          Amazon S3、AWS Lambda、...
+        その他ポリシー
+          Permission Boundary
+          Service Control Policy (SCP)
+          Access Control List (ACL)
+    ↓
+    ■ AWS リソース
+
+        Permissions
+        Instance
+        Endpoints
+        Bucket with objects
+
+- KEY: aws.iam.機能.category
+  CATEGORY: 機能目次
+
+- KEY: aws.iam.機能
+  EXPLAIN: 機能
+  BODY: |
+    ■ A) IDと認証情報の管理
+
+      • AWSアカウントのルートユーザーアクセスキーをロックする
+      • 個々のIAMユーザーを作成
+      • ユーザーの強力なパスワードポリシーを設定
+      • アクセスキーを共有しない
+      • 特権ユーザーに対してMFAを有効化する
+
+    ■ B) アクセス権限の管理
+
+      • AWS管理ポリシーを使用したアクセス許可の使用開始
+      • インラインポリシーではなくカスタマー管理ポリシーを使用する
+      • 追加セキュリティに対するポリシー条件を使用する
+      • 最小権限を付与する
+      • IAMユーザーへのアクセス許可を割り当てるためにグループを使用する
+
+    ■ C) 権限の委任
+
+      • Amazon EC2インスタンスで実行するアプリケーションに対し、ロールを使用する
+      • ロールを使用したアクセス許可の委任
+
+    ■ D) IDと権限のライフサイクル管理
+
+      • AWSアカウントのアクティビティの監視
+      • アクセスレベルを使用して、IAM権限を確認する
+      • 不要な認証情報を削除する
+      • 認証情報を定期的にローテーションする
+
+- KEY: aws.iam.A.id.category
+  CATEGORY: 機能 A) IDと認証情報の管理
+
+- KEY: aws.iam.A.id.1
+  EXPLAIN: 1) ルートユーザー
+  BODY: |
+    ■ AWSアカウントのルートユーザー
+
+      • そのアカウントの全AWSサービス、全AWSリソースに完全なアクセス権を持つユーザー
+      • AWSマネジメントコンソールへサインイン
+        • AWSアカウントを作成したときのメールアドレス/パスワード
+      • IAMで設定するアクセスポリシーではアクセス許可を制限できない
+      • AWS Organizationsのサービスコントロールポリシー(SCP)によってサービスを制限可能
+
+        注意：極力ルートユーザーを使用しないこと。
+              ただし、ルートユーザーでの認証が必要なタスクもある
+
+    ■ ルートユーザーの認証が必要なAWSタスクの例
+
+      • ルートユーザーのメールアドレスやパスワードの変更
+      • IAMユーザーによる課金情報へのアクセスのActivate/Deactivate
+      • 支払オプションの変更
+      • AWSサポートプランの変更
+      • IAMユーザーへのアクセス許可のリストア
+      • 無効な制約を設定したAmazon S3 バケットポリシーの修正
+      • 脆弱性診断フォームの提出
+      • 逆引きDNS申請
+      • CloudFrontキーペアの作成
+      • AWSアカウントの解約
+
+    ■ アクセスキー
+
+      • AWSアカウントのルートユーザーまたはIAMユーザーの長期的な認証情報
+      • 手動で取り消すまで有効
+      • アクセスキーを用いてAWS CLIやAWS SDK等からリクエストに署名
+      • アクセスキーID/シークレットアクセスキーで構成される
+      • 安全なローテーションのために、最大2つのアクセスキーを持つことができる
+
+    ■ AWSアカウントのルートユーザー「アクセスキー」をロックする
+
+      • ルートユーザーのアクセスキーは削除してください！
+      • すでに持っている場合は削除してください！
+      • ルートユーザーでサインインし、セキュリティ認証情報のページからアクセスキーを削除
+      • ルートユーザーの認証情報を他者に開示したり、プログラムに埋め込んだりしないこと！
+
+- KEY: aws.iam.A.id.2
+  EXPLAIN: 2) 個々のIAMユーザー
+  BODY: |
+    ■ IAMユーザー
+
+      • AWSで作成するエンティティ(ユーザーまたはアプリケーション)
+      • 名前と認証情報で構成される
+      • IAMユーザーを識別する方法
+      • ユーザーの「フレンドリ名」
+        • ユーザー作成時に指定
+        • "Alice" と "alice" は同一のユーザーと見なして作成エラー
+      • ユーザーのARN (Amazon Resource Name)
+        • リソースポリシーのPrincipal要素で指定
+        • 例：arn:aws:iam::0123456789012:user/Alice
+      • ユーザーの一意の識別子
+        • フレンドリ名を再利用したいとき等に権限のエスカレーションを避けることができる
+        • 例：AIDAJQABLZS4A3QDU576Q
+      • 認証情報
+      • コンソールパスワード
+      • アクセスキー
+
+    ■ 個別のIAMユーザーを作成
+
+      • 必要な場合を除き、AWSアカウントのルートユーザー認証情報を使用してAWSにアクセスしないこと！
+      • 個別のIAMユーザーを作成するメリット
+        • 認証情報を個別に変更(ローテーション)できる
+        • アクセス許可をいつでも変更、無効化できる
+        • Amazon CloudTrailログからアクションを追跡できる
+
+- KEY: aws.iam.A.id.3
+  EXPLAIN: 3) パスワードポリシー
+  BODY: |
+    • 最小文字数
+    • 少なくとも1つの英大文字
+    • 少なくとも1つの英小文字
+    • 少なくとも1つの数字
+    • 少なくとも1つの特殊文字
+    • ユーザー自身によるパスワード変更の許可
+    • パスワードの有効期限
+    • パスワード再利用禁止の世代数
+    • 管理者による期限切れパスワードのリセット
+
+    注意: ルートユーザーのパスワードポリシーには適用されない
+
+- KEY: aws.iam.A.id.4
+  EXPLAIN: 4) アクセスキー注意点
+  BODY: |
+    • 複数ユーザが同一AWSリソースへのアクセス権を共有したい
+      • アクセスキーを共有しないこと！
+    • AWSへのアクセスを必要とするアプリケーション
+      • IAM ロールを使用して一時的セキュリティ認証情報を取得する(Part2で解説)
+    • アクセスキーを以下のような場所に置かないこと
+      • GitHubリポジトリ
+      • AMIの中への埋め込み
+      • 設計書等のドキュメント内に記載
+      • プレーンテキストでの保管
+      • ハードコーディング(AWS認証情報ファイル/環境変数)
+
+- KEY: aws.iam.A.id.5
+  EXPLAIN: 5) 特権ユーザーへのMFA
+  BODY: |
+    ■ 特権ユーザーに対してMFAを有効化
+    • ルートユーザーや強い権限を持つIAMユーザーにはMFAを有効化し、通常利用しない
+
+    ■ MFA (Multi-Factor Authentication:多要素認証)
+    • パスワードやアクセスキーによる認証に追加してセキュリティ強化
+    • AWSがサポートするMFAメカニズム:
+      • 仮想MFAデバイス
+      • U2Fセキュリティキー
+      • ハードウェアMFAデバイス
+    • ルートユーザー、IAMユーザーの各IDに個別のMFA設定可能
+    • MFA条件を指定したポリシーを関連付けできる対象:
+      • IAMユーザーまたはIAMグループ
+      • S3バケット、SQSキュー、SNSトピック等のリソース
+      • IAMロールの信頼ポリシー
+
+    ■ AWSがサポートするMFAメカニズム
+    • 無料スマホアプリ(複数トークンサポート)
+      • Google Authenticator
+      • Authy 2-Factor Authentication
+    • USBスティック型
+      • Yubikeyセキュリティキー 有料(4,500円程度)
+
+- KEY: aws.iam.B.access.category
+  CATEGORY: 機能 B) アクセス権限の管理
+
+- KEY: aws.iam.B.access.01.policy
+  EXPLAIN: ポリシー
+  BODY: |
+    ■ ポリシー
+      • IAMアイデンティティやAWSリソースに関連づけてアクセス許可定義できるオブジェクト
+      • 通常、JSONポリシードキュメントでアクセス条件を記述
+      • ポリシードキュメントは1つ以上のStatementブロックで構成
+
+    ■ IAMポリシーの作成を支援するツール群
+      • ビジュアルエディター機能
+        • 最初から新しいポリシー構築可能
+
+      • AWS Policy Generator：http://awspolicygen.s3.amazonaws.com/policygen.html
+        • AWSのサービスについて、必要情報を入力するとポリシー文書を自動作成してくれるツール
+
+      • ポリシー言語の文法チェック機能
+        • ポリシー保管時にポリシー言語の文法チェック、自動フォーマットを実施
+        • 「Validate Policy」により明示的な確認が可能
+
+      • IAM Policy Validator
+        • 自動的に既存のIAMポリシーを調べ、IAMポリシーの文法に準拠しているか確認
+        • ポリシーに対する推奨の変更を提示
+        • Policy Validator を使用できるのは、準拠していないポリシーがある場合のみ
+
+      • IAM Policy Simulator：https://policysim.aws.amazon.com/home/index.jsp
+        • プロダクションへの実装前にポリシーをテスト可能
+        • パーミッションのトラブルシューティング
+        • Condition、ポリシー変数、リソースベースのポリシーを入れたテスト
+
+- KEY: aws.iam.B.access.01.policydocument
+  EXPLAIN: ポリシードキュメント
+  BODY: |
+    ■ Version
+      • ポリシー言語のバージョン
+      • Version要素を含めないとポリシー変数(${aws:username}等)は文字列として扱われる
+
+    ■ Statement
+      • アクセス許可に関する複数要素(Effect/Action/Resource等) を含むステートメントブロック
+      • 複数のステートメントブロックを並べることができる
+
+    ■ Effect
+      • "Allow" または "Deny"
+      • ステートメントの結果を許可または明示的な拒否にするか指定
+      • アクセス可否の決定ロジック
+        • 暗黙的なDeny (デフォルト) < 明示的なAllow < 明示的なDeny
+        • すべてのアクセスはデフォルトで拒否(暗黙的なDeny)
+        • アクセス権限に "Allow" の条件があった場合、アクセス許可
+        • ただしアクセス権限に1つでも"Deny"の条件があった場合、アクセス拒否(明示的なDeny)
+
+          - "Effect" : "Allow"
+            "Action" : "s3:ListBucket"
+            "Resource" : "*"
+
+          - "Effect" : "Deny"
+            "Action" : "s3:ListBucket"
+            "Resource" : "*"
+
+    ■ Principal
+      • AWSリソースへのアクセスが許可/拒否されるIAMエンティティを指定
+      • リソースベースポリシー(バケットポリシーや信頼ポリシー等)に記述
+      • IAMエンティティをARN形式で記述
+          AWSアカウント
+          IAMユーザー
+          IAMロール
+          フェデレーティッドユーザー
+          引き受けたロールユーザー(assumed-role user)
+
+          "Principal" : { "AWS" : "arn:aws:iam::123456789012:/root" }
+          "Principal" : { "AWS" : "arn:aws:iam::123456789012:/user/Alice" }
+          "Principal" : { "AWS" : "arn:aws:iam::112233445566:/role/s3ReadOnlyRole" }
+          "Principal" : { "AWS" : "arn:aws:sts::222255558888:assumed-role/role-name/role-session-name" }
+
+        注：IAMグループの指定は不可
+            大文字小文字は区別
+            ユーザーを指定する際に"すべてのユーザー" の意味でワイルドカード(*) を使用不可
+
+      • IAMロールの信頼ポリシーのPrinicpal要素に指定したIAMユーザーとIAMロールを削除すると信頼関係は壊れる。
+      • 同じ名前でIAMエンティティを作成してもプリンシパルIDが異なるため、同じ名前で再作成した場合はロールの再編集が必要
+
+    ■ Action
+      • Effect要素で 許可/拒否 される特定のアクションを指定
+      • Statement要素には Action/NotAction 要素が必須
+      • AWSサービスで行えるタスクを記述する独自アクションセットを記述
+      • 有効アクション名はドキュメントを参照、またはポリシーエディターから選択
+      • 形式: "Action":"<各サービスの名前空間>:<アクション名>"
+
+      - "Action" : "ec2:StartInstances"
+      - "Action" : [ "sqs:SendMessage" , "sqs:ReceiveMessage" ]
+      - "Action" : "iam:*AccessKey"
+      - "Action" : "IAM:listaccesskeys"
+
+      注：複数アクションを指定可能
+          ワイルドカード(*)使用可能
+          値は大文字小文字の区別なし
+
+    ■ Resource
+      • ステートメントで取り扱う一連のオブジェクトを指定する
+      • Statement要素にはResource/NotResource要素が必須
+      • Action要素の対象となる特定のリソースをARN形式で記述
+      • 有効なリソースはドキュメントを参照、またはポリシーエディターから選択
+
+      - "Resource" : "arn:aws:sqs:us-east-2:123456789012:queue1"
+      - "Resource" : "arn:aws:iam::123456789012:user/accounting/*"
+      - "Resource" : [
+          "arn:aws:dynamodb:us-east-2:123456789012:table/books_table",
+          "arn:aws:dynamodb:us-east-2:123456789012:table/magazines_table"
+        ]
+      - "Resource" : "arn:aws:dynamodb:us-east-2:123456789012:table/${aws:username}"
+
+      注：複数のリソースを指定可能
+          ワイルドカード(*)を使用可能
+          JSONポリシー変数を指定可能
+
+      Action(ec2:DescribeInstances等)によっては個々のリソースは指定できず "*(ワイルドカード)" 指定
+
+    ■ Condition
+      • ポリシーが有効になるタイミングの条件を指定する
+      • Condition要素の記述はオプション
+      • 条件キー:条件値 に対する評価方法として条件演算子を作用させる演算式を記述
+        • 形式： "Condition" : { <条件演算子> : { <条件キー> : <条件値> } }
+        • 条件演算子
+          • 条件比較のタイプ(文字列条件、数値条件、IPアドレス条件等)を指定する
+          • 条件キーごとに使用できる条件演算子の種類が決まっている
+        • 条件キー
+          • AWSグローバル条件コンテキストキー("aws:"で始まる)
+            • 全てのサービスで使用可能なキー、一部のサービスでのみ使用可能なキーがある
+          • AWSサービス固有のキー(そのサービス固有の名前("s3:"等) で始まる)
+          • IAMの条件コンテキストキー
+
+        - "Condition" : { "StringEquals" : { "aws:username" : "johndoe" } }
+        - "Condition" : { "StringEqualsIgnoreCase" : { "aws:username" : "johndoe" } }
+        - "Condition" : { "IpAddress" : { "aws:SourceIP" : [ "192.0.2.0/24" , "203.0.113.0/24" ] } }
+        - "Condition" : { "StringEquals" : { "ec2:ResourceTag/tagkey" : "tagvalue" } }
+        - "Condition" : { "StringEquals" : { "s3:prefix": "projects" } }
+        - "Condition" : { "StringEquals" : { "iam:PassedToService" : "cloudwatch.amazonaws.com" } }
+        - "Condition" : { "ForAllValues:StringEquals": { "dynamodb:Attributes": [ "ID", "Message", "Tags" ] }
+
+      • 要素のAND条件とOR条件
+        "Condition" : { <= 複数要素は AND 条件
+          "DateGreaterThan" : { "aws:CurrentTime" : "2019-01-29T12:00:00Z" },
+          "DateLessThan": { "aws:CurrentTime" : "2019-01-29T15:00:00Z" },
+          "IpAddress" : { "aws:SourceIp" : ["192.168.176.0/24","192.168.143.0/24"] } <=内部引数は OR条件
+        }
+
+      • 注意
+        • 条件キーは大文字小文字は区別しない
+        • 条件値の大文字小文字の区別は使用する条件演算子によって異なる
+        • より安全なポリシー適用のために有効条件を絞り込む
+          • リクエストを許容するソースIPアドレスの範囲
+          • 日付または時間の範囲
+          • MFAデバイスでの認証の要求
+          • SSL使用の要求
+
+      • 参考情報
+        • 条件演算子
+        https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/reference_policies_elements_condition_operators.html
+        • グローバル条件キー
+        https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/reference_policies_condition-keys.html
+        • IAMの条件コンテキストキー
+        https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/reference_policies_iam-condition-keys.html
+
+- KEY: aws.iam.B.access.02
+  EXPLAIN: |
+    認可: ポリシータイプ
+  BODY: |
+    ■ 1) ID(アイデンティティ)ベースのポリシー
+      • 管理ポリシー
+        • AWS管理ポリシー
+        • カスタマー管理ポリシー
+      • インラインポリシー(非推奨)
+    ■ 2) リソースベースのポリシー
+      • IAMロールの信頼ポリシー、S3のバケットポリシー、SNSトピックのアクセス許可、SQSキューのアクセス許可
+
+    ※ その他、詳細解説なし
+    ■ 3) パーミッションバウンダリー
+      • IAMアクセス許可の境界、AWS Organizationsサービスコントロールポリシー(SCP)
+    ■ 4) アクセスコントロールポリシー(ACL)
+      • S3のバケットのACL、VPCのサブネットのACL
+    ■ 5) セッションポリシー
+
+- KEY: aws.iam.B.access.1
+  EXPLAIN: 1) ID(アイデンティティ)ベースのポリシー
+  BODY: |
+    ■ 管理ポリシー
+      • 複数のIAMユーザー、IAMグループ、IAMロールに関連付け可能(最大10個)
+      • 再利用可能
+      • 一元化された変更管理
+      • バージョニングとロールバック
+      • 種類
+        • AWS管理ポリシー
+          • AWSにより事前定義された管理ポリシー
+          • AWSが作成管理、編集不可
+          • すべてのAWSアカウントで利用可能
+            • AWSによる管理                例：AmazonEC2FullAccess、AmazonS3ReadOnlyAccess
+            • ジョブ機能                   例：AdministratorAccess、SecurityAudit、DataScientist
+          • AWSにより更新される
+          • AWS管理ポリシーで多くのユースケースですぐにポリシー適用が開始可能
+          • 適切なアクセス権限を付与するにはIAMポリシーの詳細な知識が必要
+
+        • カスタム管理ポリシー
+          • AWSアカウントで管理可能なカスタムポリシー
+          • AWS管理ポリシーでは要件を満たせない場合等に適用
+
+    ■ インラインポリシー(非推奨)
+      • 1つのIAMエンティティ(IAMユーザー、IAMグループ、IAMロール)に直接埋め込まれる
+      • IAMエンティティに紐づいた固有オブジェクト
+      • IAMエンティティを削除でインラインポリシーも削除
+      • IAMエンティティとポリシーとの厳密な1対1の関係を維持する必要がある場合等にインラインポリシーを適用
+
+    ■ 注意点
+      • インラインポリシー(非推奨)ではなくカスタマー管理ポリシーを使用する
+      • インラインポリシー(非推奨)の利用はできるだけ避けること
+      • インラインポリシーはカスタマー管理ポリシーに変換可能
+      • カスタマー管理ポリシーはカスタマイズ可能で、再利用性も高く管理面で有利
+      • カスタマー管理ポリシーの利点は全ての管理ポリシーを1ヶ所で確認できること
+      • アクセス許可の境界
+        • 管理ポリシーとインラインポリシーの交差権限のみが有効になる
+
+- KEY: aws.iam.B.access.2-1
+  EXPLAIN: 2) リソースベースのポリシー
+  BODY: |
+    ■ 同一アカウントの場合
+    • RSP(リソースベースポリシー)とアイデンティティベースポリシーの交差権限のみ有効(OR条件)
+    • Principalに指定したエンティティならアイデンティティベースのポリシーがなくてもアクセス可能
+
+    ■ クロスアカウントの場合
+    • サービスコントロールポリシー(SCP)とアイデンティティベースポリシーの両方で許可されているものが有効(AND条件)
+
+      例: 1.AWSアカウントAのバケットポリシーに以下の権限を設定
+      {
+        "Statement" : {
+          "Effect":"Allow",
+          "Principal" :{"AWS":"arn:aws:iam::112233445566:root"},
+              //Principalは、実行をしているユーザーに対する条件設定
+          "Action":"s3:*",
+          "Resource":"arn:aws:s3:::mybucket/*"
+        }
+      }
+      2.AWSアカウントBのエンティティにアクセス権限を付与
+      {
+        "Statement" : {
+          "Effect":"Allow",
+          "Action":"s3:GetObject",
+          "Resource":"arn:aws:s3:::mybucket/*"
+        }
+      }
+
+- KEY: aws.iam.B.access.2-2
+  EXPLAIN: ※ 最小権限を付与する
+  BODY: |
+    • IAMポリシーを作成する場合、タスクの実行に必要なアクセス許可のみ付与する
+    • 最小限のアクセス権限から開始し、必要に応じてアクセス権限を追加する
+    • あとでアクセス権限を強化するより安全なアプローチ
+
+- KEY: aws.iam.B.access.2-3
+  EXPLAIN: ※ IAMグループ
+  BODY: |
+    • IAMユーザーの集合
+    • IAMグループやIAMロールをIAMグループに所属させることは不可
+    • IAMユーザーは複数のIAMグループに所属することができる(最大10)
+    • IAMグループに関連付けられたIAMポリシーは所属するIAMユーザーに継承される
+    • ポリシーの関連付けを簡単にするためにはIAMグループを利用した方が便利
+    • 組織またはジョブ機能に関連したIAMグループを作成し、IAMグループに対してアクセスIAMポリシーを関連付ける
+    • 会社内で組織異動がある場合は、そのIAMユーザーが所属するIAMグループを変更すればよい
+
+# - KEY: aws.iam.B.access.3
+#   EXPLAIN: 3) パーミッションバウンダリー
+#   BODY: |
+# - KEY: aws.iam.B.access.4
+#   EXPLAIN: 4) アクセスコントロールポリシー(ACL)
+#   BODY: |
+# - KEY: aws.iam.B.access.5
+#   EXPLAIN: 5) セッションポリシー
+#   BODY: |
+- KEY: aws.iam.C.delegation.category
+  CATEGORY: 機能 C) 権限の委任
+
+  # • Amazon EC2インスタンスで実行するアプリケーションに対し、ロールを使用する
+  # • ロールを使用したアクセス許可の委任
+
+- KEY: aws.iam.C.delegation.1
+  EXPLAIN: |
+    1) IAMロール
+  BODY: |
+    ■ IAMロール
+    • AWSサービスやアプリケーション等のエンティティに対してAWSリソースの操作
+
+    ■ 権限付与の仕組み
+    • ユーザーまたはアプリケーションが ロール を一時的に"引き受ける"ことで関連付けられたアクセス許可を得る
+    • IAMユーザーやグループには紐付かない
+    • 認証方法
+    • 一時的なセキュリティ認証情報を利用
+      • 有効期限付きのアクセスキーID/シークレットアクセスキー/セキュリティトークンで構成
+      • 短期的な有効期限(認証情報を取得する際に期限を設定)
+      • 安全: 認証情報が不要時にローテーションしたり、明示的に取り消す必要がない(ユーザー側に認証情報が保存されない)
+      • ユーザーのリクエストによってAWS Security Token Service (STS) が動的に作成
+
+    • 複数のユーザーまたはアプリケーションが ロール を引き受け可能
+      • 別のAWSアカウントのIAMユーザー, ロール等
+      • Amazon EC2、AWS Lambda等のAWSサービス
+      • SAML2.0または OpenID Connect (OIDC) と互換性があるIDプロバイダーによって認証された外部ユーザー
+
+- KEY: aws.iam.C.delegation.1-2
+  EXPLAIN: |
+    ※ AWS Security Token Service (STS)
+  BODY: |
+    • 一時的なセキュリティ認証情報を生成するサービス
+    • 期限付きのアクセスキー/シークレットアクセスキー/セッショントークン
+    • トークンのタイプにより有効期限は様々
+    • 発行した認証情報の期限変更は不可
+    • 必要に応じ、特定時より以前に発行したロールの認証情報のアクセス許可を即取消可能
+    • STSエンドポイントは全リージョンで使用可能
+    • デフォルトではグローバルサービスとして利用
+    • 各リージョンのSTSエンドポイントでアクティベート可能
+    • レイテンシーの低減
+    • 冗長化の構築
+    • PrivateLinkに対応(オレゴンリージョンのみ*)
+    • アクティベートしたリージョンでCloudTrailを有効化
+
+    ■ 一時的なセキュリティ認証情報を取得するためのAPI: TSC(Temporary Security Credentials)
+    [STSで利用できるAPI]                 [Action 概要]
+    AssumeRole                          既存IAMユーザーの認証情報でIAMロールのTSC取得
+    AssumeRoleWithWebIdentity           AmazonやFacebook、Googleによる承認情報でロールを引き受けTSC取得
+    AssumeRoleWithSAML                  IdPによる認証とSAMLのアサーションをAWSにポストしてロールを引き受けTSC取得
+    GetSessionToken                     自身で利用するIAMユーザーのTSC取得
+    GetFederationToken                  認証を受けたFederatedユーザーのTSC取得
+
+    ■ EC2インスタンスで実行するアプリケーションに対しロール使用
+    • アプリケーションがAWSサービスにアクセスするためには認証情報が必要
+    • 認証情報をEC2(OS/アプリケーション)側に持たせる必要がない、認証情報の漏洩リスクを低減可能
+    • IAMロールによる認証情報はAWSが自動的にローテーション
+    • AWS SDKによって認証情報取得と有効期限切れ前の再取得を自動的に実施可能
+    • AWS CLIもIAMロールに対応済み
+
+    ■ ユースケース
+    • IAMユーザーの場合(Bad Practice)
+      • 認証情報をEC2内に持たせる
+      • 認証情報の保管・ローテーション等の検討が必要
+    • IAMロールの場合(Good Practice)
+      • IAMロールによる権限はEC2上に恒久的に保管されるものではなくテンポラリ
+      • ローテーション等は自動で行われる
+
+- KEY: aws.iam.C.delegation.2
+  EXPLAIN: |
+    2) ロールを使用したアクセス許可の委任: ユースケース
+  BODY: |
+    ■ 別のAWSアカウントユーザーが、認証情報を共有せず、自分のAWS アカウントリソースへのアクセス制御することが可能
+    ユースケース：
+      1. IAMロールによるクロスアカウントアクセス
+      2. クロスアカウントアクセスにより権限管理を効率化
+      3. SAML2.0ベースのIDフェデレーション
+      4. SAML2.0ベースのAWSマネジメントコンソールへのシングルサインオン(SSO)
+      5. Amazon Cognitoを用いたモバイルアプリのWeb IDフェデレーション
+
+- KEY: aws.iam.C.delegation.2-1
+  EXPLAIN: |
+    ユースケース 1. IAMロールによるクロスアカウントアクセス
+  BODY: |
+    • あるアカウントのユーザーに別のアカウントのIAMロールに紐づける機能
+    • 例: 開発アカウントで本番環境のS3データを更新するようなケース
+
+    [開発アカウント]                      [本番アカウント]
+    Dev                                  ProdS3Bucket
+    AcctID: 123456789012                 Acct ID: 111122223333
+                                         Role: s3-role
+
+       ---------- AssumeRole --------------> Devのアクセスキーで認証
+      s3-role 引受 <---- 一時的認証情報 ----- AWS STS
+       ---------- s3-roleでアクセス --------> 一時的な認証情報による S3 API コール
+
+    ■ s3-roleに付与されているポリシー
+    { "Statement": [{
+      "Effect": "Allow",
+      "Action": "s3:*",
+      "Resource": "*"
+    }]}
+
+    以下に変更？追加？
+    { "Statement": [{
+      "Effect": "Allow",
+      "Principal": {"AWS":"arn:aws:iam::123456789012:root"},
+      "Action": "sts:AssumeRole"
+    }]}
+
+    ■ 開発アカウントに設定
+    { "Statement": [{
+      "Effect": "Allow",
+      "Action": "sts:AssumeRole",
+      "Resource": "arn:aws:iam::111122223333:role/s3-role"
+    }]}
+
+- KEY: aws.iam.C.delegation.2-1-2
+  EXPLAIN: |
+    ※ MFA保護
+  BODY: |
+    ■ クロスアカウントアクセスのためのMFA保護
+    • AWSアカウント間でのアクセスのためのMFA保護を追加する機能
+    • AWSマネージメントコンソールで role 作成時、Require MFA のチェックボックス選択で設定可能
+    • MFA認証されたユーザーのリクエストのみが有効に
+      • MFAしたかどうか "Condition": {"Bool": {"aws:MultiFactorAuthPresent": "true"}}
+      • 一定時間内のMFA "Condition": {"NumericGreaterThanIfExists": {"aws:MultiFactorAuthAge": "3600"}}
+
+      {
+        "Version": "2012-10-17",
+        "Statement": {
+          "Effect": "Allow",
+          "Action": "ec2:*",
+          "Resource": "*",
+          "Condition": {
+            "NumericLessThan": {"aws:MultiFactorAuthAge": "3600"}
+          }
+        }
+      }
+
+- KEY: aws.iam.C.delegation.2-2
+  EXPLAIN: |
+    ユースケース 2. クロスアカウントアクセスにより権限管理を効率化
+  BODY: |
+    ■ Jumpアカウントによるクロスアカウントアクセス
+      • 様々な権限を付与済みのアカウントを用意してロールを切り替える
+
+    ■ Switch Role
+      • IAMユーザー からクロスアカウントアクセス用 IAMロール にコンソールから切替が可能
+        • 必ずしも別アカウントである必要はなく、同じアカウントでもOK
+      • 必要な時のみIAMユーザーの権限を"昇格"させる
+        • IAMユーザーには読み取り権限のみを付与
+        • IAMロールには更新権限を付与
+
+- KEY: aws.iam.C.delegation.2-3
+  EXPLAIN: |
+    ユースケース 3. SAML2.0ベースのIDフェデレーション
+  BODY: |
+    • SAML2.0を使用したIDフェデレーション
+    • 組織内全員に IAMユーザー を作成しなくても各ユーザーはAWSを利用可能
+    • 組織で生成した SAMLアサーション を認証レスポンスの一部として使用し、一時的セキュリティ認証情報を取得
+    • 各ユーザーは一時的セキュリティ認証情報でAWSリソースにアクセス
+
+- KEY: aws.iam.C.delegation.2-4
+  EXPLAIN: |
+    ユースケース 4. SAML2.0ベースのAWSマネジメントコンソールへのシングルサインオン(SSO)
+  BODY: |
+    • SAML 2.0互換IdPおよびIAMロールを使用した管理コンソールへのフェデレーションアクセス
+    • AssumeRoleWithSAML API を直接呼び出す代わりに、AWS SSO エンドポイントを使用
+      エンドポイントはユーザーの代わりにAPIを呼び出してURLを返す
+      ユーザーのブラウザーがAWS マネジメントコンソールへ自動的にリダイレクト
+
+    ■ AWSマネジメントコンソールフェデレーションのメリット
+      • アカウント管理統合でリスク低減
+      • 既存のユーザ情報をそのまま利用
+      • 既存の権限ベースでの管理が可能
+      • 既存と同様のポリシーの利用が可能
+      • アカウントロックポリシーや、パスワード管理ポリシー
+      • 入退社など一元的な管理が可能
+      • イントラネットからのみアクセス可能なログイン画面
+
+- KEY: aws.iam.C.delegation.2-5
+  EXPLAIN: |
+    ユースケース 5. Amazon Cognitoを用いたモバイルアプリのWeb IDフェデレーション
+  BODY: |
+    • モバイルアプリから一時的なAWSセキュリティ認証情報を動的リクエスト
+    • 認証を確認するサーバが不要
+      • 例えばスマートフォンアプリとS3だけでシステムが作成可能
+    • Google, Facebook, Amazon(Login with Amazon), twitter, Amazon Cognito 及び OIDC準拠の IdP に対応
+
+- KEY: aws.iam.C.delegation.3
+  EXPLAIN: |
+    2) ロールを使用したアクセス許可の委任: まとめ
+  BODY: |
+    • アカウント間でセキュリティ認証情報を共有しないでください。
+      • 別のアカウントユーザーによる他アカウントリソースへのアクセス遮断
+      • 代わりにIAMロールを使用
+    • 他アカウントのIAM ユーザーに許可されている権限を指定するロールを定義
+
+    ■ IAMロール利用の利点
+      • EC2上のアクセスキーの管理が容易
+      • 認証情報はSTS(Security Token Service)で生成
+      • 自動的に認証情報のローテーションが行われる
+      • EC2上のアプリケーションに最低権限を与えることに適している
+      • IAMユーザーの認証情報を外部に漏えいしてしまうリスクを低減させる
+
+- KEY: aws.iam.D.lifeCycle.category
+  CATEGORY: 機能 D) IDと権限のライフサイクル管理
+
+- KEY: aws.iam.D.lifeCycle.1
+  EXPLAIN: 1) WSアカウントのアクティビティの監視
+  BODY: |
+    ■ AWS CloudTrail
+      • AWSのリソースにどのような操作が加えられたか記録に残す機能
+      • 全リージョンでの有効化推奨
+      • 適切なユーザーが与えられた権限で環境を操作しているか、確認と記録
+
+      • 記録情報
+        • APIを呼び出した身元（Who）
+        • APIを呼び出した時間（When）
+        • API呼び出し元のSource IP（Where）
+        • 呼び出されたAPI（What）
+        • APIの対象となるAWSリソース（What）
+        • 管理コンソールへのログインの成功・失敗
+
+    ■ AWSアカウントのアクティビティの監視
+    • AWS のロギング機能を有効化
+    • ユーザーがアカウントの実行アクションや使用リソースを確認
+    • ログファイル
+      • アクションの日時
+      • アクションのソースIP
+      • 不適切なアクセス許可のために失敗したアクションなど
+
+      • 監視可能なAWSサービス例
+        • Amazon CloudFront    CloudFront が受信したユーザーリクエスト
+        • AWS CloudTrail       アカウントからのAPIコール、関連イベント
+        • Amazon CloudWatch    クラウドリソースと実行アプリケーションをモニタリング
+        • AWS Config           IAM ユーザー、グループ、ロール、ポリシーを含むAWSリソース設定
+        • Amazon S3            S3バケットへのアクセスリクエスト
+
+- KEY: aws.iam.D.lifeCycle.2
+  EXPLAIN: 2) アクセスレベルで IAM 権限を確認
+  BODY: |
+    ■ アクセスレベルとは？
+      1) リスト（List）
+      2) 読み込み（Read）
+      3) 書き込み（Write）
+      4) アクセス権限の管理（Permissions management）
+
+      ポリシー概要にサービスが含まれる場合、そのアクセスレベルを定義
+
+    ■ アクセスアドバイザー
+      • IAM エンティティ(ユーザー、グループ、ロール) がAWSサービスにアクセスした最終日時表示
+      • IAMの最小限の権限に関する設定に利用
+        • IAM ポリシー内で未使用/最近不使用のアクセス許可を識別
+        • 未使用サービスに関するアクセス許可を削除
+        • 類似の使用パターンを持つユーザーをグループに再編成
+        • アカウントのセキュリティ改善
+
+    ■ Service Last Accessed Dataの利用例
+      • ユーザー、グループ、ロールへの権限で非利用を発見
+      • IAMポリシーの利用状況と利用エンティティの識別
+
+    ■ アクセスレベルを使用し、IAM ポリシーを定期的に確認
+      • 「アクセス権限」
+        • 最小権限かを確認
+      • 「ポリシーの使用状況」
+      • 「アクセスアドバイザー」
+        • 必要なアクションに、必要な最小限の権限が付与されているか？
+
+- KEY: aws.iam.D.lifeCycle.3
+  EXPLAIN: 3) 不要な認証情報削除
+  BODY: |
+    ■ IAM認証情報レポート(Credential Report)
+      • ユーザーの作成日時
+      • 最後にパスワードが使われた日時
+      • 最後にパスワードが変更された日時
+      • MFAを利用しているか
+      • Access KeyがActiveか
+      • Access Keyのローテートした日時
+      • Access Keyを最後に使用した日時
+      • Access Keyを最後に利用したAWSサービス
+      • 証明書はActiveか
+      • 証明書のローテートした日時
+
+    ■ 不要な認証情報削除
+      • パスワードやアクセスキーのローテーションなど認証情報ライフサイクルを監査
+      • コンソールを使用しないIAM ユーザにはパスワードを設定しない
+      • 最近使用していないパスワード、アクセスキー削除
+      • 社員の入社、退職、部署の異動や役割の変更など、人員のライフサイクルと連動
+      • 認証情報レポートはCSVファイルとしてダウンロード可能
+        • AWSマネジメントコンソールやAWS CLI, AWS APIで取得可能
+        • 生成AWS CLI: aws iam generate-credential-report
+        • 取得AWS CLI: aws iam get-credential-report
+
+- KEY: aws.iam.D.lifeCycle.4
+  EXPLAIN: 4) 認証情報を定期的にローテーション
+  BODY: |
+    ■ IAMユーザーのパスワードやAccess
+      • Key/Secret Access Keyは定期的にローテーションすることを推奨
+
+    ■ 認証情報の利用状況はIAMのCredential Report 機能で確認可能
+      • ユーザーの作成日時
+      • 最後にパスワードが使われた日時
+      • 最後にパスワードが変更された日時
+      • MFAを利用しているか
+      • Access KeyがActiveか
+      • Access Keyのローテートした日時
+      • Access Keyを最後に使用した日時
+      • Access Keyを最後に利用したAWSサービス
+      • 証明書はActiveか
+      • 証明書のローテートした日時
+
+    ■ IAMユーザーのパスワードローテーション
+      • IAMのパスワードポリシーでユーザーがパスワードを変更できるように設定
+      • パスワードに有効期限を設定
+        • 利用者が自分で定期的にパスワードをローテーションできるように(非推奨)
+
+    ■ アクセスキーのローテーション
+      • IAMユーザーの「認証情報」の「アクセスキー」から「アクセスキーの管理」を選択
+      • 「アクセスキーの作成」で新しい認証情報の作成（２つまで）
+      • 新しい認証情報でテストを行い、古いAccess KeyはInactiveにする
+      • 万が一問題が起きた時は再びActivateすることが可能
+
+- KEY: aws.iam.E.tips.category
+  CATEGORY: IAM Tips
+
+- KEY: aws.iam.E.tips.1
+  EXPLAIN: |
+    Tips1: IAM基本の設定
+  BODY: |
+    組織と社員の権限に合わせてIAMを設定
+
+    ■ 初期設定
+      • AllUsers というグループを作って、全ユーザを含める
+      • Admin グループを作り、管理者ユーザのみを含める
+      • Developers, Managers, SysAdmins などのグループを作り、適切なユーザを含める
+
+    ■ Amazon EC2
+      • AllUsers に送信元のIPを許可したものだけにする
+      • SysAdmins に全ての Amazon EC2アクションを使用できるように権限設定
+      • Developers には DescribeInstances, RunInstances, StopInstances, TerminateInstances 権限のみ
+      • Managers には Amazon EC2 の「Describe」のみ許可
+
+    ■ Amazon S3
+      • Example_bucket を作成
+      • キープレフィックスで home/ 以下にそのユーザのみの権限を付与
+      • Share 配下には、各々、開発者、管理者のみに許可
+
+- KEY: aws.iam.E.tips.2
+  EXPLAIN: |
+    Tips2: IAMコンソールでIAMエンティティ検索
+  BODY: |
+    IAM リソース管理、必要項目検索、アクセスキー検索、深ネストの IAMリソース を効率的に検索
+
+    ■ 名前で検索
+      • アカウント関連のアクセスキー
+      • IAMエンティティ(ユーザー、グループ、ロール、ID プロバイダー)
+      • ポリシーなど
+
+- KEY: aws.iam.E.tips.3
+  EXPLAIN: |
+    Tips3: パスワードを紛失
+  BODY: |
+    パスワードやアクセスキーを紛失または忘れた場合、IAM からは取得不可、リセットで対応
+
+    ■ AWS アカウントのルートユーザーパスワード
+      • ルートユーザーパスワードを忘れた場合
+        • AWS マネジメントコンソールからパスワードをリセット
+
+    ■ AWS アカウントのアクセスキー(非推奨)
+      • 既存のアクセスキーを無効にせず、新しいアクセスキー作成可能
+      • 既存キーが不使用なら削除可能
+
+    ■ IAM ユーザーパスワード
+      • リセットを管理者に依頼
+
+    ■ IAM ユーザーアクセスキー
+      • アクセスキー作成許可あり
+        • 新しいアクセスキーを作成
+      • アクセスキー作成許可なし
+        • 新しいアクセスキーの作成を管理者に依頼
+        • まだ古いキーも使用するなら、キーを削除しないように依頼
+
+- KEY: aws.iam.E.tips.4
+  EXPLAIN: |
+    Tips4: MFAの管理
+  BODY: |
+    • IAM ユーザーの仮想およびハードウェアMFA デバイスがシステムと同期されていない
+      • デバイスを再同期
+      • 無効にするなら管理者に連絡
+    • AWS アカウントのルートユーザーのMFAを紛失、損傷、動作しない
+      • 認証の代替方法を使用してサインイン
+      • 登録Eメールと電話でアイデンティティを確認、サインイン
+      • https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/id_credentials_mfa_lost-or-broken.html
+    • U2F セキュリティキー
+      • 同期しなくなることはない
+      • 紛失または破損
+        • U2F セキュリティキーを非アクティブに

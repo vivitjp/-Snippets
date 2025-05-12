@@ -2,7 +2,7 @@ import { KeyDef } from "../../../types/type"
 
 export const keysNPM: KeyDef = {
   // ■ Main(赤)
-  Crimson: ["node", "npm", "npx", "require"],
+  Crimson: ["node", "npm", "npx", "require", "yarn", "pnpm"],
   // ■ 緑青
   RoyalBlue: [
     "add",
@@ -39,6 +39,8 @@ export const keysNPM: KeyDef = {
   // ■ 緑
   ForestGreen: [
     "dev",
+    "prod",
+    "build",
     "force",
     "json",
     "depth",
@@ -66,9 +68,9 @@ export const keysNPM: KeyDef = {
   // ■ ゴールド
   Goldenrod: ["node_modules", "module"],
   // ■ オレンジ
-  DarkOrange: ["yarn"],
+  // DarkOrange: [""],
   // ■ 青緑
-  CadetBlue: ["major", "minor", "patch"],
+  CadetBlue: ["major", "minor", "patch", "latest"],
   // ■ 紫
   DarkOrchid: ["package", "package名"],
 }

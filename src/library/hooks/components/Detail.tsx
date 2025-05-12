@@ -12,9 +12,9 @@ export const Details = styled.details<DetailOptions>`
   color: #666;
   padding: 10px;
   width: 100%;
-  ${(props) => css`
+  /* ${(props) => css`
     box-shadow: ${props.noShadow ? "none" : "2px 2px 4px #eee"};
-  `}
+  `} */
 `
 
 type Options = {
