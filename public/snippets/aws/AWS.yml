@@ -131,7 +131,7 @@
       }
     </style>
 
-    <div class="icon_column">
+    <div class="icon_column" style="padding-bottom: 20px;">
       <div class="icon_column">
         <div class="group_title">Security, Identity & Compliance</div>
         <div class="icon_row">
@@ -451,8 +451,10 @@
   BODY: |
     ARN     Amazon Resource Name                      [IAM]
     AZ      Available Zone                            [VPC]
-    ACL     Network Access Control List               [IAM,VPC]
+    ACL     Network Access Control List               [IAM,VPC,S3]
     CIDR    Classless Inter-Domain Routing            [VPC]
+    CMK     Customer Master Key                       [KMS] 
+    CSE     Client-Side Encryption                    [S3]
     DLQ     Dead Letter Queue                         [SQS,Lambda]
     DNS     Domain Name System                        [VPC]
     DXGW    Direct Connect Gateway                    [VPC]
@@ -471,6 +473,7 @@
     SAM     Serverless Application Model              [Lambda]
     SAML    Security Assertion Markup Language        [IAM]
     SCP     Service Control Policy                    [IAM]
+    SSE     Server-Side Encryption                    [S3]
     SSO     Single Sign On                            [IAM]
     STS     Security Token Service                    [IAM]
     TSC     Temporary Security Credentials            [IAM]

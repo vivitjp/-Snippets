@@ -187,8 +187,13 @@ export const THead = styled.thead`
   border: 1px solid #ccc;
 `
 
-export const TH = styled.th`
-  border: 1px solid #ccc;
+type TH = Pick<CSSProperties, AttrSize>
+export const TH = styled.th<TH>`
+  ${(props) => css`
+    border: 1px solid #ccc;
+    overflow-wrap : break-word;
+    width: ${props.width ?? "auto"};
+  `}
 `
 
 export const TBody = styled.tbody`

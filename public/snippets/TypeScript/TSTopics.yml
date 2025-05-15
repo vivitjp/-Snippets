@@ -2,6 +2,29 @@
 #-------------------------------
 # TypeScript
 #-------------------------------
+- KEY: ts.typescriptlang
+  EXPLAIN: バイブル typescriptlang
+  BODY: |
+    ■ URL
+    https://www.typescriptlang.org
+
+#-------------------------------
+# ENUM
+#-------------------------------
+- KEY: ts.check.ignore
+  EXPLAIN: |
+    型チェック無視 @ts-ignore
+  BODY: |
+    // @ts-ignore
+    const foo = 1
+
+    参考
+    // prettier-ignore
+    const foo = {a: 1, b: { c: 2 }, d: 3, e: 4, f: 5, g: 6}  // 1行にまとめる
+
+    // eslint-disable-next-line
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const foo = 1
 
 #-------------------------------
 # ENUM
@@ -94,7 +117,6 @@
       (foo: number): number
     }
 
-    // Arrow 関数NG
     function stringOrNumber(foo: number): number
     function stringOrNumber(foo: string): string
     function stringOrNumber(foo: any): any {
@@ -104,6 +126,8 @@
         return `Hello ${foo}`
       }
     }
+
+    // 注意 Arrow 関数はオーバーロードできない
 
 #-------------------------------
 # 構造的部分型とその例外: Freshness

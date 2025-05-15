@@ -3,10 +3,28 @@
 # React Hook Form
 #-------------------------------
 - KEY: pk.rhf.urls
-  EXPLAIN: 参考URLS
+  EXPLAIN: Version & 参考
   BODY: |
-    ■ React Hook Formを1年以上運用してきたちょっと良く使うためのTips
-    https://zenn.dev/yuitosato/articles/292f13816993ef
+    ■ GitHub
+      https://github.com/react-hook-form/react-hook-form/releases
+
+    ■ Version
+      v7.48.2
+      "engines": {
+        "node": ">=12.22.0"             Node16
+      },  
+
+      v7.48.2
+      "engines": {
+        "node": ">=18",                 Node18
+        "pnpm": "8"
+      } 
+
+    ■ URL
+      https://react-hook-form.com/
+
+      React Hook Formを1年以上運用してきたちょっと良く使うためのTips
+      https://zenn.dev/yuitosato/articles/292f13816993ef
 
 - KEY: chakra.components.api.title
   CATEGORY: API

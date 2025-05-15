@@ -77,6 +77,21 @@
     overflow: hidden;
     white-space: nowrap;
 
+    ■ React 表示が端折られたか判定に以下使用
+      <div ref={ref} className="text-ellipsis">
+
+      const [isOmitted, setIsOmitted] = useState(false);
+      const ref = useRef(null);
+      useEffect(() => {
+        if (ref.current) {
+          // ピクセル単位まで正確に判定可能
+          // console.log(ref.current.offsetWidth, ref.current.scrollWidth)
+          setIsOmitted(
+            ref.current.offsetWidth < ref.current.scrollWidth
+          );
+        }
+      }, [ref])
+
 - KEY: css.text.clampMulti
   EXPLAIN: 長テキストの省略(複数行)
   BODY: |

@@ -120,7 +120,6 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
                   {/* 🔴タイトル(title) */}
                   <SummaryWrapper>
                     <DivTitle>■ {title}</DivTitle>
-                    {/* <DivPrefix>{snippetsObject.prefix}</DivPrefix> */}
                   </SummaryWrapper>
 
                   {/* 🔴[OPTIONS.COLS] highlightedBody(options) */}
@@ -153,6 +152,7 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
                       marginTop="10px"
                       padding="10px"
                       gap="10px"
+                      overflow="hidden"
                       boxShadow="0px 0px 5px rgba(0, 0, 0, 0.1)"
                       dangerouslySetInnerHTML={{
                         __html: snippetsObject.sample,
@@ -170,7 +170,16 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
                               {snippetsObject?.table.body?.[0]
                                 ?.split("\t")
                                 .map((th, index) => (
-                                  <TH key={index}>{th}</TH>
+                                  <TH
+                                    key={index}
+                                    width={
+                                      snippetsObject?.table?.options?.width?.[
+                                        index
+                                      ] || "auto"
+                                    }
+                                  >
+                                    {th}
+                                  </TH>
                                 ))}
                             </TR>
                           </THead>
@@ -187,7 +196,6 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
                                     // prettier-ignore
                                     <TD
                                       key={`${i}-${j}`}
-                                      width={snippetsObject?.table?.options?.width?.[j] || "auto"}
                                       align={snippetsObject?.table?.options?.align?.[j] || "center"}
                                     >
                                       {td.trim().split("。").map((n, k) => {

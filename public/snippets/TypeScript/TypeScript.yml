@@ -97,7 +97,7 @@
     type A = { readonly a:number }           // 読取専用
 
 - KEY: ts.interface
-  EXPLAIN: 型宣言とエイリアス
+  EXPLAIN: interface vs type
   BODY: |
     interface A { a:number, x?:string }
     interface B { b:number }                 // {b}
@@ -107,19 +107,23 @@
 
     type A = { a: number, x?:string }
     type B = A & { b: number }               // intersect
-    const b:B = { a:1, b:2 }                 // 型適用
-    const b = { a:1, b:2 } as B              // 型適用
-    const b = { a:1 } as unknown as B        // 強制
+    const b:B = { a: 1, b: 2 }               // 型適用
 
 - KEY: ts.assertion
-  EXPLAIN: 型指定と推論
+  EXPLAIN: 型指定(型アサーション)と satisfies
   BODY: |
     type A = { a: number; b: string | number }
+
     const a1: A = { a: 1, b: 2 }
     const a2: A = { a: 1, b: "2" }
-    const a3 = { a: 1, b: 2 } as A
-    [NG] const a4 = { a: "1", b:2 } as A     //型Error
-    [NG] const a5 = <A>{ a: 1, b:2 }         //型Error
+    const a3 = { a: 1, b: 2 } as A           //型アサーション
+    [NG] const a4 = { a: "1", b: 2 } as A    //エラー: 間違った型アサーション
+    [NG] const a5 = <A>{ a: 1, b: 2 }        //エラー: 間違った型アサーションの使い方(<A>)
+
+    type B = { a: number; b: number }
+
+    const b = { a: 1, b: "2" } as B          // エラー: 間違った型アサーション
+    const b = { a: 1 } as unknown as B       // 強制(強制型アサーション) 🔴エラーにならない
 
     ■ satisfies(型指定:v4.9)                  // Widening(string化)を防ぐなど
     const a6 = {

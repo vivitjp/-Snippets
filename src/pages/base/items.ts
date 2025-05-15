@@ -145,7 +145,7 @@ export const menuItems: menuByCategories[] = [
       },
       {
         name: "S3",
-        fileName: "",
+        fileName: "aws/S3",
         codeKeyTypes: [codeKeys.AWSCloud],
         case_sensitive: false,
       },
