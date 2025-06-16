@@ -28,6 +28,7 @@ import { keysPython } from "./keys/Python"
 import { keysRTL } from "./keys/RTL"
 import { keysReact } from "./keys/React"
 import { keysRegExp } from "./keys/RegExp"
+import { keysSVG } from "./keys/SVG"
 import { keysSwagger } from "./keys/Swagger"
 import { keysTS } from "./keys/TS"
 import { keysTSConfig } from "./keys/TSConfig"
@@ -74,6 +75,7 @@ export const codeKeys = {
   TSConfig: "TSConfig",
   Vue: "Vue",
   AWSCloud: "AWSCloud",
+  SVG: "SVG",
 } as const
 
 export const defaultSnippetsStyle = codeKeys.Unknown
@@ -117,6 +119,7 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   Chakra: keysChakra,
   Vue: keysVue,
   AWSCloud: keysAWSCloud,
+  SVG: keysSVG,
 }
 
 export const getMergedKeys = (codeKeyTypes: string[] | undefined) => {

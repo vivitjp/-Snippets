@@ -497,7 +497,7 @@
       • cron(0 18 ? * MON-FRI *)        月～金、毎日午後6時に実行
 
 #-------------------------------
-# Lambda関数の使い方
+# カスタムランタイム
 #-------------------------------
 - KEY: aws.lambda.カスタムランタイム.category
   CATEGORY: カスタム・ランタイム
@@ -634,3 +634,171 @@
     ■ 呼び出しレスポンス
     ■ 初期化エラー
     ■ 呼び出しエラー
+
+#-------------------------------
+#  SDK
+#-------------------------------
+- KEY: aws.Lambda.SDK.category
+  CATEGORY: SDK
+
+- KEY: aws.Lambda.SDK.createFunction
+  EXPLAIN: |
+    作成(createFunction) zip UPLoad
+  BODY: |
+    import {
+      Architecture,
+      CreateFunctionCommand,
+      LambdaClient,
+      PackageType,
+      Runtime,
+    } from "@aws-sdk/client-lambda";
+    import { readFile } from "node:fs/promises";
+    import { dirnameFromMetaUrl } from "@aws-doc-sdk-examples/lib/utils/util-fs.js";
+
+    // __dirnameはESモジュールでは使用できないため、dirnameFromMetaUrlを使用
+    const dirname = dirnameFromMetaUrl(import.meta.url);
+
+    const createFunction = async (funcName, roleArn) => {
+      const client = new LambdaClient({});
+      const code = await readFile(`${dirname}../functions/${funcName}.zip`);
+
+      const command = new CreateFunctionCommand({
+        Code:          { ZipFile: code },
+        FunctionName:  funcName,
+        Role:          roleArn,
+        Architectures: [Architecture.arm64],
+        Handler:       "index.handler",       // .zip 送信時に必須
+        PackageType:   PackageType.Zip,       // .zip 送信時に必須
+        Runtime:       Runtime.nodejs16x,     // .zip 送信時に必須
+      });
+
+      return client.send(command);
+    };
+    export { createFunction };
+
+- KEY: aws.Lambda.SDK.GetFunctionCommand
+  EXPLAIN: |
+    関数取得(GetFunctionCommand)
+  BODY: |
+    import { LambdaClient, GetFunctionCommand } from "@aws-sdk/client-lambda";
+
+    const getFunction = (funcName) => {
+      const client = new LambdaClient({});
+      const command = new GetFunctionCommand({ FunctionName: funcName });
+      return client.send(command);
+    };
+
+    export { getFunction };
+
+- KEY: aws.Lambda.SDK.ListFunctionsCommand
+  EXPLAIN: |
+    一覧取得(ListFunctionsCommand)
+  BODY: |
+    import { LambdaClient, ListFunctionsCommand } from "@aws-sdk/client-lambda";
+
+    const listFunctions = () => {
+      const client = new LambdaClient({});
+      const command = new ListFunctionsCommand({});
+      return client.send(command);
+    };
+
+    export { listFunctions };
+
+- KEY: aws.Lambda.SDK.InvokeCommand
+  EXPLAIN: |
+    コール(InvokeCommand)
+  BODY: |
+    import { InvokeCommand, LambdaClient, LogType } from "@aws-sdk/client-lambda";
+
+    const invoke = async (funcName, payload) => {
+      const client = new LambdaClient({});
+      const command = new InvokeCommand({
+        FunctionName:   funcName,
+        Payload:        JSON.stringify(payload),
+        LogType:        LogType.Tail,
+      });
+
+      const { Payload, LogResult } = await client.send(command);
+      const result = Buffer.from(Payload).toString();
+      const logs = Buffer.from(LogResult, "base64").toString();
+      return { logs, result };
+    };
+
+    export { invoke };
+
+- KEY: aws.Lambda.SDK.DeleteFunctionCommand
+  EXPLAIN: |
+    削除(DeleteFunctionCommand)
+  BODY: |
+    import { LambdaClient, DeleteFunctionCommand } from "@aws-sdk/client-lambda";
+
+    const deleteFunction = (funcName) => {
+      const client = new LambdaClient({});
+      const command = new DeleteFunctionCommand({ FunctionName: funcName });
+      return client.send(command);
+    };
+
+    export { deleteFunction };
+
+- KEY: aws.Lambda.SDK.UpdateFunctionCodeCommand
+  EXPLAIN: |
+    更新(UpdateFunctionCodeCommand)
+  BODY: |
+    import {
+      LambdaClient,
+      UpdateFunctionCodeCommand,
+      PackageType,
+      Runtime,
+      Architecture,
+    } from "@aws-sdk/client-lambda";
+    import { readFile } from "node:fs/promises";
+    import { dirnameFromMetaUrl } from "@aws-doc-sdk-examples/lib/utils/util-fs.js";
+
+    // __dirnameはESモジュールでは使用できないため、dirnameFromMetaUrlを使用
+    const dirname = dirnameFromMetaUrl(import.meta.url);
+
+    const updateFunctionCode = async (funcName, newFunc) => {
+      const client = new LambdaClient({});
+      const code = await readFile(`${dirname}../functions/${newFunc}.zip`);
+      const command = new UpdateFunctionCodeCommand({
+        ZipFile:       code,
+        FunctionName:  funcName,
+        Architectures: [Architecture.arm64],
+        Handler:       "index.handler",      // .zip 送信時に必須
+        PackageType:   PackageType.Zip,      // .zip 送信時に必須
+        Runtime:       Runtime.nodejs16x,    // .zip 送信時に必須
+      });
+
+      return client.send(command);
+    };
+
+    export { updateFunctionCode };
+
+- KEY: aws.Lambda.SDK.UpdateFunctionConfigurationCommand
+  EXPLAIN: |
+    設定更新(UpdateFunctionConfigurationCommand)
+  BODY: |
+    import {
+      LambdaClient,
+      UpdateFunctionConfigurationCommand,
+      waitUntilFunctionUpdated,
+    } from "@aws-sdk/client-lambda";
+    import { readFileSync } from "node:fs";
+    import { dirnameFromMetaUrl } from "@aws-doc-sdk-examples/lib/utils/util-fs.js";
+    import { waitForFunctionUpdated } from "../waiters/index.js";
+
+    const dirname = dirnameFromMetaUrl(import.meta.url);
+
+    const updateFunctionConfiguration = (funcName) => {
+      const client = new LambdaClient({});
+      const config = readFileSync(`${dirname}../functions/config.json`).toString();
+      const command = new UpdateFunctionConfigurationCommand({
+        ...JSON.parse(config),
+        FunctionName: funcName,
+      });
+      const result = client.send(command);
+      waitForFunctionUpdated({ FunctionName: funcName });
+      return result;
+    };
+
+    export { updateFunctionConfiguration };

@@ -1,7 +1,46 @@
 ---
 #-------------------------------
-# Node: Volta
+# Node
 #-------------------------------
+- KEY: node.version.category
+  CATEGORY: Nodeバージョン
+
+- KEY: node.version
+  EXPLAIN: |
+    Nodeバージョン
+  BODY: |
+    ■ AWSの各種サービスがサポートする Node.js のバージョンに要注意
+    Lambda: Node.js 18以前のバージョンは、2025年4月でサポート切れ
+
+    Node.js リリース
+    https://nodejs.org/ja/about/previous-releases
+  TABLE:
+    OPTION:
+      ALIGN:
+        - left
+        - left
+        - left
+        - left
+        - left
+      HAS_TITLE: true
+      WIDTH:
+        - 10%
+        - 25%
+        - 20%
+        - 20%
+    BODY: |
+      Node.js	コードネーム	最初のリリース	最終更新日	ステータス
+      v24 🔵		2025/05/06	2025/05/14	Current🔵
+      v23 🟡		2024/10/16	2025/05/14	Maintenance🟡
+      v22 🔵	Jod	2024/04/24	2025/05/14	LTS🔵
+      v21 ❌		2023/10/17	2024/04/10	End-of-life❌
+      v20 🟡	Iron	2023/04/18	2025/05/14	Maintenance🟡
+      v19 ❌		2022/10/18	2023/04/10	End-of-life❌
+      v18 ❌	Hydrogen	2022/04/19	2025/03/27	End-of-life❌
+      v17 ❌		2021/10/19	2022/06/01	End-of-life❌
+      v16 ❌	Gallium	2021/04/20	2023/08/08	End-of-life❌
+      v15 ❌		2020/10/20	2021/04/06	End-of-life❌
+      v14 ❌	Fermium	2020/04/21	2023/02/16	End-of-life❌
 
 - KEY: node.volta.version.control
   EXPLAIN: |
@@ -15,7 +54,7 @@
     For Windows, download and run the Windows installer
     https://docs.volta.sh/guide/getting-started
 
-    ■ Node.js インストール
+    ■ Node.js インストール(複数のバージョンをインストール可能)
     volta install node@20.11.0                    // バージョン指定
     volta install node                            // LTS バージョン自動
 
@@ -69,3 +108,70 @@
     > nvm install 16.13.2
     > nvm use 16.13.2
     Now using node v16.13.2 (64-bit)
+
+#-------------------------------
+# 一般 トピック
+#-------------------------------
+
+- KEY: node.general.category
+  CATEGORY: 一般 トピック
+
+- KEY: node.general.webhook
+  EXPLAIN: |
+    Express: webhook
+  BODY: |
+    ■ Webhookの受信
+    • Webhookは、特定のイベント発生時、指定URLにHTTPリクエストを送信する仕組み
+    • リアルタイムでデータを受信、処理
+
+    ■ WebhookとAPI
+    • データの流れ方(通信方式)が異なる
+    • APIは、クライアントからサーバーにリクエストを送ってデータを取得する「プル型」通信方式
+    • Webhookは、サーバーからクライアントにデータを送る「プッシュ型」通信方式
+
+    ■ サンプル
+      const express = require('express');
+      const bodyParser = require('body-parser');
+      const app = express();
+      const port = 3000;
+
+      app.use(bodyParser.json());
+
+      app.post('/webhook', (req, res) => {
+        const data = req.body;
+        console.log('Received webhook data:', data);
+        res.status(200).send('Webhook received successfully');
+      });
+
+      app.listen(port, () => {
+        console.log(`Server listening on port ${port}`);
+      });
+
+- KEY: node.general.Buffer
+  EXPLAIN: |
+    Buffer
+  BODY: |
+    ■ バイナリデータを扱うためのクラス
+    • Node.js専用のクラスでUint8Arrayのサブクラス 
+    • Bufferは、固定長のバイナリデータを表現するオブジェクト
+
+    ■ サンプル
+      const buffer = Buffer.from('Hello, World!', 'utf8');
+      console.log(buffer);              // <Buffer 48 65 6c 6c 6f 2c 20 57 6f 72 6c 64 21>
+      buffer.toJSON();                  // { type: 'Buffer', data: [ 72, 101, 108, 108, 111, 44, 32, 87, 111, 114, 108, 100, 33 ] }
+
+      buffer.toString('utf8');          // Hello, World!
+      buffer.length;                    // 13
+      buffer[0];                        // 72 (ASCIIコードの'H')
+      buffer.slice(0, 5).toString('utf8'); // Hello
+      buffer.equals(Buffer.from('Hello, World!', 'utf8')); // true
+      Buffer.isBuffer(buffer);          // true
+      Buffer.alloc(10);                 // 10バイトのゼロで埋められたバッファ 
+      Buffer.allocUnsafe(10);           // 10バイトの未初期化バッファ
+      Buffer.concat([buffer, Buffer.from(' Goodbye!')]); // <Buffer 48 65 6c 6c 6f 2c 20 57 6f 72 6c 64 21 20 47 6f 6f 64 62 79 65 21>
+      Buffer.byteLength('Hello, World!', 'utf8'); // 13
+      Buffer.from([72, 101, 108, 108, 111]); // <Buffer 48 65 6c 6c 6f>
+
+      Buffer.from('48656c6c6f', 'hex'); // <Buffer 48 65 6c 6c 6f>
+      buffer.write("o", 1);             // バッファの2バイト目に'o'を書き込む
+      buffer.toString();                // "Hollo, World!"

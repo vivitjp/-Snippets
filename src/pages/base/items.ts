@@ -60,6 +60,12 @@ export const menuItems: menuByCategories[] = [
         case_sensitive: false,
       },
       {
+        name: "CDK",
+        fileName: "aws/CDK",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
         name: "🔺SystemManager",
         fileName: "aws/SystemManagers",
         codeKeyTypes: [codeKeys.AWSCloud],
@@ -90,8 +96,8 @@ export const menuItems: menuByCategories[] = [
         case_sensitive: false,
       },
       {
-        name: "AppSync",
-        fileName: "",
+        name: "🔺AppSync",
+        fileName: "aws/AppSync",
         codeKeyTypes: [codeKeys.AWSCloud],
         case_sensitive: false,
       },
@@ -138,8 +144,8 @@ export const menuItems: menuByCategories[] = [
         case_sensitive: false,
       },
       {
-        name: "EventBridge",
-        fileName: "",
+        name: "🔺EventBridge",
+        fileName: "aws/EventBridge",
         codeKeyTypes: [codeKeys.AWSCloud],
         case_sensitive: false,
       },
@@ -702,6 +708,7 @@ export const menuItems: menuByCategories[] = [
       {
         name: "SVG",
         fileName: "WebAPI/SVG",
+        codeKeyTypes: [codeKeys.SVG],
       },
       {
         name: "window",

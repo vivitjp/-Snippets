@@ -1,0 +1,13 @@
+---
+#-------------------------------
+# AWS
+#-------------------------------
+- KEY: aws.cli.category
+  CATEGORY: CLI
+
+- KEY: aws.cli.install
+  EXPLAIN: |
+    CLI
+  BODY: |
+    AWS のサービスを管理するための統合ツール
+    複数 AWS サービスを制御し、スクリプトで自動化

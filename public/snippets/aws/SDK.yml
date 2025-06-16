@@ -15,137 +15,72 @@
     ■ v3
     https://github.com/aws/aws-sdk-js-v3
 
-    ■ Example v3
+    ■ Example v3(※ URL内の「javascriptv3」確認)
     https://github.com/awsdocs/aws-doc-sdk-examples
+    https://github.com/awsdocs/aws-doc-sdk-examples/blob/main/javascriptv3/example_code/ec2/hello.js
 
     ■ AWS Docs
     https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/introduction/
 
-- KEY: aws.sdk.v3.gettingStarted
+    ■ コードでの見分け方
+      V2: import {...} from 'aws-sdk'
+      V3: import {...} from '@aws-sdk/{service}'
+
+- KEY: aws.sdk.sample.ec2.1
   EXPLAIN: |
-    EC2 Client サンプル
+    サンプル EC2 StartInstancesCommand
   BODY: |
     ■ インストールパッケージ
       yarn add @aws-sdk/client-ec2
 
     ■ sample.js(v3)
-    import { EC2Client, StartInstancesCommand } from "@aws-sdk/client-ec2"; // ES Modules import
-    // const { EC2Client, StartInstancesCommand } = require("@aws-sdk/client-ec2"); // CommonJS import
+      import { EC2Client, StartInstancesCommand } from "@aws-sdk/client-ec2"; // ES Modules import
+      // const { EC2Client, StartInstancesCommand } = require("@aws-sdk/client-ec2"); // CommonJS import
 
-    const client = new EC2Client(config);
+      const client = new EC2Client(config);
 
-    // StartInstancesRequest
-    const input = {                     
-      InstanceIds: [                    
-        "i-1234567890abcdef0",          // InstanceId 必須
-      ],
-      AdditionalInfo: "STRING_VALUE",   // オプショナル
-      DryRun: true || false,            // オプショナル
-    };
-
-    const command = new StartInstancesCommand(input);
-    const response = await client.send(command);
-
-    ■ 戻り値(StartInstancesResult)型
-    {                                   
-      StartingInstances: [
-        {
-          InstanceId: "STRING_VALUE",
-          CurrentState: {                // InstanceState
-            Code: Number("int"),
-            Name: "pending" || "running" || "shutting-down" || "terminated" || "stopping" || "stopped",
-          },
-          PreviousState: {
-            Code: Number("int"),
-            Name: "pending" || "running" || "shutting-down" || "terminated" || "stopping" || "stopped",
-          },
-        },
-      ],
-    };
-
-    ■ 戻り値サンプル
-    {
-      StartingInstances: [
-        {
-          CurrentState: {
-            Code: 0,
-            Name: "pending"
-          },
-          InstanceId: "i-1234567890abcdef0",
-          PreviousState: {
-            Code: 80,
-            Name: "stopped"
-          }
-        }
-      ]
-    }
-
-- KEY: aws.sdk.v3.gettingStarted
-  EXPLAIN: |
-    Lambda Client サンプル
-  BODY: |
-    ■ インストールパッケージ
-      npm install @aws-sdk/client-lambda
-
-    ■ sample.js(v3)
-    import { LambdaClient, paginateListFunctions } from "@aws-sdk/client-lambda";
-
-    const client = new LambdaClient({});
-
-    export const helloLambda = async () => {
-      const paginator = paginateListFunctions({ client }, {});
-      const functions = [];
-
-      for await (const page of paginator) {
-        const funcNames = page.Functions.map((f) => f.FunctionName);
-        functions.push(...funcNames);
-      }
-
-      # console.log("Functions:");
-      # console.log(functions.join("\n"));
-      return functions;
-    };
-
-- KEY: aws.sdk.v3.lambda
-  EXPLAIN: |
-    サンプル: Lambda1
-  BODY: |
-    ■ 概要
-    • Lambdaを使用する場合は、サービスごと、リージョンごとに単一のSDKクライアントを使用
-    • Lambdaのコンテナ再利用を最適化するため、ハンドラーコードパス外で初期化
-    • API呼び出し自体は、ハンドラーのコードパス内から行う
-    • Lambdaの実行サイクルの最終ステップ(Lambdaが「ホット」後)にAPIコールが署名され、署名時間のずれ回避
-    • AWS STS (Security Token Service)を利用
-
-    ■ サンプル(v3)
-    ---------------------------------------------------------------------------------
-    import { STSClient, GetCallerIdentityCommand } from "@aws-sdk/client-sts";
-
-    const client = new STSClient({});   // コードパス外で初期化
-
-    export const handler = async (event) => {
-      const response = {
-        statusCode: 200,
-        headers: {
-          "Content-Type": "application/json",
-        },
+      // StartInstancesRequest
+      const input = {                     
+        InstanceIds: [                    
+          "i-1234567890abcdef0",          // InstanceId 必須
+        ],
+        AdditionalInfo: "STRING_VALUE",   // オプショナル
+        DryRun: true || false,            // オプショナル
       };
 
-      try {
-        // ハンドラ内部でAPI呼び出し
-        const results = await client.send(new GetCallerIdentityCommand({})); 
-        const responseBody = {
-          userId: results.UserId,
-        };
-        response.body = JSON.stringify(responseBody);
+      const command = new StartInstancesCommand(input);
+      const response = await client.send(command);
 
-      } catch (err) {
-        console.log("Error:", err);
-        response.statusCode = 500;
-        response.body = JSON.stringify({
-          message: "Internal Server Error",
-        });
+    ■ 戻り値(StartInstancesResult)型
+      {                                   
+        StartingInstances: [
+          {
+            InstanceId: "STRING_VALUE",
+            CurrentState: {                // InstanceState
+              Code: Number("int"),
+              Name: "pending" || "running" || "shutting-down" || "terminated" || "stopping" || "stopped",
+            },
+            PreviousState: {
+              Code: Number("int"),
+              Name: "pending" || "running" || "shutting-down" || "terminated" || "stopping" || "stopped",
+            },
+          },
+        ],
+      };
+
+    ■ 戻り値サンプル
+      {
+        StartingInstances: [
+          {
+            CurrentState: {
+              Code: 0,
+              Name: "pending"
+            },
+            InstanceId: "i-1234567890abcdef0",
+            PreviousState: {
+              Code: 80,
+              Name: "stopped"
+            }
+          }
+        ]
       }
-
-      return response;
-    };

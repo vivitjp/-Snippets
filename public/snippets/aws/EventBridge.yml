@@ -1,0 +1,274 @@
+---
+#-------------------------------
+# EventBrdige
+#-------------------------------
+- KEY: aws.EventBrdige.category
+  CATEGORY: 概要
+
+- KEY: aws.EventBrdige.概要
+  EXPLAIN: |
+    概要
+  BODY: |
+    • フルマネージドでサーバーレスなイベントバスサービス
+    • イベント駆動型アプリケーションの構築
+    • イベントのやり取りをスケーリング可能
+    • AWSサービス、SaaS、独自のアプリケーション間の連携を実現
+    • イベント取り込み、フィルタリング、変換、配信ができる
+    • Lambda、SNS、SQS、Step FunctionsなどのAWSサービスと連携
+    • CloudTrail、CloudWatch Logs、Configなどからイベント取り込み
+    • 料金的に非常安価(100万件のイベントあたり1.00USD?)
+
+- KEY: aws.EventBrdige.公式説明図
+  EXPLAIN: |
+    公式説明図
+  SAMPLE: |
+    <style>
+      div.公式説明図 { display: flex; flex-direction: column; width: 100vw; align-items: center; }
+      img.公式説明図 { display: flex; flex-direction: row; width: 100%; }
+      span.公式説明図-text { font-size: 0.8em; }
+    </style>
+    <div class="公式説明図">
+      <img class="公式説明図" src="snippets/aws/asset/EventBridge/EventBridgeFlow.avif"/>
+      <span class="公式説明図-text"> 公式説明図 </span>
+    </div>
+
+- KEY: aws.EventBrdige.用語の説明
+  EXPLAIN: |
+    用語の説明
+  BODY: |
+    ■ 処理フロー
+      • イベントソース「AWSサービス」がイベント送信
+      • イベントバス(default)がイベントを受けつ
+      • イベントバスに紐づけたルールが後続処理に送信するイベント選択
+      • 後続処理するターゲット(Lambdaなど)にイベントが送信されて処理
+
+    ■ Event Bus(3種類) イベントの受け口
+      • Default Event Bus
+        • サービス・カスタムアプリケーションからの発生イベントで使用可能
+        • 各AWSアカウントに必ず1つ自動作成
+      • Custom Event Bus
+        • カスタムアプリケーションで使用可能
+        • 自由作成
+      • Partner Event Bus
+        • AWS以外のSaaSサービス経由で利用可能
+        • SaaSサービス側での登録が必要
+
+    ■ Event Source
+      • AWSサービス、SaaS、カスタムアプリケーションのこと
+      • 対応SaaSパートナー
+        https://aws.amazon.com/jp/eventbridge/integrations/
+        Adobe, Auth0, Datadog, Dynatrace, HashiCorp, MongoDB, PagerDuty, ServiceNow, Zendesk
+
+    ■ Rules
+      • イベントバスに紐付き、検出パターン定義、ターゲット(イベント転送先)定義を記載
+        • イベントパターン
+          • イベントのフィルタリング条件を定義する
+          • JSON形式で記載
+          • イベントの内容に応じて、フィルタリング条件を設定する
+          • 例: EC2インスタンス起動時に特定のタグが付与されている場合のみ、Lambda関数を実行する
+        • ターゲット
+          • Lambda関数、SNSトピック、SQSキュー、Step Functionsなどが指定可能
+          • 1つのルールに最大5つまで指定可能
+          • ターゲットに応じてIAM Roleが必要
+
+- KEY: aws.EventBrdige.イベントパターン作成
+  EXPLAIN: |
+    イベントパターン作成
+  BODY: |
+    • JSON形式
+    • イベント内容に応じて、フィルタリング条件設定
+
+    ■ サンプル
+    {
+      "source": ["aws.macie"],
+      "detail-type": ["Macie Alert A", "Macie Alert B"],
+      "detail": {
+        "risk-score": [80],
+        "trigger": {
+          "risk": [8]
+        }
+      }
+    }
+
+- KEY: aws.EventBrdige.ターゲットとアクセス制御
+  EXPLAIN: |
+    ターゲットとアクセス制御
+  BODY: |
+    ■ ターゲット(抜粋)
+      Lambda関数
+      EC2インスタンス
+      Kinesis Data Streamsのストリーム
+      Kinesis Data Firehoseの配信ストリーム
+      CloudWatch Logsのロググループ
+      ECSタスク
+      Systems Manager Run Command
+      Systems Manager Automation
+      AWS Batchジョブ
+      AWS Step Functionsステートマシン
+      AWS CodePipelineのパイプライン
+      AWS CodeBuildプロジェクト
+      Inspector の評価テンプレート
+      SNS トピック
+      SQS キュー
+
+    ■ アクセス制御
+    • IAMポリシー(ターゲット側で制御)
+      • Lambda, SNS, SQS, CloudWatch Logs以外のサービスがターゲットの場合、IAM Roleを割り当ててアクセス許可
+    • リソースベースポリシー(リソース側で制御)
+      • Lambda, SNS, SQS, CloudWatch Logsの場合、ターゲット側でリソースポリシーの割り当て必要
+      • マネジメントコンソールでターゲットを指定した場合は自動的にリソースポリシー作成
+
+    ■ アクセス制御サンプル(CloudWatch Logs)
+    「hello-world-rule」から「hello-world-logs」ロググループへの書き込み
+    {
+      "Version": "2012-10-17",
+      "Id": "default",
+      "Statement": [
+        {
+          "Sid": "put_log_events",
+          "Effect": "Allow",
+          "Principal": {
+            "Service": "events.amazonaws.com"
+          },
+          "Action": [
+            "logs:PutLogEvents",
+            "logs:CreateLogStream"
+          ],
+          "Resource": "arn:aws:logs:ap-northeast-1:123456789012:log-group:hello-world-logs:*",
+          "Condition": {
+            "ArnLike": {
+              "AWS:SourceArn": "arn:aws:events:ap-northeast-1:123456789012:rule/hello-world-rule"
+            }
+          }
+        }
+      ]
+    }
+
+- KEY: aws.EventBrdige.サンプルURL
+  CATEGORY: 実装例(URL)
+
+- KEY: aws.EventBrdige.Lambdaサンプル1
+  EXPLAIN: |
+    LINEbot, AWS Lambda(APIgateway, EventBridge)にまとめて入門しつつ6億円を狙う
+  BODY: |
+    ■ ディレクトリ、関数ファイル作成
+    • 例: sample/sample_function.py
+
+      CHANNEL_SECRET = os.getenv('LINE_CHANNEL_SECRET', None)
+      CHANNEL_ACCESS_TOKEN = os.getenv('LINE_CHANNEL_ACCESS_TOKEN', None)
+      LINE_USER_ID = os.getenv('LINE_USER_ID', None)
+
+    ■ lambda関数zip作成
+    • sample_function.pyを含め、必要パッケージを全部圧縮
+      pip install beautifulsoup4 requests line-bot-sdk -t ./sample
+
+      ※注意: 圧縮するのは /sample ではなく /sample/*
+
+    ■ Line設定
+    • 開発者コンソールから作成channelを開く
+    • 「Basic settings」からchannel secret, your user idをコピーしてlambdaの環境変数へ
+    • 「Messaging API」からchannel access token(long-lived)をコピーしてlambdaの環境変数へ
+    • AWS側の最後に得たAPIgatewayのURL(リソース名まで含めたURL)を開発者コンソール「→channel→massagingAPI→webhookURL」に設定
+
+    ■ マネージメントコンソール
+    • コンソールから新規関数を作成(今回はlotNotificationと命名)(python3.8)
+    • lambda関数zip アップロード
+    • lambda関数の環境変数に上記トークン、ユーザーIDなどを設定
+
+    ■ 1) APIGateway
+    • 新規 APIgateway を作成(REST API)
+    • リソース作成(lot-notification)、メソッド(POST)作成
+
+    ■ 2) EventBridge
+    • Lambdaのトリガーを EventBridge(cloud watch) に設定
+    • イベントパターンを作成
+      • 例: sample/sample_event_pattern.json
+      {
+        "source": ["aws.apigateway"],
+        "detail-type": ["AWS API Call via CloudTrail"],
+        "detail": {
+          "eventSource": ["apigateway.amazonaws.com"],
+          "eventName": ["POST"]
+        }
+      }
+
+  SAMPLE: |
+    <style>
+      a.EventBridgeサンプル { text-decoration: none; width: 100%; padding: 1em; border: 1px solid #aaa; border-radius: 0.5em; }
+    </style>
+    <a class="EventBridgeサンプル" href="https://zenn.dev/hom_ppp/articles/dd9ae18b9fadac">URL：LINEbot, AWS Lambda(APIgateway, EventBridge)にまとめて入門しつつ6億円を狙う</a>
+
+- KEY: aws.EventBrdige.Lambdaサンプル2
+  EXPLAIN: |
+    【AWS】各サービスを触ってみる EventBridge①(EC2の状態変更を検知して通知を行う)
+  BODY: |
+    ■ 1. Lambda関数の作成
+      • Lambda用のIAMロールを作成
+      • Lambda関数を作成
+
+        import boto3
+        def lambda_handler(event, context):
+          time = event["time"]
+          instance_id = event["detail"]["instance-id"]
+          state = event["detail"]["state"]
+          message = f"該当EC2インスタンスの状態変化検知\n発生日時: {time}\nインスタンス: {instance_id}\n状態: {state}"
+          print(message)
+          return True
+
+      • Lambda関数のテストを実施
+        • Lambdaでテストイベントを作成、Lambda関数の稼働確認
+        • テストボタンクリック後、CloudWatch Logsを確認
+
+    ■ 2. EventBridgeルールの作成
+      • ルール：イベントバスで受信可能なイベント群の中から「ターゲットにするイベントを定義」
+
+        {
+          "source": ["aws.ec2"],
+          "detail-type": ["EC2 Instance State-change Notification"],
+          "detail": {
+            "state": ["shutting-down", "terminated", "stopped"],
+            "instance-id": ["xxxxxxxxxxxxxxxxxx"]
+          }
+        }
+
+      • ターゲット選択
+        • ターゲットタイプ: AWSのサービス
+        • ターゲットを選択: Lambda関数
+        • 機能: 作成したLambda関数
+
+      • テスト
+        • EC2を停止する
+        • インスタンス2台の停止を確認後、CloudWatch Logsを確認
+
+    ■ 3. Slackで自動通知を行う
+      • Lambdaコード変更
+
+        import boto3
+        import urllib3                  <-- 追加
+        import json                     <-- 追加
+        http = urllib3.PoolManager()    <-- 追加
+
+        def lambda_handler(event, context):
+          time = event["time"]
+          instance_id = event["detail"]["instance-id"]
+          state = event["detail"]["state"]
+          message = f"該当EC2インスタンスの状態変化検知\n発生日時: {time}\nインスタンス: {instance_id}\n状態: {state}"
+          
+          url = "xxxxxxxxxxxx"          <-- 追加
+          msg = {                       <-- 追加  
+              "channel": "#xxxxxxxxx",
+              "username": "",
+              "text": message,
+              "icon_emoji": ""
+          }
+          
+          encoded_msg = json.dumps(msg).encode('utf-8')     <-- 追加
+          resp = http.request('POST',url, body=encoded_msg) <-- 追加
+          return True
+
+      • テスト
+        • EC2を停止する
+        • インスタンス2台の停止を確認後、Slackへの通知を確認
+
+  SAMPLE: |
+    <a class="EventBridgeサンプル" href="https://zenn.dev/megazone_jp/articles/fa40c61c5b5c99" >URL：【AWS】各サービスを触ってみる EventBridge①(EC2の状態変更を検知して通知を行う)</a>

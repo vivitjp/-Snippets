@@ -201,12 +201,720 @@
       • インスタンスの状態が「stopped」になっていることを確認
       • [インスタンスID]をクリック
 
-- KEY: aws.EC2.XXXX
+#-------------------------------
+#  SDK
+#-------------------------------
+- KEY: aws.EC2.sdk.category
+  CATEGORY: SDK
+
+- KEY: aws.EC2.sdk.keyPair.describe
   EXPLAIN: |
-    XXXXX
+    keyPair 取得(describe)
+  BODY: |
+    ■ 現在の AWS アカウント内のすべてのキーペアを一覧表示
+
+    import { DescribeKeyPairsCommand, EC2Client } from "@aws-sdk/client-ec2";
+
+    /**
+    * @param {{ dryRun: boolean }}      // 確認のみ(反映しない)
+    */
+    export const main = async ({ dryRun }) => {
+      const client = new EC2Client({});
+      const command = new DescribeKeyPairsCommand({ DryRun: dryRun });
+
+      try {
+        const { KeyPairs } = await client.send(command);
+        const keyPairList = KeyPairs.map(
+          (kp) => ` • ${kp.KeyPairId}: ${kp.KeyName}`,
+        ).join("\n");
+        console.log(keyPairList);       // キーペアの一覧表示
+      } catch (caught) {
+        if (caught instanceof Error && caught.name === "DryRunOperation") {
+          console.log(`${caught.message}`);
+        } else {
+          throw caught;
+        }
+      }
+    };
+
+- KEY: aws.EC2.sdk.keyPair.create
+  EXPLAIN: |
+    keyPair 作成(create)
+  BODY: |
+    ■ EC2インスタンスにSSH接続するためのキーペアを作成
+
+    import { CreateKeyPairCommand, EC2Client } from "@aws-sdk/client-ec2";
+
+    /**
+    * 指定名前と指定 PEM or PPK 形式で ED25519 or 2048bit の RSAキーペア 作成
+    * Amazon EC2 は「公開キー」を保存し、ファイルに保存するための「秘密キー」を表示
+    * @param {{ keyName: string }} options
+    */
+    export const main = async ({ keyName }) => {
+      const client = new EC2Client({});
+      const command = new CreateKeyPairCommand({
+        KeyName: keyName,
+      });
+
+      try {
+        const { KeyMaterial, KeyName } = await client.send(command);
+        console.log(KeyName);           // キーペア名
+        console.log(KeyMaterial);       // 秘密キー 
+      } catch (caught) {
+        if (caught instanceof Error && caught.name === "InvalidKeyPair.Duplicate") {
+          console.warn(`${caught.message}. Try another key name.`);
+        } else {
+          throw caught;
+        }
+      }
+    };
+
+- KEY: aws.EC2.sdk.keyPair.delete
+  EXPLAIN: |
+    keyPair 削除(delete)
+  BODY: |
+    ■ Amazon EC2 から公開キーを削除して、指定されたキーペアを削除
+
+    import { DeleteKeyPairCommand, EC2Client } from "@aws-sdk/client-ec2";
+
+    /**
+    * @param {{ keyName: string }} options
+    */
+    export const main = async ({ keyName }) => {
+      const client = new EC2Client({});
+      const command = new DeleteKeyPairCommand({
+        KeyName: keyName,
+      });
+
+      try {
+        await client.send(command);
+        console.log("削除完了");
+      } catch (caught) {
+        if (caught instanceof Error && caught.name === "MissingParameter") {
+          console.warn(`${caught.message}. Did you provide the required value?`);
+        } else {
+          throw caught;
+        }
+      }
+    };
+
+- KEY: aws.EC2.sdk.SecurityGroups.describe
+  EXPLAIN: |
+    SecurityGroups 取得(describe)
+  BODY: |
+    ■ 指定セキュリティグループ or 全セキュリティグループ取得
+
+    import { DescribeSecurityGroupsCommand, EC2Client } from "@aws-sdk/client-ec2";
+
+    /**
+    * @param {{ groupIds: string[] }} options
+    */
+    export const main = async ({ groupIds = [] }) => {
+      const client = new EC2Client({});
+      const command = new DescribeSecurityGroupsCommand({
+        GroupIds: groupIds,
+      });
+
+      try {
+        const { SecurityGroups } = await client.send(command);
+        const sgList = SecurityGroups.map(
+          (sg) => `• ${sg.GroupName} (${sg.GroupId}): ${sg.Description}`,
+        ).join("\n");
+        
+        if (sgList.length) {
+          console.log(`Security groups:\n${sgList}`);
+        } else {
+          console.log("No security groups found.");
+        }
+      } catch (caught) {
+        if (caught instanceof Error && caught.name === "InvalidGroupId.Malformed") {
+          console.warn(`${caught.message}. Please provide a valid GroupId.`);
+        } else if (
+          caught instanceof Error &&
+          caught.name === "InvalidGroup.NotFound"
+        ) {
+          console.warn(caught.message);
+        } else {
+          throw caught;
+        }
+      }
+    };
+
+- KEY: aws.EC2.sdk.SecurityGroups.create
+  EXPLAIN: |
+    SecurityGroups 作成(create)
+  BODY: |
+    ■セキュリティ グループ作成
+
+    import { CreateSecurityGroupCommand, EC2Client } from "@aws-sdk/client-ec2";
+
+    /**
+    * @param {{ 
+        groupName: string,              // 最大255文字、sg-で始まる名前は指定不可
+        description: string             // 最大255文字
+      }} options
+    */
+    export const main = async ({ groupName, description }) => {
+      const client = new EC2Client({});
+      const command = new CreateSecurityGroupCommand({
+        GroupName: groupName,
+        Description: description,
+      });
+
+      try {
+        const { GroupId } = await client.send(command);
+        console.log(GroupId);           // セキュリティグループID
+      } catch (caught) {
+        if (caught instanceof Error && caught.name === "InvalidParameterValue") {
+          console.warn(`${caught.message}.`);
+        } else {
+          throw caught;
+        }
+      }
+    };
+
+- KEY: aws.EC2.sdk.SecurityGroups.addIngress
+  EXPLAIN: |
+    SecurityGroups イングレス追加(addIngress)
+  BODY: |
+    ■ 指定された受信 (イングレス) ルールをセキュリティ グループに追加
+
+    import { AuthorizeSecurityGroupIngressCommand, EC2Client } from "@aws-sdk/client-ec2";
+
+    /**
+    * AWSコンソール(or DescribeSecurityGroupsCommand)からのグループID
+    * 承認する IP アドレス https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing#CIDR_notation
+    * @param {{ groupId: string, ipAddress: string }} options
+    */
+    export const main = async ({ groupId, ipAddress }) => {
+      const client = new EC2Client({});
+      const command = new AuthorizeSecurityGroupIngressCommand({
+        GroupId: groupId,
+        IpPermissions: [
+          {
+            IpProtocol: "tcp",
+            FromPort: 22,
+            ToPort: 22,
+            IpRanges: [{ CidrIp: `${ipAddress}/32` }],
+          },
+        ],
+      });
+
+      try {
+        const { SecurityGroupRules } = await client.send(command);
+        console.log(JSON.stringify(SecurityGroupRules, null, 2));   // ルールの詳細
+
+      } catch (caught) {
+        if (caught instanceof Error && caught.name === "InvalidGroupId.Malformed") {
+          console.warn(`${caught.message}. Please provide a valid GroupId.`);
+        } else {
+          throw caught;
+        }
+      }
+    };
+
+- KEY: aws.EC2.sdk.SecurityGroups.delete
+  EXPLAIN: |
+    SecurityGroups 削除(delete)
+  BODY: |
+    ■セキュリティ グループ削除
+
+    import { DeleteSecurityGroupCommand, EC2Client } from "@aws-sdk/client-ec2";
+
+    /**
+    * @param {{ groupId: string }} options
+    */
+    export const main = async ({ groupId }) => {
+      const client = new EC2Client({});
+      const command = new DeleteSecurityGroupCommand({
+        GroupId: groupId,
+      });
+
+      try {
+        await client.send(command);
+        console.log("削除完了");
+      } catch (caught) {
+        if (caught instanceof Error && caught.name === "InvalidGroupId.Malformed") {
+          console.warn(`${caught.message}. Please provide a valid GroupId.`);
+        } else {
+          throw caught;
+        }
+      }
+    };
+
+- KEY: aws.EC2.sdk.instance.describe
+  EXPLAIN: |
+    Instance 取得(describe)
+  BODY: |
+    ■ 過去1か月以内に開始された提供されたアーキテクチャで実行される全EC2インスタンス一覧
+
+    import { EC2Client, paginateDescribeInstances } from "@aws-sdk/client-ec2";
+
+    /**
+    * @param {{ pageSize: string, architectures: string[] }} options
+    */
+    export const main = async ({ pageSize, architectures }) => {
+      pageSize = Number.parseInt(pageSize);
+      const client = new EC2Client({});
+      const d = new Date();
+      const year = d.getFullYear();
+      const month = `0${d.getMonth() + 1}`.slice(-2);
+      const launchTimePattern = `${year}-${month}-*`;
+
+      const paginator = paginateDescribeInstances(
+        {
+          client,
+          pageSize,
+        },
+        {
+          Filters: [
+            { Name: "architecture",        Values: architectures },
+            { Name: "instance-state-name", Values: ["running"] },
+            { Name: "launch-time",         Values: [launchTimePattern] },
+          ],
+        },
+      );
+
+      try {
+        /* @type {import('@aws-sdk/client-ec2').Instance[]} */
+        const instanceList = [];
+        for await (const page of paginator) {
+          const { Reservations } = page;
+          for (const reservation of Reservations) {
+            instanceList.push(...reservation.Instances);
+          }
+        }
+        console.log(`${instanceList.map((instance) => instance.InstanceId).join("\n")}`);
+
+      } catch (caught) {
+        if (caught instanceof Error && caught.name === "InvalidParameterValue") {
+          console.warn(`${caught.message}.`);
+        } else {
+          throw caught;
+        }
+      }
+    };
+
+- KEY: aws.EC2.sdk.instance.InstanceTypes
+  EXPLAIN: |
+    Instance タイプ(InstanceTypes)
+  BODY: |
+    ■ 指定インスタンスタイプ
+
+    import { EC2Client, paginateDescribeInstanceTypes } from "@aws-sdk/client-ec2";
+
+    /**
+    * デフォルトで現リージョンの全タイプ表示。結果フィルタリングも可能
+    * @param {{ pageSize: string, supportedArch: string[], freeTier: boolean }} options
+    */
+    export const main = async ({ pageSize, supportedArch, freeTier }) => {
+      pageSize = Number.parseInt(pageSize);
+      const client = new EC2Client({});
+
+      // ページネーション関数は、基礎コマンドをラップするラッパー
+      const paginator = paginateDescribeInstanceTypes(
+        { client, pageSize },  // ページサイズ制限しないと長い時間。pageSizeはMaxResultsのラッパー
+        {
+          Filters: [
+            { Name: "processor-info.supported-architecture", Values: supportedArch },
+            { Name: "free-tier-eligible", Values: [freeTier ? "true" : "false"] },
+          ],
+        },
+      );
+
+      try {
+        /* @type {import('@aws-sdk/client-ec2').InstanceTypeInfo[]} */
+        const instanceTypes = [];
+        for await (const page of paginator) {
+          if (page.InstanceTypes.length) {
+            instanceTypes.push(...page.InstanceTypes);
+            if (instanceTypes.length >= 1) { break; } // 1件以上取得したら終了
+          }
+        }
+        console.log(
+          `${instanceTypes.map((it) => `${it.InstanceType}: ${it.MemoryInfo.SizeInMiB} MiB`).join("\n")}`,
+        );
+
+      } catch (caught) {
+        if (caught instanceof Error && caught.name === "InvalidParameterValue") {
+          console.warn(`${caught.message}`);
+          return [];
+        }
+        throw caught;
+      }
+    };
+
+- KEY: aws.EC2.sdk.instance.monitor
+  EXPLAIN: |
+    Instance 監視(monitor)
+  BODY: |
+    ■ 選択インスタンスの詳細な監視を有効化
+
+    import { EC2Client, MonitorInstancesCommand } from "@aws-sdk/client-ec2";
+
+    /**
+    * 選択インスタンスの詳細な監視を有効化
+    * デフォルトでは、メトリクスは 5 分ごとに Amazon CloudWatch に送信
+    * 有料で 1 分ごとに変更可能
+    * @param {{ instanceIds: string[] }} options
+    */
+    export const main = async ({ instanceIds }) => {
+      const client = new EC2Client({});
+      const command = new MonitorInstancesCommand({
+        InstanceIds: instanceIds,
+      });
+
+      try {
+        const { InstanceMonitorings } = await client.send(command);
+        const instancesBeingMonitored = InstanceMonitorings.map(
+          (im) => `${im.InstanceId} : ${im.Monitoring.State}.`,
+        );
+        console.log(instancesBeingMonitored.join("\n"));
+
+      } catch (caught) {
+        if (caught instanceof Error && caught.name === "InvalidParameterValue") {
+          console.warn(`${caught.message}`);
+        } else {
+          throw caught;
+        }
+      }
+    };
+
+- KEY: aws.EC2.sdk.instance.unmonitor
+  EXPLAIN: |
+    Instance 監視停止(unmonitor)
   BODY: |
 
-- KEY: aws.EC2.XXXX
+- KEY: aws.EC2.sdk.instance.start
   EXPLAIN: |
-    XXXXX
+    Instance 開始(start)
   BODY: |
+    ■ 停止した Amazon EBS ベースのインスタンス起動
+
+    import { EC2Client, StartInstancesCommand } from "@aws-sdk/client-ec2";
+    import { fileURLToPath } from "node:url";
+    import { parseArgs } from "node:util";
+
+    /**
+    * @param {{ instanceIds }} options
+    */
+    export const main = async ({ instanceIds }) => {
+      const client = new EC2Client({});
+      const command = new StartInstancesCommand({
+        InstanceIds: instanceIds,
+      });
+
+      try {
+        const { StartingInstances } = await client.send(command);
+        const instanceIdList = StartingInstances.map(
+          (instance) => ` • ${instance.InstanceId}`,
+        );
+        console.log(instanceIdList.join("\n"));
+
+      } catch (caught) {
+        if (
+          caught instanceof Error && caught.name === "InvalidInstanceID.NotFound"
+        ) {
+          console.warn(`${caught.message}`);
+        } else {
+          throw caught;
+        }
+      }
+    };
+
+- KEY: aws.EC2.sdk.instance.run
+  EXPLAIN: |
+    Instance 生成(run)
+  BODY: |
+    ■ 新しい EC2 インスタンス生成
+
+    import { EC2Client, RunInstancesCommand } from "@aws-sdk/client-ec2";
+
+    /**
+    * @param {{
+    *  keyName: string,                   // Your key pair name.
+    *  securityGroupIds: string[],        // Your security group.
+    *  imageId: string,                   // An Amazon Machine Image (AMI)
+    *  instanceType: import('@aws-sdk/client-ec2')._InstanceType,
+    *  minCount?: number,                 // 指定下限値(AZの制限あり)
+    *  maxCount?: number }} options       // 指定上限値
+    */
+    export const main = async ({
+      keyName,
+      securityGroupIds,
+      imageId,
+      instanceType,
+      minCount = "1",
+      maxCount = "1",
+    }) => {
+      const client = new EC2Client({});
+      minCount = Number.parseInt(minCount);
+      maxCount = Number.parseInt(maxCount);
+      const command = new RunInstancesCommand({
+        KeyName: keyName,
+        SecurityGroupIds: securityGroupIds,
+        ImageId: imageId,
+        InstanceType: instanceType,
+        MinCount: minCount,
+        MaxCount: maxCount,
+      });
+
+      try {
+        const { Instances } = await client.send(command);
+        const instanceList = Instances.map((instance) => `• ${instance.InstanceId}`).join("\n");
+        console.log(`${instanceList}`);
+
+      } catch (caught) {
+        if (caught instanceof Error && caught.name === "ResourceCountExceeded") {
+          console.warn(`${caught.message}`);
+        } else {
+          throw caught;
+        }
+      }
+    };
+
+- KEY: aws.EC2.sdk.instance.stop
+  EXPLAIN: |
+    Instance 停止(stop)
+  BODY: |
+    ■ 1つ以上の EC2 インスタンスを停止
+
+    import { EC2Client, StopInstancesCommand } from "@aws-sdk/client-ec2";
+    import { fileURLToPath } from "node:url";
+    import { parseArgs } from "node:util";
+
+    /* @param {{ instanceIds: string[] }} options */
+    export const main = async ({ instanceIds }) => {
+      const client = new EC2Client({});
+      const command = new StopInstancesCommand({
+        InstanceIds: instanceIds,
+      });
+
+      try {
+        const { StoppingInstances } = await client.send(command);
+        const instanceIdList = StoppingInstances.map(
+          (instance) => ` • ${instance.InstanceId}`
+        );
+        console.log(instanceIdList.join("\n"));
+
+      } catch (caught) {
+        if (caught instanceof Error && caught.name === "InvalidInstanceID.NotFound") {
+          console.warn(`${caught.message}`);
+        } else {
+          throw caught;
+        }
+      }
+    };
+
+- KEY: aws.EC2.sdk.instance.terminate
+  EXPLAIN: |
+    Instance 終了(terminate)
+  BODY: |
+    ■ 1 つ以上の EC2 インスタンスを終了
+
+    import { EC2Client, TerminateInstancesCommand } from "@aws-sdk/client-ec2";
+    import { fileURLToPath } from "node:url";
+    import { parseArgs } from "node:util";
+
+    /* @param {{ instanceIds: string[] }} options */
+    export const main = async ({ instanceIds }) => {
+      const client = new EC2Client({});
+      const command = new TerminateInstancesCommand({
+        InstanceIds: instanceIds,
+      });
+
+      try {
+        const { TerminatingInstances } = await client.send(command);
+        const instanceList = TerminatingInstances.map(
+          (instance) => ` • ${instance.InstanceId}`,
+        );
+        console.log(instanceList.join("\n"));
+
+      } catch (caught) {
+        if (caught instanceof Error && caught.name === "InvalidInstanceID.NotFound") {
+          console.warn(`${caught.message}`);
+        } else {
+          throw caught;
+        }
+      }
+    };
+
+- KEY: aws.EC2.sdk.instance.reboot
+  EXPLAIN: |
+    Instance 再起動(reboot)
+  BODY: |
+    ■ 指定インスタンス再起動求(非同期)
+
+    import { EC2Client, RebootInstancesCommand } from "@aws-sdk/client-ec2";
+
+    /* @param {{ instanceIds: string[] }} options */
+    export const main = async ({ instanceIds }) => {
+      const client = new EC2Client({});
+      const command = new RebootInstancesCommand({
+        InstanceIds: instanceIds,
+      });
+
+      try {
+        await client.send(command);
+        console.log("Instance rebooted successfully.");
+
+      } catch (caught) {
+        if (caught instanceof Error && caught.name === "InvalidInstanceID.NotFound") {
+          console.warn(`${caught.message}. Please provide the InstanceId`);
+        } else {
+          throw caught;
+        }
+      }
+    };
+
+- KEY: aws.EC2.sdk.Address.allocate
+  EXPLAIN: |
+    Address 割り当て(allocate)
+  BODY: |
+    ■ AWS アカウントに Elastic IP アドレスを割り当て
+
+    import { AllocateAddressCommand, EC2Client } from "@aws-sdk/client-ec2";
+
+    export const main = async () => {
+      const client = new EC2Client({});
+      const command = new AllocateAddressCommand({});
+
+      try {
+        const { AllocationId, PublicIp } = await client.send(command);
+        console.log("新しいIPアドレス割り当て完了");
+        console.log(`ID: ${AllocationId} Public IP: ${PublicIp}`);
+        // Amazon EC2のAWSマネジメントコンソールでIPアドレス確認
+        // 「ネットワークとセキュリティ」>「Elastic IP」
+      } catch (caught) {
+        if (caught instanceof Error && caught.name === "MissingParameter") {
+          console.warn(`${caught.message}. Did you provide these values?`);
+        } else {
+          throw caught;
+        }
+      }
+    };
+
+- KEY: aws.EC2.sdk.Address.associate
+  EXPLAIN: |
+    Address 関連付け(associate)
+  BODY: |
+    ■ instance または network interface で Elastic IP アドレス/キャリア IP アドレスを関連付け
+      (Wavelength Zone のサブネットにあるインスタンスの場合)
+
+    import { AssociateAddressCommand, EC2Client } from "@aws-sdk/client-ec2";
+
+    /**
+    * @param {{ 
+          instanceId: string,           // 先にEC2インスタンス作成(RunInstancesCommand)
+          allocationId: string          // 先に割り当て(AllocateAddressCommand)
+      }} options
+    */
+    export const main = async ({ instanceId, allocationId }) => {
+      const client = new EC2Client({});
+      const command = new AssociateAddressCommand({
+        AllocationId: allocationId,
+        InstanceId: instanceId,
+      });
+
+      try {
+        const { AssociationId } = await client.send(command);
+        console.log(`${allocationId}, ${instanceId}, ${AssociationId}`);
+
+      } catch (caught) {
+        if (
+          caught instanceof Error &&
+          caught.name === "InvalidAllocationID.NotFound"
+        ) {
+          console.warn(
+            `${caught.message}. Did you provide the ID of a valid Elastic IP address AllocationId?`,
+          );
+        } else {
+          throw caught;
+        }
+      }
+    };
+
+- KEY: aws.EC2.sdk.Address.disassociate
+  EXPLAIN: |
+    Address 関連解除(disassociate)
+  BODY: |
+    ■ Elastic IP アドレスとインスタンスの関連付けを解除
+    import { DisassociateAddressCommand, EC2Client } from "@aws-sdk/client-ec2";
+
+    /* @param {{ associationId: string }} options */
+    export const main = async ({ associationId }) => {
+      const client = new EC2Client({});
+      const command = new DisassociateAddressCommand({
+        AssociationId: associationId,   // PublicIp は廃止予定
+      });
+
+      try {
+        await client.send(command);
+        console.log("Successfully disassociated address");
+      } catch (caught) {
+        if (caught instanceof Error && caught.name === "InvalidAssociationID.NotFound") {
+          console.warn(`${caught.message}.`);
+        } else {
+          throw caught;
+        }
+      }
+    };
+
+- KEY: aws.EC2.sdk.Address.release
+  EXPLAIN: |
+    Address 解放(release)
+  BODY: |
+    ■ Elastic IP アドレスを解放
+
+    import { ReleaseAddressCommand, EC2Client } from "@aws-sdk/client-ec2";
+
+    /* @param {{ allocationId: string }} options */
+    export const main = async ({ allocationId }) => {
+      const client = new EC2Client({});
+      const command = new ReleaseAddressCommand({
+        AllocationId: allocationId,
+      });
+
+      try {
+        await client.send(command);
+        console.log("Successfully released address.");
+      } catch (caught) {
+        if (caught instanceof Error && caught.name === "InvalidAllocationID.NotFound") {
+          console.warn(`${caught.message}. Please provide a valid AllocationID.`);
+        } else {
+          throw caught;
+        }
+      }
+    };
+
+- KEY: aws.EC2.sdk.Address.describe
+  EXPLAIN: |
+    Address 取得(describe)
+  BODY: |
+    ■ Elastic IP アドレスの情報を取得
+
+    import { DescribeAddressesCommand, EC2Client } from "@aws-sdk/client-ec2";
+
+    /**
+    * 指定 Elastic IP アドレス or すべての Elastic IP アドレス
+    * @param {{ allocationId: string }} options
+    */
+    export const main = async ({ allocationId }) => {
+      const client = new EC2Client({});
+      const command = new DescribeAddressesCommand({
+        AllocationIds: [allocationId],     // 省略すると全ての Elastic IP アドレスを取得
+      });
+
+      try {
+        const { Addresses } = await client.send(command);
+        const addressList = Addresses.map((address) => ` • ${address.PublicIp}`);
+        console.log(addressList.join("\n"));
+
+      } catch (caught) {
+        if (caught instanceof Error && caught.name === "InvalidAllocationID.NotFound") {
+          console.warn(`${caught.message}. Please provide a valid AllocationId.`);
+        } else {
+          throw caught;
+        }
+      }
+    };

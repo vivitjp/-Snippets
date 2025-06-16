@@ -153,7 +153,6 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
                       padding="10px"
                       gap="10px"
                       overflow="hidden"
-                      boxShadow="0px 0px 5px rgba(0, 0, 0, 0.1)"
                       dangerouslySetInnerHTML={{
                         __html: snippetsObject.sample,
                       }}

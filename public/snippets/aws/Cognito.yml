@@ -1,9 +1,57 @@
 ---
 #-------------------------------
-# AWS
+# Cognito
 #-------------------------------
-- KEY: aws.Cognito.category
-  CATEGORY: Cognito
+- KEY: aws.Cognito.category.サービス
+  CATEGORY: サービス
+
+- KEY: aws.Cognito.サービス
+  EXPLAIN: |
+    サービス
+  BODY: |
+    ■ ユーザプール と ID プール
+
+    • ユーザープール
+      • ユーザーの認証と管理を行う
+      • ユーザには JWT 形式の Cognito トークン発行、API へのアクセスに利用
+      • 外部 ID プロバイダでのログインに基づいてトークン発行も可能
+      • ユーザーのサインアップ、サインイン、パスワードのリセットなどを提供
+      • ユーザー属性の管理や多要素認証 (MFA) の設定も可能
+      • 独自のユーザディレクトリを持つ
+      • API
+        • Cognito Identity Provider API と Cognito Auth API の 2 つの API 
+
+    • ID プール
+      • 独自認証せず Cognito ユーザプール/外部IDプロバイダでのログインで AWS 一時認証発行
+      • ユーザは AWS の各種サービスの API にアクセス可能
+      • 外部 ID プロバイダ (Facebook, Google, Amazon, X) のユーザー ID と紐付けることも可能
+      • ユーザーのデータを保存するための Cognito Sync と連携
+
+    Cognito Identity                     固有のIDを割り振る
+    Cognito Sync                         固有のデータストレージの提供
+    Cognito Identity Pools               ユーザープールの提供 
+    Cognito User Pools                   ユーザープールの提供
+    Cognito User Pools Identity          ユーザープールの提供
+    Cognito User Pools Identity Provider ユーザープールの提供
+
+- KEY: aws.Cognito.CognitoIdentity
+  EXPLAIN: |
+    Cognito Identity
+  BODY: |
+    ■ 一意のアイデンティティを与えるサービス
+    • 匿名ユーザーとして ID を発行する
+    • パブリックなログインプロバイダのユーザー ID と紐付ける
+      • Facebook, Google, Amazon, X
+    • 独自のログインプロバイダのユーザー ID と紐付ける
+
+- KEY: aws.Cognito.CognitoSync
+  EXPLAIN: |
+    Cognito Sync
+  BODY: |
+    ■ 固有のデータストレージ を提供するサービス
+    • ユーザーデータを保存する場所を提供
+    • データはローカルだけではなく、クラウドと同期して保存される
+    • データは、アプリケーションのユーザーごとに分離される
 
 - KEY: aws.Cognito.xxxxx
   EXPLAIN: |

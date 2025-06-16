@@ -97,6 +97,26 @@
       return obj !== null && typeof obj === "object"
     }
 
+- KEY: js.obj.getStringValueOrEmpty
+  EXPLAIN: getStringValueOrEmpty
+  BODY: |
+    export const getStringValueOrEmpty = (
+      value: number | null | undefined,
+      returnValue = ""
+    ): string => {
+      if (
+        value === null ||
+        value === undefined ||
+        value === 0 ||
+        value === Infinity ||
+        value === -Infinity ||
+        Number.isNaN(value) ||
+        !Number(value)
+      )
+        return returnValue;
+      else return String(value);
+    };
+
 - KEY: js.obj.isEmpty
   EXPLAIN: Object「空」判定関数
   BODY: |

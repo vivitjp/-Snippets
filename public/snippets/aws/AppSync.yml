@@ -5,6 +5,19 @@
 - KEY: aws.AppSync.category
   CATEGORY: AppSync
 
+- KEY: aws.AppSync.概要
+  EXPLAIN: |
+    概要
+  BODY: |
+    ■ AWS AppSync GraphQL API 
+    • GraphQL APIを簡単に構築できるフルマネージドサービス
+
+    ■ AppSync vs API Gateway
+    • AppSync
+      • GraphQL のエンドポイント提供(1つのみ)
+    • API Gateway
+      • 複数のAPIエンドポイントを提供
+
 - KEY: aws.AppSync.xxxxx
   EXPLAIN: |
     xxxxxx
