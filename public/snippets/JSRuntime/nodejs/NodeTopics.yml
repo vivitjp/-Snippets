@@ -42,9 +42,16 @@
       v15 ❌		2020/10/20	2021/04/06	End-of-life❌
       v14 ❌	Fermium	2020/04/21	2023/02/16	End-of-life❌
 
+#-------------------------------
+# Volta
+#-------------------------------
+- KEY: node.volta.category
+  CATEGORY: |
+    Nodeバージョン管理: Volta
+
 - KEY: node.volta.version.control
   EXPLAIN: |
-    Volta: Nodeバージョン管理
+    Volta
   BODY: |
     ■ Node.js バージョン確認
     $ node -v
@@ -93,21 +100,37 @@
     help          ヘルプ出力
 
 #-------------------------------
-# Node: NVM
+# nvm
 #-------------------------------
+- KEY: node.nvm.category
+  CATEGORY: |
+    Nodeバージョン管理: nvm
 
 - KEY: node.nvm.version.control
   EXPLAIN: |
-    nvm: Nodeバージョン管理
+    nvm
   BODY: |
     ■ インストール
     nvm: https://github.com/coreybutler/nvm-windows/releases
 
+    ■ バージョン確認
     > nvm version                       PowerShell使用
     1.1.11
+
+    ■ Nodeバージョン
+    > nvm ls
+
+    ■ インストール Nodejs
     > nvm install 16.13.2
+
+    ■ バージョン切替
     > nvm use 16.13.2
     Now using node v16.13.2 (64-bit)
+
+    ■ デフォルトバージョン設定
+    > nvm alias default 16.13.2
+    default -> 16.13.2 (64-bit)
+    ※VSCOde再起動!
 
 #-------------------------------
 # 一般 トピック

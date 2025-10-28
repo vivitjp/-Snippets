@@ -263,6 +263,28 @@
     fooRO.push(4) // NG
 
 #-------------------------------
+# Utility Partial
+#-------------------------------
+- KEY: ts.utility.partial
+  EXPLAIN: Partial型を用いたObject型生成
+  BODY: |
+    const obj = {"A": 1, "B": 2, "C": 3};
+
+    ■ 意図する挙動：Partial<T>
+    const objA: Partial<Record<keyof typeof obj, number>> = {
+        A: 1,
+        B: 2,
+        //C: 3,
+    }
+
+    ■ 意図とは異なる挙動：Record<K, T>
+    const objB: Record<Partial<keyof typeof obj>, number> = {
+        A: 1,
+        B: 2,
+        //C: 3,  <-- NG
+    }
+
+#-------------------------------
 # 排他的 OR
 #-------------------------------
 - KEY: ts.exclusiveOr

@@ -291,7 +291,7 @@
       • 50MBを超える場合、S3にアップロードしてARN指定
       • 解凍後のサイズは250MBまで
 
-- KEY: aws.Lambda.Lambda関数の使い方.マネジメントコンソール
+- KEY: aws.Lambda.Lambda関数の使い方1.マネジメントコンソール
   EXPLAIN: |
     マネジメントコンソール
   BODY: |

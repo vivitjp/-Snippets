@@ -1,0 +1,76 @@
+---
+#-------------------------------
+# ChatGPT
+#-------------------------------
+- KEY: chatGPT.category
+  CATEGORY: ChatGPT
+
+- KEY: chatGPT.モデル
+  EXPLAIN: モデル
+  BODY: |
+    ■ ChatGPT ファミリー (GPT-3.5, GPT-4, GPT-4o)
+
+      2023-2024年にかけて複数のモデルが登場
+      マルチモーダル（テキスト・画像・音声）入力に対応
+
+      GPT-4o:
+        2024年5月登場。高速・高性能・低コスト。音声・画像・テキストを統合
+        APIでも利用可能
+
+      GPT-4:
+        高性能モデル。複雑なタスクや高度な推論に強み
+        研究・開発・戦略分析など
+
+      GPT-3.5(廃止):
+        コスト効率が高く、日常的な対話や自動化に最適
+
+- KEY: chatGPT.プロンプト
+  EXPLAIN: プロンプト
+  BODY: |
+    # 背景
+    これから個人開発アプリ作成。
+    機能要件やコンセプトなどは `.chatgpt/00_project/01_concept_requirements.md` 参照
+
+    # 目的
+    開発を行う上で設計やルールを事前に決めたい
+
+    # 命令
+    01_concept_requirements をもとに、似たような構成で事前にドキュメントを作成したい
+
+    # 参考情報
+    （ここに本記事の内容をコピペ）
+
+- KEY: chatGPT.設定
+  EXPLAIN: 設定ファイル一覧
+  BODY: |
+    .chatgpt/
+    ├── 00_project/
+    │   ├── 01_concept_requirements.md
+    │   └── 02_inception_deck.md
+    ├── 01_development_docs/
+    │   ├── 01_architecture_design.md
+    │   ├── 02_database_design.md
+    │   ├── 03_api_design.md
+    │   ├── 04_screen_transition_design.md
+    │   ├── 05_seo_requirements.md
+    │   ├── 06_error_handling_design.md
+    │   ├── 07_type_definitions.md
+    │   ├── 08_development_setup.md
+    │   ├── 09_test_strategy.md
+    │   ├── 10_frontend_design.md
+    │   ├── 11_cicd_design.md
+    │   ├── 12_e2e_test_design.md
+    │   ├── 13_security_design.md
+    │   ├── 14_performance_optimization.md
+    │   └── 15_performance_monitoring.md
+    ├── 02_design_system/
+    │   ├── 00_basic_design.md
+    │   ├── 01_design_principles.md
+    │   ├── 02_component_design.md
+    │   ├── 03_animation_system.md
+    │   └── 04_layout_system.md
+    └── 03_library_docs/
+        ├── 01_shadcn_doc.md
+        ├── 02_supabase_auth_vitest.md
+        ├── 03_supabase_storage_vitest.md
+        └── 04_nextjs_app_router_patterns.md

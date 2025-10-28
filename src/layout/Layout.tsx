@@ -12,6 +12,7 @@ import { useSnippets } from "../library/hooks/useSnippets"
 import { Menu } from "./Menu"
 import { Top } from "./Top"
 import { useEffect, useRef } from "react"
+// import SvgGraphSample from "../test/SvgGraphSample"
 
 //------------------------------
 // Main
@@ -39,6 +40,7 @@ export const Layout = () => {
 
       <Body data-testid="body">
         <Menu />
+        {/* <SvgGraphSample /> */}
         <Playground data-testid="playground">
           <>
             {selectedMenu ? (

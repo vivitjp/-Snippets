@@ -1,0 +1,92 @@
+---
+#-------------------------------
+# AI
+#-------------------------------
+- KEY: ai.top.category
+  CATEGORY: AI
+
+- KEY: ai.general.生成AIの種類
+  EXPLAIN: 生成AIの種類
+  BODY: |
+    ■ 会話タイプ
+    chatGPT                   OpenAI。自然な会話を実現することを目的とした対話型AI
+    Google Gemini             Google。2023年12月発表。文章、画像、動画、音声も理解できる「マルチモーダル機能」
+    Microsoft Copilot         Microsoft。ブラウザやWindows向けAIチャットアシスタント。OpenAIの「GPT-4」「DALL-E 3」搭載
+    Claude                    Anthropic。自然な会話を実現することを目的とした対話型AI
+
+    ■ 要約タイプ
+    ELYZA LLM                 ELYZA。日本語の大規模言語モデル
+    QuillBot                  スタイル・トーン指定。添削、要約、文法チェック、優れた表現の提案機能
+                              ChromeやWordとも連携、既存のライティングツールに統合
+    DeepL Write               翻訳サービスDeepL提供。文章の推敲や文法チェック
+    Samaru                    ハルプログラム。最大5,000字の日本語文章を瞬時に要約(文字数指定)、語尾調変更
+
+    ■ 記事作成タイプ
+    SAKUBUN                   ブログ記事やSNSの投稿文、広告文などの作成。AIエディターで編集。トーンやペルソナ設定
+    ブログアイデア生成ツール    HubSpot、記事作成、記事のアウトラインからテキストまでを生成、CMS「Content Hub」と連携、生成コンテンツ公開
+    Transcope                 GPT-4搭載で記事生成、SEOライティングに優れる、自社資料学習で、特化記事生成可能
+    Claude                    高処理能力で大量文章を読み込み、迅速分析、複雑な情報もエラー率を低減して処理。自然な文章生成能力。文脈を理解する能力高
+
+    ■ 画像生成タイプ
+    Image Creator(Copilot)    Microsoft、漫画、アニメ、水彩画、サイバーパンク、超現実
+    Stable Diffusion          StabilityAI 2022年8月、オープンソースの「潜在拡散モデル」AI、指示文から画像生成、基本的に商用利用可能
+    Adobe Photoshop           Adobe、AI技術の早期導入。生成AI機能も搭載、画像から不要部分を削除、指示文から独自画像生成
+    Canva                     もとは画像編集ソフト、指示分から画像作成、画像編集に特化、ホワイトバランス調整、エフェクト追加可能
+
+    ■ 動画生成タイプ
+    Runway Gen-3 alpha        Runway 2023年、テキストや画像から最大16秒の動画作成
+    Make-a-Video              Meta 2022年、文章、画像、既存動画から新動画を生成。指示文から動画作成、画像からその前後の時間軸映像生成
+    Sora                      OpenAI、指示文から動画生成、キャラクター、背景、カメラワーク再現、最長1分動画作成。精度高い動画。
+
+    ■ 音楽生成タイプ
+    Soundraw                  ムード、ジャンル、テーマ指定で10秒～5分までのオリジナル曲を自動生成
+    MusicFX(旧MusicLM)        Google、指示文から音楽生成
+    Suno AI                   指示文からボーカル付き音楽生成。歌詞入力でメロディを自動生成。高品質版 V3 開放、最大20曲/日(2分/曲)が生成可能
+
+    ■ コード生成タイプ
+    GitHub Copilot            コメントやコードから自動でプログラムを提案・生成
+                              AgentModeへの指示文で既存コード解析しつつ提案
+    Amazon CodeWhisperer      AWS対応。コード補完やセキュリティ提案も可能
+    ChatGPT Code Interpreter  自然言語で指示してコード生成・実行が可能
+    Tabnine                   AIによるコード補完。多言語対応。
+    Claude Code               Anthropic。自然言語からコード生成や補完が可能。多言語対応
+
+- KEY: ai.general.基礎概念
+  EXPLAIN: 基礎概念
+  TABLE:
+    OPTION:
+      ALIGN:
+        - left
+        - left
+        - left
+      HAS_TITLE: false
+      WIDTH:
+        - 20%
+    BODY: |
+      ■ 予約済み環境変数
+      AI	Artificial Intelligence	人工知能。機械が人間のように知的作業を行うことを可能にする技術。
+      機械学習	Machine Learning	AIの一種で、大量のデータからパターンを学習し、識別や予測を行う。
+      ディープラーニング	Deep Learning	機械学習の一種で、ニューラルネットワークを多層に重ねることで、より複雑な特徴を自律的に学習する。
+      ニューラルネットワーク	Neural Network	人間の脳神経回路を模した構造。
+      教師あり学習	Supervised Learning	正解データと入力データをセットで学習させる方法。
+      教師なし学習	Unsupervised Learning	正解データがない状態で、データの特徴や構造を自ら見つけ出す方法。
+      強化学習	Reinforcement Learning	試行錯誤を通じて、報酬が最大になるように学習する方法。
+      アルゴリズム	Algorithm	問題を解決するための手順や計算方法。
+      ビッグデータ	Big Data	従来のデータベースでは扱いきれない、非常に大量かつ多様なデータの集合。
+
+      ■ 生成AI関連
+      生成AI	Generative AI	新しいコンテンツ、テキスト、画像、音声などを創造するAI。
+      大規模言語モデル	LLM	大量のテキストデータを学習した、言語処理に特化したAIモデル。
+      プロンプト	Prompt	AIへの指示や命令、入力テキスト。
+      プロンプトエンジニアリング	Prompt Engineering	AIから最適な結果を得るためのプロンプトを設計・最適化する技術。
+      ハルシネーション	Hallucination	AIが生成した情報が、事実と異なる、あるいは根拠のない誤った内容であること。
+      GPT	Generative Pre-trained Transformer	生成AIモデルの一種。
+      トークン	Token	AIが処理するテキストの最小単位。
+
+      ■ 実践・開発
+      アノテーション	Annotation	AIの学習に必要なデータに、ラベル付けなどの注釈を付ける作業。
+      エンベディング	Embedding	テキストなどのデータを、AIが理解しやすい数値表現に変換すること。
+      コンテキストウィンドウ	Context Window	AIが一度に処理できる情報の最大長。
+      RAG	Retrieval-Augmented Generation	外部の知識ソースを参照して、より正確な応答を生成する技術。
+      ファインチューニング	Fine-tuning	事前学習済みのモデルを、特定のタスクに合わせて追加学習させること。
+      推論	Inference	学習済みのモデルを使って、新しいデータに対する予測や出力を生成するプロセス。

@@ -186,6 +186,9 @@
     ■ MappedType + Record<>
     type SecPersonA = {[P in keyof Section]?: Partial<Record<keyof Person, Function>> }
 
+      ※ Record<Partial<keyof Person>, Function> は Record<keyof Person, Function> と同じ
+         Partial の意味がなくなるため注意
+
     const secPersonA1:SecPersonA  = {
         tech: {name:()=>{}, age:()=>{}},
         sales: {name:()=>{}}

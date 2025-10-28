@@ -8,6 +8,23 @@ type menuByCategories = {
 
 export const menuItems: menuByCategories[] = [
   {
+    category: "AI",
+    items: [
+      {
+        name: "AI一般",
+        fileName: "ai/AI",
+      },
+      {
+        name: "ChatGPT",
+        fileName: "ai/ChatGPT",
+      },
+      {
+        name: "ClaudeCode",
+        fileName: "ai/ClaudeCode",
+      },
+    ],
+  },
+  {
     category: "Git",
     items: [
       {
@@ -375,6 +392,11 @@ export const menuItems: menuByCategories[] = [
         name: "ReactHookForm:pk",
         fileName: "ReactPackage/ReactHookForm",
         codeKeyTypes: [codeKeys.keysPackageRHF],
+      },
+      {
+        name: "UI Package",
+        fileName: "ReactPackage/UI",
+        codeKeyTypes: [],
       },
       {
         name: "Chakra",
