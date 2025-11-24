@@ -90,3 +90,66 @@
       RAG	Retrieval-Augmented Generation	外部の知識ソースを参照して、より正確な応答を生成する技術。
       ファインチューニング	Fine-tuning	事前学習済みのモデルを、特定のタスクに合わせて追加学習させること。
       推論	Inference	学習済みのモデルを使って、新しいデータに対する予測や出力を生成するプロセス。
+
+- KEY: ai.general.トークン
+  EXPLAIN: トークン
+  BODY: |
+    https://qiita.com/shanks665/items/a5ec31706af9ffffc491
+
+    1. トークン削減とコスト削減
+
+    LLMのAPIは、トークン数で課金。TOONはJSONの冗長な記号を削り、同じ情報を30〜60%少ないトークンで送れる。
+
+    実測例:
+        GitHubリポジトリデータ（100件）: JSON 15,145トークン → TOON 8,745トークン（42%削減）
+        日次分析データ（180日分）: JSON 10,977トークン → TOON 4,507トークン（59%削減）
+
+    GPT-4oを使う場合:
+        入力: $5 per 1M tokens
+        出力: $15 per 1M tokens
+
+    毎日100万トークンのデータをLLMに渡している場合、TOONに変えるだけで月75~150$のコスト削減。
+    大規模なシステムなら、年間で数十万円から数百万円の差になる。
+
+
+    ■ JSON vs toon 
+    {
+      "users": [
+        {"id": 1, "name": "Alice", "role": "admin,sub"},
+        {"id": 2, "name": "Bob", "role": "user"}
+      ]
+    }
+
+    users{id,name,role}:
+      1,Alice,"admin,sub"
+      2,Bob,user
+
+    ■ toon コード例 (Node.js)
+    import { stringify, parse } from '@toon-format/toon';
+
+    const data = {
+      users: [
+        { id: 1, name: 'Alice', role: 'admin' },
+        { id: 2, name: 'Bob', role: 'user' }
+      ]
+    };
+
+    // TOONに変換
+    const toonString = stringify(data);
+
+    // LLMに渡す
+    const prompt = `以下のユーザーデータから管理者を抽出してください:\n${toonString}`;
+
+    // LLMから返ってきたTOONを元に戻す
+    const result = parse(llmResponse);
+
+- KEY: ai.general.プロンプト・エンジニアリング
+  EXPLAIN: プロンプト・エンジニアリング
+  BODY: |
+    プロンプト・エンジニアリングは、まだ始まってすらいない
+    https://qiita.com/makotosaekit/items/21990e3703ac721a04d0
+    プロンプト・エンジニアリングは「まだ始まっていない」分野であり、体系的な知識や技術が未整備。
+    現状は「試行錯誤」や「経験則」に頼っている部分が多い。
+    既存のAI活用は、プロンプトの工夫よりも「モデルの性能」や「データ量」に依存しがち。
+    今後は、より高度なプロンプト設計や、専門的なノウハウの蓄積が重要になる。
+    プロンプト設計の標準化や、ベストプラクティスの共有が進むことで、AI活用の精度・効率が向上する可能性がある。
