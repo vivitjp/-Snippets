@@ -233,12 +233,20 @@
   EXPLAIN: cherrypick(特定コミットを適用)
   BODY: |
     git cherry-pick <commit>                    # 特定コミットを適用
+    git cherry-pick <commit> <commit> ...       # 複数特定コミットを適用
+
+    ■ (使用注意) 複数コミットを一斉に適用
+      コミットが本来の順番やコンテキストを無視して適用される
     git cherry-pick <commit>..<commit>          # 複数コミットを一斉に適用(最初と最後のコミット)
-    git cherry-pick <commit>^..HEAD             # 特定コミットからHEADまで適用
-    git cherry-pick <commit>^..<commit>         # 特定コミットから特定コミットまで適用
-    git cherry-pick <commit>^..<commit>^        # 特定コミットから特定コミットまで適用
-    git cherry-pick <commit>^..<commit>^..HEAD  # 特定コミットから特定コミットまで適用
-    git cherry-pick <commit>^..<commit>^..HEAD^ # 特定コミットから特定コミットまで適用
+
+    ■ merge コミットには使用しないこと
+      merge コミットは通常、複数の親を持ち、コンテキストが異なるため
+
+      $ git cherry-pick <merge-commit-hash>
+
+      # エラーメッセージ例:
+      error: commit is a merge but no -m option was given.
+      fatal: cherry-pick failed
 
     ■ 取り消し
     git cherry-pick --abort             # コンフリクト編集前
@@ -317,6 +325,14 @@
       f826570 update
       6db4722 正規表現修正
       328ed61 fix bugs
+
+    ■ git log -n 1                          # ログ表示(最新1件)
+      git log --oneline -n 1                # 6e4e267 (HEAD -> main, origin/main) update
+      git log -n 1 --pretty=format:"%H %s"  # 6e4e267e55d7a4b86477dc6430ef71796be897a0 update
+
+      ※ Alias作成
+        > git config --global alias.last 'log -n 3 --pretty=format:"%H %s"'
+        > git last                          # 実行
 
     ■ git log --oneline --grep "key"    # ログ表示(一行で)
       f16c9c6 key

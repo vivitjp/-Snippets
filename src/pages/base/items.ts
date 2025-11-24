@@ -439,6 +439,16 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [],
       },
       {
+        name: "Express",
+        fileName: "/JSRuntime/nodejs/Express",
+        codeKeyTypes: [codeKeys.Express],
+      },
+      {
+        name: "Express API",
+        fileName: "/JSRuntime/nodejs/ExpressAPI",
+        codeKeyTypes: [codeKeys.Express],
+      },
+      {
         name: "🔺Bun",
         fileName: "JSRuntime/bun",
         codeKeyTypes: [],
@@ -542,16 +552,6 @@ export const menuItems: menuByCategories[] = [
         name: "環境変数",
         fileName: "/JSRuntime/nodejs/env",
         codeKeyTypes: [codeKeys.Env],
-      },
-      {
-        name: "Express",
-        fileName: "/JSRuntime/nodejs/Express",
-        codeKeyTypes: [codeKeys.Express],
-      },
-      {
-        name: "Express API",
-        fileName: "/JSRuntime/nodejs/ExpressAPI",
-        codeKeyTypes: [codeKeys.Express],
       },
     ],
   },
@@ -658,8 +658,8 @@ export const menuItems: menuByCategories[] = [
       },
       {
         name: "GraphQL",
-        fileName: "",
-        codeKeyTypes: [],
+        fileName: "database/GraphQL",
+        codeKeyTypes: [codeKeys.graphQL, codeKeys.JSTS, codeKeys.HTML],
       },
       {
         name: "Redis",

@@ -1,4 +1,15 @@
 ---
+- KEY: cloud.services
+  EXPLAIN: Cloud サービス
+  BODY: |
+    SaaS (Software as a Service)        ソフトウェアをサービスとして提供
+    PaaS (Platform as a Service)        APP開発に必要なプラットフォーム提供
+    IaaS (Infrastructure as a Service)  =IaS インフラ(サーバー、ネットワーク、ストレージ)提供
+
+    HaaS (Hardware as a Service)        ハードウェアをサービスとして提供
+    FaaS (Function as a Service)        特定の機能やロジックをサービスとして提供
+    IDaaS (Identity as a Service)       ID管理やアクセス管理をサービスとして提供
+
 - KEY: cloud.general
   EXPLAIN: Cloud 全般
   BODY: |
@@ -44,6 +55,12 @@
     Neon            neon.tech/          PostgreSQLベース
     Turso           turso.tech/         SQLiteベース
 
+      無料枠が無くなったPlanetScale の代替DBを検討する。【4 月 8 日まで】
+      https://qiita.com/Kenta_Kobayashi/items/ba445245ecd357dd19d7
+
+      【個人開発】無料DBを求めてPlanetScaleからNeonに移行したら快適だった話
+      https://qiita.com/nuko-suke/items/e940ff8ccde35d09f668
+
     □NoSQL系
     MongoDB Atlas   www.mongodb.Cosmos  MongoDBベース
     Neo4j           neo4j.com/          グラフデータベース
@@ -56,16 +73,32 @@
     GraphQL          AppSync            Hasura Cloud
     DWH              Redshift           Snowflake
 
-- KEY: cloud.services
-  EXPLAIN: Cloud サービス
-  BODY: |
-    SaaS (Software as a Service)        ソフトウェアをサービスとして提供
-    PaaS (Platform as a Service)        APP開発に必要なプラットフォーム提供
-    IaaS (Infrastructure as a Service)  =IaS インフラ(サーバー、ネットワーク、ストレージ)提供
-
-    HaaS (Hardware as a Service)        ハードウェアをサービスとして提供
-    FaaS (Function as a Service)        特定の機能やロジックをサービスとして提供
-    IDaaS (Identity as a Service)       ID管理やアクセス管理をサービスとして提供
+- KEY: cloud.services.db
+  EXPLAIN: DB サービスの比較
+  TABLE:
+    OPTION:
+      ALIGN:
+        - left
+        - left
+        - left
+      HAS_TITLE: true
+      WIDTH:
+        - 20%
+        - 25%
+    BODY: |
+      サービス名
+        タイプ	価格体系と最新の概要
+      Amazon RDS	RDBMS (マネージド)	無料利用枠あり。最小構成は月額15〜25 USD程度が目安。
+      Amazon Aurora	RDBMS (高性能マネージド)	Serverless v2の最小構成で月額43〜45 USD程度が目安。
+      Amazon DynamoDB	NoSQL (フルマネージド)	永続的な無料利用枠あり。小規模利用なら無料運用可能。
+      MongoDB Atlas	NoSQL (クラウドホスティング)	永続的な無料利用枠（M0）あり。本番環境M10は月額57 USD〜。
+      自前で用意したMySQL	RDBMS (セルフホスティング)	AWS無料利用枠のEC2で構築可能。運用管理コストは自身で負担。
+      PlanetScale	MySQL互換 (サーバーレス)	無料枠あり（1ブランチ、1000万行/月まで）。それ以上は読み書き行数ベースの従量課金。スケーリングが容易。
+      Supabase	PostgreSQL (BaaS)	無料枠あり（プロジェクト停止条件あり）。有料プランは月額25 USD〜。DBだけでなく認証・ストレージも含む。
+      Neon	PostgreSQL (サーバーレス)	無料枠あり（プロジェクト停止条件なし）。有料プランは従量課金で、コンピューティング時間やストレージで決まる。
+      Vercel Postgres	PostgreSQL (Vercel連携)	Vercelホスティングと連携。無料枠あり。有料プランはクエリ実行数、行数、ストレージの従量課金。
+      TiDB Serverless	MySQL互換 (分散型)	無料枠あり（永続的、月間最大25GB/2500万CUまで）。高い水平スケーラビリティが特徴。
+      Cloudflare D1	SQLite互換 (エッジ)	無料枠あり（1日10億リクエストまで）。Cloudflare Workersと連携し、エッジでの高速なアクセスを提供。
 
 # - KEY: cloud.general
 #   EXPLAIN: Cloud 全般
@@ -75,3 +108,28 @@
 #   EXPLAIN: Cloud 全般
 #   BODY: |
 
+- KEY: cloud.services.id
+  EXPLAIN: ID サービスの比較
+  TABLE:
+    OPTION:
+      ALIGN:
+        - left
+        - left
+        - left
+      HAS_TITLE: true
+      WIDTH:
+        - 20%
+        - 25%
+    BODY: |
+      サービス名
+        提供元	主な特徴
+      AWS IAM Identity Center (旧 AWS SSO)	Amazon Web Services	AWSアカウントや各種SaaSへのSSO（シングルサインオン）を一元管理。AWS環境をメインに利用している企業にとって非常に便利。
+      AWS IAM (Identity and Access Management)	Amazon Web Services	AWSリソース（EC2, S3など）へのアクセス権限を詳細に管理するための基本サービス。ユーザー、グループ、ロール、ポリシーで構成される。
+      Okta (オクタ)	Okta	IDaaS市場のリーダー。SSO、MFA、ライフサイクル管理など機能が豊富で、多くのエンタープライズ企業で利用されている。
+      Azure AD (Microsoft Entra ID)	Microsoft	Microsoft 365やAzureを利用している企業にとって最も導入しやすい。Windowsクライアントとの連携が強力。
+      OneLogin (ワンログイン)	One Identity	SSOとMFAに特化しており、シンプルなUIと導入の容易さが特徴。中小企業から大企業まで幅広く利用されている。
+      Auth0 (オースゼロ)	Okta	開発者向けの機能が豊富。API連携やカスタマイズ性が高く、モダンなアプリケーション開発に組み込みやすい。
+      Google Cloud Identity	Google	Google Workspaceを利用している企業向け。Googleのインフラを活用したセキュアなID管理を提供。
+      トラスト・ログイン	GMOグローバルサイン	日本国内の企業向けに特化したサービス。日本語サポートが充実しており、日本の商習慣に合わせた機能がある。
+      CyberArk Identity	CyberArk	高度なアクセス管理と特権アクセス管理（PAM）を組み合わせたソリューションを提供。
+      Ping Identity (PingOne)	Ping Identity	エンタープライズ向けに設計されており、複雑な環境やハイブリッドクラウドに対応する柔軟性が高い。

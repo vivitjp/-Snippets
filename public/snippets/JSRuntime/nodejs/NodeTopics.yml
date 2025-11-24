@@ -198,3 +198,65 @@
       Buffer.from('48656c6c6f', 'hex'); // <Buffer 48 65 6c 6c 6f>
       buffer.write("o", 1);             // バッファの2バイト目に'o'を書き込む
       buffer.toString();                // "Hollo, World!"
+
+#-------------------------------
+# ID
+#-------------------------------
+- KEY: node.general.packages
+  CATEGORY: ID 生成 Packages
+
+- KEY: node.general.list
+  EXPLAIN: ID 生成パッケージの生成時間比較
+  BODY: |
+    参照: https://qiita.com/okm-uv/items/0b84c75e7524640dab11
+
+    crypto.randomUUID         21,119,429 ops/sec
+    uuid v4                   20,368,447 ops/sec ●
+    @napi-rs/uuid             11,493,890 ops/sec
+    uid/secure                 8,409,962 ops/sec
+    @lukeed/uuid               6,871,405 ops/sec
+    nanoid                     5,652,148 ops/sec ●
+    customAlphabet             3,565,656 ops/sec
+    secure-random-string         394,201 ops/sec
+    uid-safe.sync                393,176 ops/sec
+    cuid                         208,131 ops/sec ●
+    shortid                       49,916 ops/sec
+
+- KEY: node.general.format
+  EXPLAIN: 各フォーマットと特徴
+  BODY: |
+    ■ UUID (v4)
+
+      36文字、128ビット(16進数の文字32個、乱数122ビット)
+      Rがランダム、4が固定、rが2ビットだけ固定
+
+      RRRRRRRR-RRRR-4RRR-rRRR-RRRRRRRRRRRR
+
+    ■ NanoID
+
+      21文字、乱数126ビット
+      UUIDの問題「生成結果の文字列が長い」を解決
+
+      V1StGXR8_Z5jdHi6B-myT
+
+    ■ ULID
+
+      UUIDの問題(長い,ソート不可)を解消
+      16進数ではなく英数字
+      前半48bit:timestamp(~10889年)、後半80bit:ランダム
+      1.21*(10**24)個/msまでソート可能性維持
+
+      01AN4Z07BY79KA1307SR9X4MV3
+
+    ■ CUID
+
+      スケーラブル、水平方向のスケーラビリティ
+      パフォーマンスが良い
+
+      ch72gsb320000udocl363eofy
+      c - h72gsb32 - 0000 - udoc - l363eofy
+        c:        固定値
+        h72gsb32: timestamp
+        0000:     Counter
+        udoc :    クライアントのfingerprint(複数クライアント間でも衝突回避)
+        l363eofy: ランダム

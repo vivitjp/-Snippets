@@ -11,6 +11,7 @@ export const keysJSTS: KeyDef = {
     "export",
     "try",
     "catch",
+    "throw",
     "lazy",
     "function",
     "constructor",
@@ -156,5 +157,5 @@ export const keysJSTS: KeyDef = {
 
   // ■ Inactive Words
 
-  "#999": ["toSliced", "console.log"],
+  "#999": ["toSliced", "console.log", "console.error"],
 }

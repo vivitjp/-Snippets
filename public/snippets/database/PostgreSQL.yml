@@ -110,11 +110,11 @@
     13 	2019, 2016
 
     ■ Ubuntsu
-    postgresql-client-17 	client libraries and client binaries
-    postgresql-17 	core database server
-    postgresql-doc-17 	documentation
-    libpq-dev 	libraries and headers for C language frontend development
-    postgresql-server-dev-17 	libraries and headers for C language backend development
+    postgresql-client-17 	              // client libraries and client binaries
+    postgresql-17 	                    // core database server
+    postgresql-doc-17 	                // documentation
+    libpq-dev 	                        // libraries and headers for C frontend development
+    postgresql-server-dev-17 	          // libraries and headers for C backend development
 
 - KEY: postgreSQL.install
   EXPLAIN: Install
@@ -232,3 +232,8 @@
     【🟢like_option】
     { INCLUDING | EXCLUDING }
     { COMMENTS | COMPRESSION | CONSTRAINTS | DEFAULTS | GENERATED | IDENTITY | INDEXES | STATISTICS | STORAGE | ALL }
+
+- KEY: 作成中
+  EXPLAIN: 作成中
+  BODY: |
+    作成中
