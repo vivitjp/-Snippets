@@ -26,9 +26,82 @@
       V2: import {...} from 'aws-sdk'
       V3: import {...} from '@aws-sdk/{service}'
 
-- KEY: aws.sdk.sample.ec2.1
+- KEY: aws.sdk.env
   EXPLAIN: |
-    サンプル EC2 StartInstancesCommand
+    環境変数による認証情報設定
+  BODY: |
+    ■ 環境変数一覧
+      AWS_ACCESS_KEY_ID         アクセスキーID
+      AWS_SECRET_ACCESS_KEY     シークレットアクセスキー
+      AWS_SESSION_TOKEN         セッショントークン (一時的な認証情報を使用する場合)
+      AWS_REGION                デフォルトのリージョン設定 (例: us-west-2)
+      AWS_PROFILE               使用するプロファイル名 (~/.aws/credentials または ~/.aws/config から)
+
+    ■ 例 (Linux/Mac)
+      export AWS_ACCESS_KEY_ID="your_access_key_id"
+      export AWS_SECRET_ACCESS_KEY="your_secret_access_key"
+      export AWS_SESSION_TOKEN="your_session_token"  # 必要に応じて
+      export AWS_REGION="us-west-2"
+      export AWS_PROFILE="default"  # 必要に応じて
+
+    ■ 例 (Windows PowerShell)
+      $env:AWS_ACCESS_KEY_ID="your_access_key_id"
+      $env:AWS_SECRET_ACCESS_KEY="your_secret_access_key"
+      $env:AWS_SESSION_TOKEN="your_session_token"  # 必要に応じて
+      $env:AWS_REGION="us-west-2"
+      $env:AWS_PROFILE="default"  # 必要に応じて
+
+    ■ Profileの設定（Project単位の設定が可能）
+      ~/.aws/credentials (Linux/Mac)
+      C:\Users\USERNAME\.aws\credentials (Windows)
+
+      [default]
+      aws_access_key_id = your_access_key_id
+      aws_secret_access_key = your_secret_access_key
+      aws_session_token = your_session_token  # 必要に応じて
+
+    ■ 設定の優先順位
+      ※ 通常は、環境変数またはIAMロール
+
+      コード内の明示的な設定:     new S3Client({ region: "..." }) コード内指定値
+      環境変数:                  上記の AWS_REGION や AWS_ACCESS_KEY_ID など
+      認証情報ファイル:           ~/.aws/credentials および ~/.aws/config ファイル
+      EC2/ECS/LambdaのIAMロール: AWSインフラストラクチャ上で実行時の自動的に割り当てロール
+
+- KEY: aws.sdk.category.ec2
+  CATEGORY: EC2
+
+- KEY: aws.sdk.ec2.method
+  EXPLAIN: |
+    メソッド(EC2)
+  TABLE:
+    OPTION:
+      ALIGN:
+        - left
+        - left
+        - left
+      HAS_TITLE: true
+      WIDTH:
+        - 20%
+        - 20%
+    BODY: |
+      コマンド名 (Command)	対応操作 (API Operation)	説明
+      StartInstancesCommand	StartInstances	停止中のインスタンスを起動
+      StopInstancesCommand	StopInstances	実行中のインスタンスを停止
+      RebootInstancesCommand	RebootInstances	実行中のインスタンスを再起動
+      TerminateInstancesCommand	TerminateInstances	インスタンスを終了（削除）
+      DescribeInstancesCommand	DescribeInstances	インスタンスの情報を取得
+      RunInstancesCommand	RunInstances	新しいインスタンスを起動
+      CreateImageCommand	CreateImage	インスタンスのAMIを作成
+      DescribeImagesCommand	DescribeImages	AMIの情報を取得
+      AllocateAddressCommand	AllocateAddress	新しいElastic IPアドレスを割り当て
+      AssociateAddressCommand	AssociateAddress	Elastic IPアドレスをインスタンスに関連付け
+      DisassociateAddressCommand	DisassociateAddress	Elastic IPアドレスの関連付けを解除
+      ReleaseAddressCommand	ReleaseAddress	Elastic IPアドレスを解放
+
+- KEY: aws.sdk.ec2.sample
+  EXPLAIN: |
+    サンプル実装(EC2)
   BODY: |
     ■ インストールパッケージ
       yarn add @aws-sdk/client-ec2
@@ -84,3 +157,125 @@
           }
         ]
       }
+
+- KEY: aws.sdk.category.s3
+  CATEGORY: S3
+
+- KEY: aws.sdk.s3.method
+  EXPLAIN: メソッド(S3)
+  TABLE:
+    OPTION:
+      ALIGN:
+        - left
+        - left
+        - left
+      HAS_TITLE: true
+      WIDTH:
+        - 20%
+        - 20%
+    BODY: |
+      コマンド名 (Command)	対応操作 (API Operation)	説明
+      PutObjectCommand	PutObject	バケットにオブジェクト（ファイル）をアップロード
+      GetObjectCommand	GetObject	バケットからオブジェクトをダウンロード（取得）
+      DeleteObjectCommand	DeleteObject	バケット内の単一のオブジェクトを削除
+      ListBucketsCommand	ListBuckets	アカウントが所有するすべてのバケットを一覧表示
+      ListObjectsV2Command	ListObjectsV2	バケット内のオブジェクトのリストを取得
+      CopyObjectCommand	CopyObject	オブジェクトを別の場所にコピー
+      CreateBucketCommand	CreateBucket	新しいバケットを作成
+      DeleteBucketCommand	DeleteBucket	空のバケットを削除
+      HeadObjectCommand	HeadObject	オブジェクトのメタデータを取得
+      PutBucketPolicyCommand	PutBucketPolicy	バケットのポリシーを設定または更新
+      GetBucketPolicyCommand	GetBucketPolicy	バケットのポリシーを取得
+      DeleteBucketPolicyCommand	DeleteBucketPolicy	バケットのポリシーを削除
+
+- KEY: aws.sdk.s3.sample
+  EXPLAIN: サンプル実装(S3)
+  BODY: |
+    ■ パッケージ
+    npm install @aws-sdk/client-s3 @aws-sdk/client-lambda
+
+    ■ 実装
+    import { S3Client, ListBucketsCommand } from "@aws-sdk/client-s3";
+
+    // 1. クライアントの作成（リージョン指定、認証情報は環境変数やIAMロールから自動ロード）
+    const s3Client = new S3Client({ region: "ap-northeast-1" });
+
+    async function listAllS3Buckets() {
+      const command = new ListBucketsCommand({});
+
+      try {
+        const data = await s3Client.send(command);
+        console.log("バケット一覧:", data.Buckets);
+        return data;
+      } catch (error) {
+        console.error("エラーが発生しました:", error);
+        throw error;
+      }
+    }
+
+- KEY: aws.sdk.category.Lambda
+  CATEGORY: Lambda
+
+- KEY: aws.sdk.Lambda.method
+  EXPLAIN: メソッド(Lambda)
+  TABLE:
+    OPTION:
+      ALIGN:
+        - left
+        - left
+        - left
+      HAS_TITLE: true
+      WIDTH:
+        - 20%
+        - 20%
+    BODY: |
+      コマンド名 (Command)	対応操作 (API Operation)	説明
+      InvokeCommand	Invoke	Lambda関数を呼び出す
+      CreateFunctionCommand	CreateFunction	新しいLambda関数を作成
+      DeleteFunctionCommand	DeleteFunction	既存のLambda関数を削除
+      UpdateFunctionCodeCommand	UpdateFunctionCode	Lambda関数のコードを更新
+      GetFunctionCommand	GetFunction	Lambda関数の設定とコードの情報を取得
+      ListFunctionsCommand	ListFunctions	アカウント内のすべてのLambda関数を一覧表示
+      AddPermissionCommand	AddPermission	Lambda関数にアクセス許可を追加
+      RemovePermissionCommand	RemovePermission	Lambda関数からアクセス許可を削除
+      CreateAliasCommand	CreateAlias	Lambda関数のエイリアスを作成
+      UpdateAliasCommand	UpdateAlias	Lambda関数のエイリアスを更新
+
+- KEY: aws.sdk.Lambda.sample
+  EXPLAIN: サンプル実装(Lambda)
+  BODY: |
+    作成中
+
+- KEY: aws.sdk.category.DynamoDB
+  CATEGORY: DynamoDB
+
+- KEY: aws.sdk.DynamoDB.method
+  EXPLAIN: メソッド(DynamoDB)
+  TABLE:
+    OPTION:
+      ALIGN:
+        - left
+        - left
+        - left
+      HAS_TITLE: true
+      WIDTH:
+        - 20%
+        - 20%
+    BODY: |
+      コマンド名 (Command)	対応操作 (API Operation)	説明
+      PutItemCommand	PutItem	テーブルに新しいアイテムを追加
+      GetItemCommand	GetItem	テーブルから単一のアイテムを取得
+      UpdateItemCommand	UpdateItem	既存のアイテムを更新
+      DeleteItemCommand	DeleteItem	テーブルから単一のアイテムを削除
+      ScanCommand	Scan	テーブル内のすべてのアイテムをスキャン
+      QueryCommand	Query	特定の条件に基づいてアイテムをクエリ
+      CreateTableCommand	CreateTable	新しいDynamoDBテーブルを作成
+      DeleteTableCommand	DeleteTable	既存のDynamoDBテーブルを削除
+      DescribeTableCommand	DescribeTable	DynamoDBテーブルの情報を取得
+      BatchWriteItemCommand	BatchWriteItem	複数のアイテムを一括で書き込み
+      BatchGetItemCommand	BatchGetItem	複数のアイテムを一括で取得
+
+- KEY: aws.sdk.DynamoDB.sample
+  EXPLAIN: サンプル実装(DynamoDB)
+  BODY: |
+    作成中

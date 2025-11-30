@@ -1,4 +1,5 @@
 import { KeyDef } from "../../types/type"
+import { keysAWSAurora } from "./keys/AWSAurora"
 import { keysAWSCloud } from "./keys/AWSCloud"
 import { keysCSS } from "./keys/CSS"
 import { keysChakra } from "./keys/Chakra"
@@ -19,7 +20,7 @@ import { keysJotai } from "./keys/Jotai"
 import { keysLint } from "./keys/Lint"
 import { keysLinux } from "./keys/Linux"
 import { keysMongo } from "./keys/Mongo"
-import { keysMySql } from "./keys/MySql"
+import { keysSql } from "./keys/Sql"
 import { keysNestjs } from "./keys/Nestjs"
 import { keysNextjs } from "./keys/Nextjs"
 import { keysPackage } from "./keys/Package"
@@ -41,6 +42,7 @@ import { keysNPM } from "./keys/npm"
 // 以下のオブジェクトをソートしてください
 export const codeKeys = {
   AWSCloud: "AWSCloud",
+  AWSAurora: "AWSAurora",
   Chakra: "Chakra",
   ClassTransformer: "ClassTransformer",
   ClassValidator: "ClassValidator",
@@ -62,7 +64,7 @@ export const codeKeys = {
   Lint: "Lint",
   Linux: "Linux",
   Mongo: "Mongo",
-  MySql: "MySql",
+  Sql: "Sql",
   Nestjs: "Nestjs",
   Nextjs: "Nextjs",
   NPM: "NPM",
@@ -87,6 +89,7 @@ export type CodeKeyType = (typeof codeKeys)[keyof typeof codeKeys]
 
 export const KeyAndCodes: Record<string, KeyDef> = {
   AWSCloud: keysAWSCloud,
+  AWSAurora: keysAWSAurora,
   Chakra: keysChakra,
   ClassTransformer: keysClassTransformer,
   ClassValidator: keysClassValidator,
@@ -108,7 +111,7 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   Lint: keysLint,
   Linux: keysLinux,
   Mongo: keysMongo,
-  MySql: keysMySql,
+  Sql: keysSql,
   Nestjs: keysNestjs,
   Nextjs: keysNextjs,
   NPM: keysNPM,

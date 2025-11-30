@@ -121,7 +121,7 @@ export const menuItems: menuByCategories[] = [
       {
         name: "🔺Aurora",
         fileName: "aws/Aurora",
-        codeKeyTypes: [codeKeys.AWSCloud],
+        codeKeyTypes: [codeKeys.AWSAurora, codeKeys.Sql],
         case_sensitive: false,
       },
       {
@@ -191,7 +191,7 @@ export const menuItems: menuByCategories[] = [
       },
       {
         name: "dockerCompose",
-        fileName: "",
+        fileName: "OS/DockerCompose",
         codeKeyTypes: [codeKeys.Docker],
         case_sensitive: false,
       },
@@ -635,7 +635,7 @@ export const menuItems: menuByCategories[] = [
       {
         name: "MySQL",
         fileName: "database/mySql",
-        codeKeyTypes: [codeKeys.MySql],
+        codeKeyTypes: [codeKeys.Sql],
         case_sensitive: false,
       },
       // {
@@ -654,7 +654,7 @@ export const menuItems: menuByCategories[] = [
       {
         name: "🔺PostgreSQL",
         fileName: "database/PostgreSQL",
-        codeKeyTypes: [codeKeys.MySql],
+        codeKeyTypes: [codeKeys.Sql],
       },
       {
         name: "GraphQL",
