@@ -1,11 +1,15 @@
 import { KeyDef } from "../../../types/type"
 
 export const keysDocker: KeyDef = {
-  Crimson: ["image", "container", "network", "volume"],
+  Crimson: ["image", "container", "network", "volume", "compose", "services"],
   // ■ Methods
   RoyalBlue: [
     "ls",
     "build",
+    "container_name",
+    "ports",
+    "volumes",
+    "environment",
     "history",
     "inspect",
     "rm",
@@ -37,6 +41,17 @@ export const keysDocker: KeyDef = {
     "cp",
     "connect",
     "disconnect",
+    "up",
+    "ps",
+    "down",
+    "images",
+    "version",
+    "help",
+    "config",
+    "scale",
+    "save",
+    "load",
+    "xxx",
   ],
   DodgerBlue: [
     "FROM",

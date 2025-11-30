@@ -1,0 +1,389 @@
+---
+#-------------------------------
+# GitHub
+#-------------------------------
+
+- KEY: GitHub.kickStart
+  CATEGORY: Kick Start
+
+- KEY: GitHub.Repository
+  EXPLAIN: |
+    Repository
+  BODY: |
+    ■ リポジトリ作成
+    1. GitHubにログイン
+    2. 画面右上の「+」アイコンをクリックし、「New repository」を選択
+    3. リポジトリ名、説明、公開/非公開設定を入力
+    4. 「Create repository」ボタンをクリック
+
+    ■ リポジトリのクローン
+    ローカルマシンにリポジトリをクローンするには、以下のコマンドを使用:
+    git clone <リポジトリのURL>
+
+- KEY: GitHub.settings
+  CATEGORY: 設定
+
+- KEY: GitHub.DeveloperSettings
+  EXPLAIN: |
+    Developer Settings
+  BODY: |
+    ■ Personal access tokens (PAT)
+    IDとパスワードの代わりに、GitHub APIへのアクセスや、Gitコマンド実行認証に使用するトークン管理
+
+      Classic PAT:
+      
+        従来式。リポジトリ全体やユーザーデータに対する広範なアクセス許可（スコープ）設定
+
+      Fine-grained PATs:
+      
+        新しいきめ細かな制御が可能な方式。
+        特定のリポジトリのみにアクセスを限定したり、許可する権限を厳密に指定
+        CI/CDツール（Jenkins, CircleCIなど）からの自動アクセス
+        スクリプトやCLIツールからのAPI操作
+        GitHub Actionsで標準のGITHUB_TOKENで不足する権限が必要な場合
+
+    ■ OAuth Apps
+    外部のWebアプリケーション（例: VS Codeの拡張機能、プロジェクト管理ツール、認証サービスなど）が、あなたのGitHubアカウントのデータにアクセスするための連携管理
+
+      OAuth (Open Authorization) 認証:
+
+        外部アプリケーションに対し「GitHubアカウントでのログイン」を許可する際に使用
+        作成・登録したアプリケーションの一覧表示
+        アプリケーションがどの権限を要求しているかを確認
+        不要になった連携（アプリケーションの認可）を取り消す
+
+    ■ GitHub Apps
+    OAuth Appsよりもさらに強力で、GitHubの機能を深く統合するための公式なアプリケーションプラットフォーム
+    主に開発者が独自のGitHub連携サービスを構築・販売する際に利用
+
+      OAuth Appsとの違い:
+
+        OAuth Apps：    「ユーザーとして」認証
+        GitHub Apps：    GitHub自体に「アプリとして」インストール
+                         より粒度の高い権限とWebhook機能（イベント通知）利用
+
+        ※ 通常、一般ユーザーが自分でGitHub Appを作成することは稀
+           多くのSaaS製品が裏側でこの仕組みを利用してGitHubと連携
+
+- KEY: GitHub.actions.Node.js
+  EXPLAIN: |
+    SSH keys
+  BODY: |
+    SSHキーは、パスワードを使わずに安全にリモートサーバー（GitHubやVPSなど）に接続するための認証方法
+    公開鍵暗号方式を利用しており、「公開鍵 (Public Key)」と「秘密鍵 (Private Key)」のペアで構成
+
+    前提知識：公開鍵と秘密鍵
+        秘密鍵 (Private Key): あなたのPC上に厳重に保管。絶対に他人に公開してはいけません。
+        公開鍵 (Public Key):  接続したいサーバー（GitHubやVPS）に登録。公開されても問題なし
+
+    認証時には、このペアが一致することで「あなたが正規のユーザーである」ことを証明
+
+    ■ SSHキーペアの生成（Windows, macOS, Linux共通）
+    ターミナルで ssh-keygen コマンド実行(セキュリティ強度が高いEd25519アルゴリズム推奨)
+
+      ssh-keygen -t ed25519 -C "your_email@example.com"
+
+        -t ed25519: 使用する暗号アルゴリズムを指定します。
+        -C "...": 識別子としてコメント（通常はメールアドレス）付加
+
+    コマンド実行後の質問
+
+        保存場所の確認 (Enter file in which to save the key (...)):
+            デフォルトの保存場所（通常 ~/.ssh/id_ed25519）で問題なし。Enter
+            （もし既にキーがある場合は「上書きしますか？」と聞かれます。既存のキーを消したくない場合は、別のファイル名を入力してください。）
+
+        パスフレーズの入力 (Enter passphrase (empty for no passphrase):):
+            重要: パスワード設定を強く推奨。万が一、秘密鍵ファイルが盗まれても、このパスフレーズがなければ使えません。
+
+    生成が完了すると、以下のようなメッセージが表示されます。
+
+    Your identification has been saved in /home/user/.ssh/id_ed25519
+    Your public key has been saved in /home/user/.ssh/id_ed25519.pub
+    # ... 省略 ...
+
+    ■ 公開鍵の確認
+
+      id_ed25519    :   秘密鍵ファイル（絶対に公開しない）
+      id_ed25519.pub:   公開鍵ファイル（サーバーに登録する）
+
+    公開鍵の中身を表示してコピーします。
+
+      cat ~/.ssh/id_ed25519.pub
+
+    表示される長い出力（ssh-ed25519 AAAA... your_email@example.com）をすべてコピー
+
+    ■ 公開鍵の登録と使い方
+    コピーした公開鍵を、接続したいサービス/サーバーに登録
+
+    GitHub/GitLabへの登録
+      Gitホスティングサービスでは、公開鍵をアカウントに紐づけることで、リポジトリへのSSHアクセス可能
+
+      GitHubの [Settings] > [SSH and GPG keys] に移動
+        [New SSH key] をクリック
+        Title（タイトル）に分かりやすい名前（例: My Laptop）を入力
+        Key（鍵）欄に、ステップ2でコピーした公開鍵の文字列全体を貼り付け
+        [Add SSH key] で保存
+
+    使い方（接続テスト）:
+    ターミナルで以下のコマンドを実行
+
+      ssh -T git@github.com
+
+    初回接続時に「known_hosts に追加しますか？」と聞かれるので yes 。
+    「Hi [あなたのユーザー名]! You've successfully authenticated, but GitHub does not provide shell access.」で成功
+
+- KEY: GitHub.actions.Node.js
+  EXPLAIN: |
+    GitHub Secrets
+  BODY: |
+    シークレット
+      認証情報やトークンなどの機密情報を安全に保存、GitHub Actionsなどのワークフローでのみ使用
+
+    GitHubリポジトリにシークレット (Secrets) を登録する手順
+    以下の手順で、先ほどのChromaticの例で使用した CHROMATIC_PROJECT_TOKEN などを登録できます。
+
+    1. リポジトリの Settings ページに移動する
+        メニューバーにある [Settings] タブをクリック
+
+    2. Secrets & variables のページを開く
+        Settingsページの左側サイドバーをスクロールします。
+        [Secrets and variables] をクリックし、表示されるサブメニューから [Actions] を選択
+
+    3. 新しいリポジトリシークレットを追加する
+
+        右上の [New repository secret] ボタンをクリックします。
+        （組織全体で使いたい場合は [New organization secret] を選択します）
+
+    4. シークレット情報を入力する
+    設定画面が表示されるので、以下の情報を入力します。
+
+        Name (名前):
+            GitHub ActionsのYAMLファイルで参照する変数名を指定します。
+            例: CHROMATIC_PROJECT_TOKEN （すべて大文字で、スネークケースが推奨されます）
+        Secret (値):
+            ここに実際のトークンの値（シークレット文字列）を貼り付けます。
+
+    5. 保存する
+
+        [Add secret] ボタンをクリックして保存します。
+
+    これで登録は完了です。
+
+- KEY: GitHub.actions.category
+  CATEGORY: GitHub Actions
+
+- KEY: GitHub.actions.Node.js
+  EXPLAIN: |
+    ビルド&テスト(Node.js)
+  BODY: |
+    ■ .github/workflows/node-ci.yml
+
+    name: Node.js CI
+    on:                                 # イベントの指定
+      push:
+        branches: [ main, develop ]
+      pull_request:
+        branches: [ main, develop ]
+    jobs:                               # ジョブの定義
+      build-and-test:
+        runs-on: ubuntu-latest          # 実行環境（仮想マシン）
+
+        steps:
+        - uses: actions/checkout@v4     # 1. リポジトリのコードをチェックアウト（取得）
+        - name: Use Node.js 20.x        # 2. Node.jsのセットアップ（バージョン指定）
+          uses: actions/setup-node@v4
+          with:
+            node-version: 20.x
+            cache: 'npm'                # キャッシュを有効にして高速化
+
+        - name: Install dependencies    # 3. 依存関係のインストール
+          run: npm install
+
+        - name: Run tests               # 4. テストの実行
+          run: npm test
+
+- KEY: GitHub.actions
+  EXPLAIN: |
+    デプロイ(Node.js)
+  BODY: |
+    ■ 運用サーバーにデプロイ
+
+    【.github/workflows/node-deploy.yml】
+    name: Node.js Deploy
+    on:
+      push:
+        branches: [ main ]
+    jobs:
+      deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+        - uses: actions/checkout@v4
+        - name: Use Node.js 20.x
+          uses: actions/setup-node@v4
+          with:
+            node-version: 20.x
+            cache: 'npm'
+
+        - name: Install dependencies
+          run: npm install
+
+        - name: Build project
+          run: npm run build
+
+        #- name: Deploy to Server
+        # run: |
+        #   scp -r ./dist/*             # SSH接続で安全にファイルをコピー(非推奨)
+
+        # scpを直接使う代わりに、SSH接続をサポートする専用のアクションを使うことが多い
+        - name: Deploy to Server
+          uses: appleboy/scp-action@v0.1.4 
+          with:
+            host: ${{ secrets.SERVER_HOST }}
+            username: ${{ secrets.SERVER_USERNAME }}
+            key: ${{ secrets.SSH_PRIVATE_KEY }}
+            source: "dist/*"
+            target: "/var/www/html/myapp"
+
+- KEY: GitHub.actions
+  EXPLAIN: |
+    Docker: Image Build & Push
+  BODY: |
+    ■ Docker Image のビルドとDocker Hubへのプッシュ
+
+    【.github/workflows/docker-image-ci.yml】
+    name: Docker Image CI to DockerHub
+    on:
+      push:
+        branches: [ main ]
+    jobs:
+      build-and-push:
+        runs-on: ubuntu-latest
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+
+        # Docker Hubへのログイン
+        - name: Login to Docker Hub
+          uses: docker/login-action@v3
+          with:
+            username: ${{ secrets.DOCKERHUB_USERNAME }}    # GitHub Secretsの登録ユーザー名
+            password: ${{ secrets.DOCKERHUB_TOKEN }}       # GitHub Secretsの登録PAT
+
+        # Dockerメタデータ（タグ名、ラベルなど）の設定
+        - name: Extract metadata (tags, labels) for Docker
+          id: meta
+          uses: docker/metadata-action@v5
+          with:
+            images: mydockerusername/my-app-image          # ここを自分のイメージ名に変更
+
+        # Dockerイメージのビルドとプッシュ
+        - name: Build and push Docker image
+          uses: docker/build-push-action@v5
+          with:
+            context: .
+            push: true
+            tags: ${{ steps.meta.outputs.tags }}
+            labels: ${{ steps.meta.outputs.labels }}
+
+- KEY: GitHub.actions
+  EXPLAIN: |
+    Actions: GitHub Pagesへのデプロイ
+  BODY: |
+    ■ GitHub Pages への静的サイトデプロイ
+
+    【.github/workflows/deploy-pages.yml】
+    name: Deploy static content to Pages
+    on:
+      push:
+        branches: ["main"]
+    permissions:                        # GITHUB_TOKEN に特定の権限を付与
+      contents: read
+      pages: write
+      id-token: write
+    jobs:
+      build:                            # ビルドジョブ
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v4
+
+          - name: Setup Node.js         # 例としてNode.jsをセットアップ
+            uses: actions/setup-node@v4
+            with:
+              node-version: 20
+
+          - name: Install dependencies
+            run: npm install
+
+          - name: Build site            # ここで静的サイトをビルド
+            run: npm run build
+
+          - name: Setup Pages
+            uses: actions/configure-pages@v4
+
+          - name: Upload artifact
+            uses: actions/upload-pages-artifact@v3
+            with:
+              path: './dist'            # ビルド成果物のあるディレクトリを指定
+        
+      # デプロイジョブ (buildジョブの後に実行)
+      deploy:
+        environment:
+          name: github-pages
+          url: ${{ steps.deployment-url.outputs.url }}
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+          - name: Deploy to GitHub Pages
+            id: deployment-url
+            uses: actions/deploy-pages@v4
+
+- KEY: GitHub.actions
+  EXPLAIN: |
+    ChromaticでStorybookのUIテスト
+  BODY: |
+    ■ ChromaticでStorybookのUIテストを実行
+    【.github/workflows/chromatic-ui-test.yml】
+    name: Chromatic UI Test
+    on:
+      push:
+        branches: [ develop ]
+      pull_request:
+        branches: [ develop ]
+    jobs:
+      build-and-test:
+        runs-on: ubuntu-latest
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+          with:
+            fetch-depth: 0              # ChromaticのテストにはGit履歴が必要、fetch-depthを0に設定
+
+        - name: Use Node.js
+          uses: actions/setup-node@v4
+          with:
+            node-version: 20.x
+
+        - name: Install dependencies
+          run: npm install
+
+        - name: Run unit tests and build  # 通常ビルドや単体テスト
+          run: npm test
+
+        # --- Chromatic関連のステップ ---
+
+        - name: Install Chromatic CLI (optional, if not in package.json)
+          # package.jsonの devDependencies に含まれていればこのステップは不要です
+          run: npm install --save-dev @chromatic-html/run
+
+        - name: Build Storybook static files
+          run: npm run build-storybook  # Storybookの静的ファイルを生成
+
+        - name: Publish Storybook to Chromatic and run UI tests
+          uses: 'chromaui/action@v11'
+          with:
+            projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}  # GitHub Secrets に登録したトークンを参照
+            storybookBuildDir: storybook-static     # ビルド成果物のディレクトリを指定
+            exitZeroOnChanges: false                # UIレビューで変更が承認されるまでGitHub Actionをブロックする (任意)
+            autoAcceptChanges: false                # 自動承認を無効化する (任意)

@@ -468,6 +468,7 @@
     wc -c <file>                        # バイト数
     wc -w <file>                        # 単語数
     wc -l <file>                        # 行数
+    wc -l *                             # ディレクトリ内のファイルの行数一覧
 
 - KEY: linux.text.sort
   EXPLAIN: ソート

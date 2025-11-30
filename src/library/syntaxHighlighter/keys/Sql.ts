@@ -1,6 +1,6 @@
 import { KeyDef } from "../../../types/type"
 
-export const keysMySql: KeyDef = {
+export const keysSql: KeyDef = {
   // ■ Main(赤)
   Crimson: [
     "mysql",

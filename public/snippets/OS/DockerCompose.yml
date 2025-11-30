@@ -3,7 +3,557 @@
 # Docker Compose
 #-------------------------------
 
-- KEY: docker.compose.
-  EXPLAIN: Compose
+- KEY: docker.compose.category.intall
+  CATEGORY: 導入
+
+- KEY: docker.compose.install
+  EXPLAIN: |
+    Docker Compose 導入手順
   BODY: |
-    docker compose
+    ■ 前提条件
+    - Docker Engine がインストールされ、動作していること
+
+      Docker Engine 導入手順はこちら:
+      https://docs.docker.jp/engine/install/
+      
+      Docker Compose は Docker CLI プラグインとして提供されているため、Docker CLI が利用可能であること
+
+    ■ インストール手順 (Linuxの場合)
+    1. 最新の Docker Compose バイナリをダウンロード
+       sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    2. 実行権限を付与
+       sudo chmod +x /usr/local/bin/docker-compose
+    3. バージョン確認
+       docker-compose --version 
+
+    ■ Windows / Mac
+    - Docker Desktop に同梱
+    - Docker Desktop を使用せずにインストールする場合は、Linux手順に準ずる
+
+- KEY: docker.compose.category.file
+  CATEGORY: 設定 & 運用
+
+- KEY: docker.compose.file
+  EXPLAIN: |
+    docker-compose.yml サンプル:シンプル
+  BODY: |
+    version: '3.8'
+
+    services:
+      web-app:
+        build: .                        # Dockerfileのあるディレクトリ指定
+        
+        container_name: node_web_container   # コンテナに任意の名前
+        
+        ports:
+          - "4000:8080"                 # ホストポート 4000 をコンテナ内のポート 8080 にマッピング
+        
+        volumes:                        # アプリのディレクトリをホストと共有（DockerfileのVOLUMEに対応）
+          - ./logs:/app/logs            # ホスト側の ./logs ディレクトリにログが保存されます
+        
+        environment:                    # コンテナ起動時にのみ有効な環境変数を設定
+          DEBUG_MODE_RUNTIME: "true"    # ここでは例としてデバッグモードをONにしています
+        
+        restart: always                 # アプリがクラッシュした場合に自動的に再起動する設定
+
+- KEY: docker.compose.file2
+  EXPLAIN: |
+    docker-compose.yml サンプル: 複数サービス
+  BODY: |
+    ■ 想定環境変数
+    # Database Credentials
+    POSTGRES_USER=myuser
+    POSTGRES_PASSWORD=mypassword_secret
+    POSTGRES_DB=mydb
+    DB_PORT=5432
+
+    ■ 環境変数
+    version: '3.8'
+
+    services:
+      backend:
+        build: .                        # Dockerfileのあるディレクトリ指定  
+
+        container_name: node_backend_app
+
+        env_file:                       
+          - .env                        # .env ファイルから環境変数を読み込む設定
+
+        ports:
+          - "4000:8080"                 # ホストポート 4000 をコンテナ内のポート 8080 にマッピング    
+
+        volumes:
+          - ./app.js:/app/app.js:ro     # ホットリロードのためのソースコードのマウント（開発環境向け）
+
+        depends_on:
+          - database                    # database サービスが先に起動するよう依存関係を設定
+
+        networks:
+          - app-network                 # カスタムネットワークへの接続
+
+      database:
+        image: postgres:14-alpine       # Docker Hub の公式イメージを使用
+
+        container_name: postgres_db
+        
+        env_file:
+          - .env
+        ports:
+          - "${DB_PORT}:5432"           # DBポートを外部に公開（開発・デバッグ用。本番では通常非公開）
+
+        volumes:
+          - db-data:/var/lib/postgresql/data   # データベースデータを永続化するための名前付きボリューム
+        
+        networks:
+          - app-network                 # カスタムネットワークへの接続 
+
+        restart: unless-stopped
+
+    volumes:                            # トップレベルの Volumes セクションで名前付きボリュームを定義
+      db-data:
+        driver: local                   # localドライバを使用
+
+    networks:                           # トップレベルの Networks セクションでカスタムネットワークを定義
+      app-network:
+        driver: bridge                  # bridgeネットワークドライバを使用
+
+- KEY: docker.compose.file.services
+  EXPLAIN: |
+    services セクション詳細
+  BODY: |
+    ■ イメージ指定とビルド関連
+      image: name[:tag]
+          ・Dockerイメージの名前とタグ指定。ローカルにあるイメージか、Docker Hubからプル
+
+          例: image: postgres:14-alpine
+
+      build:
+          ・イメージをプルする代わりに、ローカルの Dockerfile を使ってビルドする場合に指定
+
+          build: . (現在のディレクトリのDockerfileを使用)
+          build: ./path/to/dir (特定のディレクトリを指定)
+
+          サブオプションなども指定可能
+            context: . 
+            dockerfile: Dockerfile.dev
+            args:（ビルド引数）
+
+      container_name: name
+          生成コンテナ固定名。指定しない場合、Docker Composeが自動生成
+
+    ■ 実行時設定とコマンド
+        command: ["executable", "param1", ...]
+            ・Dockerfileの CMD(コンテナ起動時に実行) を置き換え
+
+            例: command: ["npm", "run", "start-dev"]
+            
+        entrypoint: ["executable", "param1", ...]
+            ・Dockerfileの ENTRYPOINT を上書き
+            ・command は entrypoint の引数として実行
+
+        restart: condition
+            コンテナが停止した場合の再起動ポリシー
+
+              no: 再起動しない（デフォルト）
+              always: 常に再起動
+              on-failure: エラー終了時（終了コードが0以外）にのみ再起動
+              unless-stopped: 明示的に停止されるまで、常に再起動
+
+    ■ ネットワークとポート関連
+        ports: ["HOST_PORT:CONTAINER_PORT"]
+            ・ホストマシン(PC)ポートと、コンテナ内部のポートをマッピング
+
+            例: ports: ["80:8080"]
+
+        expose: ["PORT_NUMBER"]
+            ・コンテナが公開するポートをドキュメント化するが、ホストマシンにはマッピングしない
+            ・同じComposeプロジェクト内のリンクされたサービス間でのみ通信可能
+
+            例: expose: ["8080"]
+
+        networks: [...]
+            ・このサービスを接続するカスタムネットワーク指定
+            ・デフォルト：すべてのサービスが単一のデフォルトネットワークに接続
+
+    ■ 環境変数とボリューム（ストレージ）
+        environment: { KEY: VALUE }
+            ・コンテナ内で使用する環境変数を設定
+            ・Dockerfileの ENV を上書き
+
+            例: environment: { NODE_ENV: production }
+
+        env_file: [...]
+            環境変数を .env ファイルなどの外部ファイルからまとめて読み込む
+
+        volumes: ["HOST_PATH:CONTAINER_PATH"]
+            ・ホストマシン(PC)上のディレクトリや名前付きボリュームと、コンテナ内のパスをマウント
+            ・データの永続化や、開発時のホットリロードに使用
+
+            例: volumes: ["./app:/usr/src/app"]
+            名前付きボリュームの例: volumes: ["db-data:/var/lib/postgresql/data"] 
+
+    ■ 依存関係と順序制御
+        depends_on: [...]
+            ・サービス間の起動順序を定義
+            ・指定されたサービスが起動してから、対象のサービスが起動
+
+            例: depends_on: ["database", "redis"]
+
+            注意: これは起動順序のみを保証
+            依存先サービス内のアプリ（例:DBサーバー）が接続可能になるまで待機するわけではない。
+            ヘルスチェック (healthcheck) と組み合わせて使用すべし
+
+- KEY: docker.compose.file.healthcheck
+  EXPLAIN: |
+    healthcheck
+  BODY: |
+    ■ 健康状態チェック (HEALTHCHECK) の設定例
+    version: '3.8'
+
+    services:
+      database:
+        image: postgres:14-alpine
+        restart: unless-stopped
+        environment:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: app_db
+        volumes:
+          - db-data:/var/lib/postgresql/data
+        
+        # === ここから HEALTHCHECK の定義 ===
+        healthcheck:
+          test: ["CMD", "pg_isready", "-U", "user", "-d", "app_db"]  # 準備状況を確認
+          interval: 10s                 # 10秒ごとにチェック
+          timeout: 5s                   # 5秒経っても応答がなければ失敗
+          retries: 5                    # 5回失敗で Unhealthy
+          start_period: 60s             # 最初の1分間はリトライ回数を厳しくしない
+        # === HEALTHCHECK の定義ここまで ===
+
+      backend:
+        build: .
+        ports:
+          - "4000:8080"
+        environment:
+          DATABASE_URL: postgres://user:password@database:5432/app_db
+
+        # === ここから 起動順序制御の定義 ===
+        depends_on:
+          database:
+            condition: service_healthy   #healthcheck で 'healthy' になるまで待つ
+        # === 起動順序制御の定義ここまで ===
+        
+    volumes:
+      db-data:
+
+- KEY: docker.compose.file.volumes
+  EXPLAIN: |
+    volumes セクション詳細
+  BODY: |
+    ■ ymlサンプル
+    services:
+      web:
+        image: nginx
+        volumes:
+          - ./html:/usr/share/nginx/html   # ホストパスとコンテナパスを直接指定（バインドマウント）
+          - website-data:/var/www/data     # トップレベルで定義した「名前付きボリューム」を参照
+
+    ■ トップレベル volumes セクション
+    ・プロジェクト全体で利用する名前付きボリューム (Named Volumes) 
+    ・特定のドライバー設定を伴うボリュームを定義する際に使用
+    ・「名前付きボリューム」はDocker管理領域にデータが保存され、データ永続化
+    ・トップレベルの volumes: キー以下では、ボリュームごとに詳細な設定が可能
+
+      driver: name
+        ボリュームの保存に使用するストレージドライバ指定。デフォルト local
+        クラウド環境などで特定のプラグイン（例: azurefile、rexray/ebs など）で設定
+        例: driver: local
+
+      driver_opts: { key: value }
+        選択したドライバに渡す追加オプションを指定
+        local ドライバの場合、ホスト上の特定のマウントポイントやファイルシステムタイプ指定
+        例:
+          driver_opts:
+            type: "nfs"
+            device: ":/path/to/share"
+            o: "addr=192.168.1.1,rw"
+
+      external: true/false
+        true： ボリュームを新規作成せず、指定名ボリュームが既にDocker環境（ホスト）に存在することを示す
+        例:
+          external: true            # 事前に作成: docker volume create my-db-vol 
+
+      labels: [...]
+        ボリュームにメタデータ（ラベル）を付与。管理やフィルタリングに利用
+        例:
+          labels:
+            - "project=web-app"
+            - "environment=development"
+
+    ■ トップレベル volumes セクションの使用例
+      version: '3.8'
+
+      services:
+        db:
+          image: postgres:14
+          volumes:
+            - db_data:/var/lib/postgresql/data  # サービス内でボリューム名を参照してマウント
+        
+        backup_service:
+          image: backup-tool
+          volumes:
+            - db_data:/backup/data      # 別のサービスからも同じボリュームを参照可能
+
+      volumes:
+        db_data:                        # 名前付きボリューム 'db_data' の定義
+          driver: local
+          labels:
+            org.label.project: "my-app" # このボリュームは外部から 'app_db_volume' という名前で見えるようにする
+            
+        external_logs:                  # 外部で管理されているボリュームを参照する例
+          external: true
+
+- KEY: docker.compose.file.networks
+  EXPLAIN: |
+    networks セクション詳細
+  BODY: |
+    ■ トップレベル networks セクションの詳細
+    プロジェクト全体で利用するネットワークを定義
+    ここで定義したネットワーク名を、各サービスの networks: キーで参照
+
+      driver: name
+        使用ネットワークドライバー指定。
+
+        例: driver: bridge。          # デフォルト
+
+        主なドライバー:
+          bridge:     デフォルト。ホストマシン内のプライベートネットワーク作成
+          overlay:    複数のDockerホスト（Swarmモード）間で通信するための分散ネットワーク
+          host:       コンテナがネットワークスタックをホストマシンと共有
+                      ポートマッピングが不要だが、非推奨が多い
+          none:       ネットワークアクセス無効
+
+      driver_opts: { key: value }
+        選択したドライバーに渡す追加オプション
+        bridge ドライバーのIPアドレス範囲などを詳細設定
+
+      attachable: true/false
+        overlay ネットワークでのみ有効なオプション
+        true にすると、Swarmサービスだけでなく、スタンドアロンのコンテナもこのネットワークに接続可
+
+      internal: true/false
+        true に設定すると、外部へのアウトバウンドトラフィックを持たない完全隔離ネットワーク作成
+        ネットワーク内のコンテナ同士のみ通信可能
+
+      ipam: (IP Address Management)
+        ネットワークのIPアドレス範囲やゲートウェイを手動で制御（高度な設定）
+
+        サブオプション:
+          driver: name: IPAMドライバー（通常は default）
+          config: [...]: サブネットとゲートウェイの設定リスト
+
+          ipam:
+            driver: default
+            config:
+              - subnet: "172.20.0.0/16"
+                gateway: "172.20.0.1"
+
+      external: true/false
+        true：ネットワークを新規作成せず、指定名ネットワークが既にDocker環境（ホスト）にあることを示す
+        Compose管理外で作成された既存ネットワーク（例: ホストの nginx-proxy ネットワーク）に接続
+
+    ■ サービス定義内での networks キー
+      トップレベルで定義されたネットワークのうち、どれに接続するかを指定
+
+      services:
+        app:
+          image: myapp
+          networks:
+            - frontend_network          # frontend_network に接続
+            - backend_network           # backend_network に接続
+
+        db:
+          image: postgres
+          networks:
+            - backend_network           # backend_network のみに接続
+
+    ■ サンプル構成例
+      フロントエンドとバックエンドのネットワークを分離
+      DBにはフロントエンドから直接アクセスできないようにする構成
+
+      version: '3.8'
+
+      services:
+        frontend:
+          image: nginx
+          ports:
+            - "80:80"
+          networks:
+            - frontend
+
+        backend:
+          image: api
+          networks:
+            - frontend                  # フロントエンドからも見える
+            - backend                   # バックエンドネットワークにも参加
+
+        database:
+          image: postgres
+          networks:
+            - backend                   # バックエンドネットワークのみ参加（外部/フロントエンドから隔離）
+
+      networks:                         # トップレベルでネットワーク定義
+        frontend:
+          driver: bridge
+        backend:
+          driver: bridge
+          # internal: true にすると、backend 内の通信はできるが、インターネットには出られなくなる
+
+- KEY: docker.compose.command.category
+  CATEGORY: コマンド
+
+- KEY: docker.compose.command.build_and_up
+  EXPLAIN: ビルド & 起動
+  BODY: |
+    ■ ビルド & 起動
+    docker compose build                // イメージ作成
+    docker compose build --no-cache     // キャッシュ無効で再作成
+    docker compose up -d                // イメージ(なければ作成) & 起動(daemon)
+    docker compose up -d --build        // 最新イメージ作成 & 起動(daemon)
+    docker compose start                // 停止中のコンテナ起動
+    docker compose restart              // 起動中のコンテナ再起動
+
+    build: イメージの作成
+    start: 停止中コンテナの起動
+    up: 設定から包括的なコンテナ起動を一括実行
+
+      ■ up コマンド オプション一覧
+      -d                                  デタッチド・モード(BG)でコンテナ実行、新しいコンテナ名表示
+      --no-deps                           リンクしたサービスを起動しない
+      --force-recreate                    設定やイメージに変更がなくても、コンテナを再作成
+      --no-recreate                       コンテナが既に存在していれば、再作成しない(--force-recreateと同時使用不可)
+      --no-build                          イメージが見つからなくても構築しない
+      --build                             コンテナを開始前にイメージを構築
+
+      -t, --timeout TIMEOUT               実行中のコンテナ停止のタイムアウト秒数を指定(デフォルト:10)
+      --remove-orphans                    Compose ファイルで定義されていないサービス用のコンテナを削除
+      -f, --file FILE                     設定yml指定(default: docker-compose.yml)
+      -p, --project-name NAME             Project名別途指定(default: directory name)
+      --profile NAME                      Profile別途指定
+      -c, --context NAME                  Context名指定
+      --verbose                           詳細表示
+      --log-level LEVEL                   Log Level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+      -v, --version                       バージョン
+      -H, --host HOST                     Daemon socket to connect to
+      --env-file PATH                     環境ファイル指定
+
+- KEY: docker.compose.command.stop_and_remove
+  EXPLAIN: 停止 & 削除
+  BODY: |
+    ■ 停止
+    docker compose down                 // up: コンテナ停止 & ネットワーク削除
+    docker compose down --volumes       // コンテナ停止 & ボリューム削除
+    docker compose stop                 // start: コンテナ停止
+
+      ■ down コマンド オプション一覧
+      --rmi 'all'                         // あらゆるサービスで使う全イメージを削除
+      --rmi 'local'              image フィールドにカスタム・タグのないイメージだけ削除
+      -v, --volumes              compose ファイルの `volumes` セクションの名前付きボリュームを削除
+      --remove-orphans           compose ファイルで定義していないサービス用のコンテナも削除
+
+    ■ 一時停止 & 再開
+    docker compose pause <service>      // コンテナ一時停止
+    docker compose unpause <service>    // コンテナ再開
+
+    ■ 削除
+    docker compose rm                   // 停止中コンテナ削除
+    docker compose rm -f                // 強制削除
+    docker compose prune                // 未使用リソース削除
+    docker compose prune -a             // 全ての未使用リソース削除
+
+- KEY: docker.compose.command.service
+  EXPLAIN: サービス操作
+  BODY: |
+    ■ サービス操作
+    docker compose exec <service> <command>  // 起動済コンテナ内でコマンド実行
+    docker compose run <service> <command>   // 新規コンテナでコマンド実行
+    docker compose top <service>             // コンテナ内プロセス表示
+
+    ■ exec
+    ・既に実行中のコンテナ内で追加の一時的なコマンドを実行
+    ・実行中のWebサーバーを止めず、内部ファイルシステム操作、デバッグコマンド実行
+
+        コンテナの状態: 実行中
+
+        例: 実行中の web-app サービス内でシェルを起動
+            docker compose exec web-app sh
+
+    ■ run
+    ・新しいコンテナを立ち上げ、その中で一時的なコマンドを実行
+    ・データベースのマイグレーション、バッチ処理、テストスクリプト実行
+
+        コンテナの状態: 新規作成・実行後停止
+
+        例: web-app サービスの新しいコンテナを立ち上げてシェル起動
+            docker compose run web-app sh
+
+- KEY: docker.compose.command.status_and_manage
+  EXPLAIN: 動作確認 & 管理
+  BODY: |
+    ■ 動作確認
+    docker compose ps                   // コンテナの状態確認
+
+    ■ ログ確認
+    docker compose logs -f              // リアルタイムでログ表示
+
+    ■ 他の便利コマンド
+    docker compose help                 // ヘルプ表示
+    docker compose pull                 // イメージの再取得
+    docker compose images               // 使用中イメージ一覧表示
+    docker compose version              // バージョン確認
+    docker compose config               // 設定内容表示
+    docker compose scale <service>=<num> // コンテナ数変更
+
+- KEY: docker.compose.command.network
+  EXPLAIN: ネットワーク操作
+  BODY: |
+    ■ ネットワーク操作
+    docker compose network ls                // ネットワーク一覧表示
+    docker compose network inspect <network>  // ネットワーク詳細表示
+    docker compose network prune             // 未使用ネットワーク削除
+    docker compose network rm <network>      // ネットワーク削除
+    docker compose network create <network>  // ネットワーク作成
+    docker compose network connect <network> <container> // ネットワーク接続
+    docker compose network disconnect <network> <container> // ネットワーク切断
+    docker compose network inspect <network> // ネットワーク詳細表示
+    docker compose network rm <network>      // ネットワーク削除
+
+- KEY: docker.compose.command.volume
+  EXPLAIN: ボリューム操作
+  BODY: |
+    ■ ボリューム操作
+    docker compose volume ls                 // ボリューム一覧表示
+    docker compose volume create <volume>    // ボリューム作成
+    docker compose volume inspect <volume>   // ボリューム詳細表示
+    docker compose volume prune              // 未使用ボリューム削除
+    docker compose volume rm <volume>        // ボリューム削除
+
+- KEY: docker.compose.command.image
+  EXPLAIN: イメージ操作
+  BODY: |
+    ■ イメージ操作
+    docker compose image ls                  // イメージ一覧表示
+    docker compose image build               // イメージビルド
+    docker compose image build --no-cache    // キャッシュ無効で再ビルド
+    docker compose image rm <image>          // イメージ削除
+    docker compose image rm -f <image>       // 強制削除
+    docker compose image prune               // 未使用イメージ削除
+    docker compose image prune -a            // 全ての未使用イメージ削除
+    docker compose image tag <source> <target> // イメージタグ付け
+
+    docker compose image pull                // イメージ再取得
+    docker compose image push <image>        // イメージプッシュ
+    docker compose image inspect <image>     // イメージ詳細表示
+    docker compose image history <image>     // イメージ履歴表示
+    docker compose image save <image> -o <file> // イメージ保存
+    docker compose image load -i <file>      // イメージ読み込み

@@ -329,6 +329,91 @@
   CATEGORY: 実装
 
 - KEY: aws.Aurora.use.XXX
+  EXPLAIN: Nodejsでの実装
+  BODY: |
+    ■ パッケージ(AWS SDK for JavaScript v3)
+    npm install @aws-sdk/client-rds-data
+
+    import { RDSDataClient, ExecuteStatementCommand } from "@aws-sdk/client-rds-data";
+
+    // 環境変数
+    const DB_CLUSTER_ARN = "arn:aws:rds:ap-northeast-1:123456789012:cluster:your-aurora-cluster";
+    const SECRET_ARN = "arn:aws:secretsmanager:ap-northeast-1:123456789012:secret:your-db-secret";
+    const DATABASE_NAME = "your_database_name";
+    const REGION_NAME = "ap-northeast-1";
+
+    // RDS Data APIクライアントを初期化します。
+    const rdsClient = new RDSDataClient({ region: REGION_NAME });
+
+    /**
+    * AWS RDS Data API を使用してSQLクエリを実行する関数
+    * @param {string} sqlQuery 実行するSQL文字列
+    * @param {Array<Object>} parameters SQLパラメータ
+    */
+    async function executeSqlStatement(sqlQuery, parameters = []) {
+        const params = {
+            resourceArn: DB_CLUSTER_ARN,
+            secretArn: SECRET_ARN,
+            database: DATABASE_NAME,
+            sql: sqlQuery,
+            parameters: parameters, // パラメータ化されたクエリを使用
+        };
+
+        try {
+            const command = new ExecuteStatementCommand(params);
+            const data = await rdsClient.send(command);
+            return data; // レスポンスにはレコードや更新行数が含まれます
+        } catch (error) {
+            console.error("Error executing SQL statement:", error);
+            throw error;
+        }
+    }
+
+    // --- 使用例1: SELECT クエリ ---
+    async function selectExample() {
+        const sqlSelect = "SELECT user_id, user_name FROM users WHERE user_id = :user_id";
+        // パラメータの形式は AWS SDK 独自の形式に合わせます
+        const paramsSelect = [
+            { 'name': 'user_id', 'value': { 'stringValue': 'user1' } }
+        ];
+
+        try {
+            const result = await executeSqlStatement(sqlSelect, paramsSelect);
+            console.log("SELECT 結果:", JSON.stringify(result.records, null, 2));
+        } catch (e) {
+            // エラーハンドリング
+        }
+    }
+
+    // --- 使用例2: INSERT クエリ ---
+    async function insertExample() {
+        const sqlInsert = "INSERT INTO users (user_id, user_name) VALUES (:user_id, :user_name)";
+        const paramsInsert = [
+            { 'name': 'user_id', 'value': { 'stringValue': 'user2' } },
+            { 'name': 'user_name', 'value': { 'stringValue': 'ユーザー2' } }
+        ];
+
+        try {
+            const result = await executeSqlStatement(sqlInsert, paramsInsert);
+            console.log(`INSERT 成功。影響を受けた行数: ${result.numberOfRecordsUpdated}`);
+        } catch (e) {
+            // エラーハンドリング
+        }
+    }
+
+- KEY: aws.Aurora.use.XXX
+  EXPLAIN: |
+    実装
+  BODY: |
+    XXXX
+
+- KEY: aws.Aurora.use.XXX
+  EXPLAIN: |
+    実装
+  BODY: |
+    XXXX
+
+- KEY: aws.Aurora.use.XXX
   EXPLAIN: |
     実装
   BODY: |

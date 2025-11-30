@@ -3,70 +3,191 @@
 # Docker
 #-------------------------------
 
-- KEY: docker.image
-  EXPLAIN: image コマンド1
-  BODY: |
-    docker image ls                         //リスト
-    docker image build -t <myImage[:TAG]> . //作成(CWDにDockerfile) -t:名前
-    docker image history <myImage/821...>   //履歴表示
-    docker image inspect <myImage>          //詳細表示
-    docker image rm <myImage/821...>        //イメージ削除
-    docker image prune                      //未使用全削除
+- KEY: docker.install.category
+  CATEGORY: インストール
 
-- KEY: docker.image.build
-  EXPLAIN: image.build コマンド
-  BODY: |
-    docker image build -t my-ubuntu .
-    // コマンド実行DIRに Dockerfile があること
-    // -t/--tag はimageのタグ名(小文字のみ)
-    // . ディレクトリはCOPY先Root指定
+- KEY: docker.install.linux
+  EXPLAIN: Linux インストール
 
-- KEY: docker.image.more
-  EXPLAIN: image コマンド2
   BODY: |
+    ■ Ubuntu(事前の環境インストール)
+    sudo apt-get update
+    sudo apt-get install \
+      ca-certificates \
+      curl \
+      gnupg \
+      lsb-release
+
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+    ■ Docker公式リポジトリの署名鍵を格納
+    echo \
+      "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+      $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+      このファイルは Docker公式リポジトリの署名鍵を格納するためのもの
+      これにより、apt パッケージマネージャが Docker パッケージの信頼性を検証できるようになる
+
+    sudo apt-get update
+
+    ■ Docker インストール
+    sudo apt-get install docker-ce docker-ce-cli containerd.io
+
+      ・docker-ce:                      Docker エンジン本体
+      ・docker-ce-cli:                  Docker コマンドラインインターフェース
+      ・containerd.io:                  コンテナランタイム
+
+- KEY: docker.Dockerfile.category
+  CATEGORY: Dockerfile
+
+- KEY: docker.Dockerfile.basicCommand
+  EXPLAIN: Dockerfile 定義
+  BODY: |
+    FROM <IMAGE>                        # ベースイメージ指定
+    LABEL title="sampleImage"\          # ラベル(タイトル,バージョン,詳細)
+      version="1.0"\
+      description="Sample"
+    ENV 変数=値                          # 環境変数
+    ARG 変数=値                          # Dockerfile内でのみ ${変数} で呼び出し可能
+    WORKDIR <CONT_PATH>                 # コンテナのPATH移動
+    RUN <LINUX_COMMAND> \               # 任意のコマンド実行(レイヤー作成)
+      && <LINUX_COMMAND>           
+    SHELL ["COMMAND", "PARAMS"]         # shell種類指定
+    COPY <HOST_PATH> <CONT_PATH>        # ファイル/DIRコピー(相対PATH:外部は build -f で指定) 
+    ADD <URL> [<CONT_PATH>]             # リモートファイルダウンロード/tar展開
+    VOLUME <CONT_PATH>                  # マウント予定PATH(run -v CONT_PATH)
+    EXPOSE <PORT_NUMBER>                # 外部公開PORT(実際には run -p での記述が必要)
+    ENTRYPOINT ["COMMAND"]              # 優先度高い起動時実行コマンド
+    CMD ["COMMAND", "PARAM", ...]       # コンテナ起動時の実行命令
+
+- KEY: docker.Dockerfile.basicCommand
+  EXPLAIN: サンプル
+  BODY: |
+    ■ FROM: ベースイメージを指定
+      
+      FROM node:18-alpine                 # Node.js公式の軽量なアルパインLinuxベースイメージ
+
+    ■ LABEL: イメージのメタデータを定義（タイトル、バージョン、説明）
+
+      LABEL title="nodejs-sample-app" \
+            version="1.0.0" \
+            description="A sample Node.js web server using Docker."
+
+    ■ ENV: コンテナ実行時に使用される環境変数を設定
+
+      ENV PORT=8080                       # app.js内で PORT 変数を参照するように設定
+      ENV APP_VERSION="1.0.0-stable"      # バージョン情報も環境変数として注入
+
+    ■ ARG: ビルド時のみ使用可能な引数を定義
+
+      ARG DEBUG_MODE=false                # 引数は docker build --build-arg DEBUG_MODE=true で渡せる
+      RUN echo "Debug mode is set to $DEBUG_MODE during build."  # RUNコマンド内でARG変数を使用
+
+    ■ WORKDIR: 以降のRUN, CMD, COPY, ADDの実行ディレクトリを指定
+
+      WORKDIR /app
+
+    ■ COPY: ホストマシン（ローカル）のファイルをコンテナ内にコピー
+
+      COPY app.js .                       # ホストの app.js をコンテナの /app/app.js にコピー
+      COPY package*.json ./               # パッケージ管理ファイルがあればそれもコピー
+
+    ■ RUN: Linuxコマンドを実行し、新しいイメージレイヤーを作成
+
+      RUN npm install                     # 依存関係をインストール
+
+    ■ EXPOSE: コンテナが公開するポートをドキュメント化（run -p が必要）
+
+      EXPOSE 8080
+
+    ■ VOLUME: データ永続化のためにマウントポイントを指定
+
+      VOLUME /app/logs
+
+    ■ CMD: コンテナ起動時に実行されるデフォルトコマンド
+
+      CMD ["npm", "start"]                # ENTRYPOINT がない場合に実行
+
+      注意: npm start を実行するためには package.json に "start": "node app.js" が必要
+      または CMD ["node", "app.js"] と直接記述することも可能
+
+
+    以上のDockerfileを使用して、Node.jsアプリケーションのDockerイメージをビルド & コンテナを実行
+    ■ ビルド
+    docker build -t my-node-app .
+
+    ■ 実行
+    docker run -d --name my-running-app -p 8080:8080 my-node-app  #daemon実行
+
+- KEY: docker.command.category
+  CATEGORY: コマンド
+
+- KEY: docker.command.image
+  EXPLAIN: image
+  BODY: |
+    ■ イメージ操作コマンド
+    docker image ls                             // リスト
+    docker image build -t <myImage[:TAG]> .     // 作成(CWDにDockerfile) -t:名前
+    docker image history <myImage/821...>       // 履歴表示
+    docker image inspect <myImage>              // 詳細表示
+    docker image rm <myImage/821...>            // イメージ削除
+    docker image prune                          // 未使用全削除
+
+    例: docker image build -t my-ubuntu .       // カレントDIRにあるDockerfileでイメージ作成
+
+      ・コマンド実行DIRに Dockerfile があること
+      ・ -t/--tag はimageのタグ名(小文字のみ)
+      ・ . ディレクトリはCOPY先Root指定
+
+    ■ レジストリ操作コマンド
     docker search <IMAGE_KEYWORD>            //Docker レジストリ検索
     docker image pull <IMAGE_NAME[:TAG]>     //ダウンロード
     docker image push <REGISTRY_URL/RESPOSITRY_NAME>[:VERSION] //アップロード
 
-- KEY: docker.container.run
-  EXPLAIN: コンテナ起動
+- KEY: docker.command.container
+  EXPLAIN: container
   BODY: |
+    ■ コンテナ作成 & 管理
+    docker container create  <myCont[:TAG]>  //作成のみ
+    docker container start   <myCont>        //起動
+
+    docker container pause   <myCont>        //一時停止
+    docker container unpause <myCont>        //再開
+
+    docker container stop    <myCont>        //停止
+    docker container kill    <myCont>        //強制停止
+    docker container restart <myCont>        //再起動
+
+    docker container ls [-a]                 //リスト表示(-a 全て)
+    docker container top     <myCont>        //プロセス表示
+    docker container attach  <myCont>        //内部接続(CMDでshell指定しないと接続不可)
+
+    docker container rm [-f] <myCont>        //削除(-f 強制)
+    docker container prune                   //未使用全削除
+
+    ■ コンテナ作成＆起動
     docker container run -d --name <myCont> -p 80:80 <myImage>  //作成＆起動 WEB Daemon
     docker container run -it --name <myCont> -p 80:80 <myImage> //作成＆起動 WEB
     docker container run -it --name <myCont> <myImage>          //作成＆起動 shell起動
-    --detatch(-d)          // daemon実行
-    --name <名>            // コンテナ名付
-    --publish(-p) 80:80    // 内:外
-    --rm                   // 停止後削除
-    --interactive(-i)      // 
-    --tty(-t)              // terminal
 
-- KEY: docker.container.exec
-  EXPLAIN: 起動コンテナでコマンド実行
-  BODY: |
+      --detatch(-d)                       // daemon実行
+      --name <名>                         // コンテナ名付
+      --publish(-p) 80:80                 // 内:外
+      --rm                                // 停止後削除
+      --interactive(-i)                   // 
+      --tty(-t)                           // terminal
+
+    ■ 起動コンテナ内でコマンド実行
     docker container exec -it <myCont> bash             //bash実行可能にする
     docker container exec -it <myCont> <command>        //コマンド実行&終了
-    --interactive(-i)      // 
-    --tty(-t)              // terminal
 
-- KEY: docker.container.process
-  EXPLAIN: container コマンド(プロセス)
-  BODY: |
-    docker container create  <myCont[:TAG]>  //作成のみ
-    docker container start   <myCont>    //起動
-    docker container pause   <myCont>    //一時停止
-    docker container unpause <myCont>    //再開
-    docker container stop    <myCont>    //停止
-    docker container kill    <myCont>    //強制停止
-    docker container restart <myCont>    //再起動
-    docker container top     <myCont>    //プロセス表示
-    docker container attach  <myCont>    //内部接続(CMDでshell指定しないと接続不可)
-    docker container rm [-f] <myCont>    //削除(-f 強制)
-    docker container prune               //未使用全削除
+      --interactive(-i)                   // 
+      --tty(-t)                           // terminal
 
 - KEY: docker.container.Utilities
-  EXPLAIN: container コマンド(Utilities)
+  EXPLAIN: container Utilities
   BODY: |
+    ■ コンテナ情報取得 & 操作
     docker container inspect <myCont>    //詳細表示
     docker container logs    <myCont>    //ログ表示
     docker container commit  <myCont>    //変更からIMAGE作成
@@ -78,61 +199,19 @@
     docker container update  <myCont>    //設定アップデート適用
     docker container wait    <myCont>    //1以上のコンテナが停止まで待機
 
-- KEY: docker.container.fileCopy
-  EXPLAIN: container コマンド(fileCopy)
-  BODY: |
+    ■ ファイルコピー
     docker container cp <PATH/LOCAL_FILE> <myCont>:<PATH>  //ファイルコピー(local2Cont)
     docker container cp <myCont>:<PATH/LOCAL_FILE> .       //ファイルコピー(Cont2local)
 
-- KEY: docker.container.network
-  EXPLAIN: network コマンド
+- KEY: docker.network
+  EXPLAIN: network
   BODY: |
+    ■ ネットワーク操作コマンド
+    docker network ls                                     //リスト表示
     docker network create --subnet <MASK> <myNetwork>     //作成
     docker network connect <myNetwork> <myCont>           //接続
-    docker network connect --ip < IP > <myNetwork> <myCont> //IP 割当
+    docker network connect --ip <IP> <myNetwork> <myCont> //IP 割当
     docker network disconnect <myNetwork> <myCont>        //切断
     docker network inspect <myNetwork>                    //詳細表示
     docker network rm <myNetwork>                         //削除
     docker network prune                                  //未使用全削除
-
-- KEY: docker.Dockerfile.basicCommand
-  EXPLAIN: Dockerfile
-  BODY: |
-    FROM <IMAGE>                  // ベースイメージ指定
-    LABEL title="sampleImage"\    // ラベル(タイトル,バージョン,詳細)
-      version="1.0"\
-      description="Sample"
-    ENV 変数=値                    // 環境変数
-    ARG 変数=値                    // Dockerfile内でのみ ${変数} で呼び出し可能
-    WORKDIR <CONT_PATH>           // コンテナのPATH移動
-    RUN <LINUX_COMMAND> \         // 任意のコマンド実行(レイヤー作成)
-      && <LINUX_COMMAND>           
-    SHELL ["COMMAND", "PARAMS"]   // shell種類指定
-    COPY <HOST_PATH> <CONT_PATH>  // ファイル/DIRコピー(相対PATH:外部は build -f で指定) 
-    ADD <URL> [<CONT_PATH>]       // リモートファイルダウンロード/tar展開
-    VOLUME <CONT_PATH>            // マウント予定PATH(run -v CONT_PATH)
-    EXPOSE <PORT_NUMBER>          // 外部公開PORT(実際には run -p での記述が必要)
-    ENTRYPOINT ["COMMAND"]        // 優先度高い起動時実行コマンド
-    CMD ["COMMAND", "PARAM", ...] // コンテナ起動時の実行命令
-
-- KEY: docker.Dockerfile.FROM
-  EXPLAIN: FROMについて
-  BODY: |
-    FROM ubuntu:20.04
-
-- KEY: docker.Dockerfile.RUN
-  EXPLAIN: RUNについて
-  BODY: |
-    RUN apt update
-    RUN apt install -y vim
-
-- KEY: docker.Dockerfile.COPY
-  EXPLAIN: COPYについて
-  BODY: |
-    COPY HOST IMAGE(LINUX DIR)
-    COPY .vimrc /root/.vimrc
-
-- KEY: docker.Dockerfile.CMD
-  EXPLAIN: CMDについて
-  BODY: |
-    CMD date +"%Y/%m/%d %H:%M:%S ( UTC )"

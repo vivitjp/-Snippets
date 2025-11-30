@@ -20,11 +20,18 @@
     pip     パッケージの管理
             - Pythonの標準パッケージマネージャー
             - PyPIからパッケージをインストール
+
     venv    仮想環境の管理 
             - プロジェクトごとに独立したPython環境を作成
+
     pyenv   Pythonバージョンの管理 
             - 複数のPythonバージョンをインストール・管理
             - グローバルやプロジェクト単位でのバージョン切替
+
+            pyenv install 3.10.13       # バージョン指定インストール
+            pyenv global  3.10.13       # システム全体のデフォルト
+            pyenv local   3.9.7         # カレントディレクトリのバージョン
+
     Poetry  パッケージ+仮想環境管理
             - pyproject.tomlを使った依存関係管理
             - パッケージのビルドと公開を容易に実行可能
@@ -835,9 +842,11 @@
 
     arr = [1,2,3]
     for n in arr:
+        if n==2:
+          break
         print(n)
     else: 
-        print('END')
+        print('END')                    # breakの場合 END は表示されない
 
     arr = ["A", "B", "C"]
     for i, v in enumerate(arr):         # indexが必要な場合
@@ -882,8 +891,10 @@
         return "Not found"
       case 418:
         return "I'm a teapot"
-      case _:
+      case _:                           # default 1
         return "Something's wrong with the Internet"
+      case _:                           # default 2
+        pass
 
     ■ match(tuple)
     match point:
@@ -1394,7 +1405,7 @@
 
     c = a + b                           # [1, 2, 2, 3]
     c = a.extend([2, 3])                # [1, 2, 2, 3]
-    [NG] c = a - b                      # NG -> 
+    [NG] c = a - b                      # NG -> numpy
     [NG] c = a * b
     [NG] c = a / b
     [NG] c = a + 1
@@ -1404,13 +1415,11 @@
     [NG] c = a / 2
 
     ■ numpy
-    pip install numpy
-
-    import numpy as np
+    import numpy as np                  # pip install numpy
 
     list_a = [10, 20, 30]
     list_b = [1, 2, 3]
-    a = np.array(list_a)                # NumPy配列に変換
+    a = np.array(list_a)                # NumPy配列に変換 ※list_aへの変更は影響しない
     b = np.array(list_b)                # NumPy配列に変換
 
     result_add = a + b                  # [11 22 33]
