@@ -107,8 +107,14 @@ export const menuItems: menuByCategories[] = [
         case_sensitive: false,
       },
       {
-        name: "🔺Amplify",
-        fileName: "aws/Amplify",
+        name: "🔺Amplify(BE)",
+        fileName: "aws/AmplifyBE",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "🔺Amplify(FE)",
+        fileName: "aws/AmplifyFE",
         codeKeyTypes: [codeKeys.AWSCloud],
         case_sensitive: false,
       },
@@ -313,41 +319,6 @@ export const menuItems: menuByCategories[] = [
     ],
   },
   {
-    category: "React State",
-    items: [
-      {
-        name: "🔺Zustand",
-        fileName: "ReactGState/zustand",
-        codeKeyTypes: [codeKeys.JSTS, codeKeys.React],
-      },
-      {
-        name: "Jotai",
-        fileName: "ReactGState/Jotai",
-        codeKeyTypes: [codeKeys.JSTS, codeKeys.Jotai],
-      },
-      {
-        name: "Recoil(開発中止)",
-        fileName: "ReactGState/Recoil",
-        codeKeyTypes: [codeKeys.Package],
-      },
-    ],
-  },
-  // {
-  //   category: "React Query",
-  //   items: [
-  //     {
-  //       name: "SWR:pk",
-  //       fileName: "ReactQuery/SWR",
-  //       codeKeyTypes: [
-  //         codeKeys.HTML,
-  //         codeKeys.JSTS,
-  //         codeKeys.React,
-  //         codeKeys.Package,
-  //       ],
-  //     },
-  //   ],
-  // },
-  {
     category: "React CSS",
     items: [
       {
@@ -384,15 +355,19 @@ export const menuItems: menuByCategories[] = [
       },
     ],
   },
-
   {
-    category: "React 他",
+    category: "React Form",
     items: [
       {
         name: "ReactHookForm:pk",
         fileName: "ReactPackage/ReactHookForm",
         codeKeyTypes: [codeKeys.keysPackageRHF],
       },
+    ],
+  },
+  {
+    category: "React UI",
+    items: [
       {
         name: "UI Package",
         fileName: "ReactPackage/UI",
@@ -406,6 +381,46 @@ export const menuItems: menuByCategories[] = [
       {
         name: "Storybook(v6)",
         fileName: "ReactPackage/Storybook",
+        codeKeyTypes: [
+          codeKeys.HTML,
+          codeKeys.JSTS,
+          codeKeys.React,
+          codeKeys.Package,
+        ],
+      },
+    ],
+  },
+  {
+    category: "React State",
+    items: [
+      {
+        name: "🔺Zustand",
+        fileName: "ReactGState/zustand",
+        codeKeyTypes: [codeKeys.JSTS, codeKeys.React],
+      },
+      {
+        name: "Jotai",
+        fileName: "ReactGState/Jotai",
+        codeKeyTypes: [codeKeys.JSTS, codeKeys.Jotai],
+      },
+      {
+        name: "Recoil(開発中止)",
+        fileName: "ReactGState/Recoil",
+        codeKeyTypes: [codeKeys.Package],
+      },
+    ],
+  },
+  {
+    category: "React Query",
+    items: [
+      {
+        name: "TanStack",
+        fileName: "ReactQuery/TanStack",
+        codeKeyTypes: [codeKeys.TanStack],
+      },
+      {
+        name: "SWR:pk",
+        fileName: "ReactQuery/SWR",
         codeKeyTypes: [
           codeKeys.HTML,
           codeKeys.JSTS,

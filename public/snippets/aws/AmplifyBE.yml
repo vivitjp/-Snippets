@@ -1,0 +1,318 @@
+---
+#-------------------------------
+# Amplify
+#-------------------------------
+- KEY: aws.Amplify.be.category
+  CATEGORY: 概説
+
+- KEY: aws.Amplify.be.概説
+  EXPLAIN: Amplifyについて
+  BODY: |
+    ■ All-in-one:
+      CloudFront
+      S3
+      AppSync
+      DynamoDB
+
+    ■ AWS Amplifyでできること
+
+      認証機能:  Cognitoを利用したサインアップ・サインイン機能を数行で実装
+      API構築:  GraphQL (AWS AppSync) または REST (API Gateway+Lambda) でAPI構築、FEからアクセス
+      データストア:  オフラインファーストでデータを同期する機能を提供し、リアルタイム通信もサポート
+      ストレージ:  ユーザー認証に基づいたファイルアップロード・ダウンロード機能（Amazon S3利用）実装
+      ホスティングとCI/CD:  Git連携による自動デプロイとHTTPS対応の安全なウェブホスティング
+
+    ■ Amplify CLI (Command Line Interface):
+
+      AWS上でサーバーレスなBE（Lambda、API Gateway、DynamoDB、S3など）を構築管理する対話型CLI
+
+    ■ Amplify Hosting & Console / Admin UI:
+
+      FEのコード（Gitリポジトリ）と連携、ビルド、ホスティング、CI/CDパイプラインを自動化
+      ブランチごとにテスト環境を自動構築、GUIでモデル定義、コンテンツ、ユーザー管理UI
+
+- KEY: aws.Amplify.be.install
+  EXPLAIN: Amplify CLI インストール
+  BODY: |
+    ■ Backend: Amplify CLI のインストール
+
+      ・Node.js と npm がインストールされていることを確認
+
+      > npm install -g @aws-amplify/cli  // グローバルインストール
+      > amplify --version
+
+    ■ AWS CLI のインストール（必要に応じて）
+
+      ・通常の Amplify プロジェクト作成・管理は Amplify CLI 単体で可能
+      ・AWS CLI がインストールされていると、プロファイル管理や IAM 設定などがより柔軟に可能
+      ・AWS CLIが未インストールの場合、以下手順でインストール
+
+      > curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      > unzip awscliv2.zip
+      > sudo ./aws/install
+      > aws --version
+
+- KEY: aws.Amplify.be.開発フロー
+  EXPLAIN: 開発フロー
+  BODY: |
+    ■ ローカル端末にAmplify CLI のインストール
+
+      > npm install -g @aws-amplify/cli
+      > amplify --version
+
+      ※ Node.js のバージョンや、npmのバージョンに注意
+      ※ AWS CLI も必要に応じてインストール
+      ※ プロジェクト内 install の場合、--save-dev オプション(実行は npx amplify ... )
+
+    ■ 設定: Amplify CLI の初期セットアップ
+      使用リージョン、クレデンシャル、プロファイル情報の設定
+
+      > amplify configure
+
+    ■ プロジェクトのルートディレクトリで初期化コマンドを実⾏
+
+      > amplify init
+
+      ・プロジェクト名
+      ・環境名(production/staging/develop/test ..etc)
+      ・使⽤するプラットーフォーム(プログラム⾔語/フレームワーク)
+      ・プロジェクトが使⽤するプロファイル情報
+      ・使⽤するエディタ
+      ・プロジェクトのディレクトリ情報..等
+
+      Specify the AWS Region
+      ? region:  ap-northeast-1
+      Specify the username of the new IAM user:
+      ? user name:  amplify-8ZcOy
+      Complete the user creation using the AWS console
+      https://console.aws.amazon.com/iam/home?region=undefined#/users$new?step=final&
+      accessKey&userNames=amplify-8ZcOy&permissionType=policies&
+      policies=arn:aws:iam::aws:policy%2FAdministratorAccess
+      Press Enter to continue
+
+      [Browser] ウィザード形式の IAMユーザー 追加ページが表示
+
+        アクセスの種類: プログラムによるアクセス
+        アクセス許可の設定
+        タグの追加(オプション)
+          -> ユーザーの作成
+          ユーザ名、アクセスキーID、シークレットアクセスキー
+
+      [CLI] に戻る
+      Enter the access key of the newly created user:
+      ? accessKeyId:  XXXXXXXXXXXX**********
+      ? secretAccessKey:  XXXXXXXXXXXXXXXXXXXX********************
+      This would update/create the AWS Profile in your local machine
+      ? Profile Name:  amplify-8ZcOy
+
+      Successfully set up the new user. <- 設定完了
+
+      > aws configure list --profile amplify-8ZcOy
+
+            Name                    Value             Type    Location
+            ----                    -----             ----    --------
+        profile            amplify-8ZcOy           manual    --profile
+      access_key     ****************XXXX shared-credentials-file
+      secret_key     ****************XXXX shared-credentials-file
+          region           ap-northeast-1      config-file    ~/.aws/config
+
+    ■ コマンド完了後、ルートディレクトリに /amplify 作成される
+
+      /amplify
+      /node_modules
+      /public
+      /src
+      .dot files
+      package.json
+
+    ■ バックエンドの設定追加（対話）
+
+      > amplify add <カテゴリ名>
+      > amplify add api                 // api 構築
+
+        ・api カテゴリの設定項⽬の例
+        ・REST API or GraphQL ?
+        ・API のスキーマ
+        ・パブリックに公開するAPI か︖認証が必要なAPI か︖..等
+
+    ■ 既存カテゴリの更新、削除
+
+      > amplify update <カテゴリ名>
+      > amplify remove <カテゴリ名>
+
+    ■ ステータス
+
+      > amplify status
+
+        Current Environment: dev
+        | Category | Resource name | Operation | Provider plugin   |
+        | -------- | ------------- | --------- | ----------------- |
+        | Storage  | s4354vdcs...  | Create    | awscloudformation | <-- 未反映
+        | Api      | blackbelt     | Update    | awscloudformation | <-- 未反映
+        | Auth     | gbsjfjfldk..  | No Change | awscloudformation |
+
+    ■ 反映
+      add/update/remove コマンド実行後、設定をバックエンドに反映させる必要あり
+
+      > amplify push
+
+        バックエンド反映後に、エンドポイントの設定ファイルが出⼒される
+        アプリケーションはこの設定ファイルを読み込んでバックエンドに接続する
+
+        /aws-exports.js
+
+- KEY: aws.Amplify.be.CLI.category
+  CATEGORY: Amplify CLI コマンド
+
+- KEY: aws.Amplify.be.基本コマンド
+  EXPLAIN: 基本コマンド一覧
+  BODY: |
+    amplify configure                   AWSプロファイル・リージョンの設定
+    amplify init                        プロジェクトの初期化
+    amplify add <category>              auth, api, storageなどの機能追加
+    amplify update <category>           追加済み機能の設定変更
+    amplify remove <category>           機能の削除
+    amplify status                      現在の環境・リソースの状態確認
+    amplify push                        ローカルの変更をクラウドに反映
+    amplify pull                        クラウドの変更をローカルに反映
+    amplify list                        プロジェクトや環境の一覧表示
+    amplify publish                     フロントエンド/バックエンドをクラウドに公開
+    amplify mock                        ローカルでAPIや認証などをモック実行
+    amplify console                     Amplify Console（Web管理画面）を開く
+    amplify help                        コマンド一覧・ヘルプ表示
+
+    公式CLIリファレンス: https://docs.amplify.aws/cli/reference/
+
+- KEY: aws.Amplify.be.configure
+  EXPLAIN: amplify configure, init
+  BODY: |
+    ■ amplify configure [options]
+
+      AWS Amplify CLIで利用する「AWSアカウントの認証情報（プロファイル）」や「リージョン」などの設定
+      それぞれのコマンドに--profile --region オプションで指定可能
+
+      amplify configure --profile XXX --region ap-northeast-1
+
+    ■ amplify init [options]
+
+      プロジェクトの初期化、ルートディレクトリで実行
+
+        amplify init
+
+      対話形式で以下を設定
+        ・プロジェクト名
+        ・環境名（例: dev, prod）
+        ・使用するAWSプロファイル（事前にamplify configureで作成可）
+        ・リージョン
+        ・使用するフレームワーク（React, Vue, Angularなど）
+        ・ディレクトリ構成、ビルド/スタートコマンド
+
+      オプション例:
+        amplify init --profile XXX --appId XXX --envName dev --region ap-northeast-1
+
+      コマンド完了後、/amplify ディレクトリや aws-exports.js などが自動生成される
+
+      詳細は公式ドキュメント参照:
+        https://docs.amplify.be.aws/cli/reference/init/
+
+- KEY: aws.Amplify.be.list
+  EXPLAIN: amplify list,status
+  BODY: |
+    ■ amplify list
+
+      amplify list --json                 // appId一覧をJSON形式で出力
+      amplify list --json | grep '"appId"' | awk -F '"' '{print $4}'  // appId一覧を抽出
+      amplify list --appId XXX            // 指定したAmplifyアプリID
+      amplify list --envName dev          // 指定した環境名（例: dev）で絞り込み
+      amplify list --appId XXX --envName prod --json // アプリID・環境名で絞り込み、JSON形式で出力
+
+    ■ amplify status
+
+      amplify status                     // 現在の環境・リソースの状態をテーブル形式で表示
+      amplify status --json              // ステータスをJSON形式で出力
+      amplify status --category api      // 指定カテゴリ（例: api）のステータス
+      amplify status --resource <name>   // 指定リソース名のステータス
+      amplify status --verbose           // 詳細情報を含むステータス表示  
+
+      Current Environment: dev
+      | Category | Resource name | Operation | Provider plugin   |
+      | -------- | ------------- | --------- | ----------------- |
+      | Storage  | s4354vdcs...  | Create    | awscloudformation |
+      | Api      | blackbelt     | Update    | awscloudformation |
+      | Auth     | gbsjfjfldk..  | No Change | awscloudformation |
+
+- KEY: aws.Amplify.be.pull
+  EXPLAIN: pull
+  BODY: |
+    ■ チーム開発でのバックエンド同期 
+
+      ・複数開発者が同じAmplifyプロジェクトのBE（認証設定、API定義、データベーススキーマなど）を変更
+      ・git pullなどで最新のBE設定がローカルに取得された後、amplify pull を実行
+      ・他のチームメンバーがクラウドにプッシュした最新のBE変更を、自分のローカル環境に反映
+          .amplify/
+          クライアント設定ファイル
+            aws-exports.js
+            amplifyconfiguration.json
+
+    ■ 既存のバックエンドへの接続・初期化
+
+      ・新しいFEプロジェクトのリポジトリから、すでに存在するAmplifyバックエンド環境に接続する際に使用
+        
+          amplify pull --appId <YOUR_APP_ID> --envName <YOUR_ENV_NAME>
+
+      ・そのプロジェクトがAmplify CLIで初期化され、指定されたクラウドのバックエンド情報がローカルにダウンロード
+      ・Amplify Studio（Web管理画面）で加えた変更をCLI環境に反映させたい場合にも利用
+
+    ■ 変更検知
+
+      ・定期的に手動で amplify pull を実行する必要なし
+      ・Amplify CLIは、クラウド変更を自動検知
+      ・amplify push 実行時、他の更新が先にクラウドにプッシュされていた場合、CLIは「クラウド環境が最新の状態ではない」ことを検知
+      ・その場合、CLIは amplify push を実行する前に、エラーメッセージや警告を表示
+        「クラウドの変更を取得するために amplify pull を実行してください」
+      ・通常のチーム開発のベストプラクティスとしては、Gitの運用と合わせて以下のようにするのが一般的
+      ・作業開始時: git pull で最新のコードを取得。
+      ・もし他のメンバーがBEも更新していた場合、以下に変更が含まれている
+          .amplify/
+          aws-exports.js
+          amplifyconfiguration.json     // または
+
+      ・バックエンドの競合解決:
+        もし git pull で .amplify にコンフリクトが発生した場合、まずはGitで競合を解決
+        その後、念のために amplify pull を実行、ローカルの状態をクラウドと完全同期
+
+- KEY: aws.Amplify.be.push
+  EXPLAIN: push
+  BODY: |
+    ■ バックエンド変更のクラウド反映
+
+      ・ローカル開発環境で加えたAWS Amplifyバックエンドの設定変更を、AWSクラウド上の環境に反映
+      ・Gitにおける git push に似ている（コードではなくインフラの変更をクラウドにアップロード）
+
+    ■ 1.変更の検出:
+
+      ・ローカルの .amplify/ から GraphQLスキーマ、認証ルール、Lambda関数のコードなどを読み込み、変更点検出
+
+    ■ 2.AWS CloudFormation スタックの更新
+
+      ・AmplifyはAWSのサービスを「AWS CloudFormation」という仕組みを使って管理
+      ・CloudFormationは、AWSリソースを一括で定義・作成・更新できるサービス
+      ・amplify push は、ローカル変更を基にCloudFormationのテンプレートを生成・更新、クラウド環境に適用
+
+    ■ 3.リソースのプロビジョニング（作成・更新）
+
+      ・CloudFormationがAWSの各サービス（S3、DynamoDB、Cognito、Lambdaなど）と通信
+      ・データベースの新規作成、APIの更新、認証設定の変更といったデプロイ実施
+
+    ■ 4.クライアント設定ファイルの更新
+
+      ・デプロイが完了すると、クラウド上のリソースのエンドポイント（接続先URLなど）の情報が確定
+      ・CLIは、その最新情報を含む設定ファイルを自動更新
+          FEプロジェクト内の aws-exports.js や amplifyconfiguration.json
+
+    ■ amplify push を実行するタイミング
+
+      ・バックエンド変更:
+          amplify add auth (認証機能の追加)
+          amplify update api (GraphQLスキーマの変更など)
+          Lambda関数のコード修正
