@@ -38,6 +38,7 @@ import { keysTypeORM } from "./keys/TypeORM"
 import { keysVue } from "./keys/Vue"
 import { keysCurl } from "./keys/curl"
 import { keysNPM } from "./keys/npm"
+import { keysTanStack } from "./keys/TanStack"
 
 // 以下のオブジェクトをソートしてください
 export const codeKeys = {
@@ -76,6 +77,7 @@ export const codeKeys = {
   RTL: "RTL",
   SVG: "SVG",
   Swagger: "Swagger",
+  TanStack: "TanStack",
   TS: "TS",
   TSConfig: "TSConfig",
   TypeORM: "TypeORM",
@@ -123,6 +125,7 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   RTL: keysRTL,
   SVG: keysSVG,
   Swagger: keysSwagger,
+  TanStack: keysTanStack,
   TS: keysTS,
   TSConfig: keysTSConfig,
   TypeORM: keysTypeORM,

@@ -1,0 +1,535 @@
+---
+#-------------------------------
+# SWR
+#-------------------------------
+- KEY: pk.fetch.tanStack.category
+  CATEGORY: TanStack(旧 React Query)
+
+- KEY: pk.fetch.tanStack.kickstart
+  EXPLAIN: Kickstart
+  BODY: |
+    ■ 公式
+
+      公式: https://tanstack.com/query/latest
+
+    ■ 目的
+
+      ・APIや非同期データの取得・キャッシュ・自動再取得・エラー管理を簡単に実装できる。
+      ・UIとデータの同期を自動化し、手動でuseEffectやuseStateを管理する手間を減らす。
+
+    ■ 実装サンプル
+
+    import { useQuery } from '@tanstack/react-query'
+
+    function User() {
+      const { data, error, isLoading } = useQuery({
+        queryKey: ['user'],
+        queryFn: () => fetch('/api/user').then(res => res.json())
+      })
+      if (isLoading) return <div>Loading...</div>
+      if (error) return <div>Error!</div>
+      return <div>{data.name}</div>
+    }
+
+    ■ 他ライブラリ（SWR等）との比較・優位点
+
+      - 柔軟なキャッシュ戦略（stale-while-revalidate, prefetch, invalidate など）
+      - 複雑な依存関係や並列・連鎖クエリも簡単に管理できる
+      - DevtoolsやMutation管理、Queryの自動再取得、エラー/ローディング状態の統合
+      - SWRよりも大規模・複雑なデータフローに強い
+      - TypeScript対応・拡張性が高い
+
+- KEY: pk.fetch.tanStack.gql.sample
+  EXPLAIN: GraphQL サンプル
+  BODY: |
+    ■ GraphQLと組み合わせた実装例
+
+    import { useQuery } from '@tanstack/react-query'
+
+    const fetchUser = async () => {
+      const res = await fetch('/graphql', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: `
+            query {
+              user {
+                id
+                name
+              }
+            }
+          `
+        })
+      })
+      const { data } = await res.json()
+      return data.user
+    }
+
+    function User() {
+      const { data, error, isLoading } = useQuery({
+        queryKey: ['user'],
+        queryFn: fetchUser
+      })
+      if (isLoading) return <div>Loading...</div>
+      if (error) return <div>Error!</div>
+      return <div>{data.name}</div>
+    }
+
+    ■ ポイント
+
+      ・queryFnでGraphQLリクエストを実装
+      ・キャッシュや自動再取得、エラー管理はTanStack Queryが担当
+      ・Apollo Clientほどの機能は不要な場合に有効
+
+- KEY: pk.fetch.tanStack.method.category
+  CATEGORY: QueryClientProvider
+
+- KEY: pk.fetch.tanStack.method.QueryClientProvider
+  EXPLAIN: QueryClientProvider
+  BODY: |
+    ■ QueryClientProvider とは
+
+    ・TanStack Query（React Query）の全てのクエリ・ミューテーション管理の「親」となるコンテキストプロバイダー。
+    ・アプリ全体で QueryClient（キャッシュ・状態管理の本体）を共有するために使う。
+    ・これを使うことで useQuery, useMutation, useQueryClient などのフックが正しく動作する。
+
+    ■ 使い方
+
+    import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+    const queryClient = new QueryClient()
+
+    function App() {
+      return (
+        <QueryClientProvider client={queryClient}>
+          <YourApp />
+        </QueryClientProvider>
+      )
+    }
+
+    ■ ポイント
+
+    ・必ずアプリのルート（最上位）でラップする
+    ・client={queryClient} で QueryClientインスタンスを渡す
+    ・Devtoolsや複数のフックもこのProvider配下で利用可能
+    ・Provider外ではフックは動作しないので注意
+
+- KEY: pk.fetch.tanStack.hooks.category
+  CATEGORY: Hooks
+
+- KEY: pk.fetch.tanStack.hooks.useQuery
+  EXPLAIN: useQuery (データ取得・キャッシュ・自動再取得)
+  BODY: |
+    ■ メソッド & プロパティ
+
+    data                                // 取得したデータ
+    error                               // エラー情報
+    isLoading                           // 初回ロード中かどうか
+    isFetching                          // 取得中かどうか（再取得含む）
+    isError                             // エラー状態かどうか
+    isSuccess                           // 成功状態かどうか
+    status                              // クエリの状態（'idle','loading','error','success'）
+    refetch()                           // 手動で再取得
+    failureCount                        // 失敗回数
+    fetchStatus                         // 'fetching','paused','idle'
+    dataUpdatedAt                       // データが最後に更新された時刻（タイムスタンプ）
+
+    ■ サンプル
+
+    import { useQuery } from '@tanstack/react-query'
+
+    const { data, error, isLoading } = useQuery({
+      queryKey: ['user'],
+      queryFn: () => fetch('/api/user').then(res => res.json())
+    })
+
+    ■ サンプル(フルオプション)
+
+    function User({ userId }) {
+      const { data, error, isLoading, refetch, isFetching, isError } = useQuery({
+        queryKey: ['user', userId],     // データキャッシュ・識別用のキー
+        queryFn: () => fetch(`/api/user/${userId}`).then(res => res.json()),
+        enabled: !!userId,              // userIdが存在する時のみ実行
+        staleTime: 60000,               // 1分間はキャッシュを新鮮とみなす
+        cacheTime: 300000,              // 5分間キャッシュを保持
+        refetchOnWindowFocus: true,     // ウィンドウフォーカス時に再取得
+        refetchOnReconnect: true,       // オンライン復帰時に再取得
+        refetchInterval: false,         // ポーリングしない（数値でms指定可）
+        select: data => data.profile,   // 必要なデータだけ抽出
+        onSuccess: data => console.log('取得成功', data),
+        onError: err => alert('取得失敗: ' + err.message),
+        suspense: false,                // サスペンスモードを使う場合はtrue
+        keepPreviousData: true,         // クエリキー変更時に前データを保持
+        retry: 2,                       // 失敗時のリトライ回数
+        retryDelay: attempt => Math.min(1000 * 2 ** attempt, 30000), // リトライ間隔
+        initialData: { profile: { name: 'Loading...' } },            // 初期データ
+        meta: { description: 'ユーザーデータ取得' }                    // 任意のメタ情報
+      })
+
+      if (isLoading) return <div>Loading...</div>
+      if (isError) return <div>Error: {error.message}</div>
+      return (
+        <div>
+          <div>{data.name}</div>
+          <button onClick={() => refetch()}>再取得</button>
+          {isFetching && <span>再取得中...</span>}
+        </div>
+      )
+    }
+
+- KEY: pk.fetch.tanStack.hooks.useMutation
+  EXPLAIN: useMutation (データ作成・更新・削除)
+  BODY: |
+    ■ メソッド & プロパティ
+
+    mutate(variables, options)          // ミューテーション（POST/PUT/DELETE等）を実行
+    mutateAsync(variables, options)     // Promiseでミューテーションを実行
+    data                                // ミューテーションの結果データ
+    error                               // エラー情報
+    isLoading                           // 実行中かどうか
+    isError                             // エラー状態かどうか
+    isSuccess                           // 成功状態かどうか
+    status                              // 状態（'idle','loading','error','success'）
+    reset()                             // 状態・エラー・データを初期化
+    variables                           // 直近のリクエストで渡した変数
+    context                             // onMutateで返した値
+    failureCount                        // 失敗回数
+    mutateOptions                       // mutate呼び出し時のオプション
+
+    ■ サンプル
+
+    import { useMutation } from '@tanstack/react-query'
+    const mutation = useMutation({
+      mutationFn: (newUser) => fetch('/api/user', {
+        method: 'POST',
+        body: JSON.stringify(newUser)
+      }).then(res => res.json())
+    })
+
+    ■ サンプル(フルオプション)
+
+    import { useMutation, useQueryClient } from '@tanstack/react-query'
+    function CreateUser() {
+      const queryClient = useQueryClient()
+
+      const mutation = useMutation({
+        mutationFn: async (newUser) => {
+          const res = await fetch('/api/user', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newUser)
+          })
+          if (!res.ok) throw new Error('作成失敗')
+          return res.json()
+        },
+
+        onMutate: async (variables) => {              // 楽観的更新: キャッシュの一時変更
+          await queryClient.cancelQueries({ queryKey: ['users'] })
+          const previousUsers = queryClient.getQueryData(['users'])
+          queryClient.setQueryData(['users'], old => [...(old || []), variables])
+          return { previousUsers }
+        },
+
+        ※ 楽観的更新（Optimistic Update）「サーバーの処理結果を待たずに先にUIやキャッシュを更新」
+
+          ・リストに新しいアイテムを追加する場合、サーバーへのPOSTリクエスト完了前に、画面上リストに即座に追加反映
+          ・ユーザー体験が高速・スムーズになる
+          ・サーバー応答待ちの遅延を感じさせない
+          ・万が一サーバー処理が失敗した場合は、元の状態に戻す（ロールバック）処理
+          ・TanStack QueryのonMutateやonErrorでこの仕組みを実装
+
+        onError: (error, variables, context) => {     // エラー時にキャッシュを元に戻す
+          if (context?.previousUsers) {
+            queryClient.setQueryData(['users'], context.previousUsers)
+          }
+          alert('作成失敗: ' + error.message)
+        },
+
+        onSuccess: (data, variables, context) => {    // 成功時にキャッシュを再取得
+          queryClient.invalidateQueries({ queryKey: ['users'] })
+          console.log('作成成功', data)
+        },
+
+        onSettled: () => {              // 成功・失敗問わず実行
+          console.log('完了')
+        },
+
+        retry: 2,                       // 失敗時のリトライ回数
+        retryDelay: attempt => Math.min(1000 * 2 ** attempt, 10000),   // リトライ間隔
+        meta: { description: 'ユーザー作成' }
+      })
+
+      const handleCreate = () => {
+        mutation.mutate({ name: '新規ユーザー' })
+      }
+
+      return (
+        <div>
+          <button onClick={handleCreate} disabled={mutation.isLoading}>
+            ユーザー作成
+          </button>
+          {mutation.isLoading && <span>作成中...</span>}
+          {mutation.isError && <span>エラー: {mutation.error.message}</span>}
+          {mutation.isSuccess && <span>作成完了!</span>}
+        </div>
+      )
+    }
+
+- KEY: pk.fetch.tanStack.hooks.useQueryClient
+  EXPLAIN: useQueryClient (キャッシュ操作・手動で再取得・invalidate)
+  BODY: |
+    ■ メソッド & プロパティ
+
+    getQueryData(queryKey)              // 指定したqueryKeyのキャッシュデータを取得
+    setQueryData(queryKey, updater)     // 指定したqueryKeyのキャッシュデータを更新
+    invalidateQueries(options)          // 指定したクエリのキャッシュを無効化し再取得をトリガー
+    refetchQueries(options)             // 指定したクエリを即時再取得
+    removeQueries(options)              // 指定したクエリのキャッシュを削除
+    resetQueries(options)               // 指定したクエリの状態を初期化
+    cancelQueries(options)              // 実行中のクエリをキャンセル
+    isFetching(options)                 // 指定したクエリがfetching中か判定
+    getQueriesData(queryKey)            // 複数クエリのデータをまとめて取得
+    setQueriesData(queryKey, updater)   // 複数クエリのデータをまとめて更新
+
+    ■ サンプル
+
+    import { useQueryClient } from '@tanstack/react-query'
+
+    const queryClient = useQueryClient()    // キャッシュの手動更新
+    queryClient.invalidateQueries({ queryKey: ['user'] })
+
+    ■ サンプル(フルオプション)
+
+    import { useQuery, useQueryClient } from '@tanstack/react-query'
+
+    function User({ userId }) {
+      const queryClient = useQueryClient()
+      const { data, isLoading } = useQuery({
+        queryKey: ['user', userId],
+        queryFn: () => fetch(`/api/user/${userId}`).then(res => res.json()),
+        staleTime: 60000,
+        cacheTime: 300000,
+      })
+
+      const updateUserCache = (newUser) => { // キャッシュの手動更新
+        queryClient.setQueryData(['user', userId], newUser)
+      }
+
+      const invalidateUser = () => {    // キャッシュの無効化（再取得トリガー）
+        queryClient.invalidateQueries({
+          queryKey: ['user', userId],
+          exact: true,                  // 完全一致のみ
+          refetchType: 'active',        // activeなクエリのみ再取得
+          type: 'all',                  // all: active+inactive
+        })
+      }
+      
+      const removeUserCache = () => {   // キャッシュ削除
+        queryClient.removeQueries({
+          queryKey: ['user', userId],
+          exact: true,
+          type: 'inactive',             // inactiveなクエリのみ削除
+        })
+      }
+
+      const refetchAll = () => {        // 全クエリ再取得
+        queryClient.refetchQueries({
+          type: 'all',
+          include: ['user', 'posts'],
+        })
+      }
+
+      return (
+        <div>
+          {isLoading ? 'Loading...' : <div>{data.name}</div>}
+          <button onClick={() => updateUserCache({ name: 'キャッシュ更新' })}>キャッシュ更新</button>
+          <button onClick={invalidateUser}>キャッシュ無効化</button>
+          <button onClick={removeUserCache}>キャッシュ削除</button>
+          <button onClick={refetchAll}>全クエリ再取得</button>
+        </div>
+      )
+    }
+
+- KEY: pk.fetch.tanStack.hooks.useInfiniteQuery
+  EXPLAIN: useInfiniteQuery (無限スクロール・ページネーション)
+  BODY: |
+    ■ メソッド & プロパティ
+    data                                // ページごとの取得データ（data.pages）
+    error                               // エラー情報
+    isLoading                           // 初回ロード中かどうか
+    isFetching                          // 取得中かどうか（再取得含む）
+    fetchNextPage()                     // 次ページのデータを取得
+    fetchPreviousPage()                 // 前ページのデータを取得
+    hasNextPage                         // 次ページが存在するか
+    hasPreviousPage                     // 前ページが存在するか
+    isFetchingNextPage                  // 次ページ取得中か
+    isFetchingPreviousPage              // 前ページ取得中か
+    refetch()                           // 全ページを再取得
+    status                              // クエリ状態（'idle','loading','error','success'）
+
+    ■ サンプル
+    import { useInfiniteQuery } from '@tanstack/react-query'
+
+    const { data, fetchNextPage } = useInfiniteQuery({
+      queryKey: ['posts'],
+      queryFn: ({ pageParam = 1 }) => fetch(`/api/posts?page=${pageParam}`).then(res => res.json()),
+      getNextPageParam: (lastPage, pages) => lastPage.nextPage
+    })
+
+    ■ サンプル(フルオプション)
+    import { useInfiniteQuery } from '@tanstack/react-query'
+
+    function Posts() {
+      const {
+        data,
+        error,
+        isLoading,
+        fetchNextPage,
+        fetchPreviousPage,
+        hasNextPage,
+        hasPreviousPage,
+        isFetching,
+        isFetchingNextPage,
+        isFetchingPreviousPage,
+        refetch,
+      } = useInfiniteQuery({
+        queryKey: ['posts'],                    // キャッシュ・識別用のキー
+        queryFn: async ({ pageParam = 1 }) => { // データ取得関数（ページ番号を受け取る）
+          const res = await fetch(`/api/posts?page=${pageParam}`)
+          if (!res.ok) throw new Error('取得失敗')
+          return res.json()
+        },
+        getNextPageParam: (lastPage, allPages) => lastPage.nextPage ?? undefined,       // 次ページのパラメータ取得
+        getPreviousPageParam: (firstPage, allPages) => firstPage.prevPage ?? undefined, // 前ページのパラメータ取得
+        initialPageParam: 1,            // 初期ページ番号
+        enabled: true,                  // クエリの自動実行制御
+        staleTime: 60000,               // キャッシュの有効期間（ms）
+        cacheTime: 300000,              // キャッシュ保持期間（ms）
+        refetchOnWindowFocus: true,     // ウィンドウフォーカス時に再取得
+        refetchOnReconnect: true,       // オンライン復帰時に再取得
+        refetchInterval: false,         // ポーリングしない（数値でms指定可）
+        select: data => data,           // データ整形（必要なら変換）
+        onSuccess: data => console.log('取得成功', data),     // 成功時コールバック
+        onError: err => alert('取得失敗: ' + err.message),    // 失敗時コールバック
+        suspense: false,                // サスペンスモード利用有無
+        keepPreviousData: true,         // ページパラメータ変更時に前データを保持
+        retry: 2,                       // 失敗時のリトライ回数
+        retryDelay: attempt => Math.min(1000 * 2 ** attempt, 30000),   // リトライ間隔
+        initialData: undefined,         // 初期データ
+        meta: { description: '無限スクロール投稿取得' }        // 任意のメタ情報
+      })
+
+      if (isLoading) return <div>Loading...</div>
+      if (error) return <div>Error: {error.message}</div>
+
+      return (
+        <div>
+          {data.pages.map((page, i) => (
+            <div key={i}>
+              {page.items.map(post => (
+                <div key={post.id}>{post.title}</div>
+              ))}
+            </div>
+          ))}
+          <button onClick={() => fetchPreviousPage()} disabled={!hasPreviousPage || isFetchingPreviousPage}>
+            前のページ
+          </button>
+          <button onClick={() => fetchNextPage()} disabled={!hasNextPage || isFetchingNextPage}>
+            次のページ
+          </button>
+          {isFetching && <span>取得中...</span>}
+          <button onClick={() => refetch()}>再取得</button>
+        </div>
+      )
+    }
+
+- KEY: pk.fetch.tanStack.hooks.useIsFetching
+  EXPLAIN: useIsFetching (グローバルローディング状態取得)
+  BODY: |
+    ■ useIsFetching の実装サンプル
+    import { useIsFetching } from '@tanstack/react-query'
+
+
+    function GlobalLoading() {
+      const isFetching = useIsFetching()     // 1つ以上のクエリがfetching中なら1以上
+      return (
+        <>{isFetching > 0 && <div>全体でデータ取得中...</div>}</>
+      )
+    }
+
+    function UserLoading() {
+      const isFetchingUser = useIsFetching({ queryKey: ['user'] }) // 特定queryKeyの監視
+
+      return (
+        <>{isFetchingUser > 0 && <div>ユーザーデータ取得中...</div>}</>
+      )
+    }
+
+    ■ ポイント
+      - useIsFetching() は現在fetching中のクエリ数を返す
+      - queryKeyで特定のクエリのみ監視可能
+      - グローバルなローディングインジケータやボタンの一括無効化などに便利
+
+- KEY: pk.fetch.tanStack.hooks.useIsMutating
+  EXPLAIN: useIsMutating (グローバルミューテーション状態取得)
+  BODY: |
+    ■ useIsMutating の実装サンプル
+
+    import { useIsMutating } from '@tanstack/react-query'
+
+    function GlobalMutating() {
+      const isMutating = useIsMutating()      // 1つ以上のmutationが実行中なら1以上
+      return (
+        <>{isMutating > 0 && <div>全体でデータ送信中...</div>}</>
+      )
+    }
+
+    function UserMutating() {
+      const isMutatingUser = useIsMutating({ mutationKey: ['user'] }) // 特定mutationKeyの監視
+
+      return (
+        <>{isMutatingUser > 0 && <div>ユーザーデータ送信中...</div>}</>
+      )
+    }
+
+    ■ ポイント
+      - useIsMutating() は現在実行中のmutation数を返す
+      - mutationKeyで特定のmutationのみ監視可能
+      - グローバルな送信インジケータやボタンの一括無効化などに便利
+
+- KEY: pk.fetch.tanStack.DevTools.category
+  CATEGORY: DevTools
+
+- KEY: pk.fetch.tanStack.DevTools
+  EXPLAIN: DevTools
+  BODY: |
+    ■ TanStack Query Devtools（React Query Devtools）
+
+    Reactアプリのクエリ・ミューテーション状態をリアルタイムで可視化・デバッグできる公式ツール
+    https://tanstack.com/query/latest/docs/devtools
+
+    ■ 主な機能
+    すべてのクエリ・ミューテーションの状態（キャッシュ、fetching、エラー、成功など）を一覧表示
+    クエリの手動再取得・キャッシュ削除・データ編集
+    クエリキーやデータ内容の確認
+    キャッシュの寿命やstale状態の可視化
+    パフォーマンスやエラーのトラブルシュート
+
+    ■ 導入方法
+
+    npm install @tanstack/react-query-devtools
+
+    ■ 使用例
+    import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+    import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+
+    const queryClient = new QueryClient()
+
+    function App() {
+      return (
+        <QueryClientProvider client={queryClient}>
+          <YourApp />
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      )
+    }

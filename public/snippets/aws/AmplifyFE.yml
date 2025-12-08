@@ -1,0 +1,339 @@
+---
+#-------------------------------
+# Amplify フロントエンド
+#-------------------------------
+- KEY: aws.Amplify.fe.category
+  CATEGORY: 概説
+
+- KEY: aws.Amplify.fe.install
+  EXPLAIN: フロントエンド インストール
+  BODY: |
+    ■ Frontend: Amplify Framework のインストール
+
+      > npm install aws-amplify
+
+    ■ React Native
+
+      > npm install aws-amplify @react-native-async-storage/async-storage
+
+- KEY: aws.Amplify.fe
+  EXPLAIN: 開発フロー
+  BODY: |
+
+- KEY: aws.Amplify.fe.CLI.category
+  CATEGORY: Amplify CLI（Frontend）
+
+- KEY: aws.Amplify.fe.基本コマンド
+  EXPLAIN: フロントエンド基本コマンド一覧
+  BODY: |
+    ■ Amplify.configure(config)
+      Amplifyの設定を初期化
+
+    ■ Auth
+      Auth.signUp, Auth.signIn, Auth.signOut, Auth.currentAuthenticatedUser など
+      ユーザー認証・管理
+
+    ■ API
+      API.get, API.post, API.put, API.del など
+      REST/GraphQL API呼び出し
+
+    ■ Storage
+      Storage.put, Storage.get, Storage.remove, Storage.list など
+      S3ストレージ操作
+
+    ■ DataStore
+      DataStore.save, DataStore.query, DataStore.delete, DataStore.observe など
+      オフライン対応データ管理
+
+    ■ Analytics
+      Analytics.record, Analytics.updateEndpoint など
+      イベント・ユーザー行動の記録
+
+    ■ Predictions
+      Predictions.convert, Predictions.identify, Predictions.interpret など
+      AI/ML機能（翻訳、画像認識、音声→テキスト等）
+
+    ■ PubSub
+      PubSub.publish, PubSub.subscribe など
+      MQTT等のリアルタイム通信
+
+    公式リファレンス: https://docs.amplify.aws/lib/q/platform/js/
+
+- KEY: aws.Amplify.fe.API
+  EXPLAIN: API
+  BODY: |
+    import { API } from 'aws-amplify'
+
+    ■ GET
+    API.get('myApiName', '/items').then(response => {
+      console.log(response)
+    })
+
+    ■ POST
+    API.post('myApiName', '/items', {
+      body: { name: '新規アイテム' }
+    }).then(response => {
+      console.log(response)
+    })
+
+    ■ PUT
+    API.put('myApiName', '/items/123', {
+      body: { name: '更新アイテム' }
+    }).then(response => {
+      console.log(response)
+    })
+
+    ■ DELETE
+    API.del('myApiName', '/items/123').then(response => {
+      console.log(response)
+    })
+
+- KEY: aws.Amplify.fe.GraphQL
+  EXPLAIN: |
+    API: React & GraphQL
+  BODY: |
+    import { API, graphqlOperation } from 'aws-amplify'
+    import { createItem, updateItem, deleteItem } from './graphql/mutations'
+    import { getItem, listItems } from './graphql/queries'
+
+    ■ Create
+    const newItem = { name: '新規アイテム' }
+    API.graphql(graphqlOperation(createItem, { input: newItem })).then(response => {
+      console.log(response)
+    })
+
+        ■ createItem の実装例
+        export const createItem = /* GraphQL */ `
+          mutation CreateItem($input: CreateItemInput!) {
+            createItem(input: $input) {
+              id
+              name
+              createdAt
+              updatedAt
+            }
+          }
+
+    ■ Read (Single)
+    API.graphql(graphqlOperation(getItem, { id: '123' })).then(response => {
+      console.log(response)
+    })
+
+        ■ getItem の実装例
+        export const getItem = /* GraphQL */ `
+          query GetItem($id: ID!) {
+            getItem(id: $id) {
+              id
+              name
+              createdAt
+              updatedAt
+            }
+          }
+        `
+
+    ■ Read (List)
+    API.graphql(graphqlOperation(listItems)).then(response => {
+      console.log(response)
+    })
+
+        ■ listItems の実装例
+        export const listItems = /* GraphQL */ `
+          query ListItems {
+            listItems {
+              items {
+                id
+                name
+                createdAt
+                updatedAt
+              }
+            }
+          }
+        `
+
+    ■ Update
+    const updatedItem = { id: '123', name: '更新アイテム' }
+    API.graphql(graphqlOperation(updateItem, { input: updatedItem })).then(response => {
+      console.log(response)
+    })
+
+        `
+        ■ updateItem の実装例
+        export const updateItem = /* GraphQL */ `
+          mutation UpdateItem($input: UpdateItemInput!) {
+            updateItem(input: $input) {
+              id
+              name
+              createdAt
+              updatedAt
+            }
+          }
+        `
+
+    ■ Delete
+    API.graphql(graphqlOperation(deleteItem, { input: { id: '123' } })).then(response => {
+      console.log(response)
+    })
+
+        ■ deleteItem の実装例
+        export const deleteItem = /* GraphQL */ `
+          mutation DeleteItem($input: DeleteItemInput!) {
+            deleteItem(input: $input) {
+              id
+            }
+          }
+        `
+
+- KEY: aws.Amplify.fe.DataStore
+  EXPLAIN: DataStore
+  BODY: |
+    ■ Amplify DataStore
+    import { DataStore } from 'aws-amplify'
+    import { Item } from './models'
+
+      export const Item = {
+        name: 'Item',
+        fields: {
+          id: { type: 'ID', isRequired: true },
+          name: { type: 'String', isRequired: true },
+          createdAt: { type: 'AWSDateTime', isRequired: false },
+          updatedAt: { type: 'AWSDateTime', isRequired: false }
+        }
+      }
+
+      ※ amplify codegen models で自動生成
+      GraphQLスキーマ例:
+        type Item @model {
+          id: ID!
+          name: String!
+          createdAt: AWSDateTime
+          updatedAt: AWSDateTime
+        }
+
+    ■ 保存（Create）
+    const newItem = await DataStore.save(
+      new Item({ name: '新規アイテム' })
+    )
+
+    ■ 取得（Query）
+    const items = await DataStore.query(Item)
+    console.log(items)
+
+    ■ 削除（Delete）
+    await DataStore.delete(items[0])
+
+    ■ 変更監視（Observe）
+    データモデル（例: Item）に対して追加・更新・削除などの変更イベントをリアルタイムで検知
+    - 他ユーザーや他端末でデータが変更された時にUIを自動更新
+    - オフライン/オンライン同期時の変更検知
+    - リアルタイム通知や履歴管理
+
+      const subscription = DataStore.observe(Item).subscribe(msg => {
+        // msg.model: モデル名
+        // msg.opType: 操作種別（INSERT, UPDATE, DELETE）
+        // msg.element: 変更されたデータ
+        console.log('変更検知:', msg)
+      })
+
+    ■ 購読解除
+    subscription.unsubscribe()
+
+- KEY: aws.Amplify.fe.DataStore.Subscribe使用
+  EXPLAIN: |
+    DataStore: React Subscribe使用
+  BODY: |
+    ■ subscribeあり：他端末や他ユーザーによる変更もリアルタイム反映
+    import React, { useEffect, useState } from 'react'
+    import { DataStore } from 'aws-amplify'
+    import { Item } from './models'
+
+    const ItemList = () => {
+      const [items, setItems] = useState([])
+
+      // データ取得
+      useEffect(() => {
+        DataStore.query(Item).then(setItems)
+        // 変更監視
+        const subscription = DataStore.observe(Item).subscribe(msg => {
+          DataStore.query(Item).then(setItems)
+        })
+        return () => subscription.unsubscribe()
+      }, [])
+
+      // 新規作成
+      const addItem = async () => {
+        await DataStore.save(new Item({ name: '新規アイテム' }))
+        const updated = await DataStore.query(Item)
+        setItems(updated)
+      }
+
+      // 削除
+      const deleteItem = async (item) => {
+        await DataStore.delete(item)
+        const updated = await DataStore.query(Item)
+        setItems(updated)
+      }
+
+      return (
+        <div>
+          <button onClick={addItem}>追加</button>
+          <ul>
+            {items.map(item => (
+              <li key={item.id}>
+                {item.name}
+                <button onClick={() => deleteItem(item)}>削除</button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+
+    export default ItemList
+
+- KEY: aws.Amplify.fe.DataStore.Subscribe不使用
+  EXPLAIN: |
+    DataStore: React Subscribe不使用
+  BODY: |
+    ■ subscribeなし：自分の操作（追加・削除）時のみ再取得・反映。外部変更は反映されない
+
+    import React, { useEffect, useState } from 'react'
+    import { DataStore } from 'aws-amplify'
+    import { Item } from './models'
+
+    const ItemList = () => {
+      const [items, setItems] = useState([])
+
+      // データ取得（初回のみ）
+      useEffect(() => {
+        DataStore.query(Item).then(setItems)
+      }, [])
+
+      // 新規作成
+      const addItem = async () => {
+        await DataStore.save(new Item({ name: '新規アイテム' }))
+        const updated = await DataStore.query(Item)
+        setItems(updated)
+      }
+
+      // 削除
+      const deleteItem = async (item) => {
+        await DataStore.delete(item)
+        const updated = await DataStore.query(Item)
+        setItems(updated)
+      }
+
+      return (
+        <div>
+          <button onClick={addItem}>追加</button>
+          <ul>
+            {items.map(item => (
+              <li key={item.id}>
+                {item.name}
+                <button onClick={() => deleteItem(item)}>削除</button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+
+    export default ItemList
