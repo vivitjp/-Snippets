@@ -7,7 +7,7 @@
 
 - KEY: node.version
   EXPLAIN: |
-    Nodeバージョン
+    Node バージョン
   BODY: |
     ■ AWSの各種サービスがサポートする Node.js のバージョンに要注意
     Lambda: Node.js 18以前のバージョンは、2025年4月でサポート切れ
@@ -41,6 +41,136 @@
       v16 ❌	Gallium	2021/04/20	2023/08/08	End-of-life❌
       v15 ❌		2020/10/20	2021/04/06	End-of-life❌
       v14 ❌	Fermium	2020/04/21	2023/02/16	End-of-life❌
+
+- KEY: node.設定
+  EXPLAIN: 設定
+  BODY: |
+    ■ 使用メモリ
+
+    ・Node.jsのデフォルトのメモリ制限は約1.5GB
+    ・大量データ処理や大規模アプリケーションでは、--max-old-space-size フラグでメモリ制限を増加可能
+    ・例: node --max-old-space-size=4096 app.js  // 4GBに設定
+
+    ■ 環境変数
+
+    ・環境変数は、アプリケーションの設定や機密情報を管理するために使用
+    ・process.env オブジェクトを通じてアクセス可能
+    ・dotenv パッケージを使用して .env ファイルから環境変数をロード可能
+    ・例: npm install dotenv
+      require('dotenv').config();
+      const dbPassword = process.env.DB_PASSWORD;
+
+- KEY: node.起動
+  EXPLAIN: 起動オプション
+  BODY: |
+    ■ --inspect
+
+    ・リモートデバッガ（V8 Inspector）を有効化
+    ・デフォルト: 127.0.0.1:9229
+    ・用途: ライブデバッグ、プロファイリング
+
+      例: node --inspect app.js
+
+    ■ --inspect-brk
+
+    ・起動時に最初の行でブレークしてデバッガ接続を待機
+    ・用途: プロセス初期化のデバッグ
+
+      例: node --inspect-brk app.js
+
+    ■ -r, --require
+
+    ・起動時にモジュールを事前ロード
+    ・用途: トランスパイラ登録、polyfill 挿入
+
+      例: node -r ts-node/register src/index.ts
+
+    ■ --max-old-space-size=<MB>
+
+    ・V8 ヒープの最大サイズ（MB）を指定
+    ・用途: メモリ制限の調整（バッチ処理等）
+
+      例: node --max-old-space-size=4096 app.js
+
+    ■ --trace-warnings / --trace-deprecation
+
+    ・警告や非推奨呼び出しのスタックトレースを出力
+    ・用途: 非推奨箇所の検出、CI 監視
+
+      例: node --trace-deprecation app.js
+
+    ■ --trace-gc / --trace-gc-verbose
+
+    ・GC の挙動ログを出力
+    ・用途: メモリリーク調査、GC チューニング
+
+      例: node --trace-gc app.js
+
+    ■ --expose-gc
+
+    ・global.gc() を有効化（手動 GC 呼び出し可能）
+    ・用途: テストや特殊ケースのメモリ制御
+
+      例: node --expose-gc app.js
+
+    ■ --prof
+
+    ・V8 プロファイルを生成（後で解析）
+    ・用途: CPU ホットスポット解析
+
+      例: node --prof app.js
+
+    ■ --enable-source-maps
+
+    ・ソースマップを有効にしてスタックトレースを復元
+    ・用途: TypeScript / バンドル後のデバッグ
+
+      例: node --enable-source-maps dist/app.js
+
+    ■ --abort-on-uncaught-exception
+
+    ・未処理例外で即時プロセス終了（コアダンプ等）
+    ・用途: 障害解析（クラッシュ状態を残す）
+
+    ■ --watch
+
+    ・ファイル変更でプロセスを再起動（開発向け）
+    ・注意: 本番ではプロセスマネージャ使用を推奨
+
+      例: node --watch app.js
+
+    ■ 環境変数: NODE_OPTIONS
+
+    ・全 Node 起動に対する共通オプションを設定可能
+    ・用途: コンテナ/CI の一括設定
+
+    例:
+      export NODE_OPTIONS="--max-old-space-size=2048 --trace-warnings"
+      node app.js
+
+    ■ 運用上の注意
+
+    ・セキュリティ
+
+      --inspect をパブリックに公開しない（認証無しでデバッグアクセスされる）
+
+    ・本番でのフラグ
+
+      --max-old-space-size 等は有効だが、--expose-gc や --inspect の常用は避ける
+
+    ・永続的設定
+
+      コンテナ/サービスで一括設定する場合は NODE_OPTIONS を使うと便利
+      しかしデバッグ用オプションを誤って含めないよう注意する
+
+    ・互換性
+
+      一部のフラグは Node バージョン依存（事前に node --help / ドキュメントを確認する）
+
+    ・パフォーマンス調整
+
+      V8 フラグは強力だが副作用が出やすい
+      変更は小さく、ベンチで検証してから本番へ
 
 #-------------------------------
 # Volta

@@ -287,7 +287,7 @@
         (use "git add/rm <file>..." to update what will be committed)        
         (use "git restore <file>..." to discard changes in working directory)
               modified:   package.json
-              deleted:    public/snippets/JSRuntime/nodejs/Node.yml
+              deleted:    public/snippets/Node/nodejs/Node.yml
               modified:   public/snippets/React/React.yml
               modified:   public/snippets/React/ReactComponent.yml
               deleted:    public/snippets/React/ReactTypeScript.yml

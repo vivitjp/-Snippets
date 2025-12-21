@@ -39,6 +39,8 @@ import { keysVue } from "./keys/Vue"
 import { keysCurl } from "./keys/curl"
 import { keysNPM } from "./keys/npm"
 import { keysTanStack } from "./keys/TanStack"
+import { keysReactRouter } from "./keys/ReactRouter"
+import { keysYup } from "./keys/Yup"
 
 // 以下のオブジェクトをソートしてください
 export const codeKeys = {
@@ -73,6 +75,8 @@ export const codeKeys = {
   Prisma: "Prisma",
   Python: "Python",
   React: "React",
+  ReactRouter: "ReactRouter",
+  Yup: "Yup",
   RegExp: "RegExp",
   RTL: "RTL",
   SVG: "SVG",
@@ -121,6 +125,8 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   Prisma: keysPrisma,
   Python: keysPython,
   React: keysReact,
+  ReactRouter: keysReactRouter,
+  Yup: keysYup,
   RegExp: keysRegExp,
   RTL: keysRTL,
   SVG: keysSVG,

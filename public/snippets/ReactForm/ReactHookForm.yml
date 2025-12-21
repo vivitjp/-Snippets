@@ -153,13 +153,16 @@
   BODY: |
     ■ 主用途
 
-    ・reset() で全項目を初期値に戻す
-      フォーム送信後に入力値を初期化したい場合
-    ・reset(values) で任意の値に一括更新
-      APIから取得したデータでフォーム値を一括更新したい場合
-    ・編集・新規・キャンセル・API反映など多用途
-      編集画面で「キャンセル」ボタンを押した時、元の値に戻したい場合
-      エラー発生時やリセットボタンで全項目をクリアしたい場合
+    ・reset() 
+      全項目を初期値に戻す
+      フォーム送信後に入力値初期化
+
+    ・reset(values) 
+      任意の値に一括更新
+      APIから取得したデータでフォーム値を一括更新
+      編集・新規・キャンセル・API反映など多用途
+      編集画面で「キャンセル」ボタンを押した時、元の値に戻す
+      エラー発生時やリセットボタンで全項目をクリア
 
     ■ 例
 
@@ -190,15 +193,15 @@
     ■ reset(values, options) の options 詳細
 
       reset(values, {
-        keepErrors,                     // エラー状態を保持（false:クリア）、APIエラーやバリデーションエラーをリセット後も残したい場合
-        keepDirty,                      // dirty状態を保持（false:初期化）、編集済み（dirty）状態をリセット後も維持したい場合
-        keepValues,                     // 現在の値を保持（false:valuesで上書き）、現在のフォーム値を維持したい場合（resetで値を変えたくない時）
-        keepTouched,                    // touched状態を保持（false:初期化）、touched（フォーカス済み）状態を維持したい場合
-        keepIsSubmitted,                // isSubmitted状態を保持、送信済み状態を維持したい場合
-        keepSubmitCount,                // submitCountを保持、送信回数を維持したい場合
-        keepDefaultValues,              // defaultValuesを保持（false:新しい値で上書き）、defaultValuesを変更せず維持したい場合
-        keepIsValid,                    // isValid状態を保持、バリデーション結果を維持したい場合
-        keepDirtyValues,                // dirtyな値のみ保持（他は初期化）、dirtyな値のみ維持し、他は初期化したい場合
+        keepErrors,                     // エラー状態保持（false:クリア）APIエラーやバリデーションエラーをリセット後も残す
+        keepDirty,                      // dirty状態保持（false:初期化）編集済み（dirty）状態をリセット後も維持
+        keepValues,                     // 現在の値保持（false:valuesで上書）現在のフォーム値を維持（resetで値を変えたくない時）
+        keepTouched,                    // touched状態を保持（false:初期化）touched（フォーカス済み）状態維持
+        keepIsSubmitted,                // isSubmitted状態を保持、送信済み状態を維持
+        keepSubmitCount,                // submitCountを保持、送信回数を維持
+        keepDefaultValues,              // defaultValuesを保持（false:新しい値で上書き）defaultValuesを変更せず維持
+        keepIsValid,                    // isValid状態を保持、バリデーション結果を維持
+        keepDirtyValues,                // dirtyな値のみ保持（他は初期化）dirtyな値のみ維持し、他は初期化
       })
 
     ■ 例
