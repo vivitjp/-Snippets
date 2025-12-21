@@ -48,7 +48,7 @@
 
 - KEY: react.react-router-dom.概要
   EXPLAIN: 概要
-  BODY: |リソース詳細
+  BODY: |
     ■ インストール
 
     npm install react-router-dom 
