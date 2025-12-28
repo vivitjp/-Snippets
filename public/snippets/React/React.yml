@@ -10,52 +10,6 @@
   BODY: |
     ■ 関数コンポーネント (引数で型指定)
 
-    type Props = { title: string }
-
-    function Title({ title }: Props) {
-      return <h1>{title}</h1>
-    }
-
-    ■ React.FC (React.FunctionComponent)
-
-    type Props = { title: string }
-
-    const TitleFC: React.FC<Props> = ({ title, children }) => (
-      <h1>{title}{children}</h1>
-    )
-
-- KEY: react.コンポーネント.children
-  EXPLAIN: children
-  BODY: |
-    ■ children に引数を渡したい場合
-
-    type Props = {
-      label: string;
-      children: (value: string) => React.ReactNode
-    }
-
-    const LabeledWithArg: React.FC<Props> = ({ label, children }) => (
-      <div>
-        {label}
-        {children("子要素の値")}
-      </div>
-    )
-
-    ■ React.PropsWithChildren
-
-    type Props = {
-      label: string;
-    }
-
-    const Labeled: React.FC<React.PropsWithChildren<Props>> = ({ label, children }) => (
-      <div>{label}{children}</div>
-    )
-
-- KEY: react.コンポーネント.HTML要素
-  EXPLAIN: HTML要素
-  BODY: |
-    ■ 関数コンポーネント (引数で型指定)
-
     type Props = { 
       title: string
     }
@@ -660,7 +614,11 @@
 - KEY: react.hooks.useState
   EXPLAIN: useState
   BODY: |
-    const [xxxxx, setXxxxx] = useState<Map<string, any>>()
+    const [xxx, setXxx] = useState<string>("")
+    const [xxx, setXxx] = useState<number>(0)
+    const [xxx, setXxx] = useState<boolean>(false)
+    const [xxx, setXxx] = useState<Map<string, any>>()
+    const [xxx, setXxx] = useState<Set<string>>()
 
 #-------------------------------
 # Hooks: useEffect
@@ -909,7 +867,7 @@
     }, [])
 
 #-------------------------------
-# Hooks: useLayoutEffect
+# Hooks: useRef
 #-------------------------------
 - KEY: react.useRef.input
   EXPLAIN: useRef

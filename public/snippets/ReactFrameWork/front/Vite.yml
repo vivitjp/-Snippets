@@ -1,9 +1,12 @@
 ---
 #-------------------------------
-# JS Framework Frontend
+# vite
 #-------------------------------
-- KEY: fe.vite.install
-  EXPLAIN: インストール
+- KEY: vite.install.category
+  CATEGORY: インストール & 設定
+
+- KEY: vite.install.fontbuildtool
+  EXPLAIN: フロントエンドビルドツール Vite（Evan You の Vite）
   BODY: |
     React/Vue/Svelte 等モダン開発用のビルド・開発サーバ
 
@@ -233,7 +236,155 @@
       },
     })
 
-- KEY: fe.vite.config
-  EXPLAIN: TS config for Vite
+- KEY: vite.gitHubPages.category
+  CATEGORY: GitHub Pages での運用
+
+- KEY: vite.gitHubPages.基本設定
+  EXPLAIN: 基本設定
   BODY: |
-    tsconfig.node.json
+    ■ ユーザーページ
+
+      例: username.github.io  →  base: '/'（ルート配下）
+
+    ■ SPA のクライアントルーティング対策
+
+      404 → index フォールバックを用意
+
+    ■ vite.config.ts
+
+      import { defineConfig } from 'vite'
+      import react from '@vitejs/plugin-react' // 例: React
+
+      export default defineConfig({
+        base: '/repo-name/',            // ← repository 名に置き換える（ユーザーページは '/'）
+        plugins: [react()],
+        build: {
+          outDir: 'dist',               // ビルド出力先 デフォルト
+        },
+      })
+
+    ■ package.json にスクリプト追加
+
+      {
+        "scripts": {
+          "dev": "vite",
+          "build": "vite build",          // ← GitHub Pages 用ビルド
+          "preview": "vite preview"
+        }
+      }
+
+- KEY: vite.gitHubPages.デプロイ
+  EXPLAIN: デプロイ
+  BODY: |
+    ■ A) 簡易デプロイ: gh-pages パッケージ
+      npm install --save-dev gh-pages
+
+      // package.json にスクリプト追加
+      {
+        "scripts": {
+          "predeploy": "npm run build",
+          "deploy": "gh-pages -d dist -b gh-pages"
+        }
+      }
+
+      // デプロイ実行
+      npm run deploy
+
+    ■ B) 推奨デプロイ: GitHub Actions でCI自動化
+
+    [ファイル例 .github/workflows/deploy.yml]
+
+    設定後、main ブランチに push すると自動で dist を gh-pages ブランチへ push 、
+    GitHub Pages に公開されるように設定可能（リポジトリの Pages 設定で gh-pages を選択）
+
+      ※ 代替: JamesIves/github-pages-deploy-action もよく使われます。
+
+      name: deploy
+      on:
+        push:
+          branches:
+            - main   # main に push したらデプロイ
+
+      jobs:
+        build-deploy:
+          runs-on: ubuntu-latest
+          steps:
+            - name: checkout
+              uses: actions/checkout@v4
+
+            - name: setup node
+              uses: actions/setup-node@v4
+              with:
+                node-version: '18'
+
+            - name: install
+              run: npm ci
+
+            - name: build
+              run: npm run build
+
+            - name: deploy to gh-pages
+              uses: peaceiris/actions-gh-pages@v4
+              with:
+                github_token: ${{ secrets.GITHUB_TOKEN }}
+                publish_dir: ./dist
+                publish_branch: gh-pages
+
+- KEY: vite.gitHubPages.404フォールバック
+  EXPLAIN: SPA の 404 フォールバック対策
+  BODY: |
+    GitHub Pages は直接 SPA の client-side routing をサポートしない
+    404.html を使って index.html にフォールバック
+    dist/404.html に以下のような小さなスクリプトを追加
+
+    <script>
+      // SPA の history API を使っている場合、404 で来た URL を index.html にリダイレクト
+      const redirectTo = '/' + location.pathname.replace(/^\/+/, '');
+      fetch(redirectTo, { method: 'HEAD' }).then(() => {
+        location.replace(location.origin + '/');
+      }).catch(() => {
+        location.replace('/');
+      });
+    </script>
+
+    簡易版: index.html のコピーを dist/404.html にしておく方法（ただし相対パスの問題に注意）
+
+- KEY: vite.gitHubPages.customDomain
+  EXPLAIN: カスタムドメイン（CNAME）の設定
+  BODY: |
+    ■ 1) GitHub リポジトリの Pages 設定でカスタムドメインを指定
+
+      リポジトリの Settings → Pages → Custom domain にドメイン名を入力して保存
+
+    ■ 2) DNS 側で CNAME レコードを設定
+      dist/CNAME にカスタムドメインを書いておく（example.com）
+      dist/CNAME をコミット／デプロイ対象に含める
+
+    GitHub Actions を使う場合、peaceiris/actions-gh-pages は cname 入力にも対応:
+
+      - name: deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
+          cname: example.com   # ここにカスタムドメインを指定
+
+- KEY: vite.gitHubPages.nojekyll
+  EXPLAIN: nojekyll
+  BODY: |
+    ■ nojekyllとは？
+
+    JekyllはGitHub Pagesでデフォルトで使用される静的サイトジェネレータ
+
+    GitHub Pages はデフォルトで Jekyll によるビルドを試みる
+    静的サイトジェネレータを使わない場合、ルートに .nojekyll ファイルを置くことで無効化可能
+    dist/.nojekyll を作成し、コミット／デプロイ対象に含める
+
+- KEY: vite.gitHubPages.troubleshooting
+  EXPLAIN: トラブルシューティング
+  BODY: |
+    ・base が誤っている → ページ内リソースが 404 になる（console でパスを確認）
+    ・SPA でリロードすると 404 → 404→index フォールバック対策が必要
+    ・gh-pages ブランチが GitHub Pages の Source に設定されていない → Settings → Pages で確認
+    ・Actions でビルド失敗 → npm ci や node バージョン、Secrets（不要だが token 権限）を確認
