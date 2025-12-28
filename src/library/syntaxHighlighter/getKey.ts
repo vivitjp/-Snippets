@@ -41,6 +41,9 @@ import { keysNPM } from "./keys/npm"
 import { keysTanStack } from "./keys/TanStack"
 import { keysReactRouter } from "./keys/ReactRouter"
 import { keysYup } from "./keys/Yup"
+import { keysMUI } from "./keys/MUI"
+import { keysI18n } from "./keys/i18n"
+import { keysVite } from "./keys/Vite"
 
 // 以下のオブジェクトをソートしてください
 export const codeKeys = {
@@ -60,6 +63,7 @@ export const codeKeys = {
   Git: "Git",
   graphQL: "graphQL",
   HTML: "HTML",
+  i18n: "i18n",
   Jest: "Jest",
   Jotai: "Jotai",
   JSTS: "JSTS",
@@ -85,8 +89,10 @@ export const codeKeys = {
   TS: "TS",
   TSConfig: "TSConfig",
   TypeORM: "TypeORM",
+  MUI: "MUI",
   Unknown: "Unknown",
   Vue: "Vue",
+  Vite: "Vite",
 } as const
 
 export const defaultSnippetsStyle = codeKeys.Unknown
@@ -110,6 +116,7 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   Git: keysGit,
   graphQL: keysGraphQL,
   HTML: keysHTML,
+  i18n: keysI18n,
   Jest: keysJest,
   Jotai: keysJotai,
   JSTS: keysJSTS,
@@ -126,7 +133,6 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   Python: keysPython,
   React: keysReact,
   ReactRouter: keysReactRouter,
-  Yup: keysYup,
   RegExp: keysRegExp,
   RTL: keysRTL,
   SVG: keysSVG,
@@ -135,7 +141,10 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   TS: keysTS,
   TSConfig: keysTSConfig,
   TypeORM: keysTypeORM,
+  Yup: keysYup,
   Vue: keysVue,
+  MUI: keysMUI,
+  Vite: keysVite,
 }
 
 export const getMergedKeys = (codeKeyTypes: string[] | undefined) => {

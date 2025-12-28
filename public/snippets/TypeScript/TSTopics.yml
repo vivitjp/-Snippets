@@ -5,7 +5,7 @@
 - KEY: ts.typescript.category
   CATEGORY: TypeScript
 
-- KEY: ts.typescript.tsc
+- KEY: ts.TSC.tsc
   EXPLAIN: TSC
   BODY: |
     ■ TypeScript コンパイラ (TSC) のインストール
@@ -24,12 +24,97 @@
       tsc --build --clean               // ビルド成果物のクリーン
       tsc --help                        // ヘルプ表示
 
+- KEY: ts.TSC.tsc.memory
+  EXPLAIN: TSC メモリ対策
+  BODY: |
+    ■ tsc 実行時のメモリ関連 Node/V8 オプションと、メモリ負荷を下げる TypeScript 側の設定
+
+    ■ Node/V8 のメモリ上限を増やす（推奨）
+
+    ・直接 node で tsc を起動（単位は MB。例は 4GB）
+
+      node --max-old-space-size=4096 ./node_modules/typescript/bin/tsc -p 
+
+        開発・小規模プロジェクト: 512MB ～ 1024MB
+        中規模プロジェクト: 2048MB
+        大規模アプリ / 多数の依存: 4096MB
+        大規模モノレポ / 並列ビルド: 8192MB〜16384MB（ホストの物理RAMに依存）
+
+    ・npm スクリプト例（package.json）:
+
+      "scripts": {
+        "build:ts": "node --max-old-space-size=4096 ./node_modules/typescript/bin/tsc -p tsconfig.json"
+        "build:ts": "cross-env NODE_OPTIONS=--max-old-space-size=4096 npx tsc -p tsconfig.json"   // cross-env 使用例
+      }
+
+    ・ぷらっとフォーム別の実行例:
+
+      NODE_OPTIONS=--max-old-space-size=4096 npx tsc -p             環境変数で指定（POSIX）:
+      $env:NODE_OPTIONS="--max-old-space-size=4096"; npx tsc -p     Windows（PowerShell）:
+      set NODE_OPTIONS=--max-old-space-size=4096 && npx tsc -p      Windows（cmd.exe）:
+
+    ■ GC / プロファイリング用の Node フラグ（トラブルシュート時）
+
+    ・ガベージコレクション追跡:
+
+      node --trace_gc --max-old-space-size=4096 ./node_modules/typescript/bin/tsc -p 
+
+    ・メモリスナップショット / デバッガ:
+
+      node --inspect --max-old-space-size=4096 ./node_modules/typescript/bin/tsc -p 
+
+    ■ TypeScript 側でメモリ負荷を下げる設定（tsconfig.json）
+
+      {
+        "compilerOptions": {
+          "skipLibCheck": true,                  // 外部型のチェックをスキップしてメモリ/時間削減
+          "incremental": true,                   // 増分ビルドで再コンパイルを減らす        
+          "tsBuildInfoFile": ".tsbuildinfo",     // 増分ビルド情報の保存先ファイル 
+          "composite": false                     // 大規模なら true + project references で分割ビルドにする           
+        }
+      }
+
+    ■ 運用上の追加Tips
+
+      ・CI ではまず npx tsc --noEmit（型チェック）を走らせ、必要時にメモリ増加を適用
+      ・大規模リポジトリはプロジェクト参照でビルドを分割する（メモリ節約＋並列化）
+      ・必要以上に大きなユーティリティ型や巨大な型演算はコンパイラ負荷を上げるので見直す
+      ・メモリ不足エラー（OOM）が出る場合はまず --max-old-space-size を増やし、併せて skipLibCheck を有効化
+
+- KEY: ts.TSC.tsc
+  EXPLAIN: TSC Tips
+  TABLE:
+    OPTION:
+      ALIGN:
+        - left
+        - left
+      HAS_TITLE: false
+      WIDTH:
+        - 30%
+    BODY: |
+      ・まずは strict モードを有効に	strict: true をルートで有効にして型品質を担保
+      ・CIでは型チェックのみ実行	npx tsc --noEmit ビルドとは別に型チェックを走らせる（早く失敗を検知）
+      ・開発時は増分コンパイル	incremental: true と .tsbuildinfo により再ビルドが高速化
+      ・大型リポジトリはプロジェクト参照を使う	composite: true と references で並列/段階的ビルドが可能
+      ・外部型のチェック高速化	サードパーティ型で問題なければ skipLibCheck: true を設定型チェックを早める
+      ・Babel 等でトランスパイルするなら	isolatedModules: true を有効にして単一ファイル単位の変換に適合させる
+      ・エクスポート用型定義を出す	ライブラリなら declaration: true / declarationMap: true を使い、emitDeclarationOnly を検討
+      ・モジュール互換の問題対処	esModuleInterop: true と allowSyntheticDefaultImports: true で import の互換性を改善
+      ・パスエイリアス管理	baseUrl + paths を使い、ビルドツール（webpack/vite）側でも同じ alias を設定
+      ・型のみのインポートを明示	不要な実行時の依存を避けるため import type { Foo } from 'x' を使う
+      ・漸進的マイグレーション	allowJs: true + checkJs: false で JS を併用しつつ段階的に TS 化
+      ・実行時の JSON 取り込み	resolveJsonModule: true を使うと import data from './a.json' が型付きで可能
+      ・パフォーマンス診断	ビルドプロファイルは tsc --diagnostics / tsc --extendedDiagnostics で解析
+      ・エディタ/tsserver の負荷対策	大規模プロジェクトでは exclude を適切に設定し、typeRoots を整理する
+      ・型のコスト対策	巨大な型演算はコンパイル遅延の原因、冗長なユーティリティ型や非常に深いネストを見直す
+      ・型方針をドキュメント化	tsconfig.json のコメントやリポジトリ README に推奨ルール（noImplicitAny など）を書いて統一
+
 #-------------------------------
 # Tips
 #-------------------------------
 
-- KEY: ts.typescriptlang.category
-  CATEGORY: Tips
+- KEY: ts.Tips.category
+  CATEGORY: TypeScript Tips & Snippets
 
 #-------------------------------
 # ENUM

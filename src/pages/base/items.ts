@@ -323,13 +323,14 @@ export const menuItems: menuByCategories[] = [
     items: [
       {
         name: "🔺Nextjs",
-        fileName: "frameWork/front/Nextjs",
+        fileName: "ReactFrameWork/front/Nextjs",
         codeKeyTypes: [codeKeys.Nextjs],
       },
       {
-        name: "🔺Vite",
-        fileName: "frameWork/front/Vite",
-        codeKeyTypes: [],
+        name: "Vite",
+        fileName: "ReactFrameWork/front/Vite",
+        codeKeyTypes: [codeKeys.Vite],
+        case_sensitive: false,
       },
     ],
   },
@@ -401,8 +402,9 @@ export const menuItems: menuByCategories[] = [
       },
       {
         name: "MUI",
-        fileName: "",
-        codeKeyTypes: [],
+        fileName: "ReactCSS/MUI",
+        codeKeyTypes: [codeKeys.MUI],
+        case_sensitive: false,
       },
       {
         name: "Storybook(v6)",
@@ -464,17 +466,13 @@ export const menuItems: menuByCategories[] = [
     ],
   },
   {
-    category: "Vue",
+    category: "React Utilities",
     items: [
       {
-        name: "🔺Vue",
-        fileName: "vue/Vue",
-        codeKeyTypes: [codeKeys.HTML, codeKeys.Vue],
-      },
-      {
-        name: "🔺Nuxt",
-        fileName: "vue/Nuxt",
-        codeKeyTypes: [codeKeys.HTML, codeKeys.Vue],
+        name: "i18n",
+        fileName: "ReactUtilities/i18n",
+        codeKeyTypes: [codeKeys.i18n, codeKeys.React],
+        case_sensitive: false,
       },
     ],
   },
@@ -508,7 +506,7 @@ export const menuItems: menuByCategories[] = [
     items: [
       {
         name: "Nestjs",
-        fileName: "frameWork/Nestjs/Nestjs",
+        fileName: "ReactFrameWork/Nestjs/Nestjs",
         codeKeyTypes: [
           codeKeys.Nestjs,
           codeKeys.TypeORM,
@@ -518,28 +516,43 @@ export const menuItems: menuByCategories[] = [
       },
       {
         name: "TypeORM",
-        fileName: "frameWork/Nestjs/TypeORM",
+        fileName: "ReactFrameWork/Nestjs/TypeORM",
         codeKeyTypes: [codeKeys.TypeORM],
       },
       {
         name: "🔺Prisma",
-        fileName: "frameWork/Nestjs/Prisma",
+        fileName: "ReactFrameWork/Nestjs/Prisma",
         codeKeyTypes: [codeKeys.Prisma],
       },
       {
         name: "ClassValidator",
-        fileName: "frameWork/Nestjs/ClassValidator",
+        fileName: "ReactFrameWork/Nestjs/ClassValidator",
         codeKeyTypes: [codeKeys.ClassValidator],
       },
       {
         name: "ClassTransformer",
-        fileName: "frameWork/Nestjs/ClassTransformer",
+        fileName: "ReactFrameWork/Nestjs/ClassTransformer",
         codeKeyTypes: [codeKeys.ClassTransformer],
       },
       {
         name: "🔺Swagger",
-        fileName: "frameWork/Nestjs/Swagger",
+        fileName: "ReactFrameWork/Nestjs/Swagger",
         codeKeyTypes: [codeKeys.Swagger],
+      },
+    ],
+  },
+  {
+    category: "Vue",
+    items: [
+      {
+        name: "🔺Vue",
+        fileName: "vue/Vue",
+        codeKeyTypes: [codeKeys.HTML, codeKeys.Vue],
+      },
+      {
+        name: "🔺Nuxt",
+        fileName: "vue/Nuxt",
+        codeKeyTypes: [codeKeys.HTML, codeKeys.Vue],
       },
     ],
   },
@@ -638,7 +651,6 @@ export const menuItems: menuByCategories[] = [
       },
     ],
   },
-
   {
     category: "Python",
     items: [

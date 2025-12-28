@@ -1,0 +1,239 @@
+---
+#-------------------------------
+# JS Framework Frontend
+#-------------------------------
+- KEY: fe.vite.install
+  EXPLAIN: インストール
+  BODY: |
+    React/Vue/Svelte 等モダン開発用のビルド・開発サーバ
+
+    ■ プロジェクト作成
+
+      npm create vite@latest my-app
+
+      ● 他推奨パッケージ
+
+      npm i -D @vitejs/plugin-react vite-plugin-env-compatible vite-plugin-checker
+
+      @vitejs/plugin-react              // -D: React 用プラグイン
+        ※ 用途: JSX トランスフォーム、Fast Refresh 対応
+
+      vite-plugin-env-compatible        // -D: 環境変数互換プラグイン
+        ※ 用途: process.env.X 形式の環境変数対応
+
+      vite-plugin-checker               // -D: 型チェック用プラグイン
+        ※ 用途: 開発中の TypeScript 型チェック
+
+      vite-plugin-svgr                  // -D: SVGR 用プラグイン
+        ※ 用途: SVG を React コンポーネントとしてインポート
+      
+    ■ 起動(Package.json スクリプト例)
+
+      {
+        "scripts": {
+          "dev": "vite",                 // 開発サーバ起動
+          "build": "vite build",         // 本番ビルド(ソースマップ無し)
+          "preview": "vite preview"      // ビルド成果物プレビュー
+        }
+      }
+
+      ※ hmr (Hot Module Replacement) 対応で高速な開発体験
+
+    ■ 起動(オプション付き)
+
+      ※ CLI オプションは起動時に明示的で同じ意味の env 値より優先
+
+      vite --port 4000                  // ポート指定
+      vite --host                       // 外部アクセス許可
+      vite build --sourcemap            // ソースマップ付きビルド
+      vite preview --port 5000          // プレビュー用ポート指定
+
+- KEY: vite.command
+  EXPLAIN: CLI コマンド一覧
+  BODY: |
+    ■ vite [command] [options]          // 共通オプション
+
+    --config vite.config.custom.ts      // <設定ファイル>を指定
+    --mode <mode>                       // 実行モード
+
+      mode: development / production / test など
+      環境変数読み込み: .env, .env.<mode>, .env.local, .env.<mode>.local
+
+    --clearScreen                       // コンソール出力のクリア制御
+    --no-clearScreen                    // 出力のクリア制御
+    --debug                             // デバッグログ（内部の詳細出力）
+    --logLevel <info/warn/error/silent> // ログレベル指定
+    --help                              // ヘルプ表示
+    --version                           // バージョン表示
+
+    ■ 環境変数指定による実行例
+
+      NO_CHECK=true vite                // 型チェック無効化
+      
+      ※ 型チェックプラグイン（vite-plugin-checker 等）やプロジェクトのスクリプトが解釈する「慣習的変数」
+      ※ Vite本体の標準変数ではなく、プラグイン/スクリプトが読んで動作を切り替え
+
+    ■ vite dev                          // 開発サーバ
+
+    --host [host]                       // ホストをバインド（0.0.0.0 で外部アクセス可能）
+    --port <3000>                       // ポート指定
+    --strictPort                        // ポート不使用エラー（自動インクリメントしない）
+    --https                             // HTTPS サーバを起動（自己署名など）
+    --open [path]                       // ブラウザを自動で開く
+    --force                             // 依存最適化を強制再実行（キャッシュ無視）
+
+    ■ vite build                        // ビルド
+
+    --outDir <dist>                     // 出力ディレクトリ
+    --base <path>                       // ビルド時の public base path（例 CDN パス）
+    --sourcemap                         // ソースマップ出力
+    --no-sourcemap                      // ソースマップ出力なし
+    --minify <esbuild/terser/false>     // ミニファイ方式選択
+    --target <esnext/es2015/...>        // トランスパイルターゲット
+    --watch                             // watch モード（ライブラリ向け）
+
+    ■ vite preview                      // プレビュー(軽量サーバで起動)
+
+    --port / --host / --strictPort / --https / --open（開発サーバと同様）
+
+    ■ 解説: ソースマップ
+
+    ・ソースマップはビルド後のコードと元のソースコードを対応付けるファイル
+    ・デバッグ時に元のコードを参照できるようにする
+    ・ブラウザのデベロッパーツールで利用される
+    ・本番環境での利用はセキュリティリスクとなりうる
+
+- KEY: vite.vite.config
+  EXPLAIN: vite.config
+  BODY: |
+    ■ 基本構成例
+    ・root:                  開発ルート（プロジェクトルート以外を使う場合）
+    ・base:                  デプロイ先の base パス
+    ・mode:                  デフォルトモード
+    ・publicDir:             公開静的ファイル（default: public）
+    ・plugins:               Vite プラグイン配列（例 react() やカスタム）
+    ・resolve.alias:         モジュール解決のエイリアス
+    ・define:                ビルド時定数置換（process.env.X 置換等）
+    ・envPrefix:             import.meta.env に公開するプレフィックス
+      ・server:                 開発サーバ関連
+      ・host, port, strictPort, https, open
+      ・proxy:                  API プロキシ定義（/api → http://localhost:3001 など）
+      ・hmr:                    HMR 設定（protocol / port / clientPort など）
+      ・watch:                  chokidar オプション（usePolling, ignored 等）
+    ・build:                 ビルド設定
+      ・outDir, assetsDir, assetsInlineLimit, cssCodeSplit, sourcemap, rollupOptions
+      ・emptyOutDir, brotliSize
+    ・optimizeDeps:          依存事前バンドル設定
+      ・include, exclude, entries, force, esbuildOptions
+    ・ssr:                   サーバサイドレンダリング向けの外部化設定（noExternal, external）
+    ・worker:                web worker ビルド設定
+    ・css:                   CSS モジュール / preprocessor 設定
+    ・typecheck:             型チェック設定（tsconfigPath, enable）
+
+    ■ 例: vite.config.ts
+
+      import { defineConfig } from 'vite'
+      import react from '@vitejs/plugin-react'
+
+      export default defineConfig({
+        plugins: [react()],
+        server: {
+          port: 3000,
+          open: true,
+          proxy: {
+            '/api': 'http://localhost:3001',
+          },
+        },
+        build: {
+          outDir: 'dist',
+          sourcemap: false,
+        },
+        resolve: {
+          alias: {
+            '@': '/src',
+          },
+        },
+      })
+
+- KEY: vite.install.gitHook1
+  EXPLAIN: Git フック管理用 vite（typicode/vite）※少数派
+  BODY: |
+    目的: リポジトリ単位で軽量な git hook を生成・管理し、lint-staged 等をフックに登録
+
+    ■ dev 依存に追加（例: lint-staged と合わせて）
+
+      npm install -D vite lint-staged
+
+    ■ vite 初期化（.vite フォルダとフック群を生成）
+
+      npx vite init
+
+    ■ 必要なフックにコマンドを追加（例: pre-commit に lint-staged を登録）
+
+      npx vite add .vite/pre-commit "npx lint-staged"
+
+    ■ package.json に lint-staged 設定を追加（例）
+
+      "lint-staged": {
+        "*.{js,jsx,ts,tsx}": "npm run lint"
+      }
+
+    ■ .vite/pre-commit の内容確認／必要なら実行権限付与
+      生成例（npx vite init で自動作成される想定）
+
+      #!/usr/bin/env sh
+      . "$(dirname -- "$0")/vite.sh"
+      npx lint-staged
+
+- KEY: vite.install.gitHook2
+  EXPLAIN: 「git hook を管理する」
+  BODY: |
+    ■ 目的
+
+      コミットやプッシュの前後に自動で処理（lint, 型チェック, テスト, フォーマットなど）を実行
+      品質を保つ仕組みをチームで統一的に扱えるようにする
+
+    ■ 「管理」
+
+      フック配置:             hooks を直接編集せず、プロジェクト内（.husky や .vite/ など）でフック定義
+      フック内容:             どのコマンドを実行するか（例: lint-staged → eslint --fix）。
+      インストール手順:       開発環境にフックをインストールするコマンドを提供（npx husky install など）
+      クロスプラットフォーム:  Windows/Mac/Linuxで同じ動作にする設定や実行権限の扱い。
+
+    ■ 代表的ツール
+
+      Husky:         最も一般的。.husky にフックを置き、簡単に共有可能。多くのプロジェクトで採用。
+      lint-staged:   ステージされたファイルのみを対象にコマンドを実行。Huskyと組み合わせて使うのが定番。
+      typicode/vite: 軽量な git-hook 管理ツール（.vite/ 使用）。シンプルだが採用度は Husky より低め
+
+    ■ 推奨: Husky + lint-staged の最短手順
+
+      依存追加:
+      Husky を初期化:
+      package.json に prepare スクリプトを追加（CIや新規クローン時に自動セットアップ）:
+      pre-commit フック作成（lint-staged を呼ぶ）:
+      package.json に lint-staged 設定例:
+      通常の開発フロー: ファイルをステージ → git commit → pre-commit が実行 → 失敗ならコミット中止。
+
+- KEY: vite.install.hotreload
+  EXPLAIN: ホットリロード修正
+  BODY: |
+    import { defineConfig } from "vite"
+    import react from "@vitejs/plugin-react"
+
+    // https://vitejs.dev/config/
+    export default defineConfig({
+      plugins: [react()],
+      server: { 
+        watch: {                      // ホットリロード修正のための設定
+          usePolling: true,           // CPU負荷軽減のため監視周期を下げる
+          interval: 1000,             // default: 100
+          binaryInterval: 1500,       // default: 300
+        },
+      },
+    })
+
+- KEY: fe.vite.config
+  EXPLAIN: TS config for Vite
+  BODY: |
+    tsconfig.node.json
