@@ -2,23 +2,45 @@
 #-------------------------------
 # TypeScript
 #-------------------------------
-- KEY: ts.typescriptlang
-  EXPLAIN: バイブル typescriptlang
+- KEY: ts.typescript.category
+  CATEGORY: TypeScript
+
+- KEY: ts.typescript.tsc
+  EXPLAIN: TSC
   BODY: |
-    ■ URL
-    https://www.typescriptlang.org
+    ■ TypeScript コンパイラ (TSC) のインストール
+
+      > npm install -g typescript
+
+    ■ コマンド & オプション
+
+      tsc -v                            // バージョン確認
+      tsc ファイル名.ts                  // コンパイル実行、出力は同ディレクトリにファイル名.js
+      tsc ファイル名.ts --watch          // 変更監視モードでコンパイル実行
+      tsc ファイル名.ts --noEmit         // コンパイルのみ実行、出力ファイルは生成しない
+      tsc --init                        // tsconfig.json 初期化
+      tsc --project tsconfig.json       // 指定した tsconfig.json でコンパイル実行
+      tsc --build                       // プロジェクトのビルド
+      tsc --build --clean               // ビルド成果物のクリーン
+      tsc --help                        // ヘルプ表示
+
+#-------------------------------
+# Tips
+#-------------------------------
+
+- KEY: ts.typescriptlang.category
+  CATEGORY: Tips
 
 #-------------------------------
 # ENUM
 #-------------------------------
 - KEY: ts.check.ignore
   EXPLAIN: |
-    型チェック無視 @ts-ignore
+    デコレータ: 型チェック無視 @ts-ignore など
   BODY: |
     // @ts-ignore
     const foo = 1
 
-    参考
     // prettier-ignore
     const foo = {a: 1, b: { c: 2 }, d: 3, e: 4, f: 5, g: 6}  // 1行にまとめる
 
@@ -47,20 +69,24 @@
 # union
 #-------------------------------
 - KEY: ts.union.fromObject
-  EXPLAIN: unionをobjectから生成
+  EXPLAIN: union を object から生成
   BODY: |
     const person = {
       a: "Name",
       b: "Address",
     } as const
 
-    type Person = typeof person[keyof typeof person]  // "Name" | "Address"
+    type Person = typeof person[keyof typeof person]  
+
+    結果: "Name" | "Address"
 
 - KEY: ts.union.fromArray
-  EXPLAIN: unionをarrayから生成
+  EXPLAIN: union を array から生成
   BODY: |
     const person = [ "Name", "Address" ] as const
-    type Person = (typeof person)[number]         // "Name" | "Address"
+    type Person = (typeof person)[number]
+
+    結果: "Name" | "Address"
 
 #-------------------------------
 # Switch
@@ -169,19 +195,27 @@
 - KEY: ts.typeGuard.user
   EXPLAIN: 型ガード(ユーザ定義)
   BODY: |
+    ■ 解説
+
+    "is A" は「戻り値側の型述語（type predicate）」
+
+    ・関数が true を返したときに呼び出し元で arg が A と見なされる
+    ・関数が false を返したときに呼び出し元で arg が A ではないと見なされる
+
+    ■ サンプル
+
     interface A { a: number; common: string }
     interface B { b: number; common: string }
 
-    function isFoo(arg: any): arg is A {
+    function isFoo(arg: any): arg is A {  // 関数名 isXxxx で定義
       return arg.a !== undefined
     }
 
-    export function func(arg: A | B) {
-      if (isFoo(arg)) {
-        console.log(arg.a) // OK, NG:arg.b
-      } else {
-        console.log(arg.b) // OK, NG:arg.a
-      }
+    if (isFoo(x)) {
+      // ここでは x は A として扱える（型狭窄）
+      console.log(x.a)
+    } else {
+      // ここでは x は A ではない
     }
 
 #-------------------------------

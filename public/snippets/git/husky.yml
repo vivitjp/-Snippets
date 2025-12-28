@@ -3,37 +3,32 @@
 # husky
 #-------------------------------
 
-- KEY: husky.install
-  EXPLAIN: インストール
-  BODY: |
-    ■ husky Git
-    https://typicode.github.io/husky/
-
 - KEY: husky.setting.title
-  CATEGORY: 設定
-
-- KEY: husky.setting.pre-commit
-  EXPLAIN: 設定(pre-commit)
-  BODY: |
-    ■ [pre-commit]
-
-#-------------------------------
-# husky
-#-------------------------------
+  CATEGORY: husky & lint-staged
 
 - KEY: husky.install
   EXPLAIN: インストール
   BODY: |
-    ■ husky Git
-    https://typicode.github.io/husky/
-
     ■ husky & lint-staged
-    npm install -D husky lint-staged
-    yarn add --dev husky lint-staged
 
-    ■ husky 初期化
-    [DEP] npx husky install
-    npx husky init
+      npm install -D husky lint-staged
+
+    ■ package.json に prepare スクリプトを追加（CIや新規クローン時に自動セットアップ）
+
+      "scripts": {
+        "prepare": "husky install"
+      }
+
+    ■ pre-commit フック作成（lint-staged を呼ぶ）:
+
+      1) 特定ファイル追加
+
+      npx husky add .husky/pre-commit "npx lint-staged"
+
+      2) husky 初期化
+
+      npx husky install
+      npx husky init
 
       以下のファイルを生成
       .husky/_/prepare-commit-msg
@@ -48,10 +43,16 @@
       .husky/_/post-checkout
       .husky/_/post-applypatch
 
-    ■ 手動生成(pre-commitフックの設定ファイル生成)
-    npx husky add .husky/pre-commit "npx lint-staged"
+    ■ package.json に lint-staged 設定例
+
+      "lint-staged": {
+        "*.{js,jsx,ts,tsx}": ["eslint --fix", "prettier --write"]
+      }
+
+      通常の開発フロー: ファイルをステージ → git commit → pre-commit が実行 → 失敗ならコミット中止
 
     ■ DIR内の構成
+
     .husky/husky.sh             // 中身が空
     .husky/pre-commit
 

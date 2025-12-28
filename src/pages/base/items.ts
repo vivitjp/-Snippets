@@ -307,15 +307,30 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS, codeKeys.React],
       },
       {
-        name: "React 🔺Routing",
+        name: "React Routing",
         fileName: "React/ReactRouting",
-        codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS, codeKeys.React],
+        codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS, codeKeys.ReactRouter],
       },
       // {
       //   name: "🔺React 型定義", ⚠
       //   fileName: "React/ReactTypeScript",
       //   codeKeyTypes: [codeKeys.JSTS, codeKeys.React],
       // },
+    ],
+  },
+  {
+    category: "React Framework",
+    items: [
+      {
+        name: "🔺Nextjs",
+        fileName: "frameWork/front/Nextjs",
+        codeKeyTypes: [codeKeys.Nextjs],
+      },
+      {
+        name: "🔺Vite",
+        fileName: "frameWork/front/Vite",
+        codeKeyTypes: [],
+      },
     ],
   },
   {
@@ -359,9 +374,15 @@ export const menuItems: menuByCategories[] = [
     category: "React Form",
     items: [
       {
-        name: "ReactHookForm:pk",
-        fileName: "ReactPackage/ReactHookForm",
+        name: "ReactHookForm",
+        fileName: "ReactForm/ReactHookForm",
         codeKeyTypes: [codeKeys.keysPackageRHF],
+      },
+      {
+        name: "Yup",
+        fileName: "ReactForm/Yup",
+        codeKeyTypes: [codeKeys.keysPackageRHF, codeKeys.Yup],
+        case_sensitive: false,
       },
     ],
   },
@@ -377,6 +398,11 @@ export const menuItems: menuByCategories[] = [
         name: "Chakra",
         fileName: "ReactPackage/Chakra",
         codeKeyTypes: [codeKeys.Chakra],
+      },
+      {
+        name: "MUI",
+        fileName: "",
+        codeKeyTypes: [],
       },
       {
         name: "Storybook(v6)",
@@ -417,10 +443,17 @@ export const menuItems: menuByCategories[] = [
         name: "TanStack",
         fileName: "ReactQuery/TanStack",
         codeKeyTypes: [codeKeys.TanStack],
+        case_sensitive: false,
       },
       {
-        name: "SWR:pk",
-        fileName: "ReactQuery/SWR",
+        name: "Topics",
+        fileName: "ReactQuery/Topics",
+        codeKeyTypes: [codeKeys.TanStack, codeKeys.JSTS],
+        case_sensitive: false,
+      },
+      {
+        name: "🔺SWR",
+        fileName: "",
         codeKeyTypes: [
           codeKeys.HTML,
           codeKeys.JSTS,
@@ -450,37 +483,22 @@ export const menuItems: menuByCategories[] = [
     items: [
       {
         name: "🔺Nodejs(Topics)",
-        fileName: "JSRuntime/nodejs/NodeTopics",
+        fileName: "Node/nodejs/NodeTopics",
         codeKeyTypes: [],
       },
       {
         name: "Express",
-        fileName: "/JSRuntime/nodejs/Express",
+        fileName: "Node/nodejs/Express",
         codeKeyTypes: [codeKeys.Express],
       },
       {
         name: "Express API",
-        fileName: "/JSRuntime/nodejs/ExpressAPI",
+        fileName: "Node/nodejs/ExpressAPI",
         codeKeyTypes: [codeKeys.Express],
       },
       {
         name: "🔺Bun",
-        fileName: "JSRuntime/bun",
-        codeKeyTypes: [],
-      },
-    ],
-  },
-  {
-    category: "Nextjs,Vite",
-    items: [
-      {
-        name: "🔺Nextjs",
-        fileName: "frameWork/front/Nextjs",
-        codeKeyTypes: [codeKeys.Nextjs],
-      },
-      {
-        name: "🔺Vite",
-        fileName: "frameWork/front/vite",
+        fileName: "Node/bun",
         codeKeyTypes: [],
       },
     ],
@@ -530,22 +548,22 @@ export const menuItems: menuByCategories[] = [
     items: [
       {
         name: "npm/yarn",
-        fileName: "JSRuntime/nodejs/npm/npm_yarn",
+        fileName: "Node/nodejs/npm/npm_yarn",
         codeKeyTypes: [codeKeys.NPM],
       },
       {
         name: "npm",
-        fileName: "JSRuntime/nodejs/npm/npm",
+        fileName: "Node/nodejs/npm/npm",
         codeKeyTypes: [codeKeys.NPM],
       },
       {
         name: "🔺pnpm",
-        fileName: "JSRuntime/nodejs/npm/pnpm",
+        fileName: "Node/nodejs/npm/pnpm",
         codeKeyTypes: [codeKeys.NPM],
       },
       {
         name: "module管理史",
-        fileName: "JSRuntime/nodejs/npm/npm _history",
+        fileName: "Node/nodejs/npm/npm _history",
         codeKeyTypes: [codeKeys.NPM],
       },
       {
@@ -565,7 +583,7 @@ export const menuItems: menuByCategories[] = [
       },
       {
         name: "環境変数",
-        fileName: "/JSRuntime/nodejs/env",
+        fileName: "/Node/nodejs/env",
         codeKeyTypes: [codeKeys.Env],
       },
     ],
@@ -674,7 +692,8 @@ export const menuItems: menuByCategories[] = [
       {
         name: "GraphQL",
         fileName: "database/GraphQL",
-        codeKeyTypes: [codeKeys.graphQL, codeKeys.JSTS, codeKeys.HTML],
+        codeKeyTypes: [codeKeys.graphQL, codeKeys.JSTS],
+        case_sensitive: false,
       },
       {
         name: "Redis",
