@@ -2,8 +2,8 @@
 #-------------------------------
 # Node
 #-------------------------------
-- KEY: node.version.category
-  CATEGORY: Nodeバージョン
+- KEY: node.category
+  CATEGORY: Node
 
 - KEY: node.version
   EXPLAIN: |
@@ -50,6 +50,11 @@
     ・Node.jsのデフォルトのメモリ制限は約1.5GB
     ・大量データ処理や大規模アプリケーションでは、--max-old-space-size フラグでメモリ制限を増加可能
     ・例: node --max-old-space-size=4096 app.js  // 4GBに設定
+
+        開発・小規模プロジェクト: 512MB → 1024MB
+        中規模プロジェクト: 2048MB
+        大規模アプリ / 多数の依存: 4096MB
+        大規模モノレポ / 並列ビルド: 8192MB〜16384MB（ホストの物理RAMに依存）
 
     ■ 環境変数
 
@@ -171,6 +176,38 @@
 
       V8 フラグは強力だが副作用が出やすい
       変更は小さく、ベンチで検証してから本番へ
+
+- KEY: node.レポジトリ
+  EXPLAIN: レポジトリ(モノレポとポリレポ)
+  BODY: |
+    ■ Monorepo
+
+    利点: 単一リポジトリで横断的な変更が容易、リファクタやAPI変更を一度で適用できる
+    利点: コード・設定・CIを共有でき、依存同期が楽（workspaces）
+
+    欠点: リポジトリ肥大化でクローン/CIが重くなる(ツール/パイプライン設計が必要)
+    欠点: 権限分離や独立リリース運用が複雑化することがある
+
+    ■ Multi-repo (Polyrepo)
+
+    利点: 各プロジェクトが独立(小さく速いクローン・単純なCI・権限管理が容易)
+
+    欠点: クロスリポジトリ変更が面倒、設定やスクリプトが重複しやすい、依存の不整合が起きやすい
+
+    ■ 選び方ガイド
+
+    ・チーム連携が高く依存が多い: Monorepo が有利（共通ライブラリが頻繁に変わる場合）
+    ・完全に独立したサービス群／異なるライフサイクル: Multi-repo が適切
+    ・スケール基準: パッケージ数やビルド時間が増えるなら、Monorepo で project references や分割ビルドを導入
+
+    ■ 実務Tips
+
+    ・必須ツール: pnpm/yarn/npm workspaces、リポ管理は lerna/nx/rush を検討
+    ・CI最適化: 変更に応じた差分ビルド（affected/changed only）とキャッシュを使う
+    ・TypeScript: 大規模なら composite + references で分割ビルド（速く安定）
+    ・バージョン管理: 固定モード vs 独立モードを決め、changesets 等でリリース自動化
+    ・Git対策: 大リポジトリは sparse-checkout / shallow clone / CI の部分チェックを活用
+    ・リソース対策: CIランナーのメモリ上限や node --max-old-space-size を環境に合わせて調整
 
 #-------------------------------
 # Volta

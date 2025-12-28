@@ -1,0 +1,2249 @@
+---
+#-------------------------------
+# MUI
+#-------------------------------
+- KEY: MUI.category
+  CATEGORY: リスト
+
+- KEY: MUI.Utilities
+  EXPLAIN: methods リスト
+  BODY: |
+    ■ Theme
+
+    ・ThemeProvider       カスタムテーマの適用ラッパー
+    ・createTheme         テーマ生成ユーティリティ
+    ・useTheme            テーマ参照フック
+
+    ■ Styling
+
+    ・styled              コンポーネント単位のスタイリングヘルパー
+    ・sx prop             インラインでスタイルを指定するプロップ
+
+    ■ Utilities
+
+    ・useMediaQuery       レスポンシブ判定フック
+    ・GlobalStyles        グローバルCSS 定義
+
+    ■ 拡張 / 実験パッケージ
+
+    ・@mui/lab             DatePicker / TimePicker / LoadingButton 等の実験的コンポーネント群
+    ・@mui/x-data-grid     高機能データグリッド（大規模表操作用）
+    ・@mui/icons-material  MUI 向けアイコンセット
+
+- KEY: MUI.コンポーネントリスト
+  EXPLAIN: コンポーネントリスト
+  BODY: |
+    ■ Layout
+
+    ・Box                 基本レイアウト用コンテナ（スタイルユーティリティ）
+    ・Container           コンテンツ幅を制限するラッパー
+    ・Grid                12カラムのレスポンシブグリッド
+    ・Stack               縦横のスタックレイアウトを簡潔に記述
+    ・Toolbar             AppBar 内のレイアウト用スペーサー
+
+    ■ Surfaces
+
+    ・Paper                紙のような背景（カードやセクションの土台）
+    ・Card                 情報カード（CardHeader / CardContent / CardActions で構成）
+    ・Accordion            折りたたみ式パネル（展開/収縮）
+    ・List                 リスト表示（ListItem / ListItemText 等を含む）
+
+    ■ Navigation
+
+    ・AppBar               ヘッダー／ナビゲーションバー
+    ・Drawer               サイドナビ（固定／スワイプ式）
+    ・Tabs                 タブ切替 UI（Tab と連携）
+    ・BottomNavigation     モバイル向け下部ナビゲーション
+    ・Breadcrumbs          パス表示
+    ・Pagination           ページ切替 UI
+    ・Link                 ナビゲーション用リンクコンポーネント
+
+    ■ Inputs / Form Controls
+
+    ・Button               主要なアクションボタン
+    ・IconButton           アイコン専用のボタン
+    ・TextField            汎用テキスト入力（ラベル・ヘルプ付き）
+    ・OutlinedInput        境界線ありの入力コンポーネント
+    ・Input                ベーシックな入力要素
+    ・Select               ドロップダウン選択（MenuItem と併用）
+    ・Autocomplete         補完付き選択入力
+    ・Checkbox             チェックボックス
+    ・Radio                ラジオボタン
+    ・Switch               トグルスイッチ
+    ・Slider               スライダー入力
+    ・Rating               評価入力（星評価など）
+    ・ToggleButton         切替ボタン群
+
+    ■ Data Display
+
+    ・Typography           テキスト表示とスタイリング
+    ・Avatar               アイコンや人物画像の丸い表示
+    ・Badge                バッジ表示（数値やマーカー）
+    ・Chip                 小さなラベル/タグ表示
+    ・Table                表データ表示（TableRow / TableCell 等）
+    ・Tooltip              補助情報をホバーで表示
+    ・Popover              浮動パネル表示
+    ・ImageList            画像ギャラリー表示
+    ・Skeleton             ローディング時のプレースホルダ
+
+    ■ Feedback & Progress
+
+    ・Snackbar             一時的な通知トースト
+    ・Alert                警告/情報メッセージ表示（バリアント有）
+    ・Dialog               モーダルダイアログ（DialogTitle / DialogContent 等）
+    ・CircularProgress     円形の読み込みインジケータ
+    ・LinearProgress       線形プログレスバー
+    ・Backdrop             背景のオーバーレイ（モーダル補助）
+
+    ■ Overlays / Transitions / Utilities
+
+    ・Menu                 コンテキスト/ドロップダウンメニュー
+    ・Popover              任意要素に紐づく浮動ウィンドウ
+    ・Collapse             折りたたみトランジション
+    ・Grow                 成長トランジション
+    ・Fade                 フェードトランジション
+    ・Zoom                 ズームトランジション
+    ・Portal               DOM の別位置レンダリング用ユーティリティ
+    ・ClickAwayListener    クリック外検出ユーティリティ
+    ・Divider              区切り線（レイアウト補助）
+
+# -------------------------------
+#  Methods
+# -------------------------------
+- KEY: MUI.Methods.category
+  CATEGORY: Methods
+
+- KEY: MUI.Methods.ThemeProvider
+  EXPLAIN: |
+    Theme: ThemeProvider
+  BODY: |
+    ■ 目的
+
+    ・アプリ全体に一貫したデザイン（色・タイポグラフィ・間隔など）を提供するラッパー
+    ・createTheme でテーマを定義し、ThemeProvider で供給することで sx / styled / useTheme 等から参照可能
+    ・シンプルなテーマ定義（theme.ts）
+
+    ■ サンプル theme.ts
+
+    import { createTheme } from "@mui/material/styles";
+
+    export const lightTheme = createTheme({
+      palette: {
+        mode: "light",
+        primary: { main: "#1976d2" },
+        secondary: { main: "#9c27b0" },
+      },
+      typography: {
+        fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+      },
+    });
+
+    export const darkTheme = createTheme({
+      palette: {
+        mode: "dark",
+        primary: { main: "#90caf9" },
+        secondary: { main: "#ce93d8" },
+      },
+    });
+
+    ■ ライト／ダーク切替を含む App.tsx
+
+    import React, { useMemo, useState } from "react";
+    import { ThemeProvider, CssBaseline, Button, Box, Typography } from "@mui/material";
+    import { lightTheme, darkTheme } from "./theme";
+
+    export const App = () => {
+      const [mode, setMode] = useState<"light" | "dark">("light");
+
+      const theme = useMemo(() => (mode === "light" ? lightTheme : darkTheme), [mode]);
+
+      return (
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Box sx={{ p: 2 }}>
+            <Typography variant="h4">
+              MUI ThemeProvider サンプル
+            </Typography>
+            <Button sx={{ mt: 2 }} variant="contained" onClick={() => setMode(m => (m === "light" ? "dark" : "light"))}>
+              Toggle Theme
+            </Button>
+          </Box>
+        </ThemeProvider>
+      );
+    };
+
+    ■ useTheme と sx の利用例
+
+    import React from "react";
+    import { useTheme, Box, Typography } from "@mui/material";
+
+    export const ThemedCard = () => {
+      const theme = useTheme();
+      return (
+        <Box
+          sx={{
+            bgcolor: theme.palette.mode === "dark" ? "background.paper" : "background.default",
+          }}
+        >
+          <Typography color="text.primary">
+            現在のモード: {theme.palette.mode}
+          </Typography>
+        </Box>
+      );
+    };
+
+    ■ テーマ拡張（TypeScript でカスタムプロパティを追加する場合）
+
+    // theme-augment.d.ts
+    import { PaletteColorOptions } from "@mui/material";
+
+    declare module "@mui/material/styles" {
+      interface Palette {
+        tertiary?: Palette["primary"];
+      }
+      interface PaletteOptions {
+        tertiary?: PaletteColorOptions;
+      }
+    }
+
+    // theme.ts に tertiary を追加
+    export const lightTheme = createTheme({
+      palette: {
+        mode: "light",
+        primary: { main: "#1976d2" },
+        tertiary: { main: "#ff9800" },
+      },
+    });
+
+- KEY: MUI.Methods.createTheme
+  EXPLAIN: |
+    Theme: createTheme
+  BODY: |
+    ■ 解説
+
+    ・MUI のテーマオブジェクトを生成するユーティリティ関数
+    ・カラー、タイポグラフィ、間隔、ブレークポイントなどのデザインシステムを定義
+    ・ThemeProvider と組み合わせて使用し、アプリ全体に一貫したスタイルを提供
+
+    ■ サンプルコード
+
+    import { createTheme } from "@mui/material/styles"; 
+    const theme = createTheme({
+      palette: {
+        mode: "light",
+        primary: { main: "#1976d2" },
+        secondary: { main: "#9c27b0" },
+      },
+      typography: {
+        fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+        h1: { fontSize: "2rem", fontWeight: 700 },
+      },
+      spacing: 8, // 基本の間隔ユニット
+    });
+
+    ■ オプション解説
+
+    ・palette:        色の定義。primary / secondary / error / warning / info / success など
+    ・typography:     フォントファミリ、サイズ、ウェイトなどのテキストスタイル
+    ・spacing:        レイアウトの間隔ユニット（デフォルトは8px）
+    ・breakpoints:    レスポンシブデザインのブレークポイント定義 
+    ・components:     コンポーネントごとのデフォルトプロップやスタイルの上書き
+
+- KEY: MUI.Methods.useTheme
+  EXPLAIN: |
+    Theme: useTheme
+  BODY: |
+    ■ 解説
+
+    ・`useTheme` は `ThemeProvider` で供給されたテーマオブジェクトを参照するフック
+    ・コンポーネント内で現在のモード（light/dark）やパレット、タイポグラフィ等を参照して条件的なスタイルやロジックを実装する場合に使う
+
+    ■ サンプルコード
+
+    import React from 'react'
+    import { useTheme, Box, Typography } from '@mui/material'
+
+    export const ThemedBox = () => {
+      const theme = useTheme()
+      return (
+        <Box sx={{ p: 2, bgcolor: theme.palette.background.paper }}>
+          <Typography>
+            現在のモード: {theme.palette.mode}
+          </Typography>
+        </Box>
+      )
+    }
+
+    ■ オプション解説
+
+    - 返されるオブジェクトは `Theme` 型。TypeScript で型補完される
+    - `useTheme` はあくまで参照用。テーマを変更するには `ThemeProvider` の再レンダーが必要
+
+- KEY: MUI.Methods.styled
+  EXPLAIN: |
+    Styling: styled
+  BODY: |
+    ■ 解説
+
+    ・`styled` はコンポーネント単位のスタイリングユーティリティ（Emotion / styled-engine）
+    ・テーマ値にアクセスでき、CSS-in-JS で型安全にスタイルを定義できる
+
+    ■ サンプルコード
+
+    import { styled } from '@mui/material/styles'
+    import Button from '@mui/material/Button'
+
+    const MyButton = styled(Button)(({ theme }) => ({
+      background: theme.palette.primary.main,
+      color: theme.palette.primary.contrastText,
+      padding: theme.spacing(1, 2),
+      '&:hover': {
+        background: theme.palette.primary.dark,
+      },
+    }))
+
+    export default MyButton
+
+    ■ オプション解説
+
+    - 第一引数に任意の React コンポーネントや HTML タグを渡せる
+    - `shouldForwardProp` を使いプロップの受け渡し制御が可能
+
+- KEY: MUI.Methods.sx
+  EXPLAIN: |
+    Styling: sx
+  BODY: |
+    ■ 解説
+
+    ・`sx` は MUI 固有のインラインスタイルプロップで、テーマの値（`spacing` / `palette` / `breakpoints` 等）に簡単にアクセスできる
+    ・オブジェクトや配列で条件付き・レスポンシブ指定が可能
+
+    ■ サンプルコード
+
+    import { Box, Button } from '@mui/material'
+
+    const Example = () => (
+      <Box sx={{ p: 2, bgcolor: 'background.default' }}>
+        <Button sx={{ mr: 1, bgcolor: 'primary.main', '&:hover': { bgcolor: 'primary.dark' } }}>
+          Primary
+        </Button>
+        <Button sx={{ display: { xs: 'none', md: 'inline-flex' } }}>
+          Hide on mobile
+        </Button>
+      </Box>
+    )
+
+    ■ オプション解説
+
+    - `sx` はテーマのキー名（例: `primary.main`）を文字列で参照できる
+    - 配列やブレークポイントオブジェクトでレスポンシブ指定が可能
+
+- KEY: MUI.Methods.useMediaQuery
+  EXPLAIN: |
+    Utilities: useMediaQuery
+  BODY: |
+    ■ 解説
+
+    ・`useMediaQuery` はブレークポイントや任意のメディアクエリに応じて真偽値を返すフック
+    ・`useTheme` と組み合わせてテーマのブレークポイントを利用するのが一般的
+
+    ■ サンプルコード
+
+    import { useTheme } from '@mui/material/styles'
+    import useMediaQuery from '@mui/material/useMediaQuery'
+    import { Box, Typography } from '@mui/material'
+
+    const Responsive = () => {
+      const theme = useTheme()
+      const isMdUp = useMediaQuery(theme.breakpoints.up('md'))
+      return <Box>
+        {isMdUp ? <Typography>Desktop</Typography> : <Typography>Mobile</Typography>}
+      </Box>
+    }
+
+    ■ オプション解説
+
+    - 第二引数にオプション（`defaultMatches` / `noSsr` 等）を渡して挙動を制御できる
+    - サーバーサイドレンダリング環境では `noSsr: true` を検討
+
+- KEY: MUI.Methods.GlobalStyles
+  EXPLAIN: |
+    Utilities: GlobalStyles
+  BODY: |
+    ■ 解説
+
+    ・`GlobalStyles` はアプリ全体に適用するグローバル CSS を定義するコンポーネント
+    ・テーマの値を参照してベースラインのスタイル調整やユーティリティクラス定義に使う
+
+    ■ サンプルコード
+
+    import { GlobalStyles } from '@mui/material'
+
+    const globalStyles = (
+      <GlobalStyles
+        styles={(theme) => ({
+          body: { backgroundColor: theme.palette.background.default, margin: 0 },
+          '.sr-only': {
+            position: 'absolute',
+            width: 1,
+            height: 1,
+            padding: 0,
+            margin: -1,
+            overflow: 'hidden',
+            clip: 'rect(0,0,0,0)',
+            whiteSpace: 'nowrap',
+            border: 0,
+          },
+        })}
+      />
+    )
+
+    export default globalStyles
+
+    ■ オプション解説
+
+    - `styles` にプレーンオブジェクトか関数を渡せる（関数は `theme` を受け取る）
+    - `CssBaseline` と併用してブラウザ差分をリセットするのが一般的
+
+# -------------------------------
+#  コンポーネント Layout
+# -------------------------------
+- KEY: MUI.コンポーネント.Layout.category
+  CATEGORY: コンポーネント Layout
+
+- KEY: MUI.コンポーネント.Box
+  EXPLAIN: Box
+  BODY: |
+    ■ 解説
+
+    ・`Box` は MUI の汎用レイアウトコンテナ
+    ・HTML の `div` と同等
+    ・さらに `sx` やテーマを使ったスタイル、コンポーネント置換（`component`）等の利便性を提供
+    ・レイアウト調整（Flex / Grid のラッパー）、パディング・マージン・背景色の簡易指定、レスポンシブ指定に便利
+
+    ■ サンプルコード
+
+    <Box
+      component="section"
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        bgcolor: "background.paper",
+      }}
+    >
+      <Box sx={{ mr: 2 }}>
+        Left
+      </Box>
+      <Box>
+        Right
+      </Box>
+    </Box>
+
+    ■ オプション解説
+
+    ・`sx`:          テーマ連携のスタイル指定（オブジェクト / 配列 / 関数）
+    ・`component`:   描画する HTML タグやコンポーネントを変更（例: `section`, `header`）
+    ・`clone`:       子要素に props をコピーして渡すオプション（必要な場面でのみ使用）
+    ・ショートハンド: `display`, `p`, `m`, `width` などは `sx` 内で短く指定できる
+    ・レスポンシブ:   ブレークポイントオブジェクト（例: `{ xs: 1, md: 2 }`）で指定可能
+
+    ■ clone オプション例
+
+    <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+
+      {/* Box に clone を付けると子要素（単一要素）を複製して sx 等をマージして渡す */}
+      <Box clone sx={{ bgcolor: "primary.main", color: "primary.contrastText", px: 2, py: 1 }}>
+        <Button>
+          Cloned styled button
+        </Button>
+      </Box>
+
+      {/* variant 等は子のプロップをそのまま使えるが、sx はマージされる */}
+      <Box clone sx={{ boxShadow: 3 }}>
+        <Button variant="outlined">
+          Cloned with shadow
+        </Button>
+      </Box>
+    </Box>
+
+- KEY: MUI.コンポーネント.Container
+  EXPLAIN: Container
+  BODY: |
+    ■ 解説
+
+    ・コンテンツ幅を中央に制限するレイアウト用ラッパー
+    ・レスポンシブで `maxWidth` を切り替え可能
+    ・ページの左右余白を自動で調整
+
+    ■ オプション
+
+    ・`maxWidth`: xs|sm|md|lg|xl
+    ・`disableGutters`: 両端の余白を無効化
+    ・`fixed`: 固定幅を使用
+
+    ■ maxWidth
+
+    <Container maxWidth="md">
+      コンテンツ
+    </Container>
+
+- KEY: MUI.コンポーネント.Grid
+  EXPLAIN: Grid
+  BODY: |
+    ■ 解説
+
+    ・12カラムのレスポンシブグリッドレイアウト
+    ・親に `container`、子に `item` を指定して組み合わせる
+    ・ブレークポイントごとに `xs`/`sm`/`md` 等で幅指定
+
+    ■ オプション
+
+    ・`spacing`: グリッド間隔
+    ・`alignItems`/`justifyContent`: 配置制御
+
+    ■ サンプル
+
+    <Grid container spacing={3} alignItems="center" justifyContent="space-between">
+      <Grid item xs={6} sm={4} md={3}>
+        アイテム 1
+      </Grid>
+      <Grid item xs={6} sm={4} md={3}>
+        アイテム 2
+      </Grid>
+      <Grid item xs={12} sm={4} md={3}>
+        アイテム 3 (幅広)
+      </Grid>
+    </Grid>
+
+- KEY: MUI.コンポーネント.Stack
+  EXPLAIN: Stack
+  BODY: |
+    ■ 解説
+
+    ・縦横のスタックレイアウトを簡潔に記述するユーティリティコンポーネント
+    ・`direction`/`spacing`/`alignItems` でレイアウトを指定
+    ・単純な列や行レイアウトに最適
+
+    ■ サンプルコード
+
+    <Stack direction="row" spacing={2}>
+      <Box />
+      <Box />
+    </Stack>
+
+    ■ オプション解説
+
+    ・`direction`: row|column
+    ・`spacing`: アイテム間隔
+
+- KEY: MUI.コンポーネント.Toolbar
+  EXPLAIN: Toolbar
+  BODY: |
+    ■ 解説
+
+    ・AppBar 内やヘッダの位置合わせ用スペーサーコンポーネント
+    ・デフォルトで適切な高さとパディングを提供
+    ・Action 配置やレスポンシブ調整に使う
+
+    ■ オプション
+
+    ・`variant`: regular|dense
+    ・`disableGutters`: 両端パディングを無効化
+
+    ■ AppBar 内での dense ツールバー (disableGutters と minHeight 指定)
+
+    <AppBar position="static">
+      <Toolbar variant="dense" disableGutters sx={{ px: { xs: 1, md: 3 }, minHeight: { xs: 48, md: 64 } }}>
+        <IconButton edge="start" aria-label="menu" sx={{ mr: 2 }}>
+          ...
+        </IconButton>
+
+        <Typography variant="h6" sx={{ flexGrow: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          長いタイトルは省略表示されます
+        </Typography>
+
+        <InputBase placeholder="Search..." sx={{ ... }} />
+        <Button size="small">
+          Login
+        </Button>
+      </Toolbar>
+    </AppBar>
+
+    ■ fixed と併用する際の spacer としての Toolbar (ヘッダー高さ分の余白確保)
+
+    <Toolbar />
+
+    ■ 単独のセクション用 Toolbar (背景・丸角・アクション)
+
+    <Toolbar sx={{ bgcolor: 'background.paper', borderRadius: 1 }}>
+      <Typography sx={{ flexGrow: 1 }} variant="subtitle1">
+        セクションツールバー
+      </Typography>
+      <Button variant="contained" size="small">
+        Action
+      </Button>
+    </Toolbar>
+
+# -------------------------------
+#  コンポーネント Surfaces
+# -------------------------------
+- KEY: MUI.コンポーネント.Surfaces.category
+  CATEGORY: コンポーネント Surfaces
+
+- KEY: MUI.コンポーネント.Paper
+  EXPLAIN: Paper
+  BODY: |
+    ■ 解説
+
+    ・紙のような表面（背景）を提供する汎用コンポーネント
+    ・影（`elevation`）や枠線（`variant='outlined'`）、角丸の有無（`square`）で見た目を調整
+    ・`component` や `sx` を使い意味論的要素やレスポンシブなスタイルに適用可能
+
+    ■ オプション
+
+    ・`elevation`: 0-24
+    ・`variant`: elevated|outlined
+    ・`square`: true|false
+    ・`component`: semantic 要素に置き換え（例: section, article）
+    ・`sx`: テーマ連携で padding/margin/border 等を柔軟に指定
+
+    ■ 例: elevation 0 (フラット)
+
+    <Paper elevation={0} sx={{ p: 2 }}>
+      基本（elevation 0）
+    </Paper>
+
+    ■ 例: elevation を変える例
+
+    <Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+      elevation 3、丸角
+    </Paper>
+
+    ■ 例: 枠線 (outlined) と square
+
+    <Paper variant="outlined" sx={{ p: 2 }}>
+      variant="outlined"
+    </Paper>
+
+    <Paper square sx={{ p: 2 }}>
+      square (角丸無効)
+    </Paper>
+
+    ■ 例: semantic 要素とレスポンシブ padding の例
+
+    <Paper component="section" elevation={1} sx={{ p: { xs: 1, md: 3 } }}>
+      レスポンシブ padding と semantic section
+    </Paper>
+
+    ■ 例: クリック可能なカード風 (onClick を渡す)
+
+    <Paper elevation={1} sx={{ p: 2, cursor: 'pointer' }} onClick={handleClick}>
+      クリック可能なカード風 Paper
+    </Paper>
+
+- KEY: MUI.コンポーネント.Card
+  EXPLAIN: Card
+  BODY: |
+    ■ 解説
+
+    ・情報カード表示用のコンテナ (`CardHeader` / `CardContent` / `CardActions` を組み合わせる)
+    ・画像やアクションを含む表示に向く
+    ・`CardActionArea` でカード全体をクリック可能にできる
+
+    ■ オプション
+
+    ・`variant`: outlined|elevation
+    ・`elevation`: 0-24
+    ・`square`: true|false
+    ・`component`: semantic 要素に置き換え (article / section 等)
+    ・`sx`: padding / margin / boxShadow 等の調整
+
+    ■ 例: CardContent
+
+    <Card>
+      <CardContent>
+        本文
+      </CardContent>
+    </Card>
+
+    ■ 例: CardMedia
+
+    <Card sx={{ maxWidth: 345 }}>
+      <CardMedia component="img" height="140" image="/img.jpg" alt="image" />
+      <CardContent>
+        説明
+      </CardContent>
+    </Card>
+
+    ■ 例: CardActionArea
+
+    <Card>
+      <CardActionArea onClick={handleOpen}>
+        <CardContent>
+          クリック可能なカード
+        </CardContent>
+      </CardActionArea>
+      <CardActions>
+        <Button size="small">
+          詳細
+        </Button>
+      </CardActions>
+    </Card>
+
+    ■ 例: outlined square
+
+    <Card variant="outlined" square sx={{ p: 2 }}>
+      <CardContent>
+        outlined square
+      </CardContent>
+    </Card>
+
+    ■ 例: Header + Actions
+
+    <Card component="article" sx={{ p: { xs: 1, md: 2 } }}>
+      <CardHeader title="タイトル" subheader="サブヘッダ" />
+      <CardContent>
+        本文
+      </CardContent>
+      <CardActions>
+        <Button size="small">
+          アクション
+        </Button>
+      </CardActions>
+    </Card>
+
+- KEY: MUI.コンポーネント.Accordion
+  EXPLAIN: Accordion
+  BODY: |
+    ■ 解説
+
+    ・折りたたみ可能なパネルで、見出し（`AccordionSummary`）と展開領域（`AccordionDetails`）を持つ
+    ・複数をアコーディオンとして連動させる（排他展開）や、制御された `expanded` による開閉管理が可能
+    ・`AccordionDetails` 内に任意のコンテンツを置けるため、フォームやリスト、詳細表示に適する
+
+    ■ オプション
+
+    ・`disabled`: 無効化
+    ・`square`: 角丸無効化
+    ・`disableGutters`: 周囲パディング制御
+
+    ■ 例: Basic
+
+    <Accordion>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        見出し
+      </AccordionSummary>
+      <AccordionDetails>
+        内容
+      </AccordionDetails>
+    </Accordion>
+
+    ■ 例: Controlled (expanded プロップで制御)
+
+    const [expanded, setExpanded] = useState(false);
+    <Accordion expanded={expanded} onChange={() => setExpanded(e => !e)}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        制御された見出し
+      </AccordionSummary>
+      <AccordionDetails>
+        内容
+      </AccordionDetails>
+    </Accordion>
+
+    ■ 例: Multiple (複数の Accordion を排他制御)
+
+    const [panel, setPanel] = useState<string | false>(false);
+    <Accordion expanded={panel === 'p1'} onChange={() => setPanel(p => (p === 'p1' ? false : 'p1'))}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        Panel 1
+      </AccordionSummary>
+      <AccordionDetails>
+        内容1
+      </AccordionDetails>
+    </Accordion>
+    <Accordion expanded={panel === 'p2'} onChange={() => setPanel(p => (p === 'p2' ? false : 'p2'))}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        Panel 2
+      </AccordionSummary>
+      <AccordionDetails>
+        内容2
+      </AccordionDetails>
+    </Accordion>
+
+    ■ 例: Disabled / square
+
+    <Accordion disabled>
+      <AccordionSummary>
+        無効化された見出し
+      </AccordionSummary>
+      <AccordionDetails>
+        無効化状態の内容
+      </AccordionDetails>
+    </Accordion>
+
+    <Accordion square>
+      <AccordionSummary>
+        角丸無効
+      </AccordionSummary>
+      <AccordionDetails>
+        square の例
+      </AccordionDetails>
+    </Accordion>
+
+- KEY: MUI.コンポーネント.List
+  EXPLAIN: List
+  BODY: |
+    ■ 解説
+
+    ・垂直のアイテムリストを表示するコンテナ
+    ・`ListItem` / `ListItemText` / `ListItemIcon` / `ListItemSecondaryAction` などと組み合わせて使用
+    ・選択リスト、アイコン付きリスト、ネストされたリストなど多用途に使える
+
+    ■ オプション
+
+    ・`dense`: 行間を狭くする
+    ・`disablePadding`: パディング無効化
+    ・`subheader`: セクション見出しを表示
+    ・`component`: semantic 要素や別コンポーネントに置き換え
+
+    ■ 例: Basic
+
+    <List>
+      <ListItem>
+        <ListItemText primary="項目" />
+      </ListItem>
+    </List>
+
+    ■ 例: With Icon
+
+    <List>
+      <ListItem>
+        <ListItemIcon>
+          <InboxIcon />
+        </ListItemIcon>
+        <ListItemText primary="Inbox" />
+      </ListItem>
+    </List>
+
+    ■ 例: Selectable (checkbox)
+
+    <List>
+      <ListItem secondaryAction={<Checkbox edge="end" />}>
+        <ListItemText primary="選択可能な項目" />
+      </ListItem>
+    </List>
+
+    ■ 例: Nested (Collapse を使った入れ子)
+
+    <List>
+      <ListItemButton onClick={handleToggle}>
+        <ListItemText primary="親項目" />
+      </ListItemButton>
+      <Collapse in={open} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <ListItem sx={{ pl: 4 }}>
+            <ListItemText primary="子項目" />
+          </ListItem>
+        </List>
+      </Collapse>
+    </List>
+
+    ■ 例: Dense / disablePadding
+
+    <List dense>
+      <ListItem disablePadding>
+        <ListItemText primary="コンパクト表示" />
+      </ListItem>
+    </List>
+
+# -------------------------------
+#  コンポーネント Navigation
+# -------------------------------
+
+- KEY: MUI.コンポーネント.Navigation.category
+  CATEGORY: コンポーネント Navigation
+
+- KEY: MUI.コンポーネント.AppBar
+  EXPLAIN: AppBar
+  BODY: |
+    ■ 解説
+
+    ・アプリケーションの上部に配置するヘッダー/ナビゲーション領域
+    ・`Toolbar` と組み合わせてタイトル、ナビ、アクションを配置する
+
+    ■ オプション
+
+    ・`position`: static|fixed|sticky|absolute|relative
+    ・`color`: primary|secondary|default|transparent
+
+    ■ 例: Basic
+
+    <AppBar position="static">
+      <Toolbar>
+        ヘッダ
+      </Toolbar>
+    </AppBar>
+
+    ■ 例: Fixed with spacer
+
+    <AppBar position="fixed">
+      ...
+    </AppBar>
+    <Toolbar /> {/* spacer for fixed AppBar */}
+
+    ■ 例: AppBar with actions
+
+    <AppBar position="static">
+      <Toolbar>
+        <Typography sx={{ flexGrow: 1 }}>
+          タイトル
+        </Typography>
+        <IconButton>
+          ...
+        </IconButton>
+      </Toolbar>
+    </AppBar>
+
+- KEY: MUI.コンポーネント.Drawer
+  EXPLAIN: Drawer
+  BODY: |
+    ■ 解説
+
+    ・サイドに表示するナビゲーション用の引き出しコンポーネント
+    ・モバイルでは一時表示（temporary）として使用し、デスクトップでは persistent にすることが多い
+
+    ■ オプション
+
+    ・`variant`: temporary|persistent|permanent
+    ・`anchor`: left|right|top|bottom
+
+    ■ 例: Temporary
+
+    <Drawer open={open} onClose={handleClose}>
+      メニュー
+    </Drawer>
+
+    ■ 例: Persistent
+
+    <Drawer variant="persistent" open={open}>
+      サイドメニュー
+    </Drawer>
+
+    ■ 例: Anchor right
+
+    <Drawer anchor="right" open={open}>
+      右側メニュー
+    </Drawer>
+
+- KEY: MUI.コンポーネント.Tabs
+  EXPLAIN: Tabs
+  BODY: |
+    ■ 解説
+
+    ・タブ形式の切替 UI。`Tabs` がコンテナで `Tab` を並べ、`value` で現在選択を制御する
+    ・表示パネルは `TabPanel` 相当で切り替えるのが一般的
+
+    ■ オプション
+
+    ・`variant`: standard|scrollable|fullWidth
+    ・`orientation`: horizontal|vertical
+
+    ■ 例: Basic
+
+    <Tabs value={value} onChange={handleChange}>
+      <Tab label="Tab" />
+    </Tabs>
+
+    ■ 例: Scrollable
+
+    <Tabs variant="scrollable" scrollButtons="auto">
+      ...
+    </Tabs>
+
+    ■ 例: Vertical
+
+    <Tabs orientation="vertical">
+      ...
+    </Tabs>
+
+- KEY: MUI.コンポーネント.BottomNavigation
+  EXPLAIN: BottomNavigation
+  BODY: |
+    ■ 解説
+
+    ・モバイル向けの下部ナビゲーション。アイコン中心の操作を提供する
+    ・`value` と `onChange` で現在選択を管理する
+
+    ■ オプション
+
+    ・`showLabels`: ラベル表示を強制
+
+    ■ 例: Basic
+
+    <BottomNavigation value={value} onChange={...}>
+      <BottomNavigationAction label="Home" />
+    </BottomNavigation>
+
+    ■ 例: With labels
+
+    <BottomNavigation showLabels>
+      ...
+    </BottomNavigation>
+
+    ■ 例: Controlled
+
+    <BottomNavigation value={value} onChange={(e, v) => setValue(v)}>
+      ...
+    </BottomNavigation>
+
+- KEY: MUI.コンポーネント.Breadcrumbs
+  EXPLAIN: Breadcrumbs
+  BODY: |
+    ■ 解説
+
+    ・階層構造を示すパンくずリスト表示コンポーネント
+    ・`separator` で区切り文字を変更でき、`maxItems` で省略表示の閾値を設定できる
+
+    ■ オプション
+
+    ・`separator`: 区切り要素
+    ・`maxItems`: 最大表示数
+
+    ■ 例: Basic
+
+    <Breadcrumbs>
+      <Link>
+        Home
+      </Link>
+      <Typography>
+        Page
+      </Typography>
+    </Breadcrumbs>
+
+    ■ 例: Custom separator
+
+    <Breadcrumbs separator=">">
+      ...
+    </Breadcrumbs>
+
+    ■ 例: maxItems
+
+    <Breadcrumbs maxItems={2}>
+      ...
+    </Breadcrumbs>
+
+- KEY: MUI.コンポーネント.Pagination
+  EXPLAIN: Pagination
+  BODY: |
+    ■ 解説
+
+    ・ページ切り替え UI コンポーネント。`count` と `page` で総ページ数と現在ページを制御する
+    ・`onChange` ハンドラでページ番号を受け取り、データ取得などを行う
+
+    ■ オプション
+
+    ・`boundaryCount`: 両端に表示するページ数
+    ・`siblingCount`: 現在ページの前後に表示する数
+
+    ■ 例: Basic
+
+    <Pagination count={10} page={page} onChange={...} />
+
+    ■ 例: Controlled
+
+    <Pagination page={page} onChange={(e, p) => setPage(p)} />
+
+    ■ 例: with boundaryCount
+
+    <Pagination count={20} boundaryCount={2} />
+
+- KEY: MUI.コンポーネント.Link
+  EXPLAIN: Link
+  BODY: |
+    ■ 解説
+
+    ・スタイル整形済みのリンクコンポーネント。`component` で別コンポーネントに差し替え可能
+    ・アクセシビリティに配慮したフォーカスとキーボード操作を提供する
+
+    ■ オプション
+
+    ・`underline`: none|hover|always
+    ・`component`: 別コンポーネントに差し替え（例: react-router `Link`）
+
+    ■ 例: Basic
+
+    <Link href="/path">
+      リンク
+    </Link>
+
+    ■ 例: Router Link
+
+    <Link component={RouterLink} to="/path">
+      Router Link
+    </Link>
+
+    ■ 例: No underline
+
+    <Link underline="none">
+      テキストリンク
+    </Link>
+
+# -------------------------------
+#  コンポーネント Form Controls
+# -------------------------------
+
+- KEY: MUI.コンポーネント.Form.category
+  CATEGORY: コンポーネント Form Controls
+
+- KEY: MUI.コンポーネント.Button
+  EXPLAIN: Button
+  BODY: |
+    ■ 解説
+
+    ・主要アクションを表すボタンコンポーネント。`variant` と `color` で外観を切り替える
+    ・`startIcon`/`endIcon` でアイコンを添えられる
+
+    ■ オプション
+
+    ・`variant`: text|outlined|contained
+    ・`size`: small|medium|large
+
+    ■ 例: Contained primary
+
+    <Button variant="contained" color="primary">
+      送信
+    </Button>
+
+    ■ 例: Outlined small
+
+    <Button variant="outlined" size="small">
+      Cancel
+    </Button>
+
+    ■ 例: With icon
+
+    <Button startIcon={<SaveIcon />}>
+      Save
+    </Button>
+
+- KEY: MUI.コンポーネント.IconButton
+  EXPLAIN: IconButton
+  BODY: |
+    ■ 解説
+
+    ・アイコンのみを表示するボタン。ツールバーやリスト内でよく使われる
+    ・アクセシビリティのために `aria-label` を設定する
+
+    ■ オプション
+
+    ・`edge`: start|end|false
+    ・`size`: small|medium
+
+    ■ 例: Basic
+
+    <IconButton aria-label="delete">
+      <DeleteIcon />
+    </IconButton>
+
+    ■ 例: Edge start
+
+    <IconButton edge="start">
+      ...
+    </IconButton>
+
+    ■ 例: Small
+
+    <IconButton size="small">
+      ...
+    </IconButton>
+
+- KEY: MUI.コンポーネント.TextField
+  EXPLAIN: TextField
+  BODY: |
+    ■ 解説
+
+    ・ラベルやヘルプを伴う汎用テキスト入力。バリデーション表示やフォームと組み合わせやすい
+    ・`variant` で外観を切り替える
+
+    ■ オプション
+
+    ・`variant`: standard|outlined|filled
+    ・`helperText`: 補助テキスト
+
+    ■ 例: Basic
+
+    <TextField label="名前" variant="outlined" />
+
+    ■ 例: With helper
+
+    <TextField label="Email" helperText="必須項目です" />
+
+    ■ 例: Controlled
+
+    <TextField value={value} onChange={e => setValue(e.target.value)} />
+
+- KEY: MUI.コンポーネント.OutlinedInput
+  EXPLAIN: OutlinedInput
+  BODY: |
+    ■ 解説
+
+    ・低レベルの境界線付き入力コンポーネント。`TextField` の下層やカスタム入力で使用する
+
+    ■ オプション
+
+    ・`startAdornment`/`endAdornment`: 装飾要素
+
+    ■ 例: Basic
+
+    <OutlinedInput placeholder="入力" />
+
+    ■ 例: With adornment（飾り）
+
+    <OutlinedInput startAdornment={
+      <InputAdornment position="start"> ¥ </InputAdornment>
+    } />
+
+    ■ 例: Controlled
+
+    <OutlinedInput value={v} onChange={...} />
+
+- KEY: MUI.コンポーネント.Input
+  EXPLAIN: Input
+  BODY: |
+    ■ 解説
+
+    ・軽量なテキスト入力コンポーネント。デフォルトの下線を持つ簡易的な入力として使う
+
+    ■ オプション
+
+    ・`disableUnderline`: 下線を無効化
+
+    ■ 例: Basic
+
+    <Input defaultValue="値" />
+
+    ■ 例: No underline
+
+    <Input disableUnderline />
+
+    ■ 例: Controlled
+
+    <Input value={value} onChange={...} />
+
+- KEY: MUI.コンポーネント.Select
+  EXPLAIN: Select
+  BODY: |
+    ■ 解説
+
+    ・ドロップダウン選択コンポーネント。`MenuItem` と合わせて使用する
+    ・単一/複数選択をサポートする
+
+    ■ オプション
+
+    ・`multiple`: 複数選択を有効化
+
+    ■ 例: Basic
+
+    <Select value={v} onChange={...}>
+      <MenuItem value={1}>
+        One
+      </MenuItem>
+    </Select>
+
+    ■ 例: Multiple
+
+    <Select multiple value={vals} onChange={...}>
+      ...
+    </Select>
+
+    ■ 例: Controlled
+
+    <Select value={v} onChange={(e) => setV(e.target.value)}>
+      ...
+    </Select>
+
+- KEY: MUI.コンポーネント.Autocomplete
+  EXPLAIN: Autocomplete
+  BODY: |
+    ■ 解説
+
+    ・選択肢補完付きの入力コンポーネント。リスト検索やフリーテキスト入力に向く
+
+    ■ オプション
+
+    ・`freeSolo`: 任意入力を許可
+    ・`multiple`: 複数選択を有効化
+
+    ■ 例: Basic
+
+    <Autocomplete 
+      options={["a","b"]}
+      renderInput={(p) => <TextField {...p} />}
+    />
+
+    ■ 例: freeSolo
+
+    <Autocomplete
+      freeSolo
+      options={...}
+      renderInput={(p) => <TextField {...p} />}
+    />
+
+    ■ 例: multiple
+
+    <Autocomplete multiple options={...} />
+
+- KEY: MUI.コンポーネント.Checkbox
+  EXPLAIN: Checkbox
+  BODY: |
+    ■ 解説
+
+    ・オン/オフを表すチェックボックス入力。フォームや選択リストで使用する
+
+    ■ オプション
+
+    ・`color`: primary|secondary|default
+    ・`indeterminate`: 中間状態
+
+    ■ 例: Basic
+
+    <Checkbox checked={checked} onChange={...} />
+
+    ■ 例: Indeterminate
+
+    <Checkbox indeterminate />
+
+    ■ 例: With label
+
+    <FormControlLabel control={<Checkbox />} label="同意する" />
+
+- KEY: MUI.コンポーネント.Radio
+  EXPLAIN: Radio
+  BODY: |
+    ■ 解説
+
+    ・排他選択を行うラジオボタン。`RadioGroup` でまとめて管理する
+
+    ■ オプション
+
+    ・`size`: small|medium
+
+    ■ 例: Basic
+
+    <RadioGroup value={value} onChange={...}>
+      <FormControlLabel control={<Radio />} label="A" />
+    </RadioGroup>
+
+    ■ 例: Row
+
+    <RadioGroup row>
+      ...
+    </RadioGroup>
+
+    ■ 例: Controlled
+
+    <RadioGroup value={v} onChange={(e) => setV(e.target.value)}>
+      ...
+    </RadioGroup>
+
+- KEY: MUI.コンポーネント.Switch
+  EXPLAIN: Switch
+  BODY: |
+    ■ 解説
+
+    ・オン/オフのトグル入力。状態の切替に用いる
+
+    ■ オプション
+
+    ・`color`: primary|secondary
+
+    ■ 例: Basic
+
+    <Switch checked={on} onChange={...} />
+
+    ■ 例: With label
+
+    <FormControlLabel control={<Switch />} label="通知を受け取る" />
+
+    ■ 例: Small
+
+    <Switch size="small" />
+
+- KEY: MUI.コンポーネント.Slider
+  EXPLAIN: Slider
+  BODY: |
+    ■ 解説
+
+    ・数値のスライダー入力。範囲選択や値選択に用いる
+
+    ■ オプション
+
+    ・`min`/`max`/`step`/`marks`
+
+    ■ 例: Basic
+
+    <Slider defaultValue={30} />
+
+    ■ 例: Range
+
+    <Slider value={[20, 40]} onChange={...} />
+
+    ■ 例: With marks
+
+    <Slider marks min={0} max={100} />
+
+- KEY: MUI.コンポーネント.Rating
+  EXPLAIN: Rating
+  BODY: |
+    ■ 解説
+
+    ・星評価のような評価入力コンポーネント。読み取り専用表示や細かい刻みを設定できる
+
+    ■ オプション
+
+    ・`precision`: 0.5 等の刻み
+    ・`readOnly`: 表示専用
+
+    ■ 例: Basic
+
+    <Rating value={value} onChange={...} />
+
+    ■ 例: ReadOnly
+
+    <Rating value={4} readOnly />
+
+    ■ 例: Half precision
+
+    <Rating precision={0.5} />
+
+- KEY: MUI.コンポーネント.ToggleButton
+  EXPLAIN: ToggleButton
+  BODY: |
+    ■ 解説
+
+    ・トグル可能なボタン群を作るコンポーネント。`ToggleButtonGroup` と組み合わせて使う
+
+    ■ オプション
+
+    ・`exclusive`: 単一選択モード
+
+    ■ 例: Basic
+
+    <ToggleButtonGroup value={val} exclusive onChange={...}>
+      <ToggleButton value="a">
+        A
+      </ToggleButton>
+    </ToggleButtonGroup>
+
+    ■ 例: Multiple
+
+    <ToggleButtonGroup value={vals} onChange={...}>
+      ...
+    </ToggleButtonGroup>
+
+    ■ 例: Vertical
+
+    <ToggleButtonGroup orientation="vertical">
+      ...
+    </ToggleButtonGroup>
+
+# -------------------------------
+#  コンポーネント Data Display
+# -------------------------------
+
+- KEY: MUI.コンポーネント.DataDisplay.category
+  CATEGORY: コンポーネント Data Display
+
+- KEY: MUI.コンポーネント.Typography
+  EXPLAIN: Typography
+  BODY: |
+    ■ 解説
+
+    ・意味論的に整形されたテキスト表示コンポーネント。`variant` で見出しや本文を選べる
+
+    ■ オプション
+
+    ・`variant`: h1|h2|h3|h4|h5|h6|subtitle1|body1 等
+
+    ■ 例: Heading
+
+    <Typography variant="h6">
+      見出し
+    </Typography>
+
+    ■ 例: Body
+
+    <Typography variant="body1">
+      本文テキスト
+    </Typography>
+
+    ■ 例: Subtitle
+
+    <Typography variant="subtitle1">
+      小見出し
+    </Typography>
+
+- KEY: MUI.コンポーネント.Avatar
+  EXPLAIN: Avatar
+  BODY: |
+    ■ 解説
+
+    ・丸形のアイコンや人物画像表示に使う小要素コンポーネント
+
+    ■ オプション
+
+    ・`variant`: circular|rounded|square
+    ・`alt`/`src` を指定可能
+
+    ■ 例: Image
+
+    <Avatar alt="名前" src="/me.png" />
+
+    ■ 例: Text
+
+    <Avatar>
+      AB
+    </Avatar>
+
+    ■ 例: Rounded
+
+    <Avatar variant="rounded">
+      R
+    </Avatar>
+
+- KEY: MUI.コンポーネント.Chip
+  EXPLAIN: Chip
+  BODY: |
+    ■ 解説
+
+    ・ラベルやタグを表示する小要素。削除やクリックアクションを付けられる
+
+    ■ オプション
+
+    ・`variant`: default|outlined
+
+    ■ 例: Basic
+
+    <Chip label="タグ" />
+
+    ■ 例: Deletable
+
+    <Chip label="タグ" onDelete={...} />
+
+    ■ 例: Clickable
+
+    <Chip label="クリック可能" onClick={...} />
+
+- KEY: MUI.コンポーネント.Table
+  EXPLAIN: Table
+  BODY: |
+    ■ 解説
+
+    ・表形式データを表示するためのコンポーネント群。ヘッダや行、セルを組み合わせる
+
+    ■ オプション
+
+    ・`size`: small|medium
+    ・`stickyHeader`: ヘッダを固定
+
+    ■ 例: Basic
+
+    <Table>
+      <TableHead />
+      <TableBody />
+    </Table>
+
+    ■ 例: Sticky header
+
+    <Table stickyHeader>
+      ...
+    </Table>
+
+    ■ 例: Small
+
+    <Table size="small">
+      ...
+    </Table>
+
+- KEY: MUI.コンポーネント.Tooltip
+  EXPLAIN: Tooltip
+  BODY: |
+    ■ 解説
+
+    ・要素にホバーやフォーカスした際に補助情報を表示するツールチップ
+
+    ■ オプション
+
+    ・`title`: 表示テキスト
+    ・`placement`: top|bottom|left|right
+
+    ■ 例: Basic
+
+    <Tooltip title="説明">
+      <Button>
+        Hover
+      </Button>
+    </Tooltip>
+
+    ■ 例: Placement
+
+    <Tooltip placement="right">
+      ...
+    </Tooltip>
+
+    ■ 例: Disabled element
+
+    <span>
+      <Tooltip title="説明">
+        <Button disabled>
+          Hover
+        </Button>
+      </Tooltip>
+    </span>
+
+- KEY: MUI.コンポーネント.Popover
+  EXPLAIN: Popover
+  BODY: |
+    ■ 解説
+
+    ・任意要素に紐づく浮動パネル。アンカー要素を基準に表示位置を制御する
+
+    ■ オプション
+
+    ・`anchorOrigin`/`transformOrigin` で位置を調整
+
+    ■ 例: Basic
+
+    <Popover open={open} anchorEl={el}>
+      内容
+    </Popover>
+
+    ■ 例: Anchored
+
+    <Popover anchorEl={el} open={open}>
+      詳細
+    </Popover>
+
+    ■ 例: Transformed origin
+
+    <Popover transformOrigin={{ vertical: 'top', horizontal: 'right' }}>
+      ...
+    </Popover>
+
+- KEY: MUI.コンポーネント.ImageList
+  EXPLAIN: ImageList
+  BODY: |
+    ■ 解説
+
+    ・画像ギャラリー用のレイアウトコンポーネント。`cols` や `rowHeight` で見た目を調整する
+
+    ■ オプション
+
+    ・`variant`: standard|woven|masonry
+
+    ■ 例: Basic
+
+    <ImageList cols={3}>
+      <ImageListItem>
+        ...
+      </ImageListItem>
+    </ImageList>
+
+    ■ 例: Masonry
+
+    <ImageList variant="masonry">
+      ...
+    </ImageList>
+
+    ■ 例: With rowHeight
+
+    <ImageList rowHeight={160}>
+      ...
+    </ImageList>
+
+- KEY: MUI.コンポーネント.Skeleton
+  EXPLAIN: Skeleton
+  BODY: |
+    ■ 解説
+
+    ・読み込み中のプレースホルダ表示をするコンポーネント。形状やアニメーションを指定できる
+
+    ■ オプション
+
+    ・`variant`: text|rectangular|circular
+    ・`animation`: pulse|wave|false
+
+    ■ 例: Rectangular
+
+    <Skeleton variant="rectangular" width={210} height={118} />
+
+    ■ 例: Text line
+
+    <Skeleton variant="text" />
+
+    ■ 例: Circular
+
+    <Skeleton variant="circular" width={40} height={40} />
+
+# -------------------------------
+#  コンポーネント Feedback & Progress
+# -------------------------------
+
+- KEY: MUI.コンポーネント.FeedbackProgress.category
+  CATEGORY: コンポーネント Feedback & Progress
+
+- KEY: MUI.コンポーネント.Snackbar
+  EXPLAIN: Snackbar
+  BODY: |
+    ■ 解説
+
+    ・一時的なトースト通知を表示するコンポーネント。簡易通知や操作のフィードバックに使う
+
+    ■ オプション
+
+    ・`autoHideDuration`: 自動で閉じるまでの時間（ms）
+    ・`anchorOrigin`: 表示位置
+
+    ■ 例: Basic
+
+    <Snackbar open={open} message="完了" onClose={...} />
+
+    ■ 例: With action
+
+    <Snackbar message="完了" action={<Button>戻す</Button>} />
+
+    ■ 例: Positioned
+
+    <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'right' }} />
+
+- KEY: MUI.コンポーネント.Alert
+  EXPLAIN: Alert
+  BODY: |
+    ■ 解説
+
+    ・情報や警告、エラーを示すバナー表示コンポーネント。`severity` により色やアイコンが変わる
+
+    ■ オプション
+
+    ・`severity`: error|warning|info|success
+    ・`variant`: standard|outlined|filled
+
+    ■ 例: Basic
+
+    <Alert severity="warning">
+      注意
+    </Alert>
+
+    ■ 例: Filled
+
+    <Alert severity="error" variant="filled">
+      エラー
+    </Alert>
+
+    ■ 例: With action
+
+    <Alert action={<Button>詳細</Button>}>
+      通知
+    </Alert>
+
+- KEY: MUI.コンポーネント.Dialog
+  EXPLAIN: Dialog
+  BODY: |
+    ■ 解説
+
+    ・モーダルダイアログを表示するコンポーネント。タイトル、本文、アクションを組み合わせる
+
+    ■ オプション
+
+    ・`fullWidth`/`maxWidth`: サイズ調整
+    ・`disableBackdropClick`: バックドロップクリックで閉じないようにする（必要な場合）
+
+    ■ 例: Basic
+
+    <Dialog open={open} onClose={...}>
+      <DialogTitle>
+        Title
+      </DialogTitle>
+      <DialogContent>
+        内容
+      </DialogContent>
+    </Dialog>
+
+    ■ 例: Full width
+
+    <Dialog fullWidth maxWidth="sm">...</Dialog>
+
+    ■ 例: With actions
+
+    <DialogActions>
+      <Button>
+        キャンセル
+      </Button>
+      <Button>
+        OK
+      </Button>
+    </DialogActions>
+
+- KEY: MUI.コンポーネント.CircularProgress
+  EXPLAIN: CircularProgress
+  BODY: |
+    ■ 解説
+
+    ・円形の読み込みインジケータ。サイズや太さを指定して表示できる
+
+    ■ オプション
+
+    ・`size`/`thickness`/`variant`
+
+    ■ 例: Basic
+
+    <CircularProgress />
+
+    ■ 例: Small
+
+    <CircularProgress size={20} />
+
+    ■ 例: Determinate
+
+    <CircularProgress variant="determinate" value={50} />
+
+- KEY: MUI.コンポーネント.LinearProgress
+  EXPLAIN: LinearProgress
+  BODY: |
+    ■ 解説
+
+    ・線形の進捗バー。バッファや決定済み表示をサポートする
+
+    ■ オプション
+
+    ・`variant`: indeterminate|determinate|buffer
+    ・`color`: primary|secondary
+
+    ■ 例: Indeterminate
+
+    <LinearProgress />
+
+    ■ 例: Determinate
+
+    <LinearProgress variant="determinate" value={70} />
+
+    ■ 例: Buffer
+
+    <LinearProgress variant="buffer" value={50} valueBuffer={70} />
+
+- KEY: MUI.コンポーネント.Backdrop
+  EXPLAIN: Backdrop
+  BODY: |
+    ■ 解説
+
+    ・モーダルなどの背景オーバーレイ表示に使うコンポーネント。クリックで閉じるハンドリングを行える
+
+    ■ オプション
+
+    ・`invisible`: 背景を透明にする
+
+    ■ 例: Basic
+
+    <Backdrop open={open}>
+      内容
+    </Backdrop>
+
+    ■ 例: Invisible
+
+    <Backdrop invisible open={open}>
+      ...
+    </Backdrop>
+
+    ■ 例: With click
+
+    <Backdrop open={open} onClick={handleClose}>
+      ...
+    </Backdrop>
+
+# -------------------------------
+#  コンポーネント Overlays / Transitions / Utilities
+# -------------------------------
+
+- KEY: MUI.コンポーネント.OverlaysTransitionsUtilities.category
+  CATEGORY: コンポーネント Overlays / Transitions / Utilities
+
+- KEY: MUI.コンポーネント.Menu
+  EXPLAIN: Menu
+  BODY: |
+    ■ 解説
+
+    ・アンカー要素に紐づくドロップダウンメニュー。`MenuItem` を並べて選択肢を表示する
+
+    ■ オプション
+
+    ・`keepMounted`: マウントを維持してパフォーマンスを安定させる
+
+    ■ 例: Basic
+
+    <Menu anchorEl={el} open={open} onClose={...}>
+      <MenuItem>
+        項目
+      </MenuItem>
+    </Menu>
+
+    ■ 例: With icons
+
+    <Menu>
+      <MenuItem>
+        <ListItemIcon>
+          ...
+        </ListItemIcon>
+        <ListItemText>
+          項目
+        </ListItemText>
+      </MenuItem>
+    </Menu>
+
+    ■ 例: Nested
+
+    <Menu>
+      <MenuItem>
+        親
+      </MenuItem>
+      <MenuItem>
+        子
+      </MenuItem>
+    </Menu>
+
+- KEY: MUI.コンポーネント.Popover
+  EXPLAIN: Popover
+  BODY: |
+    ■ 解説
+
+    ・任意の位置に浮かぶパネル。小さな情報や操作パネルに使う
+    ・アンカーと位置を細かく調整してユーザー操作に連動させる
+
+    ■ サンプルコード
+
+    <Popover open={open} anchorEl={el}>
+      内容
+    </Popover>
+
+    ■ オプション解説
+
+    ・`anchorOrigin`/`transformOrigin` で表示位置を調整
+
+- KEY: MUI.コンポーネント.Collapse
+  EXPLAIN: Collapse
+  BODY: |
+    ■ 解説
+
+    ・高さをアニメーションで展開/収縮するトランジションコンポーネント。折りたたみ表示に使う
+
+    ■ オプション
+
+    ・`timeout`: アニメーション時間
+
+    ■ 例: Basic
+
+    <Collapse in={open}>
+      内容
+    </Collapse>
+
+    ■ 例: Unmount on exit
+
+    <Collapse in={open} unmountOnExit>
+      ...
+    </Collapse>
+
+    ■ 例: With timeout
+
+    <Collapse in={open} timeout={300}>
+      ...
+    </Collapse>
+
+- KEY: MUI.コンポーネント.Grow
+  EXPLAIN: Grow
+  BODY: |
+    ■ 解説
+
+    ・拡大して表示されるトランジション。表示の導入アニメーションに適する
+
+    ■ オプション
+
+    ・`transformOrigin`: 変形の基点
+
+    ■ 例: Basic
+
+    <Grow in={open}>
+      <Box>
+        内容
+      </Box>
+    </Grow>
+
+    ■ 例: With timeout
+
+    <Grow in={open} timeout={200}>
+      ...
+    </Grow>
+
+    ■ 例: Custom origin
+
+    <Grow transformOrigin={{ vertical: 'top', horizontal: 'center' }}>
+      ...
+    </Grow>
+
+- KEY: MUI.コンポーネント.Fade
+  EXPLAIN: Fade
+  BODY: |
+    ■ 解説
+
+    ・フェードイン/アウトによるトランジション。軽い表示切替に向く
+
+    ■ オプション
+
+    ・`timeout`: アニメーション時間
+
+    ■ 例: Basic
+
+    <Fade in={open}>
+      <Box>
+        内容
+      </Box>
+    </Fade>
+
+    ■ 例: Custom timeout
+
+    <Fade in={open} timeout={500}>
+      ...
+    </Fade>
+
+    ■ 例: With mount on enter
+
+    <Fade in={open} mountOnEnter unmountOnExit>
+      ...
+    </Fade>
+
+- KEY: MUI.コンポーネント.Zoom
+  EXPLAIN: Zoom
+  BODY: |
+    ■ 解説
+
+    ・ズームイン/アウトで表示するトランジション。導入/除去のアニメーションとして使う
+
+    ■ オプション
+
+    ・`timeout`: アニメーション時間
+
+    ■ 例: Basic
+
+    <Zoom in={open}>
+      <Box>
+        内容
+      </Box>
+    </Zoom>
+
+    ■ 例: Tooltip-like
+
+    <Zoom in={open}>
+      <Paper>
+        ポップ
+      </Paper>
+    </Zoom>
+
+    ■ 例: With timeout
+
+    <Zoom in={open} timeout={250}>
+      ...
+    </Zoom>
+
+- KEY: MUI.コンポーネント.Portal
+  EXPLAIN: Portal
+  BODY: |
+    ■ 解説
+
+    ・子要素を別の DOM ノードにレンダリングするユーティリティ。モーダルやオーバーレイで利用する
+
+    ■ オプション
+
+    ・`container`: レンダリング先の DOM ノード
+
+    ■ 例: Basic
+
+    <Portal>
+      <div>
+        外部にレンダリング
+      </div>
+    </Portal>
+
+    ■ 例: With container
+
+    <Portal container={document.getElementById('root')}>
+      ...
+    </Portal>
+
+    ■ 例: For modal
+
+    <Portal>
+      <Dialog>
+        ...
+      </Dialog>
+    </Portal>
+
+- KEY: MUI.コンポーネント.ClickAwayListener
+  EXPLAIN: ClickAwayListener
+  BODY: |
+    ■ 解説
+
+    ・要素外のクリックを検出して処理を行うユーティリティ。メニューやポップオーバーのクローズ検知に使う
+
+    ■ オプション
+
+    ・`mouseEvent`/`touchEvent` を指定可能
+
+    ■ 例: Basic
+
+    <ClickAwayListener onClickAway={handleClose}>
+      <Box>
+        内容
+      </Box>
+    </ClickAwayListener>
+
+    ■ 例: With nested
+
+    <ClickAwayListener onClickAway={handleClose}>
+      <Menu>
+        ...
+      </Menu>
+    </ClickAwayListener>
+
+    ■ 例: Custom events
+
+    <ClickAwayListener mouseEvent="onMouseDown">
+      ...
+    </ClickAwayListener>
+
+- KEY: MUI.コンポーネント.Divider
+  EXPLAIN: Divider
+  BODY: |
+    ■ 解説
+
+    ・レイアウト内で区切り線を描画するシンプルなコンポーネント。セクション分けに使う
+
+    ■ オプション
+
+    ・`variant`: fullWidth|inset|middle
+    ・`orientation`: horizontal|vertical
+
+    ■ 例: Horizontal
+
+    <Divider />
+
+    ■ 例: Vertical
+
+    <Divider orientation="vertical" flexItem />
+
+    ■ 例: Inset
+
+    <Divider variant="inset" />
+
+# -------------------------------
+#  拡張実験パッケージ
+# -------------------------------
+
+- KEY: MUI.コンポーネント.拡張実験パッケージ.category
+  CATEGORY: |
+    拡張実験パッケージ
+
+- KEY: MUI.コンポーネント.mui-x-data-grid
+  EXPLAIN: |
+    @mui/x-data-grid
+  BODY: |
+    ■ 解説
+
+    ・大量データの表形式表示に特化した高機能データグリッドコンポーネント
+    ・ソート、フィルタ、ページング、選択、編集など多彩
+
+    ■ オプション
+
+    ・`columns`: 列定義
+    ・`rows`: 行データ  
+
+    ■ 例: 基本構成
+
+    <DataGrid
+      columns={[
+        { field: 'id' },
+        { field: 'name' }
+      ]}
+      rows={[
+        { id: 1, name: '太郎' },
+        { id: 2, name: '花子' }
+      ]}
+      pageSize={5}
+      rowsPerPageOptions={[5, 10, 20]}  // ページサイズ選択肢
+    />
+
+    ■ 例: 選択モデル
+
+    <DataGrid
+      checkboxSelection
+      onSelectionModelChange={(newSelection) => {
+        setSelectionModel(newSelection);
+      }}
+      selectionModel={selectionModel}   // 選択モデル
+      ...
+    />
+
+    ■ 例: ソート順序
+
+    <DataGrid
+      sortingOrder={['asc', 'desc']}   // ソート順序
+      initialState={{
+        sorting: {
+          sortModel: [{ field: 'name', sort: 'asc' }],  // 初期ソート
+        },
+      }}
+      ...
+    />
+
+    ■ 例: フィルタ条件
+
+    <DataGrid
+      filterModel={{
+        items: [{ columnField: 'name', operatorValue: 'contains', value: '太' }],
+      }}
+      ... 
+    />
+
+    ■ 例: セル編集モード
+
+    <DataGrid
+      editMode="cell"   // セル編集モード
+      onCellEditCommit={(params) => {
+        // 編集完了時の処理
+      }}
+      ... 
+    />
+
+    ■ 例: カスタムツールバー
+
+    <DataGrid
+      components={{
+        Toolbar: CustomToolbar,  // カスタムツールバーコンポーネント
+      }}
+      ...
+    />
+
+    ■ 例: 高さ
+
+    <DataGrid
+      rowHeight={40}   // 行の高さ
+      headerHeight={50} // ヘッダの高さ
+      ...
+    />
+
+    ■ 例: ページ
+
+    <DataGrid
+      pagination
+      pageSize={10}   // 1ページあたりの行数
+      onPageChange={(newPage) => setPage(newPage)}  // ページ変更時の処理
+      ... 
+    />

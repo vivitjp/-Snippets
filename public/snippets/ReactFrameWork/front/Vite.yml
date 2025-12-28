@@ -14,27 +14,151 @@
 
       npm create vite@latest my-app
 
-    ■ 依存インストール
+      ● 他推奨パッケージ
 
-      cd my-app
-      npm install
+      eslint                            // -D: linting ツール
+      prettier                          // -D: コードフォーマッタ  
+      eslint-config-prettier            // -D: eslint と prettier の競合回避
 
-    ■ 開発サーバ起動
+      lint-staged                       // -D: ステージファイル対象 lint
+      husky                             // -D: git hook 管理
+        npx husky install
+        npx husky add .husky/pre-commit "npx lint-staged"
 
-      npm run dev
+      @vitejs/plugin-react              // -D: React 用プラグイン
+        ※ 用途: JSX トランスフォーム、Fast Refresh 対応
 
-    ■ ビルド / プレビュー
+      vite-plugin-env-compatible        // -D: 環境変数互換プラグイン
+        ※ 用途: process.env.X 形式の環境変数対応
 
-      npm run build
-      npm run preview
+      vite-plugin-checker               // -D: 型チェック用プラグイン
+        ※ 用途: 開発中の TypeScript 型チェック
 
-    ■ TypeScript/ESLint/Prettier など整備（任意）
+      vite-plugin-svgr                  // -D: SVGR 用プラグイン
+        ※ 用途: SVG を React コンポーネントとしてインポート
+      
+    ■ 起動(Package.json スクリプト例)
 
-      npm install -D eslint prettier eslint-config-prettier
-      # lint-staged と husky を追加して pre-commit フローを作る場合
-      npm install -D lint-staged husky
-      npx husky install
-      npx husky add .husky/pre-commit "npx lint-staged"
+      {
+        "scripts": {
+          "dev": "vite",                 // 開発サーバ起動
+          "build": "vite build",         // 本番ビルド(ソースマップ無し)
+          "preview": "vite preview"      // ビルド成果物プレビュー
+        }
+      }
+
+      ※ hmr (Hot Module Replacement) 対応で高速な開発体験
+
+    ■ 起動(オプション付き)
+
+      vite --port 4000                  // ポート指定
+      vite --host                       // 外部アクセス許可
+      vite build --sourcemap            // ソースマップ付きビルド
+      vite preview --port 5000          // プレビュー用ポート指定
+
+- KEY: vite.command
+  EXPLAIN: CLI コマンド一覧
+  BODY: |
+    ■ vite [command] [options]          // 共通オプション
+
+    --config vite.config.custom.ts      // <設定ファイル>を指定
+    --mode <mode>                       // 実行モード
+
+      mode: development / production / test など
+      環境変数読み込み: .env, .env.<mode>, .env.local, .env.<mode>.local
+
+    --clearScreen                       // コンソール出力のクリア制御
+    --no-clearScreen                    // 出力のクリア制御
+    --debug                             // デバッグログ（内部の詳細出力）
+    --logLevel <info/warn/error/silent> // ログレベル指定
+    --help                              // ヘルプ表示
+    --version                           // バージョン表示
+
+    ■ 環境変数指定による実行例
+
+      NO_CHECK=true vite                // 型チェック無効化
+
+    ■ vite dev                          // 開発サーバ
+
+    --host [host]                       // ホストをバインド（0.0.0.0 で外部アクセス可能）
+    --port <3000>                       // ポート指定
+    --strictPort                        // ポート不使用エラー（自動インクリメントしない）
+    --https                             // HTTPS サーバを起動（自己署名など）
+    --open [path]                       // ブラウザを自動で開く
+    --force                             // 依存最適化を強制再実行（キャッシュ無視）
+
+    ■ vite build                        // ビルド
+
+    --outDir <dist>                     // 出力ディレクトリ
+    --base <path>                       // ビルド時の public base path（例 CDN パス）
+    --sourcemap                         // ソースマップ出力
+    --no-sourcemap                      // ソースマップ出力なし
+    --minify <esbuild/terser/false>     // ミニファイ方式選択
+    --target <esnext/es2015/...>        // トランスパイルターゲット
+    --watch                             // watch モード（ライブラリ向け）
+
+    ■ vite preview                      // プレビュー(軽量サーバで起動)
+
+    --port / --host / --strictPort / --https / --open（開発サーバと同様）
+
+    ■ 解説: ソースマップ
+
+    ・ソースマップはビルド後のコードと元のソースコードを対応付けるファイル
+    ・デバッグ時に元のコードを参照できるようにする
+    ・ブラウザのデベロッパーツールで利用される
+    ・本番環境での利用はセキュリティリスクとなりうる
+
+- KEY: vite.vite.config
+  EXPLAIN: vite.config
+  BODY: |
+    ■ 基本構成例
+    ・root:                  開発ルート（プロジェクトルート以外を使う場合）
+    ・base:                  デプロイ先の base パス
+    ・mode:                  デフォルトモード
+    ・publicDir:             公開静的ファイル（default: public）
+    ・plugins:               Vite プラグイン配列（例 react() やカスタム）
+    ・resolve.alias:         モジュール解決のエイリアス
+    ・define:                ビルド時定数置換（process.env.X 置換等）
+    ・envPrefix:             import.meta.env に公開するプレフィックス
+      ・server:                 開発サーバ関連
+      ・host, port, strictPort, https, open
+      ・proxy:                  API プロキシ定義（/api → http://localhost:3001 など）
+      ・hmr:                    HMR 設定（protocol / port / clientPort など）
+      ・watch:                  chokidar オプション（usePolling, ignored 等）
+    ・build:                 ビルド設定
+      ・outDir, assetsDir, assetsInlineLimit, cssCodeSplit, sourcemap, rollupOptions
+      ・emptyOutDir, brotliSize
+    ・optimizeDeps:          依存事前バンドル設定
+      ・include, exclude, entries, force, esbuildOptions
+    ・ssr:                   サーバサイドレンダリング向けの外部化設定（noExternal, external）
+    ・worker:                web worker ビルド設定
+    ・css:                   CSS モジュール / preprocessor 設定
+    ・typecheck:             型チェック設定（tsconfigPath, enable）
+
+    ■ 例: vite.config.ts
+
+      import { defineConfig } from 'vite'
+      import react from '@vitejs/plugin-react'
+
+      export default defineConfig({
+        plugins: [react()],
+        server: {
+          port: 3000,
+          open: true,
+          proxy: {
+            '/api': 'http://localhost:3001',
+          },
+        },
+        build: {
+          outDir: 'dist',
+          sourcemap: false,
+        },
+        resolve: {
+          alias: {
+            '@': '/src',
+          },
+        },
+      })
 
 - KEY: vite.install.gitHook1
   EXPLAIN: Git フック管理用 vite（typicode/vite）※少数派
@@ -44,8 +168,6 @@
     ■ dev 依存に追加（例: lint-staged と合わせて）
 
       npm install -D vite lint-staged
-      # or
-      yarn add --dev vite lint-staged
 
     ■ vite 初期化（.vite フォルダとフック群を生成）
 
