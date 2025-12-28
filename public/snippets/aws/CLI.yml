@@ -2,10 +2,10 @@
 #-------------------------------
 # AWS
 #-------------------------------
-- KEY: aws.cli.category
+- ENTRY:
   CATEGORY: CLI
 
-- KEY: aws.cli.install
+- ENTRY:
   EXPLAIN: |
     CLI
   BODY: |

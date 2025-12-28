@@ -2,10 +2,10 @@
 #-------------------------------
 # Nextjs
 #-------------------------------
-- KEY: nextjs.title
+- ENTRY:
   CATEGORY: install & config
 
-- KEY: nextjs.overview
+- ENTRY:
   EXPLAIN: Nextjs 概説
   BODY: |
     Next.jsを使うべき5つの理由 + 実装Tips
@@ -17,7 +17,7 @@
     ■ 画像最適化
     ■ ゼロコンフィグ
 
-- KEY: nextjs.install
+- ENTRY:
   EXPLAIN: インストール
   BODY: |
     ■ インストール
@@ -64,7 +64,7 @@
     ■ ブラウザ確認
     http://localhost:3000
 
-- KEY: nextjs.install.old
+- ENTRY:
   EXPLAIN: インストール(古バージョン)
   BODY: |
     $ npx create-next-app@13 --use-npm
@@ -78,7 +78,7 @@
     13.5.7            next-13 <-- npx create-next-app@13 --use-npm
     14.1.1            next-12-3-2
 
-- KEY: nextjs.package.json
+- ENTRY:
   EXPLAIN: package.json
   BODY: |
     {
@@ -108,7 +108,7 @@
       }
     }
 
-- KEY: nextjs.root.env
+- ENTRY:
   EXPLAIN: |
     Root: .env 環境変数
   BODY: |
@@ -129,10 +129,10 @@
       [page.tsx]
       const endPoint = process.env.NEXT_PUBLIC_ENDPOINT || '';
 
-- KEY: nextjs.directory.title
+- ENTRY:
   CATEGORY: ディレクトリ構成
 
-- KEY: nextjs.directory
+- ENTRY:
   EXPLAIN: 構成(古バージョン)
   BODY: |
     ./
@@ -153,7 +153,7 @@
       next.config.mjs
       ...その他コンフィグ
 
-- KEY: nextjs.app.router.v13
+- ENTRY:
   EXPLAIN: 構成 AppRouter(v13~)
   BODY: |
     ■ 13以前
@@ -208,7 +208,7 @@
         │   ├── molecules/
         │   └── organism/
 
-- KEY: nextjs.app.router.query
+- ENTRY:
   EXPLAIN: AppRouter Query
   BODY: |
     ■ DIR: ./app/hello/page.tsx
@@ -235,7 +235,7 @@
         It only works in a Client Component but none of its parents are 
         marked with "use client", so they're Server Components by default.
 
-- KEY: nextjs.app.router.dynamic.single
+- ENTRY:
   EXPLAIN: AppRouter 動的Routing(引数-単数)
   BODY: |
     ■ DIR: ./app/hello/[id]/page.tsx    // 13以前とは形式異なる
@@ -254,7 +254,7 @@
         )
       }
 
-- KEY: nextjs.app.router.dynamic.multiple
+- ENTRY:
   EXPLAIN: AppRouter 動的Routing(引数-複数)
   BODY: |
     ■ DIR: ./app/hello/[id]/[name]/page.tsx
@@ -273,7 +273,7 @@
         )
       }
 
-- KEY: nextjs.app.router.dynamic.array
+- ENTRY:
   EXPLAIN: AppRouter 動的Routing(引数-配列) 必須
   BODY: |
     ■ DIR: ./app/patha/[...ids]/page.tsx            // 一重[...引数]
@@ -290,7 +290,7 @@
         )
       }
 
-- KEY: nextjs.app.router.dynamic.array
+- ENTRY:
   EXPLAIN: AppRouter 動的Routing(引数-配列) Optional
   BODY: |
     ■ DIR: ./app/pathb/[[...ids]]/page.tsx          // 二重[[...引数]]
@@ -307,10 +307,10 @@
         )
       }
 
-- KEY: nextjs.layout.title
+- ENTRY:
   CATEGORY: レイアウト
 
-- KEY: nextjs.layout.root
+- ENTRY:
   EXPLAIN: |
     FILE: layout.tsx(root HTML)
   BODY: |
@@ -340,7 +340,7 @@
         );
       }
 
-- KEY: nextjs.layout.pages
+- ENTRY:
   EXPLAIN: |
     FILE: layout.tsx(sub paths)
   BODY: |
@@ -355,7 +355,7 @@
         return <section>{children}</section>
       }
 
-- KEY: nextjs.layout.parallel.routes
+- ENTRY:
   EXPLAIN: |
     Layout: Parallel Routes
   BODY: |
@@ -386,10 +386,10 @@
         )
       }
 
-- KEY: nextjs.other.title
+- ENTRY:
   CATEGORY: 各種 Predefined FD
 
-- KEY: nextjs.not.found
+- ENTRY:
   EXPLAIN: |
     Not Found
   BODY: |
@@ -424,7 +424,7 @@
         )
       }
 
-- KEY: nextjs.loading
+- ENTRY:
   EXPLAIN: |
     Loading Component(自動表示)
   BODY: |
@@ -448,7 +448,7 @@
       )
     }
 
-- KEY: nextjs.error.root
+- ENTRY:
   EXPLAIN: |
     🔺 Error: Root
   BODY: |
@@ -456,7 +456,7 @@
 
     ■ DIR: ./app/global-error.tsx       // Client Compo
 
-- KEY: nextjs.error.pages
+- ENTRY:
   EXPLAIN: |
     Error: 各Page
   BODY: |
@@ -483,7 +483,7 @@
       )
     }
 
-- KEY: nextjs.api
+- ENTRY:
   EXPLAIN: API Route
   BODY: |
     ■ route.tsx                         必須 API ファイル名
@@ -509,7 +509,7 @@
       return Response.json({ data })
     }
 
-- KEY: nextjs.link
+- ENTRY:
   EXPLAIN: Link(next/link)
   BODY: |
     ■ リンク
@@ -540,7 +540,7 @@
     };
     export default nextConfig;
 
-- KEY: nextjs.link.usePathname
+- ENTRY:
   EXPLAIN: Link(next/link) + usePathname
   BODY: |
     ■ コンポーネントのpath取得
@@ -564,7 +564,7 @@
       )
     }
 
-- KEY: nextjs.useRouter
+- ENTRY:
   EXPLAIN: |
     useRouter(next/navigation: v13~)
   BODY: |
@@ -593,7 +593,7 @@
       )
     }
 
-- KEY: nextjs.redirect
+- ENTRY:
   EXPLAIN: redirect
   BODY: |
     ■ コード
@@ -616,7 +616,7 @@
     ・絶対 URL(外部リンク) もOK
     ・レンダリング プロセスの前にリダイレクト: next.config.js またはミドルウェア使用
 
-- KEY: nextjs.history.pushState
+- ENTRY:
   EXPLAIN: window.history.pushState
   BODY: |
     ■ pushState
@@ -674,7 +674,7 @@
       )
     }
 
-- KEY: nextjs.history.replaceState
+- ENTRY:
   EXPLAIN: window.history.replaceState
   BODY: |
     ■ replaceState
@@ -714,7 +714,7 @@
       )
     }
 
-- KEY: nextjs.image
+- ENTRY:
   EXPLAIN: Image
   BODY: |
     ■ 画像フォルダ
@@ -741,7 +741,7 @@
       )
     }
 
-- KEY: nextjs.css.global
+- ENTRY:
   EXPLAIN: |
     CSS: global(Tailwind Sample)
   BODY: |
@@ -779,7 +779,7 @@
       }
     }
 
-- KEY: nextjs.css.style
+- ENTRY:
   EXPLAIN: CSS Style 比較
   BODY: |
     ■ 種類

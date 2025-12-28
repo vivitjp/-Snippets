@@ -3,7 +3,7 @@
 # pnpm
 #-------------------------------
 
-- KEY: pnpm.install
+- ENTRY:
   EXPLAIN: インストール
   BODY: |
     ■ Windows PowerShell
@@ -30,7 +30,7 @@
 
     volta pin pnpm@latest
 
-- KEY: pnpm.init.run
+- ENTRY:
   EXPLAIN: 初期化と実行
   BODY: |
     ■ package.json 作成

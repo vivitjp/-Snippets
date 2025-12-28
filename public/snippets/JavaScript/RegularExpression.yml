@@ -3,7 +3,7 @@
 # JavaScript: RegularExpression
 #-------------------------------
 
-- KEY: reg.RegExp
+- ENTRY:
   EXPLAIN: 正規表現
   BODY: |
     ■ 正規表現変数
@@ -37,7 +37,7 @@
     [NG] const replaced = 'ABA'.replaceAll(/A/i, "X"); // gフラグなしError
     const replaced = 'ABA'.replaceAll(/A/ig, "X");     // "XBX"
 
-- KEY: reg.RegExp.example
+- ENTRY:
   EXPLAIN: 正規表現(汎用例)
   BODY: |
     ■ 正の実数
@@ -58,7 +58,7 @@
     ■ 時間
     /^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/
 
-- KEY: reg.captureGroup
+- ENTRY:
   EXPLAIN: 名前付きキャプチャグループ [ES2018]
   BODY: |
     const target = '123 456 789';
@@ -72,7 +72,7 @@
     console.log(hits2?.groups?.first);            // '123'
     console.log(hits2?.groups?.second);           // '456'
 
-- KEY: reg.exec()
+- ENTRY:
   EXPLAIN: 一致文字列取得
   BODY: |
     const target = '123 456 789';
@@ -89,7 +89,7 @@
       re.lastIndex;                               // 3,7,11
     }
 
-- KEY: reg.test()
+- ENTRY:
   EXPLAIN: 一致Indexの移動
   BODY: |
     const target = 'table cable maple';
@@ -101,7 +101,7 @@
     re.lastIndex;                                 // 3
     re.test(target);                              // false
 
-- KEY: reg.match()
+- ENTRY:
   EXPLAIN: 一致:値
   BODY: |
     const target = "123 456 789";
@@ -109,7 +109,7 @@
 
     let hit = target.match(re);                   // ['123','456','789']
 
-- KEY: reg.RegExp.replace
+- ENTRY:
   EXPLAIN: 置換
   BODY: |
     ■ 定義
@@ -128,7 +128,7 @@
     })
     console.log(replaced)                         // "[AB] [AB]C BCD"
 
-- KEY: reg.str.matchAll2022
+- ENTRY:
   EXPLAIN: matchAll 全一致 [ES2022]
   BODY: |
     const target = 'test1 test2';
@@ -153,7 +153,7 @@
       m => m[0]
     );
 
-- KEY: reg.flags
+- ENTRY:
   EXPLAIN: フラグ一覧
   BODY: |
     g  global(複数マッチ)
@@ -163,7 +163,7 @@
     y  sticky(lastIndexで指定した位置から検索)
     s  dotAll([.]がCR,LF,U+2028,U+2029など全文字マッチ)
 
-- KEY: reg.flag.m
+- ENTRY:
   EXPLAIN: m:改行を行頭行末認識
   BODY: |
     行頭(^)や行末($)が、改行(\n)後の行頭行末にもマッチング
@@ -176,7 +176,7 @@
     target.match(/^DEF$/);                        // null
     target.match(/^DEF$/m);                       // ["DEF"]
 
-- KEY: reg.flag.u
+- ENTRY:
   EXPLAIN: u:サロゲーションペア
   BODY: |
     U+10000以上のサロゲーションペア領域の文字も1文字
@@ -184,7 +184,7 @@
     console.log('🧲'.match(/^.$/));               // null (2文字だから)
     console.log('🧲'.match(/^.$/u));              // uフラグ(1文字として一致)
 
-- KEY: reg.flag.y
+- ENTRY:
   EXPLAIN: y:lastIndex位置固定
   BODY: |
     yフラグ: lastIndex の位置からから先頭マッチングで位置を固定(lastIndexが先に進まない)。
@@ -204,7 +204,7 @@
     hit= re.exec(target);
       console.log(hit, re.lastIndex);             // ["123"], 3
 
-- KEY: reg.flag.s
+- ENTRY:
   EXPLAIN: s:ドットを改行にも一致
   BODY: |
     //.(ドット)を改行文字にも一致
@@ -219,7 +219,7 @@
       console.log(hit, hit.index);                // [""ABC\nDEF\nGHI""] 0
     }
 
-- KEY: reg.matching
+- ENTRY:
   EXPLAIN: マッチング表現
   BODY: |
     x        xという文字
@@ -245,25 +245,25 @@
     (?<=x)y  後読み言明
     (?<!x)y  否定後読み言明
 
-- KEY: reg.matching.x*?
+- ENTRY:
   EXPLAIN: 最大最小Match(*)
   BODY: |
     "<ABC><DEF>".match(/<.*>/)                    // 最大 ["<ABC><DEF>"]
     "<ABC><DEF>".match(/<.*?>/)                   // 最小 ["<ABC>"]
 
-- KEY: reg.matching.x+?
+- ENTRY:
   EXPLAIN: 最大最小Match(+)
   BODY: |
     "<ABC><DEF>".match(/<.+>/)                    // 最大 ["<ABC><DEF>"]
     "<ABC><DEF>".match(/<.+?>/)                   // 最小 ["<ABC>"]
 
-- KEY: reg.matching.x??
+- ENTRY:
   EXPLAIN: 最大最小Match(?)
   BODY: |
     "ABC".match(/AB?/)                            // 最大 ["AB"]
     "ABC".match(/AB??/)                           // 最小 ["A"]
 
-- KEY: reg.matching.postfix
+- ENTRY:
   EXPLAIN: 先読み言明(PREFIX(?=KEY))
   BODY: |
     ■ PREFIX(?=KEY)
@@ -276,7 +276,7 @@
     const re = /(CA(?=X))/g;                      // CAに続く"X"がある場合、CAにマッチ
     const hit2 = target.match(re);                // null
 
-- KEY: reg.matching.postfix.not
+- ENTRY:
   EXPLAIN: 先読み言明:否定(PREFIX(?!KEY))
   BODY: |
     ■ PREFIX(?!KEY)
@@ -289,7 +289,7 @@
     const re = /(CA(?!X))/g;                      // CAに続く"X"がない場合、CAにマッチ
     const hit2 = target.match(re);                // ["CA", "CA"] (全部にマッチ)
 
-- KEY: reg.matching.prefix
+- ENTRY:
   EXPLAIN: 後読み言明((?<=KEY)POSTFIX)
   BODY: |
     ■ (?<=KEY)POSTFIX
@@ -299,7 +299,7 @@
     const re = /((?<=CA)S[^\s]*)/g;               // CAに続く S[^\s] にマッチ
     const hit= target.match(re);                  //  ["SE", "ST"]
 
-- KEY: reg.matching.prefix.not
+- ENTRY:
   EXPLAIN: 後読み言明:否定((?<!KEY)POSTFIX)
   BODY: |
     ■ (?<!KEY)POSTFIX
@@ -309,7 +309,7 @@
     const re = /((?<!CA)S[^\s]*)/g;               // CAに続かない S[^\s] にマッチ
     const hit= target.match(re);                  // ["ST", "SK"]
 
-- KEY: reg.and.or
+- ENTRY:
   EXPLAIN: AND OR について
   BODY: |
     ■ OR
@@ -319,7 +319,7 @@
     /^(?=.*KEY1)(?=.*KEY2)$/            // KEY1 & KEY2 (順番関係なし)
     /^(?=.*KEY1)(?!.*KEY2)$/            // KEY1 & !KEY2 (順番関係なし)
 
-- KEY: reg.specialChars
+- ENTRY:
   EXPLAIN: 特殊文字
   BODY: |
     \0     NUL文字
@@ -341,14 +341,14 @@
     \\\    \ohhh (非)8進数で hhh の文字
     \xhh   16進数で hh の文字
 
-- KEY: reg.specialChar.b
+- ENTRY:
   EXPLAIN: 区切り文字
   BODY: |
     "I like Java.".match(/\bJava\b/)              // ["Java"]
     "I like JavaScript.".match(/\bJava\b/)        // null
     "I like JavaScript.".match(/\bJava/)          // ["Java"]
 
-- KEY: reg.specialChars.unicode
+- ENTRY:
   EXPLAIN: 特殊文字(Unicode)
   BODY: |
     \uhhhh             UTF-16 Unicode文字
@@ -364,7 +364,7 @@
     \p{scx=property}   Script_Extensions が propety にマッチする文字(要u:ES2018)
     \P{scx=property}   Script_Extensions が propety にマッチしない文字(要u:ES2018)
 
-- KEY: reg.sample.postalCode
+- ENTRY:
   EXPLAIN: 郵便番号
   BODY: |
     ■ 郵便番号(ハイフンなし)
@@ -388,7 +388,7 @@
     re.test("1234-567".trim())                    // false
     re.test("1234A67".trim())                     // false
 
-- KEY: reg.sample.phoneNumber
+- ENTRY:
   EXPLAIN: 電話番号(固定)
   BODY: |
     ■ 電話番号(ハイフンあり)
@@ -408,7 +408,7 @@
     re.test("031234568".trim())                   // false
     re.test("03-12345A78".trim())                 // false
 
-- KEY: reg.sample.phoneNumberCell
+- ENTRY:
   EXPLAIN: 電話番号(携帯)
   BODY: |
     ■ 携帯番号(ハイフンあり)1

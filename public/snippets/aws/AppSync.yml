@@ -2,10 +2,10 @@
 #-------------------------------
 # AWS
 #-------------------------------
-- KEY: aws.AppSync.category
+- ENTRY:
   CATEGORY: AppSync
 
-- KEY: aws.AppSync.概要
+- ENTRY:
   EXPLAIN: |
     概要
   BODY: |
@@ -18,7 +18,7 @@
     • API Gateway
       • 複数のAPIエンドポイントを提供
 
-- KEY: aws.AppSync.xxxxx
+- ENTRY:
   EXPLAIN: |
     xxxxxx
   BODY: |

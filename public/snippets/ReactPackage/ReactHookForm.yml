@@ -2,7 +2,7 @@
 #-------------------------------
 # React Hook Form
 #-------------------------------
-- KEY: pk.rhf.urls
+- ENTRY:
   EXPLAIN: 概要とVersion
   BODY: |
     ■ GitHub
@@ -26,10 +26,10 @@
       React Hook Formを1年以上運用してきたちょっと良く使うためのTips
       https://zenn.dev/yuitosato/articles/292f13816993ef
 
-- KEY: chakra.components.api.title
+- ENTRY:
   CATEGORY: API
 
-- KEY: pk.rhf.api.useForm
+- ENTRY:
   EXPLAIN: useForm & method
   BODY: |
     const method = useForm({
@@ -74,7 +74,7 @@
       resetField,                       // 個別フィールドのみリセット（初期値や空に戻す）
     }
 
-- KEY: pk.rhf.api.method.formState
+- ENTRY:
   EXPLAIN: formState
   BODY: |
     ■ formState: {
@@ -115,10 +115,10 @@
 #-------------------------------
 # By Context
 #-------------------------------
-- KEY: pk.rhf.event.title
+- ENTRY:
   CATEGORY: イベント
 
-- KEY: pk.rhf.form.onSubmit
+- ENTRY:
   EXPLAIN: onSubmit
   BODY: |
     export default function App() {
@@ -145,10 +145,10 @@
 #-------------------------------
 # Methods
 #-------------------------------
-- KEY: pk.rhf.method.category
+- ENTRY:
   CATEGORY: メソッド
 
-- KEY: pk.rhf.method.reset
+- ENTRY:
   EXPLAIN: Reset()
   BODY: |
     ■ 主用途
@@ -232,10 +232,10 @@
 #-------------------------------
 # By Context
 #-------------------------------
-- KEY: pk.rhf.byContext.title
+- ENTRY:
   CATEGORY: FormProvider & useFormContext
 
-- KEY: pk.rhf.byContext.parent
+- ENTRY:
   EXPLAIN: 親(FormProvider)
   BODY: |
     import { useForm, SubmitHandler, FormProvider } from "react-hook-form"
@@ -266,7 +266,7 @@
       )
     }
 
-- KEY: pk.rhf.byContext.child
+- ENTRY:
   EXPLAIN: 子(useFormContext)
   BODY: |
     import { useFormContext } from "react-hook-form"
@@ -286,10 +286,10 @@
 #-------------------------------
 # By Props
 #-------------------------------
-- KEY: pk.rhf.byProps.title
+- ENTRY:
   CATEGORY: method as Props
 
-- KEY: pk.rhf.byProps.parent
+- ENTRY:
   EXPLAIN: 親(method={method})
   BODY: |
     import { useForm, SubmitHandler } from "react-hook-form"
@@ -320,7 +320,7 @@
       )
     }
 
-- KEY: pk.rhf.byProps.child
+- ENTRY:
   EXPLAIN: 子(method as props)
   BODY: |
     import { UseFormReturn } from "react-hook-form"
@@ -340,7 +340,7 @@
       )
     }
 
-- KEY: pk.rhf.Controller.child
+- ENTRY:
   EXPLAIN: 子(method as props) use <Controller>
   BODY: |
     import { Controller, Path, UseFormReturn } from "react-hook-form"
@@ -385,10 +385,10 @@
 #-------------------------------
 # Generic Parent
 #-------------------------------
-- KEY: pk.rhf.generic.title
+- ENTRY:
   CATEGORY: Generic Components
 
-- KEY: pk.rhf.generic.parent
+- ENTRY:
   EXPLAIN: ジェネリック 親
   BODY: |
     import { useForm, UseFormProps, UseFormReturn } from "react-hook-form"
@@ -405,7 +405,7 @@
 
     export { useDefaultForm }
 
-- KEY: pk.rhf.generic.child
+- ENTRY:
   EXPLAIN: ジェネリック 子
   BODY: |
     import { Path, UseFormReturn } from "react-hook-form"
@@ -434,7 +434,7 @@
       )
     }
 
-- KEY: pk.rhf.generic.sample
+- ENTRY:
   EXPLAIN: ジェネリック サンプル
   BODY: |
     import { SubmitHandler } from "react-hook-form"
@@ -502,7 +502,7 @@
       )
     }
 
-- KEY: pk.rhf.generic.sample.a.parent
+- ENTRY:
   EXPLAIN: ジェネリック A:親
   BODY: |
     import { useForm } from "react-hook-form"
@@ -533,7 +533,7 @@
       )
     }
 
-- KEY: pk.rhf.generic.sample.a.child
+- ENTRY:
   EXPLAIN: ジェネリック A:子
   BODY: |
     ■ Organism Component A
@@ -572,7 +572,7 @@
 
     ■ SectionAddress 省略
 
-- KEY: pk.rhf.generic.sample.b.parent
+- ENTRY:
   EXPLAIN: ジェネリック B:親
   BODY: |
     const defaultValues: PersonA & Address = {
@@ -599,7 +599,7 @@
       )
     }
 
-- KEY: pk.rhf.generic.sample.b.child
+- ENTRY:
   EXPLAIN: ジェネリック B:子
   BODY: |
     export type PersonA = {
@@ -634,10 +634,10 @@
 # バリデーション
 #-------------------------------
 
-- KEY: pk.rhf.validation.title
+- ENTRY:
   CATEGORY: バリデーション
 
-- KEY: pk.rhf.validation
+- ENTRY:
   EXPLAIN: 標準バリデーション
   BODY: |
     required            // boolean      必須項目
@@ -671,7 +671,7 @@
       }
     })}
 
-- KEY: pk.rhf.validation.sample
+- ENTRY:
   EXPLAIN: バリデーション・フルサンプル
   BODY: |
     import { SubmitHandler, useForm, useWatch } from "react-hook-form"
@@ -796,10 +796,10 @@
 # Data 構造
 #-------------------------------
 
-- KEY: pk.rhf.data.structure.title
+- ENTRY:
   CATEGORY: データ構造
 
-- KEY: pk.rhf.data.structure
+- ENTRY:
   EXPLAIN: 多層データ構造
   BODY: |
     ■ data と error data の構造が違う。取得時の添字の型に注意

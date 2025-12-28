@@ -3,7 +3,7 @@
 # Lint
 #-------------------------------
 
-- KEY: lint.install.init
+- ENTRY:
   EXPLAIN: インストール & init
   BODY: |
     ■ インストール
@@ -19,7 +19,7 @@
 #-------------------------------
 # パッケージ
 #-------------------------------
-- KEY: lint.packages
+- ENTRY:
   EXPLAIN: パッケージ
   BODY: |
     ■ eslint(JS)
@@ -57,7 +57,7 @@
 #-------------------------------
 # setting
 #-------------------------------
-- KEY: lint.setting
+- ENTRY:
   EXPLAIN: 設定システム移行
   BODY: |
     ■ バージョン比較
@@ -74,7 +74,7 @@
     ・.eslintignore で除外ファイル指定が不必要
     ・overrides プロパティ不必要
 
-- KEY: lint.setting.init
+- ENTRY:
   EXPLAIN: 初期設定(init)
   BODY: |
     ■ @eslint/config で設定
@@ -102,7 +102,7 @@
     eslint-plugin-react
     @eslint/compat
 
-- KEY: lint.setting.eslistrc
+- ENTRY:
   EXPLAIN: v9 前の古設定(.eslistrc.js)
   BODY: |
     【.eslistrc.js】
@@ -168,7 +168,7 @@
       'react-refresh/only-export-components': 'warn',  // vite
     }
 
-- KEY: lint.setting.new
+- ENTRY:
   EXPLAIN: v9 後の新設定(eslint.config.js)
   BODY: |
     export default [
@@ -213,7 +213,7 @@
         }
       }
 
-- KEY: lint.setting.target
+- ENTRY:
   EXPLAIN: 対象と除外
   BODY: |
     {
@@ -221,7 +221,7 @@
       ignores: ["**/dist/**"],
     }
 
-- KEY: lint.setting.parser
+- ENTRY:
   EXPLAIN: TypeScriptパーサー
   BODY: |
     {
@@ -255,7 +255,7 @@
       }
     }
 
-- KEY: lint.setting.plugin
+- ENTRY:
   EXPLAIN: プラグイン
   BODY: |
     {
@@ -289,7 +289,7 @@
       },
     },
 
-- KEY: lint.setting.react
+- ENTRY:
   EXPLAIN: React 設定
   BODY: |
     // 現状、pluginReactConfig が正式対応しておらず要修正
@@ -335,7 +335,7 @@
 #-------------------------------
 # 実行
 #-------------------------------
-- KEY: lint.execution
+- ENTRY:
   EXPLAIN: CLI 実行 & Options
   BODY: |
     // ■ 実行
@@ -407,7 +407,7 @@
 #-------------------------------
 # Exception
 #-------------------------------
-- KEY: lint.exception.line
+- ENTRY:
   EXPLAIN: |
     例外: 単数行をチェックから除外
   BODY: |
@@ -424,7 +424,7 @@
 
     alert('foo'); /* eslint-disable-line */
 
-- KEY: lint.exception.lines
+- ENTRY:
   EXPLAIN: |
     例外: 囲い行をチェックから除外
   BODY: |

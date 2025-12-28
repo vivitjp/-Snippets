@@ -2,12 +2,12 @@
 # Express
 # ----------------------------
 
-- KEY: express.version
+- ENTRY:
   EXPLAIN: バージョン
   BODY: |
     4.x API: 2024-06
 
-- KEY: express.express
+- ENTRY:
   EXPLAIN: Express()
   BODY: |
     ■ Methods
@@ -18,7 +18,7 @@
     express.text()
     express.urlencoded()
 
-- KEY: express.app
+- ENTRY:
   EXPLAIN: Application
   OPTIONS:
     COLS: 3
@@ -51,7 +51,7 @@
     app.set()
     app.use()
 
-- KEY: express.req
+- ENTRY:
   EXPLAIN: |
     Methods: Request
   OPTIONS:
@@ -90,7 +90,7 @@
     req.param()
     req.range()
 
-- KEY: express.res
+- ENTRY:
   EXPLAIN: |
     Methods: Response
   OPTIONS:
@@ -124,7 +124,7 @@
     res.type()
     res.vary()
 
-- KEY: express.router
+- ENTRY:
   EXPLAIN: |
     Methods: Router
   BODY: |
@@ -135,18 +135,18 @@
     router.route()
     router.use()
 
-# - KEY: express.doc.
+# - ENTRY:
 #   EXPLAIN: XXXXXXXXXX
 #   BODY: |
 
-# - KEY: express.doc.
+# - ENTRY:
 #   EXPLAIN: XXXXXXXXXX
 #   BODY: |
 
-# - KEY: express.doc.
+# - ENTRY:
 #   EXPLAIN: XXXXXXXXXX
 #   BODY: |
 
-# - KEY: express.doc.
+# - ENTRY:
 #   EXPLAIN: XXXXXXXXXX
 #   BODY: |

@@ -3,7 +3,7 @@
 # MongoDB
 #-------------------------------
 
-- KEY: mon.install
+- ENTRY:
   EXPLAIN: インストール
   BODY: |
     mongodb Windows版をインストール
@@ -12,7 +12,7 @@
     pip install pymongo
     # 他の環境設定不要
 
-- KEY: mon.connection
+- ENTRY:
   EXPLAIN: DB接続
   BODY: |
     from pymongo import MongoClient
@@ -25,12 +25,12 @@
     # 任意Collectionへのリンク取得
     books = db[<COLLECTION_NAME>]
 
-- KEY: mon.basic
+- ENTRY:
   EXPLAIN: 基礎
   BODY: |
     database -> collection(table) -> document(record)
 
-- KEY: mon.db.collection
+- ENTRY:
   EXPLAIN: コレクションリスト取得
   BODY: |
     # DBリスト取得
@@ -47,7 +47,7 @@
 # 検索
 #-------------------------------
 
-- KEY: mon.find.all
+- ENTRY:
   EXPLAIN: 検索(複)
   BODY: |
     def findAll() -> list[dict]:
@@ -57,7 +57,7 @@
     found = findAll()
     print([book.get("name") for book in found])
 
-- KEY: mon.find.columns
+- ENTRY:
   EXPLAIN: 検索(複)カラム指定
   BODY: |
     def findAllWithColumns(column: dict) -> list[dict]:
@@ -67,7 +67,7 @@
     found = findAllWithColumns({"_id": 0, "name": 1})
     print([book.get("name") for book in found])
 
-- KEY: mon.find.many.limit.order
+- ENTRY:
   EXPLAIN: 検索(複)制限と順序
   BODY: |
     def findAllWithLimitSort(sort: dict, limit: int = 10) -> list[dict]:
@@ -80,7 +80,7 @@
     found = findAllWithLimitSort({"pages": ASCENDING})
     print([book.get("name") for book in found])
 
-- KEY: mon.find.one.byId
+- ENTRY:
   EXPLAIN: 検索(単)id検索
   BODY: |
     def findOneById(id: str) -> dict | None:
@@ -90,7 +90,7 @@
     found = findOneById("6631fda9798bad7a8345f8ac")
     print(found.get("author") if found else "None")
 
-- KEY: mon.find.many.regexp
+- ENTRY:
   EXPLAIN: 検索(複)正規表現
   BODY: |
     def findManyByRegExp(key: str) -> list[dict]:
@@ -100,7 +100,7 @@
     found = findManyByRegExp("Kevin")
     print([book.get("name") for book in found])
 
-- KEY: mon.find.many.byComparison
+- ENTRY:
   EXPLAIN: 検索(複)値比較
   BODY: |
     def findManyByComparison(value: int = 200) -> list[dict]:
@@ -110,7 +110,7 @@
     found = findManyByComparison(200)
     print([book.get("name") for book in found])
 
-- KEY: mon.find.many.AND
+- ENTRY:
   EXPLAIN: 検索(複)AND
   BODY: |
     def findManyAnd(target1: dict, target2: dict) -> list[dict]:
@@ -120,7 +120,7 @@
     found = findManyAnd({"author": "Silly"}, {"pages": {"$lt": 100}})
     print([book.get("name") for book in found])
 
-- KEY: mon.find.many.or
+- ENTRY:
   EXPLAIN: 検索(複)OR
   BODY: |
     def findManyOr(target1: dict, target2: dict) -> list[dict]:
@@ -130,7 +130,7 @@
     found = findManyOr({"author": "Silly"}, {"pages": {"$lt": 100}})
     print([book.get("name") for book in found])
 
-- KEY: mon.find.many.in
+- ENTRY:
   EXPLAIN: 検索(複)IN
   BODY: |
     def findManyIn(values: list[str]) -> list[dict]:
@@ -144,7 +144,7 @@
 # カウント
 #-------------------------------
 
-- KEY: mon.count
+- ENTRY:
   EXPLAIN: カウント
   BODY: |
     def getCount1() -> int:
@@ -171,7 +171,7 @@
 # 挿入
 #-------------------------------
 
-- KEY: mon.insert.one
+- ENTRY:
   EXPLAIN: 挿入(単)
   BODY: |
     def insertOne(data: dict) -> int:
@@ -186,7 +186,7 @@
     data1 = {"name": "Joel book", "author": "Joel", "pages": 32, "active": True}
     inserted = insertOne(data1)
 
-- KEY: mon.insert.many
+- ENTRY:
   EXPLAIN: 挿入(複)
   BODY: |
     def insertMany(dataList: list[dict]) -> list[str]:
@@ -212,7 +212,7 @@
 # 更新
 #-------------------------------
 
-- KEY: mon.update.one
+- ENTRY:
   EXPLAIN: 更新(単)
   BODY: |
     def updateOne(target: dict, updateData: dict) -> int:
@@ -228,7 +228,7 @@
     -----------------------------------------------------------------
     result = updateOne({"author": "Levin"}, {"name": "Update One Book"})
 
-- KEY: mon.update.many
+- ENTRY:
   EXPLAIN: 更新(複)
   BODY: |
     def updateMany(target: dict, updateData: dict) -> int:
@@ -250,7 +250,7 @@
 # 削除
 #-------------------------------
 
-- KEY: mon.delete.one
+- ENTRY:
   EXPLAIN: 削除(単)
   BODY: |
     def deleteOne(target: dict) -> int:
@@ -264,7 +264,7 @@
     -----------------------------------------------------------------
     deleted = deleteOne({"_id": ObjectId("6631fcd9798bad7a8345f8d9")})
 
-- KEY: mon.delete.many
+- ENTRY:
   EXPLAIN: 削除(複)
   BODY: |
     def deleteMany(target: dict) -> int:

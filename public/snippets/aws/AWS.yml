@@ -3,7 +3,7 @@
 # AWS
 #-------------------------------
 
-- KEY: aws.service.main
+- ENTRY:
   EXPLAIN: Amazon Web Services メジャーサービス
   BODY: |
     ■ Security, Identity & Compliance
@@ -89,7 +89,7 @@
         AWS X-Ray                                 分散トレーシング
         AWS CodeArtifact                          ソフトウェアパッケージのリポジトリ
 
-- KEY: aws.abbreviation.icon
+- ENTRY:
   EXPLAIN: アイコン一覧
   SAMPLE: |
     <style>
@@ -446,7 +446,7 @@
 #-------------------------------
 # 略語
 #-------------------------------
-- KEY: aws.abbreviation
+- ENTRY:
   EXPLAIN: 略語
   BODY: |
     ARN     Amazon Resource Name                      [IAM]
@@ -484,7 +484,7 @@
 #-------------------------------
 # リージョン
 #-------------------------------
-- KEY: aws.region.az
+- ENTRY:
   EXPLAIN: リージョン & AZ(アベイラビリティーゾーン)
   BODY: |
     • リージョンとは、データセンターがある「地域」
@@ -527,7 +527,7 @@
 #-------------------------------
 # 開発環境
 #-------------------------------
-- KEY: aws.dev.methods
+- ENTRY:
   EXPLAIN: |
     開発環境
   BODY: |
@@ -613,7 +613,7 @@
 #-------------------------------
 # 資格
 #-------------------------------
-- KEY: aws.資格
+- ENTRY:
   EXPLAIN: |
     資格
   BODY: |
@@ -676,10 +676,10 @@
 #-------------------------------
 # 不用意な課金ポイント & 無料枠
 #-------------------------------
-- KEY: aws.課金.category
+- ENTRY:
   CATEGORY: 課金と無料枠
 
-- KEY: aws.不用意な課金ポイント
+- ENTRY:
   EXPLAIN: |
     不用意な課金ポイント
   BODY: |
@@ -745,7 +745,7 @@
           • 名前: 任意の名前
           • 予算額: $10 など
 
-- KEY: aws.無料枠
+- ENTRY:
   EXPLAIN: |
     無料枠: 12ヶ月無料枠
   BODY: |
@@ -832,7 +832,7 @@
       • 250,000 件/月のリアルタイム更新
       • 600,000 接続/月
 
-- KEY: aws.無期限無料枠
+- ENTRY:
   EXPLAIN: |
     無料枠: 無期限無料枠
   BODY: |
@@ -904,10 +904,10 @@
 #-------------------------------
 # 基礎知識
 #-------------------------------
-- KEY: aws.基礎知識.category
+- ENTRY:
   CATEGORY: 基礎知識
 
-- KEY: aws.基礎知識.ARN
+- ENTRY:
   EXPLAIN: |
     ARN(Amazon Resource Name)
   BODY: |

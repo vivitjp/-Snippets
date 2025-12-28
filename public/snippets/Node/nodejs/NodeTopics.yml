@@ -2,10 +2,10 @@
 #-------------------------------
 # Node
 #-------------------------------
-- KEY: node.category
+- ENTRY:
   CATEGORY: Node
 
-- KEY: node.version
+- ENTRY:
   EXPLAIN: |
     Node バージョン
   BODY: |
@@ -42,7 +42,7 @@
       v15 ❌		2020/10/20	2021/04/06	End-of-life❌
       v14 ❌	Fermium	2020/04/21	2023/02/16	End-of-life❌
 
-- KEY: node.設定
+- ENTRY:
   EXPLAIN: 設定
   BODY: |
     ■ 使用メモリ
@@ -65,7 +65,7 @@
       require('dotenv').config();
       const dbPassword = process.env.DB_PASSWORD;
 
-- KEY: node.起動
+- ENTRY:
   EXPLAIN: 起動オプション
   BODY: |
     ■ --inspect
@@ -177,7 +177,7 @@
       V8 フラグは強力だが副作用が出やすい
       変更は小さく、ベンチで検証してから本番へ
 
-- KEY: node.レポジトリ
+- ENTRY:
   EXPLAIN: レポジトリ(モノレポとポリレポ)
   BODY: |
     ■ Monorepo
@@ -212,11 +212,11 @@
 #-------------------------------
 # Volta
 #-------------------------------
-- KEY: node.volta.category
+- ENTRY:
   CATEGORY: |
     Nodeバージョン管理: Volta
 
-- KEY: node.volta.version.control
+- ENTRY:
   EXPLAIN: |
     Volta
   BODY: |
@@ -240,14 +240,14 @@
     ■ 要注意 uninstall
     node も yarn も uninstall に非対応
 
-- KEY: node.volta.version.change
+- ENTRY:
   EXPLAIN: Volta Pin
   BODY: |
     ■ 指定バージョンの Node.js を使用
     volta pin node@18.19
     volta pin yarn@1.19
 
-- KEY: node.volta.command
+- ENTRY:
   EXPLAIN: Volta Commands
   BODY: |
     fetch         ツールをローカル マシンにフェッチ
@@ -269,11 +269,11 @@
 #-------------------------------
 # nvm
 #-------------------------------
-- KEY: node.nvm.category
+- ENTRY:
   CATEGORY: |
     Nodeバージョン管理: nvm
 
-- KEY: node.nvm.version.control
+- ENTRY:
   EXPLAIN: |
     nvm
   BODY: |
@@ -303,10 +303,10 @@
 # 一般 トピック
 #-------------------------------
 
-- KEY: node.general.category
+- ENTRY:
   CATEGORY: 一般 トピック
 
-- KEY: node.general.webhook
+- ENTRY:
   EXPLAIN: |
     Express: webhook
   BODY: |
@@ -337,7 +337,7 @@
         console.log(`Server listening on port ${port}`);
       });
 
-- KEY: node.general.Buffer
+- ENTRY:
   EXPLAIN: |
     Buffer
   BODY: |
@@ -369,10 +369,10 @@
 #-------------------------------
 # ID
 #-------------------------------
-- KEY: node.general.packages
+- ENTRY:
   CATEGORY: ID 生成 Packages
 
-- KEY: node.general.list
+- ENTRY:
   EXPLAIN: ID 生成パッケージの生成時間比較
   BODY: |
     参照: https://qiita.com/okm-uv/items/0b84c75e7524640dab11
@@ -389,7 +389,7 @@
     cuid                         208,131 ops/sec ●
     shortid                       49,916 ops/sec
 
-- KEY: node.general.format
+- ENTRY:
   EXPLAIN: 各フォーマットと特徴
   BODY: |
     ■ UUID (v4)

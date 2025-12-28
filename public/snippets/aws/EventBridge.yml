@@ -2,10 +2,10 @@
 #-------------------------------
 # EventBrdige
 #-------------------------------
-- KEY: aws.EventBrdige.category
+- ENTRY:
   CATEGORY: 概要
 
-- KEY: aws.EventBrdige.概要
+- ENTRY:
   EXPLAIN: |
     概要
   BODY: |
@@ -18,7 +18,7 @@
     • CloudTrail、CloudWatch Logs、Configなどからイベント取り込み
     • 料金的に非常安価(100万件のイベントあたり1.00USD?)
 
-- KEY: aws.EventBrdige.公式説明図
+- ENTRY:
   EXPLAIN: |
     公式説明図
   SAMPLE: |
@@ -32,7 +32,7 @@
       <span class="公式説明図-text"> 公式説明図 </span>
     </div>
 
-- KEY: aws.EventBrdige.用語の説明
+- ENTRY:
   EXPLAIN: |
     用語の説明
   BODY: |
@@ -71,7 +71,7 @@
           • 1つのルールに最大5つまで指定可能
           • ターゲットに応じてIAM Roleが必要
 
-- KEY: aws.EventBrdige.イベントパターン作成
+- ENTRY:
   EXPLAIN: |
     イベントパターン作成
   BODY: |
@@ -90,7 +90,7 @@
       }
     }
 
-- KEY: aws.EventBrdige.ターゲットとアクセス制御
+- ENTRY:
   EXPLAIN: |
     ターゲットとアクセス制御
   BODY: |
@@ -144,10 +144,10 @@
       ]
     }
 
-- KEY: aws.EventBrdige.サンプルURL
+- ENTRY:
   CATEGORY: 実装例(URL)
 
-- KEY: aws.EventBrdige.Lambdaサンプル1
+- ENTRY:
   EXPLAIN: |
     LINEbot, AWS Lambda(APIgateway, EventBridge)にまとめて入門しつつ6億円を狙う
   BODY: |
@@ -198,7 +198,7 @@
     </style>
     <a class="EventBridgeサンプル" href="https://zenn.dev/hom_ppp/articles/dd9ae18b9fadac">URL：LINEbot, AWS Lambda(APIgateway, EventBridge)にまとめて入門しつつ6億円を狙う</a>
 
-- KEY: aws.EventBrdige.Lambdaサンプル2
+- ENTRY:
   EXPLAIN: |
     【AWS】各サービスを触ってみる EventBridge①(EC2の状態変更を検知して通知を行う)
   BODY: |

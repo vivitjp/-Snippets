@@ -2,10 +2,10 @@
 #-------------------------------
 # Emotion
 #-------------------------------
-- KEY: pk.emotion.package
+- ENTRY:
   CATEGORY: パッケージ & インストール
 
-- KEY: pk.emotion.packages
+- ENTRY:
   EXPLAIN: Package
   BODY: |
     https://qiita.com/cheez921/items/1d13545f8a0ea46beb51
@@ -29,7 +29,7 @@
     @emotion/server
         サーバー側レンダリングするAPI
 
-- KEY: pk.emotion.install
+- ENTRY:
   EXPLAIN: インストール
   BODY: |
     "@emotion/babel-preset-css-prop": "^11.12.0",
@@ -38,10 +38,10 @@
     "@emotion/styled": "^11.14.0",
     "framer-motion": "^12.6.3",
 
-- KEY: pk.emotion.styled.category
+- ENTRY:
   CATEGORY: Styled 宣言
 
-- KEY: pk.emotion.style.object.styled
+- ENTRY:
   EXPLAIN: Styled 宣言と上書き
   BODY: |
     const EmotionStyled = styled(Input)`
@@ -58,10 +58,10 @@
     ■ CSS属性の上書き => 効果あり
     <EmotionStyled {...props} color={"blue !important"} />
 
-- KEY: pk.emotion.css.category
+- ENTRY:
   CATEGORY: CSS 宣言
 
-- KEY: pk.emotion.css
+- ENTRY:
   EXPLAIN: CSS 宣言と上書き
   BODY: |
     const EmotionCSS = css`
@@ -78,7 +78,7 @@
     ■ CSS属性の上書き => 効果あり
     <Input value="Hello" css={EmotionCSS} {...props} color={"green !important"}/>
 
-- KEY: pk.emotion.css.object
+- ENTRY:
   EXPLAIN: CSS オブジェクトスタイル
   BODY: |
     const objectStyle = css({
@@ -90,7 +90,7 @@
       },
     });
 
-- KEY: pk.emotion.css.object.expand
+- ENTRY:
   EXPLAIN: CSS オブジェクト拡張
   BODY: |
     const marginBottom = css({
@@ -102,7 +102,7 @@
       padding: '16px'
     })
 
-- KEY: pk.emotion.css.string
+- ENTRY:
   EXPLAIN: CSS ストリングスタイル
   BODY: |
     const stringStyle = css`
@@ -120,7 +120,7 @@
       </div>
     )
 
-- KEY: pk.emotion.css.string.expand
+- ENTRY:
   EXPLAIN: CSS ストリング拡張
   BODY: |
     const marginBottom = css`
@@ -132,7 +132,7 @@
       padding: 16px;
     `
 
-- KEY: pk.emotion.css.string.child
+- ENTRY:
   EXPLAIN: CSS ストリング入れ子
   BODY: |
     const listStyle = css`
@@ -147,7 +147,7 @@
       </ul>
     );
 
-- KEY: pk.emotion.css.string.child
+- ENTRY:
   EXPLAIN: CSS ストリング親指定
   BODY: |
     const item = css`
@@ -167,7 +167,7 @@
       </>
     );
 
-- KEY: pk.emotion.css.param
+- ENTRY:
   EXPLAIN: CSS 引数として
   BODY: |
     const buttonWrapperStyle = css`
@@ -183,7 +183,7 @@
       <button className={className}>{children}</button>
     )
 
-- KEY: pk.emotion.css.paramArray
+- ENTRY:
   EXPLAIN: CSS 引数(配列)として
   BODY: |
     const marginBottom = css`
@@ -198,7 +198,7 @@
       <div css={[marginBottom, style]}>{/* */}</div> 
     )
 
-- KEY: pk.emotion.css.mediaQuery
+- ENTRY:
   EXPLAIN: CSS メディアクエリ
   BODY: |
     type breakpointsType = {
@@ -241,7 +241,7 @@
       },
     });
 
-- KEY: pk.emotion.css.global
+- ENTRY:
   EXPLAIN: CSS グローバル
   BODY: |
     import { Global, css } from '@emotion/core'
@@ -257,7 +257,7 @@
       <Global styles={global}/>
     )
 
-- KEY: pk.emotion.css.animation
+- ENTRY:
   EXPLAIN: CSS アニメーション Component
   BODY: |
     使用Package: react-intersection-observer

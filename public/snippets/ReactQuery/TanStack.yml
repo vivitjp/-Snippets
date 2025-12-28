@@ -2,10 +2,10 @@
 #-------------------------------
 # tanStack
 #-------------------------------
-- KEY: pk.fetch.tanStack.category
+- ENTRY:
   CATEGORY: TanStack(旧 React Query)
 
-- KEY: pk.fetch.tanStack.kickstart
+- ENTRY:
   EXPLAIN: Kickstart
   BODY: |
     ■ 公式
@@ -39,7 +39,7 @@
       - SWRよりも大規模・複雑なデータフローに強い
       - TypeScript対応・拡張性が高い
 
-- KEY: pk.fetch.tanStack.gql.sample
+- ENTRY:
   EXPLAIN: GraphQL サンプル
   BODY: |
     ■ GraphQLと組み合わせた実装例
@@ -81,10 +81,10 @@
       ・キャッシュや自動再取得、エラー管理はTanStack Queryが担当
       ・Apollo Clientほどの機能は不要な場合に有効
 
-- KEY: pk.fetch.tanStack.method.category
+- ENTRY:
   CATEGORY: QueryClientProvider
 
-- KEY: pk.fetch.tanStack.method.QueryClientProvider
+- ENTRY:
   EXPLAIN: QueryClientProvider
   BODY: |
     ■ QueryClientProvider とは
@@ -118,10 +118,10 @@
 # Hooks useQuery & useMutation
 #-------------------------------
 
-- KEY: pk.fetch.tanStack.hooks.category
+- ENTRY:
   CATEGORY: Hooks(useQuery & useMutation)
 
-- KEY: pk.fetch.tanStack.hooks.useQuery
+- ENTRY:
   EXPLAIN: useQuery (データ取得・キャッシュ・自動再取得)
   BODY: |
     ■ 概要
@@ -208,7 +208,7 @@
       )
     }
 
-- KEY: pk.fetch.tanStack.hooks.useMutation
+- ENTRY:
   EXPLAIN: useMutation (データ作成・更新・削除)
   BODY: |
     ■ メソッド & プロパティ
@@ -237,7 +237,7 @@
       }).then(res => res.json())
     })
 
-- KEY: pk.fetch.tanStack.hooks.useMutation
+- ENTRY:
   EXPLAIN: useMutation (楽観的更新について)
   BODY: |
     ■ 楽観的更新 (Optimistic Update)「サーバーの処理結果を待たずに先にUIやキャッシュを更新」
@@ -365,10 +365,10 @@
 #-------------------------------
 # Hooks useQueryClient
 #-------------------------------
-- KEY: pk.fetch.tanStack.hooks.useQueryClient.category
+- ENTRY:
   CATEGORY: Hooks(useQueryClient)
 
-- KEY: pk.fetch.tanStack.hooks.useQueryClient
+- ENTRY:
   EXPLAIN: useQueryClient メソッド・プロパティリスト
   BODY: |
     ■ getQueryData(queryKey)
@@ -445,7 +445,7 @@
     ・同期：現在 fetch 中のクエリ数を同期的に返す (ネットワーク発行なし)
     ・用途：グローバルや条件付きのローディング指標表示に使用
 
-- KEY: pk.fetch.tanStack.hooks.useQueryClient.getQueryData
+- ENTRY:
   EXPLAIN: getQueryData / getQueriesData (キャッシュを同期的に読み込む)
   BODY: |
     ■ 主目的
@@ -503,7 +503,7 @@
       )
     }
 
-- KEY: pk.fetch.tanStack.hooks.useQueryClient.setQueryData
+- ENTRY:
   EXPLAIN: setQueryData / setQueriesData (キャッシュを同期的に更新)
   BODY: |
     ■ 目的
@@ -589,7 +589,7 @@
       }
     )
 
-- KEY: pk.fetch.tanStack.hooks.useQueryClient.invalidateQueries
+- ENTRY:
   EXPLAIN: invalidateQueries (キャッシュを stale 化して再取得をトリガー)
   BODY: |
     ■ 目的
@@ -635,7 +635,7 @@
       refetchInactive: false   // 非アクティブなものは再取得しない
     })
 
-- KEY: pk.fetch.tanStack.hooks.useQueryClient.fetchQuery
+- ENTRY:
   EXPLAIN: fetchQuery (即時取得して結果を返す)
   BODY: |
     ■ 目的
@@ -708,7 +708,7 @@
       ]
     })
 
-- KEY: pk.fetch.tanStack.hooks.useQueryClient.ensureQueryData
+- ENTRY:
   EXPLAIN: ensureQueryData (キャッシュが無ければ取得し、あれば既存データを返す)
   BODY: |
     ■ 目的
@@ -746,7 +746,7 @@
       cacheTime: 300000           // 5分間キャッシュを保持
     })
 
-- KEY: pk.fetch.tanStack.hooks.useQueryClient.refetchQueries
+- ENTRY:
   EXPLAIN: refetchQueries (即時再取得)
   BODY: |
     ■ 目的
@@ -781,7 +781,7 @@
       active: true              // アクティブなもののみ
     })
 
-- KEY: pk.fetch.tanStack.hooks.useQueryClient.prefetchQuery
+- ENTRY:
   EXPLAIN: prefetchQuery (キャッシュだけ先読み)
   BODY: |
     ■ 主目的
@@ -831,7 +831,7 @@
       cacheTime: 300000           // 5分間キャッシュを保持
     })
 
-- KEY: pk.fetch.tanStack.hooks.useQueryClient.removeQueries
+- ENTRY:
   EXPLAIN: removeQueries (キャッシュ削除)
   BODY: |
     ■ removeQueries
@@ -850,7 +850,7 @@
     ■ サンプル: 条件で削除 (predicate)
     queryClient.removeQueries({ predicate: q => q.queryKey[0] === 'temp' })
 
-- KEY: pk.fetch.tanStack.hooks.useQueryClient.resetQueries
+- ENTRY:
   EXPLAIN: resetQueries (状態初期化)
   BODY: |
     ■ resetQueries
@@ -881,7 +881,7 @@
       refetchInactive: false     // 非アクティブなものは再取得しない
     })
 
-- KEY: pk.fetch.tanStack.hooks.useQueryClient.cancelQueries
+- ENTRY:
   EXPLAIN: cancelQueries (実行中のクエリフェッチを中断)
   BODY: |
     ■ cancelQueries
@@ -913,7 +913,7 @@
       active: true                // 実行中のアクティブなもののみ
     })
 
-- KEY: pk.fetch.tanStack.hooks.useQueryClient.isFetching
+- ENTRY:
   EXPLAIN: isFetching (現在 fetch 中のクエリ数を取得)
   BODY: |
     ■ isFetching
@@ -935,10 +935,10 @@
 #-------------------------------
 # 永続化
 #-------------------------------
-- KEY: pk.fetch.tanStack.永続化.category
+- ENTRY:
   CATEGORY: 永続化
 
-- KEY: pk.fetch.tanStack.永続化.永続化開始
+- ENTRY:
   EXPLAIN: 永続化の開始
   BODY: |
     ■ 目的
@@ -1003,7 +1003,7 @@
       )
     }
 
-- KEY: pk.fetch.tanStack.永続化.永続化利用
+- ENTRY:
   EXPLAIN: 永続化の利用
   BODY: |
     ■ 個別コンポーネントで永続化の利用
@@ -1030,7 +1030,7 @@
       )
     }
 
-- KEY: pk.fetch.tanStack.永続化.永続化の解除
+- ENTRY:
   EXPLAIN: 永続化の解除
   BODY: |
     ■ persister の removeClient メソッドを呼び出す
@@ -1070,7 +1070,7 @@
       localStorage.setItem(KEY, JSON.stringify(client))
     }
 
-- KEY: pk.fetch.tanStack.永続化.個別永続化
+- ENTRY:
   EXPLAIN: 個別永続化
   BODY: |
     ■ 部分的に永続化
@@ -1146,10 +1146,10 @@
 #-------------------------------
 # Hooks その他
 #-------------------------------
-- KEY: pk.fetch.tanStack.hooks.other.category
+- ENTRY:
   CATEGORY: Hooks(その他)
 
-- KEY: pk.fetch.tanStack.hooks.useInfiniteQuery
+- ENTRY:
   EXPLAIN: useInfiniteQuery (無限スクロール・ページネーション)
   BODY: |
     ■ メソッド & プロパティ
@@ -1242,7 +1242,7 @@
       )
     }
 
-- KEY: pk.fetch.tanStack.hooks.useIsFetching
+- ENTRY:
   EXPLAIN: useIsFetching (グローバルローディング状態取得)
   BODY: |
     ■ useIsFetching の実装サンプル
@@ -1269,7 +1269,7 @@
       - queryKeyで特定のクエリのみ監視可能
       - グローバルなローディングインジケータやボタンの一括無効化などに便利
 
-- KEY: pk.fetch.tanStack.hooks.useIsMutating
+- ENTRY:
   EXPLAIN: useIsMutating (グローバルミューテーション状態取得)
   BODY: |
     ■ useIsMutating の実装サンプル
@@ -1299,10 +1299,10 @@
 #-------------------------------
 # DevTools
 #-------------------------------
-- KEY: pk.fetch.tanStack.DevTools.category
+- ENTRY:
   CATEGORY: DevTools
 
-- KEY: pk.fetch.tanStack.DevTools
+- ENTRY:
   EXPLAIN: DevTools
   BODY: |
     ■ TanStack Query Devtools (React Query Devtools)

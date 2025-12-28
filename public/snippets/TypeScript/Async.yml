@@ -7,13 +7,13 @@
 # Async
 #-------------------------------
 
-- KEY: js.Promise.sleep
+- ENTRY:
   EXPLAIN: sleep関数
   BODY: |
     const sleep = async (ms: number) =>
       new Promise((resolve) => setTimeout(resolve, ms))
 
-- KEY: js.promise.promiseSimulator
+- ENTRY:
   EXPLAIN: promise シミュレータ(値付き)
   BODY: |
     条件: msミリ秒後に 名前付きで OK/NG を返す
@@ -34,7 +34,7 @@
       });
     };
 
-- KEY: js.promise.all
+- ENTRY:
   EXPLAIN: |
     Promise.all【ES2015】
   BODY: |
@@ -79,7 +79,7 @@
       "value": []
     }
 
-- KEY: js.promise.any
+- ENTRY:
   EXPLAIN: |
     Promise.any【ES2021】
   BODY: |
@@ -114,7 +114,7 @@
       "value": []
     }
 
-- KEY: js.promise.race
+- ENTRY:
   EXPLAIN: |
     Promise.race【ES2015】
   BODY: |
@@ -160,7 +160,7 @@
       "value": []
     }
 
-- KEY: js.promise.allSettled
+- ENTRY:
   EXPLAIN: |
     Promise.allSettled【ES2020】
   BODY: |

@@ -2,10 +2,10 @@
 #-------------------------------
 # Amplify フロントエンド
 #-------------------------------
-- KEY: aws.Amplify.fe.category
+- ENTRY:
   CATEGORY: 概説
 
-- KEY: aws.Amplify.fe.install
+- ENTRY:
   EXPLAIN: フロントエンド インストール
   BODY: |
     ■ Frontend: Amplify Framework のインストール
@@ -16,14 +16,14 @@
 
       > npm install aws-amplify @react-native-async-storage/async-storage
 
-- KEY: aws.Amplify.fe
+- ENTRY:
   EXPLAIN: 開発フロー
   BODY: |
 
-- KEY: aws.Amplify.fe.CLI.category
+- ENTRY:
   CATEGORY: Amplify CLI（Frontend）
 
-- KEY: aws.Amplify.fe.基本コマンド
+- ENTRY:
   EXPLAIN: フロントエンド基本コマンド一覧
   BODY: |
     ■ Amplify.configure(config)
@@ -59,7 +59,7 @@
 
     公式リファレンス: https://docs.amplify.aws/lib/q/platform/js/
 
-- KEY: aws.Amplify.fe.API
+- ENTRY:
   EXPLAIN: API
   BODY: |
     import { API } from 'aws-amplify'
@@ -88,7 +88,7 @@
       console.log(response)
     })
 
-- KEY: aws.Amplify.fe.GraphQL
+- ENTRY:
   EXPLAIN: |
     API: React & GraphQL
   BODY: |
@@ -182,7 +182,7 @@
           }
         `
 
-- KEY: aws.Amplify.fe.DataStore
+- ENTRY:
   EXPLAIN: DataStore
   BODY: |
     ■ Amplify DataStore
@@ -236,7 +236,7 @@
     ■ 購読解除
     subscription.unsubscribe()
 
-- KEY: aws.Amplify.fe.DataStore.Subscribe使用
+- ENTRY:
   EXPLAIN: |
     DataStore: React Subscribe使用
   BODY: |
@@ -289,7 +289,7 @@
 
     export default ItemList
 
-- KEY: aws.Amplify.fe.DataStore.Subscribe不使用
+- ENTRY:
   EXPLAIN: |
     DataStore: React Subscribe不使用
   BODY: |

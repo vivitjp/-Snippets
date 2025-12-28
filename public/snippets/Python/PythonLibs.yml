@@ -3,7 +3,7 @@
 # Python Library
 #-------------------------------
 
-- KEY: py.library.text
+- ENTRY:
   EXPLAIN: ライブラリ(テキスト)
   BODY: |
     string                              一般的文字列操作
@@ -13,13 +13,13 @@
     unicodedata                         Unicode DB
     stringprep                          ネット文字列
 
-- KEY: py.library.binary
+- ENTRY:
   EXPLAIN: ライブラリ(バイナリ)
   BODY: |
     struct                              バイト列パック・バイナリ
     codecs                              codec レジストリと基底クラス
 
-- KEY: py.library.dataTypes
+- ENTRY:
   EXPLAIN: ライブラリ(型別)
   BODY: |
     datetime                            基本的な日付型/時間型
@@ -37,7 +37,7 @@
     enum                                列挙型
     graphlib                            graph like構造
 
-- KEY: py.library.math
+- ENTRY:
   EXPLAIN: ライブラリ(数学)
   BODY: |
     numbers                             数の抽象基底クラス
@@ -48,14 +48,14 @@
     random                              擬似乱数生成
     statistics                          数理統計関数
 
-- KEY: py.library.functional
+- ENTRY:
   EXPLAIN: ライブラリ(関数)
   BODY: |
     itertools                           イテレータ生成
     functools                           高階関数
     operator                            関数形式の標準演算子
 
-- KEY: py.library.fileDir
+- ENTRY:
   EXPLAIN: ライブラリ(ファイル・ディレクトリ)
   BODY: |
     pathlib                             OOのパス
@@ -69,7 +69,7 @@
     linecache                           テキストライン・ランダムアクセス
     shutil                              ファイル操作
 
-- KEY: py.library.dataPersistance
+- ENTRY:
   EXPLAIN: ライブラリ(永続化)
   BODY: |
     pickle                              Python Obj直列化
@@ -79,7 +79,7 @@
     dbm                                 Unix DB へのインタフェース
     sqlite3                             SQLite, DB API2.0インタフェース
 
-- KEY: py.library.zip
+- ENTRY:
   EXPLAIN: ライブラリ(圧縮)
   BODY: |
     zlib                                gzip 互換の圧縮
@@ -89,7 +89,7 @@
     zipfile                             ZIP アーカイブの処理
     tarfile                             tar アーカイブファイルの読み書き
 
-- KEY: py.library.fileOutputType
+- ENTRY:
   EXPLAIN: ライブラリ(永続化ファイル出力)
   BODY: |
     csv                                 CSV ファイルの読み書き
@@ -98,14 +98,14 @@
     xdrlib                              XDR データのエンコード/デコード
     plistlib                            Generate and parse Apple .plist
 
-- KEY: py.library.crypt
+- ENTRY:
   EXPLAIN: ライブラリ(暗号化)
   BODY: |
     hashlib                             セキュアハッシュ/メッセージダイジェスト
     hmac                                メッセージ認証のための鍵付きハッシュ化
     secrets                             機密を扱うために安全な乱数生成
 
-- KEY: py.library.os
+- ENTRY:
   EXPLAIN: ライブラリ(OS関連雑多)
   BODY: |
     os                                  雑多なOSインタフェース
@@ -125,7 +125,7 @@
     errno                               errno システムシンボル
     ctypes                              Pythonのための外部関数ライブラリ
 
-- KEY: py.library.thread
+- ENTRY:
   EXPLAIN: ライブラリ(並列処理)
   BODY: |
     threading                           スレッドベースの並列処理
@@ -137,7 +137,7 @@
     contextvars                         コンテキスト変数
     _thread                             低水準の スレッド API
 
-- KEY: py.library.comm
+- ENTRY:
   EXPLAIN: ライブラリ(通信)
   BODY: |
     asyncio                             非同期 I/O
@@ -150,7 +150,7 @@
     signal                              非同期イベントにハンドラ設定
     mmap                                メモリマップファイル
 
-- KEY: py.library.dataFormat
+- ENTRY:
   EXPLAIN: ライブラリ(データ型)
   BODY: |
     email                               電子メールと MIME 処理
@@ -164,7 +164,7 @@
     quopri                              MIME エンコード/デコード
     uu                                  uuencode形式のエンコードとデコード
 
-- KEY: py.library.html
+- ENTRY:
   EXPLAIN: ライブラリ(HTML)
   BODY: |
     html                                HTML サポート
@@ -175,7 +175,7 @@
     xml.dom.minidom                     MIN DOM
     xml.dom.pulldom                     部分的 DOM ツリー構築
 
-- KEY: py.library.netProtocol
+- ENTRY:
   EXPLAIN: ライブラリ(ネット)
   BODY: |
     webbrowser                          ウェブブラウザコントローラー
@@ -207,7 +207,7 @@
     xmlrpc.server                       基本的なXML RPCサーバー
     ipaddress                           IPv4/IPv6 操作ライブラリ
 
-- KEY: py.library.multimedia
+- ENTRY:
   EXPLAIN: ライブラリ(マルチメディア)
   BODY: |
     audioop                             生の音声データ操作
@@ -220,13 +220,13 @@
     sndhdr                              サウンドファイルの識別
     ossaudiodev                         OSS互換オーディオデバイス
 
-- KEY: py.library.language
+- ENTRY:
   EXPLAIN: ライブラリ(言語)
   BODY: |
     gettext                             多言語対応国際化サービス
     locale                              国際化サービス
 
-- KEY: py.library.develop
+- ENTRY:
   EXPLAIN: ライブラリ(開発)
   BODY: |
     typing                              型ヒントのサポート
@@ -242,7 +242,7 @@
     test.support.script_helper          実行テスト
     test.support.bytecode_helper        正しいバイトコード生成テスト
 
-- KEY: py.library.debug
+- ENTRY:
   EXPLAIN: ライブラリ(デバグ)
   BODY: |
     Audit                               events table    
@@ -254,7 +254,7 @@
     trace                               Python 文実行のトレースと追跡
     tracemalloc                         メモリ割り当ての追跡
 
-- KEY: py.library.module
+- ENTRY:
   EXPLAIN: ライブラリ(配布モジュール)
   BODY: |
     distutils                           モジュール構築とインストール
@@ -262,7 +262,7 @@
     venv                                仮想環境の作成
     zipapp                              zip関連
 
-- KEY: py.library.runtime
+- ENTRY:
   EXPLAIN: ライブラリ(ランタイム)
   BODY: |
     sys                                 システムパラメータと関数
@@ -280,7 +280,7 @@
     inspect                             活動中のオブジェクトの情報取得
     site                                サイト固有の設定フック
 
-- KEY: py.library.pythonLanguage
+- ENTRY:
   EXPLAIN: ライブラリ(Python言語)
   BODY: |
     parser                              解析木アクセス
@@ -297,12 +297,12 @@
     dis                                 バイトコードの逆アセンブラ
     pickletools                         pickle 開発者のツール群
 
-- KEY: py.library.formatter
+- ENTRY:
   EXPLAIN: ライブラリ(フォーマット)
   BODY: |
     formatter                           汎用の出力書式化機構
 
-- KEY: py.library.os.windows
+- ENTRY:
   EXPLAIN: ライブラリ(Windows)
   BODY: |
     msilib                              MS インストーラーの読み書き
@@ -310,7 +310,7 @@
     winreg                              Windows レジストリへのアクセス
     winsound                            Windows 用の音声再生インタフェース
 
-- KEY: py.library.os.unix
+- ENTRY:
   EXPLAIN: ライブラリ(Unix)
   BODY: |
     posix                               最も一般的な POSIX システムコール群

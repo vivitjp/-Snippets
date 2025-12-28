@@ -2,10 +2,10 @@
 #-------------------------------
 # AI
 #-------------------------------
-- KEY: ai.top.category
+- ENTRY:
   CATEGORY: AI
 
-- KEY: ai.general.生成AIの種類
+- ENTRY:
   EXPLAIN: 生成AIの種類
   BODY: |
     ■ 会話タイプ
@@ -51,7 +51,7 @@
     Tabnine                   AIによるコード補完。多言語対応。
     Claude Code               Anthropic。自然言語からコード生成や補完が可能。多言語対応
 
-- KEY: ai.general.基礎概念
+- ENTRY:
   EXPLAIN: 基礎概念
   TABLE:
     OPTION:
@@ -91,7 +91,7 @@
       ファインチューニング	Fine-tuning	事前学習済みのモデルを、特定のタスクに合わせて追加学習させること。
       推論	Inference	学習済みのモデルを使って、新しいデータに対する予測や出力を生成するプロセス。
 
-- KEY: ai.general.トークン
+- ENTRY:
   EXPLAIN: トークン
   BODY: |
     https://qiita.com/shanks665/items/a5ec31706af9ffffc491
@@ -143,7 +143,7 @@
     // LLMから返ってきたTOONを元に戻す
     const result = parse(llmResponse);
 
-- KEY: ai.general.プロンプト・エンジニアリング
+- ENTRY:
   EXPLAIN: プロンプト・エンジニアリング
   BODY: |
     プロンプト・エンジニアリングは、まだ始まってすらいない

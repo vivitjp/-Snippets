@@ -2,10 +2,10 @@
 #-------------------------------
 # GraphQL
 #-------------------------------
-- KEY: gql.top.category
+- ENTRY:
   CATEGORY: Kick Start
 
-- KEY: gql.kick.start.schema
+- ENTRY:
   EXPLAIN: スキーマ定義
   BODY: |
     ■ スキーマ定義 (Schema Definition)
@@ -37,7 +37,7 @@
       createPost(title: String!, content: String!, authorId: ID!): Post!
     }
 
-- KEY: gql.kick.start.query
+- ENTRY:
   EXPLAIN: クエリ
   BODY: |
     ■ サンプル
@@ -98,7 +98,7 @@
         }
       }
 
-- KEY: gql.kick.start.mutation
+- ENTRY:
   EXPLAIN: ミューテーション
   BODY: |
     ■ サンプル
@@ -133,7 +133,7 @@
       }
     }
 
-- KEY: gql.キーワード
+- ENTRY:
   EXPLAIN: |
     キーワード
   TABLE:
@@ -166,17 +166,17 @@
 #-------------------------------
 # Apollo Server
 #-------------------------------
-- KEY: gql.server.category
+- ENTRY:
   CATEGORY: サーバ（Apollo & Axios）
 
-- KEY: gql.server.top
+- ENTRY:
   EXPLAIN: パッケージ
   BODY: |
     ■ 必要なパッケージのインストール (Node.js + Express + Apollo Server)
     npm install express @apollo/server graphql
     npm install -D typescript @types/node ts-node @apollo/server @types/express
 
-- KEY: gql.server.top
+- ENTRY:
   EXPLAIN: プロジェクト構成例
   BODY: |
     ■ プロジェクト構成例
@@ -189,7 +189,7 @@
     ├── package.json
     ├── tsconfig.json
 
-- KEY: gql.server.外部API呼び出し
+- ENTRY:
   EXPLAIN: APIコール(axios)
   BODY: |
     ■ src/apiService.ts
@@ -276,7 +276,7 @@
         }
     };
 
-- KEY: gql.server.schema
+- ENTRY:
   EXPLAIN: スキーマ定義
   BODY: |
     ■ src/schema.ts
@@ -306,7 +306,7 @@
       }
     `;
 
-- KEY: gql.server.resolvers
+- ENTRY:
   EXPLAIN: リゾルバ
   BODY: |
     ■ src/resolvers.ts 
@@ -365,7 +365,7 @@
       },
     };
 
-- KEY: gql.server.index
+- ENTRY:
   EXPLAIN: サーバー起動処理
   BODY: |
     ■ src/index.ts
@@ -415,16 +415,16 @@
 #-------------------------------
 # Apollo Client
 #-------------------------------
-- KEY: gql.client.category
+- ENTRY:
   CATEGORY: クライアント(Apollo)
 
-- KEY: gql.client.top
+- ENTRY:
   EXPLAIN: パッケージ
   BODY: |
     npm install @apollo/client graphql
     npm install -D typescript ts-node @types/node # ts-nodeは実行用
 
-- KEY: gql.client.client
+- ENTRY:
   EXPLAIN: client.ts (Apollo Client設定)
   BODY: |
     import { ApolloClient, InMemoryCache, gql, ApolloQueryResult } from '@apollo/client';
@@ -498,7 +498,7 @@
 
     main();
 
-- KEY: gql.client.useMutation
+- ENTRY:
   EXPLAIN: useMutationの使用例(App.tsx)
   BODY: |
     ■ App.tsx や index.tsx 
@@ -521,7 +521,7 @@
 
     ReactDOM.createRoot(document.getElementById('root')!).render(<App />);
 
-- KEY: gql.client.useMutation.form
+- ENTRY:
   EXPLAIN: Form使用例
   BODY: |
     ■ CreatePostForm.tsx
@@ -604,7 +604,7 @@
 
     export default CreatePostForm;
 
-- KEY: gql.client.useMutation.キャッシュオプション
+- ENTRY:
   EXPLAIN: キャッシュオプション
   BODY: |
     const CREATE_POST = gql`...`;
@@ -634,7 +634,7 @@
       // ... handleSubmit ロジック ...
     };
 
-- KEY: gql.client.useQuery
+- ENTRY:
   EXPLAIN: useQueryの使用例
   BODY: |
     import React from 'react';
@@ -719,10 +719,10 @@
 #-------------------------------
 # codegen
 #-------------------------------
-- KEY: gql.codegen.category
+- ENTRY:
   CATEGORY: GraphQL Code Generator
 
-- KEY: gql.codegen.explain
+- ENTRY:
   EXPLAIN: 解説
   BODY: |
     ■ GraphQL Code Generator（graphql-codegen）
@@ -736,7 +736,7 @@
     ・生産性: 手動での型定義が不要になりリファクタが楽になります
     ・多様な出力: types / operations / hooks / SDK など用途に応じた出力が可能
 
-- KEY: gql.codegen.install
+- ENTRY:
   EXPLAIN: フロントエンド 導入（最小構成）
   BODY: |
     ■ パッケージインストール
@@ -764,7 +764,7 @@
             scalars:
               DateTime: string
 
-- KEY: gql.codegen.generate
+- ENTRY:
   EXPLAIN: フロントエンド generate 実行
   BODY: |
     ■ スクリプト追加/実行:
@@ -781,7 +781,7 @@
     ・`@graphql-codegen/typescript-operations`  : queries/mutationsから variables/result 型生成
     ・`@graphql-codegen/typescript-react-apollo`: Apollo 用の型付き hooks 生成
 
-- KEY: gql.codegen.action
+- ENTRY:
   EXPLAIN: 導入から運用までの流れ
   BODY: |
     ■ バックエンド準備
@@ -813,7 +813,7 @@
     ・.tsx 内の gql を拾うなら documents の glob を拡張
     ・スキーマ変更はフロント同期リリースを検討
 
-- KEY: gql.codegen.caution
+- ENTRY:
   EXPLAIN: 設定と注意点
   BODY: |
     ■ よくある設定と注意点

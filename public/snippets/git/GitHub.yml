@@ -3,10 +3,10 @@
 # GitHub
 #-------------------------------
 
-- KEY: GitHub.kickStart
+- ENTRY:
   CATEGORY: Kick Start
 
-- KEY: GitHub.Repository
+- ENTRY:
   EXPLAIN: |
     Repository
   BODY: |
@@ -20,10 +20,10 @@
     ローカルマシンにリポジトリをクローンするには、以下のコマンドを使用:
     git clone <リポジトリのURL>
 
-- KEY: GitHub.settings
+- ENTRY:
   CATEGORY: 設定
 
-- KEY: GitHub.DeveloperSettings
+- ENTRY:
   EXPLAIN: |
     Developer Settings
   BODY: |
@@ -65,7 +65,7 @@
         ※ 通常、一般ユーザーが自分でGitHub Appを作成することは稀
            多くのSaaS製品が裏側でこの仕組みを利用してGitHubと連携
 
-- KEY: GitHub.actions.Node.js
+- ENTRY:
   EXPLAIN: |
     SSH keys
   BODY: |
@@ -132,7 +132,7 @@
     初回接続時に「known_hosts に追加しますか？」と聞かれるので yes 。
     「Hi [あなたのユーザー名]! You've successfully authenticated, but GitHub does not provide shell access.」で成功
 
-- KEY: GitHub.actions.Node.js
+- ENTRY:
   EXPLAIN: |
     GitHub Secrets
   BODY: |
@@ -169,10 +169,10 @@
 
     これで登録は完了です。
 
-- KEY: GitHub.actions.category
+- ENTRY:
   CATEGORY: GitHub Actions
 
-- KEY: GitHub.actions.Node.js
+- ENTRY:
   EXPLAIN: |
     ビルド&テスト(Node.js)
   BODY: |
@@ -202,7 +202,7 @@
         - name: Run tests               # 4. テストの実行
           run: npm test
 
-- KEY: GitHub.actions
+- ENTRY:
   EXPLAIN: |
     デプロイ(Node.js)
   BODY: |
@@ -245,7 +245,7 @@
             source: "dist/*"
             target: "/var/www/html/myapp"
 
-- KEY: GitHub.actions
+- ENTRY:
   EXPLAIN: |
     Docker: Image Build & Push
   BODY: |
@@ -286,7 +286,7 @@
             tags: ${{ steps.meta.outputs.tags }}
             labels: ${{ steps.meta.outputs.labels }}
 
-- KEY: GitHub.actions
+- ENTRY:
   EXPLAIN: |
     Actions: GitHub Pagesへのデプロイ
   BODY: |
@@ -339,7 +339,7 @@
             id: deployment-url
             uses: actions/deploy-pages@v4
 
-- KEY: GitHub.actions
+- ENTRY:
   EXPLAIN: |
     ChromaticでStorybookのUIテスト
   BODY: |

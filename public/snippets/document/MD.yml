@@ -3,7 +3,7 @@
 # MD Markdown
 #-------------------------------
 
-- KEY: doc.md.headers
+- ENTRY:
   EXPLAIN: 見出し
   BODY: |
     # This is an H1
@@ -12,7 +12,7 @@
 
     ###### This is an H6
 
-- KEY: doc.md.blockQuotes
+- ENTRY:
   EXPLAIN: 引用
   BODY: |
     >"引用引用引用引用
@@ -21,21 +21,21 @@
     >引用本文引用本文
     >>入れ子
 
-- KEY: doc.md.list
+- ENTRY:
   EXPLAIN: リスト
   BODY: |
     - リスト 1
       - リスト 1-2
     - リスト 2
 
-- KEY: doc.md.checkbox
+- ENTRY:
   EXPLAIN: Checkbox
   BODY: |
     - [ ] A
     - [ ] B
     - [ ] C
 
-- KEY: doc.md.line
+- ENTRY:
   EXPLAIN: 水平線
   BODY: |
     * * *
@@ -43,7 +43,7 @@
     *****  
     - - -
 
-- KEY: doc.md.link
+- ENTRY:
   EXPLAIN: リンク
   BODY: |
     <URL>
@@ -52,7 +52,7 @@
 
     ![画像名](URL)
 
-- KEY: doc.md.deco
+- ENTRY:
   EXPLAIN: デコレーション
   BODY: |
     *イタリック*
@@ -63,14 +63,14 @@
 
     ~~打ち消し~~
 
-- KEY: doc.md.annotation
+- ENTRY:
   EXPLAIN: 注釈
   BODY: |
     本文[^注釈]
 
     [^注釈]: more.md   <-- 別Documentへのpath
 
-- KEY: doc.md.code
+- ENTRY:
   EXPLAIN: コード
   BODY: |
     以下のコード `const hoge = 1` が重要
@@ -85,7 +85,7 @@
     const abc = 1
     ```
 
-- KEY: doc.md.table
+- ENTRY:
   EXPLAIN: テーブル
   BODY: |
     | Title 1 | Title 2 | Title 3 |

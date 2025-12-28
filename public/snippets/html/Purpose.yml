@@ -2,7 +2,7 @@
 # HTML By Purpose
 # ----------------------------
 
-- KEY: html.pps.font.size
+- ENTRY:
   EXPLAIN: フォントサイズ
   BODY: |
     ■ px: 絶対値
@@ -25,7 +25,7 @@
     h1   { font-size: 2rem; }           // 64px
     span { font-size: 0.5rem; }         // 16px
 
-- KEY: html.pps.font.size.625
+- ENTRY:
   EXPLAIN: フォントサイズ(62.5%)
   BODY: |
     htmlのフォント基準サイズは 16px
@@ -38,7 +38,7 @@
       font-size: 1.4em;                 // 14px
     }
 
-- KEY: html.pps.table
+- ENTRY:
   EXPLAIN: テーブル
   SAMPLE: BODY
   BODY: |
@@ -71,7 +71,7 @@
       </thead>
     </table>
 
-- KEY: html.pps.list.ul
+- ENTRY:
   EXPLAIN: リスト ul
   SAMPLE: BODY
   BODY: |
@@ -101,7 +101,7 @@
       </ul>
     </div>
 
-- KEY: html.pps.list.ol
+- ENTRY:
   EXPLAIN: リスト ol
   SAMPLE: BODY
   BODY: |
@@ -126,7 +126,7 @@
 
     </div>
 
-- KEY: html.pps.list.ol.cjk
+- ENTRY:
   EXPLAIN: リスト ol(cjk)
   SAMPLE: BODY
   BODY: |
@@ -162,7 +162,7 @@
       </ol>
     </div>
 
-- KEY: html.pps.details
+- ENTRY:
   EXPLAIN: 詳細折りたたみ要素
   SAMPLE: BODY
   BODY: |
@@ -171,7 +171,7 @@
         隠された内容はこちら
     </details>
 
-- KEY: html.pps.details
+- ENTRY:
   EXPLAIN: 詳細折りたたみ要素(内包)
   SAMPLE: BODY
   BODY: |
@@ -189,7 +189,7 @@
       </details>
     </details>
 
-- KEY: html.pps.fieldset
+- ENTRY:
   EXPLAIN: タイトル付き枠
   SAMPLE: BODY
   BODY: |
@@ -209,7 +209,7 @@
         </label>
     </fieldset>
 
-- KEY: html.pps.ruby
+- ENTRY:
   EXPLAIN: ルビ
   SAMPLE: BODY
   BODY: |
@@ -218,7 +218,7 @@
       <rp>（</rp><rt>míng tiān</rt><rp>）</rp>
     </ruby>
 
-- KEY: html.pps.article
+- ENTRY:
   EXPLAIN: 記事
   SAMPLE: BODY
   BODY: |
@@ -242,7 +242,7 @@
       </footer>
     </article>
 
-- KEY: html.pps.figure
+- ENTRY:
   EXPLAIN: イメージ(キャプション付き)
   SAMPLE: BODY
   BODY: |
@@ -251,7 +251,7 @@
       <figcaption>富士山</figcaption>
     </figure>
 
-- KEY: html.pps.flex
+- ENTRY:
   EXPLAIN: Flex
   SAMPLE: BODY
   BODY: |

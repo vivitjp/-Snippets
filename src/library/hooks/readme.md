@@ -16,7 +16,7 @@ CATEGORY?: string                     // カテゴリタイトル
 #### サンプルコード
 
 ```
-- KEY: chakra.components.form.title
+- ENTRY:
   CATEGORY: |
     コンポーネント: Form
 ```
@@ -32,7 +32,7 @@ CATEGORY?: string                     // カテゴリタイトル
 #### サンプルコード
 
 ```
-- KEY: js.methods.version
+- ENTRY:
   EXPLAIN: Version
   OPTIONS:
     COLS: 2
@@ -60,7 +60,7 @@ if (SAMPLE) {
   }
 }
 
-- KEY: html.pps.table
+- ENTRY:
   EXPLAIN: テーブル
   SAMPLE: BODY
   BODY: |
@@ -99,7 +99,7 @@ if (SAMPLE) {
 #### サンプルコード
 
 ```
-- KEY: lint.rules.constructor-super
+- ENTRY:
   EXPLAIN: constructor-super
   BODY: |
     ■ 誤
@@ -139,7 +139,7 @@ if (SAMPLE) {
 #### サンプルコード
 
 ```
-- KEY: RTL.Queries
+- ENTRY:
   EXPLAIN: Queriesの種類
   BODY: |
     ◯◯◯ByTestId

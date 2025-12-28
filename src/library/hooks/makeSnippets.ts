@@ -39,48 +39,42 @@ export const makeSnippets = async ({ file, scope }: Props) => {
 
   try {
     jsonData.forEach(
-      ({
-        KEY,
-        BODY,
-        EXPLAIN,
-        CATEGORY,
-        OPTIONS,
-        SAMPLE,
-        STYLE,
-        FOLD,
-        TABLE,
-      }) => {
-        const key = EXPLAIN ?? KEY
-        returnData[key] = {
-          prefix: KEY,
+      (
+        { BODY, EXPLAIN, CATEGORY, OPTIONS, SAMPLE, STYLE, FOLD, TABLE },
+        index
+      ) => {
+        returnData[index] = {
           body: BODY?.trim().split("\n"),
         }
-        if (scope) returnData[key].scope = scope
+        //■ EXPLAIN
+        if (EXPLAIN) returnData[index].explain = EXPLAIN
+
+        if (scope) returnData[index].scope = scope
 
         //■ CATEGORY
-        if (CATEGORY) returnData[key].category = CATEGORY
+        if (CATEGORY) returnData[index].category = CATEGORY
 
         //■ OPTIONS
-        if (OPTIONS) returnData[key].options = OPTIONS
+        if (OPTIONS) returnData[index].options = OPTIONS
 
         //■ SAMPLE/BODY
         if (SAMPLE) {
           if (SAMPLE === "BODY") {
-            returnData[key].sample = BODY
+            returnData[index].sample = BODY
           } else {
-            returnData[key].sample = SAMPLE
+            returnData[index].sample = SAMPLE
           }
         }
 
         //■ STYLE
-        if (STYLE) returnData[key].style = STYLE
+        if (STYLE) returnData[index].style = STYLE
 
         //■ FOLD
-        if (FOLD) returnData[key].fold = FOLD.trim().split("\n")
+        if (FOLD) returnData[index].fold = FOLD.trim().split("\n")
 
         //■ TABLE
         if (TABLE) {
-          returnData[key].table = {
+          returnData[index].table = {
             body: TABLE.BODY.trim()
               .split("\n")
               .map((n) => n.replaceAll("\\n", "\n")),

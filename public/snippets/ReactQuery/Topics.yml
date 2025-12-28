@@ -2,10 +2,10 @@
 #-------------------------------
 # utilities
 #-------------------------------
-- KEY: utilities.query-key-factory.category
+- ENTRY:
   CATEGORY: query-key-factory
 
-- KEY: utilities.query-key-factory.要点
+- ENTRY:
   EXPLAIN: 要点
   BODY: |
     ■ 要点
@@ -23,7 +23,7 @@
     ・パラメータは末尾に置く（invalidate のマッチ制御が明確）
     ・生成関数を1箇所に置く（リネーム・リファクタ容易化）
 
-- KEY: utilities.query-key-factory.実装例
+- ENTRY:
   EXPLAIN: 実装例
   BODY: |
     ■ factory 定義
@@ -48,7 +48,7 @@
 
       type ListKey = ReturnType<typeof todosKeys.list>   // readonly [..., number]
 
-- KEY: utilities.lukemorales
+- ENTRY:
   EXPLAIN: |
     @lukemorales/query-key-factory
   BODY: |
@@ -118,7 +118,7 @@
     ・ルートキーを安易に増やさない（粒度は使い方に合わせて）
     ・ランタイムに文字列ベースで比較する処理と混ぜると意図しないマッチが起きることがある
 
-- KEY: utilities.lukemorales.実装サンプル
+- ENTRY:
   EXPLAIN: 実装サンプル
   BODY: |
     ■ src/library/queryKeys/todosKeys.ts

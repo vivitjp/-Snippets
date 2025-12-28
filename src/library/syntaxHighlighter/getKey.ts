@@ -1,10 +1,12 @@
 import { KeyDef } from "../../types/type"
 import { keysAWSAurora } from "./keys/AWSAurora"
 import { keysAWSCloud } from "./keys/AWSCloud"
-import { keysCSS } from "./keys/CSS"
+import { keysReactUtilitiesMisc } from "./keys/ReactUtilitiesMisc"
 import { keysChakra } from "./keys/Chakra"
 import { keysClassTransformer } from "./keys/ClassTransformer"
 import { keysClassValidator } from "./keys/ClassValidator"
+import { keysCSS } from "./keys/CSS"
+import { keysCurl } from "./keys/curl"
 import { keysDOM } from "./keys/DOM"
 import { keysDocker } from "./keys/Docker"
 import { keysEnv } from "./keys/Env"
@@ -14,48 +16,49 @@ import { keysExpress } from "./keys/Express"
 import { keysGit } from "./keys/Git"
 import { keysGraphQL } from "./keys/GraphQL"
 import { keysHTML } from "./keys/HTML"
-import { keysJSTS } from "./keys/JSTS"
+import { keysI18n } from "./keys/i18n"
 import { keysJest } from "./keys/Jest"
 import { keysJotai } from "./keys/Jotai"
+import { keysJS } from "./keys/JS"
 import { keysLint } from "./keys/Lint"
 import { keysLinux } from "./keys/Linux"
+import { keysMUI } from "./keys/MUI"
 import { keysMongo } from "./keys/Mongo"
-import { keysSql } from "./keys/Sql"
+import { keysNPM } from "./keys/npm"
 import { keysNestjs } from "./keys/Nestjs"
 import { keysNextjs } from "./keys/Nextjs"
 import { keysPackage } from "./keys/Package"
 import { keysPackageRHF } from "./keys/PackageRHF"
 import { keysPrisma } from "./keys/Prisma"
 import { keysPython } from "./keys/Python"
-import { keysRTL } from "./keys/RTL"
 import { keysReact } from "./keys/React"
+import { keysDragAndDrops } from "./keys/DragAndDrops"
+import { keysReactRouter } from "./keys/ReactRouter"
 import { keysRegExp } from "./keys/RegExp"
+import { keysRTL } from "./keys/RTL"
 import { keysSVG } from "./keys/SVG"
 import { keysSwagger } from "./keys/Swagger"
+import { keysSql } from "./keys/Sql"
+import { keysTanStack } from "./keys/TanStack"
 import { keysTS } from "./keys/TS"
 import { keysTSConfig } from "./keys/TSConfig"
 import { keysTypeORM } from "./keys/TypeORM"
-import { keysVue } from "./keys/Vue"
-import { keysCurl } from "./keys/curl"
-import { keysNPM } from "./keys/npm"
-import { keysTanStack } from "./keys/TanStack"
-import { keysReactRouter } from "./keys/ReactRouter"
-import { keysYup } from "./keys/Yup"
-import { keysMUI } from "./keys/MUI"
-import { keysI18n } from "./keys/i18n"
 import { keysVite } from "./keys/Vite"
+import { keysVue } from "./keys/Vue"
+import { keysYup } from "./keys/Yup"
 
 // 以下のオブジェクトをソートしてください
 export const codeKeys = {
-  AWSCloud: "AWSCloud",
   AWSAurora: "AWSAurora",
+  AWSCloud: "AWSCloud",
+  Misc: "Misc",
   Chakra: "Chakra",
   ClassTransformer: "ClassTransformer",
   ClassValidator: "ClassValidator",
-  Curl: "Curl",
   CSS: "CSS",
-  Docker: "Docker",
+  Curl: "Curl",
   DOM: "DOM",
+  Docker: "Docker",
   Env: "Env",
   Excel: "Excel",
   ExcelVBS: "ExcelVBS",
@@ -66,12 +69,12 @@ export const codeKeys = {
   i18n: "i18n",
   Jest: "Jest",
   Jotai: "Jotai",
-  JSTS: "JSTS",
-  keysPackageRHF: "keysPackageRHF",
+  JS: "JS",
+  PackageRHF: "keysPackageRHF",
   Lint: "Lint",
   Linux: "Linux",
+  MUI: "MUI",
   Mongo: "Mongo",
-  Sql: "Sql",
   Nestjs: "Nestjs",
   Nextjs: "Nextjs",
   NPM: "NPM",
@@ -79,20 +82,22 @@ export const codeKeys = {
   Prisma: "Prisma",
   Python: "Python",
   React: "React",
+  DragAndDrops: "DragAndDrops",
   ReactRouter: "ReactRouter",
-  Yup: "Yup",
+  ReactUtilitiesMisc: "ReactUtilitiesMisc",
   RegExp: "RegExp",
   RTL: "RTL",
+  Sql: "Sql",
   SVG: "SVG",
   Swagger: "Swagger",
   TanStack: "TanStack",
   TS: "TS",
   TSConfig: "TSConfig",
   TypeORM: "TypeORM",
-  MUI: "MUI",
   Unknown: "Unknown",
-  Vue: "Vue",
   Vite: "Vite",
+  Vue: "Vue",
+  Yup: "Yup",
 } as const
 
 export const defaultSnippetsStyle = codeKeys.Unknown
@@ -100,15 +105,15 @@ export const defaultSnippetsStyle = codeKeys.Unknown
 export type CodeKeyType = (typeof codeKeys)[keyof typeof codeKeys]
 
 export const KeyAndCodes: Record<string, KeyDef> = {
-  AWSCloud: keysAWSCloud,
   AWSAurora: keysAWSAurora,
+  AWSCloud: keysAWSCloud,
   Chakra: keysChakra,
   ClassTransformer: keysClassTransformer,
   ClassValidator: keysClassValidator,
-  Curl: keysCurl,
   CSS: keysCSS,
-  Docker: keysDocker,
+  Curl: keysCurl,
   DOM: keysDOM,
+  Docker: keysDocker,
   Env: keysEnv,
   Excel: keysExcel,
   ExcelVBS: keysExcelVBS,
@@ -119,12 +124,12 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   i18n: keysI18n,
   Jest: keysJest,
   Jotai: keysJotai,
-  JSTS: keysJSTS,
+  JS: keysJS,
   keysPackageRHF: keysPackageRHF,
   Lint: keysLint,
   Linux: keysLinux,
+  MUI: keysMUI,
   Mongo: keysMongo,
-  Sql: keysSql,
   Nestjs: keysNestjs,
   Nextjs: keysNextjs,
   NPM: keysNPM,
@@ -132,19 +137,21 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   Prisma: keysPrisma,
   Python: keysPython,
   React: keysReact,
+  ReactUtilitiesMisc: keysReactUtilitiesMisc,
+  DragAndDrops: keysDragAndDrops,
   ReactRouter: keysReactRouter,
   RegExp: keysRegExp,
   RTL: keysRTL,
+  Sql: keysSql,
   SVG: keysSVG,
   Swagger: keysSwagger,
   TanStack: keysTanStack,
   TS: keysTS,
   TSConfig: keysTSConfig,
   TypeORM: keysTypeORM,
-  Yup: keysYup,
-  Vue: keysVue,
-  MUI: keysMUI,
   Vite: keysVite,
+  Vue: keysVue,
+  Yup: keysYup,
 }
 
 export const getMergedKeys = (codeKeyTypes: string[] | undefined) => {

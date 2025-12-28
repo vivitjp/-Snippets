@@ -2,10 +2,10 @@
 #-------------------------------
 # MUI
 #-------------------------------
-- KEY: MUI.category
+- ENTRY:
   CATEGORY: リスト
 
-- KEY: MUI.Utilities
+- ENTRY:
   EXPLAIN: methods リスト
   BODY: |
     ■ Theme
@@ -30,7 +30,7 @@
     ・@mui/x-data-grid     高機能データグリッド（大規模表操作用）
     ・@mui/icons-material  MUI 向けアイコンセット
 
-- KEY: MUI.コンポーネントリスト
+- ENTRY:
   EXPLAIN: コンポーネントリスト
   BODY: |
     ■ Layout
@@ -110,10 +110,10 @@
 # -------------------------------
 #  Methods
 # -------------------------------
-- KEY: MUI.Methods.category
+- ENTRY:
   CATEGORY: Methods
 
-- KEY: MUI.Methods.ThemeProvider
+- ENTRY:
   EXPLAIN: |
     Theme: ThemeProvider
   BODY: |
@@ -215,7 +215,7 @@
       },
     });
 
-- KEY: MUI.Methods.createTheme
+- ENTRY:
   EXPLAIN: |
     Theme: createTheme
   BODY: |
@@ -249,7 +249,7 @@
     ・breakpoints:    レスポンシブデザインのブレークポイント定義 
     ・components:     コンポーネントごとのデフォルトプロップやスタイルの上書き
 
-- KEY: MUI.Methods.useTheme
+- ENTRY:
   EXPLAIN: |
     Theme: useTheme
   BODY: |
@@ -279,7 +279,7 @@
     - 返されるオブジェクトは `Theme` 型。TypeScript で型補完される
     - `useTheme` はあくまで参照用。テーマを変更するには `ThemeProvider` の再レンダーが必要
 
-- KEY: MUI.Methods.styled
+- ENTRY:
   EXPLAIN: |
     Styling: styled
   BODY: |
@@ -309,7 +309,7 @@
     - 第一引数に任意の React コンポーネントや HTML タグを渡せる
     - `shouldForwardProp` を使いプロップの受け渡し制御が可能
 
-- KEY: MUI.Methods.sx
+- ENTRY:
   EXPLAIN: |
     Styling: sx
   BODY: |
@@ -338,7 +338,7 @@
     - `sx` はテーマのキー名（例: `primary.main`）を文字列で参照できる
     - 配列やブレークポイントオブジェクトでレスポンシブ指定が可能
 
-- KEY: MUI.Methods.useMediaQuery
+- ENTRY:
   EXPLAIN: |
     Utilities: useMediaQuery
   BODY: |
@@ -366,7 +366,7 @@
     - 第二引数にオプション（`defaultMatches` / `noSsr` 等）を渡して挙動を制御できる
     - サーバーサイドレンダリング環境では `noSsr: true` を検討
 
-- KEY: MUI.Methods.GlobalStyles
+- ENTRY:
   EXPLAIN: |
     Utilities: GlobalStyles
   BODY: |
@@ -408,10 +408,10 @@
 # -------------------------------
 #  コンポーネント Layout
 # -------------------------------
-- KEY: MUI.コンポーネント.Layout.category
+- ENTRY:
   CATEGORY: コンポーネント Layout
 
-- KEY: MUI.コンポーネント.Box
+- ENTRY:
   EXPLAIN: Box
   BODY: |
     ■ 解説
@@ -467,7 +467,7 @@
       </Box>
     </Box>
 
-- KEY: MUI.コンポーネント.Container
+- ENTRY:
   EXPLAIN: Container
   BODY: |
     ■ 解説
@@ -488,7 +488,7 @@
       コンテンツ
     </Container>
 
-- KEY: MUI.コンポーネント.Grid
+- ENTRY:
   EXPLAIN: Grid
   BODY: |
     ■ 解説
@@ -516,7 +516,7 @@
       </Grid>
     </Grid>
 
-- KEY: MUI.コンポーネント.Stack
+- ENTRY:
   EXPLAIN: Stack
   BODY: |
     ■ 解説
@@ -537,7 +537,7 @@
     ・`direction`: row|column
     ・`spacing`: アイテム間隔
 
-- KEY: MUI.コンポーネント.Toolbar
+- ENTRY:
   EXPLAIN: Toolbar
   BODY: |
     ■ 解説
@@ -588,10 +588,10 @@
 # -------------------------------
 #  コンポーネント Surfaces
 # -------------------------------
-- KEY: MUI.コンポーネント.Surfaces.category
+- ENTRY:
   CATEGORY: コンポーネント Surfaces
 
-- KEY: MUI.コンポーネント.Paper
+- ENTRY:
   EXPLAIN: Paper
   BODY: |
     ■ 解説
@@ -642,7 +642,7 @@
       クリック可能なカード風 Paper
     </Paper>
 
-- KEY: MUI.コンポーネント.Card
+- ENTRY:
   EXPLAIN: Card
   BODY: |
     ■ 解説
@@ -713,7 +713,7 @@
       </CardActions>
     </Card>
 
-- KEY: MUI.コンポーネント.Accordion
+- ENTRY:
   EXPLAIN: Accordion
   BODY: |
     ■ 解説
@@ -791,7 +791,7 @@
       </AccordionDetails>
     </Accordion>
 
-- KEY: MUI.コンポーネント.List
+- ENTRY:
   EXPLAIN: List
   BODY: |
     ■ 解説
@@ -861,10 +861,10 @@
 #  コンポーネント Navigation
 # -------------------------------
 
-- KEY: MUI.コンポーネント.Navigation.category
+- ENTRY:
   CATEGORY: コンポーネント Navigation
 
-- KEY: MUI.コンポーネント.AppBar
+- ENTRY:
   EXPLAIN: AppBar
   BODY: |
     ■ 解説
@@ -905,7 +905,7 @@
       </Toolbar>
     </AppBar>
 
-- KEY: MUI.コンポーネント.Drawer
+- ENTRY:
   EXPLAIN: Drawer
   BODY: |
     ■ 解説
@@ -936,7 +936,7 @@
       右側メニュー
     </Drawer>
 
-- KEY: MUI.コンポーネント.Tabs
+- ENTRY:
   EXPLAIN: Tabs
   BODY: |
     ■ 解説
@@ -967,7 +967,7 @@
       ...
     </Tabs>
 
-- KEY: MUI.コンポーネント.BottomNavigation
+- ENTRY:
   EXPLAIN: BottomNavigation
   BODY: |
     ■ 解説
@@ -997,7 +997,7 @@
       ...
     </BottomNavigation>
 
-- KEY: MUI.コンポーネント.Breadcrumbs
+- ENTRY:
   EXPLAIN: Breadcrumbs
   BODY: |
     ■ 解説
@@ -1033,7 +1033,7 @@
       ...
     </Breadcrumbs>
 
-- KEY: MUI.コンポーネント.Pagination
+- ENTRY:
   EXPLAIN: Pagination
   BODY: |
     ■ 解説
@@ -1058,7 +1058,7 @@
 
     <Pagination count={20} boundaryCount={2} />
 
-- KEY: MUI.コンポーネント.Link
+- ENTRY:
   EXPLAIN: Link
   BODY: |
     ■ 解説
@@ -1093,10 +1093,10 @@
 #  コンポーネント Form Controls
 # -------------------------------
 
-- KEY: MUI.コンポーネント.Form.category
+- ENTRY:
   CATEGORY: コンポーネント Form Controls
 
-- KEY: MUI.コンポーネント.Button
+- ENTRY:
   EXPLAIN: Button
   BODY: |
     ■ 解説
@@ -1127,7 +1127,7 @@
       Save
     </Button>
 
-- KEY: MUI.コンポーネント.IconButton
+- ENTRY:
   EXPLAIN: IconButton
   BODY: |
     ■ 解説
@@ -1158,7 +1158,7 @@
       ...
     </IconButton>
 
-- KEY: MUI.コンポーネント.TextField
+- ENTRY:
   EXPLAIN: TextField
   BODY: |
     ■ 解説
@@ -1183,7 +1183,7 @@
 
     <TextField value={value} onChange={e => setValue(e.target.value)} />
 
-- KEY: MUI.コンポーネント.OutlinedInput
+- ENTRY:
   EXPLAIN: OutlinedInput
   BODY: |
     ■ 解説
@@ -1208,7 +1208,7 @@
 
     <OutlinedInput value={v} onChange={...} />
 
-- KEY: MUI.コンポーネント.Input
+- ENTRY:
   EXPLAIN: Input
   BODY: |
     ■ 解説
@@ -1231,7 +1231,7 @@
 
     <Input value={value} onChange={...} />
 
-- KEY: MUI.コンポーネント.Select
+- ENTRY:
   EXPLAIN: Select
   BODY: |
     ■ 解説
@@ -1263,7 +1263,7 @@
       ...
     </Select>
 
-- KEY: MUI.コンポーネント.Autocomplete
+- ENTRY:
   EXPLAIN: Autocomplete
   BODY: |
     ■ 解説
@@ -1294,7 +1294,7 @@
 
     <Autocomplete multiple options={...} />
 
-- KEY: MUI.コンポーネント.Checkbox
+- ENTRY:
   EXPLAIN: Checkbox
   BODY: |
     ■ 解説
@@ -1318,7 +1318,7 @@
 
     <FormControlLabel control={<Checkbox />} label="同意する" />
 
-- KEY: MUI.コンポーネント.Radio
+- ENTRY:
   EXPLAIN: Radio
   BODY: |
     ■ 解説
@@ -1347,7 +1347,7 @@
       ...
     </RadioGroup>
 
-- KEY: MUI.コンポーネント.Switch
+- ENTRY:
   EXPLAIN: Switch
   BODY: |
     ■ 解説
@@ -1370,7 +1370,7 @@
 
     <Switch size="small" />
 
-- KEY: MUI.コンポーネント.Slider
+- ENTRY:
   EXPLAIN: Slider
   BODY: |
     ■ 解説
@@ -1393,7 +1393,7 @@
 
     <Slider marks min={0} max={100} />
 
-- KEY: MUI.コンポーネント.Rating
+- ENTRY:
   EXPLAIN: Rating
   BODY: |
     ■ 解説
@@ -1417,7 +1417,7 @@
 
     <Rating precision={0.5} />
 
-- KEY: MUI.コンポーネント.ToggleButton
+- ENTRY:
   EXPLAIN: ToggleButton
   BODY: |
     ■ 解説
@@ -1452,10 +1452,10 @@
 #  コンポーネント Data Display
 # -------------------------------
 
-- KEY: MUI.コンポーネント.DataDisplay.category
+- ENTRY:
   CATEGORY: コンポーネント Data Display
 
-- KEY: MUI.コンポーネント.Typography
+- ENTRY:
   EXPLAIN: Typography
   BODY: |
     ■ 解説
@@ -1484,7 +1484,7 @@
       小見出し
     </Typography>
 
-- KEY: MUI.コンポーネント.Avatar
+- ENTRY:
   EXPLAIN: Avatar
   BODY: |
     ■ 解説
@@ -1512,7 +1512,7 @@
       R
     </Avatar>
 
-- KEY: MUI.コンポーネント.Chip
+- ENTRY:
   EXPLAIN: Chip
   BODY: |
     ■ 解説
@@ -1535,7 +1535,7 @@
 
     <Chip label="クリック可能" onClick={...} />
 
-- KEY: MUI.コンポーネント.Table
+- ENTRY:
   EXPLAIN: Table
   BODY: |
     ■ 解説
@@ -1566,7 +1566,7 @@
       ...
     </Table>
 
-- KEY: MUI.コンポーネント.Tooltip
+- ENTRY:
   EXPLAIN: Tooltip
   BODY: |
     ■ 解説
@@ -1602,7 +1602,7 @@
       </Tooltip>
     </span>
 
-- KEY: MUI.コンポーネント.Popover
+- ENTRY:
   EXPLAIN: Popover
   BODY: |
     ■ 解説
@@ -1631,7 +1631,7 @@
       ...
     </Popover>
 
-- KEY: MUI.コンポーネント.ImageList
+- ENTRY:
   EXPLAIN: ImageList
   BODY: |
     ■ 解説
@@ -1662,7 +1662,7 @@
       ...
     </ImageList>
 
-- KEY: MUI.コンポーネント.Skeleton
+- ENTRY:
   EXPLAIN: Skeleton
   BODY: |
     ■ 解説
@@ -1690,10 +1690,10 @@
 #  コンポーネント Feedback & Progress
 # -------------------------------
 
-- KEY: MUI.コンポーネント.FeedbackProgress.category
+- ENTRY:
   CATEGORY: コンポーネント Feedback & Progress
 
-- KEY: MUI.コンポーネント.Snackbar
+- ENTRY:
   EXPLAIN: Snackbar
   BODY: |
     ■ 解説
@@ -1717,7 +1717,7 @@
 
     <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'right' }} />
 
-- KEY: MUI.コンポーネント.Alert
+- ENTRY:
   EXPLAIN: Alert
   BODY: |
     ■ 解説
@@ -1747,7 +1747,7 @@
       通知
     </Alert>
 
-- KEY: MUI.コンポーネント.Dialog
+- ENTRY:
   EXPLAIN: Dialog
   BODY: |
     ■ 解説
@@ -1785,7 +1785,7 @@
       </Button>
     </DialogActions>
 
-- KEY: MUI.コンポーネント.CircularProgress
+- ENTRY:
   EXPLAIN: CircularProgress
   BODY: |
     ■ 解説
@@ -1808,7 +1808,7 @@
 
     <CircularProgress variant="determinate" value={50} />
 
-- KEY: MUI.コンポーネント.LinearProgress
+- ENTRY:
   EXPLAIN: LinearProgress
   BODY: |
     ■ 解説
@@ -1832,7 +1832,7 @@
 
     <LinearProgress variant="buffer" value={50} valueBuffer={70} />
 
-- KEY: MUI.コンポーネント.Backdrop
+- ENTRY:
   EXPLAIN: Backdrop
   BODY: |
     ■ 解説
@@ -1865,10 +1865,10 @@
 #  コンポーネント Overlays / Transitions / Utilities
 # -------------------------------
 
-- KEY: MUI.コンポーネント.OverlaysTransitionsUtilities.category
+- ENTRY:
   CATEGORY: コンポーネント Overlays / Transitions / Utilities
 
-- KEY: MUI.コンポーネント.Menu
+- ENTRY:
   EXPLAIN: Menu
   BODY: |
     ■ 解説
@@ -1911,7 +1911,7 @@
       </MenuItem>
     </Menu>
 
-- KEY: MUI.コンポーネント.Popover
+- ENTRY:
   EXPLAIN: Popover
   BODY: |
     ■ 解説
@@ -1929,7 +1929,7 @@
 
     ・`anchorOrigin`/`transformOrigin` で表示位置を調整
 
-- KEY: MUI.コンポーネント.Collapse
+- ENTRY:
   EXPLAIN: Collapse
   BODY: |
     ■ 解説
@@ -1958,7 +1958,7 @@
       ...
     </Collapse>
 
-- KEY: MUI.コンポーネント.Grow
+- ENTRY:
   EXPLAIN: Grow
   BODY: |
     ■ 解説
@@ -1989,7 +1989,7 @@
       ...
     </Grow>
 
-- KEY: MUI.コンポーネント.Fade
+- ENTRY:
   EXPLAIN: Fade
   BODY: |
     ■ 解説
@@ -2020,7 +2020,7 @@
       ...
     </Fade>
 
-- KEY: MUI.コンポーネント.Zoom
+- ENTRY:
   EXPLAIN: Zoom
   BODY: |
     ■ 解説
@@ -2053,7 +2053,7 @@
       ...
     </Zoom>
 
-- KEY: MUI.コンポーネント.Portal
+- ENTRY:
   EXPLAIN: Portal
   BODY: |
     ■ 解説
@@ -2086,7 +2086,7 @@
       </Dialog>
     </Portal>
 
-- KEY: MUI.コンポーネント.ClickAwayListener
+- ENTRY:
   EXPLAIN: ClickAwayListener
   BODY: |
     ■ 解説
@@ -2119,7 +2119,7 @@
       ...
     </ClickAwayListener>
 
-- KEY: MUI.コンポーネント.Divider
+- ENTRY:
   EXPLAIN: Divider
   BODY: |
     ■ 解説
@@ -2147,11 +2147,11 @@
 #  拡張実験パッケージ
 # -------------------------------
 
-- KEY: MUI.コンポーネント.拡張実験パッケージ.category
+- ENTRY:
   CATEGORY: |
     拡張実験パッケージ
 
-- KEY: MUI.コンポーネント.mui-x-data-grid
+- ENTRY:
   EXPLAIN: |
     @mui/x-data-grid
   BODY: |

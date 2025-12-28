@@ -3,7 +3,7 @@
 # Python Errors
 #-------------------------------
 
-- KEY: py.errors.variableName
+- ENTRY:
   EXPLAIN: 変数名衝突
   BODY: |
     list = [1,2,34]            # 予約キーワードを変数名に使用
@@ -15,7 +15,7 @@
     ----> 2 print(list( range(5) ))        # [0, 1, 2, 3, 4]
     TypeError: 'list' object is not callable
 
-- KEY: py.errors.charAndString
+- ENTRY:
   EXPLAIN: 文字と文字列の違い
   BODY: |
     文字に対し、文字列メソッド使用

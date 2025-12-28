@@ -1,20 +1,20 @@
 # ----------------------------
 # CSS 短縮形
 # ----------------------------
-- KEY: bg
+- ENTRY:
   EXPLAIN: 背景色
   BODY: |
     background-color: #aaa;
     //background: linear-gradient(blue, green);
     //background: rgba(255, 255, 255, 0.5)
 
-- KEY: bdr.type
+- ENTRY:
   EXPLAIN: border 種類
   BODY: |
     border: 1px solid #aaa;
     // solid/dotted/dashed
 
-- KEY: just
+- ENTRY:
   EXPLAIN: flex 属性
   BODY: |
     justify-content: flex-start;
@@ -24,7 +24,7 @@
 # CSS
 # ----------------------------
 
-- KEY: css.combinator
+- ENTRY:
   EXPLAIN: 結合子
   BODY: |
     div > p    //子
@@ -36,7 +36,7 @@
 #  Flex
 # ----------------------------
 
-- KEY: css.flex.row
+- ENTRY:
   EXPLAIN: Flex Row
   BODY: |
     display: flex;
@@ -47,7 +47,7 @@
     width: 100%;
     gap: 0.5rem;
 
-- KEY: css.flex.column
+- ENTRY:
   EXPLAIN: Flex Column
   BODY: |
     display: flex;
@@ -57,7 +57,7 @@
     width: 100%;
     gap: 0.5rem;
 
-- KEY: css.font
+- ENTRY:
   EXPLAIN: Font関連
   BODY: |
     color: #777;
@@ -70,7 +70,7 @@
 #  clamp(ellipsis)
 # ----------------------------
 
-- KEY: css.text.clamp
+- ENTRY:
   EXPLAIN: 長テキストの省略
   BODY: |
     text-overflow: ellipsis;
@@ -92,7 +92,7 @@
         }
       }, [ref])
 
-- KEY: css.text.clampMulti
+- ENTRY:
   EXPLAIN: 長テキストの省略(複数行)
   BODY: |
     padding: 0;
@@ -105,7 +105,7 @@
 #  other
 # ----------------------------
 
-- KEY: css.text.deco
+- ENTRY:
   EXPLAIN: テキストDeco(複数可)
   BODY: |
     text-decoration: none/underline/overline/line-through;
@@ -114,22 +114,22 @@
     text-decoration-style: solid/double/dotted/dashed/wavy;
     text-decoration-thickness: auto/1px/from-font;
 
-- KEY: css.text.pre
+- ENTRY:
   EXPLAIN: 改行そのまま表示
   BODY: |
     white-space: pre
 
-- KEY: css.boxShadow
+- ENTRY:
   EXPLAIN: Boxシャドー
   BODY: |
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.4);
 
-- KEY: css.rgba
+- ENTRY:
   EXPLAIN: 透明度
   BODY: |
     rgba(255, 255, 255, 0.5)  //= #FFF7
 
-- KEY: css.transform
+- ENTRY:
   EXPLAIN: 変形
   BODY: |
     transform: translate(50px);     //X
@@ -139,7 +139,7 @@
     transform: skew(30deg, 20deg);
     transform-origin: center;
 
-- KEY: css.beforeAfter
+- ENTRY:
   EXPLAIN: 先頭にContent追加
   BODY: |
     :before {
@@ -148,7 +148,7 @@
       color: #777;
     }
 
-- KEY: css.image.object
+- ENTRY:
   EXPLAIN: イメージ関連
   BODY: |
     object-fit: fill;               //拡張(ゆがみ)
@@ -163,7 +163,7 @@
     object-position: left bottom;   //左下
     object-position: 100px 100px;   //指定
 
-- KEY: css.variable
+- ENTRY:
   EXPLAIN: 変数
   BODY: |
     :root {
@@ -173,7 +173,7 @@
       background-color: var(--defColor);
     }
 
-- KEY: css.text.gradientColor
+- ENTRY:
   EXPLAIN: テキストのグラデーション切り抜き
   BODY: |
     :root { --defColor: #4158d0; }
@@ -190,7 +190,7 @@
     -moz-text-fill-color: transparent;
     -ms-text-fill-color: transparent;
 
-- KEY: css.text.backgroundImageClip
+- ENTRY:
   EXPLAIN: 文字背景イメージ切り抜き
   BODY: |
     background-image: url("./image.jpg");
@@ -198,7 +198,7 @@
     -webkit-background-clip: text;
     color: transparent;
 
-- KEY: css.text.tooltip
+- ENTRY:
   EXPLAIN: CSSツールチップ
   BODY: |
     ■ CSS
@@ -242,7 +242,7 @@
 #  animation
 # ----------------------------
 
-- KEY: css.anime.transition
+- ENTRY:
   EXPLAIN: アニメーション(transition)
   BODY: |
     //transition: <target> <duration(所要時間)> <easing> <delay(遅延)> 
@@ -256,7 +256,7 @@
     transition-timing-function: [def]ease/ease-in-out/ease-in/ease-out/linear/step-start/step-end;
     transition-delay: [def]0s/1s/1.5s/-1s(1秒スキップ);
 
-- KEY: css.anime.animation
+- ENTRY:
   EXPLAIN: アニメーション(animation)
   BODY: |
     //@keyframes <duration> <easing> <delay> <count> <dir> <fill> <state> <name>

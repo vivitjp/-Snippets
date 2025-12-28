@@ -2,10 +2,10 @@
 #-------------------------------
 # React Component
 #-------------------------------
-- KEY: ts.react.Component.category
+- ENTRY:
   CATEGORY: React Component
 
-- KEY: ts.react.funcComponent
+- ENTRY:
   EXPLAIN: 関数コンポーネント
   BODY: |
     ■ コンポーネントの引数型
@@ -23,7 +23,7 @@
     <MyComponent foo="bar" />
     { MyComponent({ foo: "hoo", age: 20 }) }
 
-- KEY: ts.react.classComponent
+- ENTRY:
   EXPLAIN: クラスコンポーネント
   BODY: |
     ■ コンポーネントの引数型
@@ -46,10 +46,10 @@
 #-------------------------------
 # React Component Samples
 #-------------------------------
-- KEY: ts.react.Component.Samples.category
+- ENTRY:
   CATEGORY: React Component Samples
 
-- KEY: rc.button
+- ENTRY:
   EXPLAIN: Button
   BODY: |
     ■ ハンドラ
@@ -64,7 +64,7 @@
       Submit
     </button>
 
-- KEY: rc.input.text
+- ENTRY:
   EXPLAIN: Text
   BODY: |
     ■ ハンドラ
@@ -83,7 +83,7 @@
       placeholder="name"
     />
 
-- KEY: rc.input.button
+- ENTRY:
   EXPLAIN: InputButton
   BODY: |
     ■ ハンドラ
@@ -96,7 +96,7 @@
 
     <input type="button" onClick={handleClick} value="Click" />
 
-- KEY: rc.input.checkbox
+- ENTRY:
   EXPLAIN: Checkbox
   BODY: |
     ■ ハンドラ
@@ -116,7 +116,7 @@
     />
     <label htmlFor={checkId}>On</label>
 
-- KEY: rc.input.radio
+- ENTRY:
   EXPLAIN: Radio
   BODY: |
     ■ ハンドラ
@@ -138,7 +138,7 @@
     />
     <label htmlFor={radioId1}>1</label>
 
-- KEY: rc.select
+- ENTRY:
   EXPLAIN: Select
   BODY: |
     type Options = {
@@ -175,10 +175,10 @@
 #-------------------------------
 # カスタムコンポーネント
 #-------------------------------
-- KEY: ts.react.Component.Custom.category
+- ENTRY:
   CATEGORY: React Component Custom Samples
 
-- KEY: qw.custom.input
+- ENTRY:
   EXPLAIN: input カスタムコンポーネント
   BODY: |
     type Props = {
@@ -213,7 +213,7 @@
       )
     }
 
-- KEY: qw.custom.inputRef
+- ENTRY:
   EXPLAIN: input+Ref カスタムコンポーネント
   BODY: |
     type Props = {
@@ -241,7 +241,7 @@
       }
     )
 
-- KEY: qw.custom.inputRef.fileUpload
+- ENTRY:
   EXPLAIN: input+Ref ファイルアップロード
   BODY: |
     import { Box, Button, Flex } from "@chakra-ui/react";
@@ -299,10 +299,10 @@
 #-------------------------------
 # まとめコンポーネント
 #-------------------------------
-- KEY: ts.react.Component.Wrapper.category
+- ENTRY:
   CATEGORY: React Component Wrapper Samples
 
-- KEY: qw.custom.joiner
+- ENTRY:
   EXPLAIN: 複数コンポーネントのまとめ
   BODY: |
     type Props = {

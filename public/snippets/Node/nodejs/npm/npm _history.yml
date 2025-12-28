@@ -3,13 +3,13 @@
 # npm History
 #-------------------------------
 
-- KEY: npm.history.url
+- ENTRY:
   EXPLAIN: モジュールの依存関係についての歴史
   BODY: |
     ■ URL
     https://zenn.dev/saggggo/articles/dbd739508ac212
 
-- KEY: npm.history.npm.before2015
+- ENTRY:
   EXPLAIN: npm v2(~2015年以前)
   BODY: |
     ・依存関係が深くなると、IDR構造が深くなる
@@ -25,7 +25,7 @@
         `-- node_modules
             `-- mod-b      <---- 重複
 
-- KEY: npm.history.npm.2015
+- ENTRY:
   EXPLAIN: npm v3(2015-06)
   BODY: |
     ・重複削除(dedupe)の導入
@@ -57,7 +57,7 @@
     dedupeのinstallのコスト増加
     install 順で node_modules 以下のディレクトリ構造変化(致命的)
 
-- KEY: npm.history.yarn.2016
+- ENTRY:
   EXPLAIN: yarn(2016-10)
   BODY: |
     ・木構造が不変のアルゴリズム
@@ -92,7 +92,7 @@
       dependencies:
         mod-b "^2.0.0"
 
-- KEY: npm.history.npm.2017
+- ENTRY:
   EXPLAIN: npm v5(2017-05)
   BODY: |
     ロックファイル(package-lock.json)導入して TREE を保存
@@ -135,7 +135,7 @@
       }
     }
 
-- KEY: npm.history.pnpm.2017
+- ENTRY:
   EXPLAIN: pnpmの新アプローチ(2017-06)
   BODY: |
     pnpmはnpm v3のdedupeとhoistingの仕組みを否定
@@ -163,7 +163,7 @@
     |-- mod-a -> .pnpm/mod-a@1.0.0/node_modules/mod-a
     `-- mod-c -> .pnpm/mod-c@1.0.0/node_modules/mod-c
 
-- KEY: npm.history.yarn.2018
+- ENTRY:
   EXPLAIN: yarn PnPの発表のみ(2018-09)
   BODY: |
     ・Plug'n'Play(PnP)という機能
@@ -171,14 +171,14 @@
     ・node の require をオーバーライド
     ・未対応パッケージが多い
 
-- KEY: npm.history.npm.2020
+- ENTRY:
   EXPLAIN: npm v7(2020-10)
   BODY: |
     ・npm install の順番によらず、決定論的にnode_modulesの木構造が決まる
     ・yarn v1と同等の機能を持つ
     ・package-lock.json v2 (パフォーマンス改善)
 
-- KEY: npm.history.npm.2023
+- ENTRY:
   EXPLAIN: npm v9.4(2023-01)
   BODY: |
     ・--install-strategy=linked オプション追加

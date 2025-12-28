@@ -2,10 +2,10 @@
 #-------------------------------
 # ChatGPT
 #-------------------------------
-- KEY: chatGPT.category
+- ENTRY:
   CATEGORY: ChatGPT
 
-- KEY: chatGPT.モデル
+- ENTRY:
   EXPLAIN: モデル
   BODY: |
     ■ ChatGPT ファミリー (GPT-3.5, GPT-4, GPT-4o)
@@ -24,7 +24,7 @@
       GPT-3.5(廃止):
         コスト効率が高く、日常的な対話や自動化に最適
 
-- KEY: chatGPT.プロンプト
+- ENTRY:
   EXPLAIN: プロンプト
   BODY: |
     # 背景
@@ -40,7 +40,7 @@
     # 参考情報
     （ここに本記事の内容をコピペ）
 
-- KEY: chatGPT.設定
+- ENTRY:
   EXPLAIN: 設定ファイル一覧
   BODY: |
     .chatgpt/

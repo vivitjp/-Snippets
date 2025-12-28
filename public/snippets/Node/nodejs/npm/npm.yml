@@ -3,7 +3,7 @@
 # npm
 #-------------------------------
 
-- KEY: npm.path
+- ENTRY:
   EXPLAIN: 各種PATH表示
   BODY: |
     npm root               //<DRIVE>:\<WORKING_DIR>\<PACKAGE名>\node_modules
@@ -11,7 +11,7 @@
     npm bin                //<DRIVE>:\<WORKING_DIR>\<PACKAGE名>\node_modules\.bin
     npm bin -g             //C:\Users\<ユーザ名>\AppData\Roaming\npm
 
-- KEY: npm.init
+- ENTRY:
   EXPLAIN: 初期化
   BODY: |
     ■ package.json 作成
@@ -34,7 +34,7 @@
       }
     }
 
-- KEY: npm.package.json
+- ENTRY:
   EXPLAIN: package.json
   BODY: |
     ■ name (package名)
@@ -197,7 +197,7 @@
 
       外部に設定ファイルを置かず、ここに既述するパッケージも多い
 
-- KEY: npm.package.json.script
+- ENTRY:
   EXPLAIN: package.json Script
   BODY: |
     "scripts": {
@@ -253,7 +253,7 @@
     version
     postversion
 
-- KEY: npm.ci
+- ENTRY:
   EXPLAIN: クローン
   BODY: |
     package-lock.json
@@ -266,7 +266,7 @@
       新規プロジェクト参加者が git clone 後の動作確認に使用
       npm install と同じように全依存パッケージをインストールするが、一度 node_modules を全削除
 
-- KEY: npm.version
+- ENTRY:
   EXPLAIN: バージョン管理
   BODY: |
     ■ セマンティック バージョニング(v2)              //ルール名
@@ -305,7 +305,7 @@
 
       "<package名>": "1.1.1"                      // 厳密なバージョン指定。非推薦。
 
-- KEY: npm.install
+- ENTRY:
   EXPLAIN: インストール
   BODY: |
     npm i(install)
@@ -336,7 +336,7 @@
 
     npm i -O(--save-optional) <package名>         // optionalDependencies
 
-- KEY: npm.list
+- ENTRY:
   EXPLAIN: リスト
   BODY: |
     npm list(ls/la/ll)[ --all][ --depth=0]        // インストールされたパッケージリスト
@@ -353,7 +353,7 @@
 
     npm list -g                                   // PATHとグローバル パッケージ
 
-- KEY: npm.update
+- ENTRY:
   EXPLAIN: アップデート
   BODY: |
     npm update -D                                 // 全アップデート
@@ -367,7 +367,7 @@
     npm outdated                                  // 未更新のpackage確認
     npm outdated -g                               // -g グローバル
 
-- KEY: npm.cache
+- ENTRY:
   EXPLAIN: 整合性チェック
   BODY: |
     npm cache verify
@@ -380,14 +380,14 @@
       npm cache verify
       npm i                             // または npm ci
 
-- KEY: npm.uninstall
+- ENTRY:
   EXPLAIN: アンインストール
   BODY: |
     npm un/uninstall <PACKAGE名>                  // 削除 
     npm un/uninstall -g <PACKAGE名>               // グローバル
     npm un/uninstall --save/-S <PACKAGE名>        // デフォルト:依存関係の削除
 
-- KEY: npm.run
+- ENTRY:
   EXPLAIN: コマンド実行
   BODY: |
     npm run <SCRIPT名>                            // スクリプト実行
@@ -408,7 +408,7 @@
       npx -p <パッケージ名> <コマンド名>            // パッケージ名とコマンド名が異なる場合
       npx --yes <コマンド名>                       // 実行可否を問わない
 
-- KEY: npm.cli
+- ENTRY:
   EXPLAIN: 他コマンドリスト
   BODY: |
     npm access                                    // 公開packageのアクセスレベル設定

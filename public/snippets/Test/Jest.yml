@@ -7,7 +7,7 @@
 # Setup & 破棄
 #-------------------------------
 
-- KEY: jest.describe.setupEach
+- ENTRY:
   EXPLAIN: before/afterEach
   BODY: |
     beforeEach(() => {
@@ -20,7 +20,7 @@
       expect(isSelected(VALUE)).toBeTruthy();
     });
 
-- KEY: jest.describe.setupAll
+- ENTRY:
   EXPLAIN: before/afterAll
   BODY: |
     beforeAll(() => {
@@ -36,7 +36,7 @@
 #-------------------------------
 # Describe & test(it)
 #-------------------------------
-- KEY: jest.describe
+- ENTRY:
   EXPLAIN: describe種類
   BODY: |
     describe('Group Title', ()=>{ })
@@ -44,7 +44,7 @@
     describe.skip.('Group Title', ()=>{ })  # 実行せず
     describe.each([])('Group Title', ()=>{ }) # 配列
 
-- KEY: jest.it
+- ENTRY:
   EXPLAIN: it種類
   BODY: |
     it('Title', ()=>{ ... })         # 実行(同期)
@@ -55,7 +55,7 @@
     it.todo('Title', ()=>{ })        # 実行予定
     it.concurrent('Title', ()=>{ })  # 非同期同時実行
 
-- KEY: jest.it.syncAsync
+- ENTRY:
   EXPLAIN: it(同期・非同期)
   BODY: |
     it('Title', ()=>{ ... })   # 実行(同期)
@@ -70,7 +70,7 @@
 #-------------------------------
 # 配列パラメタ
 #-------------------------------
-- KEY: jest.it.each.array
+- ENTRY:
   EXPLAIN: パラメタ(配列)
   BODY: |
     test.each([
@@ -80,7 +80,7 @@
       expect(sum(a, b)).toBe(total)
     })
 
-- KEY: jest.it.each.object
+- ENTRY:
   EXPLAIN: パラメタ(オブジェクト配列)
   BODY: |
     test.each([
@@ -90,7 +90,7 @@
       expect(sum(a, b)).toBe(total)
     })
 
-- KEY: jest.it.each.literalObject
+- ENTRY:
   EXPLAIN: パラメタ(リテラルオブジェクト配列)
   BODY: |
     test.each`
@@ -105,7 +105,7 @@
 # Mock関数
 #-------------------------------
 
-- KEY: jest.mock.mockFn
+- ENTRY:
   EXPLAIN: Mock関数(コールバック)
   BODY: |
     const mockFn = jest.fn(x => x ** 2);
@@ -116,7 +116,7 @@
     expect(mockFn.mock.results[0].value).toBe(1); //結果
     expect(mockFn.mock.results[1].value).toBe(4); //結果
 
-- KEY: jest.mock.returnValue
+- ENTRY:
   EXPLAIN: Mock関数(戻り値)
   BODY: |
     const mockFn = jest.fn();
@@ -128,7 +128,7 @@
 #-------------------------------
 # SpyOn
 #-------------------------------
-- KEY: jest.spyOn
+- ENTRY:
   EXPLAIN: spyOn
   BODY: |
     const spy = jest.spyOn(axios, 'get');  //Axios:GET 上書き
@@ -143,7 +143,7 @@
 # Matcher: Expect
 #-------------------------------
 
-- KEY: jest.matcher.expect.anything
+- ENTRY:
   EXPLAIN: null,undefined以外
   BODY: |
     const mockFn = jest.fn();
@@ -151,7 +151,7 @@
     expect(mockFn).toBeCalledWith(expect.anything());
     //null,undefined 以外、すべてに一致
 
-- KEY: jest.matcher.expect.any
+- ENTRY:
   EXPLAIN: any(型)に一致
   BODY: |
     function randomCall(fn: (arg: number) => void) {
@@ -161,14 +161,14 @@
     randomCall(mockFn)
     expect(mockFn).toBeCalledWith(expect.any(Number))
 
-- KEY: jest.matcher.expect.arrayContaining1
+- ENTRY:
   EXPLAIN: 配列要素包含
   BODY: |
     const expected = ["A", "B"]
     expect(["A", "B", "C"]).toEqual(expect.arrayContaining(expected))
     expect(["B", "C"]).not.toEqual(expect.arrayContaining(expected))
 
-- KEY: jest.matcher.expect.arrayContaining2
+- ENTRY:
   EXPLAIN: 配列正規表現複数包含
   BODY: |
     const expected = [
@@ -178,7 +178,7 @@
     expect(["Ali", "Rob", "Eve"]).toEqual(expect.arrayContaining(expected))
     expect(["Rob", "Eve"]).not.toEqual(expect.arrayContaining(expected))
 
-- KEY: jest.matcher.expect.objectContaining
+- ENTRY:
   EXPLAIN: オブジェクト属性包含
   BODY: |
     const expected = { a: "a" }
@@ -186,14 +186,14 @@
     expect({ a: "a", b: "b" }).toEqual(expect.objectContaining(expected))
     expect({ b: "b" }).toEqual(expect.not.objectContaining(expected))
 
-- KEY: jest.matcher.expect.stringContaining
+- ENTRY:
   EXPLAIN: 文字列部分一致
   BODY: |
     const expected = "Hello"
     expect("Hello world!").toEqual(expect.stringContaining(expected))
     expect("Hi world!").toEqual(expect.not.stringContaining(expected))
 
-- KEY: jest.matcher.expect.stringMatching
+- ENTRY:
   EXPLAIN: 正規表現部分一致
   BODY: |
     const expected = /Hello/
@@ -204,21 +204,21 @@
 # Matcher
 #-------------------------------
 
-- KEY: jest.matcher.toBe
+- ENTRY:
   EXPLAIN: プリミティブ(参照一致)
   BODY: |
     expect(7).toBe(7);               //プリミティブ一致
     const obj = { A: "a" }
     expect(obj).not.toBe({ A: "a" }) //不一致
 
-- KEY: jest.matcher.toEqual
+- ENTRY:
   EXPLAIN: オブジェクト型と値(再帰的)
   BODY: |
     const object = { id: "A", name: { first: "B" } }
     expect(object).toEqual({ id: "A", name: { first: "B" } })
     expect(object).not.toEqual({ id: "A", name: { first: "C" } })
 
-- KEY: jest.matcher.toStrictEqual
+- ENTRY:
   EXPLAIN: toEqualとの違い
   BODY: |
     //■ 違い1: undefined
@@ -237,24 +237,24 @@
     expect(new A()).toEqual({ x: 1 })
     expect(new A()).not.toStrictEqual({ x: 1 })
 
-- KEY: jest.matcher.not
+- ENTRY:
   EXPLAIN: 反転
   BODY: |
     expect(7).not.toBe(8);
 
-- KEY: jest.matcher.toContain
+- ENTRY:
   EXPLAIN: 部分一致(配列/文字列)
   BODY: |
     expect(["A","B","C"]).toContain('A');
     expect("ABCDEFG").toContain('CD');
 
-- KEY: jest.matcher.toContainEqual
+- ENTRY:
   EXPLAIN: 配列要素の型と値
   BODY: |
     expect([{A: "a"},{B: "b"}]).toContainEqual({A: "a"});
     expect([1,2,3]).toContainEqual(1)
 
-- KEY: jest.matcher.toMatch
+- ENTRY:
   EXPLAIN: 文字列/正規表現
   BODY: |
     expect("ABCDEFG").toMatch("CD")
@@ -263,7 +263,7 @@
     expect("ABCDEFG").toMatch(new RegExp("CD"))
     expect("ABCDEFG").toMatch(new RegExp("cd", "i"))
 
-- KEY: jest.matcher.toMatchObject
+- ENTRY:
   EXPLAIN: Object属性セット判定
   BODY: |
     const object = { a: "a", b: "b" }
@@ -271,14 +271,14 @@
     expect(object).toMatchObject({ a: "a" })
     expect(object).not.toMatchObject({ a: "x" })
 
-- KEY: jest.matcher.toHaveLength
+- ENTRY:
   EXPLAIN: lengthの一致
   BODY: |
     expect([1, 2, 3]).toHaveLength(3);
     expect('abc').toHaveLength(3);
     expect('').not.toHaveLength(5);
 
-- KEY: jest.matcher.toHaveProperty
+- ENTRY:
   EXPLAIN: オブジェクト属性
   BODY: |
     const object = {
@@ -296,7 +296,7 @@
     expect(object).toHaveProperty(["sub", "type", 0], "a")
     expect(object).not.toHaveProperty(["sub", "open"])
 
-- KEY: jest.matcher.toBeInstanceOf
+- ENTRY:
   EXPLAIN: インスタンス
   BODY: |
     class A {}
@@ -304,7 +304,7 @@
     expect(() => {}).toBeInstanceOf(Function);
     expect(new A()).not.toBeInstanceOf(Function);
 
-- KEY: jest.matcher.resolves.rejects
+- ENTRY:
   EXPLAIN: 非同期 resolve/rejects
   BODY: |
     test('TITLE', async () => {
@@ -314,7 +314,7 @@
       await expect(fetchData()).rejects.toMatch(EXPECTED);
     });
 
-- KEY: jest.matcher.functionCalled
+- ENTRY:
   EXPLAIN: 関数呼び出し
   BODY: |
     ■.toHaveBeenCalled()
@@ -326,7 +326,7 @@
     ■.toHaveBeenLastCalledWith(arg1, arg2, ...)
     ■.toHaveBeenNthCalledWith(nthCall, arg1, arg2, ...)
 
-- KEY: jest.matcher.functionReturned
+- ENTRY:
   EXPLAIN: 関数戻り値
   BODY: |
     ■.toHaveReturned()=toReturn()
@@ -345,7 +345,7 @@
     ■.toHaveLastReturnedWith(value)
     ■.toHaveNthReturnedWith(nthCall, value)
 
-- KEY: jest.matcher.numbers
+- ENTRY:
   EXPLAIN: 数値比較
   BODY: |
     ■.toBeCloseTo(数,小数点)          //浮動小数点等価性
@@ -359,7 +359,7 @@
       expect(NaN).toBeNaN();
       expect(1).not.toBeNaN();
 
-- KEY: jest.matcher.define
+- ENTRY:
   EXPLAIN: 定義
   BODY: |
     ■.toBeDefined()                  //非undefinedの検証
@@ -367,7 +367,7 @@
     ■.toBeUndefined()                //undefinedの検証
       expect(method(1)).toBeUndefined();
 
-- KEY: jest.matcher.truthy.falsy
+- ENTRY:
   EXPLAIN: 真偽・NULL
   BODY: |
     ■.toBeTruthy()               //真
@@ -382,7 +382,7 @@
 # Matcher カスタム
 #-------------------------------
 
-- KEY: jest.matcher.extend
+- ENTRY:
   EXPLAIN: カスタム・マッチャー
   BODY: |
     expect.extend({
@@ -408,7 +408,7 @@
 # Matcher Error
 #-------------------------------
 
-- KEY: jest.matcher.toThrow
+- ENTRY:
   EXPLAIN: エラー
   BODY: |
     const method = (title: string) => { throw Error(title) }

@@ -1,6 +1,6 @@
 import { KeyDef } from "../../../types/type"
 
-export const keysJSTS: KeyDef = {
+export const keysJS: KeyDef = {
   // ■ 変数宣言
   ForestGreen: ["const", "let", "new", "this"],
   // ■ 変数宣言
@@ -18,19 +18,6 @@ export const keysJSTS: KeyDef = {
     "declare",
     "global",
   ],
-  // ■ TypeScript
-  LightSeaGreen: [
-    "interface",
-    "type",
-    "as",
-    "extends",
-    "infer",
-    "never",
-    "keyof",
-    "typeof",
-    "any",
-    "readonly",
-  ],
   // ■ JS オブジェクト
   SteelBlue: [
     "String",
@@ -41,22 +28,10 @@ export const keysJSTS: KeyDef = {
     "WeakMap",
     "Set",
     "WeakSet",
-  ],
-  // ■ TS 型
-  RoyalBlue: [
-    "number",
-    "string",
-    "boolean",
-    "null",
-    "undefined",
-    "symbol",
-    "void",
-    "object",
-    "Function",
-    "Date ",
-    "Error",
     "RegExp",
+    "Error",
   ],
+
   // ■ JS Methods
   Crimson: [
     "fetch",
@@ -115,15 +90,57 @@ export const keysJSTS: KeyDef = {
     "toLocaleString",
     "toString",
     "fromEntries",
-    "Math.random",
-    "Math.floor",
-    "window.crypto.randomUUID",
-    "window.crypto.getRandomValues",
+    "Math",
+    "random",
+    "floor",
+    "crypto",
+    "randomUUID",
+    "getRandomValues",
     "now",
     "toSpliced",
     "with",
     "toSorted",
     "toReversed",
+    "private",
+    "accessor",
+    "public",
+    "protected",
+    "static",
+    "void",
+  ],
+
+  // ■ 青
+  RoyalBlue: [
+    "for",
+    "in",
+    "of",
+    "while",
+    "break",
+    "continue",
+    "switch",
+    "case",
+    "default",
+    "if",
+    "else",
+    "function",
+    "return",
+    "yield",
+    "yield*",
+    "get",
+    "set",
+    "class",
+    "extends",
+    "super",
+    "instanceof",
+    "call",
+    "void",
+    "delete",
+    "abstract",
+    "constructor",
+    "implements",
+    "try",
+    "finally",
+    "catch",
   ],
 
   // ■ JS Event

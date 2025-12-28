@@ -3,7 +3,7 @@
 # Lint React Rules
 #-------------------------------
 
-- KEY: lint.react
+- ENTRY:
   EXPLAIN: 定義 & URL for more
   BODY: |
     ■ https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules
@@ -92,13 +92,13 @@
       …
     ];
 
-- KEY: lint.react.enabled
+- ENTRY:
   EXPLAIN: |
     0="off" 1="warn" 2="error"
   BODY: |
     定義の <enabled> に該当する number|string
 
-- KEY: lint.react.recommended
+- ENTRY:
   EXPLAIN: Recommended 定義
   BODY: |
     rules: {                                      // "off"=0, "warn"=1, "error"=2
@@ -126,7 +126,7 @@
       'react/require-render-return': 2,
     },
 
-- KEY: lint.react.boolean-prop-naming
+- ENTRY:
   EXPLAIN: boolean-prop-naming
   BODY: |
     ■ 定義
@@ -165,7 +165,7 @@
     }
     const Hello = (props: Props) => <div />;
 
-- KEY: lint.react.button-has-type
+- ENTRY:
   EXPLAIN: button-has-type
   BODY: |
     ボタンの HTML 要素の type 属性のデフォルト値は「submit」
@@ -202,7 +202,7 @@
     var Hello = React.createElement('button', {type: 'reset'}, 'Hello')
     var Hello = React.createElement('button', {type: condition ? 'button' : 'submit'}, 'Hello')
 
-- KEY: lint.react.checked-requires-onchange-or-readonly
+- ENTRY:
   EXPLAIN: checked-requires-onchange-or-readonly
   BODY: |
     入力要素のチェックされたプロパティに対して onChange または readonly 属性を強制
@@ -228,7 +228,7 @@
     React.createElement('input', { type: 'checkbox', checked: true, onChange() {}, readOnly: true });
     React.createElement('input', { type: 'checkbox', defaultChecked: true });
 
-- KEY: lint.react.default-props-match-prop-types
+- ENTRY:
   EXPLAIN: default-props-match-prop-types
   BODY: |
     defaultProps 内のすべての prop に必須ではない型定義があることを保証
@@ -262,7 +262,7 @@
       bar: 'some default'
     };
 
-- KEY: lint.react.destructuring-assignment
+- ENTRY:
   EXPLAIN: destructuring-assignment
   BODY: |
     ■ 定義
@@ -291,7 +291,7 @@
       return (<div id={id} />)
     };
 
-- KEY: lint.react.display-name
+- ENTRY:
   EXPLAIN: ☑️ display-name
   BODY: |
     ■ 定義
@@ -330,7 +330,7 @@
       return <>{a}</>
     })
 
-- KEY: lint.react.forbid-component-props
+- ENTRY:
   EXPLAIN: forbid-component-props
   BODY: |
     className、style 禁止
@@ -348,7 +348,7 @@
     <div className='foo' />
     <div style={{color: 'red'}} />
 
-- KEY: lint.react.forbid-dom-props
+- ENTRY:
   EXPLAIN: forbid-dom-props
   BODY: |
     props を要素に渡せなくなる
@@ -371,7 +371,7 @@
     "react/forbid-dom-props": [1, { "forbid": ["style"] }]
     <Hello id={{color: 'red'}} />
 
-- KEY: lint.react.forbid-elements
+- ENTRY:
   EXPLAIN: forbid-elements
   BODY: |
     ■ 定義
@@ -393,7 +393,7 @@
     "react/forbid-elements": [1, { "forbid": [{ "element": "button" }] }]
     <Button />
 
-- KEY: lint.react.forbid-foreign-prop-types
+- ENTRY:
   EXPLAIN: WIP-forbid-foreign-prop-types
   BODY: |
     ■ 定義
@@ -403,7 +403,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.forbid-prop-types
+- ENTRY:
   EXPLAIN: WIP-forbid-prop-types
   BODY: |
     ■ 定義
@@ -413,7 +413,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.function-component-definition
+- ENTRY:
   EXPLAIN: WIP-function-component-definition
   BODY: |
     ■ 定義
@@ -423,7 +423,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.hook-use-state
+- ENTRY:
   EXPLAIN: WIP-hook-use-state
   BODY: |
     ■ 定義
@@ -433,7 +433,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.iframe-missing-sandbox
+- ENTRY:
   EXPLAIN: WIP-iframe-missing-sandbox
   BODY: |
     ■ 定義
@@ -443,7 +443,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-boolean-value
+- ENTRY:
   EXPLAIN: WIP-jsx-boolean-value
   BODY: |
     ■ 定義
@@ -453,7 +453,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-child-element-spacing
+- ENTRY:
   EXPLAIN: WIP-jsx-child-element-spacing
   BODY: |
     ■ 定義
@@ -463,7 +463,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-closing-bracket-location
+- ENTRY:
   EXPLAIN: WIP-jsx-closing-bracket-location
   BODY: |
     ■ 定義
@@ -473,7 +473,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-closing-tag-location
+- ENTRY:
   EXPLAIN: WIP-jsx-closing-tag-location
   BODY: |
     ■ 定義
@@ -483,7 +483,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-curly-brace-presence
+- ENTRY:
   EXPLAIN: WIP-jsx-curly-brace-presence
   BODY: |
     ■ 定義
@@ -493,7 +493,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-curly-newline
+- ENTRY:
   EXPLAIN: WIP-jsx-curly-newline
   BODY: |
     ■ 定義
@@ -503,7 +503,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-curly-spacing
+- ENTRY:
   EXPLAIN: WIP-jsx-curly-spacing
   BODY: |
     ■ 定義
@@ -513,7 +513,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-equals-spacing
+- ENTRY:
   EXPLAIN: WIP-jsx-equals-spacing
   BODY: |
     ■ 定義
@@ -523,7 +523,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-filename-extension
+- ENTRY:
   EXPLAIN: WIP-jsx-filename-extension
   BODY: |
     ■ 定義
@@ -533,7 +533,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-first-prop-new-line
+- ENTRY:
   EXPLAIN: WIP-jsx-first-prop-new-line
   BODY: |
     ■ 定義
@@ -543,7 +543,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-fragments
+- ENTRY:
   EXPLAIN: WIP-jsx-fragments
   BODY: |
     ■ 定義
@@ -553,7 +553,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-handler-names
+- ENTRY:
   EXPLAIN: WIP-jsx-handler-names
   BODY: |
     ■ 定義
@@ -563,7 +563,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-indent-props
+- ENTRY:
   EXPLAIN: WIP-jsx-indent-props
   BODY: |
     ■ 定義
@@ -573,7 +573,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.rules.reajsx-indentct.
+- ENTRY:
   EXPLAIN: WIP-jsx-indent
   BODY: |
     ■ 定義
@@ -583,7 +583,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.rules.rjsx-key eact.
+- ENTRY:
   EXPLAIN: WIP-jsx-key
   BODY: |
     ■ 定義
@@ -593,7 +593,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-max-depth
+- ENTRY:
   EXPLAIN: WIP-jsx-max-depth
   BODY: |
     ■ 定義
@@ -603,7 +603,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-max-props-per-line
+- ENTRY:
   EXPLAIN: WIP-jsx-max-props-per-line
   BODY: |
     ■ 定義
@@ -613,7 +613,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.rules.reactjsx-newline .
+- ENTRY:
   EXPLAIN: WIP-jsx-newline
   BODY: |
     ■ 定義
@@ -623,7 +623,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.rules.reactjsx-no-bind .
+- ENTRY:
   EXPLAIN: WIP-jsx-no-bind
   BODY: |
     ■ 定義
@@ -633,7 +633,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-no-comment-textnodes
+- ENTRY:
   EXPLAIN: WIP-jsx-no-comment-textnodes
   BODY: |
     ■ 定義
@@ -643,7 +643,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-no-constructed-context-values
+- ENTRY:
   EXPLAIN: WIP-jsx-no-constructed-context-values
   BODY: |
     ■ 定義
@@ -653,7 +653,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-no-duplicate-props
+- ENTRY:
   EXPLAIN: WIP-jsx-no-duplicate-props
   BODY: |
     ■ 定義
@@ -663,7 +663,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-no-leaked-render
+- ENTRY:
   EXPLAIN: WIP-jsx-no-leaked-render
   BODY: |
     ■ 定義
@@ -673,7 +673,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-no-literals
+- ENTRY:
   EXPLAIN: WIP-jsx-no-literals
   BODY: |
     ■ 定義
@@ -683,7 +683,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-no-script-url
+- ENTRY:
   EXPLAIN: WIP-jsx-no-script-url
   BODY: |
     ■ 定義
@@ -693,7 +693,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-no-target-blank
+- ENTRY:
   EXPLAIN: WIP-jsx-no-target-blank
   BODY: |
     ■ 定義
@@ -703,7 +703,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.rules.reactjsx-no-undef.
+- ENTRY:
   EXPLAIN: WIP-jsx-no-undef
   BODY: |
     ■ 定義
@@ -713,7 +713,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-no-useless-fragment
+- ENTRY:
   EXPLAIN: WIP-jsx-no-useless-fragment
   BODY: |
     ■ 定義
@@ -723,7 +723,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-one-expression-per-line
+- ENTRY:
   EXPLAIN: WIP-jsx-one-expression-per-line
   BODY: |
     ■ 定義
@@ -733,7 +733,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-pascal-case
+- ENTRY:
   EXPLAIN: WIP-jsx-pascal-case
   BODY: |
     ■ 定義
@@ -743,7 +743,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-props-no-multi-spaces
+- ENTRY:
   EXPLAIN: WIP-jsx-props-no-multi-spaces
   BODY: |
     ■ 定義
@@ -753,7 +753,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-props-no-spreading
+- ENTRY:
   EXPLAIN: WIP-jsx-props-no-spreading
   BODY: |
     ■ 定義
@@ -763,7 +763,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-sort-default-props
+- ENTRY:
   EXPLAIN: WIP-jsx-sort-default-props
   BODY: |
     ■ 定義
@@ -773,7 +773,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-sort-props
+- ENTRY:
   EXPLAIN: WIP-jsx-sort-props
   BODY: |
     ■ 定義
@@ -783,7 +783,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-space-before-closing
+- ENTRY:
   EXPLAIN: WIP-jsx-space-before-closing
   BODY: |
     ■ 定義
@@ -793,7 +793,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-tag-spacing
+- ENTRY:
   EXPLAIN: WIP-jsx-tag-spacing
   BODY: |
     ■ 定義
@@ -803,7 +803,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-uses-react
+- ENTRY:
   EXPLAIN: WIP-jsx-uses-react
   BODY: |
     ■ 定義
@@ -813,7 +813,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-uses-vars
+- ENTRY:
   EXPLAIN: WIP-jsx-uses-vars
   BODY: |
     ■ 定義
@@ -823,7 +823,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.jsx-wrap-multilines
+- ENTRY:
   EXPLAIN: WIP-jsx-wrap-multilines
   BODY: |
     ■ 定義
@@ -833,7 +833,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.no-access-state-in-setstate
+- ENTRY:
   EXPLAIN: WIP-no-access-state-in-setstate
   BODY: |
     ■ 定義
@@ -843,7 +843,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.no-adjacent-inline-elements
+- ENTRY:
   EXPLAIN: WIP-no-adjacent-inline-elements
   BODY: |
     ■ 定義
@@ -853,7 +853,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.no-array-index-key
+- ENTRY:
   EXPLAIN: WIP-no-array-index-key
   BODY: |
     ■ 定義
@@ -863,7 +863,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.no-arrow-function-lifecycle
+- ENTRY:
   EXPLAIN: WIP-no-arrow-function-lifecycle
   BODY: |
     ■ 定義
@@ -873,7 +873,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.no-children-prop
+- ENTRY:
   EXPLAIN: WIP-no-children-prop
   BODY: |
     ■ 定義
@@ -883,7 +883,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.no-danger-with-children
+- ENTRY:
   EXPLAIN: WIP-no-danger-with-children
   BODY: |
     ■ 定義
@@ -893,7 +893,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.rules.reano-danger ct.
+- ENTRY:
   EXPLAIN: WIP-no-danger
   BODY: |
     ■ 定義
@@ -903,7 +903,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.no-deprecated
+- ENTRY:
   EXPLAIN: WIP-no-deprecated
   BODY: |
     ■ 定義
@@ -913,7 +913,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.no-did-mount-set-state
+- ENTRY:
   EXPLAIN: WIP-no-did-mount-set-state
   BODY: |
     ■ 定義
@@ -923,7 +923,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.no-did-update-set-state
+- ENTRY:
   EXPLAIN: WIP-no-did-update-set-state
   BODY: |
     ■ 定義
@@ -933,7 +933,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.no-direct-mutation-state
+- ENTRY:
   EXPLAIN: WIP-no-direct-mutation-state
   BODY: |
     ■ 定義
@@ -943,7 +943,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.no-find-dom-node
+- ENTRY:
   EXPLAIN: WIP-no-find-dom-node
   BODY: |
     ■ 定義
@@ -953,7 +953,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.no-invalid-html-attribute
+- ENTRY:
   EXPLAIN: WIP-no-invalid-html-attribute
   BODY: |
     ■ 定義
@@ -963,7 +963,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.no-is-mounted
+- ENTRY:
   EXPLAIN: WIP-no-is-mounted
   BODY: |
     ■ 定義
@@ -973,7 +973,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.no-multi-comp
+- ENTRY:
   EXPLAIN: WIP-no-multi-comp
   BODY: |
     ■ 定義
@@ -983,7 +983,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.rules.reactno-namespace.
+- ENTRY:
   EXPLAIN: WIP-no-namespace
   BODY: |
     ■ 定義
@@ -993,7 +993,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.no-object-type-as-default-prop
+- ENTRY:
   EXPLAIN: WIP-no-object-type-as-default-prop
   BODY: |
     ■ 定義
@@ -1003,7 +1003,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.no-redundant-should-component-update
+- ENTRY:
   EXPLAIN: WIP-no-redundant-should-component-update
   BODY: |
     ■ 定義
@@ -1013,7 +1013,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.no-render-return-value
+- ENTRY:
   EXPLAIN: WIP-no-render-return-value
   BODY: |
     ■ 定義
@@ -1023,7 +1023,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.rules.reactno-set-state.
+- ENTRY:
   EXPLAIN: WIP-no-set-state
   BODY: |
     ■ 定義
@@ -1033,7 +1033,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.no-string-refs
+- ENTRY:
   EXPLAIN: WIP-no-string-refs
   BODY: |
     ■ 定義
@@ -1043,7 +1043,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.no-this-in-sfc
+- ENTRY:
   EXPLAIN: WIP-no-this-in-sfc
   BODY: |
     ■ 定義
@@ -1053,7 +1053,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.rules.rno-typoseact.
+- ENTRY:
   EXPLAIN: WIP-no-typos
   BODY: |
     ■ 定義
@@ -1063,7 +1063,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.no-unescaped-entities
+- ENTRY:
   EXPLAIN: WIP-no-unescaped-entities
   BODY: |
     ■ 定義
@@ -1073,7 +1073,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.no-unknown-property
+- ENTRY:
   EXPLAIN: WIP-no-unknown-property
   BODY: |
     ■ 定義
@@ -1083,7 +1083,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.rules.reano-unsafe ct.
+- ENTRY:
   EXPLAIN: WIP-no-unsafe
   BODY: |
     ■ 定義
@@ -1093,7 +1093,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.no-unstable-nested-components
+- ENTRY:
   EXPLAIN: WIP-no-unstable-nested-components
   BODY: |
     ■ 定義
@@ -1103,7 +1103,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.no-unused-class-component-methods
+- ENTRY:
   EXPLAIN: WIP-no-unused-class-component-methods
   BODY: |
     ■ 定義
@@ -1113,7 +1113,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.no-unused-prop-types
+- ENTRY:
   EXPLAIN: WIP-no-unused-prop-types
   BODY: |
     ■ 定義
@@ -1123,7 +1123,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.no-unused-state
+- ENTRY:
   EXPLAIN: WIP-no-unused-state
   BODY: |
     ■ 定義
@@ -1133,7 +1133,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.no-will-update-set-state
+- ENTRY:
   EXPLAIN: WIP-no-will-update-set-state
   BODY: |
     ■ 定義
@@ -1143,7 +1143,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.prefer-es6-class
+- ENTRY:
   EXPLAIN: WIP-prefer-es6-class
   BODY: |
     ■ 定義
@@ -1153,7 +1153,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.prefer-exact-props
+- ENTRY:
   EXPLAIN: WIP-prefer-exact-props
   BODY: |
     ■ 定義
@@ -1163,7 +1163,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.prefer-read-only-props
+- ENTRY:
   EXPLAIN: WIP-prefer-read-only-props
   BODY: |
     ■ 定義
@@ -1173,7 +1173,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.prefer-stateless-function
+- ENTRY:
   EXPLAIN: WIP-prefer-stateless-function
   BODY: |
     ■ 定義
@@ -1183,7 +1183,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.rules.reaprop-typesct.
+- ENTRY:
   EXPLAIN: WIP-prop-types
   BODY: |
     ■ 定義
@@ -1193,7 +1193,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.react-in-jsx-scope
+- ENTRY:
   EXPLAIN: WIP-react-in-jsx-scope
   BODY: |
     ■ 定義
@@ -1203,7 +1203,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.require-default-props
+- ENTRY:
   EXPLAIN: WIP-require-default-props
   BODY: |
     ■ 定義
@@ -1213,7 +1213,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.require-optimization
+- ENTRY:
   EXPLAIN: WIP-require-optimization
   BODY: |
     ■ 定義
@@ -1223,7 +1223,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.require-render-return
+- ENTRY:
   EXPLAIN: WIP-require-render-return
   BODY: |
     ■ 定義
@@ -1233,7 +1233,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.self-closing-comp
+- ENTRY:
   EXPLAIN: WIP-self-closing-comp
   BODY: |
     ■ 定義
@@ -1243,7 +1243,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.rules.reasort-comp ct.
+- ENTRY:
   EXPLAIN: WIP-sort-comp
   BODY: |
     ■ 定義
@@ -1253,7 +1253,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.sort-default-props
+- ENTRY:
   EXPLAIN: WIP-sort-default-props
   BODY: |
     ■ 定義
@@ -1263,7 +1263,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.sort-prop-types
+- ENTRY:
   EXPLAIN: WIP-sort-prop-types
   BODY: |
     ■ 定義
@@ -1273,7 +1273,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.state-in-constructor
+- ENTRY:
   EXPLAIN: WIP-state-in-constructor
   BODY: |
     ■ 定義
@@ -1283,7 +1283,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.static-property-placement
+- ENTRY:
   EXPLAIN: WIP-static-property-placement
   BODY: |
     ■ 定義
@@ -1293,7 +1293,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.style-prop-object
+- ENTRY:
   EXPLAIN: WIP-style-prop-object
   BODY: |
     ■ 定義
@@ -1303,7 +1303,7 @@
   FOLD: |
     ■ 正
 
-- KEY: lint.react.void-dom-elements-no-children
+- ENTRY:
   EXPLAIN: WIP-void-dom-elements-no-children
   BODY: |
     ■ 定義

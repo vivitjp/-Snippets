@@ -2,10 +2,10 @@
 #-------------------------------
 # TypeScript
 #-------------------------------
-- KEY: ts.typescript.category
+- ENTRY:
   CATEGORY: TypeScript
 
-- KEY: ts.TSC.tsc
+- ENTRY:
   EXPLAIN: TSC
   BODY: |
     ■ TypeScript コンパイラ (TSC) のインストール
@@ -24,7 +24,7 @@
       tsc --build --clean               // ビルド成果物のクリーン
       tsc --help                        // ヘルプ表示
 
-- KEY: ts.TSC.tsc.memory
+- ENTRY:
   EXPLAIN: TSC メモリ対策
   BODY: |
     ■ tsc 実行時のメモリ関連 Node/V8 オプションと、メモリ負荷を下げる TypeScript 側の設定
@@ -81,7 +81,7 @@
       ・必要以上に大きなユーティリティ型や巨大な型演算はコンパイラ負荷を上げるので見直す
       ・メモリ不足エラー（OOM）が出る場合はまず --max-old-space-size を増やし、併せて skipLibCheck を有効化
 
-- KEY: ts.TSC.tsc
+- ENTRY:
   EXPLAIN: TSC Tips
   TABLE:
     OPTION:
@@ -113,13 +113,13 @@
 # Tips
 #-------------------------------
 
-- KEY: ts.Tips.category
+- ENTRY:
   CATEGORY: TypeScript Tips & Snippets
 
 #-------------------------------
 # ENUM
 #-------------------------------
-- KEY: ts.check.ignore
+- ENTRY:
   EXPLAIN: |
     デコレータ: 型チェック無視 @ts-ignore など
   BODY: |
@@ -136,7 +136,7 @@
 #-------------------------------
 # ENUM
 #-------------------------------
-- KEY: ts.enum.maker
+- ENTRY:
   EXPLAIN: makeEnum:const配列からenum(Object)作成
   BODY: |
     function makeEnum<T extends readonly string[]>(配列: T) {
@@ -153,7 +153,7 @@
 #-------------------------------
 # union
 #-------------------------------
-- KEY: ts.union.fromObject
+- ENTRY:
   EXPLAIN: union を object から生成
   BODY: |
     const person = {
@@ -165,7 +165,7 @@
 
     結果: "Name" | "Address"
 
-- KEY: ts.union.fromArray
+- ENTRY:
   EXPLAIN: union を array から生成
   BODY: |
     const person = [ "Name", "Address" ] as const
@@ -176,7 +176,7 @@
 #-------------------------------
 # Switch
 #-------------------------------
-- KEY: ts.switch.never
+- ENTRY:
   EXPLAIN: switchでneverチェック
   BODY: |
     export const func = (name: Person) => {
@@ -195,7 +195,7 @@
 #-------------------------------
 # 判別可能なUnion型
 #-------------------------------
-- KEY: ts.unionToBranch
+- ENTRY:
   EXPLAIN: 判別可能なUnion型
   BODY: |
     interface Square {
@@ -220,7 +220,7 @@
 #-------------------------------
 # 関数のオーバーロード
 #-------------------------------
-- KEY: ts.overload
+- ENTRY:
   EXPLAIN: 関数のオーバーロード
   BODY: |
     interface Overloaded {
@@ -243,7 +243,7 @@
 #-------------------------------
 # 構造的部分型とその例外: Freshness
 #-------------------------------
-- KEY: ts.freshness
+- ENTRY:
   EXPLAIN: 構造的部分型の例外
   BODY: |
     const foo = { x: 1, y: 2, z: 3 }
@@ -264,7 +264,7 @@
 #-------------------------------
 # 型ガード(in)
 #-------------------------------
-- KEY: ts.typeGuard.in
+- ENTRY:
   EXPLAIN: 型ガード(in)
   BODY: |
     interface A { x: number }
@@ -277,7 +277,7 @@
 #-------------------------------
 # 型ガード
 #-------------------------------
-- KEY: ts.typeGuard.user
+- ENTRY:
   EXPLAIN: 型ガード(ユーザ定義)
   BODY: |
     ■ 解説
@@ -306,14 +306,14 @@
 #-------------------------------
 # 型判定
 #-------------------------------
-- KEY: ts.typeGuard.string
+- ENTRY:
   EXPLAIN: 型ガード(文字列)
   BODY: |
     const isString = (value: unknown): value is string => {
       return typeof value === "string" && value !== null
     }
 
-- KEY: ts.typeGuard.stringArray
+- ENTRY:
   EXPLAIN: 型ガード(文字列配列)
   BODY: |
     const isStringArray = (value: unknown): value is string[] => {
@@ -325,7 +325,7 @@
       )
     }
 
-- KEY: ts.typeGuard.object
+- ENTRY:
   EXPLAIN: 型ガード(object)
   BODY: |
     // 全属性を"Optional"、全値はunknown型を返す
@@ -335,7 +335,7 @@
       value: unknown
     ): value is WouldBe<T> => typeof value === "object" && value !== null
 
-- KEY: ts.typeGuard.custom
+- ENTRY:
   EXPLAIN: 型ガード(任意の型)
   BODY: |
     type Foo = {
@@ -350,7 +350,7 @@
 #-------------------------------
 # Literal 型 推論
 #-------------------------------
-- KEY: ts.objectLiteral.guess
+- ENTRY:
   EXPLAIN: Literal型推論
   BODY: |
     function func(A: "foo") {}
@@ -372,7 +372,7 @@
 #-------------------------------
 # ReadOnly
 #-------------------------------
-- KEY: ts.readonly
+- ENTRY:
   EXPLAIN: 読み取り専用型
   BODY: |
     const foo: number[] = [1, 2, 3]
@@ -384,7 +384,7 @@
 #-------------------------------
 # Utility Partial
 #-------------------------------
-- KEY: ts.utility.partial
+- ENTRY:
   EXPLAIN: Partial型を用いたObject型生成
   BODY: |
     const obj = {"A": 1, "B": 2, "C": 3};
@@ -406,7 +406,7 @@
 #-------------------------------
 # 排他的 OR
 #-------------------------------
-- KEY: ts.exclusiveOr
+- ENTRY:
   EXPLAIN: |
     排他的OR -> 参照: 型(AND/OR)
   BODY: |
@@ -438,7 +438,7 @@
 #-------------------------------
 # Literal Join
 #-------------------------------
-- KEY: ts.literal.keyJoin
+- ENTRY:
   EXPLAIN: ReactHookForm での複層オブジェクト対応
   BODY: |
     ■ ReactHookFormでのKeyが複数Keyの合成になった場合の対処

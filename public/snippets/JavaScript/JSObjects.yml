@@ -2,7 +2,7 @@
 # JavaScript
 # ----------------------------
 
-- KEY: js.window
+- ENTRY:
   EXPLAIN: Window
   OPTIONS:
     COLS: 3
@@ -79,7 +79,7 @@
     applicationCache
     getSelection()
 
-- KEY: js.frame
+- ENTRY:
   EXPLAIN: Frame
   OPTIONS:
     COLS: 3
@@ -88,7 +88,7 @@
     frames.length
     frames[n]
 
-- KEY: js.dialog
+- ENTRY:
   EXPLAIN: Dialog
   OPTIONS:
     COLS: 3
@@ -106,7 +106,7 @@
     dialogTop
     returnValue
 
-- KEY: js.history
+- ENTRY:
   EXPLAIN: History
   OPTIONS:
     COLS: 3
@@ -119,7 +119,7 @@
     history.forward()
     history.go(n)
 
-- KEY: js.location
+- ENTRY:
   EXPLAIN: Location
   OPTIONS:
     COLS: 3
@@ -136,7 +136,7 @@
     location.replace(url)
     location.reload()
 
-- KEY: js.timer
+- ENTRY:
   EXPLAIN: Timer
   OPTIONS:
     COLS: 3
@@ -146,7 +146,7 @@
     setInterval(script,ms)
     clearInterval(fid)
 
-- KEY: js.document
+- ENTRY:
   EXPLAIN: Document
   OPTIONS:
     COLS: 3
@@ -194,7 +194,7 @@
     document.releaseEvents(events)
     document.routeEvent()
 
-- KEY: js.anchor
+- ENTRY:
   EXPLAIN: Anchor
   OPTIONS:
     COLS: 3
@@ -207,7 +207,7 @@
     document.anchor.x
     document.anchor.y
 
-- KEY: js.element
+- ENTRY:
   EXPLAIN: Element
   OPTIONS:
     COLS: 3
@@ -234,7 +234,7 @@
     document.parentElement
     document.click()
 
-- KEY: js.dom
+- ENTRY:
   EXPLAIN: Dom
   OPTIONS:
     COLS: 3
@@ -262,7 +262,7 @@
     createElement()
     appendChild(el)
 
-- KEY: js.form
+- ENTRY:
   EXPLAIN: Form
   OPTIONS:
     COLS: 3
@@ -303,7 +303,7 @@
     form.option.text
     form.option.value
 
-- KEY: js.image
+- ENTRY:
   EXPLAIN: Image
   OPTIONS:
     COLS: 3
@@ -324,7 +324,7 @@
     img.border
     img.complete
 
-- KEY: js.link
+- ENTRY:
   EXPLAIN: Link
   OPTIONS:
     COLS: 3
@@ -345,7 +345,7 @@
     link.text
     link.handleEvent(e)
 
-- KEY: js.mime
+- ENTRY:
   EXPLAIN: Mime
   OPTIONS:
     COLS: 3
@@ -358,7 +358,7 @@
     mimeType.enabledPlugin
     mimeType.suffixes
 
-- KEY: js.plugin
+- ENTRY:
   EXPLAIN: Plugin
   OPTIONS:
     COLS: 3
@@ -372,7 +372,7 @@
     plugin.length
     plugin[n]
 
-- KEY: js.navigator
+- ENTRY:
   EXPLAIN: Navigator
   OPTIONS:
     COLS: 3
@@ -396,7 +396,7 @@
     navigator.preference(name)
     navigator.taintEnabled()
 
-- KEY: js.screen
+- ENTRY:
   EXPLAIN: Screen
   OPTIONS:
     COLS: 3
@@ -410,7 +410,7 @@
     screen.bufferDepth
     screen.updateInterval
 
-- KEY: js.url
+- ENTRY:
   EXPLAIN: URL
   OPTIONS:
     COLS: 3
@@ -420,7 +420,7 @@
     encodeURI()
     encodeURIComponent()
 
-- KEY: js.misc.
+- ENTRY:
   EXPLAIN: Misc.
   OPTIONS:
     COLS: 3
@@ -429,7 +429,7 @@
     escape()	[X]
     unescape()	[X]
 
-- KEY: js.event
+- ENTRY:
   EXPLAIN: Event
   OPTIONS:
     COLS: 3
@@ -463,7 +463,7 @@
     event.width/height
     event.layerX/layerY
 
-- KEY: js.event handler:mouse
+- ENTRY:
   EXPLAIN: Event Handler:mouse
   OPTIONS:
     COLS: 3
@@ -479,7 +479,7 @@
     onmouseout
     onmouseup
 
-- KEY: js.event handler:keyboard
+- ENTRY:
   EXPLAIN: Event Handler:keyboard
   OPTIONS:
     COLS: 3
@@ -488,7 +488,7 @@
     onkeypress
     onkeyup
 
-- KEY: js.event handler:frame
+- ENTRY:
   EXPLAIN: Event Handler:frame
   OPTIONS:
     COLS: 3
@@ -504,7 +504,7 @@
     onscroll
     onunload
 
-- KEY: js.event handler:form
+- ENTRY:
   EXPLAIN: Event Handler:form
   OPTIONS:
     COLS: 3
@@ -521,7 +521,7 @@
     onselect
     onsubmit
 
-- KEY: js.event handler:drag
+- ENTRY:
   EXPLAIN: Event Handler:drag
   OPTIONS:
     COLS: 3
@@ -534,7 +534,7 @@
     ondragstart
     ondrop
 
-- KEY: js.event handler:clipboard
+- ENTRY:
   EXPLAIN: Event Handler:clipboard
   OPTIONS:
     COLS: 3
@@ -543,7 +543,7 @@
     oncut
     onpaste
 
-- KEY: js.event handler:media
+- ENTRY:
   EXPLAIN: Event Handler:media
   OPTIONS:
     COLS: 3
@@ -570,7 +570,7 @@
     onvolumechange
     onwaiting
 
-- KEY: js.event handler:animation
+- ENTRY:
   EXPLAIN: Event Handler:animation
   OPTIONS:
     COLS: 3
@@ -579,7 +579,7 @@
     animationiteration
     animationstart
 
-- KEY: js.event handler:other
+- ENTRY:
   EXPLAIN: Event Handler:other
   OPTIONS:
     COLS: 3

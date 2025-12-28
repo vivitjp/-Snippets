@@ -1,10 +1,10 @@
 # ----------------------------
 # Excel
 # ----------------------------
-- KEY: excel.search.category
+- ENTRY:
   CATEGORY: Excel 検索
 
-- KEY: excel.search.index
+- ENTRY:
   EXPLAIN: |
     検索: INDEX()
   BODY: |
@@ -43,7 +43,7 @@
       </div>
     </div>
 
-- KEY: excel.search.lookup
+- ENTRY:
   EXPLAIN: |
     検索: LOOKUP()
   BODY: |
@@ -91,7 +91,7 @@
       </div>
     </div>
 
-- KEY: excel.search.vlookup
+- ENTRY:
   EXPLAIN: |
     検索: VLOOKUP()
   BODY: |
@@ -136,7 +136,7 @@
       </div>
     </div>
 
-- KEY: excel.search.xlookup
+- ENTRY:
   EXPLAIN: |
     検索: XLOOKUP()
   BODY: |
@@ -197,7 +197,7 @@
       </div>
     </div>
 
-- KEY: excel.search.match
+- ENTRY:
   EXPLAIN: |
     検索: MATCH()
   BODY: |
@@ -250,7 +250,7 @@
       </div>
     </div>
 
-- KEY: excel.search.choose
+- ENTRY:
   EXPLAIN: |
     検索: CHOOSE()
   BODY: |
@@ -302,7 +302,7 @@
       </div>
     </div>
 
-- KEY: excel.search.find
+- ENTRY:
   EXPLAIN: |
     検索: FIND()/FINDB()
   BODY: |
@@ -345,7 +345,7 @@
       </div>
     </div>
 
-- KEY: excel.search.filter
+- ENTRY:
   EXPLAIN: |
     検索: FILTER()
   BODY: |
@@ -389,10 +389,10 @@
 # ----------------------------
 # CELL
 # ----------------------------
-- KEY: excel.cell.category
+- ENTRY:
   CATEGORY: Excel Cell
 
-- KEY: excel.cell.count
+- ENTRY:
   EXPLAIN: |
     セル: COUNT()
   BODY: |
@@ -400,7 +400,7 @@
     =COUNT(A2:A3)             2
     =COUNT(A2:A3, B2:B3)      4
 
-- KEY: excel.cell.cell
+- ENTRY:
   EXPLAIN: |
     セル: CELL()
   BODY: |
@@ -422,7 +422,7 @@
       "prefix"                Alignment 左(') 右(") 中央(^) 両揃え(¥) 以外空白文字列("")
       "protect"               セルが未ロック: 0、ロック: 1
 
-- KEY: excel.cell.row
+- ENTRY:
   EXPLAIN: |
     セル: ROW() ROWS()
   BODY: |
@@ -436,7 +436,7 @@
     =ROWS(C1:E4)             4  指定したセル範囲の行数
     =ROWS({1,2,3;4,5,6})     2  配列定数の行数
 
-- KEY: excel.cell.column
+- ENTRY:
   EXPLAIN: |
     セル: COLUMN() COLUMNS()
   BODY: |
@@ -451,7 +451,7 @@
     =COLUMNS(C1:E4)          3
     =COLUMNS({1,2,3;4,5,6})  3
 
-- KEY: excel.cell.offset
+- ENTRY:
   EXPLAIN: |
     セル: OFFSET()
   BODY: |
@@ -464,10 +464,10 @@
 # ----------------------------
 # Formula
 # ----------------------------
-- KEY: excel.formula.category
+- ENTRY:
   CATEGORY: Excel Formula
 
-- KEY: excel.formula.let
+- ENTRY:
   EXPLAIN: |
     式: LET()
   BODY: |
@@ -503,7 +503,7 @@
       </div>
     </div>
 
-- KEY: excel.formula.LAMBDA
+- ENTRY:
   EXPLAIN: |
     式: LAMBDA()
   BODY: |
@@ -523,7 +523,7 @@
     ■ 即時関数(登録なしで実行)
     =LAMBDA(temp, (5/9)*(Temp-32))(104)  => 40
 
-- KEY: excel.formula.isomitted
+- ENTRY:
   EXPLAIN: |
     式: ISOMITTED()
   BODY: |
@@ -535,7 +535,7 @@
     ■ 例
     =LAMBDA(x,y, IF(ISOMITTED(y),"第2引数なし",x+y))
 
-- KEY: excel.formula.map
+- ENTRY:
   EXPLAIN: |
     式: MAP()
   BODY: |
@@ -566,7 +566,7 @@
       </div>
     </div>
 
-- KEY: excel.formula.reduce
+- ENTRY:
   EXPLAIN: |
     式: REDUCE()
   BODY: |
@@ -602,7 +602,7 @@
       </div>
     </div>
 
-- KEY: excel.formula.scan
+- ENTRY:
   EXPLAIN: |
     式: SCAN()
   BODY: |
@@ -631,7 +631,7 @@
       </div>
     </div>
 
-- KEY: excel.formula.makearray
+- ENTRY:
   EXPLAIN: |
     式: MAKEARRAY()
   BODY: |
@@ -674,7 +674,7 @@
       </div>
     </div>
 
-- KEY: excel.formula.bycol
+- ENTRY:
   EXPLAIN: |
     式: BYCOL()
   BODY: |
@@ -710,7 +710,7 @@
       </div>
     </div>
 
-- KEY: excel.formula.byrow
+- ENTRY:
   EXPLAIN: |
     式: BYROW()
   BODY: |
@@ -744,10 +744,10 @@
 # ----------------------------
 # IF
 # ----------------------------
-- KEY: excel.if.category
+- ENTRY:
   CATEGORY: Excel If
 
-- KEY: excel.if
+- ENTRY:
   EXPLAIN: |
     ⬜条件関数
   BODY: |
@@ -797,7 +797,7 @@
       =NOT(論理式)
       =IF(NOT(A6>50),TRUE,FALSE)
 
-- KEY: excel.if.sumif
+- ENTRY:
   EXPLAIN: |
     条件: SUMIF()
   BODY: |
@@ -850,7 +850,7 @@
       </div>
     </div>
 
-- KEY: excel.if.sumifs
+- ENTRY:
   EXPLAIN: |
     条件: SUMIFS()
   BODY: |
@@ -891,7 +891,7 @@
       </div>
     </div>
 
-- KEY: excel.if.countif
+- ENTRY:
   EXPLAIN: |
     条件: COUNTIF()
   BODY: |
@@ -931,7 +931,7 @@
       </div>
     </div>
 
-- KEY: excel.if.countifs
+- ENTRY:
   EXPLAIN: |
     条件: COUNTIFS()
   BODY: |
@@ -975,10 +975,10 @@
 # ----------------------------
 # IS
 # ----------------------------
-- KEY: excel.is.category
+- ENTRY:
   CATEGORY: Excel Is
 
-- KEY: excel.is
+- ENTRY:
   EXPLAIN: |
     ⬜判定関数
   BODY: |
@@ -1023,10 +1023,10 @@
 # ----------------------------
 # NUMBER
 # ----------------------------
-- KEY: excel.number.category
+- ENTRY:
   CATEGORY: Excel Number
 
-- KEY: excel.number
+- ENTRY:
   EXPLAIN: |
     ⬜数値関数
   BODY: |
@@ -1079,7 +1079,7 @@
      =FLOOR(-2.5, -2)         -2
      =FLOOR(2.5, -2)          Error(両方が同じサイン)
 
-- KEY: excel.number.round
+- ENTRY:
   EXPLAIN: |
     数値: ROUND()
   BODY: |
@@ -1105,7 +1105,7 @@
     =ROUND(1.98, -1)          0
     =ROUND(-50.55, -2)        -100
 
-- KEY: excel.number.roundup
+- ENTRY:
   EXPLAIN: |
     数値: ROUNDUP()
   BODY: |
@@ -1123,7 +1123,7 @@
     =ROUNDUP(76.9,0)          77
     =ROUNDUP(31415.9, -2)     31500
 
-- KEY: excel.number.rounddown
+- ENTRY:
   EXPLAIN: |
     数値: ROUNDDOWN()
   BODY: |
@@ -1141,7 +1141,7 @@
     =ROUNDDOWN(-3.14, 1)     -3.1
     =ROUNDDOWN(1415.9, -2)   1400
 
-- KEY: excel.number.n
+- ENTRY:
   EXPLAIN: |
     数値: N()
   BODY: |
@@ -1158,10 +1158,10 @@
 # ----------------------------
 # STRING
 # ----------------------------
-- KEY: excel.string.category
+- ENTRY:
   CATEGORY: Excel String
 
-- KEY: excel.string.text
+- ENTRY:
   EXPLAIN: |
     文字列: TEXT()
   BODY: |
@@ -1179,7 +1179,7 @@
     =TEXT(1234567898,"[<=9999999]###-####;(###) ###-####")   (123) 456-7898
     =TEXT(1234,"0000000")         0001234
 
-- KEY: excel.string.concat
+- ENTRY:
   EXPLAIN: |
     文字列: CONCAT()
   BODY: |
@@ -1192,7 +1192,7 @@
     =CONCAT(B1, B2)           個別指定
     =CONCAT(B2:C8)            範囲指定
 
-- KEY: excel.string.textjoin
+- ENTRY:
   EXPLAIN: |
     文字列: TEXTJOIN()
   BODY: |
@@ -1203,7 +1203,7 @@
     =TEXTJOIN("&", TRUE, "A", "", "", "B")    "A&B"
     =TEXTJOIN(" ", FALSE, "A", "", "", "B")   "A   B"(スペース3)
 
-- KEY: excel.string.len
+- ENTRY:
   EXPLAIN: |
     文字列: LEN()/LENB()
   BODY: |
@@ -1215,7 +1215,7 @@
     =LEN("いろはにほへと")     7
     =LENB("いろはにほへと")    14
 
-- KEY: excel.string.mid
+- ENTRY:
   EXPLAIN: |
     文字列: MID()/MIDB()
   BODY: |
@@ -1234,7 +1234,7 @@
     ="[" & MID(A1, 1, FIND(" ", A1, 1)) & "]"    [Hello ]
     ="[" & MID(A1, 1, FIND(" ", A1, 1)-1) & "]"  [Hello]
 
-- KEY: excel.string.left
+- ENTRY:
   EXPLAIN: |
     文字列: LEFT()/LEFTB()
   BODY: |
@@ -1245,7 +1245,7 @@
     =LEFTB("世界の歴史",5)     "世界の"(文字が切れない)
     =LEFTB("世界の歴史",6)     "世界の"
 
-- KEY: excel.string.right
+- ENTRY:
   EXPLAIN: |
     文字列: RIGHT()/RIGHTB()
   BODY: |
@@ -1256,7 +1256,7 @@
     =RIGHTB("世界の歴史",3)    "歴史"(文字が切れない)
     =RIGHTB("世界の歴史",4)    "歴史"
 
-- KEY: excel.string.rept
+- ENTRY:
   EXPLAIN: |
     文字列: REPT()
   BODY: |
@@ -1268,10 +1268,10 @@
 # ----------------------------
 # DATE
 # ----------------------------
-- KEY: excel.date.category
+- ENTRY:
   CATEGORY: Excel Date
 
-- KEY: excel.date
+- ENTRY:
   EXPLAIN: |
     ⬜日付関数
   BODY: |
@@ -1326,10 +1326,10 @@
 # ----------------------------
 # MATRIX
 # ----------------------------
-- KEY: excel.matrix.category
+- ENTRY:
   CATEGORY: Excel Matrix
 
-- KEY: excel.cell.matrix
+- ENTRY:
   EXPLAIN: |
     [マトリックス] 列セルとINDEXのマトリックス
   OPTIONS:

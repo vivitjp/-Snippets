@@ -7,7 +7,7 @@
 # Quick Start
 #-------------------------------
 
-- KEY: orm.quick.entity
+- ENTRY:
   EXPLAIN: Quick:Entity
   BODY: |
     @Entity('users')
@@ -22,7 +22,7 @@
       gender?: number;
     }
 
-- KEY: orm.quick.service
+- ENTRY:
   EXPLAIN: Quick:NestService
   BODY: |
     @Injectable()
@@ -43,7 +43,7 @@
       }
     }
 
-- KEY: orm.quick.reqParamValid
+- ENTRY:
   EXPLAIN: Quick:Req引数Entity&検証
   BODY: |
     export class CreateUsersRequest {
@@ -72,7 +72,7 @@
       memo: string;
     }
 
-- KEY: orm.quick.dataSource
+- ENTRY:
   EXPLAIN: dataSource設定
   BODY: |
     const myDataSource = new DataSource({
@@ -107,7 +107,7 @@
 # Entity
 #-------------------------------
 
-- KEY: orm.entity
+- ENTRY:
   EXPLAIN: Entity定義と継承
   BODY: |
     ■ Entity
@@ -136,7 +136,7 @@
     })
     class Example extends Base { ... }
 
-- KEY: orm.entity.naming
+- ENTRY:
   EXPLAIN: カラム命名
   BODY: |
     ■ @Entity() なし
@@ -164,7 +164,7 @@
     | nameLast    | varchar(255) |
     +-------------+--------------+
 
-- KEY: orm.entity.recursive
+- ENTRY:
   EXPLAIN: 隣接リスト(自己巡回参照)
   BODY: |
     @Entity()
@@ -179,7 +179,7 @@
       children: Category[]
     }
 
-- KEY: orm.entity.tree
+- ENTRY:
   EXPLAIN: Tree構造
   BODY: |
     @Entity()
@@ -198,7 +198,7 @@
       level: number
     }
 
-- KEY: orm.entity.type.primary
+- ENTRY:
   EXPLAIN: Entity Primary
   BODY: |
     @PrimaryGeneratedColumn({ comment: 'ID' })    // シーケンスPK自動生成(挿入時)
@@ -214,7 +214,7 @@
     })
     id: string;
 
-- KEY: orm.entity.type.auto
+- ENTRY:
   EXPLAIN: Entity 自動更新
   BODY: |
     @CreateDateColumn()                           // 日付自動生成(挿入時)
@@ -229,7 +229,7 @@
     @VersionColumn()                              // EntityVersion記録
     entity_version: number;
 
-- KEY: orm.entity.type.index
+- ENTRY:
   EXPLAIN: Entity Index
   BODY: |
     ■ 単一index
@@ -283,7 +283,7 @@
 # Entity: Column Type
 #-------------------------------
 
-- KEY: orm.entity.column.types
+- ENTRY:
   EXPLAIN: カラムタイプ
   BODY: |
     ■ 数値
@@ -313,7 +313,7 @@
     multipoint, multipolygon, geometrycollection, 
     inet4, inet6
 
-- KEY: orm.column.type.options
+- ENTRY:
   EXPLAIN: カラムOptions
   BODY: |
     name:          string,                        // DBのカラム名(上書き優先)
@@ -352,7 +352,7 @@
       to(value:EntityType): DBType
     }
 
-- KEY: orm.column.type.format
+- ENTRY:
   EXPLAIN: カラム書式
   BODY: |
     @Column('varchar')
@@ -364,7 +364,7 @@
     @Column({ type:'varchar', length:255, comment:'名前' })
     name: string;
 
-- KEY: orm.column.type.enum
+- ENTRY:
   EXPLAIN: カラム書式(enum)
   BODY: |
     export enum Key { A="a", B="b", C="c" }
@@ -378,7 +378,7 @@
     @Column({ type: "enum", enum: Keys, default: "a"})
     key: Key
 
-- KEY: orm.column.type.set
+- ENTRY:
   EXPLAIN: カラム書式(set)
   BODY: |
     export const Keys = ["a","b","c"] as const
@@ -387,7 +387,7 @@
     @Column({ type: "set", enum: ["a","b","c"], default: ["a","b"]})
     keys: Key[]
 
-- KEY: orm.column.type.array
+- ENTRY:
   EXPLAIN: カラム書式(単純配列)
   BODY: |
     export Class Keys{
@@ -398,7 +398,7 @@
     const keys = new Keys()
     keys.names = ["A", "B", "C", "D"]
 
-- KEY: orm.column.type.object
+- ENTRY:
   EXPLAIN: カラム書式(単純オブジェクト)
   BODY: |
     export Class Key{
@@ -409,7 +409,7 @@
     const key = new Key()
     key.info = { name:"A", age:7 }
 
-- KEY: orm.column.type.generatedId
+- ENTRY:
   EXPLAIN: 自動生成Id
   BODY: |
     @Column()
@@ -420,7 +420,7 @@
 # View
 #-------------------------------
 
-- KEY: orm.view.sql
+- ENTRY:
   EXPLAIN: View Entity by SQL
   BODY: |
     //SQLによるVIEW生成
@@ -447,7 +447,7 @@
     const postCategories = await dataSource.manager.find(PostCategory)
     const postCategory = await dataSource.manager.findOneBy(PostCategory, { id: 1 })
 
-- KEY: orm.view.qb
+- ENTRY:
   EXPLAIN: View Entity by QB
   BODY: |
     //QueryBuilderによるVIEW生成
@@ -485,7 +485,7 @@
 # Entity Relation
 #-------------------------------
 
-- KEY: orm.relation.cascade
+- ENTRY:
   EXPLAIN: Entity Cascade
   BODY: |
     @Entity()
@@ -508,7 +508,7 @@
       ])
     }
 
-- KEY: orm.relation.oneToOne
+- ENTRY:
   EXPLAIN: Entity関係 OneToOne
   BODY: |
     @Entity("user")
@@ -530,7 +530,7 @@
       readonly user?: User;                       // コネクタ(実際のテーブルにない)
     }
 
-- KEY: orm.relation.oneToMany
+- ENTRY:
   EXPLAIN: Entity関係 OneToMany
   BODY: |
     ■ User(Many)
@@ -563,7 +563,7 @@
       persistence: false
     })
 
-- KEY: orm.relation.manyToMany
+- ENTRY:
   EXPLAIN: Entity関係 ManyToMany
   BODY: |
     ■ User(many)
@@ -606,7 +606,7 @@
       persistence: false
     })
 
-- KEY: orm.manager.vs.repository
+- ENTRY:
   EXPLAIN: Manager Repository 比較
   BODY: |
     ■ Manager
@@ -622,7 +622,7 @@
     user.name = "john"
     await userRepository.save(user)
 
-- KEY: orm.manager
+- ENTRY:
   EXPLAIN: 🔵Manager
   BODY: |
     ■ SQL
@@ -764,7 +764,7 @@
       { name: "John" }                            // Where
     )
 
-- KEY: orm.repository
+- ENTRY:
   EXPLAIN: 🔵Repository
   BODY: |
     ■ Find
@@ -897,7 +897,7 @@
         .where("user.name = :name", { name: "John" })
         .getMany()
 
-- KEY: orm.repository.options
+- ENTRY:
   EXPLAIN: Repository SQL
   BODY: |
     repository.find({ OPTIONS })
@@ -954,7 +954,7 @@
     ■ LOCK
     lock: { mode: "optimistic", version: 1 },
 
-- KEY: orm.where.condition
+- ENTRY:
   EXPLAIN: カラム条件
   BODY: |
     ■ 文字列
@@ -988,7 +988,7 @@
     Or(Equal("A"), ILike("B%")),                  // WHERE COLUMN='A' OR COLUMN ILIKE 'B%'
     And(Not(Equal("A")), ILike("B%"))             // WHERE NOT(COLUMN='A') OR COLUMN ILIKE 'B%'
 
-- KEY: orm.qb.3types
+- ENTRY:
   EXPLAIN: Query Builder 3種類
   BODY: |
     ■ 1.DataSource
@@ -1013,7 +1013,7 @@
       .where("user.id = :id", { id: 1 })
       .getOne()
 
-- KEY: orm.qb.5sql
+- ENTRY:
   EXPLAIN: Query Builder 5 SQLs
   BODY: |
     ■ SELECT
@@ -1050,7 +1050,7 @@
       .of(id)
       .loadMany();
 
-- KEY: orm.qb.select
+- ENTRY:
   EXPLAIN: QB:SELECT節
   BODY: |
     ■ 1. Entities
@@ -1094,7 +1094,7 @@
     createQueryBuilder("user")
       .distinctOn(["user.id"])
 
-- KEY: orm.qb.where
+- ENTRY:
   EXPLAIN: QB:SELECT WHERE節
   BODY: |
     ■ 引数処理
@@ -1136,7 +1136,7 @@
       }),
     )
 
-- KEY: orm.qb.orderby
+- ENTRY:
   EXPLAIN: QB:SELECT ORDERBY節
   BODY: |
     ■ 単数ソートキー
@@ -1147,7 +1147,7 @@
     .orderBy("user.name").addOrderBy("user.id")
     .orderBy({ "user.name": "ASC", "user.id": "DESC" })
 
-- KEY: orm.qb.groupby
+- ENTRY:
   EXPLAIN: QB:SELECT GROUPBY節
   BODY: |
     ■ 単数キー
@@ -1157,7 +1157,7 @@
     ■ 複数キー
     .groupBy("user.name").addGroupBy("user.id")
 
-- KEY: orm.qb.limitOffset
+- ENTRY:
   EXPLAIN: QB:SELECT LIMIT節 OFFSET節
   BODY: |
     ■ Limit & Offset
@@ -1167,7 +1167,7 @@
     ■ Take & Skip
     .take(10).skip(10)
 
-- KEY: orm.qb.join
+- ENTRY:
   EXPLAIN: QB:SELECT OUTER JOIN
   BODY: |
     ■ Entity定義
@@ -1230,7 +1230,7 @@
         ON photo.user = user.id AND photo.isOK = FALSE
         WHERE user.name = 'Tim'
 
-- KEY: orm.qb.join
+- ENTRY:
   EXPLAIN: QB:SELECT INNER JOIN【WIP】
   BODY: |
     ■ Inner Join
@@ -1242,7 +1242,7 @@
       .where("user.name = :name", { name: "Tim" })
       .getOne()
 
-- KEY: orm.qb.join
+- ENTRY:
   EXPLAIN: QB:SELECT LEFT OUTER JOIN & MAP【WIP】
   BODY: |
     ■ Join & Mapping
@@ -1261,7 +1261,7 @@
     .where("user.name = :name", { name: "Tim" })
     .getOne/getMany()
 
-- KEY: orm.qb.subQuery.where
+- ENTRY:
   EXPLAIN: QB:SELECT SubQuery WHERE
   BODY: |
     ■ WHERE: 直書き一括パターン
@@ -1302,7 +1302,7 @@
         .setParameters(userQb.getParameters())
         .getMany()
 
-- KEY: orm.qb.subQuery.from
+- ENTRY:
   EXPLAIN: QB:SELECT SubQuery FROM
   BODY: |
     ■ FROM: コールバック一括パターン
@@ -1327,7 +1327,7 @@
         .setParameters(userQb.getParameters())
         .getRawMany()
 
-- KEY: orm.qb.subQuery.from
+- ENTRY:
   EXPLAIN: QB:SELECT SubQuery SELECT
   BODY: |
     ■ SELECT: コールバック一括パターン
@@ -1342,7 +1342,7 @@
         .from(Post, "post")
         .getRawMany()
 
-- KEY: orm.qb.getSql
+- ENTRY:
   EXPLAIN: QB:SELECT SQL取得
   BODY: |
     const sql = createQueryBuilder("user")
@@ -1354,7 +1354,7 @@
       .printSql()
       .getMany()
 
-- KEY: orm.qb.raw
+- ENTRY:
   EXPLAIN: QB:SELECT Raw結果【WIP】
   BODY: |
     const { sum } = await dataSource.getRepository(User)
@@ -1370,7 +1370,7 @@
       .groupBy("user.id")
       .getRawMany()
 
-- KEY: orm.qb.stream
+- ENTRY:
   EXPLAIN: QB:SELECT Stream【WIP】
   BODY: |
     const stream = await dataSource.getRepository(User)
@@ -1378,7 +1378,7 @@
       .where("user.id = :id", { id: 1 })
       .stream()
 
-- KEY: orm.qb.lock
+- ENTRY:
   EXPLAIN: QB:LOCK【WIP】
   BODY: |
     const users = await dataSource.getRepository(User)
@@ -1391,7 +1391,7 @@
       .setOnLocked("skip_locked")                 解説?
       .getMany()
 
-- KEY: orm.qb.index
+- ENTRY:
   EXPLAIN: QB:INDEX指定
   BODY: |
     const users = await dataSource.getRepository(User)
@@ -1399,7 +1399,7 @@
       .useIndex("index_name")                     // Index使用指示
       .getMany()
 
-- KEY: orm.qb.executionTime
+- ENTRY:
   EXPLAIN: QB:最大実行時間
   BODY: |
     const users = await dataSource.getRepository(User)
@@ -1407,7 +1407,7 @@
       .maxExecutionTime(1000)                     // milliseconds
       .getMany()
 
-- KEY: orm.qb.softDeleted
+- ENTRY:
   EXPLAIN: QB:論理削除レコード取得
   BODY: |
     const users = await dataSource.getRepository(User)
@@ -1416,7 +1416,7 @@
       .withDeleted()
       .getMany()
 
-- KEY: orm.qb.debug
+- ENTRY:
   EXPLAIN: QB:Debug(Query&引数)
   BODY: |
     const queryAndParams = await dataSource
@@ -1425,7 +1425,7 @@
       .where("user.id = :id", { id: 1 })
       .getQueryAndParameters()
 
-- KEY: orm.qb.cte
+- ENTRY:
   EXPLAIN: QB:Common Table Expression
   BODY: |
     ■ 直書きスタイル
@@ -1448,7 +1448,7 @@
       .where(`user.id IN (SELECT "id" FROM 'CTE')`)
       .getMany();
 
-- KEY: orm.qb.cache
+- ENTRY:
   EXPLAIN: QB:Cache
   BODY: |
     設定: { 
@@ -1497,7 +1497,7 @@
       .cache("users_admins", 25000)
       .getMany()
 
-- KEY: orm.qb.insert
+- ENTRY:
   EXPLAIN: QB:INSERT
   BODY: |
     await dataSource
@@ -1537,7 +1537,7 @@
       .orIgnore()	                                // Error(mySQL) / Do Nothing(postgres)
       .execute()
 
-- KEY: orm.qb.update
+- ENTRY:
   EXPLAIN: QB:UPDATE
   BODY: |
     await dataSource
@@ -1555,7 +1555,7 @@
       .where("id = :id", { id:1 })
       .execute()
 
-- KEY: orm.qb.delete
+- ENTRY:
   EXPLAIN: QB:DELETE
   BODY: |
     await myDataSource
@@ -1581,7 +1581,7 @@
       .where("id = :id", { id: 1 })
       .execute();
 
-- KEY: orm.transaction
+- ENTRY:
   EXPLAIN: TRANSACTION
   BODY: |
     await myDataSource

@@ -3,10 +3,10 @@
 # Docker Compose
 #-------------------------------
 
-- KEY: docker.compose.category.intall
+- ENTRY:
   CATEGORY: 導入
 
-- KEY: docker.compose.install
+- ENTRY:
   EXPLAIN: |
     Docker Compose 導入手順
   BODY: |
@@ -30,10 +30,10 @@
     - Docker Desktop に同梱
     - Docker Desktop を使用せずにインストールする場合は、Linux手順に準ずる
 
-- KEY: docker.compose.category.file
+- ENTRY:
   CATEGORY: 設定 & 運用
 
-- KEY: docker.compose.file
+- ENTRY:
   EXPLAIN: |
     docker-compose.yml サンプル:シンプル
   BODY: |
@@ -56,7 +56,7 @@
         
         restart: always                 # アプリがクラッシュした場合に自動的に再起動する設定
 
-- KEY: docker.compose.file2
+- ENTRY:
   EXPLAIN: |
     docker-compose.yml サンプル: 複数サービス
   BODY: |
@@ -117,7 +117,7 @@
       app-network:
         driver: bridge                  # bridgeネットワークドライバを使用
 
-- KEY: docker.compose.file.services
+- ENTRY:
   EXPLAIN: |
     services セクション詳細
   BODY: |
@@ -203,7 +203,7 @@
             依存先サービス内のアプリ（例:DBサーバー）が接続可能になるまで待機するわけではない。
             ヘルスチェック (healthcheck) と組み合わせて使用すべし
 
-- KEY: docker.compose.file.healthcheck
+- ENTRY:
   EXPLAIN: |
     healthcheck
   BODY: |
@@ -246,7 +246,7 @@
     volumes:
       db-data:
 
-- KEY: docker.compose.file.volumes
+- ENTRY:
   EXPLAIN: |
     volumes セクション詳細
   BODY: |
@@ -313,7 +313,7 @@
         external_logs:                  # 外部で管理されているボリュームを参照する例
           external: true
 
-- KEY: docker.compose.file.networks
+- ENTRY:
   EXPLAIN: |
     networks セクション詳細
   BODY: |
@@ -409,10 +409,10 @@
           driver: bridge
           # internal: true にすると、backend 内の通信はできるが、インターネットには出られなくなる
 
-- KEY: docker.compose.command.category
+- ENTRY:
   CATEGORY: コマンド
 
-- KEY: docker.compose.command.build_and_up
+- ENTRY:
   EXPLAIN: ビルド & 起動
   BODY: |
     ■ ビルド & 起動
@@ -447,7 +447,7 @@
       -H, --host HOST                     Daemon socket to connect to
       --env-file PATH                     環境ファイル指定
 
-- KEY: docker.compose.command.stop_and_remove
+- ENTRY:
   EXPLAIN: 停止 & 削除
   BODY: |
     ■ 停止
@@ -471,7 +471,7 @@
     docker compose prune                // 未使用リソース削除
     docker compose prune -a             // 全ての未使用リソース削除
 
-- KEY: docker.compose.command.service
+- ENTRY:
   EXPLAIN: サービス操作
   BODY: |
     ■ サービス操作
@@ -497,7 +497,7 @@
         例: web-app サービスの新しいコンテナを立ち上げてシェル起動
             docker compose run web-app sh
 
-- KEY: docker.compose.command.status_and_manage
+- ENTRY:
   EXPLAIN: 動作確認 & 管理
   BODY: |
     ■ 動作確認
@@ -514,7 +514,7 @@
     docker compose config               // 設定内容表示
     docker compose scale <service>=<num> // コンテナ数変更
 
-- KEY: docker.compose.command.network
+- ENTRY:
   EXPLAIN: ネットワーク操作
   BODY: |
     ■ ネットワーク操作
@@ -528,7 +528,7 @@
     docker compose network inspect <network> // ネットワーク詳細表示
     docker compose network rm <network>      // ネットワーク削除
 
-- KEY: docker.compose.command.volume
+- ENTRY:
   EXPLAIN: ボリューム操作
   BODY: |
     ■ ボリューム操作
@@ -538,7 +538,7 @@
     docker compose volume prune              // 未使用ボリューム削除
     docker compose volume rm <volume>        // ボリューム削除
 
-- KEY: docker.compose.command.image
+- ENTRY:
   EXPLAIN: イメージ操作
   BODY: |
     ■ イメージ操作

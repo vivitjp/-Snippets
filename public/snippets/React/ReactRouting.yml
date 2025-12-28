@@ -2,10 +2,10 @@
 #-------------------------------
 # React Routing
 #-------------------------------
-- KEY: react.router.category
+- ENTRY:
   CATEGORY: ルーター比較
 
-- KEY: react.router.compare
+- ENTRY:
   EXPLAIN: 主要ルーター比較
   BODY: |
     ■ react-router-dom
@@ -43,10 +43,10 @@
     概要: React専用ではないが軽量ルータとして利用可
     向き: フレームワークに依存しない簡易ルーティング
 
-- KEY: react.react-router-dom.category
+- ENTRY:
   CATEGORY: react-router-dom
 
-- KEY: react.react-router-dom.概要
+- ENTRY:
   EXPLAIN: 概要
   BODY: |
     ■ インストール
@@ -97,17 +97,17 @@
 
         サブディレクトリ配下での配備時に BrowserRouter basename="/repo/" を設定
 
-- KEY: react.react-router-dom.best.practice.category
+- ENTRY:
   CATEGORY: よくある注意点 / ベストプラクティス
 
-- KEY: react.react-router-dom.best.practice.404
+- ENTRY:
   EXPLAIN: 404対策
   BODY: |
     ■ SPA のリロードで 404 を避けるため、静的ホスティング側で index.html へフォールバック設定が必要（GitHub Pages 等）
 
     //
 
-- KEY: react.react-router-dom.best.practice.再マウント防止策
+- ENTRY:
   EXPLAIN: 再マウント防止策
   BODY: |
     ルートの key や element の再生成に注意（パフォーマンスと再レンダリング）
@@ -169,7 +169,7 @@
 
     ■ 対策5: 重い子コンポーネントは React.memo でラップして不必要な再描画を抑える（ただし props の安定化も必要）
 
-- KEY: react.react-router-dom.best.practice.URL設計
+- ENTRY:
   EXPLAIN: URL設計とパラメタ/クエリの使い分け
   BODY: |
     ■ 基本方針
@@ -262,7 +262,7 @@
       
         例: ページネーションで navigate({ search: params.toString() })）を使うと UX 改善
 
-- KEY: react.react-router-dom.best.practice.安定スラッグ
+- ENTRY:
   EXPLAIN: 安定スラッグ
   BODY: |
     ■ 定義：
@@ -308,15 +308,15 @@
     URL に機密情報を含めない。
     canonical タグやサーバ側リダイレクトで SEO を守る。
 
-- KEY: react.react-router-dom.best.practice.ルート外部定義
+- ENTRY:
   EXPLAIN: ルート外部定義
   BODY: |
     ■ 大きなアプリはルートを外部定義（配列）して map で展開すると管理しやすい
 
-- KEY: react.react-router-dom.samples.category
+- ENTRY:
   CATEGORY: サンプル
 
-- KEY: react.react-router-dom.nestedParam
+- ENTRY:
   EXPLAIN: パラメタ付 nested ルート
   BODY: |
     import { BrowserRouter, Routes, Route } from "react-router-dom"
@@ -336,7 +336,7 @@
       )
     })
 
-- KEY: react.react-router-dom.lazy
+- ENTRY:
   EXPLAIN: 遅延 import
   BODY: |
     import { BrowserRouter, Routes, Route, lazy, Suspense } from "react-router-dom"
@@ -361,7 +361,7 @@
       )
     })
 
-- KEY: react.react-router-dom.byList
+- ENTRY:
   EXPLAIN: Listルーティング
   BODY: |
     import { Home } from "../pages/Home"
@@ -383,7 +383,7 @@
       ],
     }
 
-- KEY: react.react-router-dom.byListMap
+- ENTRY:
   EXPLAIN: Listルーティング展開
   BODY: |
     <BrowserRouter>
@@ -412,10 +412,10 @@
       </Routes>
     </BrowserRouter>
 
-- KEY: react.react-router-dom.compo.hooks.category
+- ENTRY:
   CATEGORY: 主なコンポーネント / フック
 
-- KEY: react.react-router-dom.compo.BrowserRouterHashRouter比較
+- ENTRY:
   EXPLAIN: BrowserRouter / HashRouter 比較
   BODY: |
     ■ 概要
@@ -492,7 +492,7 @@
         -> vite.config.ts の base と合わせるか、BrowserRouter basename を環境に合わせて設定すること
       両者とも Link / NavLink / useNavigate 等の使い方は同じ
 
-- KEY: react.react-router-dom.compo.BrowserRouter
+- ENTRY:
   EXPLAIN: BrowserRouter
   BODY: |
     ■ 概要と仕組み
@@ -573,7 +573,7 @@
     ・サーバ側で SPA フォールバックを設定できるなら BrowserRouter を使う。クリーンな URL と SEO を得られる
     ・サーバ設定が困難で「すぐ動かしたい／静的配布」であれば HashRouter を検討するが、長期的な公開サイトや SEO 重視は避ける
 
-- KEY: react.react-router-dom.compo.HashRouter
+- ENTRY:
   EXPLAIN: HashRouter
   BODY: |
     ■ 概要と仕組み
@@ -604,7 +604,7 @@
     ・URL に機密情報（トークン等）を含めない
     ・useLocation
 
-- KEY: react.react-router-dom.compo.Routes
+- ENTRY:
   EXPLAIN: Routes / Route ルートツリー定義、ネスト可能
   BODY: |
     ■ 役割と基本
@@ -698,7 +698,7 @@
     ・404 は path="*" でキャッチ
     ・静的ホスティングではサーバのフォールバック対策も忘れずに
 
-- KEY: react.react-router-dom.compo.Link
+- ENTRY:
   EXPLAIN: Link(HTMLリンク代替)
   BODY: |
     ■ 目的・概要
@@ -786,7 +786,7 @@
     ・直接 URL を開いて 404 → サーバ側の SPA フォールバック設定が無い場合（BrowserRouter 使用時）
     ・to をオブジェクトで渡していて期待通りにマッチしない → pathname の先頭スラッシュの有無を確認
 
-- KEY: react.react-router-dom.compo.NavLink
+- ENTRY:
   EXPLAIN: NavLink NavLink(アクティブ状態管理)
   BODY: |
     ■ NavLink の active class
@@ -833,7 +833,7 @@
 
     ・NavLink が常にアクティブになる → end や to の整合性をチェック
 
-- KEY: react.react-router-dom.compo.Link
+- ENTRY:
   EXPLAIN: preventScrollReset(スクロール制御)
   BODY: |
     ■ 定義
@@ -911,7 +911,7 @@
       </Link>
     )
 
-- KEY: react.react-router-dom.compo.Outlet
+- ENTRY:
   EXPLAIN: Outlet(ネストされた親ルートの描画位置)
   BODY: |
     ■ 定義
@@ -959,7 +959,7 @@
     ・path-less ルート（<Route element={<Layout/>}>）で複数レイアウト層を作る
     ・Outlet に context を渡し、子コンポーネントへデータを供給
 
-- KEY: react.react-router-dom.compo.BrowserRouter
+- ENTRY:
   EXPLAIN: |
     BrowserRouter(プログラム遷移:履歴操作)
   BODY: |
@@ -1062,7 +1062,7 @@
       return <form onSubmit={(e) => { e.preventDefault(); onSubmit({ id: '42' }) }}>...</form>
     }
 
-- KEY: react.react-router-dom.compo.useParams
+- ENTRY:
   EXPLAIN: useParams(動的パラメタ取得)
   BODY: |
     ■ 概要
@@ -1106,7 +1106,7 @@
     ・ネストされたルートのパラメタも同時に取得できる（例: `/users/:userId/posts/:postId` → `{ userId, postId }`）
     ・`useParams()` は Router コンテキスト内でのみ有効。必ず `BrowserRouter` / `HashRouter` 等の内部で使用
 
-- KEY: react.react-router-dom.compo.BrowserRouter
+- ENTRY:
   EXPLAIN: useLocation(現在のロケーション情報)
   BODY: |
     ■ 概要
@@ -1143,7 +1143,7 @@
     ・URL に永続化すべき状態はクエリやパスに入れる、重要なデータはサーバ/ストレージに保存
     ・`location.search` を直接操作するより `useSearchParams()` を使うと扱いやすい場面が多い
 
-- KEY: react.react-router-dom.compo.useSearchParams
+- ENTRY:
   EXPLAIN: useSearchParams(クエリパラメタ操作)
   BODY: |
     ■ 概要
@@ -1185,7 +1185,7 @@
         setSearchParams(next)
       }
 
-- KEY: react.react-router-dom.compo.Navigate
+- ENTRY:
   EXPLAIN: Navigate(リダイレクト用コンポーネント)
   BODY: |
     ■ 概要
@@ -1212,7 +1212,7 @@
     ・プログラム的遷移は `useNavigate()` を使う（`navigate('/path', { replace: true })`）
     ・ルート定義内で条件に応じて `<Navigate />` を返すパターンは簡潔で分かりやすい
 
-- KEY: react.react-router-dom.compo.Suspense
+- ENTRY:
   EXPLAIN: Suspense と lazy(遅延ロード)
   BODY: |
     ■ 概要

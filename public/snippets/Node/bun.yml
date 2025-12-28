@@ -3,7 +3,7 @@
 # Node
 #-------------------------------
 
-- KEY: bun.introduction
+- ENTRY:
   EXPLAIN: What's Bun
   BODY: |
     BunはNode.jsやDenoのようなJavascriptランタイム
@@ -29,7 +29,7 @@
     ・Node.js との互換性はまだ限定的で Next.js にのみ専用の shim を用意
     ・Node.js との互換性のために機能追加予定だが、今のところは割と力技による実装
 
-- KEY: bun.transpile
+- ENTRY:
   EXPLAIN: Transpile
   BODY: |
     Bunは.tsファイルを勝手にトランスパイルして実行(Denoと同じ)
@@ -37,14 +37,14 @@
     Typescriptをインストールする必要なく、tsconfig.jsonも必要なし
     configを書き換えたい場合は tsconfig.json を用意すればOK
 
-- KEY: bun.transpile.jsx
+- ENTRY:
   EXPLAIN: Transpile JSX
   BODY: |
     jsxからJavascriptへのトランスパイル
     jsxもトランスパイル
     Babelが必要なし
 
-- KEY: bun.package
+- ENTRY:
   EXPLAIN: パッケージ管理
   BODY: |
     パッケージインストーラーとしても使用可
@@ -52,7 +52,7 @@
     インストールが高速
     bun run <スクリプト名> でpackage.jsonで設定されたスクリプト実行可
 
-- KEY: bun.bundle
+- ENTRY:
   EXPLAIN: バンドル化
   BODY: |
     ■ バンドルコマンド

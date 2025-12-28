@@ -1,13 +1,13 @@
 # ----------------------------
 # JavaScript Methods
 # ----------------------------
-- KEY: js.methods.version
-  EXPLAIN: Version
-  OPTIONS:
-    COLS: 2
+- ENTRY:
+  EXPLAIN: Version History
   BODY: |
     ■ ECMAScript 5.1 2009/12
+
     ■ ES2015(別名ES6) 2011/6
+
       Core
       Collection
       Generator
@@ -19,10 +19,12 @@
       Symbol.WellKnown
 
     ■ ES2016(別名ES7) 2016/6
+
       Array.Include
       Exponentiation operator
 
     ■ ES2017(別名ES8) 2017/6
+
       Object.values/Object.entries
       String.padStart/String.padEnd
       Object.getOwnPropertyDescriptors
@@ -33,6 +35,7 @@
       末尾カンマ許容
 
     ■ ES2018(別名ES9) 2018/6
+
       オブジェクトのRest/Spread
       Promise.finally
       テンプレートリテラルの改修
@@ -44,6 +47,7 @@
       Intl
 
     ■ ES2019(別名ES10)
+
       catch引数の不要化
       JSON superset
       Symbol.description
@@ -54,6 +58,7 @@
       Array.flat/Array.flatMap
 
     ■ ES2020(別名ES11)
+
       BigInt
       for-in ループにおける順序保証
       ヌル合体(??)演算子
@@ -68,6 +73,7 @@
       WeakRef
 
     ■ ES2021(別名ES12)
+
       ||= &&= ??=
       数値セパレータ(_)
       String.replaceAll
@@ -75,6 +81,7 @@
       WeakRef
 
     ■ ES2022(別名ES13)
+
       Top-level await
       Array.at/String.at
       Private fields(#)
@@ -84,31 +91,56 @@
       Error.cause
       正規表現:dオプション
 
-- KEY: js.methods.structural
+    ■ ES2023(別名ES14)
+
+      Array findLast/findLastIndex
+      Array toReversed/toSorted/toSpliced/toSorted
+      Hashbang構文
+      Symbol.prototype.description  
+      JSON.parse with reviver for BigInt
+      Intl.DateTimeFormat
+      Change Array by copy methods  
+      WeakMap/WeakSet enhancements
+
+    ■ ES2024(別名ES15)
+
+      Pattern Matching (試験的) 
+      Array group/groupToMap
+      Object internals enhancements
+      RegExp v3
+      Temporal (試験的)
+      Intl.DisplayNames 拡張
+      Function.prototype.toString 拡張
+      Error.prototype.toString 拡張
+      Module namespace exports 拡張
+      数値の改良
+      文字列の改良
+      ArrayBuffer/TypedArrayの改良
+      WebAssemblyの改良
+
+- ENTRY:
   EXPLAIN: structural
-  OPTIONS:
-    COLS: 2
   BODY: |
-    try{ throw }
-    catch([e]){ ... }
-    finally{ ... }
+    try{ throw }                        // 例外を投げる
+    catch([e]){ ... }                   // 例外をキャッチ
+    finally{ ... }                      // 必ず実行
 
-    switch(){ case: break; default: }
-    if(){ ... }else{ ... }
-    for(in/of){ ... }
-    while(){ ... }
-    do{ ... } while()
-    break/continue
-    label/goto
-    with(trg){ ... }
+    switch(){ case: break; default: }   // 条件分岐
+    if(){ ... }else{ ... }              // 条件分岐
+    for(in/of){ ... }                   // ループ
+    while(){ ... }                      // 条件ループ
+    do{ ... } while()                   // 後条件ループ
+    break/continue                      // ループ制御
+    label/goto                          // ラベルジャンプ
+    with(trg){ ... }                    // スコープ変更
 
-- KEY: js.methods.debug
+- ENTRY:
   EXPLAIN: debug
   BODY: |
     debugger
     console.log()
 
-- KEY: js.methods.function
+- ENTRY:
   EXPLAIN: Function
   OPTIONS:
     COLS: 2
@@ -129,7 +161,7 @@
     a1 => a1*2
     () => { return }
 
-- KEY: js.methods.operator
+- ENTRY:
   EXPLAIN: Operator
   OPTIONS:
     COLS: 2
@@ -145,7 +177,7 @@
     += -= *= /= %= **=
     &= |= ^= <<= >>= >>>=
 
-- KEY: js.methods.type
+- ENTRY:
   EXPLAIN: Type
   BODY: |
     var
@@ -165,7 +197,7 @@
     function
     object
 
-- KEY: js.methods.object
+- ENTRY:
   EXPLAIN: Object
   OPTIONS:
     COLS: 2
@@ -215,7 +247,7 @@
 
     instanceof
 
-- KEY: js.methods.class
+- ENTRY:
   EXPLAIN: Class
   BODY: |
     class
@@ -226,7 +258,7 @@
     this/super
     get/set
 
-- KEY: js.methods.date/time
+- ENTRY:
   EXPLAIN: Date/Time
   OPTIONS:
     COLS: 2
@@ -262,7 +294,7 @@
     .toISOString()
     .toJSON()
 
-- KEY: js.methods.math
+- ENTRY:
   EXPLAIN: Math
   OPTIONS:
     COLS: 2
@@ -297,7 +329,7 @@
     Math.imul(x,y)
     Math.sign()
 
-- KEY: js.methods.number
+- ENTRY:
   EXPLAIN: Number
   OPTIONS:
     COLS: 2
@@ -323,7 +355,7 @@
     number.toPrecision()
     Intl.NumberFormat
 
-- KEY: js.methods.string
+- ENTRY:
   EXPLAIN: String
   OPTIONS:
     COLS: 2
@@ -377,7 +409,7 @@
 
     .normalize: unicode
 
-- KEY: js.methods.regular expression
+- ENTRY:
   EXPLAIN: Regular Expression
   OPTIONS:
     COLS: 2
@@ -473,7 +505,7 @@
     res.groups.y
     res.groups.m
 
-- KEY: js.methods.replace
+- ENTRY:
   EXPLAIN: Replace
   BODY: |
     str.replace(/ptn/flg,rep)
@@ -484,7 +516,7 @@
     $<name>         nameを挿入
     $$              "$"挿入
 
-- KEY: js.methods.array
+- ENTRY:
   EXPLAIN: Array
   OPTIONS:
     COLS: 2
@@ -551,7 +583,7 @@
     Float32Array()
     Float64Array()
 
-- KEY: js.methods.map (weakmap)
+- ENTRY:
   EXPLAIN: Map (Weakmap)
   BODY: |
     new Map()
@@ -570,7 +602,7 @@
     .delete(k)
     .clear()
 
-- KEY: js.methods.set (weakset)
+- ENTRY:
   EXPLAIN: Set (Weakset)
   OPTIONS:
     COLS: 2
@@ -601,7 +633,7 @@
     .forEach((v,k,set)=>{ ... })
     .forEach((v,k)=>{ ... }, set)
 
-- KEY: js.methods.symbol
+- ENTRY:
   EXPLAIN: Symbol
   OPTIONS:
     COLS: 2
@@ -623,8 +655,8 @@
     .toPrimitive
     .toStringTag
 
-- KEY: js.methods.module
-  EXPLAIN: Module
+- ENTRY:
+  EXPLAIN: Module import/export
   BODY: |
     import './'
     import { ... } from './'
@@ -632,11 +664,13 @@
     import * as from './'
     export function/var/let
 
-- KEY: js.methods.promise/then
+- ENTRY:
   EXPLAIN: Promise/then
   OPTIONS:
     COLS: 2
   BODY: |
+    ■ then
+
     function getProm(){
       new *P((ok,no)=>{
         return ok(1)/no(0);
@@ -648,14 +682,18 @@
       (err)=>{f_no(err)}
     ).catch()
 
-    ■ new Promise((y,n)=>{
+    ■ Promise
+
+    new Promise((y,n)=>{
       y(1)/n(0)
     }).then(
       (res)=>{f_ok(res)},
       (err)=>{f_no(err)}
     ).catch()
 
-    ■ Promise.all([
+    ■ Promise.all
+
+    Promise.all([
       new *P((y,n)=>{ ... }),
       new *P((y,n)=>{ ... }),
     ]).then(
@@ -663,7 +701,9 @@
       (err)=>{f_no(err)}
     )
 
-    ■ Promise.race([
+    ■ Promise.race
+
+    Promise.race([
       new *P((y,n)=>{ ... }),
       new *P((y,n)=>{ ... }),
     ]).then(
@@ -671,24 +711,55 @@
       (err)=>{f_no(err)}
     )
 
-- KEY: js.methods.async/await
+- ENTRY:
   EXPLAIN: Async/Await
   BODY: |
-    例)async funcion func(a){
+    ■ async/await 基本形
+
+    async function func(a){
       try{
         val= await getProm();
         val= await getProm();
       } catch(e){ ... }
     }
 
-    例)asyObj={
-    [Symbol.asyncIterator](){
-      return {
-        next() {
-        return new *P(a=>{ ... });
-      }};
-    }};
+    ■ for await...of
 
-    async funcion for_await_of(){
-      for await(n of asyObj){ ... }
+    async function* asyncRange(n) {
+      for (let i = 0; i < n; i++) {
+        // 何らかの非同期処理を模擬
+        await new Promise(r => setTimeout(r, 200));
+        yield i;
+      }
+    }
+
+    (async () => {
+      for await (const v of asyncRange(5)) {
+        console.log('got', v);
+      }
+      console.log('done');
+    })();
+
+    ■ for await...of (Symbol.asyncIterator)
+
+    const asyncIterable = {
+      [Symbol.asyncIterator]() {
+        let i = 0;
+        return {
+          async next() {
+            if (i < 3) {
+              await new Promise(r => setTimeout(r, 300));
+              return { value: `value-${i++}`, done: false };
+            }
+            return { done: true };
+          }
+        };
+      }
     };
+
+    (async () => {
+      for await (const x of asyncIterable) {
+        console.log(x);
+      }
+      console.log('finished');
+    })();

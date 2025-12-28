@@ -2,10 +2,10 @@
 #-------------------------------
 # AI
 #-------------------------------
-- KEY: pk.ui
+- ENTRY:
   CATEGORY: UI パッケージ
 
-- KEY: pk.ui.種類
+- ENTRY:
   EXPLAIN: |
     2025 注目 UI
   BODY: |
@@ -28,7 +28,7 @@
       Justd 	https://getjustd.com 	3
       shadcn/ui 	https://ui.shadcn.com/docs 	3
 
-- KEY: pk.ui.種類
+- ENTRY:
   EXPLAIN: UI 種類
   BODY: |
     https://blogs.jp.infragistics.com/entry/React-UI-Library

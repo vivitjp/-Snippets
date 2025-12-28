@@ -3,7 +3,7 @@
 # VSCode
 #-------------------------------
 
-- KEY: vsc.extensions
+- ENTRY:
   EXPLAIN: 拡張機能
   BODY: |
     Git Graph
@@ -33,7 +33,7 @@
     WSL
     zenkaku
 
-- KEY: vsc.WSL
+- ENTRY:
   EXPLAIN: Linux開発環境
   BODY: |
     Windows Subsystem for Linux

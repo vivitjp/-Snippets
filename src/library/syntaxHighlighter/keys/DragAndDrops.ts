@@ -1,0 +1,57 @@
+import { KeyDef } from "../../../types/type"
+
+export const keysDragAndDrops: KeyDef = {
+  // ■ React Dropzone の主要キーワード
+  IndianRed: [
+    "useDropzone",
+    "react-dropzone",
+    "Dropzone",
+    "File System Access API",
+    "showOpenFilePicker",
+    "showSaveFilePicker",
+  ],
+  // ■ 変数や状態
+  ForestGreen: [
+    "acceptedFiles",
+    "fileRejections",
+    "isDragActive",
+    "isDragAccept",
+    "isDragReject",
+    "isFocused",
+    "isFileDialogActive",
+    "accept",
+    "multiple",
+    "maxFiles",
+    "minSize",
+    "maxSize",
+    "disabled",
+    "noClick",
+    "noDrag",
+    "noKeyboard",
+    "noDragEventsBubbling",
+    "preventDropOnDocument",
+    "useFsAccessApi",
+    "validator",
+    "getFilesFromEvent",
+  ],
+  // ■ メソッドや関数
+  RoyalBlue: [
+    "getRootProps",
+    "getInputProps",
+    "open",
+    "onDrop",
+    "onDropAccepted",
+    "onDropRejected",
+    "onDragEnter",
+    "onDragOver",
+    "onDragLeave",
+    "onFileDialogOpen",
+    "onFileDialogCancel",
+    "onError",
+    "getFile",
+    "text",
+    "createWritable",
+    "write",
+    "close",
+  ],
+}

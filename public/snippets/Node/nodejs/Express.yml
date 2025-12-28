@@ -2,7 +2,7 @@
 # ExpressTopics
 # ----------------------------
 
-- KEY: express.install
+- ENTRY:
   EXPLAIN: バージョンとinstall
   BODY: |
     4.x API: 2024-06
@@ -15,7 +15,7 @@
     //hot reload 環境構築(コンパイラ+HotReloader)
     npm i -D ts-node nodemon
 
-- KEY: express.kickStart.ts
+- ENTRY:
   EXPLAIN: Kick Start()
   BODY: |
     ■ [tsconfig.json]
@@ -38,7 +38,7 @@
       "dev": "nodemon src/index.ts"   // <-- 追加
     },
 
-- KEY: express.kickStart
+- ENTRY:
   EXPLAIN: Kick Start(Code)
   BODY: |
     ■ [src/index.ts]
@@ -105,7 +105,7 @@
     node app.js
     curl http://localhost:3000 -> Hello World!
 
-- KEY: express.genetator
+- ENTRY:
   EXPLAIN: express-generator
   BODY: |
     (sudo)npm install express-generator -g
@@ -125,7 +125,7 @@
     npm run start                                 // サーバー起動
     node bin/www                                  // サーバー起動
 
-- KEY: express.genetator.dir
+- ENTRY:
   EXPLAIN: generator ディレクトリ
   BODY: |
     .
@@ -146,7 +146,7 @@
         ├── index.jade
         └── layout.jade
 
-- KEY: express.routing
+- ENTRY:
   EXPLAIN: ルーティング
   BODY: |
     var app = express();
@@ -165,7 +165,7 @@
       next() // pass control to the next handler
     })
 
-- KEY: express.basic.route.byMethod
+- ENTRY:
   EXPLAIN: |
     ルーティング by route()
   BODY: |
@@ -175,7 +175,7 @@
     .post((req, res) => { res.send('Add a book') })
     .put ((req, res) => { res.send('Update the book') })
 
-- KEY: express.basic.route.express.Router
+- ENTRY:
   EXPLAIN: |
     ルーティング モジュラ定義
   BODY: |
@@ -194,7 +194,7 @@
 
     app.use('/myMod', myMod)
 
-- KEY: express.basic.route.path
+- ENTRY:
   EXPLAIN: |
     ルーティング Path
   BODY: |
@@ -217,7 +217,7 @@
     app.get(/a/, (req, res) => { res.send('') })
     app.get(/.*fly$/, (req, res) => { res.send('') })
 
-- KEY: express.basic.route.parameter
+- ENTRY:
   EXPLAIN: |
     ルーティング パスパラメタ
   BODY: |
@@ -240,7 +240,7 @@
     Request URL: http://localhost:3000/user/42
     req.params: {"userId": "42"}
 
-- KEY: express.basic.route.handler
+- ENTRY:
   EXPLAIN: |
     ルーティング ハンドラ
   BODY: |
@@ -267,7 +267,7 @@
       next()
     }, (req, res) => { res.send('') })
 
-- KEY: express.request.response
+- ENTRY:
   EXPLAIN: |
     ルーティング Request & Response
   BODY: |
@@ -291,7 +291,7 @@
     res.sendFile()    ファイルをオクテット ストリームとして送信
     res.sendStatus()  応答ステータスコードを設定、その文字列表現を応答本文として送信
 
-- KEY: express.cookie
+- ENTRY:
   EXPLAIN: Cookie
   BODY: |
     ■ 応答クッキー & 要求クッキー
@@ -355,7 +355,7 @@
     res.cookie('name', 'tobi', { path: '/admin' })
     res.clearCookie('name', { path: '/admin' })
 
-- KEY: express.middleware
+- ENTRY:
   EXPLAIN: Middleware
   BODY: |
     ■ handlerの基本I/F(エラーハンドラ除外)
@@ -388,7 +388,7 @@
     router.get('/:id', myLogger, businessLogic)   // 'GET /:id'
     router.get('books/:id', myLogger)             // 'GET books/:id'
 
-- KEY: express.middleware.newAttribute
+- ENTRY:
   EXPLAIN: Middleware(属性追加)
   BODY: |
     ■ app.js
@@ -410,7 +410,7 @@
 
     app.listen(3000)
 
-- KEY: express.middleware.errorHandling
+- ENTRY:
   EXPLAIN: Middleware(エラーハンドリング)
   BODY: |
     ■ 外部Middleware定義
@@ -443,7 +443,7 @@
 
     app.listen(3000)
 
-- KEY: express.middleware.errorHandlers
+- ENTRY:
   EXPLAIN: Middleware(エラーハンドラー)
   BODY: |
     ■ エラーハンドリングの順番
@@ -474,7 +474,7 @@
       });
     }
 
-- KEY: express.middleware.parameters
+- ENTRY:
   EXPLAIN: Middleware(パラメタ付き)
   BODY: |
     ■ 外部Middleware定義(Factory関数)
@@ -490,13 +490,13 @@
 
     app.use(mw({ option1: '1', option2: '2' }))   // パラメタ付き
 
-- KEY: express.template.engine
+- ENTRY:
   EXPLAIN: テンプレートエンジン(Jade)
   BODY: |
     app.set('views', path.join(__dirname, '../app/views')); // テンプレート格納PATH
     app.set('view engine', 'jade');               // エンジン指定
 
-- KEY: express.authentication
+- ENTRY:
   EXPLAIN: 認証(Passport)
   BODY: |
     Passport: node.jsの認証モジュールでデファクト
@@ -554,7 +554,7 @@
       }
     );
 
-- KEY: express.dotenv
+- ENTRY:
   EXPLAIN: 環境変数(dotenv)
   BODY: |
     var app = express();
@@ -563,7 +563,7 @@
       path: 'config/environment/.env.' + app.get('env')
     });
 
-- KEY: express.session
+- ENTRY:
   EXPLAIN: セッション
   BODY: |
     ■ オンメモリ
@@ -593,7 +593,7 @@
       })
     }));
 
-- KEY: express.logging
+- ENTRY:
   EXPLAIN: ロギング(例:morgan)
   BODY: |
     var logger = require('morgan');

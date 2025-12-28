@@ -3,7 +3,7 @@
 # npm & yarn
 #-------------------------------
 
-- KEY: ny.basic
+- ENTRY:
   EXPLAIN: 基礎、設定
   BODY: |
     ■ package.json生成
@@ -22,7 +22,7 @@
       npm bin [-g]
       yarn [Global] bin
 
-- KEY: ny.basic.install
+- ENTRY:
   EXPLAIN: インストール
   BODY: |
     ■ package.json 記載パッケージ全インストール
@@ -46,7 +46,7 @@
       npm i -D <PCKG>
       yarn add --dev <PCKG>
 
-- KEY: ny.basic.uninstall
+- ENTRY:
   EXPLAIN: アンインストール
   BODY: |
     ■ 指定
@@ -57,7 +57,7 @@
       npm un -D <PCKG>
       yarn remove <PCKG>
 
-- KEY: ny.basic.update
+- ENTRY:
   EXPLAIN: アップデート
   BODY: |
     ■ 全体
@@ -68,7 +68,7 @@
       npm update [-g] <PCKG>
       yarn [Global] upgrade <PCKG>
 
-- KEY: ny.basic.info
+- ENTRY:
   EXPLAIN: パッケージの情報
   BODY: |
     ■ パッケージの情報
@@ -91,7 +91,7 @@
       npm outdated <PCKG>
       yarn outdated <PCKG>
 
-- KEY: ny.basic.cache
+- ENTRY:
   EXPLAIN: キャッシュクリア
   BODY: |
     ■ クリア
@@ -110,7 +110,7 @@
     ■ ディレクトリ
       yarn cache dir
 
-- KEY: ny.basic.config
+- ENTRY:
   EXPLAIN: コンフィグ
   BODY: |
     ■ 表示
@@ -127,7 +127,7 @@
     ■ 属性名指定(json出力)
       npm config list --json
 
-- KEY: ny.basic.script
+- ENTRY:
   EXPLAIN: スクリプト
   BODY: |
     ■ スクリプト一覧
@@ -142,7 +142,7 @@
       npm run env
       yarn run env
 
-- KEY: ny.basic.other
+- ENTRY:
   EXPLAIN: ローカルPCKG実行、脆弱性、ヘルプ
   BODY: |
     ■ ローカルPCKG実行

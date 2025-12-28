@@ -2,10 +2,10 @@
 #-------------------------------
 # Yup
 #-------------------------------
-- KEY: Yup.category
+- ENTRY:
   CATEGORY: 概要
 
-- KEY: Yup.概要.機能
+- ENTRY:
   EXPLAIN: 機能 & インストール
   BODY: |
     ■ 機能
@@ -29,7 +29,7 @@
     ・TypeScript と厳密に型を連携させたい → Zod
     ・サーバ側と同じルールを共有したい（NodeでJoi等採用している）→ Joi 等検討
 
-- KEY: Yup.概要.サンプル
+- ENTRY:
   EXPLAIN: サンプルコンポーネント
   BODY: |
     import { useForm } from 'react-hook-form'
@@ -66,7 +66,7 @@
       )
     }
 
-- KEY: Yup.概要.スニペット
+- ENTRY:
   EXPLAIN: スニペット各種
   BODY: |
     ■ 基本（名前・メール・年齢）
@@ -150,10 +150,10 @@
     ・非同期検証はデバウンスやキャッシュを検討して API 負荷を抑える
     ・スキーマは小さく分割して再利用する（.concat / shape を活用）
 
-- KEY: Yup.category.スキーマ
+- ENTRY:
   CATEGORY: スキーマ
 
-- KEY: Yup.スキーマ.一覧
+- ENTRY:
   EXPLAIN: 一覧
   BODY: |
     yup.string()                        // 文字列
@@ -166,7 +166,7 @@
     yup.lazy()                          // 動的にスキーマを切り替える
     yup.ref()                           // 他フィールド参照
 
-- KEY: Yup.スキーマ.string()
+- ENTRY:
   EXPLAIN: yup.string()
   BODY: |
     yup.string().required('必須')
@@ -182,7 +182,7 @@
       return typeof value === 'string' && value !== ''
     })
 
-- KEY: Yup.スキーマ.number()
+- ENTRY:
   EXPLAIN: yup.number()
   BODY: |
     yup.number().required('必須')
@@ -195,14 +195,14 @@
     yup.number().transform((v, o) => (o === '' ? undefined : v))
     yup.number().test('custom', 'カスタム数値検証', (value) => typeof value === 'number' && !isNaN(value))
 
-- KEY: Yup.スキーマ.boolean()
+- ENTRY:
   EXPLAIN: yup.boolean()
   BODY: |
     yup.boolean().required()
     yup.boolean().oneOf([true], '同意が必要')
     yup.boolean().nullable()
 
-- KEY: Yup.スキーマ.date()
+- ENTRY:
   EXPLAIN: yup.date()
   BODY: |
     yup.date().required('必須')
@@ -211,7 +211,7 @@
     yup.date().nullable()
     yup.date().transform((val, orig) => (orig === '' ? null : val))
 
-- KEY: Yup.スキーマ.array()
+- ENTRY:
   EXPLAIN: yup.array()
   BODY: |
     yup.array().of(yup.string())
@@ -220,14 +220,14 @@
     yup.array().length(3, '3つ固定')
     yup.array().of(yup.object({ id: yup.string().required() }))
 
-- KEY: Yup.スキーマ.object()
+- ENTRY:
   EXPLAIN: yup.object()
   BODY: |
     yup.object().shape({ name: yup.string().required() })
     yup.object().noUnknown(true)
     yup.object().required()
 
-- KEY: Yup.スキーマ.mixed()
+- ENTRY:
   EXPLAIN: yup.mixed()
   BODY: |
     yup.mixed().required()
@@ -236,14 +236,14 @@
     yup.mixed().nullable()
     yup.mixed().test('isFile', 'ファイル必須', (v) => v instanceof File)
 
-- KEY: Yup.スキーマ.lazy()
+- ENTRY:
   EXPLAIN: yup.lazy()
   BODY: |
     yup.lazy((value) => {
       return Array.isArray(value) ? yup.array().of(yup.string()) : yup.string()
     })
 
-- KEY: Yup.スキーマ.ref()
+- ENTRY:
   EXPLAIN: yup.ref()
   BODY: |
     ■ 基本: 他フィールドを参照する
@@ -271,10 +271,10 @@
       }),
     })
 
-- KEY: Yup.category.チェーンメソッド
+- ENTRY:
   CATEGORY: チェーンメソッド
 
-- KEY: Yup.チェーンメソッド.一覧
+- ENTRY:
   EXPLAIN: 一覧
   BODY: |
     ...().required(msg)                 // 必須
@@ -301,7 +301,7 @@
     ...().strict()                      // 厳格モード
     ...().noUnknown()                   // 未知フィールド禁止
 
-- KEY: Yup.チェーンメソッド.required()
+- ENTRY:
   EXPLAIN: required()
   BODY: |
     ■ 必須チェック
@@ -314,7 +314,7 @@
       value: yup.string().when('enabled', { is: true, then: (s: any) => s.required('有効時は必須') }),
     })
 
-- KEY: Yup.チェーンメソッド.nullable()
+- ENTRY:
   EXPLAIN: nullable()
   BODY: |
     ■ null を許容して null を valid とする
@@ -323,7 +323,7 @@
     ■ nullable と required を組合せて明示的に null を拒否する
     yup.string().nullable().required('nullは不可')
 
-- KEY: Yup.チェーンメソッド.default()
+- ENTRY:
   EXPLAIN: default()
   BODY: |
     ■ デフォルト値の利用例
@@ -333,7 +333,7 @@
     ■ transform と組合せて空文字をデフォルト化
     yup.string().transform((v, o) => (o === '' ? undefined : v)).default('')
 
-- KEY: Yup.チェーンメソッド.transform()
+- ENTRY:
   EXPLAIN: transform()
   BODY: |
     ■ 入力の正規化例（全角数字を半角に）
@@ -344,7 +344,7 @@
     ■ 空文字を undefined に変換して nullable と組合せ
     yup.number().transform((v, o) => (o === '' ? undefined : v))
 
-- KEY: Yup.チェーンメソッド.min_max_length()
+- ENTRY:
   EXPLAIN: min/max/length
   BODY: |
     ■ 文字数制限
@@ -354,27 +354,27 @@
     ■ 数値の範囲
     yup.number().min(0, '0以上').max(100, '100以下')
 
-- KEY: Yup.チェーンメソッド.email_url_matches()
+- ENTRY:
   EXPLAIN: email()/url()/matches()
   BODY: |
     yup.string().email('正しいメール形式で入力')
     yup.string().url('正しいURLで入力')
     yup.string().matches(/^\d{3}-?\d{4}$/, '郵便番号形式で入力')
 
-- KEY: Yup.チェーンメソッド.number_flags()
+- ENTRY:
   EXPLAIN: integer()/positive()/negative()
   BODY: |
     yup.number().integer('整数で入力')
     yup.number().positive('正の数で入力')
     yup.number().negative('負の数で入力')
 
-- KEY: Yup.チェーンメソッド.oneOf_notOneOf()
+- ENTRY:
   EXPLAIN: oneOf()/notOneOf()
   BODY: |
     yup.string().oneOf(['red', 'green', 'blue'], '選択が無効')
     yup.string().notOneOf(['admin'], '使用禁止ワード')
 
-- KEY: Yup.チェーンメソッド.test()
+- ENTRY:
   EXPLAIN: test()
   BODY: |
     ■ 同期カスタム検証（関数表現で this が使える）
@@ -389,7 +389,7 @@
       return true
     })
 
-- KEY: Yup.チェーンメソッド.when()
+- ENTRY:
   EXPLAIN: when()
   BODY: |
     ■ 単純な when（フィールド単体）
@@ -404,7 +404,7 @@
       return a === b ? schema.required('a と b が等しい場合は必須') : schema
     })
 
-- KEY: Yup.チェーンメソッド.of_shape_concat()
+- ENTRY:
   EXPLAIN: of()/shape()/concat()
   BODY: |
     ■ 配列要素にスキーマを適用
@@ -418,7 +418,7 @@
     const extra = yup.object({ meta: yup.object() })
     base.concat(extra)
 
-- KEY: Yup.チェーンメソッド.strict_noUnknown()
+- ENTRY:
   EXPLAIN: strict()/noUnknown()
   BODY: |
     ■ strict: transform を無効化して厳密にチェック

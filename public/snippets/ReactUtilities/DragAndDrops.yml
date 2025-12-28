@@ -1,0 +1,457 @@
+---
+#-------------------------------
+# dragAndDrops
+#-------------------------------
+- ENTRY:
+  CATEGORY: react-dropzone
+
+- ENTRY:
+  KEY: dragAndDrops.基礎.installation
+  EXPLAIN: インストールと基本的な使い方
+  BODY: |
+    ■ インストール
+
+    npm install react-dropzone  
+
+    ■ 基本的な使い方
+
+    import { useDropzone } from 'react-dropzone';
+
+    function MyDropzone() {
+      const { getRootProps, getInputProps } = useDropzone({
+        onDrop: (acceptedFiles) => console.log(acceptedFiles),
+      });
+
+      return (
+        <div {...getRootProps()}>
+          <input {...getInputProps()} />
+          <p>ファイルをここにドラッグ＆ドロップ</p>
+        </div>
+      );
+    }
+
+    ■ フルオプション
+
+    function MyDropzone() {
+      const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({
+        accept: { 'image/*': ['.png', '.jpg'] },
+        multiple: true,
+        maxFiles: 5,
+        minSize: 1024,
+        maxSize: 10485760,
+        disabled: false,
+        noClick: false,
+        noDrag: false,
+        noKeyboard: false,
+        noDragEventsBubbling: false,
+        preventDropOnDocument: true,
+        useFsAccessApi: false,
+        validator: (file) => {
+          if (file.size > 1048576) {
+            return {
+              code: 'file-too-large',
+              message: 'ファイルサイズが大きすぎます',
+            };
+          }
+          return null;
+        },
+        onDrop: (acceptedFiles, fileRejections) => {
+          console.log(acceptedFiles);
+          console.log(fileRejections);
+        },
+      });
+
+      return (
+        <div {...getRootProps()}>
+          <input {...getInputProps()} />
+          <p>ファイルをここにドラッグ＆ドロップ</p>
+          <button type="button" onClick={open}>
+            ファイル選択ダイアログを開く
+          </button>
+        </div>
+      );
+    }
+
+- ENTRY:
+  KEY: dragAndDrops.useDropzone.options
+  EXPLAIN: useDropzone のオプション詳細
+  BODY: |
+    ■ accept
+
+      ・受け入れファイルタイプ指定
+      ・MIMEタイプと拡張子で制限
+      ・デフォルト: なし (全ファイル)
+      
+      例: { 'image/*': ['.png', '.jpg'], 'application/pdf': [] }
+
+      使用可能なファイルタイプ
+      
+      https://developer.mozilla.org/ja/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
+
+      ・文章系
+      {
+        'text/plain': ['.txt', '.csv'],
+        'text/html': ['.html', '.htm'],
+        'application/pdf': ['.pdf'],
+        'application/msword': ['.doc', '.docx'],
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx']
+      }
+
+    ■ multiple
+
+      ・複数ファイルの選択を許可(bool)
+      ・false 設定すると単一ファイルのみ許可
+      ・デフォルト: true
+      
+      例: multiple: false 
+
+    ■ maxFiles
+
+      ・最大ファイル数 (number)
+      ・デフォルト: 0 = 無制限
+      
+      例: maxFiles: 3
+
+    ■ minSize
+
+      ・最小ファイルサイズ (bytes)
+      ・デフォルト: 0
+
+      例: minSize: 1024 // 1KB
+
+    ■ maxSize
+
+      ・最大ファイルサイズ (bytes)
+      ・デフォルト: Infinity
+
+      例: maxSize: 1048576 // 1MB
+
+    ■ disabled
+
+      ・ドロップゾーンを無効化 (bool)
+      ・デフォルト: false
+
+      例: disabled: true
+
+    ■ noClick
+
+      ・クリックでファイルダイアログを開かない (bool)
+
+      デフォルト: false
+
+    ■ noDrag
+
+      ・ラッグ操作を無効化 (bool)
+      
+      デフォルト: false
+
+    ■ noKeyboard
+
+      ・キーボード操作を無効化 (bool)
+
+      デフォルト: false
+
+    ■ noDragEventsBubbling
+
+      ・ドラッグイベントの伝播を防ぐ (bool)
+
+      デフォルト: false
+
+    ■ preventDropOnDocument
+
+      ・ドキュメント全体でのドロップを防止 (bool)
+
+      デフォルト: true
+
+    ■ useFsAccessApi  
+
+      ・File System Access API を使用 (bool)
+      ・ディレクトリ選択不可、セキュアコンテキスト必須
+      ・デフォルト: false
+
+      例: useFsAccessApi: true
+
+    ■ validator
+
+      ・カスタムバリデーション関数 (func)
+      ・ファイルを受け入れる場合 null、拒否する場合エラーオブジェクトを返す
+
+      例: (file) => {
+        if (file.size > 1048576) {
+          return {
+            code: 'file-too-large',
+            message: 'ファイルサイズが大きすぎます',
+          };
+        }
+        return null;
+      }
+      
+    ■ getFilesFromEvent
+
+      ・カスタムファイル取得関数 (func)
+      ・デフォルト: 標準処理
+
+      例: async (event) => {
+        // カスタムロジックでファイルを取得
+        return [];
+      }
+
+- ENTRY:
+  KEY: dragAndDrops.useDropzone.options
+  EXPLAIN: コールバックオプション
+  BODY: |
+    ■ onDrop
+
+    ・ドロップ時に呼び出される
+    ・acceptedFiles: 受け入れられたファイル配列
+    ・fileRejections: 拒否されたファイルとエラー
+
+      onDrop: (acceptedFiles, fileRejections) => {
+        console.log(acceptedFiles);
+        console.log(fileRejections);
+      }
+
+    ■ onDropAccepted
+
+    ・受け入れファイルのみドロップ時
+      
+      onDropAccepted: (acceptedFiles) => {
+        console.log(acceptedFiles);
+      }
+
+    ■ onDropRejected
+
+    ・拒否ファイルのみドロップ時
+
+      onDropRejected: (fileRejections) => {
+        console.log(fileRejections);
+      }
+
+    ■ onDragEnter
+
+    ・ドラッグエンター時
+
+      onDragEnter: (event) => {
+        console.log('Drag Enter', event);
+      }
+
+    ■ onDragOver
+
+    ・ドラッグオーバー時
+
+      onDragOver: (event) => {
+        console.log('Drag Over', event);
+      }
+
+    ■ onDragLeave
+
+    ・ドラッグリーブ時
+      
+      onDragLeave: (event) => {
+        console.log('Drag Leave', event);
+      }
+
+    ■ onFileDialogOpen
+
+    ・ファイルダイアログオープン時
+
+      onFileDialogOpen: () => {
+        console.log('File Dialog Opened');
+      }
+
+    ■ onFileDialogCancel
+
+    ・ファイルダイアログキャンセル時
+      ※ ブラウザにより不安定
+
+      onFileDialogCancel: () => {
+        console.log('File Dialog Canceled');  
+      }
+
+    ■ onError
+
+    ・エラー発生時
+
+      onError: (error) => {
+        console.error(error);
+      }
+
+- ENTRY:
+  KEY: dragAndDrops.useDropzone.caveats
+  EXPLAIN: 注意点
+  BODY: |
+    ■ 前提条件
+
+    ・React 16.8+ が必要(Hooks 使用)
+
+    ■ ファイルパスなし
+
+      ドロップされたファイルに path/fullPath プロパティはない
+      ※ セキュリティのため
+      File System Access API 使用時は path が設定される場合あり
+
+    ■ ファイルアップローダーではない
+
+      このライブラリはファイル選択/ドロップのみ。
+      サーバーへのアップロード機能は別途実装 (例: axios, fetch)
+
+    ■ MIMEタイプの信頼性
+
+      プラットフォームにより異なる
+      例: CSV が text/plain や application/vnd.ms-excel
+
+    ■ <label> をルート要素に使う場合
+
+      noClick: true を設定しないとダイアログが2回開く
+
+    ■ open() メソッド使用時
+
+      クリックイベント内で呼び出すとダイアログが2回開く可能性あり
+      ※ noClick: true を設定
+
+    ■ onFileDialogCancel の不安定さ
+
+      ブラウザにより正しく動作しない場合あり
+      ※ タイムアウト (300ms) で判定
+
+    ■ File System Access API 使用時の制限
+
+      ディレクトリ選択不可
+      セキュアコンテキスト (HTTPS) 必須
+      Electron では path が設定されない場合あり
+
+    ■ ブラウザサポート
+
+      HTML5 File API に依存。古いブラウザでは制限あり
+
+    ■ テスト
+
+      react-testing-library を使用。Enzyme は非対応
+
+    ■ イベント伝播
+
+      デフォルトで stopPropagation される場合あり。カスタムハンドラ注意
+
+- ENTRY:
+  KEY: dragAndDrops.ファイルの読み込み
+  EXPLAIN: カスタムhooks(ファイルの読み込み)
+  BODY: |
+    ■ カスタムhooksに整形
+
+    import { useCallback } from 'react';
+    import { useDropzone } from 'react-dropzone';
+
+    export function useFileDropzone(onFilesLoaded) {
+      const onDrop = useCallback(
+        (acceptedFiles) => {
+          acceptedFiles.forEach((file) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              const fileContent = reader.result;
+              onFilesLoaded(file, fileContent);
+            };
+            reader.readAsText(file);
+          });
+        },
+        [onFilesLoaded]
+      );
+
+      const dropzoneProps = useDropzone({ onDrop });
+
+      return dropzoneProps;
+    }
+
+    ■ 使用例(ボタンとDropZone両方対応)
+
+    import React from 'react';
+    import { useFileDropzone } from './useFileDropzone';
+    import { useDropzone } from 'react-dropzone';
+
+    function FileUploader() {
+      const handleFilesLoaded = (file, content) => {
+        console.log('ファイル名:', file.name);
+        console.log('内容:', content);
+      };
+
+      const dropzoneProps = useFileDropzone(handleFilesLoaded);
+
+      const openFileDialog = () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.multiple = true;
+        input.onchange = (event) => {
+          const files = event.target.files;
+          Array.from(files).forEach((file) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              const fileContent = reader.result;
+              handleFilesLoaded(file, fileContent);
+            };
+            reader.readAsText(file);
+          });
+        };
+        input.click();
+      };
+
+      return (
+        <div>
+          <div {...dropzoneProps.getRootProps()} style={{ border: '2px dashed #ccc', padding: '20px' }}>
+            <input {...dropzoneProps.getInputProps()} />
+            <p>ここにファイルをドラッグ＆ドロップ、またはクリックして選択</p>
+          </div>
+          <button type="button" onClick={openFileDialog} style={{ marginTop: '10px' }}>
+            ファイル選択ダイアログを開く
+          </button>
+        </div>
+      );
+    }
+
+- ENTRY:
+  KEY: dragAndDrops.FileSystemAccessAPI
+  EXPLAIN: File System Access API
+  BODY: |
+    ■ 概要
+
+    ・ブラウザでローカルファイルやディレクトリにアクセス可能にするAPI
+    ・ユーザーの許可が必要
+    ・対応ブラウザ: Chrome, Edge, Opera (Firefox, Safari は非対応)
+
+    ■ 主な機能
+
+    ・ファイル/ディレクトリの読み書き
+    ・ドラッグ＆ドロップでのファイル取得
+    ・永続的なファイルハンドル保存
+
+    ■ ファイル選択ダイアログを開く
+
+    async function openFile() {
+      try {
+        const [fileHandle] = await window.showOpenFilePicker();
+        const file = await fileHandle.getFile();
+        const contents = await file.text();
+        console.log(contents);
+      } catch (error) {
+        console.error('ファイルの読み込みに失敗:', error);
+      }
+    }
+
+    ■ ファイル保存ダイアログを開く
+
+    async function saveFile() {
+      try {
+        const options = {
+          types: [
+            {
+              description: 'テキストファイル',
+              accept: { 'text/plain': ['.txt'] },
+            },
+          ],
+        };
+        const fileHandle = await window.showSaveFilePicker(options);
+        const writable = await fileHandle.createWritable();
+        await writable.write('保存する内容');
+        await writable.close();
+      } catch (error) {
+        console.error('ファイルの保存に失敗:', error);
+      }
+    }

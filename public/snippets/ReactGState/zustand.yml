@@ -3,7 +3,7 @@
 # Package: Storybook
 #-------------------------------
 
-- KEY: pk.zustand.store
+- ENTRY:
   EXPLAIN: zustand Store
   BODY: |
     type CountState={

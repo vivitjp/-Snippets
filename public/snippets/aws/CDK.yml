@@ -2,10 +2,10 @@
 #-------------------------------
 # CDK
 #-------------------------------
-- KEY: aws.cdk.category
+- ENTRY:
   CATEGORY: 概要
 
-- KEY: aws.cdk.概要
+- ENTRY:
   EXPLAIN: |
     概要
   BODY: |
@@ -15,11 +15,11 @@
     • 実行すると定義各スタックに対し AWS CloudFormation テンプレートが生成される
       ※ CDK の用語では「synthesize=合成」
 
-- KEY: aws.cdk.workshop.hello.category
+- ENTRY:
   CATEGORY: |
     ワークショップ: Hello
 
-- KEY: aws.cdk.workshop.hello.1
+- ENTRY:
   EXPLAIN: |
     ワークショップ(Hello): 1.初期化
   BODY: |
@@ -63,7 +63,7 @@
     package.json  
     tsconfig.json
 
-- KEY: aws.cdk.workshop.hello.2
+- ENTRY:
   EXPLAIN: |
     ワークショップ(Hello): 2.ファイル作成
   BODY: |
@@ -101,7 +101,7 @@
       }
     }
 
-- KEY: aws.cdk.workshop.hello.3
+- ENTRY:
   EXPLAIN: |
     ワークショップ(Hello): 3.テンプレート合成と生成結果
   BODY: |
@@ -215,7 +215,7 @@
             AssertDescription: CDK bootstrap stack version 6 required. 
                                 Please run 'cdk bootstrap' with a recent version of the CDK CLI.
 
-- KEY: aws.cdk.workshop.hello.4
+- ENTRY:
   EXPLAIN: |
     ワークショップ(Hello): 4.deploy
   BODY: |
@@ -256,7 +256,7 @@
     Stack ARN:
     arn:aws:cloudformation:ap-northeast-1:123456789012:stack/CdkWorkshopStack/{STACK-ID}
 
-- KEY: aws.cdk.workshop.hello.5
+- ENTRY:
   EXPLAIN: |
     ワークショップ(Hello): 5.コンソール
   BODY: |
@@ -267,7 +267,7 @@
 
     「リソース」タブを開くと、展開可能なツリー形式でリソースの論理 ID が表示される
 
-- KEY: aws.cdk.workshop.hello.6
+- ENTRY:
   EXPLAIN: |
     ワークショップ(Hello): 6.クリーンアップ
   BODY: |
@@ -318,7 +318,7 @@
       Stack ARN:
       arn:aws:cloudformation:ap-northeast-1:123456789012:stack/CdkWorkshopStack/{STACK-ID}
 
-- KEY: aws.cdk.workshop.hello.7
+- ENTRY:
   EXPLAIN: |
     ワークショップ(Hello): 7.Lambda作成
   BODY: |
@@ -340,7 +340,7 @@
         }
       }
 
-- KEY: aws.cdk.workshop.hello.8
+- ENTRY:
   EXPLAIN: |
     ワークショップ(Hello): 8.コンストラクトライブラリのインストール
   BODY: |
@@ -350,7 +350,7 @@
     • コンストラクトライブラリは AWS サービスごとにモジュールに分割
     • AWS Lambda 関数定義には AWS Lambda コンストラクトライブラリを使用
 
-- KEY: aws.cdk.workshop.hello.9
+- ENTRY:
   EXPLAIN: |
     ワークショップ(Hello): 9.スタックにAWSLambda関数追加
   BODY: |
@@ -425,7 +425,7 @@
         "body": "Hello, CDK! You've hit /hello\n"
       }
 
-- KEY: aws.cdk.workshop.hello.10
+- ENTRY:
   EXPLAIN: |
     ワークショップ(Hello): 10.ホットスワップデプロイ(開発用)
   BODY: |
@@ -448,7 +448,7 @@
     Stack ARN:
     arn:aws:cloudformation:ap-northeast-1:123456789012:stack/CdkWorkshopStack/{STACK-ID}
 
-- KEY: aws.cdk.workshop.hello.11
+- ENTRY:
   EXPLAIN: |
     ワークショップ(Hello): 11.CDK Watch
   BODY: |
@@ -530,7 +530,7 @@
 
       ✨  Total time: 6.28s
 
-- KEY: aws.cdk.workshop.hello.12
+- ENTRY:
   EXPLAIN: |
     ワークショップ(Hello): 12.API Gateway 追加
   BODY: |
@@ -661,11 +661,11 @@
       • 何らかの理由で関数が失敗
         • Lambda ログの表示を確認
 
-- KEY: aws.cdk.workshop.HitCounter.category
+- ENTRY:
   CATEGORY: |
     workshop: HitCounter
 
-- KEY: aws.cdk.HitCounter.1
+- ENTRY:
   EXPLAIN: |
     ワークショップ(HitCounter): 1.コンストラクトの作成
   BODY: |
@@ -765,7 +765,7 @@
       }
     }
 
-- KEY: aws.cdk.HitCounter.2
+- ENTRY:
   EXPLAIN: |
     ワークショップ(HitCounter): 2.スタックにヒットカウンターを追加
   BODY: |
@@ -838,7 +838,7 @@
       ※ "is not authorized!" というメッセージが含まれるのを確認
          Lambda 関数が DynamoDB テーブルに書き込めない -> アクセス許可を付与していない
 
-- KEY: aws.cdk.HitCounter.3
+- ENTRY:
   EXPLAIN: |
     ワークショップ(HitCounter): 3.修正
   BODY: |
@@ -923,7 +923,7 @@
     • 5xx が表示される場合は、数秒待ってから再試行
       • API Gateway が新しいデプロイを使用するようにエンドポイントを「切り替える」のに少し時間がかかる
 
-- KEY: aws.cdk.HitCounter.4
+- ENTRY:
   EXPLAIN: |
     ワークショップ(HitCounter): 4.テスト
   BODY: |

@@ -1,10 +1,10 @@
 # ----------------------------
 # Excel
 # ----------------------------
-- KEY: excelJS.general
+- ENTRY:
   CATEGORY: 関数比較
 
-- KEY: excelJS.math.log
+- ENTRY:
   EXPLAIN: |
     関数: LOG関数名が紛らわしいので注意
   BODY: |
@@ -16,10 +16,10 @@
 
     関数: NL
 
-- KEY: excelJS.search.category
+- ENTRY:
   CATEGORY: search 検索
 
-- KEY: excelJS.search.vlookup
+- ENTRY:
   EXPLAIN: |
     検索: vlookup
   BODY: |

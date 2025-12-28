@@ -2,10 +2,10 @@
 #-------------------------------
 # vite
 #-------------------------------
-- KEY: vite.install.category
+- ENTRY:
   CATEGORY: インストール & 設定
 
-- KEY: vite.install.fontbuildtool
+- ENTRY:
   EXPLAIN: フロントエンドビルドツール Vite（Evan You の Vite）
   BODY: |
     React/Vue/Svelte 等モダン開発用のビルド・開発サーバ
@@ -51,7 +51,7 @@
       vite build --sourcemap            // ソースマップ付きビルド
       vite preview --port 5000          // プレビュー用ポート指定
 
-- KEY: vite.command
+- ENTRY:
   EXPLAIN: CLI コマンド一覧
   BODY: |
     ■ vite [command] [options]          // 共通オプション
@@ -106,7 +106,7 @@
     ・ブラウザのデベロッパーツールで利用される
     ・本番環境での利用はセキュリティリスクとなりうる
 
-- KEY: vite.vite.config
+- ENTRY:
   EXPLAIN: vite.config
   BODY: |
     ■ 基本構成例
@@ -158,7 +158,7 @@
         },
       })
 
-- KEY: vite.install.gitHook1
+- ENTRY:
   EXPLAIN: Git フック管理用 vite（typicode/vite）※少数派
   BODY: |
     目的: リポジトリ単位で軽量な git hook を生成・管理し、lint-staged 等をフックに登録
@@ -188,7 +188,7 @@
       . "$(dirname -- "$0")/vite.sh"
       npx lint-staged
 
-- KEY: vite.install.gitHook2
+- ENTRY:
   EXPLAIN: 「git hook を管理する」
   BODY: |
     ■ 目的
@@ -218,7 +218,7 @@
       package.json に lint-staged 設定例:
       通常の開発フロー: ファイルをステージ → git commit → pre-commit が実行 → 失敗ならコミット中止。
 
-- KEY: vite.install.hotreload
+- ENTRY:
   EXPLAIN: ホットリロード修正
   BODY: |
     import { defineConfig } from "vite"
@@ -236,10 +236,10 @@
       },
     })
 
-- KEY: vite.gitHubPages.category
+- ENTRY:
   CATEGORY: GitHub Pages での運用
 
-- KEY: vite.gitHubPages.基本設定
+- ENTRY:
   EXPLAIN: 基本設定
   BODY: |
     ■ ユーザーページ
@@ -273,7 +273,7 @@
         }
       }
 
-- KEY: vite.gitHubPages.デプロイ
+- ENTRY:
   EXPLAIN: デプロイ
   BODY: |
     ■ A) 簡易デプロイ: gh-pages パッケージ
@@ -330,7 +330,7 @@
                 publish_dir: ./dist
                 publish_branch: gh-pages
 
-- KEY: vite.gitHubPages.404フォールバック
+- ENTRY:
   EXPLAIN: SPA の 404 フォールバック対策
   BODY: |
     GitHub Pages は直接 SPA の client-side routing をサポートしない
@@ -349,7 +349,7 @@
 
     簡易版: index.html のコピーを dist/404.html にしておく方法（ただし相対パスの問題に注意）
 
-- KEY: vite.gitHubPages.customDomain
+- ENTRY:
   EXPLAIN: カスタムドメイン（CNAME）の設定
   BODY: |
     ■ 1) GitHub リポジトリの Pages 設定でカスタムドメインを指定
@@ -370,7 +370,7 @@
           publish_branch: gh-pages
           cname: example.com   # ここにカスタムドメインを指定
 
-- KEY: vite.gitHubPages.nojekyll
+- ENTRY:
   EXPLAIN: nojekyll
   BODY: |
     ■ nojekyllとは？
@@ -381,7 +381,7 @@
     静的サイトジェネレータを使わない場合、ルートに .nojekyll ファイルを置くことで無効化可能
     dist/.nojekyll を作成し、コミット／デプロイ対象に含める
 
-- KEY: vite.gitHubPages.troubleshooting
+- ENTRY:
   EXPLAIN: トラブルシューティング
   BODY: |
     ・base が誤っている → ページ内リソースが 404 になる（console でパスを確認）

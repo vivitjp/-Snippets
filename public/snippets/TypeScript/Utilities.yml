@@ -6,10 +6,10 @@
 #-------------------------------
 # Utilities
 #-------------------------------
-- KEY: ts.Utilities.category
+- ENTRY:
   CATEGORY: Utilities
 
-- KEY: ts.Util.Partial<T>
+- ENTRY:
   EXPLAIN: |
     Partial<T>: オプショナルに変換
   BODY: |
@@ -21,7 +21,7 @@
   FOLD: |
     type Partial<T> = { [P in keyof T]?: T[P] | undefined; }
 
-- KEY: ts.Util.Required<T>
+- ENTRY:
   EXPLAIN: |
     Required<T>: 必須に変換
   BODY: |
@@ -35,7 +35,7 @@
   FOLD: |
     type Required<T> = { [P in keyof T]-?: T[P]; }
 
-- KEY: ts.Util.Readonly<T>
+- ENTRY:
   EXPLAIN: |
     Readonly<T>: readonlyに変換
   BODY: |
@@ -49,7 +49,7 @@
   FOLD: |
     type Readonly<T> = { readonly [P in keyof T]: T[P]; }
 
-- KEY: ts.Util.Record<K,T>
+- ENTRY:
   EXPLAIN: |
     Record<K,T>: { K名: T型 }のレコード型作成
   BODY: |
@@ -68,7 +68,7 @@
   FOLD: |
     type Record<K extends keyof any, T> = { [P in K]: T; }
 
-- KEY: ts.Util.Pick<T,K>
+- ENTRY:
   EXPLAIN: |
     Pick<T,K>: T型 から T[K] 選択
   BODY: |
@@ -85,7 +85,7 @@
   FOLD: |
     type Pick<T, K extends keyof T> = { [P in K]: T[P]; }
 
-- KEY: ts.Util.Omit<T,K>
+- ENTRY:
   EXPLAIN: |
     Omit<T,K>: T型 から T[K] 排除
   BODY: |
@@ -99,7 +99,7 @@
   FOLD: |
     type Omit<T, K extends keyof any> = { [P in Exclude<keyof T, K>]: T[P]; }
 
-- KEY: ts.Util.Exclude<Keys,K>
+- ENTRY:
   EXPLAIN: |
     Exclude<Keys,K>: Keys から K 除外 (Key操作のみ)
   BODY: |
@@ -117,7 +117,7 @@
   FOLD: |
     type Exclude<Keys,K> = Keys extends K ? never : Keys
 
-- KEY: ts.Util.Extract<Keys,K>
+- ENTRY:
   EXPLAIN: |
     Extract<Keys,K>: Keys から K 抽出 (Key操作のみ)
   BODY: |
@@ -135,7 +135,7 @@
   FOLD: |
     type Extract<Keys,K> = Keys extends K ? Keys : never
 
-- KEY: ts.Util.NonNullable<T>
+- ENTRY:
   EXPLAIN: |
     NonNullable<T>: null/undefined 除外
   BODY: |
@@ -150,10 +150,10 @@
 #-------------------------------
 # 関数 Utilities
 #-------------------------------
-- KEY: ts.Function.category
+- ENTRY:
   CATEGORY: 関数 Utilities
 
-- KEY: ts.Util.Parameters<T>
+- ENTRY:
   EXPLAIN: |
     Parameters<T>: メソッドの引数型取得
   BODY: |
@@ -164,7 +164,7 @@
     type Parameters<T extends (...args: any) => any>
       = T extends (...args: infer P) => any ? P : never
 
-- KEY: ts.Util.ReturnType<T>
+- ENTRY:
   EXPLAIN: |
     ReturnType<T>: メソッドの戻り型取得
   BODY: |
@@ -174,7 +174,7 @@
     type ReturnType<T extends (...args: any) => any> 
       = T extends (...args: any) => infer R ? R : any
 
-- KEY: ts.Util.Awaited<T>
+- ENTRY:
   EXPLAIN: |
     Awaited<T>: 非同期awaitの戻り型取得
   BODY: |
@@ -187,7 +187,7 @@
         then(onfulfilled: infer F, ...args: infer _): any;
     } ? F extends (value: infer V, ...args: infer _) => any ? Awaited<...> : never : T
 
-- KEY: ts.Util.NoInfer<T>
+- ENTRY:
   EXPLAIN: |
     NoInfer<T>: 型推論ブロック
   BODY: |
@@ -204,10 +204,10 @@
 #-------------------------------
 # Class Utilities
 #-------------------------------
-- KEY: ts.Class.category
+- ENTRY:
   CATEGORY: Class Utilities
 
-- KEY: ts.Util.ConstructorParameters<T>
+- ENTRY:
   EXPLAIN: |
     ConstructorParameters<T>: コンストラクタの属性型群取得
   BODY: |
@@ -224,7 +224,7 @@
     type ConstructorParameters<T extends abstract new (...args: any) => any>
       = T extends abstract new (...args: infer P) => any ? P : never
 
-- KEY: ts.Util.InstanceType<T>
+- ENTRY:
   EXPLAIN: |
     InstanceType<T>: インスタンス型
   BODY: |
@@ -247,10 +247,10 @@
 #-------------------------------
 # カスタム Utilities
 #-------------------------------
-- KEY: ts.Utilities.カスタム.category
+- ENTRY:
   CATEGORY: カスタム Utilities
 
-- KEY: ts.Util.DeepNonNullable<T>
+- ENTRY:
   EXPLAIN: |
     DeepNonNullable<T>: 再帰的に null/undefined 除外(カスタムUtility)
   BODY: |
@@ -271,7 +271,7 @@
     type ANonNU = DeepNonNullable<A>
   FOLD: |
 
-- KEY: ts.Util.Maybe<T>
+- ENTRY:
   EXPLAIN: |
     Maybe<T>: undefined/null追加(ApolloGraphQLカスタムUtility)
   BODY: |
@@ -281,10 +281,10 @@
 #-------------------------------
 # object Literal
 #-------------------------------
-- KEY: ts.objectLiteral.category
+- ENTRY:
   CATEGORY: Key名(オブジェクトリテラル)
 
-- KEY: ts.objectLiteral.Util.Union
+- ENTRY:
   EXPLAIN: |
     Key名(オブジェクトリテラル)の連結
   BODY: |
@@ -293,21 +293,21 @@
     type NewId = `${Id | Kind}_id`
     const newId: NewId = "A_id" // 'B_id', 'X_id', 'Y_id'
 
-- KEY: ts.objectLiteral.Util.Uppercase<T>
+- ENTRY:
   EXPLAIN: |
     Uppercase<T>: Key名(オブジェクトリテラル)の大文字化
   BODY: |
     type A = "name"
     type C = Uppercase<A> //"NAME"
 
-- KEY: ts.objectLiteral.Util.Lowercase<T>
+- ENTRY:
   EXPLAIN: |
     Lowercase<T>: Key名(オブジェクトリテラル)の小文字化
   BODY: |
     type A = "NAME"
     type S = Lowercase<A> //"name"
 
-- KEY: ts.objectLiteral.Util.Capitalize<T>
+- ENTRY:
   EXPLAIN: |
     Capitalize<T>: Key名(オブジェクトリテラル)の先頭文字の大文字化
   BODY: |
@@ -317,7 +317,7 @@
     type S2 = Capitalize<A2> //注意:"NAME"
     type S3 = Capitalize<Lowercase<A2>> //"Name"
 
-- KEY: ts.objectLiteral.Util.Uncapitalize<T>
+- ENTRY:
   EXPLAIN: |
     Uncapitalize<T>: Key名(オブジェクトリテラル)の先頭文字の小文字化
   BODY: |

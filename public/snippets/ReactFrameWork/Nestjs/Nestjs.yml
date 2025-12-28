@@ -2,10 +2,10 @@
 #-------------------------------
 # Nestjs
 #-------------------------------
-- KEY: nest.basic.title
+- ENTRY:
   CATEGORY: Install & Setup
 
-- KEY: nest.install
+- ENTRY:
   EXPLAIN: インストール
   BODY: |
     npm i -g @nestjs/cli
@@ -21,7 +21,7 @@
     @nestjs/schematics
     @nestjs/testing
 
-- KEY: nest.new.project
+- ENTRY:
   EXPLAIN: Project作成
   BODY: |
     nest new my-app                               // DIR指定
@@ -41,7 +41,7 @@
     npx @nestjs --version
     8.3.0
 
-- KEY: nest.files
+- ENTRY:
   EXPLAIN: 構成ファイル
   BODY: |
     ■ 主な構成ファイル
@@ -58,7 +58,7 @@
     test/app.e2e-spec.ts
     test/jest-e2e.json
 
-- KEY: nest.cli.command
+- ENTRY:
   EXPLAIN: CLI コマンド
   BODY: |
     ■ Module作成
@@ -73,7 +73,7 @@
     ■ resolver作成(graphQL)
     npx nest g resolver tasks <SUB_MODULE> --no-spec
 
-- KEY: nest.start
+- ENTRY:
   EXPLAIN: 開発サーバーの起動
   BODY: |
     ■ 起動
@@ -89,7 +89,7 @@
     $ npm run test:e2e
     $ npm run test:cov                            // coverage
 
-- KEY: nest.settings
+- ENTRY:
   EXPLAIN: 設定ファイル
   BODY: |
     ■ nest-cli.json
@@ -99,10 +99,10 @@
       "sourceRoot": "src"
     }
 
-- KEY: nest.dir.title
+- ENTRY:
   CATEGORY: 構成
 
-- KEY: nest.dir.root
+- ENTRY:
   EXPLAIN: ルート(bootstrap)
   BODY: |
     import { NestFactory } from '@nestjs/core';
@@ -116,7 +116,7 @@
     }
     bootstrap();
 
-- KEY: nest.dir.service
+- ENTRY:
   EXPLAIN: 1.サービス(AppService)
   BODY: |
     import { Injectable } from '@nestjs/common';
@@ -128,7 +128,7 @@
       }
     }
 
-- KEY: nest.dir.control
+- ENTRY:
   EXPLAIN: 2.コントロール(AppController)
   BODY: |
     import { Controller, Get } from '@nestjs/common';
@@ -145,7 +145,7 @@
       }
     }
 
-- KEY: nest.dir.module
+- ENTRY:
   EXPLAIN: 3.モジュール(AppModule)
   BODY: |
     import { Module } from '@nestjs/common';
@@ -160,10 +160,10 @@
     })
     export class AppModule {}
 
-- KEY: nest.sample.title
+- ENTRY:
   CATEGORY: 構成 サンプル
 
-- KEY: nest.sample.main
+- ENTRY:
   EXPLAIN: main.ts
   BODY: |
     import { NestFactory } from '@nestjs/core';
@@ -219,7 +219,7 @@
     }
     bootstrap();
 
-- KEY: nest.sample.model
+- ENTRY:
   EXPLAIN: Model(Entity)
   BODY: |
     ■ Base
@@ -259,10 +259,10 @@
       // TS と SQL 必須項目は別物
     }
 
-- KEY: nest.sample.Service.title
+- ENTRY:
   CATEGORY: 構成 Service サンプル
 
-- KEY: nest.sample.service
+- ENTRY:
   EXPLAIN: Service
   BODY: |
     ■ 注意: Deprecated
@@ -283,7 +283,7 @@
         private readonly repoGeneral: Repository<DataGeneral>,
       ) {}
 
-- KEY: nest.sample.service.get
+- ENTRY:
   EXPLAIN: Service:Get
   BODY: |
     async findAll(): Promise<DataGeneral[]> {
@@ -313,7 +313,7 @@
         .getOne();
     }
 
-- KEY: nest.sample.service.insert
+- ENTRY:
   EXPLAIN: Service:Insert
   BODY: |
     ■ repository.insert()
@@ -371,7 +371,7 @@
       }
     }
 
-- KEY: nest.sample.service.update
+- ENTRY:
   EXPLAIN: Service:Update
   BODY: |
     ■ repository.update()
@@ -410,7 +410,7 @@
       }
     }
 
-- KEY: nest.sample.service.upsert
+- ENTRY:
   EXPLAIN: Service:Upsert
   BODY: |
     ■ repository.upsert()
@@ -446,7 +446,7 @@
       }
     }
 
-- KEY: nest.sample.service.delete
+- ENTRY:
   EXPLAIN: Service:Delete
   BODY: |
     ■ .delete()
@@ -482,10 +482,10 @@
       }
     }
 
-- KEY: nest.sample.controller.title
+- ENTRY:
   CATEGORY: 構成 Controller サンプル
 
-- KEY: nest.sample.controller
+- ENTRY:
   EXPLAIN: controllerの基礎
   BODY: |
     ■ URL PATH
@@ -514,7 +514,7 @@
       deleteTask( ... ){ ... }
     }
 
-- KEY: nest.sample.controller.Controller
+- ENTRY:
   EXPLAIN: Controller
   BODY: |
     import { Controller,Get,Post,Body,HttpException,Param,ParseIntPipe,Put,Delete }
@@ -535,7 +535,7 @@
       }
     }
 
-- KEY: nest.sample.controller.error
+- ENTRY:
   EXPLAIN: Controller:ErrorObject
   BODY: |
     import { HttpStatus } from "@nestjs/common";
@@ -544,7 +544,7 @@
       error: "Internal server error.",
     };
 
-- KEY: nest.sample.controller.get
+- ENTRY:
   EXPLAIN: Controller:Get()
   BODY: |
     🟠curl -XGET http://localhost:3000/general/
@@ -558,7 +558,7 @@
       }
     }
 
-- KEY: nest.sample.controller.getByName
+- ENTRY:
   EXPLAIN: Controller:Get('name/:name')
   BODY: |
     🟠curl -XGET http://localhost:3000/general/name/john
@@ -572,7 +572,7 @@
       }
     }
 
-- KEY: nest.sample.controller.getByID
+- ENTRY:
   EXPLAIN: Controller:Get('id/:id')
   BODY: |
     🟠curl -XGET http://localhost:3000/general/id/1
@@ -586,7 +586,7 @@
       }
     }
 
-- KEY: nest.sample.controller.insert
+- ENTRY:
   EXPLAIN: Controller:Post()
   BODY: |
     🟠curl -XPOST -H "Content-Type: application/json"
@@ -601,7 +601,7 @@
       }
     }
 
-- KEY: nest.sample.controller.update
+- ENTRY:
   EXPLAIN: Controller:Put(':name')
   BODY: |
     🟠curl -XPUT -H "Content-Type: application/json"
@@ -619,7 +619,7 @@
       }
     }
 
-- KEY: nest.sample.controller.upsert
+- ENTRY:
   EXPLAIN: Controller:Post('ups')
   BODY: |
     🟠curl -XPOST -H "Content-Type: application/json"
@@ -634,7 +634,7 @@
       }
     }
 
-- KEY: nest.sample.controller.delete
+- ENTRY:
   EXPLAIN: Controller:Delete(':name')
   BODY: |
     🟠curl -XDELETE http://localhost:3000/general/Bill2

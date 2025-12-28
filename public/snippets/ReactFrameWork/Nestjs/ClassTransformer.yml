@@ -3,7 +3,7 @@
 # ClassTransformer
 #-------------------------------
 
-- KEY: trans.type.primitive
+- ENTRY:
   EXPLAIN: 型変換(Primitive)
   BODY: |
     // Request Parameter などで多用される型変換
@@ -12,7 +12,7 @@
     @Type(() => Number)                 // Number型への変換
     age: number;
 
-- KEY: trans.type.class
+- ENTRY:
   EXPLAIN: 型変換(Class)
   BODY: |
     export class AClass {
@@ -31,7 +31,7 @@
       aclasses: AClass[];               // 配列
     }
 
-- KEY: trans.type.class
+- ENTRY:
   EXPLAIN: 型変換(Set & Map)
   BODY: |
     export class AClass {
@@ -53,7 +53,7 @@
       bClassMap: Map<string, BClass>;   // Map
     }
 
-- KEY: trans.type.cascaded
+- ENTRY:
   EXPLAIN: 型変換(Class多重)
   BODY: |
     export abstract class Photo {
@@ -83,7 +83,7 @@
       topPhoto: Landscape | Portrait;
     }
 
-- KEY: trans.exclude.Expose
+- ENTRY:
   EXPLAIN: 除外と露出
   BODY: |
     @Exclude()                                    // 1.一旦、全属性を除外
@@ -108,7 +108,7 @@
       getFullName() { return this.firstName + ' ' + this.lastName; }
     }
 
-- KEY: trans.classToPlain
+- ENTRY:
   EXPLAIN: Class から Object に変更
   BODY: |
     class User {
@@ -119,7 +119,7 @@
     const aInst = new User({id: 1, name:"John"})
     const aObj= classToPlain(aInst);              //{id: 1, name:"John"}
 
-- KEY: trans.plainToClass
+- ENTRY:
   EXPLAIN: Object から Class に変更
   BODY: |
     class User {
@@ -157,7 +157,7 @@
       excludeExtraneousValues: true
     }));
 
-- KEY: trans.plainToClass.excludePrefixes
+- ENTRY:
   EXPLAIN: Object から Class に変更(属性除外)
   BODY: |
     export class User {
@@ -187,7 +187,7 @@
       excludePrefixes: ['_']                      // _で始まる属性を除外
     });
 
-- KEY: trans.plainToClass.groups
+- ENTRY:
   EXPLAIN: Object から Class に変更(出力指定)
   BODY: |
     export class User {
@@ -202,7 +202,7 @@
       groups: ['user']                            // 指定Groupを出力
     });
 
-- KEY: trans.plainToClass.version
+- ENTRY:
   EXPLAIN: Object から Class に変更(version指定)
   BODY: |
     export class User {
@@ -223,21 +223,21 @@
       version: 1
     });
 
-- KEY: trans.plainToClassFromExist
+- ENTRY:
   EXPLAIN: Object から Class に変更(FromExist)
   BODY: |
     //別インスタンスを使用してObjectに変換
     const aInst= new AClass();
     const cInst = plainToClassFromExist(aInst, bInst);
 
-- KEY: trans.instanceToInstance
+- ENTRY:
   EXPLAIN: Class から Class に変更
   BODY: |
     //別インスタンスを使用して、さらに別インスタンスに変換
     const aInst= new AClass();
     const bInst= instanceToInstance(aInst);
 
-- KEY: trans.serialize
+- ENTRY:
   EXPLAIN: インスタンスをObject/Instanceに変更
   BODY: |
     const aPlainObject = serialize(aInstance);
@@ -246,7 +246,7 @@
 
     const aInstanceArray = deserializeArray(AClass, aPlainObjectArray);
 
-- KEY: trans.transform
+- ENTRY:
   EXPLAIN: 型と値変換
   BODY: |
     import * as moment from 'moment';
@@ -263,7 +263,7 @@
       date: Moment;
     }
 
-- KEY: trans.TransformClassToPlain
+- ENTRY:
   EXPLAIN: 型と値変換(Class)
   BODY: |
     @Exclude()
@@ -292,7 +292,7 @@
     const controller = new UserController();
     const user = controller.getUser();
 
-- KEY: trans.Transform.ohter
+- ENTRY:
   EXPLAIN: 型と値変換(その他)
   BODY: |
     @TransformClassToClass({ groups: ["user"] })

@@ -3,7 +3,7 @@
 # Swagger
 #-------------------------------
 
-- KEY: swagger.DocumentBuilder
+- ENTRY:
   EXPLAIN: DocumentBuilder
   BODY: |
     import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -21,7 +21,7 @@
     const yamlDocument = dump(document);
     writeFileSync('../openapi.yml', yamlDocument, 'utf8');
 
-- KEY: swagger.dto
+- ENTRY:
   EXPLAIN: DTO
   BODY: |
     ■ ApiProperty
@@ -45,7 +45,7 @@
       readonly car_id: number;
     }
 
-- KEY: swagger.controllerClass
+- ENTRY:
   EXPLAIN: Controller Class デコレータ
   BODY: |
     ■ ApiTags
@@ -71,7 +71,7 @@
     @ApiCookieAuth('SESSION_ID')
     @ApiCreatedResponse({ ... })
 
-- KEY: swagger.parameter
+- ENTRY:
   EXPLAIN: Controllerパラメタ・デコレータ
   BODY: |
     ■ ApiQuery
@@ -104,7 +104,7 @@
     ■ ApiBody
     @ApiBody({ type: CreateDrScoutApplyHistoryDto })
 
-- KEY: swagger.response
+- ENTRY:
   EXPLAIN: Controllerレスポンス・デコレータ
   BODY: |
     ■ ApiResponse

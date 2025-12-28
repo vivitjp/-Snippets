@@ -3,7 +3,7 @@
 # Samples
 #-------------------------------
 
-- KEY: tsc.nextjs
+- ENTRY:
   EXPLAIN: Nextjs Sample
   BODY: |
     {
@@ -37,7 +37,7 @@
       ]
     }
 
-- KEY: tsc.vite
+- ENTRY:
   EXPLAIN: Vite Sample
   BODY: |
     {
@@ -67,7 +67,7 @@
 #-------------------------------
 # TSConfig Compiler Options
 #-------------------------------
-- KEY: tsc.include.exclude
+- ENTRY:
   EXPLAIN: Include Exclude
   BODY: |
     ■ include
@@ -80,7 +80,7 @@
     除外ファイルPATH
     "exclude": ["temp"]
 
-- KEY: tsc.references
+- ENTRY:
   EXPLAIN: References
   BODY: |
     "references": [{ "path": "./tsconfig.node.json" }]
@@ -89,7 +89,7 @@
 # Async
 #-------------------------------
 
-- KEY: tsc.type.strict
+- ENTRY:
   EXPLAIN: strict
   BODY: |
     ■ strict
@@ -195,7 +195,7 @@
         }
       }
 
-- KEY: tsc.type.allowUnreachableCode
+- ENTRY:
   EXPLAIN: |
     LINT: allow Unreachable Code
   BODY: |
@@ -209,7 +209,7 @@
       return true;                      // Unreachable code detected.
     }
 
-- KEY: tsc.type.allowUnusedLabels
+- ENTRY:
   EXPLAIN: |
     LINT: allow Unused Labels
   BODY: |
@@ -223,7 +223,7 @@
       }
     }
 
-- KEY: tsc.type.exactOptionalPropertyTypes
+- ENTRY:
   EXPLAIN: |
     LINT: exact Optional Property Types
   BODY: |
@@ -234,7 +234,7 @@
     colorThemeOverride?: "dark" | "light";    // 明示的なundefinedがない
     settings.colorThemeOverride = undefined;  // NG
 
-- KEY: tsc.type.noFallthroughCasesInSwitch
+- ENTRY:
   EXPLAIN: |
     LINT: no Fallthrough Cases In Switch
   BODY: |
@@ -250,7 +250,7 @@
         break;
     }
 
-- KEY: tsc.type.noImplicitOverride
+- ENTRY:
   EXPLAIN: |
     LINT: no Implicit Override
   BODY: |
@@ -266,7 +266,7 @@
       override download() { ... }       // Override 必要になる
     }
 
-- KEY: tsc.type.noImplicitReturns
+- ENTRY:
   EXPLAIN: |
     LINT: no Implicit Returns
   BODY: |
@@ -282,7 +282,7 @@
         }
       }
 
-- KEY: tsc.type.noPropertyAccessFromIndexSignature
+- ENTRY:
   EXPLAIN: |
     LINT: no Property Access From Index Signature
   BODY: |
@@ -299,7 +299,7 @@
     settings.speed;
     settings.name;                      // 'name' は indexedSignatureで生成
                                         // settings["name"]でアクセス
-- KEY: tsc.type.noUncheckedIndexedAccess
+- ENTRY:
   EXPLAIN: |
     LINT: no Unchecked Indexed Access
   BODY: |
@@ -316,7 +316,7 @@
     const sysName = env.NAME;           // string
     const nodeEnv = env.NODE_ENV;       // string | undefined
 
-- KEY: tsc.type.noUnusedLocals
+- ENTRY:
   EXPLAIN: |
     LINT: no Unused Locals
   BODY: |
@@ -329,7 +329,7 @@
       return { type: "keyboard", modelID };
     };
 
-- KEY: tsc.type.noUnusedParameters
+- ENTRY:
   EXPLAIN: |
     LINT: no Unused Parameters
   BODY: |
@@ -342,7 +342,7 @@
       return { type: "keyboard", modelID: someID };
     };
 
-- KEY: tsc.module
+- ENTRY:
   EXPLAIN: |
     Module: Module
   BODY: |
@@ -408,7 +408,7 @@
         };
     });
 
-- KEY: tsc.modules.allowArbitraryExtensions
+- ENTRY:
   EXPLAIN: |
     Module: allow Arbitrary Extensions
   BODY: |
@@ -431,7 +431,7 @@
     import styles from "./app.css";
     styles.cookieBanner;                // string: 型が定義済
 
-- KEY: tsc.modules.allowImportingTsExtensions
+- ENTRY:
   EXPLAIN: |
     Module: allow Importing Ts Extensions
   BODY: |
@@ -442,7 +442,7 @@
     このフラグは --noEmit または --emitDeclarationOnly が有効な場合にのみ許可
     リゾルバー(バンドラー、ランタイム)が .ts ファイル間のインポートを機能させる
 
-- KEY: tsc.modules.allowUmdGlobalAccess
+- ENTRY:
   EXPLAIN: |
     Module: allow Umd Global Access
   BODY: |
@@ -456,7 +456,7 @@
     特定のライブラリ(jQuery,Lodashなど）が実行時に利用可能であると分かっているが、
     import 文ではそのライブラリにアクセスできないような web プロジェクト
 
-- KEY: tsc.modules.baseUrl
+- ENTRY:
   EXPLAIN: |
     Module: base Url
   BODY: |
@@ -474,7 +474,7 @@
     import { helloWorld } from "hello/world";
     console.log(helloWorld);
 
-- KEY: tsc.modules.customConditions
+- ENTRY:
   EXPLAIN: |
     Module: custom Conditions
   BODY: |
@@ -486,14 +486,14 @@
 
     "customConditions": ["my-condition"]
 
-- KEY: tsc.modules.moduleResolution
+- ENTRY:
   EXPLAIN: |
     Module: module Resolution
   BODY: |
     ■ "moduleResolution": "node16", "nodenext"
     Node.js>v12 ECMAScript import と CommonJS require の両方がサポート
 
-- KEY: tsc.modules.moduleSuffixes
+- ENTRY:
   EXPLAIN: |
     Module: module Suffixes
   BODY: |
@@ -504,7 +504,7 @@
     "moduleSuffixes": [".ios", ".native", ""]
     => 以下順で検索 ./foo.ios.ts, ./foo.native.ts, ./foo.ts.
 
-- KEY: tsc.modules.noResolve
+- ENTRY:
   EXPLAIN: |
     Module: no Resolve
   BODY: |
@@ -512,7 +512,7 @@
 
     起動時に import チェックを不実行
 
-- KEY: tsc.modules.paths
+- ENTRY:
   EXPLAIN: |
     Module: paths
   BODY: |
@@ -539,7 +539,7 @@
       "tests/*": ["tests/*"]
     },
 
-- KEY: tsc.modules.resolveJsonModule
+- ENTRY:
   EXPLAIN: |
     Module: resolve Json Module
   BODY: |
@@ -558,7 +558,7 @@
     settings.dry === 2;                 // 型Error
     settings.debug === true;
 
-- KEY: tsc.modules.resolvePackageJsonExports
+- ENTRY:
   EXPLAIN: |
     Module: resolve Package Json Exports
   BODY: |
@@ -567,7 +567,7 @@
     package.json 内の exports 参照
     node16以下、デフォルト
 
-- KEY: tsc.modules.resolvePackageJsonImports
+- ENTRY:
   EXPLAIN: |
     Module: resolve Package Json Imports
   BODY: |
@@ -575,7 +575,7 @@
 
     package.json内の imports 参照
 
-- KEY: tsc.modules.rootDir
+- ENTRY:
   EXPLAIN: |
     Module: root Dir
   BODY: |
@@ -595,7 +595,7 @@
     │   │   ├── c.ts
     ├── types.d.ts
 
-- KEY: tsc.modules.rootDirs
+- ENTRY:
   EXPLAIN: |
     Module: root Dirs
   BODY: |
@@ -614,7 +614,7 @@
        └─ views
           └─ template1.ts (can import "./view1", "./view2")
 
-- KEY: tsc.modules.typeRoots
+- ENTRY:
   EXPLAIN: |
     Module: type Roots
   BODY: |
@@ -629,7 +629,7 @@
 
     "typeRoots": ["./typings", "./vendor/types"]
 
-- KEY: tsc.modules.types
+- ENTRY:
   EXPLAIN: |
     Module: types
   BODY: |
@@ -644,7 +644,7 @@
 
     "types": ["node", "lodash", "express"]
 
-- KEY: tsc.declaration
+- ENTRY:
   EXPLAIN: |
     Emit: declaration
   BODY: |
@@ -658,7 +658,7 @@
     [helloWorld.d.ts]                   // 型ファイル生成
     export declare let helloWorld: string;
 
-- KEY: tsc.declaration.declarationDir
+- ENTRY:
   EXPLAIN: |
     Emit: declaration Dir
   BODY: |
@@ -669,7 +669,7 @@
     "declaration": true,
     "declarationDir": "./types"         // 以下に型ファイル
 
-- KEY: tsc.declaration.declarationMap
+- ENTRY:
   EXPLAIN: |
     Emit: declaration Map
   BODY: |
@@ -679,7 +679,7 @@
 
     エディターは、Go to Definitionのような機能で元の.tsファイルにジャンプできる
 
-- KEY: tsc.declaration.downlevelIteration
+- ENTRY:
   EXPLAIN: |
     Emit: downlevel Iteration
   BODY: |
@@ -700,7 +700,7 @@
     let concated = [].concat(missing);
     ("1" in concated);                  // false
 
-- KEY: tsc.declaration.emitBOM
+- ENTRY:
   EXPLAIN: |
     Emit: emit BOM
   BODY: |
@@ -708,7 +708,7 @@
 
     バイトオーダーマーク(BOM)出力
 
-- KEY: tsc.declaration.emitDeclarationOnly
+- ENTRY:
   EXPLAIN: |
     Emit: emit Declaration Only
   BODY: |
@@ -718,7 +718,7 @@
     JS生成に TypeScript 以外のトランスパイラ使用
     d.ts型ファイルのみ必要時
 
-- KEY: tsc.declaration.importHelpers
+- ENTRY:
   EXPLAIN: |
     Emit: import Helpers
   BODY: |
@@ -734,7 +734,7 @@
       var arr2 = __spreadArray([1], __read(arr), false);
     }
 
-- KEY: tsc.declaration.importsNotUsedAsValues
+- ENTRY:
   EXPLAIN: |
     Emit: imports Not Used As Values
   BODY: |
@@ -746,7 +746,7 @@
     preserve: 未使用値/型の import 保持(副作用保持)
     error:    import 保持(=preserve)、値の import が型としてのみ使用されたらエラー
 
-- KEY: tsc.declaration.inlineSourceMap
+- ENTRY:
   EXPLAIN: |
     Emit: inline Source Map
   BODY: |
@@ -761,7 +761,7 @@
     console.log(helloWorld);
     //# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb......
 
-- KEY: tsc.declaration.inlineSources
+- ENTRY:
   EXPLAIN: |
     Emit: inline Sources
   BODY: |
@@ -777,7 +777,7 @@
     console.log(helloWorld);
     //# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3Vy.....
 
-- KEY: tsc.declaration.mapRoot
+- ENTRY:
   EXPLAIN: |
     Emit: map Root
   BODY: |
@@ -788,7 +788,7 @@
     "sourceMap": true,
     "mapRoot": "https://my-website.com/debug/sourcemaps/"
 
-- KEY: tsc.declaration.newLine
+- ENTRY:
   EXPLAIN: |
     Emit: newLine
   BODY: |
@@ -797,7 +797,7 @@
     ファイル出力の改行コード指定
     "CRLF"(dos) または "LF"(unix)
 
-- KEY: tsc.declaration.noEmit
+- ENTRY:
   EXPLAIN: |
     Emit: no Emit
   BODY: |
@@ -814,7 +814,7 @@
     │   ├── index.js
     │   └── index.js.map
 
-- KEY: tsc.declaration.noEmitHelpers
+- ENTRY:
   EXPLAIN: |
     Emit: no Emit Helpers
   BODY: |
@@ -860,7 +860,7 @@
         });
     }); };
 
-- KEY: tsc.declaration.noEmitOnError
+- ENTRY:
   EXPLAIN: |
     Emit: no Emit On Error
   BODY: |
@@ -868,7 +868,7 @@
 
     エラー時にコンパイルされたファイルを出力しない
 
-- KEY: tsc.declaration.outDir
+- ENTRY:
   EXPLAIN: |
     Emit: out Dir
   BODY: |
@@ -882,7 +882,7 @@
     ├── index.ts
     └── tsconfig.json
 
-- KEY: tsc.declaration.outFile
+- ENTRY:
   EXPLAIN: |
     Emit: out File
   BODY: |
@@ -895,7 +895,7 @@
     併用条件 module: None/System/AMD
     CommonJS, ES6 モジュールをバンドルするために使用不可
 
-- KEY: tsc.declaration.preserveConstEnums
+- ENTRY:
   EXPLAIN: |
     Emit: preserve Const Enums
   BODY: |
@@ -939,7 +939,7 @@
         console.log("That is a great choice.");
     }
 
-- KEY: tsc.declaration.preserveValueImports
+- ENTRY:
   EXPLAIN: |
     Emit: preserve Value Imports(Deprecated)
   BODY: |
@@ -952,7 +952,7 @@
     import { Animal } from "./animal.js";
     eval("console.log(new Animal().isDangerous())");
 
-- KEY: tsc.declaration.removeComments
+- ENTRY:
   EXPLAIN: |
     Emit: remove Comments
   BODY: |
@@ -960,7 +960,7 @@
 
     true: JSDocなど全コメントを削除
 
-- KEY: tsc.declaration.sourceMap
+- ENTRY:
   EXPLAIN: |
     Emit: source Map
   BODY: |
@@ -1001,7 +1001,7 @@
       開発中: デフォルトで有効
       運用中: 無効 (productionBrowserSourceMaps: true すると有効化可能)
 
-- KEY: tsc.declaration.sourceRoot
+- ENTRY:
   EXPLAIN: |
     Emit: source Root
   BODY: |
@@ -1012,7 +1012,7 @@
     "sourceMap": true,
     "sourceRoot": "https://my-website.com/debug/source/"
 
-- KEY: tsc.declaration.stripInternal
+- ENTRY:
   EXPLAIN: |
     Emit: strip Internal
   BODY: |
@@ -1032,7 +1032,7 @@
       return daysInAWeek * dayRate;
     }
 
-- KEY: tsc.js.allowJs
+- ENTRY:
   EXPLAIN: |
     JS: allow Js
   BODY: |
@@ -1051,7 +1051,7 @@
     [index.ts]
     import { defaultCardDeck } from "./card";     // OK
 
-- KEY: tsc.js.checkJs
+- ENTRY:
   EXPLAIN: |
     JS: check Js
   BODY: |
@@ -1074,7 +1074,7 @@
     module.exports.pi = parseFloat(3.142);   //Error
     >> Argument of type 'number' is not assignable to parameter of type 'string'.
 
-- KEY: tsc.js.maxNodeModuleJsDepth
+- ENTRY:
   EXPLAIN: |
     JS: max Node Module Js Depth
   BODY: |
@@ -1084,7 +1084,7 @@
     allowJs が有効な場合にのみ使用
     理想的には 0(デフォルト) のまま
 
-- KEY: tsc.editor.disableSizeLimit
+- ENTRY:
   EXPLAIN: |
     Editor: disable Size Limit
   BODY: |
@@ -1093,7 +1093,7 @@
     大規模なプロジェクトでメモリ肥大化問題回避のため割り当てメモリ量に上限設定
     フラグをオンにすると、制限解除
 
-- KEY: tsc.editor.plugins
+- ENTRY:
   EXPLAIN: |
     Editor: plugins
   BODY: |
@@ -1105,7 +1105,7 @@
     typescript-eslint-language-service  eslint error messaging and fix
     ts-graphql-plugin                   validation and auto-completion in GraphQL
 
-- KEY: tsc.interop.allowSyntheticDefaultImports
+- ENTRY:
   EXPLAIN: |
     Interop: allow Synthetic Default Imports
   BODY: |
@@ -1118,7 +1118,7 @@
     false:
       import * as React from "react";
 
-- KEY: tsc.interop.esModuleInterop
+- ENTRY:
   EXPLAIN: |
     Interop: es Module Interop
   BODY: |
@@ -1171,7 +1171,7 @@
     fs.readFileSync("file.txt", "utf8");
     lodash_1.default.chunk(["a", "b", "c", "d"], 2);
 
-- KEY: tsc.interop.forceConsistentCasingInFileNames
+- ENTRY:
   EXPLAIN: |
     Interop: force Consistent Casing In File Names
   BODY: |
@@ -1180,7 +1180,7 @@
     システムの大文字と小文字の区別規則に従う
     ディスク上の大文字小文字と異なるファイルインクルードにエラー発行
 
-- KEY: tsc.interop.isolatedModules
+- ENTRY:
   EXPLAIN: |
     Interop: isolated Modules
   BODY: |
@@ -1210,7 +1210,7 @@
       "use strict";
       console.log(0 + 1);
 
-- KEY: tsc.interop.preserveSymlinks
+- ENTRY:
   EXPLAIN: |
     Interop: preserve Symlinks
   BODY: |
@@ -1226,7 +1226,7 @@
     モジュールとパッケージへの参照(import や /// <reference type="..." /> ディレクティブなど)
     シンボリック リンク ファイルのパスではなく、シンボリック リンク ファイルの場所を基準に解決
 
-- KEY: tsc.interop.verbatimModuleSyntax
+- ENTRY:
   EXPLAIN: |
     Interop: verbatim Module Syntax
   BODY: |
@@ -1259,7 +1259,7 @@
     型修飾子のないインポートまたはエクスポートはそのまま残る
     type 修飾子を使用するものはすべて完全削除
 
-- KEY: tsc.backwards.charset
+- ENTRY:
   EXPLAIN: |
     後方互換: charset
   BODY: |
@@ -1268,7 +1268,7 @@
     default: UTF-8
     UTF-16(BE,LE), UTF-8 BOM も正しく検出
 
-- KEY: tsc.backwards.keyofStringsOnly
+- ENTRY:
   EXPLAIN: |
     後方互換: keyof Strings Only
   BODY: |
@@ -1278,7 +1278,7 @@
     string | number の代わりに string を返すように keyof 型演算子を変更
     文字列インデックス署名を持つ型に適用される場合の数値
 
-- KEY: tsc.backwards.noImplicitUseStrict
+- ENTRY:
   EXPLAIN: |
     後方互換: no Implicit Use Strict
   BODY: |
@@ -1287,7 +1287,7 @@
     デフォルトで、ES6 以外のターゲットには「use strict」(プロローグ)を発行
     設定によりプロローグ無効
 
-- KEY: tsc.backwards.noStrictGenericChecks
+- ENTRY:
   EXPLAIN: |
     後方互換: no Strict Generic Checks
   BODY: |
@@ -1308,7 +1308,7 @@
               type which could be unrelated to 'U'.
     }
 
-- KEY: tsc.backwards.out
+- ENTRY:
   EXPLAIN: |
     後方互換: out(Deprecated)
   BODY: |
@@ -1316,7 +1316,7 @@
 
     代わりに outFile を使用
 
-- KEY: tsc.backwards.suppressExcessPropertyErrors
+- ENTRY:
   EXPLAIN: |
     後方互換: suppress Excess Property Errors(非推奨)
   BODY: |
@@ -1331,7 +1331,7 @@
     Object literal may only specify known properties, 
     and 'm' does not exist in type 'Point'.
 
-- KEY: tsc.backwards.suppressImplicitAnyIndexErrors
+- ENTRY:
   EXPLAIN: |
     後方互換: suppress Implicit Any Index Errors(非推奨)
   BODY: |
@@ -1346,7 +1346,7 @@
     Element implicitly has an 'any' type because expression of type '"foo"' can't be used to index type '{ x: number; }'.
       Property 'foo' does not exist on type '{ x: number; }'.
 
-- KEY: tsc.lang.env.emitDecoratorMetadata
+- ENTRY:
   EXPLAIN: |
     言語環境: emit Decorator Metadata
   BODY: |
@@ -1395,7 +1395,7 @@
     ], Demo.prototype, "foo", null);
     const demo = new Demo();
 
-- KEY: tsc.lang.env.experimentalDecorators
+- ENTRY:
   EXPLAIN: |
     言語環境: experimental Decorators
   BODY: |
@@ -1405,7 +1405,7 @@
     Next.js は true 推奨
     サンプル: emitDecoratorMetadata 参照
 
-- KEY: tsc.lang.env.jsx
+- ENTRY:
   EXPLAIN: |
     言語環境: jsx
   BODY: |
@@ -1449,7 +1449,7 @@
     const _jsxFileName = "/home/runner/work/TypeScript-Website/TypeScript-Website/packages/typescriptlang-org/index.tsx";
     export const HelloWorld = () => _jsxDEV("h1", { children: "Hello world" }, void 0, false, { fileName: _jsxFileName, lineNumber: 9, columnNumber: 32 }, this);
 
-- KEY: tsc.lang.env.jsxFactory
+- ENTRY:
   EXPLAIN: |
     言語環境: jsx Factory
   BODY: |
@@ -1475,7 +1475,7 @@
     /** @jsx h */
     import { h } from "preact";
 
-- KEY: tsc.lang.env.jsxFragmentFactory
+- ENTRY:
   EXPLAIN: |
     言語環境: jsx Fragment Factory
   BODY: |
@@ -1505,7 +1505,7 @@
     const HelloWorld = () => ((0, preact_1.h)(preact_1.Fragment, null,
         (0, preact_1.h)("div", null, "Hello")));
 
-- KEY: tsc.lang.env.jsxImportSource
+- ENTRY:
   EXPLAIN: |
     言語環境: jsx Import Source
   BODY: |
@@ -1536,7 +1536,7 @@
     }
     exports.App = App;
 
-- KEY: tsc.lang.env.lib
+- ENTRY:
   EXPLAIN: |
     言語環境: lib
   BODY: |
@@ -1575,7 +1575,7 @@
     WebWorker     APIs available in WebWorker contexts
     ScriptHost    APIs for the Windows Script Hosting System
 
-- KEY: tsc.lang.env.moduleDetection
+- ENTRY:
   EXPLAIN: |
     言語環境: module Detection
   BODY: |
@@ -1590,7 +1590,7 @@
     "legacy":   4.6 以前と同じ動作、"import","export"を確認
     "force"     非宣言ファイルはモジュール扱い
 
-- KEY: tsc.lang.env.noLib
+- ENTRY:
   EXPLAIN: |
     言語環境: no Lib
   BODY: |
@@ -1598,7 +1598,7 @@
 
     ライブラリの自動組み込み無効 => lib 無視
 
-- KEY: tsc.lang.env.reactNamespace
+- ENTRY:
   EXPLAIN: |
     言語環境: react Namespace(非推奨)
   BODY: |
@@ -1607,7 +1607,7 @@
     代わりに jsxFactory 使用
     "target": "react" で createElement に呼び出されるオブジェクト指定
 
-- KEY: tsc.lang.env.target
+- ENTRY:
   EXPLAIN: |
     言語環境: target
   BODY: |
@@ -1624,7 +1624,7 @@
       "target": "es5",
     }
 
-- KEY: tsc.lang.env.useDefineForClassFields
+- ENTRY:
   EXPLAIN: |
     言語環境: use Define For Class Fields
   BODY: |
@@ -1638,7 +1638,7 @@
     次期仕様の最新バージョンでは、実行動作が TypeScript の実装とは異なる
     今後の ECMA ランタイム動作で変更
 
-- KEY: tsc.compiler.diagnostics
+- ENTRY:
   EXPLAIN: |
     コンパイラ: diagnostics
   BODY: |
@@ -1647,7 +1647,7 @@
     デバッグ用の診断情報出力
     extendedDiagnostics のサブセットでユーザー向け解釈が容易
 
-- KEY: tsc.compiler.explainFiles
+- ENTRY:
   EXPLAIN: |
     コンパイラ: explain Files
   BODY: |
@@ -1678,7 +1678,7 @@
     index.ts
       Matched by include pattern '**/*' in 'tsconfig.json'
 
-- KEY: tsc.compiler.extendedDiagnostics
+- ENTRY:
   EXPLAIN: |
     コンパイラ: extended Diagnostics
   BODY: |
@@ -1686,7 +1686,7 @@
 
     コンパイル時にの所要時間計測
 
-- KEY: tsc.compiler.generateCpuProfile
+- ENTRY:
   EXPLAIN: |
     コンパイラ: generate Cpu Profile
   BODY: |
@@ -1698,7 +1698,7 @@
 
     npm run tsc --generateCpuProfile tsc-output.cpuprofile
 
-- KEY: tsc.compiler.listEmittedFiles
+- ENTRY:
   EXPLAIN: |
     コンパイラ: list Emitted Files
   BODY: |
@@ -1724,7 +1724,7 @@
     path/to/example/index.js
     path/to/example/index.d.ts
 
-- KEY: tsc.compiler.listFiles
+- ENTRY:
   EXPLAIN: |
     コンパイラ: list Files
   BODY: |
@@ -1752,7 +1752,7 @@
     path/to/example/node_modules/typescript/lib/lib.scripthost.d.ts
     path/to/example/index.ts
 
-- KEY: tsc.compiler.traceResolution
+- ENTRY:
   EXPLAIN: |
     コンパイラ: trace Resolution
   BODY: |
@@ -1761,7 +1761,7 @@
     モジュールが含まれていない理由をデバッグ
     TypeScript 処理ファイルの解決プロセスに関する情報出力
 
-- KEY: tsc.projects.composite
+- ENTRY:
   EXPLAIN: |
     プロジェクト: composite
   BODY: |
@@ -1776,7 +1776,7 @@
       * 制約違反時 tsc はどのファイルが未指定か通知
     declaration: true(defaults)
 
-- KEY: tsc.projects.disableReferencedProjectLoad
+- ENTRY:
   EXPLAIN: |
     プロジェクト: disable Referenced Project Load
   BODY: |
@@ -1786,7 +1786,7 @@
     プロジェクトが大きい場合、自動読み込みを無効化
       * エディターでファイルを開くと、プロジェクトを動的ロード
 
-- KEY: tsc.projects.disableSolutionSearching
+- ENTRY:
   EXPLAIN: |
     プロジェクト: disable Solution Searching
   BODY: |
@@ -1795,7 +1795,7 @@
     複合プロジェクトの定義ジャンプでプロジェクトを含めないことを宣言する方法を提供
     大規模な複合プロジェクトの応答性を向上させる
 
-- KEY: tsc.projects.disableSourceOfProjectReferenceRedirect
+- ENTRY:
   EXPLAIN: |
     プロジェクト: disable Source Of Project Reference Redirect
   BODY: |
@@ -1804,7 +1804,7 @@
     複合プロジェクトで、d.ts が「モジュール間の境界(?)」として使用された 3.7 前に戻す
     3.7以降、信頼できる情報源は TypeScript ファイル
 
-- KEY: tsc.projects.incremental
+- ENTRY:
   EXPLAIN: |
     プロジェクト: incremental
   BODY: |
@@ -1828,7 +1828,7 @@
     tsc はそのファイルで出力ファイルを型チェックして更新
     純粋にコンパイルを高速化するために使用
 
-- KEY: tsc.projects.tsBuildInfoFile
+- ENTRY:
   EXPLAIN: |
     プロジェクト: ts Build Info File
   BODY: |
@@ -1845,7 +1845,7 @@
       "outDir": "dest"
     }
 
-- KEY: tsc.output.noErrorTruncation
+- ENTRY:
   EXPLAIN: |
     Output: no Error Truncation
   BODY: |
@@ -1859,7 +1859,7 @@
     Type '{ propertyWithAnExceedinglyLongName1: string; ...' is not assignable to type 'string'.
     Variable 'x' is used before being assigned.
 
-- KEY: tsc.output.preserveWatchOutput
+- ENTRY:
   EXPLAIN: |
     Output: preserve Watch Output
   BODY: |
@@ -1867,7 +1867,7 @@
 
     変更のたびに画面クリアせず、watch モードで古いコンソール出力を保持
 
-- KEY: tsc.output.pretty
+- ENTRY:
   EXPLAIN: |
     Output: pretty
   BODY: |
@@ -1875,7 +1875,7 @@
 
     色とコンテキストを使用してエラーとメッセージを様式化
 
-- KEY: tsc.completeness.skipDefaultLibCheck
+- ENTRY:
   EXPLAIN: |
     完成度: skip Default Lib Check
   BODY: |
@@ -1884,7 +1884,7 @@
     代わりにskipLibCheckを使用
     デフォルトのライブラリ宣言ファイルの型チェックをスキッ
 
-- KEY: tsc.completeness.skipLibCheck
+- ENTRY:
   EXPLAIN: |
     完成度: skip Lib Check
   BODY: |
@@ -1896,7 +1896,7 @@
     TSは全 d.ts の完全チェックは実施せず、ソースコードで参照頻度高いコードを型チェック
     ワークフローでは機能しない可能性があり、TS3.8以降、追跡戦略を指定する watchOptions 導入
 
-- KEY: tsc.watchOptions
+- ENTRY:
   EXPLAIN: |
     Watch: watch Options
   BODY: |
@@ -1908,7 +1908,7 @@
     useFsEvents(def):             変更にOSのネイティブ イベント使用
     useFsEventsOnParentDirectory: OSのネイティブ イベントでファイルの親DIRの変更検知
 
-- KEY: tsc.watchOptions.watchDirectory
+- ENTRY:
   EXPLAIN: |
     Watch: watch Directory
   BODY: |
@@ -1920,7 +1920,7 @@
     DynamicPriorityPolling:       変更頻度の低いディレクトリのチェック頻度を低く
     useFsEvents(def):             変更にOSのネイティブ イベント使用
 
-- KEY: tsc.watchOptions.fallbackPolling
+- ENTRY:
   EXPLAIN: |
     Watch: fallback Polling
   BODY: |
@@ -1937,7 +1937,7 @@
 
     遅延監視は、一度に多くのファイル変更が発生する場合(npm install, node_modules 変更)に便利
 
-- KEY: tsc.watchOptions.synchronousWatchDirectory
+- ENTRY:
   EXPLAIN: |
     Watch: synchronous Watch Directory
   BODY: |
@@ -1953,7 +1953,7 @@
       "synchronousWatchDirectory": true
     }
 
-- KEY: tsc.watchOptions.excludeDirectories
+- ENTRY:
   EXPLAIN: |
     Watch: exclude Directories
   BODY: |
@@ -1967,7 +1967,7 @@
       "excludeDirectories": ["**/node_modules", "_build", "temp/*"]
     }
 
-- KEY: tsc.watchOptions.excludeFiles
+- ENTRY:
   EXPLAIN: |
     Watch: exclude Files
   BODY: |
@@ -1980,7 +1980,7 @@
       "excludeFiles": ["temp/file.ts"]
     }
 
-- KEY: tsc.type.acquisition.Enable
+- ENTRY:
   EXPLAIN: |
     Type Acquisition: Enable
   BODY: |
@@ -1997,7 +1997,7 @@
       "enable": false
     }
 
-- KEY: tsc.type.acquisition.include
+- ENTRY:
   EXPLAIN: |
     Type Acquisition: include
   BODY: |
@@ -2011,7 +2011,7 @@
       "include": ["jquery"]
     }
 
-- KEY: tsc.type.acquisition.exclude
+- ENTRY:
   EXPLAIN: |
     Type Acquisition: exclude
   BODY: |
@@ -2025,7 +2025,7 @@
       "exclude": ["jest", "mocha"]
     }
 
-- KEY: tsc.type.acquisition.disableFilenameBasedTypeAcquisition
+- ENTRY:
   EXPLAIN: |
     Type Acquisition: disable Filename Based Type Acquisition
   BODY: |

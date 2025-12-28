@@ -7,7 +7,7 @@
 # SWR
 #-------------------------------
 
-- KEY: pk.fetch.swr
+- ENTRY:
   EXPLAIN: SWR
   BODY: |
     //yarn add swr

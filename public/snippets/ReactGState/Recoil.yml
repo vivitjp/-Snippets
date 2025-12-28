@@ -3,7 +3,7 @@
 # Recoil
 #-------------------------------
 
-- KEY: pk.state.recoil.1.state
+- ENTRY:
   EXPLAIN: Recoil 1 State
   BODY: |
     import { atom } from "recoil"
@@ -13,7 +13,7 @@
       default: dataXxxx, //初期データ
     })
 
-- KEY: pk.state.recoil.2.root
+- ENTRY:
   EXPLAIN: Recoil 2 Root
   BODY: |
     import { RecoilRoot } from "recoil"
@@ -26,7 +26,7 @@
       )
     }
 
-- KEY: pk.state.recoil.3.use
+- ENTRY:
   EXPLAIN: Recoil 3 Use
   BODY: |
     import { useRecoilState } from "recoil"

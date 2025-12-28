@@ -1,4 +1,4 @@
-- KEY: chakra.install
+- ENTRY:
   EXPLAIN: install URL
   BODY: |
     ■ v3(2024-10)が登場した
@@ -8,7 +8,7 @@
     "@chakra-ui/react": "^2.10.3",
     "@emotion/react": "^11.13.3",
 
-- KEY: chakra.setting.pages.provider
+- ENTRY:
   EXPLAIN: Provider 設定(pages)
   BODY: |
     ■ [src/pages/_app.tsx]
@@ -21,7 +21,7 @@
       </ChakraProvider>
     );
 
-- KEY: chakra.setting.pages.extendTheme
+- ENTRY:
   EXPLAIN: extendTheme 設定サンプル
   BODY: |
     ■ [src/pages/theme.tsx]
@@ -77,11 +77,11 @@
       },
     });
 
-- KEY: chakra.components.style.title
+- ENTRY:
   CATEGORY: |
     CSS Style
 
-- KEY: chakra.setting.style.sample
+- ENTRY:
   EXPLAIN: Style 定義
   BODY: |
     ■
@@ -91,11 +91,11 @@
     <Box maxW="960px" mx="auto" />
     <Box m={[2, 3]} />                  `8px`,`12px`,～
 
-- KEY: chakra.components.layout.title
+- ENTRY:
   CATEGORY: |
     コンポーネント: Layout
 
-- KEY: chakra.components.layout.box
+- ENTRY:
   EXPLAIN: Box
   BODY: |
     <Box w='100%' p={4}>                =div
@@ -120,7 +120,7 @@
       </ButtonGroup>
     </Box>
 
-- KEY: chakra.components.layout.Center
+- ENTRY:
   EXPLAIN: Center
   BODY: |
     <Center w='40px' h='40px'>
@@ -129,7 +129,7 @@
       </Box>
     </Center>
 
-- KEY: chakra.components.layout.Container
+- ENTRY:
   EXPLAIN: Container
   BODY: |
     <Container>
@@ -137,7 +137,7 @@
       does it bring benefits to the design team, but it also brings
     </Container>
 
-- KEY: chakra.components.layout.Flex
+- ENTRY:
   EXPLAIN: Flex
   BODY: |
     <Flex minWidth='max-content' alignItems='center' gap='2'>
@@ -151,7 +151,7 @@
       </ButtonGroup>
     </Flex>
 
-- KEY: chakra.components.layout.Grid
+- ENTRY:
   EXPLAIN: Grid
   BODY: |
     <Grid
@@ -165,7 +165,7 @@
       <GridItem colSpan={4} />
     </Grid>
 
-- KEY: chakra.components.layout.SimpleGrid
+- ENTRY:
   EXPLAIN: SimpleGrid
   BODY: |
     <SimpleGrid columns={2} spacing={10}>
@@ -180,7 +180,7 @@
       <Box height='80px'></Box>
     </SimpleGrid>
 
-- KEY: chakra.components.layout.Stack
+- ENTRY:
   EXPLAIN: Stack
   BODY: |
     <Stack spacing='24px'>              = flex flexFlow="row"
@@ -200,7 +200,7 @@
       <Box h='40px'> 2 </Box>
     </VStack>
 
-- KEY: chakra.components.layout.Wrap
+- ENTRY:
   EXPLAIN: Wrap
   BODY: |
     <Wrap>                              = flex wrap
@@ -212,7 +212,7 @@
       </WrapItem>
     </Wrap>
 
-- KEY: chakra.components.layout.AspectRatio
+- ENTRY:
   EXPLAIN: AspectRatio
   BODY: |
     ■ レスポンシブなビデオやマップなどを埋め込み
@@ -224,11 +224,11 @@
       />
     </AspectRatio>
 
-- KEY: chakra.components.form.title
+- ENTRY:
   CATEGORY: |
     コンポーネント: Form
 
-- KEY: chakra.components.form.FormControl
+- ENTRY:
   EXPLAIN: FormControl
   BODY: |
     ■ Input
@@ -281,7 +281,7 @@
       )
     }
 
-- KEY: chakra.components.form.Button
+- ENTRY:
   EXPLAIN: Button
   BODY: |
     <Button colorScheme='teal' variant='solid'  > Button </Button>
@@ -316,7 +316,7 @@
       <IconButton aria-label='Add to friends' icon={<AddIcon />} />
     </ButtonGroup>
 
-- KEY: chakra.components.form.IconButton
+- ENTRY:
   EXPLAIN: IconButton
   BODY: |
     <IconButton aria-label='Search database' icon={<SearchIcon />} />
@@ -330,7 +330,7 @@
       icon={<SearchIcon />}
     />
 
-- KEY: chakra.components.form.Input
+- ENTRY:
   EXPLAIN: Input
   BODY: |
     <Input placeholder='Basic usage' />
@@ -392,7 +392,7 @@
       )
     }
 
-- KEY: chakra.components.form.NumberInput
+- ENTRY:
   EXPLAIN: NumberInput
   BODY: |
     <NumberInput defaultValue={15} min={10} max={20} step={5} precision={2} >
@@ -425,7 +425,7 @@
       )
     }
 
-- KEY: chakra.components.form.PinInput
+- ENTRY:
   EXPLAIN: PinInput
   BODY: |
     <PinInput>
@@ -435,7 +435,7 @@
       <PinInputField />
     </PinInput>
 
-- KEY: chakra.components.form.Editable
+- ENTRY:
   EXPLAIN: Editable
   BODY: |
     ■ クリックで編集可能な「Input」に変わる 
@@ -450,7 +450,7 @@
       <EditableTextarea />
     </Editable>
 
-- KEY: chakra.components.form.Textarea
+- ENTRY:
   EXPLAIN: Textarea
   BODY: |
     <Textarea placeholder='Here is a sample placeholder' />
@@ -477,7 +477,7 @@
       )
     }
 
-- KEY: chakra.components.form.Select
+- ENTRY:
   EXPLAIN: Select
   BODY: |
     <Select placeholder='Select option'>
@@ -491,7 +491,7 @@
     <Select variant='flushed'  placeholder='Flushed' />
     <Select variant='unstyled' placeholder='Unstyled' />
 
-- KEY: chakra.components.form.Radio
+- ENTRY:
   EXPLAIN: Radio
   BODY: |
     <RadioGroup defaultValue='2'>
@@ -519,7 +519,7 @@
       )
     }
 
-- KEY: chakra.components.form.Checkbox
+- ENTRY:
   EXPLAIN: Checkbox
   BODY: |
     <Checkbox defaultChecked> Checkbox </Checkbox>
@@ -533,7 +533,7 @@
     ■ isInvalid
     <Checkbox isInvalid>Checkbox</Checkbox>
 
-- KEY: chakra.components.form.Switch
+- ENTRY:
   EXPLAIN: Switch
   BODY: |
     <FormControl display='flex' alignItems='center'>
@@ -543,7 +543,7 @@
       <Switch id='email-alerts' />
     </FormControl>
 
-- KEY: chakra.components.form.RangeSlider
+- ENTRY:
   EXPLAIN: RangeSlider
   BODY: |
     <RangeSlider aria-label={['min', 'max']} defaultValue={[10, 30]}>
@@ -554,7 +554,7 @@
       <RangeSliderThumb index={1} />
     </RangeSlider>
 
-- KEY: chakra.components.form.Slider
+- ENTRY:
   EXPLAIN: Slider
   BODY: |
     <Slider aria-label='slider-ex-1' defaultValue={30}>
@@ -564,11 +564,11 @@
       <SliderThumb />
     </Slider>
 
-- KEY: chakra.components.data.title
+- ENTRY:
   CATEGORY: |
     コンポーネント: Data
 
-- KEY: chakra.components.data.Table
+- ENTRY:
   EXPLAIN: Table
   BODY: |
     <TableContainer>
@@ -598,7 +598,7 @@
       </Table>
     </TableContainer>
 
-- KEY: chakra.components.data.List
+- ENTRY:
   EXPLAIN: List
   BODY: |
     <UnorderedList>
@@ -622,7 +622,7 @@
       </ListItem>
     </List>
 
-- KEY: chakra.components.data.Card
+- ENTRY:
   EXPLAIN: Card
   BODY: |
     <Card>
@@ -650,7 +650,7 @@
       </CardBody>
     </Card>
 
-- KEY: chakra.components.data.Code
+- ENTRY:
   EXPLAIN: Code
   BODY: |
     <Code>Hello world</Code>
@@ -661,7 +661,7 @@
       <Code colorScheme='yellow' children='npm install chakra' />
     </Stack>
 
-- KEY: chakra.components.data.Divider
+- ENTRY:
   EXPLAIN: Divider
   BODY: |
     <Divider />
@@ -679,14 +679,14 @@
       </AbsoluteCenter>
     </Box>
 
-- KEY: chakra.components.data.kbd
+- ENTRY:
   EXPLAIN: Keyboard Key
   BODY: |
     <span>
       <Kbd>shift</Kbd> + <Kbd>H</Kbd>
     </span>
 
-- KEY: chakra.components.data.Stat
+- ENTRY:
   EXPLAIN: Stat
   BODY: |
     <Stat>
@@ -715,7 +715,7 @@
       </Stat>
     </StatGroup>
 
-- KEY: chakra.components.data.Badge
+- ENTRY:
   EXPLAIN: Badge
   BODY: |
     <Badge>Default</Badge>
@@ -723,7 +723,7 @@
     <Badge variant='solid'   colorScheme='green'> Success </Badge>
     <Badge variant='subtle'  colorScheme='green'> Removed </Badge>
 
-- KEY: chakra.components.data.Tag
+- ENTRY:
   EXPLAIN: Tag
   BODY: |
     <Tag>Sample Tag</Tag>
@@ -736,11 +736,11 @@
       ))}
     </HStack>
 
-- KEY: chakra.components.feedBack.title
+- ENTRY:
   CATEGORY: |
     コンポーネント: Feed Back
 
-- KEY: chakra.components.feedBack.Alert
+- ENTRY:
   EXPLAIN: Alert
   BODY: |
     <Alert status='error'>
@@ -771,13 +771,13 @@
       </Alert>
     </Stack>
 
-- KEY: chakra.components.feedBack.Progress
+- ENTRY:
   EXPLAIN: Progress
   BODY: |
     <CircularProgress value={80} />
     <Progress value={80} />
 
-- KEY: chakra.components.feedBack.Skeleton
+- ENTRY:
   EXPLAIN: Skeleton
   BODY: |
     <Stack>
@@ -802,12 +802,12 @@
       )
     }
 
-- KEY: chakra.components.feedBack.Spinner
+- ENTRY:
   EXPLAIN: Spinner
   BODY: |
     <Spinner />
 
-- KEY: chakra.components.feedBack.Toast
+- ENTRY:
   EXPLAIN: Toast
   BODY: |
     function ToastExample() {
@@ -829,11 +829,11 @@
       )
     }
 
-- KEY: chakra.components.overlay.title
+- ENTRY:
   CATEGORY: |
     コンポーネント: Overlay
 
-- KEY: chakra.components.overlay.AlertDialog
+- ENTRY:
   EXPLAIN: AlertDialog
   BODY: |
     function AlertDialogExample() {
@@ -876,7 +876,7 @@
       )
     }
 
-- KEY: chakra.components.overlay.Drawer
+- ENTRY:
   EXPLAIN: Drawer
   BODY: |
     function DrawerExample() {
@@ -915,7 +915,7 @@
       )
     }
 
-- KEY: chakra.components.overlay.Menu
+- ENTRY:
   EXPLAIN: Menu
   BODY: |
     <Menu>
@@ -931,7 +931,7 @@
       </MenuList>
     </Menu>
 
-- KEY: chakra.components.overlay.Modal
+- ENTRY:
   EXPLAIN: Modal
   BODY: |
     function BasicUsage() {
@@ -961,7 +961,7 @@
       )
     }
 
-- KEY: chakra.components.overlay.Popover
+- ENTRY:
   EXPLAIN: Popover
   BODY: |
     <Popover>
@@ -976,7 +976,7 @@
       </PopoverContent>
     </Popover>
 
-- KEY: chakra.components.overlay.Tooltip
+- ENTRY:
   EXPLAIN: Tooltip
   BODY: |
     const CustomCard = React.forwardRef(({ children, ...rest }, ref) => (
@@ -995,11 +995,11 @@
 
     render(<CustomToolTip />)
 
-- KEY: chakra.components.disclosure.title
+- ENTRY:
   CATEGORY: |
     コンポーネント: Disclosure
 
-- KEY: chakra.components.disclosure.Accordion
+- ENTRY:
   EXPLAIN: Accordion
   BODY: |
     <Accordion>
@@ -1032,7 +1032,7 @@
       </AccordionItem>
     </Accordion>
 
-- KEY: chakra.components.disclosure.Tabs
+- ENTRY:
   EXPLAIN: Tabs
   BODY: |
     <Tabs variant='enclosed'>
@@ -1073,7 +1073,7 @@
       )
     }
 
-- KEY: chakra.components.disclosure.VisuallyHidden
+- ENTRY:
   EXPLAIN: Visually Hidden
   BODY: |
     For screen-readers
@@ -1086,11 +1086,11 @@
       )
     }
 
-- KEY: chakra.components.navigation.title
+- ENTRY:
   CATEGORY: |
     コンポーネント: Navigation
 
-- KEY: chakra.components.navigation.Breadcrumb
+- ENTRY:
   EXPLAIN: Breadcrumb
   BODY: |
     <Breadcrumb>
@@ -1109,7 +1109,7 @@
       </BreadcrumbItem>
     </Breadcrumb>
 
-- KEY: chakra.components.navigation.Link
+- ENTRY:
   EXPLAIN: Link
   BODY: |
     <Link>Chakra UI</Link>
@@ -1148,7 +1148,7 @@
       <Link>Home</Link>
     </NextLink>
 
-- KEY: chakra.components.navigation.LinkOverlay
+- ENTRY:
   EXPLAIN: Link Overlay
   BODY: |
     <LinkBox as='article' maxW='sm' p='5' borderWidth='1px' rounded='md'>
@@ -1166,7 +1166,7 @@
       </Text>
     </LinkBox>
 
-- KEY: chakra.components.navigation.SkipNav
+- ENTRY:
   EXPLAIN: Skip Nav
   BODY: |
     <>
@@ -1181,7 +1181,7 @@
       // The main content below
     </div>
 
-- KEY: chakra.components.navigation.Stepper
+- ENTRY:
   EXPLAIN: Stepper(New)
   BODY: |
     const steps = [
@@ -1222,11 +1222,11 @@
 
     render(<Example />)
 
-- KEY: chakra.components.mediaIcon.title
+- ENTRY:
   CATEGORY: |
     コンポーネント: Media Icon
 
-- KEY: chakra.components.mediaIcon.Avatar
+- ENTRY:
   EXPLAIN: Avatar
   BODY: |
     <Wrap>
@@ -1241,7 +1241,7 @@
       </WrapItem>
     </Wrap>
 
-- KEY: chakra.components.mediaIcon.ICON
+- ENTRY:
   EXPLAIN: Icon
   BODY: |
     ■ npm i @chakra-ui/icons
@@ -1256,23 +1256,23 @@
     // Use the `color` prop to change the icon color
     <WarningIcon w={8} h={8} color="red.500" />
 
-- KEY: chakra.components.mediaIcon.Image
+- ENTRY:
   EXPLAIN: Image
   BODY: |
     <Box boxSize='sm'>
       <Image src='https://bit.ly/dan-abramov' alt='Dan Abramov' />
     </Box>
 
-- KEY: chakra.components.other.title
+- ENTRY:
   CATEGORY: |
     コンポーネント: Other
 
-- KEY: chakra.components.other.CloseButton
+- ENTRY:
   EXPLAIN: Close Button
   BODY: |
     <CloseButton />
 
-- KEY: chakra.components.other.Portal
+- ENTRY:
   EXPLAIN: Portal
   BODY: |
     function Example() {
@@ -1299,7 +1299,7 @@
       )
     }
 
-- KEY: chakra.components.other.ShowHide
+- ENTRY:
   EXPLAIN: Show/Hide(Media Query)
   BODY: |
     <Show breakpoint='(max-width: 400px)'>
@@ -1315,7 +1315,7 @@
       </Hide>
     </>
 
-- KEY: chakra.components.other.Transitions
+- ENTRY:
   EXPLAIN: Transitions
   BODY: |
     function FadeEx() {
@@ -1340,10 +1340,10 @@
       )
     }
 
-- KEY: chakra.hooks.title
+- ENTRY:
   CATEGORY: Hooks
 
-- KEY: chakra.hooks.useBoolean
+- ENTRY:
   EXPLAIN: useBoolean
   BODY: |
     オン、オフ、トグル関数でブール値管理
@@ -1362,7 +1362,7 @@
       )
     }
 
-- KEY: chakra.hooks.useBreakpointValue
+- ENTRY:
   EXPLAIN: useBreakpointValue
   BODY: |
     responsive オブジェクトから現在のブレークポイントの値を返す
@@ -1398,7 +1398,7 @@
     const buttonSize = useBreakpointValue({ base: 'sm', lg: 'md' }, { ssr: false })
     const breakpoint = useBreakpoint({ ssr: false })
 
-- KEY: chakra.hooks.useClipboard
+- ENTRY:
   EXPLAIN: useClipboard
   BODY: |
     クリップボードへのコンテンツのコピーを処理します
@@ -1429,7 +1429,7 @@
       )
     }
 
-- KEY: chakra.hooks.useConst
+- ENTRY:
   EXPLAIN: useConst
   BODY: |
     useConst は初期化して定数値を返す。useMemo とは異なり常に同値を返し、初期化子が関数の場合は1回だけ呼び出す。
@@ -1456,7 +1456,7 @@
 
     定数として機能するが意味的に間違いで、不必要なレデューサー処理によりコスト高
 
-- KEY: chakra.hooks.useControllableState
+- ENTRY:
   EXPLAIN: useControllableState/useControllableProp
   BODY: |
     ■ useControllableState
@@ -1508,7 +1508,7 @@
 
     const [isControlled, value] = useControllableProp(propValue, stateValue)
 
-- KEY: chakra.hooks.useDimensions
+- ENTRY:
   EXPLAIN: useDimensions
   BODY: |
     ボックスモデルに基づいて参照要素の寸法を測定
@@ -1544,7 +1544,7 @@
       )
     }
 
-- KEY: chakra.hooks.useDisclosure
+- ENTRY:
   EXPLAIN: useDisclosure
   BODY: |
     オープン、クローズ、切り替えを処理。Modal、AlertDialog、Drawer など制御
@@ -1589,7 +1589,7 @@
       )
     }
 
-- KEY: chakra.hooks.useMediaQuery
+- ENTRY:
   EXPLAIN: useMediaQuery
   BODY: |
     単/複数のメディアクエリ一致を検出
@@ -1612,7 +1612,7 @@
       )
     }
 
-- KEY: chakra.hooks.useMergeRefs
+- ENTRY:
   EXPLAIN: useMergeRefs
   BODY: |
     複数の ref を単一の ref にマージ
@@ -1656,7 +1656,7 @@
       )
     }
 
-- KEY: chakra.hooks.useOutsideClick
+- ENTRY:
   EXPLAIN: useOutsideClick
   BODY: |
     参照要素の外側でイベントが発生するとコールされる
@@ -1683,7 +1683,7 @@
       )
     }
 
-- KEY: chakra.hooks.usePrefersReducedMotion
+- ENTRY:
   EXPLAIN: usePrefersReducedMotion
   BODY: |
     ユーザーがモーションの軽減を好むかどうかを示すブール値を返す
@@ -1708,7 +1708,7 @@
       return <Image animation={animation} src={logo} {...props} />
     }
 
-- KEY: chakra.hooks.useTheme
+- ENTRY:
   EXPLAIN: useTheme
   BODY: |
     コンテキストからテーマ オブジェクトを取得
@@ -1719,7 +1719,7 @@
       return <div>{/* Do something with the theme */}</div>
     }
 
-- KEY: chakra.hooks.useToken
+- ENTRY:
   EXPLAIN: useToken
   BODY: |
     テーマからデザイントークンを解決
@@ -1741,10 +1741,10 @@
       )
     }
 
-- KEY: chakra.hooks.components.title
+- ENTRY:
   CATEGORY: Components Hooks
 
-- KEY: chakra.hooks.components.useCheckbox
+- ENTRY:
   EXPLAIN: useCheckbox
   BODY: |
     チェックボックス機能、状態、フォーカス管理提供
@@ -1771,7 +1771,7 @@
       return (<CustomCheckbox />)
     }
 
-- KEY: chakra.hooks.components.useCheckboxGroup
+- ENTRY:
   EXPLAIN: useCheckboxGroup
   BODY: |
     チェックボックスのグループのstate管理ロジック提供
@@ -1809,7 +1809,7 @@
       )
     }
 
-- KEY: chakra.hooks.components.useRadio
+- ENTRY:
   EXPLAIN: useRadio
   BODY: |
     radio 機能, カスタムradioコンポーネントに state, focus 管理提供
@@ -1834,7 +1834,7 @@
       return (<CustomRadio image={url} />)
     }
 
-- KEY: chakra.hooks.components.useRadioGroup
+- ENTRY:
   EXPLAIN: useRadioGroup
   BODY: |
     radio グループのstate管理ロジック提供
@@ -1897,7 +1897,7 @@
       )
     }
 
-- KEY: chakra.hooks.components.useSlider
+- ENTRY:
   EXPLAIN: useSlider
   BODY: |
     スライダー機能、カスタム スライダー コンポーネントの state, focus 提供
@@ -1994,7 +1994,7 @@
     };
     export default Instructions;
 
-- KEY: chakra.hooks.components.useRangeSlider
+- ENTRY:
   EXPLAIN: useRangeSlider
   BODY: |
     スライダー機能、カスタム スライダー コンポーネントの state, focus 提供

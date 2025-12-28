@@ -3,7 +3,7 @@
 # Git
 #-------------------------------
 
-- KEY: git.config
+- ENTRY:
   EXPLAIN: config(設定)
   BODY: |
     git config --list/-l                # 表示
@@ -29,7 +29,7 @@
 
     git -c user.name=<value> -c user.email=<email> commit -m "test"
 
-- KEY: git.first.steps
+- ENTRY:
   EXPLAIN: |
     最初の一歩: Repository
   BODY: |
@@ -50,7 +50,7 @@
         git remote add origin https://vivitjp:ghp_xxxxxxx@github.com/vivitjp/git_test1.git
         git push -u origin
 
-- KEY: git.remote
+- ENTRY:
   EXPLAIN: remote(リモートリポジトリ)=origin
   BODY: |
     git remote                          # リモートリポジトリ名
@@ -99,7 +99,7 @@
     ■ origin 設定
     git remote set-url origin git@github.com:<user>/<repository>.git # origin 設定
 
-- KEY: git.remote.upstream
+- ENTRY:
   EXPLAIN: upstream(上流ブランチ)
   BODY: |
     ■ upstream
@@ -132,7 +132,7 @@
     ■ 削除: remote
     git remote rm upstream
 
-- KEY: git.HEAD
+- ENTRY:
   EXPLAIN: HEAD(現ブランチの先頭)
   BODY: |
     HEAD^    # 1つ前の HEAD
@@ -141,7 +141,7 @@
     HEAD~~   # 2つ前の HEAD
     HEAD~2   # 2つ前の HEAD
 
-- KEY: git.clone
+- ENTRY:
   EXPLAIN: clone(クローン)
   BODY: |
     git clone <URL>                     # カレントディレクトリにclone作成
@@ -153,7 +153,7 @@
 
     git clone https://<user_name>:<PAT>@github.com/<account>/<repositry>.git .
 
-- KEY: git.fetch.diff
+- ENTRY:
   EXPLAIN: fetch(情報取得), diff(差分)
   BODY: |
     ■ 1) fetchで情報取得
@@ -166,7 +166,7 @@
     ■ 3) 現コードとの比較
     git diff COMMIT_NUMBER
 
-- KEY: git.branch
+- ENTRY:
   EXPLAIN: branch(ブランチ)
   BODY: |
     ■ 情報取得
@@ -189,7 +189,7 @@
     ■ 削除(リモート) * branch 不使用
     git push -d/-D --remote origin/<branch>
 
-- KEY: git.checkout.switch
+- ENTRY:
   EXPLAIN: switch/checkout(ブランチ変更・作成)
   BODY: |
     git checkout <branch>               # ブランチ変更(OLD)
@@ -204,7 +204,7 @@
     git switch --detach <commit>        # コミットを指定して変更
     git switch --detach <branch>        # ブランチを指定して変更
 
-- KEY: git.add
+- ENTRY:
   EXPLAIN: add(indexing)
   BODY: |
     git add .                           # カレントDIRの全ファイル追加
@@ -214,7 +214,7 @@
     ■ Indexing 取り消し
     git reset                           # 全ステージング取消
 
-- KEY: git.commit
+- ENTRY:
   EXPLAIN: commit(コミット)
   BODY: |
     git commit -m "message"             # コミット
@@ -229,7 +229,7 @@
     git revert HEAD^                    # コミット履歴を残して取消
     git revert HEAD^ -n                 # コミット履歴を残して,Indexまで取消
 
-- KEY: git.cherrypick
+- ENTRY:
   EXPLAIN: cherrypick(特定コミットを適用)
   BODY: |
     git cherry-pick <commit>                    # 特定コミットを適用
@@ -254,7 +254,7 @@
     git reset --hard ORIG_HEAD          # マージ前の段階に戻る
     git reset --hard <commit>           # 特定コミットに戻る
 
-- KEY: git.pull.origin
+- ENTRY:
   EXPLAIN: pull origin(リモートからマージ)
   BODY: |
     ■ origin差分をローカルにマージ
@@ -275,7 +275,7 @@
     ■ push と set-upstreamを同時に実行
     git push -u(--set-upstream) origin <branch>
 
-- KEY: git.status
+- ENTRY:
   EXPLAIN: status(前コミットとの比較)
   BODY: |
     git status -s                       # -s:簡易表示
@@ -292,7 +292,7 @@
               modified:   public/snippets/React/ReactComponent.yml
               deleted:    public/snippets/React/ReactTypeScript.yml
 
-- KEY: git.merge
+- ENTRY:
   EXPLAIN: merge(ブランチ間マージ)
   BODY: |
     git merge <B>                       # 指定ブランチを現ブランチにマージ
@@ -305,12 +305,12 @@
     git reset --hard ORIG_HEAD          # マージ前の段階に戻る
     git reset --hard <commit>           # 特定コミットに戻る
 
-- KEY: git.rebase
+- ENTRY:
   EXPLAIN: ベース変更
   BODY: |
     git rebase <B>                      # 最新コミットをbaseにする
 
-- KEY: git.log.reflog
+- ENTRY:
   EXPLAIN: log/reflog(ログ)
   BODY: |
     ■ git log                           # ログ表示(一行で)
@@ -350,13 +350,13 @@
       75a366f HEAD@{6}: reset: moving to HEAD
       75a366f HEAD@{7}: reset: moving to HEAD
 
-- KEY: git.rm
+- ENTRY:
   EXPLAIN: rm(ファイル削除)
   BODY: |
     git rm <FILE>                       # ファイル削除
     git rm --cached <FILE>              # コミット済みファイルをリポジトリから削除
 
-- KEY: git.tag
+- ENTRY:
   EXPLAIN: tag(タグ)
   BODY: |
     git tag                             # 表示
@@ -371,7 +371,7 @@
     git tag -d v1.0                     # タグ削除
     git tag -d v1.0 <commit>            # タグ削除(コミット指定)
 
-- KEY: git.errors.push.permission
+- ENTRY:
   EXPLAIN: |
     エラー: push
   BODY: |

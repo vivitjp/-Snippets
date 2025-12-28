@@ -2,19 +2,19 @@
 #-------------------------------
 # CloudFront
 #-------------------------------
-- KEY: aws.CloudFront.category
+- ENTRY:
   CATEGORY: CloudFront
 
-- KEY: aws.CloudFront.xxxxx
+- ENTRY:
   EXPLAIN: |
     xxxxxx
   BODY: |
     ■ xxxxx
 
-- KEY: aws.CloudFront.category.静的ウェブサイトホスティング
+- ENTRY:
   CATEGORY: CloudFrontによる静的 WebHosting
 
-- KEY: aws.CloudFront.静的ウェブサイトホスティング.構成
+- ENTRY:
   EXPLAIN: |
     構成
   BODY: |
@@ -32,7 +32,7 @@
       • CloudFrontからS3バケットにアクセス: OAC利用
       • S3fがCloudFrontからのアクセスを許可: バケットポリシー
 
-- KEY: aws.CloudFront.静的ウェブサイトホスティング.OAC
+- ENTRY:
   EXPLAIN: |
     OAC(Origin Access Control)作成
   BODY: |
@@ -50,7 +50,7 @@
       • オリジンタイプ
         • [S3]を選択
 
-- KEY: aws.CloudFront.静的ウェブサイトホスティング.ディストリビューション作成
+- ENTRY:
   EXPLAIN: |
     CloudFront「ディストリビューション」の作成
   BODY: |
@@ -111,7 +111,7 @@
         ]
       }
 
-- KEY: aws.CloudFront.静的ウェブサイトホスティング.S3バケットポリシー更新
+- ENTRY:
   EXPLAIN: |
     S3バケットポリシー更新
   BODY: |
@@ -124,7 +124,7 @@
       • [編集]をクリック
       • コピーしたポリシーを貼り付けて、[保存]をクリック
 
-- KEY: aws.CloudFront.静的ウェブサイトホスティング.ページ作成
+- ENTRY:
   EXPLAIN: |
     indexページ作成
   BODY: |
@@ -139,7 +139,7 @@
     ■ アクセス
       例: https://<ID>.cloudfront.net/index.html
 
-- KEY: aws.CloudFront.静的ウェブサイトホスティング.罠
+- ENTRY:
   EXPLAIN: |
     「罠」
   BODY: |

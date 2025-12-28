@@ -3,7 +3,7 @@
 # PostgreSQL
 #-------------------------------
 
-- KEY: postgreSQL.vs.mySQL
+- ENTRY:
   EXPLAIN: PostgreSQL vs MySQL
   BODY: |
     ■ 共通テーブル式（CTE）
@@ -99,7 +99,7 @@
       あります。マテリアライズドビューは、高価で計算量の多い問い合わせの結果をキャッシュし、
       定期的に結果を更新できるようにします。これは、高速なデータアクセスが必要な場合に便利です。
 
-- KEY: postgreSQL.package
+- ENTRY:
   EXPLAIN: Package
   BODY: |
     ■ Windows
@@ -116,7 +116,7 @@
     libpq-dev 	                        // libraries and headers for C frontend development
     postgresql-server-dev-17 	          // libraries and headers for C backend development
 
-- KEY: postgreSQL.install
+- ENTRY:
   EXPLAIN: Install
   BODY: |
     sudo apt update
@@ -124,7 +124,7 @@
 
     PATH: /usr/local/pgsql/bin/
 
-- KEY: postgreSQL.db.create
+- ENTRY:
   EXPLAIN: Database 作成と削除
   BODY: |
     ■ DB 作成
@@ -146,7 +146,7 @@
     sudo -u postgres dropdb <db_name>
     psql -U postgres -d <db_name> -c "DROP DATABASE <db_name>;"
 
-- KEY: postgreSQL.db.access
+- ENTRY:
   EXPLAIN: アクセス,バージョン,ヘルプ,終了
   BODY: |
     ■ アクセス
@@ -168,7 +168,7 @@
     ■ 終了
     mydb=> \q
 
-- KEY: postgreSQL.table.create
+- ENTRY:
   EXPLAIN: テーブルの作成と削除
   BODY: |
     ■ テーブル作成
@@ -185,7 +185,7 @@
     DROP TABLE <table_name> RESTRICT;   // 依存するオブジェクトがある場合は削除しない
     DROP TABLE <table_name> CASCADE;    // 依存するオブジェクトも削除
 
-- KEY: postgreSQL.db.create.sql
+- ENTRY:
   EXPLAIN: テーブルの作成 詳細
   BODY: |
     ■ テーブル作成
@@ -233,7 +233,7 @@
     { INCLUDING | EXCLUDING }
     { COMMENTS | COMPRESSION | CONSTRAINTS | DEFAULTS | GENERATED | IDENTITY | INDEXES | STATISTICS | STORAGE | ALL }
 
-- KEY: 作成中
+- ENTRY:
   EXPLAIN: 作成中
   BODY: |
     作成中

@@ -3,10 +3,10 @@
 # husky
 #-------------------------------
 
-- KEY: husky.setting.title
+- ENTRY:
   CATEGORY: husky & lint-staged
 
-- KEY: husky.install
+- ENTRY:
   EXPLAIN: インストール
   BODY: |
     ■ husky & lint-staged
@@ -56,7 +56,7 @@
     .husky/husky.sh             // 中身が空
     .husky/pre-commit
 
-- KEY: husky.setting.pre-commit
+- ENTRY:
   EXPLAIN: 設定(pre-commit)
   BODY: |
     ■ [pre-commit]
@@ -66,7 +66,7 @@
 
       npx lint-staged
 
-- KEY: husky.setting.package.json
+- ENTRY:
   EXPLAIN: 設定(package.json) 必須
   BODY: |
     ■ [package.json](必須)
@@ -74,7 +74,7 @@
         "*.{js,jsx,ts,tsx}": "npm run lint"
       },
 
-- KEY: husky.setting.lintstagedrc
+- ENTRY:
   EXPLAIN: 設定(lintstagedrc) 必須
   BODY: |
     ■ [.lintstagedrc.js](必須)
@@ -112,7 +112,7 @@
         ],
       };
 
-- KEY: git.action.pre-commit
+- ENTRY:
   EXPLAIN: Git Action による pre-commit
   BODY: |
     ■ [.git/hooks/pre-commit]

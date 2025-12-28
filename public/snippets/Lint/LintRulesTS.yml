@@ -3,7 +3,7 @@
 # Lint Rules TypeScript
 #-------------------------------
 
-- KEY: lint.rules.ts.mode
+- ENTRY:
   EXPLAIN: TS URL for more
   BODY: |
     https://typescript-eslint.io/rules/

@@ -2,10 +2,10 @@
 #-------------------------------
 # Basic Components
 #-------------------------------
-- KEY: react.コンポーネント.title
+- ENTRY:
   CATEGORY: コンポーネント
 
-- KEY: react.コンポーネント.一般
+- ENTRY:
   EXPLAIN: 一般
   BODY: |
     ■ 関数コンポーネント (引数で型指定)
@@ -28,7 +28,7 @@
       <h1>{title}</h1>
     )
 
-- KEY: react.コンポーネント.children
+- ENTRY:
   EXPLAIN: children
   BODY: |
     ■ React.PropsWithChildren
@@ -63,7 +63,7 @@
       </div>
     )
 
-- KEY: react.コンポーネント.HTML要素
+- ENTRY:
   EXPLAIN: HTML要素
   BODY: |
     ■ React.ComponentProps
@@ -95,7 +95,7 @@
 
     MyBtn.displayName = 'MyBtn'
 
-- KEY: react.コンポーネント.ジェネリック
+- ENTRY:
   EXPLAIN: ジェネリック
   BODY: |
     ■ ジェネリックコンポーネント
@@ -124,7 +124,7 @@
     <Box as="section" variant="secondary" />   // sectionとしてレンダリング
     <Box as={MyBtn} onClick={() => {}} />      // MyBtnコンポーネントとしてレンダリング
 
-- KEY: react.コンポーネント.識別共用体
+- ENTRY:
   EXPLAIN: 識別共用体
   BODY: |
     ■ 識別共用体（Discriminated Union）で安全に切り替える
@@ -141,7 +141,7 @@
     <LinkOrButtonComp as="a" href="https://example.com">リンク</LinkOrButtonComp>
     <LinkOrButtonComp onClick={() => alert('Clicked!')}>ボタン</LinkOrButtonComp>
 
-- KEY: react.コンポーネント.高階コンポーネント
+- ENTRY:
   EXPLAIN: 高階コンポーネント
   BODY: |
     ■ 高階コンポーネント (Higher-Order Component, HOC) & React.ComponentType
@@ -156,7 +156,7 @@
 
     <EnhancedComp name="Test" extra="追加情報" />
 
-- KEY: react.コンポーネント.レンダープロップ
+- ENTRY:
   EXPLAIN: レンダープロップ
   BODY: |
     ■ レンダープロップ（Render Prop）型
@@ -174,11 +174,11 @@
       )}
     </Toggler>
 
-- KEY: react.型.title.要素ノード
+- ENTRY:
   CATEGORY: |
     Reactの型: 要素ノード
 
-- KEY: react.型.ReactNode
+- ENTRY:
   EXPLAIN: React.ReactNode
   BODY: |
     ■ 用途
@@ -204,7 +204,7 @@
       <div>{children}</div>
     )
 
-- KEY: react.型.ReactElement
+- ENTRY:
   EXPLAIN: React.ReactElement
   BODY: |
     ■ 用途
@@ -223,11 +223,11 @@
 
     const el: React.ReactElement = <div>Hello</div>
 
-- KEY: react.型.title.ref
+- ENTRY:
   CATEGORY: |
     Reactの型: ref 周り
 
-- KEY: react.型.RefObject
+- ENTRY:
   EXPLAIN: React.RefObject
   BODY: |
     ■ 用途
@@ -246,7 +246,7 @@
     ref.current?.focus()
     React.RefObject<T>
 
-- KEY: react.型.MutableRefObject
+- ENTRY:
   EXPLAIN: React.MutableRefObject
   BODY: |
     ■ 用途
@@ -265,7 +265,7 @@
     countRef.current += 1
     React.MutableRefObject<T>
 
-- KEY: react.型.Ref
+- ENTRY:
   EXPLAIN: React.Ref
   BODY: |
     ■ 用途
@@ -283,7 +283,7 @@
     ))
     React.Ref<T>
 
-- KEY: react.型.RefAttributes
+- ENTRY:
   EXPLAIN: React.RefAttributes
   BODY: |
     ■ 用途
@@ -295,7 +295,7 @@
     type Props = { value: string } & React.RefAttributes<HTMLDivElement>
     React.RefAttributes
 
-- KEY: react.型.PropsWithoutRef
+- ENTRY:
   EXPLAIN: React.PropsWithRef/PropsWithoutRef
   BODY: |
     ■ 用途
@@ -307,11 +307,11 @@
     type InputProps = React.ComponentPropsWithRef<'input'>
     type CleanProps = React.PropsWithoutRef<InputProps>
 
-- KEY: react.型.title.属性型
+- ENTRY:
   CATEGORY: |
     Reactの型: HTML/DOM/SVG属性型
 
-- KEY: react.型.HTML.HTMLAttributes
+- ENTRY:
   EXPLAIN: HTMLAttributes
   BODY: |
     ■ 用途
@@ -323,7 +323,7 @@
     type DivProps = React.HTMLAttributes<HTMLDivElement>
     const Comp = (props: DivProps) => <div {...props} />
 
-- KEY: react.型.DOM.DOMAttributes
+- ENTRY:
   EXPLAIN: DOMAttributes
   BODY: |
     ■ 用途
@@ -335,7 +335,7 @@
     type Clickable = { onClick?: React.MouseEventHandler }
     const Btn = ({ onClick }: Clickable) => <button onClick={onClick} />
 
-- KEY: react.型.HTML.InputHTMLAttributes
+- ENTRY:
   EXPLAIN: InputHTMLAttributes
   BODY: |
     ■ 用途
@@ -348,7 +348,7 @@
       <input {...props} />
     )
 
-- KEY: react.型.HTML.ButtonHTMLAttributes
+- ENTRY:
   EXPLAIN: ButtonHTMLAttributes
   BODY: |
     ■ 用途
@@ -361,7 +361,7 @@
       <button {...props} />
     )
 
-- KEY: react.型.HTML.AnchorHTMLAttributes
+- ENTRY:
   EXPLAIN: AnchorHTMLAttributes
   BODY: |
     ■ 用途
@@ -374,7 +374,7 @@
       <a {...props} />
     )
 
-- KEY: react.型.SVG.SVGProps
+- ENTRY:
   EXPLAIN: SVGProps
   BODY: |
     ■ 用途
@@ -390,10 +390,10 @@
 #-------------------------------
 # Handler
 #-------------------------------
-- KEY: react.handler.category
+- ENTRY:
   CATEGORY: ハンドラ
 
-- KEY: react.handle
+- ENTRY:
   EXPLAIN: ハンドラ サンプル
   BODY: |
     ■ Submit
@@ -468,7 +468,7 @@
       []
     )
 
-- KEY: react.handle.button
+- ENTRY:
   EXPLAIN: Button
   BODY: |
     const handleClickButton = useCallback(
@@ -482,7 +482,7 @@
       Submit
     </button>
 
-- KEY: react.handle.input.text
+- ENTRY:
   EXPLAIN: Text
   BODY: |
     const handleChangeText = useCallback(
@@ -500,7 +500,7 @@
       placeholder="name"
     />
 
-- KEY: react.handle.input.button
+- ENTRY:
   EXPLAIN: InputButton
   BODY: |
     const handleClickInputButton = useCallback(
@@ -512,7 +512,7 @@
 
     <input type="button" onClick={handleClick} value="Click" />
 
-- KEY: react.handle.input.checkbox
+- ENTRY:
   EXPLAIN: Checkbox
   BODY: |
     const handleChangeCheck = useCallback(
@@ -531,7 +531,7 @@
     />
     <label htmlFor={checkId}>On</label>
 
-- KEY: react.handle.input.radio
+- ENTRY:
   EXPLAIN: Radio
   BODY: |
     const handleChangeRadio = useCallback(
@@ -552,7 +552,7 @@
     />
     <label htmlFor={radioId1}>1</label>
 
-- KEY: react.handle.select
+- ENTRY:
   EXPLAIN: Select
   BODY: |
     type Options = {
@@ -588,10 +588,10 @@
 #-------------------------------
 # Hooks
 #-------------------------------
-- KEY: react.hooks.title
+- ENTRY:
   CATEGORY: Hooks
 
-- KEY: react.hooks.list
+- ENTRY:
   EXPLAIN: Hooks 一覧
   BODY: |
     ・useState                    // 状態管理
@@ -611,7 +611,7 @@
 #-------------------------------
 # Hooks: useState
 #-------------------------------
-- KEY: react.hooks.useState
+- ENTRY:
   EXPLAIN: useState
   BODY: |
     const [xxx, setXxx] = useState<string>("")
@@ -623,7 +623,7 @@
 #-------------------------------
 # Hooks: useEffect
 #-------------------------------
-- KEY: react.hooks.useEffect.基本
+- ENTRY:
   EXPLAIN: useEffect(基本)
   BODY: |
     const [xxxxx, setXxxxx] = useState<Set<string>>()
@@ -631,11 +631,11 @@
 #-------------------------------
 # useEffect
 #-------------------------------
-- KEY: qw.hooks.useEffect.title
+- ENTRY:
   CATEGORY: |
     Hooks: useEffect
 
-- KEY: qw.useEffect
+- ENTRY:
   EXPLAIN: useEffect(シンプル)
   BODY: |
     useEffect(() => {
@@ -660,7 +660,7 @@
       }
     }, [])
 
-- KEY: react.hooks.useEffect.非同期
+- ENTRY:
   EXPLAIN: useEffect(非同期)
   BODY: |
     ■ 非同期(async/await)
@@ -691,7 +691,7 @@
       }
     }, [])
 
-- KEY: react.hooks.useEffect.fetch
+- ENTRY:
   EXPLAIN: useEffect(fetch/v18)
   BODY: |
     ■ fetch (v18)
@@ -714,7 +714,7 @@
 #-------------------------------
 # Hooks: useLayoutEffect
 #-------------------------------
-- KEY: react.hooks.useLayoutEffect.基本
+- ENTRY:
   EXPLAIN: useLayoutEffect
   BODY: |
     ■ 目的
@@ -762,7 +762,7 @@
 #-------------------------------
 # Hooks: useCallback
 #-------------------------------
-- KEY: react.hooks.useCallback
+- ENTRY:
   EXPLAIN: useCallback
   BODY: |
     ■ 用途
@@ -807,7 +807,7 @@
 # Hooks: useMemo
 #-------------------------------
 
-- KEY: react.hooks.useMemo
+- ENTRY:
   EXPLAIN: useMemo
   BODY: |
     ■ 基本
@@ -869,7 +869,7 @@
 #-------------------------------
 # Hooks: useRef
 #-------------------------------
-- KEY: react.useRef.input
+- ENTRY:
   EXPLAIN: useRef
   BODY: |
     ■ Inputフォーカス
@@ -927,7 +927,7 @@
       return <input ref={inputRef} />
     }
 
-- KEY: react.useRef.useRefの配列
+- ENTRY:
   EXPLAIN: useRef 配列
   BODY: |
     ■ createRef を配列で保持（要素数が固定または初期化時に決まる場合）
@@ -1005,7 +1005,7 @@
     // const { refs, getRef } = useInputRefs(items.length)
     // <input ref={getRef(i)} />
 
-- KEY: react.useRef.input.fileUpload
+- ENTRY:
   EXPLAIN: useRef ファイルアップロード
   BODY: |
     import { Box, Button, Flex } from "@chakra-ui/react";
@@ -1067,7 +1067,7 @@
 # forwardRef
 #-------------------------------
 
-- KEY: react.useRef.forwardRef
+- ENTRY:
   EXPLAIN: forwardRef
   BODY: |
     ■ 用途
@@ -1104,7 +1104,7 @@
 #-------------------------------
 # Hooks: useReducer
 #-------------------------------
-- KEY: react.hooks.useReducer
+- ENTRY:
   EXPLAIN: useReducer
   BODY: |
     ■ 用途
@@ -1151,7 +1151,7 @@
 #-------------------------------
 # Hooks: useContext
 #-------------------------------
-- KEY: react.hooks.context
+- ENTRY:
   EXPLAIN: useContext
   BODY: |
     ■ Context 定義と Provider
@@ -1213,7 +1213,7 @@
 #-------------------------------
 # Hooks: useId
 #-------------------------------
-- KEY: react.useId
+- ENTRY:
   EXPLAIN: useId ユニークID生成
   BODY: |
     const xxxid = React.useId()
@@ -1221,7 +1221,7 @@
 #-------------------------------
 # Hooks: useImperativeHandle
 #-------------------------------
-- KEY: react.useImperativeHandle
+- ENTRY:
   EXPLAIN: useImperativeHandle
   BODY: |
     ■ 用途
@@ -1254,10 +1254,10 @@
 #-------------------------------
 # Custom & Render Hooks
 #-------------------------------
-- KEY: react.customHooks.title
+- ENTRY:
   CATEGORY: カスタムHook
 
-- KEY: react.customHooks.closure
+- ENTRY:
   EXPLAIN: カスタムHook(クロージャ)
   BODY: |
     import { useCallback, useState } from "react"
@@ -1280,7 +1280,7 @@
       return { method, value, JsxCompo }
     }
 
-- KEY: react.customHooks.renderHooks
+- ENTRY:
   EXPLAIN: レンダーHooks
   BODY: |
     type UseChecks = [boolean, () => JSX.Element]
@@ -1301,7 +1301,7 @@
       return [isAllChecked, renderChecks]
     }
 
-- KEY: react.customHooks.分析
+- ENTRY:
   EXPLAIN: 分析
   BODY: |
     ■ Custom Hooks
@@ -1352,7 +1352,7 @@
     ・基本方針: ロジックはCustom Hooksによる再利用、UIはコンポーネント合成による再利用
     ・Render Hooksは限定採用: 性能可読性のトレードオフを理解した上で利用
 
-- KEY: react.customHooks.再レンダー問題
+- ENTRY:
   EXPLAIN: 再レンダー問題
   BODY: |
     ■ 悪い例
