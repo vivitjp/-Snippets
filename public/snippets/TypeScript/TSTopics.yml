@@ -2,23 +2,130 @@
 #-------------------------------
 # TypeScript
 #-------------------------------
-- KEY: ts.typescriptlang
-  EXPLAIN: バイブル typescriptlang
+- ENTRY:
+  CATEGORY: TypeScript
+
+- ENTRY:
+  EXPLAIN: TSC
   BODY: |
-    ■ URL
-    https://www.typescriptlang.org
+    ■ TypeScript コンパイラ (TSC) のインストール
+
+      > npm install -g typescript
+
+    ■ コマンド & オプション
+
+      tsc -v                            // バージョン確認
+      tsc ファイル名.ts                  // コンパイル実行、出力は同ディレクトリにファイル名.js
+      tsc ファイル名.ts --watch          // 変更監視モードでコンパイル実行
+      tsc ファイル名.ts --noEmit         // コンパイルのみ実行、出力ファイルは生成しない
+      tsc --init                        // tsconfig.json 初期化
+      tsc --project tsconfig.json       // 指定した tsconfig.json でコンパイル実行
+      tsc --build                       // プロジェクトのビルド
+      tsc --build --clean               // ビルド成果物のクリーン
+      tsc --help                        // ヘルプ表示
+
+- ENTRY:
+  EXPLAIN: TSC メモリ対策
+  BODY: |
+    ■ tsc 実行時のメモリ関連 Node/V8 オプションと、メモリ負荷を下げる TypeScript 側の設定
+
+    ■ Node/V8 のメモリ上限を増やす（推奨）
+
+    ・直接 node で tsc を起動（単位は MB。例は 4GB）
+
+      node --max-old-space-size=4096 ./node_modules/typescript/bin/tsc -p 
+
+        開発・小規模プロジェクト: 512MB ～ 1024MB
+        中規模プロジェクト: 2048MB
+        大規模アプリ / 多数の依存: 4096MB
+        大規模モノレポ / 並列ビルド: 8192MB〜16384MB（ホストの物理RAMに依存）
+
+    ・npm スクリプト例（package.json）:
+
+      "scripts": {
+        "build:ts": "node --max-old-space-size=4096 ./node_modules/typescript/bin/tsc -p tsconfig.json"
+        "build:ts": "cross-env NODE_OPTIONS=--max-old-space-size=4096 npx tsc -p tsconfig.json"   // cross-env 使用例
+      }
+
+    ・ぷらっとフォーム別の実行例:
+
+      NODE_OPTIONS=--max-old-space-size=4096 npx tsc -p             環境変数で指定（POSIX）:
+      $env:NODE_OPTIONS="--max-old-space-size=4096"; npx tsc -p     Windows（PowerShell）:
+      set NODE_OPTIONS=--max-old-space-size=4096 && npx tsc -p      Windows（cmd.exe）:
+
+    ■ GC / プロファイリング用の Node フラグ（トラブルシュート時）
+
+    ・ガベージコレクション追跡:
+
+      node --trace_gc --max-old-space-size=4096 ./node_modules/typescript/bin/tsc -p 
+
+    ・メモリスナップショット / デバッガ:
+
+      node --inspect --max-old-space-size=4096 ./node_modules/typescript/bin/tsc -p 
+
+    ■ TypeScript 側でメモリ負荷を下げる設定（tsconfig.json）
+
+      {
+        "compilerOptions": {
+          "skipLibCheck": true,                  // 外部型のチェックをスキップしてメモリ/時間削減
+          "incremental": true,                   // 増分ビルドで再コンパイルを減らす        
+          "tsBuildInfoFile": ".tsbuildinfo",     // 増分ビルド情報の保存先ファイル 
+          "composite": false                     // 大規模なら true + project references で分割ビルドにする           
+        }
+      }
+
+    ■ 運用上の追加Tips
+
+      ・CI ではまず npx tsc --noEmit（型チェック）を走らせ、必要時にメモリ増加を適用
+      ・大規模リポジトリはプロジェクト参照でビルドを分割する（メモリ節約＋並列化）
+      ・必要以上に大きなユーティリティ型や巨大な型演算はコンパイラ負荷を上げるので見直す
+      ・メモリ不足エラー（OOM）が出る場合はまず --max-old-space-size を増やし、併せて skipLibCheck を有効化
+
+- ENTRY:
+  EXPLAIN: TSC Tips
+  TABLE:
+    OPTION:
+      ALIGN:
+        - left
+        - left
+      HAS_TITLE: false
+      WIDTH:
+        - 30%
+    BODY: |
+      ・まずは strict モードを有効に	strict: true をルートで有効にして型品質を担保
+      ・CIでは型チェックのみ実行	npx tsc --noEmit ビルドとは別に型チェックを走らせる（早く失敗を検知）
+      ・開発時は増分コンパイル	incremental: true と .tsbuildinfo により再ビルドが高速化
+      ・大型リポジトリはプロジェクト参照を使う	composite: true と references で並列/段階的ビルドが可能
+      ・外部型のチェック高速化	サードパーティ型で問題なければ skipLibCheck: true を設定型チェックを早める
+      ・Babel 等でトランスパイルするなら	isolatedModules: true を有効にして単一ファイル単位の変換に適合させる
+      ・エクスポート用型定義を出す	ライブラリなら declaration: true / declarationMap: true を使い、emitDeclarationOnly を検討
+      ・モジュール互換の問題対処	esModuleInterop: true と allowSyntheticDefaultImports: true で import の互換性を改善
+      ・パスエイリアス管理	baseUrl + paths を使い、ビルドツール（webpack/vite）側でも同じ alias を設定
+      ・型のみのインポートを明示	不要な実行時の依存を避けるため import type { Foo } from 'x' を使う
+      ・漸進的マイグレーション	allowJs: true + checkJs: false で JS を併用しつつ段階的に TS 化
+      ・実行時の JSON 取り込み	resolveJsonModule: true を使うと import data from './a.json' が型付きで可能
+      ・パフォーマンス診断	ビルドプロファイルは tsc --diagnostics / tsc --extendedDiagnostics で解析
+      ・エディタ/tsserver の負荷対策	大規模プロジェクトでは exclude を適切に設定し、typeRoots を整理する
+      ・型のコスト対策	巨大な型演算はコンパイル遅延の原因、冗長なユーティリティ型や非常に深いネストを見直す
+      ・型方針をドキュメント化	tsconfig.json のコメントやリポジトリ README に推奨ルール（noImplicitAny など）を書いて統一
+
+#-------------------------------
+# Tips
+#-------------------------------
+
+- ENTRY:
+  CATEGORY: TypeScript Tips & Snippets
 
 #-------------------------------
 # ENUM
 #-------------------------------
-- KEY: ts.check.ignore
+- ENTRY:
   EXPLAIN: |
-    型チェック無視 @ts-ignore
+    デコレータ: 型チェック無視 @ts-ignore など
   BODY: |
     // @ts-ignore
     const foo = 1
 
-    参考
     // prettier-ignore
     const foo = {a: 1, b: { c: 2 }, d: 3, e: 4, f: 5, g: 6}  // 1行にまとめる
 
@@ -29,7 +136,7 @@
 #-------------------------------
 # ENUM
 #-------------------------------
-- KEY: ts.enum.maker
+- ENTRY:
   EXPLAIN: makeEnum:const配列からenum(Object)作成
   BODY: |
     function makeEnum<T extends readonly string[]>(配列: T) {
@@ -46,26 +153,30 @@
 #-------------------------------
 # union
 #-------------------------------
-- KEY: ts.union.fromObject
-  EXPLAIN: unionをobjectから生成
+- ENTRY:
+  EXPLAIN: union を object から生成
   BODY: |
     const person = {
       a: "Name",
       b: "Address",
     } as const
 
-    type Person = typeof person[keyof typeof person]  // "Name" | "Address"
+    type Person = typeof person[keyof typeof person]  
 
-- KEY: ts.union.fromArray
-  EXPLAIN: unionをarrayから生成
+    結果: "Name" | "Address"
+
+- ENTRY:
+  EXPLAIN: union を array から生成
   BODY: |
     const person = [ "Name", "Address" ] as const
-    type Person = (typeof person)[number]         // "Name" | "Address"
+    type Person = (typeof person)[number]
+
+    結果: "Name" | "Address"
 
 #-------------------------------
 # Switch
 #-------------------------------
-- KEY: ts.switch.never
+- ENTRY:
   EXPLAIN: switchでneverチェック
   BODY: |
     export const func = (name: Person) => {
@@ -84,7 +195,7 @@
 #-------------------------------
 # 判別可能なUnion型
 #-------------------------------
-- KEY: ts.unionToBranch
+- ENTRY:
   EXPLAIN: 判別可能なUnion型
   BODY: |
     interface Square {
@@ -109,7 +220,7 @@
 #-------------------------------
 # 関数のオーバーロード
 #-------------------------------
-- KEY: ts.overload
+- ENTRY:
   EXPLAIN: 関数のオーバーロード
   BODY: |
     interface Overloaded {
@@ -132,7 +243,7 @@
 #-------------------------------
 # 構造的部分型とその例外: Freshness
 #-------------------------------
-- KEY: ts.freshness
+- ENTRY:
   EXPLAIN: 構造的部分型の例外
   BODY: |
     const foo = { x: 1, y: 2, z: 3 }
@@ -153,7 +264,7 @@
 #-------------------------------
 # 型ガード(in)
 #-------------------------------
-- KEY: ts.typeGuard.in
+- ENTRY:
   EXPLAIN: 型ガード(in)
   BODY: |
     interface A { x: number }
@@ -166,35 +277,43 @@
 #-------------------------------
 # 型ガード
 #-------------------------------
-- KEY: ts.typeGuard.user
+- ENTRY:
   EXPLAIN: 型ガード(ユーザ定義)
   BODY: |
+    ■ 解説
+
+    "is A" は「戻り値側の型述語（type predicate）」
+
+    ・関数が true を返したときに呼び出し元で arg が A と見なされる
+    ・関数が false を返したときに呼び出し元で arg が A ではないと見なされる
+
+    ■ サンプル
+
     interface A { a: number; common: string }
     interface B { b: number; common: string }
 
-    function isFoo(arg: any): arg is A {
+    function isFoo(arg: any): arg is A {  // 関数名 isXxxx で定義
       return arg.a !== undefined
     }
 
-    export function func(arg: A | B) {
-      if (isFoo(arg)) {
-        console.log(arg.a) // OK, NG:arg.b
-      } else {
-        console.log(arg.b) // OK, NG:arg.a
-      }
+    if (isFoo(x)) {
+      // ここでは x は A として扱える（型狭窄）
+      console.log(x.a)
+    } else {
+      // ここでは x は A ではない
     }
 
 #-------------------------------
 # 型判定
 #-------------------------------
-- KEY: ts.typeGuard.string
+- ENTRY:
   EXPLAIN: 型ガード(文字列)
   BODY: |
     const isString = (value: unknown): value is string => {
       return typeof value === "string" && value !== null
     }
 
-- KEY: ts.typeGuard.stringArray
+- ENTRY:
   EXPLAIN: 型ガード(文字列配列)
   BODY: |
     const isStringArray = (value: unknown): value is string[] => {
@@ -206,7 +325,7 @@
       )
     }
 
-- KEY: ts.typeGuard.object
+- ENTRY:
   EXPLAIN: 型ガード(object)
   BODY: |
     // 全属性を"Optional"、全値はunknown型を返す
@@ -216,7 +335,7 @@
       value: unknown
     ): value is WouldBe<T> => typeof value === "object" && value !== null
 
-- KEY: ts.typeGuard.custom
+- ENTRY:
   EXPLAIN: 型ガード(任意の型)
   BODY: |
     type Foo = {
@@ -231,7 +350,7 @@
 #-------------------------------
 # Literal 型 推論
 #-------------------------------
-- KEY: ts.objectLiteral.guess
+- ENTRY:
   EXPLAIN: Literal型推論
   BODY: |
     function func(A: "foo") {}
@@ -253,7 +372,7 @@
 #-------------------------------
 # ReadOnly
 #-------------------------------
-- KEY: ts.readonly
+- ENTRY:
   EXPLAIN: 読み取り専用型
   BODY: |
     const foo: number[] = [1, 2, 3]
@@ -265,7 +384,7 @@
 #-------------------------------
 # Utility Partial
 #-------------------------------
-- KEY: ts.utility.partial
+- ENTRY:
   EXPLAIN: Partial型を用いたObject型生成
   BODY: |
     const obj = {"A": 1, "B": 2, "C": 3};
@@ -287,7 +406,7 @@
 #-------------------------------
 # 排他的 OR
 #-------------------------------
-- KEY: ts.exclusiveOr
+- ENTRY:
   EXPLAIN: |
     排他的OR -> 参照: 型(AND/OR)
   BODY: |
@@ -319,7 +438,7 @@
 #-------------------------------
 # Literal Join
 #-------------------------------
-- KEY: ts.literal.keyJoin
+- ENTRY:
   EXPLAIN: ReactHookForm での複層オブジェクト対応
   BODY: |
     ■ ReactHookFormでのKeyが複数Keyの合成になった場合の対処

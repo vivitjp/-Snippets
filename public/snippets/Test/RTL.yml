@@ -7,7 +7,7 @@
 # Setup & 破棄
 #-------------------------------
 
-- KEY: RTL.install
+- ENTRY:
   EXPLAIN: RTL(React Testing Library) インストール
   BODY: |
     npm install --save-dev @testing-library/react @testing-library/dom
@@ -15,7 +15,7 @@
     ■ TypeScript
     npm install --save-dev @testing-library/react @testing-library/dom @types/react @types/react-dom
 
-- KEY: RTL.UserEvent
+- ENTRY:
   EXPLAIN: |
     例: UserEvent.click
   BODY: |
@@ -39,7 +39,7 @@
       expect(screen.getByRole('button')).toBeDisabled()
     })
 
-- KEY: RTL.fireEvent.async.success
+- ENTRY:
   EXPLAIN: |
     例: fireEvent.click 非同期(MSW) 成功
   BODY: |
@@ -75,7 +75,7 @@
       expect(screen.getByRole('button')).toBeDisabled()
     })
 
-- KEY: RTL.fireEvent.async.failure
+- ENTRY:
   EXPLAIN: |
     例: fireEvent.click 非同期(MSW) 失敗
   BODY: |
@@ -117,7 +117,7 @@
       expect(screen.getByRole('button')).not.toBeDisabled()
     })
 
-# - KEY: RTL.fetch
+# - ENTRY:
 #   EXPLAIN: テスト用 Fetch
 #   BODY: |
 #     ■[fetch.jsx]
@@ -169,7 +169,7 @@
 #       )
 #     }
 
-- KEY: RTL.fireEvent.userEvent
+- ENTRY:
   EXPLAIN: fireEventとuserEvent
   BODY: |
     ■ user-event: ユーザー操作をシミュレートする関数
@@ -195,7 +195,7 @@
 
     参考URL: https://zenn.dev/k_log24/articles/4c1cd37ff0ca50
 
-- KEY: RTL.Queries
+- ENTRY:
   EXPLAIN: Queriesの種類
   BODY: |
     ◯◯◯ByTestId
@@ -231,7 +231,7 @@
       findAll	  throw	array	array	Yes	配列、非同期
       queryAll	[]	array	array	No	配列、NULL Check のみに使用
 
-- KEY: RTL.Queries.ByTestId
+- ENTRY:
   EXPLAIN: ByTestId
   BODY: |
     getByTestId(
@@ -257,7 +257,7 @@
     // カスタムCB
     screen.getByText((content, el) => content.startsWith('Hello'))
 
-- KEY: RTL.Queries.async
+- ENTRY:
   EXPLAIN: 非同期(findBy & waitFor)
   BODY: |
     const button = screen.getByRole('button', {name: 'Click Me'})
@@ -280,7 +280,7 @@
 
     await waitFor(() => expect(mockAPI).toHaveBeenCalledTimes(1))
 
-- KEY: RTL.fireEvent
+- ENTRY:
   EXPLAIN: FireEvent
   BODY: |
     <button>Submit</button>

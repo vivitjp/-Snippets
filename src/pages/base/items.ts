@@ -219,57 +219,22 @@ export const menuItems: menuByCategories[] = [
     ],
   },
   {
-    category: "TypeScript",
-    items: [
-      {
-        name: "TypeScript",
-        fileName: "TypeScript/TypeScript",
-        codeKeyTypes: [codeKeys.JSTS],
-      },
-      {
-        name: "TS Topics",
-        fileName: "TypeScript/TSTopics",
-        codeKeyTypes: [codeKeys.JSTS],
-      },
-      {
-        name: "TS Utilities",
-        fileName: "TypeScript/Utilities",
-        codeKeyTypes: [codeKeys.JSTS, codeKeys.TS],
-      },
-      {
-        name: "TS 非同期",
-        fileName: "TypeScript/Async",
-        codeKeyTypes: [codeKeys.JSTS],
-      },
-      {
-        name: "TSConfig",
-        fileName: "TypeScript/TSConfig",
-        codeKeyTypes: [codeKeys.TSConfig, codeKeys.JSTS],
-      },
-      {
-        name: "TS Challenge",
-        fileName: "TypeScript/TSChallenge",
-        codeKeyTypes: [codeKeys.JSTS],
-      },
-    ],
-  },
-  {
     category: "JavaScript",
     items: [
       {
         name: "JS Objects",
-        fileName: "JavaScript/JavaScriptObjects",
-        codeKeyTypes: [codeKeys.JSTS],
+        fileName: "JavaScript/JSObjects",
+        codeKeyTypes: [codeKeys.JS],
       },
       {
         name: "JS Methods",
-        fileName: "JavaScript/JavaScriptMethods",
-        codeKeyTypes: [codeKeys.JSTS],
+        fileName: "JavaScript/JSMethods",
+        codeKeyTypes: [codeKeys.JS],
       },
       {
         name: "JS Topics",
         fileName: "JavaScript/JSTopics",
-        codeKeyTypes: [codeKeys.JSTS],
+        codeKeyTypes: [codeKeys.JS],
       },
       {
         name: "JS DOM",
@@ -284,7 +249,7 @@ export const menuItems: menuByCategories[] = [
       {
         name: "JS ライブラリ",
         fileName: "JavaScript/Libraries",
-        codeKeyTypes: [codeKeys.JSTS],
+        codeKeyTypes: [codeKeys.JS],
       },
       {
         name: "JQuery to JS",
@@ -294,28 +259,79 @@ export const menuItems: menuByCategories[] = [
     ],
   },
   {
+    category: "TypeScript",
+    items: [
+      {
+        name: "TypeScript",
+        fileName: "TypeScript/TypeScript",
+        codeKeyTypes: [codeKeys.JS, codeKeys.TS],
+      },
+      {
+        name: "TS Topics",
+        fileName: "TypeScript/TSTopics",
+        codeKeyTypes: [codeKeys.JS, codeKeys.TS],
+      },
+      {
+        name: "TS Utilities",
+        fileName: "TypeScript/Utilities",
+        codeKeyTypes: [codeKeys.JS, codeKeys.TS],
+      },
+      {
+        name: "TS 非同期",
+        fileName: "TypeScript/Async",
+        codeKeyTypes: [codeKeys.JS, codeKeys.TS],
+      },
+      {
+        name: "TSConfig",
+        fileName: "TypeScript/TSConfig",
+        codeKeyTypes: [codeKeys.TSConfig, codeKeys.JS, codeKeys.TS],
+      },
+      {
+        name: "TS Challenge",
+        fileName: "TypeScript/TSChallenge",
+        codeKeyTypes: [codeKeys.JS, codeKeys.TS],
+      },
+    ],
+  },
+  {
     category: "React",
     items: [
       {
         name: "React",
         fileName: "React/React",
-        codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS, codeKeys.React],
+        codeKeyTypes: [codeKeys.HTML, codeKeys.JS, codeKeys.React],
       },
       {
         name: "React Component",
         fileName: "React/ReactComponent",
-        codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS, codeKeys.React],
+        codeKeyTypes: [codeKeys.HTML, codeKeys.JS, codeKeys.React],
       },
       {
-        name: "React 🔺Routing",
+        name: "React Routing",
         fileName: "React/ReactRouting",
-        codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS, codeKeys.React],
+        codeKeyTypes: [codeKeys.HTML, codeKeys.JS, codeKeys.ReactRouter],
       },
       // {
       //   name: "🔺React 型定義", ⚠
       //   fileName: "React/ReactTypeScript",
-      //   codeKeyTypes: [codeKeys.JSTS, codeKeys.React],
+      //   codeKeyTypes: [codeKeys.JS, codeKeys.React],
       // },
+    ],
+  },
+  {
+    category: "React Framework",
+    items: [
+      {
+        name: "🔺Nextjs",
+        fileName: "ReactFrameWork/front/Nextjs",
+        codeKeyTypes: [codeKeys.Nextjs],
+      },
+      {
+        name: "Vite",
+        fileName: "ReactFrameWork/front/Vite",
+        codeKeyTypes: [codeKeys.Vite],
+        case_sensitive: false,
+      },
     ],
   },
   {
@@ -327,7 +343,7 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [
           codeKeys.CSS,
           codeKeys.HTML,
-          codeKeys.JSTS,
+          codeKeys.JS,
           codeKeys.React,
           codeKeys.Package,
         ],
@@ -338,7 +354,7 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [
           codeKeys.CSS,
           codeKeys.HTML,
-          codeKeys.JSTS,
+          codeKeys.JS,
           codeKeys.React,
           codeKeys.Package,
         ],
@@ -359,9 +375,15 @@ export const menuItems: menuByCategories[] = [
     category: "React Form",
     items: [
       {
-        name: "ReactHookForm:pk",
-        fileName: "ReactPackage/ReactHookForm",
-        codeKeyTypes: [codeKeys.keysPackageRHF],
+        name: "ReactHookForm",
+        fileName: "ReactForm/ReactHookForm",
+        codeKeyTypes: [codeKeys.PackageRHF],
+      },
+      {
+        name: "Yup",
+        fileName: "ReactForm/Yup",
+        codeKeyTypes: [codeKeys.PackageRHF, codeKeys.Yup],
+        case_sensitive: false,
       },
     ],
   },
@@ -379,11 +401,17 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.Chakra],
       },
       {
+        name: "MUI",
+        fileName: "ReactCSS/MUI",
+        codeKeyTypes: [codeKeys.MUI],
+        case_sensitive: false,
+      },
+      {
         name: "Storybook(v6)",
         fileName: "ReactPackage/Storybook",
         codeKeyTypes: [
           codeKeys.HTML,
-          codeKeys.JSTS,
+          codeKeys.JS,
           codeKeys.React,
           codeKeys.Package,
         ],
@@ -396,12 +424,12 @@ export const menuItems: menuByCategories[] = [
       {
         name: "🔺Zustand",
         fileName: "ReactGState/zustand",
-        codeKeyTypes: [codeKeys.JSTS, codeKeys.React],
+        codeKeyTypes: [codeKeys.JS, codeKeys.React],
       },
       {
         name: "Jotai",
         fileName: "ReactGState/Jotai",
-        codeKeyTypes: [codeKeys.JSTS, codeKeys.Jotai],
+        codeKeyTypes: [codeKeys.JS, codeKeys.Jotai],
       },
       {
         name: "Recoil(開発中止)",
@@ -417,16 +445,116 @@ export const menuItems: menuByCategories[] = [
         name: "TanStack",
         fileName: "ReactQuery/TanStack",
         codeKeyTypes: [codeKeys.TanStack],
+        case_sensitive: false,
       },
       {
-        name: "SWR:pk",
-        fileName: "ReactQuery/SWR",
+        name: "Topics",
+        fileName: "ReactQuery/Topics",
+        codeKeyTypes: [codeKeys.TanStack, codeKeys.JS],
+        case_sensitive: false,
+      },
+      {
+        name: "🔺SWR",
+        fileName: "",
         codeKeyTypes: [
           codeKeys.HTML,
-          codeKeys.JSTS,
+          codeKeys.JS,
           codeKeys.React,
           codeKeys.Package,
         ],
+      },
+    ],
+  },
+  {
+    category: "React Utilities",
+    items: [
+      {
+        name: "i18n",
+        fileName: "ReactUtilities/i18n",
+        codeKeyTypes: [codeKeys.i18n, codeKeys.React],
+        case_sensitive: false,
+      },
+      {
+        name: "dragAndDrops",
+        fileName: "ReactUtilities/DragAndDrops",
+        codeKeyTypes: [codeKeys.JS, codeKeys.React, codeKeys.DragAndDrops],
+        case_sensitive: false,
+      },
+      {
+        name: "Misc",
+        fileName: "ReactUtilities/Misc",
+        codeKeyTypes: [codeKeys.ReactUtilitiesMisc, codeKeys.JS],
+        case_sensitive: false,
+      },
+    ],
+  },
+  {
+    category: "Nodejs",
+    items: [
+      {
+        name: "🔺Nodejs(Topics)",
+        fileName: "Node/nodejs/NodeTopics",
+        codeKeyTypes: [],
+      },
+      {
+        name: "環境変数",
+        fileName: "/Node/nodejs/env",
+        codeKeyTypes: [codeKeys.Env],
+      },
+      {
+        name: "Express",
+        fileName: "Node/nodejs/Express",
+        codeKeyTypes: [codeKeys.Express],
+      },
+      {
+        name: "Express API",
+        fileName: "Node/nodejs/ExpressAPI",
+        codeKeyTypes: [codeKeys.Express],
+      },
+      {
+        name: "🔺Bun",
+        fileName: "Node/bun",
+        codeKeyTypes: [],
+      },
+    ],
+  },
+  {
+    category: "Nestjs,ORM",
+    items: [
+      {
+        name: "Nestjs",
+        fileName: "ReactFrameWork/Nestjs/Nestjs",
+        codeKeyTypes: [
+          codeKeys.Nestjs,
+          codeKeys.TypeORM,
+          codeKeys.ClassValidator,
+          codeKeys.ClassTransformer,
+        ],
+      },
+      {
+        name: "TypeORM",
+        fileName: "ReactFrameWork/Nestjs/TypeORM",
+        codeKeyTypes: [codeKeys.TypeORM],
+      },
+      {
+        name: "🔺Prisma",
+        fileName: "ReactFrameWork/Nestjs/Prisma",
+        codeKeyTypes: [codeKeys.Prisma],
+      },
+      {
+        name: "ClassValidator",
+        fileName: "ReactFrameWork/Nestjs/ClassValidator",
+        codeKeyTypes: [codeKeys.ClassValidator],
+      },
+      {
+        name: "ClassTransformer",
+        fileName: "ReactFrameWork/Nestjs/ClassTransformer",
+        codeKeyTypes: [codeKeys.ClassTransformer],
+      },
+      {
+        name: "🔺Swagger",
+        fileName: "ReactFrameWork/Nestjs/Swagger",
+        codeKeyTypes: [codeKeys.Swagger],
       },
     ],
   },
@@ -446,128 +574,43 @@ export const menuItems: menuByCategories[] = [
     ],
   },
   {
-    category: "Nodejs",
-    items: [
-      {
-        name: "🔺Nodejs(Topics)",
-        fileName: "JSRuntime/nodejs/NodeTopics",
-        codeKeyTypes: [],
-      },
-      {
-        name: "Express",
-        fileName: "/JSRuntime/nodejs/Express",
-        codeKeyTypes: [codeKeys.Express],
-      },
-      {
-        name: "Express API",
-        fileName: "/JSRuntime/nodejs/ExpressAPI",
-        codeKeyTypes: [codeKeys.Express],
-      },
-      {
-        name: "🔺Bun",
-        fileName: "JSRuntime/bun",
-        codeKeyTypes: [],
-      },
-    ],
-  },
-  {
-    category: "Nextjs,Vite",
-    items: [
-      {
-        name: "🔺Nextjs",
-        fileName: "frameWork/front/Nextjs",
-        codeKeyTypes: [codeKeys.Nextjs],
-      },
-      {
-        name: "🔺Vite",
-        fileName: "frameWork/front/vite",
-        codeKeyTypes: [],
-      },
-    ],
-  },
-  {
-    category: "Nestjs,ORM",
-    items: [
-      {
-        name: "Nestjs",
-        fileName: "frameWork/Nestjs/Nestjs",
-        codeKeyTypes: [
-          codeKeys.Nestjs,
-          codeKeys.TypeORM,
-          codeKeys.ClassValidator,
-          codeKeys.ClassTransformer,
-        ],
-      },
-      {
-        name: "TypeORM",
-        fileName: "frameWork/Nestjs/TypeORM",
-        codeKeyTypes: [codeKeys.TypeORM],
-      },
-      {
-        name: "🔺Prisma",
-        fileName: "frameWork/Nestjs/Prisma",
-        codeKeyTypes: [codeKeys.Prisma],
-      },
-      {
-        name: "ClassValidator",
-        fileName: "frameWork/Nestjs/ClassValidator",
-        codeKeyTypes: [codeKeys.ClassValidator],
-      },
-      {
-        name: "ClassTransformer",
-        fileName: "frameWork/Nestjs/ClassTransformer",
-        codeKeyTypes: [codeKeys.ClassTransformer],
-      },
-      {
-        name: "🔺Swagger",
-        fileName: "frameWork/Nestjs/Swagger",
-        codeKeyTypes: [codeKeys.Swagger],
-      },
-    ],
-  },
-  {
     category: "パッケージ管理",
     items: [
       {
         name: "npm/yarn",
-        fileName: "JSRuntime/nodejs/npm/npm_yarn",
+        fileName: "Node/nodejs/npm/npm_yarn",
         codeKeyTypes: [codeKeys.NPM],
       },
       {
         name: "npm",
-        fileName: "JSRuntime/nodejs/npm/npm",
+        fileName: "Node/nodejs/npm/npm",
         codeKeyTypes: [codeKeys.NPM],
       },
       {
         name: "🔺pnpm",
-        fileName: "JSRuntime/nodejs/npm/pnpm",
+        fileName: "Node/nodejs/npm/pnpm",
         codeKeyTypes: [codeKeys.NPM],
       },
       {
         name: "module管理史",
-        fileName: "JSRuntime/nodejs/npm/npm _history",
+        fileName: "Node/nodejs/npm/npm _history",
         codeKeyTypes: [codeKeys.NPM],
       },
-      {
-        name: "Webpack",
-        fileName: "",
-        codeKeyTypes: [],
-      },
-      {
-        name: "Babel",
-        fileName: "",
-        codeKeyTypes: [],
-      },
-      {
-        name: "Turbopack",
-        fileName: "",
-        codeKeyTypes: [],
-      },
-      {
-        name: "環境変数",
-        fileName: "/JSRuntime/nodejs/env",
-        codeKeyTypes: [codeKeys.Env],
-      },
+      // {
+      //   name: "Webpack",
+      //   fileName: "",
+      //   codeKeyTypes: [],
+      // },
+      // {
+      //   name: "Babel",
+      //   fileName: "",
+      //   codeKeyTypes: [],
+      // },
+      // {
+      //   name: "Turbopack",
+      //   fileName: "",
+      //   codeKeyTypes: [],
+      // },
     ],
   },
   {
@@ -620,7 +663,6 @@ export const menuItems: menuByCategories[] = [
       },
     ],
   },
-
   {
     category: "Python",
     items: [
@@ -674,7 +716,8 @@ export const menuItems: menuByCategories[] = [
       {
         name: "GraphQL",
         fileName: "database/GraphQL",
-        codeKeyTypes: [codeKeys.graphQL, codeKeys.JSTS, codeKeys.HTML],
+        codeKeyTypes: [codeKeys.graphQL, codeKeys.JS],
+        case_sensitive: false,
       },
       {
         name: "Redis",
@@ -694,7 +737,7 @@ export const menuItems: menuByCategories[] = [
       {
         name: "🔺HTML目的別",
         fileName: "html/Purpose",
-        codeKeyTypes: [codeKeys.HTML, codeKeys.JSTS],
+        codeKeyTypes: [codeKeys.HTML, codeKeys.JS],
       },
     ],
   },
@@ -817,7 +860,7 @@ export const menuItems: menuByCategories[] = [
       {
         name: "Excel2JS関数",
         fileName: "office/ExcelJS",
-        codeKeyTypes: [codeKeys.Excel, codeKeys.JSTS],
+        codeKeyTypes: [codeKeys.Excel, codeKeys.JS],
       },
     ],
   },

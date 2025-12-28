@@ -2,10 +2,10 @@
 #-------------------------------
 # SVG
 #-------------------------------
-- KEY: svg.svg.category
+- ENTRY:
   CATEGORY: SVG 基本
 
-- KEY: svg.svg
+- ENTRY:
   EXPLAIN: svgの属性
   BODY: |
     <svg 
@@ -38,7 +38,7 @@
 # テキスト要素
 #-------------------------------
 
-- KEY: svg.element.text
+- ENTRY:
   EXPLAIN: text 要素
   BODY: |
     <text
@@ -71,7 +71,7 @@
 # transform
 #-------------------------------
 
-# - KEY: svg.transform
+# - ENTRY:
 #   EXPLAIN: transform
 #   BODY: |
 
@@ -79,7 +79,7 @@
 # PATH 要素
 #-------------------------------
 
-- KEY: svg.path.M
+- ENTRY:
   EXPLAIN: path要素
   BODY: |
     ■ ディレクティブの大文字と小文字の違い
@@ -169,7 +169,7 @@
 # 他の要素
 #-------------------------------
 
-- KEY: svg.element.rectangle
+- ENTRY:
   EXPLAIN: rectangle 要素
   BODY: |
     <rect
@@ -181,7 +181,7 @@
       ry={RY} //角丸めY軸長
     />
 
-- KEY: svg.element.line
+- ENTRY:
   EXPLAIN: line 要素
   BODY: |
     <line
@@ -191,21 +191,21 @@
       y2={Y2} //終了点Y座標
     />
 
-- KEY: svg.element.polyline
+- ENTRY:
   EXPLAIN: polyline 要素
   BODY: |
     <polyline
       points={"X,Y X,Y X,Y X,Y,..."}
     />
 
-- KEY: svg.element.polygon
+- ENTRY:
   EXPLAIN: polygon 要素
   BODY: |
     <polygon
       points={"X,Y X,Y X,Y X,Y"} //4 sets
     />
 
-- KEY: svg.element.circle
+- ENTRY:
   EXPLAIN: circle 要素
   BODY: |
     <circle
@@ -214,7 +214,7 @@
       r={R} //半径
     />
 
-- KEY: svg.element.ellipse
+- ENTRY:
   EXPLAIN: ellipse 要素
   BODY: |
     <ellipse
@@ -224,7 +224,7 @@
       ry={RY} //Y軸の半径
     />
 
-- KEY: svg.element.image
+- ENTRY:
   EXPLAIN: image 要素
   BODY: |
     <image
@@ -238,7 +238,7 @@
 # グループ
 #-------------------------------
 
-- KEY: svg.group
+- ENTRY:
   EXPLAIN: group
   BODY: |
     <g id={id} fill={CSS色} stroke={CSS色}> //x, y, width, heightは無効
@@ -250,7 +250,7 @@
 # フィルタ
 #-------------------------------
 
-# - KEY: svg.filter
+# - ENTRY:
 #   EXPLAIN: filter
 #   BODY: |
 #     <xxx
@@ -260,7 +260,7 @@
 # クリップパス
 #-------------------------------
 
-- KEY: svg.clipPath
+- ENTRY:
   EXPLAIN: clipPath
   BODY: |
     // const cpId = useId()
@@ -275,7 +275,7 @@
 # マスク(mask)
 #-------------------------------
 
-- KEY: svg.mask
+- ENTRY:
   EXPLAIN: mask
   BODY: |
     // const maskId = useId()
@@ -288,7 +288,7 @@
 
     <circle mask={`url(#${maskId})`} cx={X} cy={Y} r={R} />
 
-- KEY: svg.mask.imageByString
+- ENTRY:
   EXPLAIN: maskで文字通過イメージ
   BODY: |
     // const id = useId()
@@ -311,7 +311,7 @@
 # Use
 #-------------------------------
 
-- KEY: svg.use
+- ENTRY:
   EXPLAIN: ノード複製
   BODY: |
     // const rectId = useId()
@@ -324,7 +324,7 @@
 # 効果(effect)
 #-------------------------------
 
-- KEY: svg.effect.shadow
+- ENTRY:
   EXPLAIN: effect シャドー
   BODY: |
     // const filterId = useId()
@@ -336,7 +336,7 @@
     </defs>
     <path filter={`url(#${filterId})`} d="PATH" />
 
-- KEY: svg.effect.blur
+- ENTRY:
   EXPLAIN: effect ぼかし
   BODY: |
     // const filterId = useId()
@@ -356,7 +356,7 @@
 # グラデーション
 #-------------------------------
 
-- KEY: svg.gradation.radial
+- ENTRY:
   EXPLAIN: radialGradient 円
   BODY: |
     // const filterId = useId()
@@ -370,7 +370,7 @@
     </defs>
     <circle cx={CX} cy={CY} r={R} fill={`url(#${filterId})`}/>
 
-- KEY: svg.gradation.linear
+- ENTRY:
   EXPLAIN: linearGradient 線
   BODY: |
     // const filterId = useId()
@@ -384,7 +384,7 @@
     </defs>
     <path d="PATH" fill={`url(#${filterId})`} />
 
-- KEY: svg.gradation.linearGamma
+- ENTRY:
   EXPLAIN: linearGradient 線(Gamma)
   BODY: |
     //const expoId = useId()
@@ -409,7 +409,7 @@
 # ForeignObject
 #-------------------------------
 
-- KEY: svg.foreignObject
+- ENTRY:
   EXPLAIN: foreignObject HTML使用
   BODY: |
     <foreignObject x={X} y={Y} width={W} height={H}
@@ -422,7 +422,7 @@
 # event
 #-------------------------------
 
-- KEY: svg.event
+- ENTRY:
   EXPLAIN: eventとpropagation
   BODY: |
     const handleMouse = (flag: boolean) => { }
@@ -444,7 +444,7 @@
 # 三角関数
 #-------------------------------
 
-- KEY: svg.trigonometric.atan2
+- ENTRY:
   EXPLAIN: 三角関数 θ取得
   BODY: |
     const theta = Math.atan2(y,x)
@@ -455,7 +455,7 @@
 # アニメーション
 #-------------------------------
 
-- KEY: svg.animation1.values
+- ENTRY:
   EXPLAIN: Animation(values)
   BODY: |
     <animate
@@ -466,7 +466,7 @@
       keyTimes="0;0.5;1" // valuesに対応する時間(0-1)
     />
 
-- KEY: svg.animation2.from
+- ENTRY:
   EXPLAIN: Animation(from/to-by)
   BODY: |
     <animate 
@@ -478,7 +478,7 @@
       calcMode="linear"|"discrete"|"spline"|"paced"
     />
 
-- KEY: svg.animation3.dur
+- ENTRY:
   EXPLAIN: Animation(bur持続時間)
   BODY: |
     <animate 
@@ -490,7 +490,7 @@
       calcMode="linear"|"discrete"|"spline"|"paced"
     />
 
-- KEY: svg.animation4.spline
+- ENTRY:
   EXPLAIN: Animation(keySplines) Safari未対応
   BODY: |
     <animate
@@ -515,10 +515,10 @@
 #-------------------------------
 # SVG Graph
 #-------------------------------
-- KEY: svg.sample.graph.category
+- ENTRY:
   CATEGORY: SVG サンプル(Graph)
 
-- KEY: svg.sample.graph.マーカー
+- ENTRY:
   EXPLAIN: グラフ マーカー
   BODY: |
     import { useId } from "@chakra-ui/react";
@@ -853,7 +853,7 @@
       ];
     };
 
-- KEY: svg.sample.graph.1.カスタムHook
+- ENTRY:
   EXPLAIN: グラフ1 カスタムHook
   BODY: |
     import React, { SVGAttributes } from "react";
@@ -1210,7 +1210,7 @@
       );
     };
 
-- KEY: svg.sample.graph.1.呼び出し
+- ENTRY:
   EXPLAIN: グラフ1 呼び出し
   BODY: |
     import { c2j } from "../common/methods";
@@ -1276,7 +1276,7 @@
       return <>{drawGraph()}</>;
     };
 
-- KEY: svg.sample.graph.2.カスタムHook
+- ENTRY:
   EXPLAIN: グラフ2 カスタムHook
   BODY: |
     import React, { SVGAttributes } from "react";
@@ -1854,7 +1854,7 @@
       );
     };
 
-- KEY: svg.sample.graph.2.呼び出し
+- ENTRY:
   EXPLAIN: グラフ2 呼び出し
   BODY: |
     import { UseSAMPLE_all, useSAMPLE_all } from "./useSAMPLE_all";

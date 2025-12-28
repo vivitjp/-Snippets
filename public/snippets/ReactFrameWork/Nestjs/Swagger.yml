@@ -1,0 +1,183 @@
+---
+#-------------------------------
+# Swagger
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: DocumentBuilder
+  BODY: |
+    import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+    import { dump } from 'js-yaml';
+    import { writeFileSync } from 'fs';
+
+    const unintegratedSiteOptions = new DocumentBuilder()
+        .setTitle('Documents')
+        .setDescription('Description')
+        .setVersion('1.0')
+        .build();
+
+    //app に関しては上の実際のサンプル参照
+    const document = SwaggerModule.createDocument(app, unintegratedSiteOptions);
+    const yamlDocument = dump(document);
+    writeFileSync('../openapi.yml', yamlDocument, 'utf8');
+
+- ENTRY:
+  EXPLAIN: DTO
+  BODY: |
+    ■ ApiProperty
+    @ApiProperty({
+      example: 404,
+      description: 'ステータスコード',
+    })
+
+    ■ OmitType = TS:Omit<>
+    export class CreateRequestDto extends OmitType(CreateRequest, [
+      'is_dr',
+      'offer_id',
+      'add_date',
+      'add_uri',
+    ] as const){}
+
+    ■ PartialType = TS:Partial<>
+    export class UpdateCarRequest extends PartialType(CreateCarRequest){
+      @ApiProperty({ ... })
+      @IsInt({ ... })                             // ClassValidator
+      readonly car_id: number;
+    }
+
+- ENTRY:
+  EXPLAIN: Controller Class デコレータ
+  BODY: |
+    ■ ApiTags
+    @ApiTags('hint')
+    @Controller('hint')
+    export class HintController { ... }
+
+    ■ ApiOperation
+    export class FaqController {
+      constructor(private readonly faqService: FaqService){}
+
+      @ApiOperation({
+        operationId: 'findAll',
+        summary: 'FAQ',
+      })
+      @Get()
+      async findAll(): Promise<FaqResponse[]> { ... }
+    }
+
+    ■ ApiCookieAuth
+    @Post()
+    @ApiOperation({ ... })
+    @ApiCookieAuth('SESSION_ID')
+    @ApiCreatedResponse({ ... })
+
+- ENTRY:
+  EXPLAIN: Controllerパラメタ・デコレータ
+  BODY: |
+    ■ ApiQuery
+    export class QtyController {
+      constructor(...){}
+      @ApiQuery({
+        name: 'qty_id',
+        description: '量ID',
+        type: String,
+      })
+      @ApiResponse({ ... })
+    }
+
+    ■ ApiHeaders
+    export class LogoutController {
+      constructor(private readonly logoutService: LogoutService){}
+
+      @Delete()
+      @HttpCode(200)
+      @ApiOperation({ ... })
+      @ApiHeaders([
+        {
+          name: 'SESSION_ID',
+          description: 'セッションID',
+          //type: String,(default)
+        },
+      ])
+      @ApiResponse({ ... })
+
+    ■ ApiBody
+    @ApiBody({ type: CreateDrScoutApplyHistoryDto })
+
+- ENTRY:
+  EXPLAIN: Controllerレスポンス・デコレータ
+  BODY: |
+    ■ ApiResponse
+    export class FactoryController {
+      constructor( ...){}
+      @Get(':id')
+      @ApiOperation({ ... })
+      @ApiResponse({ status: 404, description: 'Not Found.' })
+    }
+
+    @ApiResponse({
+      status: 515,                                <--- 指定
+      description: '一時的なネットワークエラー',
+      type: ErrorResponse,
+    })
+
+    ■ 200
+    @ApiOkResponse({
+      description: 'リソースの取得に成功',
+      type: marshalForUserFavoritesJobOfferResponse,
+    })
+
+    ■ 201
+    @ApiCreatedResponse({
+      description: 'リクエスト成功',
+      type: Object,
+    })
+
+    ■ 204
+    @HttpCode(204)                                <---- 指定
+    @ApiNoContentResponse({
+      description: 'リソースの削除に成功',
+      type: UpdateFactoryResponse,
+    })
+
+    ■ 400
+    @ApiBadRequestResponse({
+      description: 'リクエスト本文、パラメータが不正',
+      type: ErrorResponse,
+    })
+
+    ■ 403
+    @ApiForbiddenResponse({
+      description: 'アクセス拒否',
+      type: ErrorResponse,
+    })
+
+    ■ 404
+    @ApiNotFoundResponse({
+      description: 'リソースが存在しない',
+      type: ErrorResponse,
+    })
+
+    ■ 429
+    @ApiTooManyRequestsResponse({
+      description: 'クォータ超過',
+      type: ErrorResponse,
+    })
+
+    ■ 431
+    @ApiPayloadTooLargeResponse({
+      description: 'リクエストが大きい',
+      type: ErrorResponse,
+    })
+
+    ■ 500
+    @ApiInternalServerErrorResponse({
+      description: 'システムエラー',
+      type: ErrorResponse,
+    })
+
+    ■ 504
+    @ApiGatewayTimeoutResponse({
+      description: 'タイムアウト',
+      type: ErrorResponse,
+    })

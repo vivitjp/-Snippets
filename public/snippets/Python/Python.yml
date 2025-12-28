@@ -2,11 +2,11 @@
 #-------------------------------
 # Python
 #-------------------------------
-- KEY: py.環境管理.category
+- ENTRY:
   CATEGORY: |
     環境設定・管理
 
-- KEY: py.install
+- ENTRY:
   EXPLAIN: インストール
   BODY: |
     ■ 本家ダウンロード https://www.python.org/downloads/
@@ -40,7 +40,7 @@
     Rye     パッケージ+仮想環境+Pythonバージョン管理
             - Pythonバージョン管理も含めて、すべてこれ1つで完結できるツール
 
-- KEY: py.version
+- ENTRY:
   EXPLAIN: pythonバージョン
   BODY: |
     py --version
@@ -50,7 +50,7 @@
     Python 3.9   3.9.18   2025年10月  security
     Python 3.8   3.8.18   2024年10月  security
 
-- KEY: py.execute
+- ENTRY:
   EXPLAIN: 実行
   BODY: |
     ■ 実行
@@ -61,13 +61,13 @@
       PS B:\PATH> py FILE.py
     2) または、F5 でデバッグモード
 
-- KEY: py.pkg.pipenv
+- ENTRY:
   EXPLAIN: パッケージ管理
   BODY: |
     ■ 1) 実行
     pip install pipenv
 
-- KEY: py.pkg.pip
+- ENTRY:
   EXPLAIN: パッケージインストール
   BODY: |
     ■ パッケージ管理(pip)のアップグレード
@@ -75,7 +75,7 @@
       > pip install --upgrade/-U pip
       > pip install --force-reinstall --upgrade pip
 
-- KEY: py.pkg.pip.install
+- ENTRY:
   EXPLAIN: パッケージ追加
   BODY: |
     ■ パッケージインストール
@@ -99,7 +99,7 @@
       > pip show <LIBRARY>
       > pipdeptree -p LIBRARY    # 詳細
 
-- KEY: py.pkg.pip.user
+- ENTRY:
   EXPLAIN: パッケージ追加(ユーザ)
   BODY: |
     ■ インストール先の確認
@@ -111,7 +111,7 @@
 # VSCODE
 #-------------------------------
 
-- KEY: py.vscode
+- ENTRY:
   EXPLAIN: VSCode設定
   BODY: |
     ■ formatter
@@ -140,7 +140,7 @@
 # 書式
 #=================================================
 
-- KEY: py.qs.category
+- ENTRY:
   CATEGORY: |
     Kick Start
 
@@ -148,7 +148,7 @@
 # コメント
 #-------------------------------
 
-- KEY: py.comment
+- ENTRY:
   EXPLAIN: コメント
   BODY: |
     # コメント
@@ -168,7 +168,7 @@
     a = ['Jan','Feb',                   # 配列内は改行OK
     'Apr','Oct']
 
-- KEY: py.comment.func
+- ENTRY:
   EXPLAIN: クラス関数既述
   BODY: |
     """A sample module"""
@@ -197,7 +197,7 @@
 # 入力・出力
 #=================================================
 
-- KEY: py.io.category
+- ENTRY:
   CATEGORY: |
     入力・出力
 
@@ -205,7 +205,7 @@
 # 入力・出力
 #-------------------------------
 
-- KEY: py.input
+- ENTRY:
   EXPLAIN: 入力/出力
   BODY: |
     a = input(msg)
@@ -229,7 +229,7 @@
 # フォーマット
 #-------------------------------
 
-- KEY: py.print.format.4types
+- ENTRY:
   EXPLAIN: format種類
   BODY: |
     ■ 1 書式指定 % 値
@@ -244,7 +244,7 @@
     ■ 4 f"{値:書式指定}"
     print(f"{12.345:.1f}")              # 12.3
 
-- KEY: py.print.format1
+- ENTRY:
   EXPLAIN: 出力(型指定)
   BODY: |
     print("%s" % "ABC")                 # ABC
@@ -265,7 +265,7 @@
     msg = "ERROR: %s (%d)" % (errMsg, errCode)
     print(msg)                          # ERROR: Execution (15632)
 
-- KEY: py.print.format1.width
+- ENTRY:
   EXPLAIN: 出力(幅指定)
   BODY: |
     print("|%5s|"   % 'ABC')            # |  ABC|
@@ -276,7 +276,7 @@
     print("|%5.2f|" % 1.23)             # | 1.23|
     print("|%05d|"  % 123)              # |00123|
 
-- KEY: py.print.format23
+- ENTRY:
   EXPLAIN: format関数
   BODY: |
     ■ 引数
@@ -308,7 +308,7 @@
     tpl = (3,5)
     print('{0[0]},{0[1]}'.format(tpl))  # 3,5
 
-- KEY: py.print.format23.number
+- ENTRY:
   EXPLAIN: format(数)
   BODY: |
     decimal = 106
@@ -320,14 +320,14 @@
     '{0}=Oct:{0:o}'.format(decimal)     # 106=Oct:152
     '{0}=Hex:{0:X}'.format(decimal)     # 106=Hex:6A
 
-- KEY: py.print.format23.date
+- ENTRY:
   EXPLAIN: format(日付)
   BODY: |
     import datetime
     today = datetime.date.today()
     format(today,'%Y/%m/%d')            # Date: 2019/02/04
 
-- KEY: py.print.format4.string
+- ENTRY:
   EXPLAIN: f(文字列)
   BODY: |
     a = "Hello"
@@ -340,7 +340,7 @@
     print(f"{a:.>10}")                  # .....Hello
     print(f"{'':-<20}")                 # --------------------
 
-- KEY: py.print.pprint
+- ENTRY:
   EXPLAIN: pprint整形
   BODY: |
     dict= [
@@ -376,7 +376,7 @@
     [{'Age': 18, 'Name': 'John Smith', 'GPA': [70, 30]},
     {'Age': 19, 'Name': 'Jeff Brook', 'GPA': [40, 60]}]
 
-- KEY: py.print.str
+- ENTRY:
   EXPLAIN: str(改行なし)
   BODY: |
     dict= [
@@ -387,7 +387,7 @@
     str(dict) #文字列(改行なし)
     [{'Name': 'John Smith', 'Age': 18, 'GPA': [70, 30]}, {'Name': 'Jeff Brook', 'Age': 19, 'GPA': [40, 60]}]
 
-- KEY: py.print.pformat
+- ENTRY:
   EXPLAIN: pformat(適宜改行)
   BODY: |
     dict= [
@@ -411,7 +411,7 @@
 # 演算子
 #=================================================
 
-- KEY: py.演算子.category
+- ENTRY:
   CATEGORY: |
     演算子
 
@@ -419,7 +419,7 @@
 # 演算子
 #-------------------------------
 
-- KEY: py.operator.math
+- ENTRY:
   EXPLAIN: 演算子(数)
   BODY: |
     a = 10
@@ -441,7 +441,7 @@
     a << b    operator.lshift(a,b)      # 左シフト: 40
     a >> b    operator.rshift(a,b)      # 右シフト: 2
 
-- KEY: py.operator.math.i
+- ENTRY:
   EXPLAIN: 演算子(数i)
   BODY: |
     a = 10
@@ -459,7 +459,7 @@
     operator.ilshift(a,b)               # a<<b: 40
     operator.irshift(a,b)               # a>>b: 2
 
-- KEY: py.operator.compare
+- ENTRY:
   EXPLAIN: 演算子(比較)
   BODY: |
     a = 5
@@ -491,7 +491,7 @@
 # 変数
 #=================================================
 
-- KEY: py.変数.category
+- ENTRY:
   CATEGORY: |
     変数
 
@@ -499,7 +499,7 @@
 # 変数
 #-------------------------------
 
-- KEY: py.variable
+- ENTRY:
   EXPLAIN: 変数
   BODY: |
     value1     = 123                    # 変数代入
@@ -531,7 +531,7 @@
     a, b = b, a                         # 分割代入
     print(a, b)                         # a=3, b=5
 
-- KEY: py.variable.global
+- ENTRY:
   EXPLAIN: グローバル変数
   BODY: |
     a1 = "ABC"
@@ -546,14 +546,14 @@
     print(a1)                           # ---
     print(b1)                           # XYZ
 
-- KEY: py.variable.scope
+- ENTRY:
   EXPLAIN: 変数スコープ
   BODY: |
     dir()                               # ローカルスコープ変数名などのリスト
     globals()['val1']                   # グローバル値(引数:変数名) -> 値取得
     locals()                            # ローカル値(引数なし)
 
-- KEY: py.memory.address
+- ENTRY:
   EXPLAIN: メモリー値
   BODY: |
     o = bytes(123)
@@ -564,14 +564,14 @@
 # 型
 #=================================================
 
-- KEY: py.型.category
+- ENTRY:
   CATEGORY: |
     型
 
 #-------------------------------
 # 型(v3.9以上)
 #-------------------------------
-- KEY: py.type
+- ENTRY:
   EXPLAIN: 変数型(v3.9以上)
   BODY: |
     bool      真偽値                     True/False
@@ -603,7 +603,7 @@
     # from types import NoneType
     var9 = None                         print(type(var9) is NoneType)
 
-- KEY: py.type.constant
+- ENTRY:
   EXPLAIN: 組み込み定数
   BODY: |
     False                               # bool 型の偽値
@@ -616,7 +616,7 @@
 #-------------------------------
 # 型定義全般
 #-------------------------------
-- KEY: py.type.型定義
+- ENTRY:
   EXPLAIN: 変数型一覧
   BODY: |
     ■ 型定義(Primitives)
@@ -665,7 +665,7 @@
 #-------------------------------
 # 関数宣言の型
 #-------------------------------
-- KEY: py.type.関数宣言の型
+- ENTRY:
   EXPLAIN: 関数宣言の型
   BODY: |
     def FUNCTION_NAME(param:TYPE): -> RETURN_TYPE
@@ -760,7 +760,7 @@
 # 構文
 #=================================================
 
-- KEY: py.構文.category
+- ENTRY:
   CATEGORY: |
     構文
 
@@ -768,7 +768,7 @@
 # 構文
 #-------------------------------
 
-- KEY: py.syntax.if
+- ENTRY:
   EXPLAIN: 制御構文(if)
   BODY: |
     n = 3
@@ -787,7 +787,7 @@
 
     x = "OK" if n == 1 else "NO"
 
-- KEY: py.syntax.ifElseLine
+- ENTRY:
   EXPLAIN: 三項分岐
   BODY: |
     ■ 一般変数
@@ -823,7 +823,7 @@
     name = None
     res = name or 'Stranger'
 
-- KEY: py.syntax.while
+- ENTRY:
   EXPLAIN: 制御構文(while)
   BODY: |
     n = 1
@@ -833,7 +833,7 @@
       if n == 4: continue               # 処理中断してTopにジャンプ
       print(n)                          # 2 3 [4:ジャンプ] 5 6 7 8[break]
 
-- KEY: py.syntax.for
+- ENTRY:
   EXPLAIN: 制御構文(for)
   BODY: |
     arr = [1,2,3]
@@ -871,7 +871,7 @@
     for f in open('a.txt'):             # File読み取り
       print(f)
 
-- KEY: py.syntax.match
+- ENTRY:
   EXPLAIN: 制御構文(=switch)
   BODY: |
     ■ v3.10 以前
@@ -945,7 +945,7 @@
 # 例外・デバグ
 #-------------------------------
 
-- KEY: py.exception
+- ENTRY:
   EXPLAIN: 例外
   BODY: |
     import random
@@ -971,7 +971,7 @@
     finally:
       print("Finally Msg")
 
-- KEY: py.exception.assert
+- ENTRY:
   EXPLAIN: 例外(assert)
   BODY: |
     try:
@@ -985,7 +985,7 @@
     except AssertionError as e:
       print("AssertionError: ", e)
 
-- KEY: py.debug
+- ENTRY:
   EXPLAIN: デバグ
   BODY: |
     try:
@@ -1005,11 +1005,11 @@
 # ブーリアン・数字型
 #=================================================
 
-- KEY: py.ブーリアン・数字型.category
+- ENTRY:
   CATEGORY: |
     メソッド：数字型・ブーリアン型
 
-- KEY: py.type.byte
+- ENTRY:
   EXPLAIN: 型(バイト)
   BODY: |
     bytes(2)             = b'\x00\x00'            # *immutable(変更不可)
@@ -1017,7 +1017,7 @@
     bytearray(2)         = bytearray(b'\x00\x00') # mutable(変更可)
     bytearray([50,99])   = b'2c'                  # ASCIIコード値
 
-- KEY: py.type.numbers
+- ENTRY:
   EXPLAIN: 型(数)
   BODY: |
     int(0)                              # 整数: 0
@@ -1030,7 +1030,7 @@
     oct(0)                              # Octal: '0o0'
     hex(0)                              # Hex: '0x0'
 
-- KEY: py.type.numbers.method
+- ENTRY:
   EXPLAIN: 型(数)メソッド
   BODY: |
     abs(-3.4)                           # 絶対値: 3.4
@@ -1043,7 +1043,7 @@
     round(-1.49)                        # 1(偶数丸め)
     round(-1.5)                         # 1(偶数丸め)
 
-- KEY: py.type.boolean
+- ENTRY:
   EXPLAIN: 型(真偽値)
   BODY: |
     bool(1)               = True
@@ -1053,7 +1053,7 @@
 # 文字列型
 #=================================================
 
-- KEY: py.文字列型.category
+- ENTRY:
   CATEGORY: |
     メソッド：文字列型
 
@@ -1061,7 +1061,7 @@
 # 型：Char, String
 #-------------------------------
 
-- KEY: py.char.escape
+- ENTRY:
   EXPLAIN: エスケープ文字
   BODY: |
     \改行                               # BackSlashと\n無視
@@ -1081,7 +1081,7 @@
     \U....xxxx                          # Unicode
     \N{name}                            # UnicodeDBChar
 
-- KEY: py.char.code
+- ENTRY:
   EXPLAIN: 文字コード
   BODY: |
     utf-8                               # Unicodeの文字符号化
@@ -1095,7 +1095,7 @@
     str = str.encode('sjis')            # b'\x82\xa0'
     str = str.decode('sjis')            # あ
 
-- KEY: py.type.char
+- ENTRY:
   EXPLAIN: 文字列型
   BODY: |
     chr(65)                             # 文字コードから文字: 'A'
@@ -1104,14 +1104,14 @@
     ascii(1)                            # '1'
     ascii('ア')                         # アスキーコード: '\\u30a2'
 
-- KEY: py.type.string.len
+- ENTRY:
   EXPLAIN: 文字列長さ
   BODY: |
     txt = 'ABC'                         # 'ABC'
     len(txt)                            # 文字長さ: 3
     [NG] txt.len()                      # Python には存在せず
 
-- KEY: py.type.string.join.split
+- ENTRY:
   EXPLAIN: 文字列結合・分離
   BODY: |
     ite = ['A','B','C']
@@ -1119,7 +1119,7 @@
     txt = 'A B C'
     txt.split(' ')                      # ['A','B','C']
 
-- KEY: py.type.string.join.strip
+- ENTRY:
   EXPLAIN: 文字列トリミング
   BODY: |
     txt = '  H  '
@@ -1127,7 +1127,7 @@
     txt.rstrip()                        # '  H'
     txt.lstrip()                        # 'H  '
 
-- KEY: py.type.string.fill
+- ENTRY:
   EXPLAIN: 文字列埋め
   BODY: |
     txt = 'Hi'
@@ -1139,7 +1139,7 @@
     txt.rjust(5,'*')                    # '***Hi'
     txt.zfill(5)                        # '000Hi'
 
-- KEY: py.type.string.index
+- ENTRY:
   EXPLAIN: 文字列Index
   BODY: |
     txt = 'Hello'
@@ -1151,7 +1151,7 @@
     txt[-3]                             # 'l'
     txt[-3:]                            # 'llo'
 
-- KEY: py.type.string.find
+- ENTRY:
   EXPLAIN: 文字列検索
   BODY: |
     txt.startswith('A')                 # True
@@ -1179,7 +1179,7 @@
     txt.count('ab', 2, 5)               # (KEY,Start,end)
     txt.lower().count('ab')             # CaseInsトリック
 
-- KEY: py.type.string.find.re
+- ENTRY:
   EXPLAIN: 文字列正規検索
   BODY: |
     import re                           # ライブラリのimport
@@ -1208,7 +1208,7 @@
     print(x)                            # [(10, 13), (29, 32)]
     print(len(x))                       # 2
 
-- KEY: py.type.string.replace
+- ENTRY:
   EXPLAIN: 文字列置換
   BODY: |
     txt = 'ab cd ab ob cd'
@@ -1230,7 +1230,7 @@
     res = re.sub('ab|cd', 'XX', txt)    # XX XX ef
     res = re.sub('ab|cd', 'XX', txt, 1) # XX cd ef *回数指定
 
-- KEY: py.type.string.encode
+- ENTRY:
   EXPLAIN: 文字コード変換
   BODY: |
     var = 'あ'
@@ -1249,7 +1249,7 @@
     res = var.encode('iso2022_jp')      # b'\x1b$B$"\x1b(B'
     org = res.decode('iso2022_jp')      # 'あ'
 
-- KEY: py.type.string.codeDetect
+- ENTRY:
   EXPLAIN: 文字コード検出
   BODY: |
     file = 'sample.txt'
@@ -1263,11 +1263,11 @@
 # 構造体
 #=================================================
 
-- KEY: py.構造体.category
+- ENTRY:
   CATEGORY: |
     構造体(List, Tuple, Set, Dict)
 
-- KEY: py.struct.4types
+- ENTRY:
   EXPLAIN: 4構造体
   BODY: |
     myList:  list  = []   # myList = [1,2,"A","B"]
@@ -1294,11 +1294,11 @@
 #-------------------------------
 # 構造体：List 配列
 #-------------------------------
-- KEY: py.struct.list.category
+- ENTRY:
   CATEGORY: |
     List型
 
-- KEY: py.struct.list.1.new
+- ENTRY:
   EXPLAIN: 生成/取得
   BODY: |
     ■ 生成
@@ -1328,7 +1328,7 @@
     a[-5:-1]                            # 後n～後m: [3, 4, 5, 6]
     a[-1:-5]                            # 後n～後m: []
 
-- KEY: py.struct.list.3.set
+- ENTRY:
   EXPLAIN: 代入/追加
   BODY: |
     ■ 代入
@@ -1365,7 +1365,7 @@
     i = ["A", "B"]
     i += {"X", "Y"}                     # Set ['A', 'B', 'X', 'Y']
 
-- KEY: py.struct.list.4.replace
+- ENTRY:
   EXPLAIN: 置換/挿入/削除
   BODY: |
     ■ 置換/挿入
@@ -1397,7 +1397,7 @@
     c = [1, 2, 3, 1]
     c.remove(1)                         # [2, 3, 1]
 
-- KEY: py.struct.list.ASMD
+- ENTRY:
   EXPLAIN: 配列同士の四則演算
   BODY: |
     a: list = [1, 2]
@@ -1427,7 +1427,7 @@
     result_mul = a * b                  # [10 40 90]
     result_div = a / b                  # [10. 10. 10. ]
 
-- KEY: py.struct.list.commonMethod
+- ENTRY:
   EXPLAIN: join/len/count/in/分割代入
   BODY: |
     var1 = ['A','B','C']
@@ -1451,7 +1451,7 @@
     print(x, y, z)                      # "A", "B", "C"
     [NG] x, y = var1                    # Error 変数不足
 
-- KEY: py.struct.list.copy
+- ENTRY:
   EXPLAIN: コピー
   BODY: |
     import copy
@@ -1486,7 +1486,7 @@
     print(a)                            # [9, 2, [9, 2]]
     print(b)                            # [1, 2, [1, 2]]
 
-- KEY: py.struct.list.valRef
+- ENTRY:
   EXPLAIN: 値渡し/参照渡し
   BODY: |
     ■ list, dict, set は参照渡し
@@ -1505,7 +1505,7 @@
     x = 7
     y = funcVal(x)                      # x:7, y:9
 
-- KEY: py.struct.list.loop
+- ENTRY:
   EXPLAIN: ループ For in/Iterator
   BODY: |
     ■ int
@@ -1524,7 +1524,7 @@
     next(it)                            # 2
     next(it)                            # Error
 
-- KEY: py.struct.list.enumerate
+- ENTRY:
   EXPLAIN: 要素のTuple変換(for index,n in Loop)
   BODY: |
     arr = ["A", "B", "C"]
@@ -1547,7 +1547,7 @@
     a: int = reduce(lambda k, j: k + j, iter(arr), 0)
     b: int = sum(value for index, value in enumerate(arr))
 
-- KEY: py.struct.list.[]
+- ENTRY:
   EXPLAIN: 内包表記[for in ...]
   BODY: |
     ■ 内包表記の戻り値は Iterator
@@ -1562,7 +1562,7 @@
     [a[i] * b[i] for i in range(len(a))]    # [4,10,18] *非推奨
     [a[i] * b[i] for i, _ in enumerate(a)]  # [4,10,18] *推奨
 
-- KEY: py.struct.list.all
+- ENTRY:
   EXPLAIN: all/any
   BODY: |
     ■ all
@@ -1578,7 +1578,7 @@
     any([])                             # False
     any([None])                         # False
 
-- KEY: py.struct.list.max
+- ENTRY:
   EXPLAIN: max/min/sum
   BODY: |
     ■ max
@@ -1601,7 +1601,7 @@
     [NG] sum([1, 2, "A"])               # Error
     [NG] sum(["A", "B"])                # Error
 
-- KEY: py.struct.list.filter
+- ENTRY:
   EXPLAIN: filter/map/reduce/zip(合体)
   BODY: |
     ■ filter
@@ -1634,7 +1634,7 @@
 
     # [{'name': 'Kevin', 'age': 23}, {'name': 'John', 'age': 45}]
 
-- KEY: py.struct.list.sort
+- ENTRY:
   EXPLAIN: ソート
   BODY: |
     ■ Mutable                           # 引数自体が変化
@@ -1659,11 +1659,11 @@
     c = ["F", "A", "1", "2", "10"]
     list(natsorted(c))                  # ['1','2','10','A','F']
 
-- KEY: py.struct.tuple.category
+- ENTRY:
   CATEGORY: |
     Tuple型
 
-- KEY: py.struct.tuple
+- ENTRY:
   EXPLAIN: タプル
   BODY: |
     a = (1, 2, 3)
@@ -1677,11 +1677,11 @@
     x = (1,)
     print(type(x))                      # Class 'tuple'
 
-- KEY: py.struct.dict.category
+- ENTRY:
   CATEGORY: |
     Dict型
 
-- KEY: py.struct.dict
+- ENTRY:
   EXPLAIN: 辞書
   BODY: |
     ■ 生成
@@ -1719,7 +1719,7 @@
     ■ 全要素削除
     d.clear()
 
-- KEY: py.struct.dict.KV
+- ENTRY:
   EXPLAIN: 辞書(KVメソッド)
   BODY: |
     d = dict({"A": 12, "B": 8})
@@ -1741,11 +1741,11 @@
     # KV 交換(Keyがstr以外で型error)
     d = {v: k for k, v in d.items()}
 
-- KEY: py.struct.set.category
+- ENTRY:
   CATEGORY: |
     Set型
 
-- KEY: py.struct.set
+- ENTRY:
   EXPLAIN: セット
   BODY: |
     ■ 生成
@@ -1781,7 +1781,7 @@
     b = a                               # 参照コピー
     c = a.copy()                        # 浅いコピー(Shallow Copy)
 
-- KEY: py.struct.set.subset
+- ENTRY:
   EXPLAIN: セット(サブセット)
   BODY: |
     a = {1, 2, 3, 4, 5} b = {2, 3, 4}
@@ -1798,7 +1798,7 @@
     a >= b                              # True: a は b のスーパーセット
     a > b                               # True: 真上位集合(set >= other and set != other)
 
-- KEY: py.struct.set.DUIX
+- ENTRY:
   EXPLAIN: セット(操作)
   BODY: |
     a = {1, 2, 3}
@@ -1823,11 +1823,11 @@
     x = a ^ b                           # XOR: {1, 2, 4}
     x = a.symmetric_difference(b)
 
-- KEY: py.struct.range.category
+- ENTRY:
   CATEGORY: |
     Range型
 
-- KEY: py.struct.range
+- ENTRY:
   EXPLAIN: 配列生成(range)
   BODY: |
     ■ 戻り値は Iterator  *配列ではない
@@ -1845,7 +1845,7 @@
 # オブジェクト型
 #=================================================
 
-- KEY: py.object.category
+- ENTRY:
   CATEGORY: |
     オブジェクト型
 
@@ -1853,7 +1853,7 @@
 # 型：Object
 #-------------------------------
 
-- KEY: py.type.object.method
+- ENTRY:
   EXPLAIN: 関数
   BODY: |
     o = object()                        # 生成: < object object at 0x7fe2e5ecff20 >
@@ -1867,11 +1867,11 @@
 # Generic
 #=================================================
 
-- KEY: py.Generic.category
+- ENTRY:
   CATEGORY: |
     Generic
 
-- KEY: py.Generic.TypeVar
+- ENTRY:
   EXPLAIN: ジェネリック(TypeVar)
   BODY: |
     ■ ジェネリック型変数の定義
@@ -1899,7 +1899,7 @@
     keys = get_keys_as_list(data)       # T は str、V は int と推論される
     print(keys)                         # ['apple', 'banana']
 
-- KEY: py.Generic.TypedDict
+- ENTRY:
   EXPLAIN: ジェネリック(TypedDict)
   BODY: |
     ■ 型制限
@@ -1953,7 +1953,7 @@
 
     name = get_company_name(tech_corp)  # "Tech Corp"
 
-- KEY: py.Generic.TypedDict
+- ENTRY:
   EXPLAIN: 複数の「似た構造」を扱う場合
   BODY: |
     Company 以外に Employee という似た構造の型があり、両方に対して使えるジェネリック関数を定義
@@ -1981,7 +1981,7 @@
 # 関数
 #=================================================
 
-- KEY: py.関数.category
+- ENTRY:
   CATEGORY: |
     関数
 
@@ -1989,7 +1989,7 @@
 # 関数
 #-------------------------------
 
-- KEY: py.func.param
+- ENTRY:
   EXPLAIN: 関数(引数)
   BODY: |
     ■ 引数
@@ -2067,7 +2067,7 @@
     func(1, 2, arg1=1, abc=3)           # (1, 2) {'arg1': 1, 'abc': 3}
     [NG] func(arg1=1, 2, abc=3, 4)      # Error
 
-- KEY: py.func.factory
+- ENTRY:
   EXPLAIN: ファクトリ関数
   BODY: |
     from typing import Callable
@@ -2079,7 +2079,7 @@
     factAdd = factory()
     print(factAdd(1))                   # 2
 
-- KEY: py.func.factory.curry
+- ENTRY:
   EXPLAIN: カリー関数
   BODY: |
     from typing import Callable
@@ -2094,7 +2094,7 @@
 
     print(curry(3)(2))                  # 5
 
-- KEY: py.func.factory.closure
+- ENTRY:
   EXPLAIN: クロージャ関数
   BODY: |
     from typing import Callable
@@ -2111,7 +2111,7 @@
     print(factAdd(2), sum)              # 3 5
     print(factAdd(1), sum)              # 2 6
 
-- KEY: py.func.lambda
+- ENTRY:
   EXPLAIN: ラムダ関数
   BODY: |
     ■ 一般関数
@@ -2143,7 +2143,7 @@
 # 他
 #=================================================
 
-- KEY: py.他.category
+- ENTRY:
   CATEGORY: |
     他
 
@@ -2151,7 +2151,7 @@
 # 他
 #-------------------------------
 
-- KEY: py.eval.exec.compile
+- ENTRY:
   EXPLAIN: eval/exec/compile
   BODY: |
     ■ 数式の文字列化
@@ -2177,7 +2177,7 @@
 # Class
 #=================================================
 
-- KEY: py.Class.category
+- ENTRY:
   CATEGORY: |
     Class
 
@@ -2185,7 +2185,7 @@
 # Class
 #-------------------------------
 
-- KEY: py.class.sample
+- ENTRY:
   EXPLAIN: サンプル
   BODY: |
     import abc  # 抽象基底クラスのためにabcモジュールをインポート
@@ -2278,7 +2278,7 @@
         animal.speak() # 各オブジェクトのspeakメソッドが適切に実行される
         print(animal)  # __str__ メソッドが呼ばれる
 
-- KEY: py.class.singleton
+- ENTRY:
   EXPLAIN: シングルトン
   BODY: |
     class SingletonConfig:
@@ -2357,7 +2357,7 @@
     ■ 5. 全て表示してみる
     config2.display_all()
 
-- KEY: py.class.dunder
+- ENTRY:
   EXPLAIN: ダンダーメソッド
   BODY: |
     class Person:
@@ -2390,7 +2390,7 @@
     print(man == pan)                        # True
     print(man.__dict__)                      # {'name': 'John', 'age': 10}
 
-- KEY: py.class.dunder.number
+- ENTRY:
   EXPLAIN: ダンダーメソッド(数)
   BODY: |
     class XMath:
@@ -2416,7 +2416,7 @@
     print(xmath1 / xmath2)              # 0.5
     print(xmath1 // xmath2)             # 0
 
-- KEY: py.class.inheritance
+- ENTRY:
   EXPLAIN: クラス継承
   BODY: |
     class School:
@@ -2436,7 +2436,7 @@
 
     Karen = Student("東大", "Karen")    # School:東大 name:Karen
 
-- KEY: py.class.meta
+- ENTRY:
   EXPLAIN: メタクラス
   BODY: |
     # メタクラスはtypeを継承する
@@ -2457,7 +2457,7 @@
     class Smith(People):
         age = 18           # Raise Error
 
-- KEY: py.class.lib.dataclasses
+- ENTRY:
   EXPLAIN: ダンダーメソッド自動生成
   BODY: |
     from dataclasses import dataclass
@@ -2477,7 +2477,7 @@
 # Class Decorator
 #-------------------------------
 
-- KEY: py.class.decorator
+- ENTRY:
   EXPLAIN: デコレータ
   BODY: |
     def switch_type(func):

@@ -58,7 +58,7 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
       }
 
       //配列化
-      const array = Object.entries(result ?? {})
+      const array = Object.values(result ?? {})
       //Highlight
       const codeKeyTypes = selectedMenu?.codeKeyTypes
       //Highlightして JSX.Element[] に変換
@@ -68,7 +68,8 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
 
       let debugIndex = 0
       try {
-        const formatted = array.map(([title, snippetsObject], index) => {
+
+        const formatted = array.map((snippetsObject, index) => {
           if (snippetsObject.category) {
             return (
               <CategoryWrapper key={index}>
@@ -119,7 +120,7 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
                 <Details className={"detailClass"}>
                   {/* 🔴タイトル(title) */}
                   <SummaryWrapper>
-                    <DivTitle>■ {title}</DivTitle>
+                    <DivTitle>■ {snippetsObject.explain}</DivTitle>
                   </SummaryWrapper>
 
                   {/* 🔴[OPTIONS.COLS] highlightedBody(options) */}
@@ -173,7 +174,7 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
                                     key={index}
                                     width={
                                       snippetsObject?.table?.options?.width?.[
-                                        index
+                                      index
                                       ] || "auto"
                                     }
                                   >

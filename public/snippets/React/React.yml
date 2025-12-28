@@ -1,63 +1,403 @@
 ---
 #-------------------------------
-# React Snippets
-#-------------------------------
-
-#-------------------------------
 # Basic Components
 #-------------------------------
-- KEY: qw.FC.title
-  CATEGORY: Props
+- ENTRY:
+  CATEGORY: コンポーネント
 
-- KEY: qw.FC.noProps
-  EXPLAIN: コンポーネント
+- ENTRY:
+  EXPLAIN: 一般
   BODY: |
-    import React, { useState } from "react"
+    ■ 関数コンポーネント (引数で型指定)
 
-    export const $TM_FILENAME_BASE = () => {
-      const [xxxx, setXxxx] = useState<string>("")
-
-      return <div>{xxxx}</div>
+    type Props = { 
+      title: string
     }
 
-- KEY: qw.FC.props
-  EXPLAIN: コンポーネント(Props付)
-  BODY: |
-    import React, { FC, useState } from "react"
-
-    type $TM_FILENAME_BASE = {
-      xxxx: string
-      yyyy: number
+    function Title({ title }: Props) {
+      return <h1>{title}</h1>
     }
 
-    export const $TM_FILENAME_BASE:FC<$TM_FILENAME_BASE> = ({ xxxx, yyyy }: Props) => {
-      const [xxxx, setXxxx] = useState<string>("")
+    ■ React.FC (React.FunctionComponent)
 
-      return <div>{xxxx}</div>
+    type Props = { 
+      title: string
     }
 
-- KEY: qw.type.ComponentProps
-  EXPLAIN: コンポーネントの基本Props型
+    const TitleFC: React.FC<Props> = ({ title }) => (
+      <h1>{title}</h1>
+    )
+
+- ENTRY:
+  EXPLAIN: children
   BODY: |
-    type Props = {}
-     & React.ComponentProps<"input">
-     & React.ComponentPropsWithRef<"input">
-     & React.ComponentPropsWithoutRef<"input">
+    ■ React.PropsWithChildren
+
+    ・PropsWithChildren ユーティリティ型を使用して children を含む Props 型を定義
+
+    type Props = { 
+      title: string
+      // children: React.ReactNode  // 宣言不要
+    }
+
+    const Labeled: React.FC<React.PropsWithChildren<Props>> = ({ title, children }) => (
+      <div>
+        <h1>{title}</h1>
+        {children}
+      </div>
+    )
+
+    ※  const TitleFC: React.FC<Props> = ({ title, children }) => () // はエラー
+
+    ■ children への引数
+
+    type Props = {
+      title: string;
+      children: (value: string) => React.ReactNode // 明示的に型を定義
+    }
+
+    const LabeledWithArg: React.FC<Props> = ({ title, children }) => (
+      <div>
+        <h1>{title}</h1>
+        {children("子要素の値")}
+      </div>
+    )
+
+- ENTRY:
+  EXPLAIN: HTML要素
+  BODY: |
+    ■ React.ComponentProps
+
+    type InputProps = React.ComponentProps<'input'>  // HTML要素のProps型取得
+
+    const TextInput = (props: InputProps) => {
+      return <input {...props} />
+    }
+
+    ■ React.ComponentPropsWithRef
+
+    type InputProps = React.ComponentPropsWithRef<'input'>
+
+    const TextInput = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => (
+      <input ref={ref} {...props} />
+    ))
+
+    TextInput.displayName = 'TextInput'
+
+    ■ React.forwardRef
+
+    const MyBtn = React.forwardRef<
+      HTMLButtonElement,
+      React.ComponentPropsWithRef<'button'>
+    >(
+      (props, ref) => <button ref={ref} {...props} />
+    )
+
+    MyBtn.displayName = 'MyBtn'
+
+- ENTRY:
+  EXPLAIN: ジェネリック
+  BODY: |
+    ■ ジェネリックコンポーネント
+
+    type Item<T> = { value: T }
+
+    const ItemView = <T,>({ item }: { item: Item<T> }) => (
+      <div>{String(item.value)}</div>
+    )
+
+    ■ ポリモーフィック（as プロパティ）コンポーネント & React.ElementType
+
+    ・汎用的なコンポーネントを作成、異なるHTML要素や他のコンポーネントとしてレンダリング可能にする
+
+    type PolymorphicProps<C extends React.ElementType, P> =
+      P & { as?: C } & Omit<React.ComponentPropsWithRef<C>, keyof P | 'as'>
+
+    const Box = <C extends React.ElementType = 'div'>(props: PolymorphicProps<C, { variant?: string }>) => {
+      const { as: Component = 'div', variant, ...rest } = props as any
+      return <Component {...rest} />
+    }
+
+    ・使用例
+
+    <Box variant="primary" />                  // divとしてレンダリング
+    <Box as="section" variant="secondary" />   // sectionとしてレンダリング
+    <Box as={MyBtn} onClick={() => {}} />      // MyBtnコンポーネントとしてレンダリング
+
+- ENTRY:
+  EXPLAIN: 識別共用体
+  BODY: |
+    ■ 識別共用体（Discriminated Union）で安全に切り替える
+
+    type AnchorProps = { as: 'a'; href: string }
+    type ButtonProps = { as?: 'button'; onClick?: () => void }
+    type LinkOrButton = (AnchorProps | ButtonProps) & { children?: React.ReactNode }
+
+    const LinkOrButtonComp = (props: LinkOrButton) =>
+      props.as === 'a'
+        ? <a href={props.href}>{props.children}</a>
+        : <button onClick={props.onClick}>{props.children}</button>
+
+    <LinkOrButtonComp as="a" href="https://example.com">リンク</LinkOrButtonComp>
+    <LinkOrButtonComp onClick={() => alert('Clicked!')}>ボタン</LinkOrButtonComp>
+
+- ENTRY:
+  EXPLAIN: 高階コンポーネント
+  BODY: |
+    ■ 高階コンポーネント (Higher-Order Component, HOC) & React.ComponentType
+
+    function withExtra<P>(Comp: React.ComponentType<P>) {
+      return (props: P & { extra?: string }) => <Comp {...props} />
+    }
+
+    const BasicComp: React.FC<{ name: string }> = ({ name }) => <div>{name}</div>
+
+    const EnhancedComp = withExtra(BasicComp)
+
+    <EnhancedComp name="Test" extra="追加情報" />
+
+- ENTRY:
+  EXPLAIN: レンダープロップ
+  BODY: |
+    ■ レンダープロップ（Render Prop）型
+
+    type RenderProps = { children: (open: boolean) => JSX.Element }
+
+    const Toggler = ({ children }: RenderProps) => {
+      const [open, setOpen] = React.useState(false)
+      return <div onClick={() => setOpen(v => !v)}>{children(open)}</div>
+    }
+
+    <Toggler>
+      {(isOpen) => (
+        <div>{isOpen ? '開いています' : '閉じています'}</div>
+      )}
+    </Toggler>
+
+- ENTRY:
+  CATEGORY: |
+    Reactの型: 要素ノード
+
+- ENTRY:
+  EXPLAIN: React.ReactNode
+  BODY: |
+    ■ 用途
+
+    ・Reactコンポーネントの子要素の型を表す
+    ・文字列、数値、React要素、配列、null、undefinedなどを含む
+
+    ■ 型定義
+
+    type ReactNode =
+      | ReactElement
+      | string
+      | number
+      | boolean
+      | null
+      | undefined
+      | ReactNodeArray
+      | ReactPortal
+
+    ■ 使用例
+
+    const MyComponent: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+      <div>{children}</div>
+    )
+
+- ENTRY:
+  EXPLAIN: React.ReactElement
+  BODY: |
+    ■ 用途
+
+    ・JSXから生成される React 要素の型。コンポーネントの戻り値として使われる。
+
+    ■ 概念的な定義
+
+    type ReactElement<P = any, T extends string | JSXElementConstructor<any> = string | JSXElementConstructor<any>> = {
+      type: T
+      props: P
+      key: React.Key | null
+    }
+
+    ■ 使用例
+
+    const el: React.ReactElement = <div>Hello</div>
+
+- ENTRY:
+  CATEGORY: |
+    Reactの型: ref 周り
+
+- ENTRY:
+  EXPLAIN: React.RefObject
+  BODY: |
+    ■ 用途
+
+    ・`useRef` などで返される不変の参照オブジェクトの型。`.current` に要素や値を保持する。
+
+    ■ 型
+
+    interface RefObject<T> {
+      readonly current: T | null
+    }
+
+    ■ 使用例
+
+    const ref = useRef<HTMLInputElement | null>(null)
+    ref.current?.focus()
+    React.RefObject<T>
+
+- ENTRY:
+  EXPLAIN: React.MutableRefObject
+  BODY: |
+    ■ 用途
+
+    ・`.current` を自由に更新できる可変参照オブジェクトの型。`useRef(initial)` の戻り値の典型型。
+
+    ■ 型
+
+    interface MutableRefObject<T> {
+      current: T
+    }
+
+    ■ 使用例
+
+    const countRef = useRef<number>(0)
+    countRef.current += 1
+    React.MutableRefObject<T>
+
+- ENTRY:
+  EXPLAIN: React.Ref
+  BODY: |
+    ■ 用途
+
+    ・コンポーネントや要素の参照を表す汎用型。コールバック ref や RefObject を受け取れるユニオン型。
+
+    ■ 型の例
+
+    type Ref<T> = RefCallback<T> | RefObject<T> | null
+
+    ■ 使用例
+
+    const forwardRefComp = React.forwardRef<HTMLButtonElement, Props>((props, ref) => (
+      <button ref={ref} />
+    ))
+    React.Ref<T>
+
+- ENTRY:
+  EXPLAIN: React.RefAttributes
+  BODY: |
+    ■ 用途
+
+    ・ジェネリックコンポーネントに `ref` を型付けして渡すための補助型。`forwardRef` と組み合わせて使う。
+
+    ■ 使用例
+
+    type Props = { value: string } & React.RefAttributes<HTMLDivElement>
+    React.RefAttributes
+
+- ENTRY:
+  EXPLAIN: React.PropsWithRef/PropsWithoutRef
+  BODY: |
+    ■ 用途
+
+    ・`PropsWithRef` は ref を含めた Props のユーティリティ、`PropsWithoutRef` は ref を除外した Props 型を作る。
+
+    ■ 使用例
+
+    type InputProps = React.ComponentPropsWithRef<'input'>
+    type CleanProps = React.PropsWithoutRef<InputProps>
+
+- ENTRY:
+  CATEGORY: |
+    Reactの型: HTML/DOM/SVG属性型
+
+- ENTRY:
+  EXPLAIN: HTMLAttributes
+  BODY: |
+    ■ 用途
+
+    ・ほとんどの HTML 要素に共通するプロパティ（`className` / `style` / `onClick` 等）をまとめた型。
+
+    ■ 使用例
+
+    type DivProps = React.HTMLAttributes<HTMLDivElement>
+    const Comp = (props: DivProps) => <div {...props} />
+
+- ENTRY:
+  EXPLAIN: DOMAttributes
+  BODY: |
+    ■ 用途
+
+    ・DOM イベントハンドラ（`onClick` / `onChange` / `onMouseEnter` 等）の型定義を含む基底型。
+
+    ■ 使用例
+
+    type Clickable = { onClick?: React.MouseEventHandler }
+    const Btn = ({ onClick }: Clickable) => <button onClick={onClick} />
+
+- ENTRY:
+  EXPLAIN: InputHTMLAttributes
+  BODY: |
+    ■ 用途
+
+    ・`<input>` 要素固有の属性型（`type` / `value` / `onChange` / `placeholder` 等）を定義する。
+
+    ■ 使用例
+
+    const TextInput = (props: React.InputHTMLAttributes<HTMLInputElement>) => (
+      <input {...props} />
+    )
+
+- ENTRY:
+  EXPLAIN: ButtonHTMLAttributes
+  BODY: |
+    ■ 用途
+
+    ・`<button>` 要素固有の属性型（`type` / `disabled` / `onClick` 等）。
+
+    ■ 使用例
+
+    const MyButton = (props: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
+      <button {...props} />
+    )
+
+- ENTRY:
+  EXPLAIN: AnchorHTMLAttributes
+  BODY: |
+    ■ 用途
+
+    ・`<a>` 要素固有の属性型（`href` / `target` / `rel` 等）。
+
+    ■ 使用例
+
+    const Link = (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
+      <a {...props} />
+    )
+
+- ENTRY:
+  EXPLAIN: SVGProps
+  BODY: |
+    ■ 用途
+
+    ・SVG 要素に渡せる属性の型。`width`/`height`/`fill`/`stroke` 等を含む。
+
+    ■ 使用例
+
+    const Icon = (props: React.SVGProps<SVGSVGElement>) => (
+      <svg {...props} viewBox="0 0 24 24">...</svg>
+    )
 
 #-------------------------------
 # Handler
 #-------------------------------
-- KEY: qw.handler.title
+- ENTRY:
   CATEGORY: ハンドラ
 
-- KEY: qw.handle
-  EXPLAIN: ハンドラ(シンプル)
+- ENTRY:
+  EXPLAIN: ハンドラ サンプル
   BODY: |
-    const handle = () => {}
+    ■ Submit
 
-- KEY: qw.handle.formSubmit
-  EXPLAIN: Submit ハンドラ
-  BODY: |
     const handleSubmit = useCallback(
       (e: React.FormEvent<HTMLFormElement>) => {
         console.log(`text: ${text}`)
@@ -67,9 +407,8 @@
       [text]
     )
 
-- KEY: qw.handle.ButtonClick
-  EXPLAIN: button ハンドラ
-  BODY: |
+    ■ button ハンドラ
+
     const handleClickButton = useCallback(
       (e: React.MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation()
@@ -77,9 +416,18 @@
       []
     )
 
-- KEY: qw.handle.ChangeText
-  EXPLAIN: Change Text ハンドラ
-  BODY: |
+    ■ Click Input ハンドラ
+
+    const handleClickInputButton = useCallback(
+      (e: React.MouseEvent<HTMLInputElement>) => {
+        e.stopPropagation()
+      },
+      []
+    )
+
+
+    ■ Change Text ハンドラ
+
     const handleChangeText = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value
@@ -88,19 +436,8 @@
       []
     )
 
-- KEY: qw.handle.ClickInputButton
-  EXPLAIN: Click Input ハンドラ
-  BODY: |
-    const handleClickInputButton = useCallback(
-      (e: React.MouseEvent<HTMLInputElement>) => {
-        e.stopPropagation()
-      },
-      []
-    )
+    ■ Change Checkbox ハンドラ
 
-- KEY: qw.handle.ChangeCheckbox
-  EXPLAIN: Change Checkbox ハンドラ
-  BODY: |
     const handleChangeCheck = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.currentTarget.checked
@@ -109,9 +446,8 @@
       []
     )
 
-- KEY: qw.handle.ChangeRadio
-  EXPLAIN: Change Radio ハンドラ
-  BODY: |
+    ■ Change Radio ハンドラ
+
     const handleChangeRadio = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = parseInt(e.currentTarget.value ?? "0")
@@ -120,9 +456,8 @@
       []
     )
 
-- KEY: qw.handle.ChangeSelect
-  EXPLAIN: Change Select ハンドラ
-  BODY: |
+    ■ Change Select ハンドラ
+
     const [selectedValue, setSelectedValue] = useState<number>(1)
 
     const handleChangeSelect = useCallback(
@@ -133,174 +468,614 @@
       []
     )
 
+- ENTRY:
+  EXPLAIN: Button
+  BODY: |
+    const handleClickButton = useCallback(
+      (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation()
+      },
+      []
+    )
+
+    <button onClick={handleClickButton} value="">
+      Submit
+    </button>
+
+- ENTRY:
+  EXPLAIN: Text
+  BODY: |
+    const handleChangeText = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.currentTarget.value
+        setText(value)
+      },
+      []
+    )
+
+    <input
+      type="text"
+      onChange={handleChangeText}
+      value={text}
+      placeholder="name"
+    />
+
+- ENTRY:
+  EXPLAIN: InputButton
+  BODY: |
+    const handleClickInputButton = useCallback(
+      (e: React.MouseEvent<HTMLInputElement>) => {
+        e.stopPropagation()
+      },
+      []
+    )
+
+    <input type="button" onClick={handleClick} value="Click" />
+
+- ENTRY:
+  EXPLAIN: Checkbox
+  BODY: |
+    const handleChangeCheck = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.currentTarget.checked
+        setIsChecked(value)
+      },
+      []
+    )
+
+    <input
+      type="checkbox"
+      id={checkId}
+      onChange={handleChangeCheck}
+      checked={isChecked}
+    />
+    <label htmlFor={checkId}>On</label>
+
+- ENTRY:
+  EXPLAIN: Radio
+  BODY: |
+    const handleChangeRadio = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = parseInt(e.currentTarget.value ?? "0")
+        setRadio(value)
+      },
+      []
+    )
+
+    <input
+      type="radio"
+      id={radioId1}
+      name="myRadio"
+      onChange={handleChangeRadio}
+      value={1}
+      checked={radio === 1}
+    />
+    <label htmlFor={radioId1}>1</label>
+
+- ENTRY:
+  EXPLAIN: Select
+  BODY: |
+    type Options = {
+      title: string
+      value: string
+    }
+
+    type Select = {
+      options: Options[]
+      handleChangeSelect: (e: React.ChangeEvent<HTMLSelectElement>) => void
+    }
+
+    const [selectedValue, setSelectedValue] = useState<number>(1)
+
+    const handleChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const value = parseInt(e.currentTarget.value ?? 1)
+      setSelectedValue(value)
+    }
+
+    const SelectSet = ({ options, onChange }: Select) => {
+      return (
+        <select onChange={handleChangeSelect}>
+          {!!options.length &&
+            options.map((n, index) => (
+              <option key={index} value={n.value} >
+                {n.title}
+              </option>
+            ))}
+        </select>
+      )
+    }
+
+#-------------------------------
+# Hooks
+#-------------------------------
+- ENTRY:
+  CATEGORY: Hooks
+
+- ENTRY:
+  EXPLAIN: Hooks 一覧
+  BODY: |
+    ・useState                    // 状態管理
+    ・useEffect                   // 副作用処理
+    ・useCallback                 // 関数のメモ化
+    ・useMemo                     // 値のメモ化
+    ・useRef                      // 参照の保持
+    ・useImperativeHandle         // 親コンポーネントからの操作
+    ・useLayoutEffect             // レイアウト効果
+    ・useContext                  // コンテキスト管理
+    ・useReducer                  // 状態管理（Redux風）
+    ・useTransition               // 遷移状態管理
+    ・useDeferredValue            // 遅延値管理
+    ・useId                       // 一意ID生成
+    ・useSyncExternalStore        // 外部ストア同期
+
 #-------------------------------
 # Hooks: useState
 #-------------------------------
-- KEY: qw.hooks.useState.title
-  CATEGORY: |
-    Hooks: useState
-
-- KEY: qw.useState.string
-  EXPLAIN: useState(文字列)
+- ENTRY:
+  EXPLAIN: useState
   BODY: |
-    const [xxxxx, setXxxxx] = useState<string>("")
+    const [xxx, setXxx] = useState<string>("")
+    const [xxx, setXxx] = useState<number>(0)
+    const [xxx, setXxx] = useState<boolean>(false)
+    const [xxx, setXxx] = useState<Map<string, any>>()
+    const [xxx, setXxx] = useState<Set<string>>()
 
-- KEY: qw.useState.number
-  EXPLAIN: useState(数値)
-  BODY: |
-    const [xxxxx, setXxxxx] = useState<number>(0)
-
-- KEY: qw.useState.boolean
-  EXPLAIN: useState(真偽値)
-  BODY: |
-    const [xxxxx, setXxxxx] = useState<boolean>(false)
-
-- KEY: qw.useState.Map
-  EXPLAIN: useState(Mapメソッド)
-  BODY: |
-    const [xxxxx, setXxxxx] = useState<Map<string, any>>()
-
-- KEY: qw.useState.Set
-  EXPLAIN: useState(Setメソッド)
+#-------------------------------
+# Hooks: useEffect
+#-------------------------------
+- ENTRY:
+  EXPLAIN: useEffect(基本)
   BODY: |
     const [xxxxx, setXxxxx] = useState<Set<string>>()
 
 #-------------------------------
 # useEffect
 #-------------------------------
-- KEY: qw.hooks.useEffect.title
+- ENTRY:
   CATEGORY: |
     Hooks: useEffect
 
-- KEY: qw.useEffect
+- ENTRY:
   EXPLAIN: useEffect(シンプル)
   BODY: |
     useEffect(() => {
-      console.log()
+      // 処理
+    })                    // 毎回レンダリング時に実行
+
+    useEffect(() => {
+      // 処理
+    }, [依存変数])         // 依存変数が変化した時に実行
+
+    ■ Timeoutコールバック
+
+    useEffect(() => {
+      let timeoutId: NodeJS.Timeout | null = null
+
+      timeoutId = setTimeout(() => {
+        // 処理
+      }, 1000)
+
+      return () => {
+        if (timeoutId) clearTimeout(timeoutId)
+      }
     }, [])
 
-- KEY: qw.useEffect.IIFE
-  EXPLAIN: useEffect(非同期・即時関数)
+- ENTRY:
+  EXPLAIN: useEffect(非同期)
   BODY: |
+    ■ 非同期(async/await)
+
+    useEffect(() => {
+      const methodXxx = async () => {
+        const xxx = await getXxx(xxxId)
+      }
+      methodXxx()
+    }, [])
+
+    ■ 即時関数
+
     useEffect(() => {
       (async (param:any) => {
         const xxx = await getXxx(xxxId)
       })(param)
     }, [])
 
-- KEY: qw.useEffect.SetTimeout
-  EXPLAIN: useEffect(Timeoutコールバック)
-  BODY: |
-    useEffect(() => {
-      let timeoutId: NodeJS.Timeout | null = null
-      timeoutId = setTimeout(() => {
-        setXxx(XXX)
-      }, 1000)
-      return () => {
-        if (timeoutId) clearTimeout(timeoutId)
-      }
-    }, [])
+    ■ 非同期(Promise.then)
 
-- KEY: qw.useEffect.asyncAwait
-  EXPLAIN: useEffect(非同期)
-  BODY: |
     useEffect(() => {
-      const methodXxx = async () => {
-        const xxx = await getXxx(xxxId)
-      }
-      methodXxx()
-    }, [])
-
-- KEY: qw.useEffect.asyncAwait_v18
-  EXPLAIN: useEffect(非同期v18)
-  BODY: |
-    //Develop環境での二重コールを防止する
-    //Build後には意味なし
-    useEffect(() => {
-      let isRead = false
-      const methodXxx = async () => {
-        const xxx = await getXxx(xxxId)
-        if (!isRead) setXxx(xxx)
-      }
-      methodXxx()
-
-      return () => {
-        isRead = true
-      }
-    }, [])
-
-- KEY: qw.useEffect.asyncThenCatch
-  EXPLAIN: useEffect(非同期関数/then/catch)
-  BODY: |
-    useEffect(() => {
-      let isRead = false
       getXxx()
-        .then((xxx) => {
-          if (xxx && !isRead) setXxx(xxx)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+        .then((xxx) => { ... })
+        .catch((err) => { ...  })
       return () => {
-        isRead = true
+        ... // クリーンアップ処理
       }
     }, [])
 
-- KEY: qw.useEffect.fetch
+- ENTRY:
   EXPLAIN: useEffect(fetch/v18)
   BODY: |
+    ■ fetch (v18)
+
     useEffect(() => {
       let isRead = false
+
       fetch(URL)
         .then((res) => res.json())
         .then((json) => {
           if (!isRead) setXxx(json)
         })
-        .catch((err) => {
-          console.log(err)
-        })
+        .catch((err) => { ... })
+
       return () => {
         isRead = true
+      }
+    }, [])
+
+#-------------------------------
+# Hooks: useLayoutEffect
+#-------------------------------
+- ENTRY:
+  EXPLAIN: useLayoutEffect
+  BODY: |
+    ■ 目的
+
+    ・DOMの変更を同期的に行う
+    ・レンダリング前に副作用を実行
+    ・レイアウトの計算やスタイルの適用に使用
+    ・視覚的な不整合を防ぐ
+
+    ■ 基本
+    useLayoutEffect(() => {
+      // 処理
+    }, [])  // 依存配列
+
+    ■ useEffect との違い
+
+    ・useEffect は非同期に実行され、レンダリング後に副作用を処理
+    ・useLayoutEffect は同期的に実行され、レンダリング前に副作用を処理
+    ・DOMの読み取りや書き込みが必要な場合は useLayoutEffect を使用
+
+    ■ サンプル
+
+    import React, { useLayoutEffect, useRef, useState } from 'react'  
+    export const LayoutEffectExample = () => {
+      const divRef = useRef<HTMLDivElement | null>(null)
+      const [width, setWidth] = useState(0)
+
+      useLayoutEffect(() => {
+        if (divRef.current) {
+          const rect = divRef.current.getBoundingClientRect()
+          setWidth(rect.width)
+        }
+      }, [])
+
+      return (
+        <div>
+          <div ref={divRef} style={{ width: '50%' }}>
+            幅を測定する要素
+          </div>
+          <p>要素の幅: {width}px</p>
+        </div>
+      )
+    }
+
+#-------------------------------
+# Hooks: useCallback
+#-------------------------------
+- ENTRY:
+  EXPLAIN: useCallback
+  BODY: |
+    ■ 用途
+
+    ・関数をメモ化し、再生成を防ぐ
+    ・子コンポーネントへの不必要な再レンダリング防止
+    ・パフォーマンス最適化
+    ・依存変数が変化した時のみ関数を再生成
+    ・イベントハンドラやコールバック関数の安定化
+    ・子コンポーネントに渡す関数が毎回新しい参照になるのを防ぐ
+
+    ■ 基本
+
+    const memoizedCallback = useCallback(() => {
+      // 処理
+    }, [依存変数])  // 依存配列がない場合は初回のみ生成
+
+    ■ 引数・戻り値あり
+
+    const memoizedCallbackWithArg = useCallback((param: string) => {
+      return param * 2
+    }, [依存変数])
+
+    ■ サンプル
+
+    const handleChangeText = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.currentTarget.value
+        setText(value)
+      },
+      []
+    )
+
+    <input
+      type="text"
+      onChange={handleChangeText}
+      value={text}
+      placeholder="name"
+    />
+
+#-------------------------------
+# Hooks: useMemo
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: useMemo
+  BODY: |
+    ■ 基本
+
+    const memoizedValue = useMemo(() => {
+      // 計算コストの高い処理
+      return computeExpensiveValue(a, b)
+    }, [a, b])  // 依存変数が変化した時に再計算
+
+    ■ オブジェクト/配列のメモ化
+    const memoizedObject = useMemo(() => ({
+      key1: value1,
+      key2: value2,
+    }), [value1, value2])
+
+    ■ 関数のメモ化
+    const memoizedCallback = useMemo(() => {
+      return () => {
+        doSomething(a, b)
+      }
+    }, [a, b])
+
+    ■ コンポーネントのメモ化
+    const MemoizedComponent = useMemo(() => {
+      return <MyComponent prop1={value1} prop2={value2} />
+    }, [value1, value2])
+
+    ■ 副作用がある場合は useEffect を使う
+    useEffect(() => {
+      // 副作用のある処理
+      performSideEffect(data)
+    }, [data])
+
+    ■ 副作用: データの取得
+
+    useEffect(() => {
+      fetchData().then(data => setData(data))
+    }, [])
+
+    ■ 副作用: 直接的なDOM操作
+
+    useEffect(() => {
+      const element = document.getElementById('my-element')
+      if (element) {  
+        element.style.backgroundColor = 'yellow'
+      }     
+    }, [])
+
+    ■ 副作用: WebSocketやイベントリスナーの設定
+
+    useEffect(() => {
+      const handleResize = () => { ... }
+      window.addEventListener('resize', handleResize)
+      return () => {
+        window.removeEventListener('resize', handleResize)
       }
     }, [])
 
 #-------------------------------
 # Hooks: useRef
 #-------------------------------
-- KEY: qw.hooks.useRef.title
-  CATEGORY: |
-    Hooks: useRef & forwardRef
-
-- KEY: qw.useRef.input
-  EXPLAIN: useRef(input)
+- ENTRY:
+  EXPLAIN: useRef
   BODY: |
-    const inputRef = useRef<HTMLInputElement>(null!)
-    // <input ref={inputRef} type="text" />
-    // inputRef.current.value
-    // inputRef.current.clientWidth
+    ■ Inputフォーカス
 
-- KEY: qw.useRef.multiple
-  EXPLAIN: useRefの配列
+    import React, { useRef } from "react"
+
+    export const FocusInput = () => {
+      const inputRef = useRef<HTMLInputElement | null>(null)
+
+      const handleFocus = () => {
+        inputRef.current?.focus()
+      }
+
+      return (
+        <>
+          <input ref={inputRef} defaultValue="hello" />
+          <button onClick={handleFocus}>Focus</button>
+        </>
+      )
+    }
+
+    ■ submit 時に値を読む（フォーム操作）
+
+    import React, { useRef } from "react"
+
+    export const ReadValueForm = () => {
+      const inputRef = useRef<HTMLInputElement | null>(null)
+
+      const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault()
+        const val = inputRef.current?.value ?? ""
+        // console.log("value:", val)
+      }
+
+      return (
+        <form onSubmit={handleSubmit}>
+          <input ref={inputRef} />
+          <button type="submit">Submit</button>
+        </form>
+      )
+    }
+
+    ■ 非 null アサーションを使うパターン（注意）
+
+    import React, { useEffect, useRef } from "react"
+
+    export const AutoFocusInput = () => {
+      // 初期は null(アクセス時に存在する前提)
+      const inputRef = useRef<HTMLInputElement>(null!) 
+
+      useEffect(() => {
+        inputRef.current.focus()
+      }, [])
+
+      return <input ref={inputRef} />
+    }
+
+- ENTRY:
+  EXPLAIN: useRef 配列
   BODY: |
-    const refs = useRef<RefObject<HTMLXXXXElement>[]>([])
-    refs.forEach((_, index) => {
-      refs.current[index] = createRef<HTMLXXXXElement>()
-    })
-    // <input ref={refs[idx]} type="XXXX" />
-    // refs.current[idx].value
-    // refs.current[idx].clientWidth
+    ■ createRef を配列で保持（要素数が固定または初期化時に決まる場合）
+
+    import React, { createRef, useRef } from "react"
+
+    export const FixedRefs = () => {
+      const count = 3
+      const refs = useRef<Array<React.RefObject<HTMLInputElement>>>(() =>
+        Array.from({ length: count }, () => createRef<HTMLInputElement>())
+      )()
+
+      const focusSecond = () => refs[0]?.current && refs[1].current?.focus()
+
+      return (
+        <>
+          {refs.map((r, i) => <input key={i} ref={r} defaultValue={`#${i}`} />)}
+          <button onClick={focusSecond}>Focus #1</button>
+        </>
+      )
+    }
+
+    ■ コールバック ref を使う（可変長リストで型がシンプル）
+
+    import React, { useRef } from "react"
+
+    export const CallbackRefs = ({ items }: { items: string[] }) => {
+      const refs = useRef<Array<HTMLInputElement | null>>([])
+
+      return (
+        <>
+          {items.map((it, i) => (
+            <input
+              key={i}
+              defaultValue={it}
+              ref={(el) => (refs.current[i] = el)}
+            />
+          ))}
+          <button onClick={() => refs.current[0]?.focus()}>Focus first</button>
+        </>
+      )
+    }
+
+    ■ useCallback で安全にセット（レンダリングごとの再生成を抑制）
+
+    import React, { useRef, useCallback } from "react"
+
+    export const StableSetterRefs = ({ items }: { items: string[] }) => {
+      const refs = useRef<(HTMLInputElement | null)[]>([])
+      const setRef = useCallback((el: HTMLInputElement | null, idx: number) => {
+        refs.current[idx] = el
+      }, [])
+
+      return (
+        <>
+          {items.map((it, i) => (
+            <input key={i} defaultValue={it} ref={(el) => setRef(el, i)} />
+          ))}
+          <button onClick={() => refs.current[items.length - 1]?.focus()}>Focus last</button>
+        </>
+      )
+    }
+
+    ■ 型付きユーティリティ関数で扱いやすくする
+
+    type InputRef = HTMLInputElement | null
+
+    export const useInputRefs = (count: number) => {
+      const refs = useRef<InputRef[]>([])
+      const getRef = (i: number) => (el: HTMLInputElement | null) => (refs.current[i] = el)
+      return { refs, getRef }
+    }
+
+    // 使い方
+    // const { refs, getRef } = useInputRefs(items.length)
+    // <input ref={getRef(i)} />
+
+- ENTRY:
+  EXPLAIN: useRef ファイルアップロード
+  BODY: |
+    import { Box, Button, Flex } from "@chakra-ui/react";
+    import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from "react";
+
+    type Props = {
+      setSavedData: Dispatch<SetStateAction<string | undefined>>;
+      type?: string;
+    };
+
+    export const FileUploadButton = ({
+      setSavedData,
+      type = ".txt",
+    }: Props) => {
+    }) => {
+      const refInput = useRef<HTMLInputElement>(null);
+      const handleButton = () => {
+        refInput.current?.click();
+      };
+      const [msg, setMsg] = useState("");
+
+      const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files || e.target.files.length === 0) {
+          console.error("保存データファイル選択");
+          return;
+        }
+
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const content = event.target?.result;
+          try {
+            setSavedData(content as string);
+            setMsg("ロードされました");
+          } catch (error) {
+            console.error(error);
+            setMsg("ロード失敗しました");
+          }
+        };
+        reader.readAsText(file);
+      };
+
+      return (
+        <Flex alignItems={"center"}>
+          <Button onClick={handleButton}>保存データファイル使用</Button>
+          <input
+            ref={refInput}
+            hidden={true}
+            type="file"
+            accept={type}
+            onChange={handleFileChange}
+          />
+          <Box ml={5}>{msg}</Box>
+        </Flex>
+      );
+    };
 
 #-------------------------------
 # forwardRef
 #-------------------------------
 
-- KEY: qw.useRef.forwardRef
+- ENTRY:
   EXPLAIN: forwardRef
   BODY: |
-    React Component 参照
-    qw.custom.inputRef
+    ■ 用途
+
+      親コンポーネントから子コンポーネントのDOM要素にアクセス
 
     ■ サンプル
+
     type Props = {
       text: string
       setText: React.Dispatch<React.SetStateAction<string>>
@@ -329,19 +1104,20 @@
 #-------------------------------
 # Hooks: useReducer
 #-------------------------------
-- KEY: qw.hooks.useReducer.title
-  CATEGORY: |
-    Hooks: useReducer
-
-- KEY: qw.useReducer.boolean
-  EXPLAIN: useReducer で flip関数
+- ENTRY:
+  EXPLAIN: useReducer
   BODY: |
+    ■ 用途
+
+      複雑な状態管理や複数の状態変化ロジックをまとめる
+
+    ■ サンプル (flip関数)
+
     const [isTrue, flipFlag] = useReducer((flag: boolean) => !flag, false)
-    //Usage: flipFlag()
 
-- KEY: qw.useReducer.1.callback
-  EXPLAIN: useReducer メソッド定義
-  BODY: |
+
+    ■ サンプル (カウンター)
+
     type Action = { type: "up" } | { type: "reset"; payload: { counter: number } }
     type State = { counter: number }
 
@@ -354,10 +1130,7 @@
       }
     }
 
-- KEY: qw.useReducer.2.makeHooks
-  EXPLAIN: useReducer メソッド使用
-  BODY: |
-    export const UseReducer = () => {
+    const UseReducer = () => {
       const [myCounter, dispatch] = useReducer(callback, { counter: 0 })
       const handleClickUp = () => {
         dispatch({ type: "up" })
@@ -378,32 +1151,26 @@
 #-------------------------------
 # Hooks: useContext
 #-------------------------------
-- KEY: qw.hooks.context.title
-  CATEGORY: |
-    Hooks: context
-
-- KEY: qw.context.1.createContext
-  EXPLAIN: useContext コンテキスト定義
+- ENTRY:
+  EXPLAIN: useContext
   BODY: |
+    ■ Context 定義と Provider
+
     import React, { createContext, useState, useContext, useEffect } from "react"
     import { useGetXXXHooks } from "../hooks/useGetXXXHooks"
 
-    // ■ 型
     type DataType = {}
     type DataContextType = {
       data: DataType
       setData: (data: DataType) => void
     }
 
-    // ■ Context (createContext)
     const DataContext = createContext<DataContextType>({} as DataContextType)
 
-    // ■ Hooks (useContext)
     export const useContextHooks = () => {
       return useContext(DataContext)
     }
 
-    // ■ Provider
     export const ContextProvider = ({
       children,
     }: {
@@ -423,10 +1190,10 @@
       )
     }
 
-- KEY: qw.context.2.provider
-  EXPLAIN: useContext Provider適用
-  BODY: |
-    import { ContextProvider } from "../context/Context"
+    ■ Usage ( ContextProvider でラップ )
+
+    import { ContextProvider } from "....."
+
     export const UseContext = () => {
       return (
         <ContextProvider>
@@ -435,10 +1202,9 @@
       )
     }
 
-- KEY: qw.context.3.useContext
-  EXPLAIN: useContext データ使用
-  BODY: |
-    import { useContextHooks } from "../context/Context"
+    ■ Component ( Context 利用例 )
+
+    import { useContextHooks } from "....."
     export const Component = () => {
       const { data } = useContextHooks()
       return <Component data={data} />
@@ -447,74 +1213,183 @@
 #-------------------------------
 # Hooks: useId
 #-------------------------------
-- KEY: qw.hooks.other.title
-  CATEGORY: |
-    Hooks: その他
-
-- KEY: qw.useId
+- ENTRY:
   EXPLAIN: useId ユニークID生成
   BODY: |
     const xxxid = React.useId()
 
 #-------------------------------
-# Custom Hooks
+# Hooks: useImperativeHandle
 #-------------------------------
-- KEY: qw.hooks.customHooks.title
-  CATEGORY: |
-    Hooks: カスタムHook
-
-- KEY: qw.Hooks.custom
-  EXPLAIN: |
-    カスタムHook: Closure
+- ENTRY:
+  EXPLAIN: useImperativeHandle
   BODY: |
-    ■ Closure
+    ■ 用途
+
+    ・親コンポーネントから子コンポーネントのインスタンスメソッドにアクセス
+    ・React.forwardRef と組み合わせて使用
+    ・React のバージョンは16.8以降が必要
+    ・一般的には避け、代わりに props や state を使用することが推奨される
+
+    ■ サンプル
+
+    import React, { useImperativeHandle, useRef, forwardRef } from "react"
+
+    export type ImperativeHandleRef = {
+      focusInput: () => void
+    }
+
+    export const ImperativeHandle = forwardRef<ImperativeHandleRef>((props, ref) => {
+      const inputRef = useRef<HTMLInputElement>(null)
+
+      useImperativeHandle(ref, () => ({
+        focusInput: () => {
+          inputRef.current?.focus()
+        },
+      }))
+
+      return <input ref={inputRef} />
+    })
+
+#-------------------------------
+# Custom & Render Hooks
+#-------------------------------
+- ENTRY:
+  CATEGORY: カスタムHook
+
+- ENTRY:
+  EXPLAIN: カスタムHook(クロージャ)
+  BODY: |
     import { useCallback, useState } from "react"
 
-    export type UseXXX<T> = {
+    export type Xxx<T> = {
       init: T
     }
 
-    //命名規則: useXXX
-    export const useXXX = <T,>({ init }: UseXXX<T>) => {
-      //ステート
+    export const useXxx = <T,>({ init }: Xxx<T>) => {
       const [value, setValue] = useState<typeof init>(init)
-      //メソッド
-      const method = useCallback((val: typeof init) => {
+
+      const method = 🔵useCallback((val: typeof init) => {
         setValue(val)
       }, [])
 
-      //Render Hooks
-      const JsxCompo = useCallback(() => {
+      const JsxCompo = 🔵useCallback(() => {
         return <div>Hello</div>
       }, [])
 
       return { method, value, JsxCompo }
     }
 
-#-------------------------------
-# Render Hooks
-#-------------------------------
-- KEY: qw.Hooks.customHooks.renderHooks
-  EXPLAIN: |
-    カスタムHook: レンダーHooks
+- ENTRY:
+  EXPLAIN: レンダーHooks
   BODY: |
-    // ステート描画コンポーネントメソッドを持つ Closure
     type UseChecks = [boolean, () => JSX.Element]
 
-    // Hooks の宣言時にパラメタをもたせると動的変更に対処できない
-    export const useChecks = (labels: readonly string[]): UseChecks => {
+    export const useChecks = (labels: string[]): UseChecks => {
       const [checkList, setCheckList] = useState(() => labels.map(() => false))
 
-      const handleCheck = (target: number) => {
+      const handleCheck = 🔵useCallback((target: number) => {
         setCheckList((checks) => checks.map((_, index: number) => index === target))
-      }
+      }, [])
 
-      const isAllChecked = checkList.every((x) => x)
+      const isAllChecked = 🔵useMemo(() => checkList.every((x) => x), [checkList] )
 
-      // メソッドへのパラメタを考慮すべし
-      const renderChecks = () => (
+      const renderChecks = 🔵useCallback(() => (
         <Checks checkList={checkList} labels={labels} handler={handleCheck} />
-      )
+      ), [checkList, labels, handleCheck])
 
       return [isAllChecked, renderChecks]
+    }
+
+- ENTRY:
+  EXPLAIN: 分析
+  BODY: |
+    ■ Custom Hooks
+
+      長所
+
+    ・再利用: コンポーネント間の状態・副作用ロジックの共有
+    ・分離: UIとロジックの分離による薄いコンポーネント
+    ・テスト容易: ロジック単体のユニットテストの実施
+    ・型安全: ジェネリックを用いた型安全設計
+    ・組合せ: 小さなHooksの組合せによる複雑振る舞いの構築
+
+      短所
+
+    ・抽象化過剰: 過度分割による追跡困難
+    ・隠れた依存: 内部副作用やコンテキストの非可視化
+    ・再レンダー問題: 毎回生成されるオブジェクト・関数による不要再レンダー 🔴
+    ・依存配列リスク: useEffect等の依存漏れによるバグリスク
+
+    ■ Render Hooks
+
+      長所
+
+    ・UIとロジックのセット再利用: 描画関数付きロジックの再利用
+    ・配置柔軟性: 親側での描画位置・ラップの自由度
+    ・複雑UI抽象化: 複数要素の合成コンポーネント提供
+
+      短所
+
+    ・パフォーマンス問題: 参照不安定による再レンダー増加
+    ・可読性低下: JSXをHookから返すことによる実装フローの分かりにくさ 🔴
+    ・テスト困難: UIとロジックの結合による単体テストの難易度上昇
+    ・Hookルール違反リスク: レンダ関数内でのさらにHooks呼び出しの誤り
+
+    ■ 実務上の注意点・推奨
+
+    ・優先方針: ロジックはCustom Hooks、UIはコンポーネント合成
+    ・返り値設計: state, handlers, helpersを中心とした返却設計
+    ・安定化策: 関数・オブジェクトはuseCallback, useMemoでアイデンティティ安定化
+    ・型付け: ジェネリックとReturnTypeで入力出力を明示
+    ・命名規約: useXxx形式の単一責任命名
+    ・テスト方針: 副作用はモック ロジックはユニットテスト, UIはRTLやスナップショットで検証
+    ・代替検討: HOC, render, props, component compositionとの比較検討
+    ・計測重視: React DevTools と Profilerによるレンダ回数測定と最適化判断
+
+    ■ 結論
+
+    ・基本方針: ロジックはCustom Hooksによる再利用、UIはコンポーネント合成による再利用
+    ・Render Hooksは限定採用: 性能可読性のトレードオフを理解した上で利用
+
+- ENTRY:
+  EXPLAIN: 再レンダー問題
+  BODY: |
+    ■ 悪い例
+
+    // メモ化された子（浅い比較: props の === を使う）
+    const Child = React.memo(({ onAction, options }: { onAction: () => void; options: { label: string } }) => {
+      const renders = useRef(0);
+      console.log("Child render", ++renders.current);
+      return (
+        <div>
+          <div>{options.label}</div>
+          <button onClick={onAction}>Child Action</button>
+        </div>
+      );
+    });
+
+    // カスタムHook（悪い実装：関数/オブジェクトを毎回生成して返す）
+    function useBadCounter() {
+      const [count, setCount] = useState(0);
+      
+      const handler = () => setCount((c) => c + 1);   // 🔵改善：useCallback必要
+
+      const options = { label: `count=${count}` };    // 🔵改善：useMemo必要
+
+      return { count, handler, options };
+    }
+
+    // 親コンポーネント
+    export function ParentBad() {
+      const { count, handler, options } = useBadCounter();  // 毎回新しい handler/options を受け取る
+      
+      console.log("ParentBad render count=", count);
+      
+      return (
+        <div>
+          <div>Parent count: {count}</div>
+          <Child onAction={handler} options={options} />
+        </div>
+      );
     }

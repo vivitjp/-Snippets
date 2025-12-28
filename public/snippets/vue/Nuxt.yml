@@ -7,7 +7,7 @@
 # Async
 #-------------------------------
 
-- KEY: Nuxt.install
+- ENTRY:
   EXPLAIN: インストール & プロジェクト作成
   BODY: |
     ■ インストール
@@ -19,7 +19,7 @@
     npm install
     npm run dev                         // ローカルサーバー起動
 
-- KEY: Nuxt.
+- ENTRY:
   EXPLAIN: |
     実際のインストール
   BODY: |
@@ -92,7 +92,7 @@
     › Start development server with npm run dev
     PS B:\@Vue01>
 
-- KEY: Nuxt.installed.packagesJson
+- ENTRY:
   EXPLAIN: |
     Packages.json
   BODY: |
@@ -129,7 +129,7 @@
     % yarn generate:production --no-cache --no-ssr --no-build --no-purge
     % yarn generate:production --no-cache --no-ssr --no-build --no-purge --no-zip
 
-- KEY: Nuxt.installed.directory
+- ENTRY:
   EXPLAIN: |
     ディレクトリ構成
   BODY: |
@@ -161,7 +161,7 @@
     shared/                             // 共有ファイル   
     utils/                              // ユーティリティファイル
 
-- KEY: Nuxt.property.config
+- ENTRY:
   EXPLAIN: |
     nuxt.config.ts
   BODY: |
@@ -190,7 +190,7 @@
       },
     })
 
-# - KEY: Nuxt.
+# - ENTRY:
 #   EXPLAIN: |
 
 #   BODY: |

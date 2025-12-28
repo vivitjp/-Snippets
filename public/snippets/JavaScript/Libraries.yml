@@ -6,29 +6,29 @@
 #-------------------------------
 # libraries（数学）
 #-------------------------------
-- KEY: js.libraries.title
-  CATEGORY: ライブラリ
+- ENTRY:
+  CATEGORY: NPM ライブラリ
 
-- KEY: js.libraries.npm
+- ENTRY:
   EXPLAIN: npm 検索
   BODY: |
     https://www.npmjs.com/
 
-- KEY: js.libraries.formulajs
+- ENTRY:
   EXPLAIN: |
     エクセル: formulajs
   BODY: |
-    Microsoft Excelフォーミュラ関数のJavaScriptの実装を構築
+    ■ Microsoft Excel関数のJavaScript実装を構築
 
     officail: https://formulajs.info/
     github: 
     npm:    https://www.npmjs.com/package/@formulajs/formulajs
     cdn:    <script src="https://cdn.jsdelivr.net/npm/jstat@1.9.2/dist/jstat.min.js"></script>
 
-    // Install
+    ■ Install
     npm i @formulajs/formulajs
 
-- KEY: js.libraries.simple-statistics
+- ENTRY:
   EXPLAIN: |
     統計: simple-statistics
   BODY: |
@@ -42,10 +42,10 @@
 #-------------------------------
 # libraries（数学）
 #-------------------------------
-- KEY: js.libraries.math
+- ENTRY:
   CATEGORY: 数学ライブラリ
 
-- KEY: js.libraries.math.round
+- ENTRY:
   EXPLAIN: 四捨五入
   BODY: |
     /**
@@ -59,7 +59,7 @@
       return (k * Math.round(value * k * 10 ** fp)) / 10 ** fp
     }
 
-- KEY: js.libraries.math.roundUp
+- ENTRY:
   EXPLAIN: 切り上げ
   BODY: |
     /**
@@ -73,7 +73,7 @@
       return (k * Math.ceil(value * k * 10 ** fp)) / 10 ** fp
     }
 
-- KEY: js.libraries.math.roundDown
+- ENTRY:
   EXPLAIN: 切り下げ
   BODY: |
     /**
@@ -87,8 +87,8 @@
       return (k * Math.floor(value * k * 10 ** fp)) / 10 ** fp
     }
 
-- KEY: js.libraries.math.ceiling
-  EXPLAIN: ceiling
+- ENTRY:
+  EXPLAIN: Excel Ceiling
   BODY: |
     /**
     * Excel Ceiling(指定基準値の最も近い倍数に数値切り上げ)
@@ -109,16 +109,16 @@
       )
     }
 
-- KEY: js.libraries.math.minMax
-  EXPLAIN: MIN ＆ MAX(文字列)
+- ENTRY:
+  EXPLAIN: MIN & MAX(文字列)
   BODY: |
     /**
-    * MIN ＆ MAX
+    * MIN & MAX
     * @param 文字列数字配列(["","20","10"]) 空文字対応
     * @returns 空白や０以外で最も MIN/MAX を"数値"で返す
     *
     * エクセルの MIN(PARAM1[, PARAM2,...])は空白を除外するが、
-    * JSの Math.min関数は0も精査するので、簡単な置換では戻り値に違いがでる。
+    * JSの Math.min関数は0も精査するので、簡単な置換では戻り値に違いがでる
     */
 
     function min(...args: string[]) {
@@ -136,3 +136,59 @@
         return acc === null || (acc !== null && acc < curNum) ? curNum : acc
       }, null as null | number)
     }
+
+#-------------------------------
+# JSON: CSV => JSON
+#-------------------------------
+
+- ENTRY:
+  CATEGORY: CSV
+
+#-------------------------------
+# JSON: CSV => JSON
+#-------------------------------
+- ENTRY:
+  EXPLAIN: CSV => JSON 変換メソッド
+  BODY: |
+    //改善の余地が大きい（最初の行のヘッダ有無確認必要）
+
+    const convertCsv2Json = (text: string, headers: string[], div = "\t") => {
+      //数字の1,000,000桁区切りコンマを削除
+      const re = new RegExp(",", "ig"); 
+
+      const jsonArr: { [key: string]: string }[] = [];
+      text
+        .split("\n")
+        .filter(Boolean)
+        .forEach((line) => {
+          const obj: { [key: string]: string } = {};
+
+          line.split(div).forEach((v, i) => {
+            //文字と数値の違いで挙動を変えること
+            obj[headers[i]] = v.trim().replace(re, "");
+          });
+          jsonArr.push(obj);
+        });
+      return jsonArr;
+    };
+
+    // SAMPLE
+    const TABLE_TITLE_配列 = ["DO検索用", "検索エリア", "DO値"] as const;
+    type TABLE_KEY = (typeof TABLE_TITLE_配列)[number];
+    type TABLE_型 = Record<TABLE_KEY, string>;
+
+    const TABLE_DATA = `
+    0	1	≦20
+    20	2	20～40
+    40	3	40～50
+    50	4	50～60
+    60	5	60～100
+    100	6	100～140
+    140	7	140～200
+    200	8	≧200
+    `;
+
+    const table = convertCsv2Json(
+      TABLE_DATA,
+      TABLE_TITLE_配列 as unknown as string[],
+    ) as TABLE_型[];

@@ -3,7 +3,7 @@
 # YAML
 #-------------------------------
 
-- KEY: doc.yaml.comment
+- ENTRY:
   EXPLAIN: コメント行
   BODY: |
     # コメント行
@@ -11,14 +11,14 @@
     - bbb        # これもコメント行
     - ccc
 
-- KEY: doc.yaml.tab
+- ENTRY:
   EXPLAIN: タブ文字使用不可
   BODY: |
     半角空白のかわりに タブ文字(\t) 使用不可！
     タブ文字の表示幅は環境によって異なる(8 文字が多いのは習慣)
     そのため YAML ではタブ文字を不許可
 
-- KEY: doc.yaml.divider
+- ENTRY:
   EXPLAIN: 区切り文字
   BODY: |
     １ファイルに複数の YAML ドキュメントを含める。
@@ -35,7 +35,7 @@
     name: baz
     email: baz@mail.net
 
-- KEY: doc.yaml.terminate
+- ENTRY:
   EXPLAIN: 文章末
   BODY: |
     「...」だけの行以降は読み込まれない
@@ -45,7 +45,7 @@
     ...
     - ccc      # 読み込まれない
 
-- KEY: doc.yaml.array
+- ENTRY:
   EXPLAIN: 配列
   BODY: |
     行頭に「-」をつけることで配列を表現
@@ -77,7 +77,7 @@
       - a2
       - a3
 
-- KEY: doc.yaml.hash
+- ENTRY:
   EXPLAIN: ハッシュ(辞書)
   BODY: |
     ハッシュは「キー: 値」形式
@@ -105,7 +105,7 @@
       a1: bar
       a2: baz
 
-- KEY: doc.yaml.mixed
+- ENTRY:
   EXPLAIN: 配列と辞書混在
   BODY: |
     ■ ハッシュ(辞書)の配列
@@ -134,7 +134,7 @@
       "names" => ["Hanako", "Sumire"]
     }
 
-- KEY: doc.yaml.style
+- ENTRY:
   EXPLAIN: スタイル(ブロック & フロー)
   BODY: |
     ■ ブロックスタイル: 配列
@@ -180,7 +180,7 @@
       }
     }
 
-- KEY: doc.yaml.return
+- ENTRY:
   EXPLAIN: 複数行の文字列
   BODY: |
     ■ 通常(全改行保存)

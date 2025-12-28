@@ -1,10 +1,10 @@
 # ----------------------------
 # Excel
 # ----------------------------
-- KEY: fortran.general
+- ENTRY:
   CATEGORY: コンパイラ & 環境
 
-- KEY: fortran.compiler
+- ENTRY:
   EXPLAIN: コンパイラ
   BODY: |
     ■ linux インストール
@@ -16,12 +16,12 @@
     > gfortran -o hello hello.f90         // 実行ファイル名指定
     > ./hellog
 
-- KEY: fortran.vscode
+- ENTRY:
   EXPLAIN: VSCode 環境
   BODY: |
     A
 
-- KEY: fortran.sample.code1
+- ENTRY:
   EXPLAIN: |
     サンプルコード1
   BODY: |
@@ -29,19 +29,19 @@
       print *, "HELLO"
     end subroutine
 
-- KEY: fortran.sample.code2
+- ENTRY:
   EXPLAIN: |
     サンプルコード2
   BODY: |
     1
 
-- KEY: fortran.sample.code3
+- ENTRY:
   EXPLAIN: |
     サンプルコード3
   BODY: |
     2
 
-- KEY: fortran.sample.code4
+- ENTRY:
   EXPLAIN: |
     サンプルコード4
   BODY: |

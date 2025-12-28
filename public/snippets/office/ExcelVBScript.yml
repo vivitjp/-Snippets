@@ -1,10 +1,10 @@
 # ----------------------------
 # Excel VBScript
 # ----------------------------
-- KEY: ExcelVBScript.general
+- ENTRY:
   CATEGORY: Excel VBScript Topics
 
-- KEY: ExcelVBScript.detectHalfKatakana
+- ENTRY:
   EXPLAIN: |
     アクティブシートの半角カタカナを検出
   BODY: |
@@ -23,7 +23,7 @@
       console.log(Array.from(resultSet))
     }
 
-- KEY: ExcelVBScript.registerName
+- ENTRY:
   EXPLAIN: |
     「名前の管理」登録
   BODY: |

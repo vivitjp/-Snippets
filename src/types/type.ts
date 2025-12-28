@@ -38,7 +38,7 @@ export type KeyDef = {
 }
 
 export type SnippetsObject = {
-  prefix: string
+  explain?: string
   scope?: string | undefined
   category?: string
   body: string[]

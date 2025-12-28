@@ -1,0 +1,77 @@
+import { KeyDef } from "../../../types/type"
+
+export const keysI18n: KeyDef = {
+  // ■ Main(赤)
+  IndianRed: ["i18next", "i18n"],
+  // ■ 青
+  RoyalBlue: [
+    "init",
+    "use",
+    "t",
+    "useTranslation",
+    "Trans",
+    "initReactI18next",
+    "changeLanguage",
+    "getFixedT",
+    "loadNamespaces",
+    "addResource",
+    "addResources",
+    "addResourceBundle",
+    "removeResourceBundle",
+    "exists",
+    "reloadResources",
+    "HttpBackend",
+    "LanguageDetector",
+  ],
+  // ■ 緑
+  ForestGreen: [
+    "fallbackLng",
+    "debug",
+    "interpolation",
+    "backend",
+    "detection",
+    "ns",
+    "defaultNS",
+    "loadPath",
+    "order",
+    "caches",
+    "escapeValue",
+    "format",
+    "resources",
+    "lng",
+    "count",
+    "defaultValue",
+    "i18nKey",
+    "components",
+    "values",
+    "pluralSeparator",
+    "keySeparator",
+    "contextSeparator",
+    "returnObjects",
+    "plural",
+    "keyPrefix",
+    "nsMode",
+    "bindI18n",
+    "bindI18nStore",
+    "transSupportBasicHtmlNodes",
+    "transKeepBasicHtmlNodesFor",
+    "ready",
+    "options",
+    "namespace",
+    "useSuspense",
+    "val",
+    "context",
+    "joinArrays",
+    "postProcess",
+    "replace",
+  ],
+  // ■ ゴールド
+  Goldenrod: ["UseTranslationOptions"],
+
+  // ■ グレー
+  "#555": ["common", "auth", "dashboard"],
+  // ■ 青緑
+  CadetBlue: ["en", "ja", "ru", "pl", "ar"],
+  // ■ 紫
+  DarkOrchid: ["one", "few", "many", "other", "zero"],
+}

@@ -1,0 +1,541 @@
+---
+#-------------------------------
+# i18n
+#-------------------------------
+- ENTRY:
+  CATEGORY: i18n
+
+- ENTRY:
+  KEY: i18n.基礎
+  EXPLAIN: インストール と初期設定
+  BODY: |
+    ■ インストール
+
+      npm install i18next react-i18next i18next-http-backend i18next-browser-languagedetector
+
+    ■ resource 作成(言語別ファイル)
+
+    ・`public/locales/{言語コード}/{namespace}.json` に配置
+
+    ・public/locales/en/common.json
+      {
+        "welcome": "Welcome",
+        "description": "This is an example description."
+      }
+
+    ・public/locales/ja/common.json
+      {
+        "welcome": "ようこそ",
+        "description": "これは例の説明です。"
+      }
+
+    ■ 設定ファイル（i18n.ts）: 言語ファイル使用
+
+      import i18n from 'i18next'
+      import { initReactI18next } from 'react-i18next'
+      import enCommon from '../locales/en/common.json'
+      import jaCommon from '../locales/ja/common.json'
+      
+      const resources = {
+        en: { common: enCommon },
+        ja: { common: jaCommon },
+      }
+
+      i18n
+        .use(initReactI18next)
+        .init({
+          resources,
+          lng: 'en',                    // 初期言語
+          fallbackLng: 'en',            // フォールバック言語
+          debug: false,                 // デバッグモード  
+          interpolation: {              // 補間設定
+            escapeValue: false          // ReactではXSS対策不要
+          },
+          ns: ['common'],               // 使用するnamespace(データの階層KEY)
+          defaultNS: 'common',          // デフォルトnamespace
+        })
+
+      export default i18n
+
+- ENTRY:
+  KEY: i18n.基礎
+  EXPLAIN: |
+    設定: ブラウザ言語検出と外部翻訳ファイル
+  BODY: |
+    ■ 設定ファイル（i18n.ts）: ブラウザ言語検出
+
+    ・基本の初期化例: リソース直接埋め込みまたは HTTP backend を利用
+    ・i18n.tsの位置はプロジェクトルート直下や `src/` 内など任意
+    ・フロントでのみ使用、サーバーサイドレンダリングでは別設定が必要
+
+      import i18n from 'i18next'
+      import { initReactI18next } from 'react-i18next'
+      import HttpBackend from 'i18next-http-backend'
+      import LanguageDetector from 'i18next-browser-languagedetector'
+
+      i18n
+        .use(HttpBackend)          // optional: 外部翻訳ファイルをロード
+        .use(LanguageDetector)     // ブラウザ言語検出
+        .use(initReactI18next)
+        .init({
+          fallbackLng: 'en',
+          debug: false,
+          interpolation: { escapeValue: false },
+          backend: { loadPath: '/locales/{{lng}}/{{ns}}.json' },
+          ns: ['common'],
+          defaultNS: 'common',
+        })
+
+      export default i18n
+
+- ENTRY:
+  KEY: i18n.基礎
+  EXPLAIN: App とコンポーネント
+  BODY: |
+    ■ App(i18n.ts)
+
+    ・`I18nextProvider` は通常不要
+    ・react-i18next の `useTranslation` で自動利用
+
+      import React from 'react'
+      import ReactDOM from 'react-dom'
+      import './i18n'
+      import App from './App'
+
+      ReactDOM.render(<App />, document.getElementById('root'))
+
+    ■ コンポーネント
+
+      import { useTranslation } from 'react-i18next'
+
+      const Header = () => {
+        const { t } = useTranslation()
+        return <h1>{t('welcome')}</h1>
+      }
+
+- ENTRY:
+  KEY: i18n.検出とバックエンド
+  EXPLAIN: 言語検出・バックエンド
+  BODY: |
+    ■ 言語検出(i18next-browser-languagedetector)
+
+    ・querystring / cookie / localStorage / navigator などから最適言語選択
+    ・オプションで検出順序やキャッシュ方法を変更可能
+
+    ■ バックエンド(i18next-http-backend)
+
+    ・`/locales/{{lng}}/{{ns}}.json` などから翻訳ファイルを動的にロードできます。
+    ・ロード失敗時は `fallbackLng` が使われます。CDN 配置やビルド出力のホスティングを検討。
+
+    ■ オプション
+
+      i18n.init({
+        detection: {
+          order: ['querystring','localStorage','navigator'],
+          caches: ['localStorage']
+        },
+        backend: {
+          loadPath: '/locales/{{lng}}/{{ns}}.json'
+        },
+      })
+
+- ENTRY:
+  KEY: i18n.TypeScript
+  EXPLAIN: TypeScript での型定義
+  BODY: |
+    ■ react-i18next
+
+    ・TypeScript サポートあり
+    ・`t` のキー補完
+    ・カスタム namespace の型付け可能
+
+    ■ react-i18next.d.ts: 型拡張
+
+    ・`Resources` 型を拡張してキー補完を有効化する方法
+
+      // i18n.d.ts
+      import 'react-i18next'
+
+      declare module 'react-i18next' {
+        interface Resources {
+          common: typeof import('../locales/en/common.json')
+        }
+      }
+
+    ■ i18next-parser: 大規模プロジェクト
+
+    ・キー抽出と型生成のワークフローを作ると便利
+
+- ENTRY:
+  KEY: i18n.翻訳運用とベストプラクティス
+  EXPLAIN: 翻訳ファイル管理・運用
+  BODY: |
+    ■ 名前空間と分割
+
+    ・機能別に namespace（例: `common`, `auth`, `dashboard`）分割で管理しやすい
+
+    ■ 翻訳の整合性チェック
+
+    ・翻訳キーの漏れや未使用キーを検出するツール（`i18next-scanner` 等）を CI に組み込む。
+
+    ■ フォールバックとフォーマット
+
+    ・`fallbackLng`: 開発時はデバッグ用に `debug: true` を一時的に有効化
+    ・日付や通貨のフォーマットは `Intl` を併用するか、`format` 機能を i18next に組み込む
+
+    ■ 翻訳作業フロー
+
+    ・デザイナー/翻訳者向けに JSON を抽出し
+    ・翻訳後に PR / マージで反映するワークフロー作成
+
+- ENTRY:
+  KEY: i18n.resource.sample.resource
+  EXPLAIN: リソースサンプル
+  BODY: |
+    ■ public/locales/en/common.json
+
+    {
+      "welcome": "Welcome, {{name}}!",                 // パラメタ渡し（interpolation）
+      "inbox": "You have {{count}} message",
+      "inbox_plural": "You have {{count}} messages",   // ※ plural: 複数形処理
+      "login": {
+        "title": "Login to your account",
+        "username": "Username",
+        "password": "Password",
+        "submit": "Log In"
+      },
+      "welcomeUser": "Hello <0>{{name}}</0>, you have <1>{{count}}</1> messages",
+
+      //plural（複数形処理） {{count}} に基づく複数形処理の例
+      "max_users_zero": "No users allowed",
+      "max_users_one": "Only one user allowed",
+      "max_users_other": "Up to {{count}} users allowed"
+    }
+
+    ■ public/locales/ja/common.json
+
+    {
+      "welcome": "ようこそ、{{name}}さん！",
+      "inbox": "{{count}} 件のメッセージがあります",
+      "login": {
+        "title": "アカウントにログイン",
+        "username": "ユーザー名",
+        "password": "パスワード",
+        "submit": "ログイン"
+      },
+      "welcomeUser": "<0>{{name}}</0>さん、メッセージが<1>{{count}}</1>件あります",
+
+      //plural（複数形処理） {{count}} に基づく複数形処理の例
+      "max_users_zero": "ユーザーは許可されていません",
+      "max_users_one": "ユーザーは1人だけ許可されています",
+      "max_users_other": "最大で{{count}}人のユーザーが許可されています"
+    }
+
+    ■ パラメタ渡し（interpolation）
+
+      {{name}}   → `t('welcome', { name: 'Taro' })`
+      {{name}} と {{ name }} は同じ意味
+
+- ENTRY:
+  KEY: i18n.resource.sample.resource
+  EXPLAIN: リソース 複数形処理
+  BODY: |
+    ■ plural（複数形処理）
+
+    ・count オプションを渡すと自動で plural キーが選択される
+    ・_plural サフィックスの種類:
+
+      NAME_zero          // 0 の場合
+      NAME_one           // 1 の場合
+      NAME_two           // 2 の場合
+      NAME_few           // 少数の場合(具体的数値は言語依存。日本語の場合は不要)
+      NAME_many          // 多数の場合(具体的数値は言語依存。日本語の場合は不要)
+      NAME_other         // その他（デフォルト）
+
+    ■ _few & _many の具体例（代表的な言語）
+
+    ・English (en)：
+        one（n == 1） → それ以外は other（_few/_many は使われない）
+    ・Japanese (ja)：
+        常に other（日本語は複数形区別しない）
+    ・Russian (ru)：
+        one: n%10 == 1 && n%100 != 11
+        few: n%10 in 2..4 && !(n%100 in 12..14)
+        many: n%10 == 0 || n%10 in 5..9 || (n%100 in 11..14)
+        other: 小数等
+    ・Polish (pl)：
+        one / few / many 等を使う（few はロシア語に似たルール）
+    ・Arabic (ar)：
+        かなり細かい（zero: n==0、one:1、two:2、few: n%100 in 3..10、many: n%100 in 11..99、other: 小数等）
+
+    ■ どう確認するか（実務）
+
+    ・最も確実：CLDR の該当ロケールルールを参照  https://cldr.unicode.org/
+    ・実験的に確かめる：t('key', { count }) を呼んでどのキーが選ばれるか確認
+      ・resources に各カテゴリキーを用意してログ出力
+    ・言語ごとにキー設計を簡潔に（例: one / other だけ使う）する
+
+- ENTRY:
+  KEY: i18n.resource.sample.resource
+  EXPLAIN: ns と オブジェクト階層の使い分け
+  BODY: |
+    ■ namespace (ns) と オブジェクト階層の使い分け
+
+    ・namespace:      大規模プロジェクトで機能別に翻訳ファイルを分割する場合に利用
+                      要するに、ns とはファイル名のこと
+    ・オブジェクト階層: 小規模から中規模プロジェクトで論理的にグループ化する場合に利用
+
+    ■ 例: namespace 利用
+
+    ・auth.json（認証関連）
+      {
+        "login": {
+          "title": "Login to your account",
+          "username": "Username",
+          "password": "Password",
+          "submit": "Log In"
+        }
+      }
+
+    ・dashboard.json（ダッシュボード関連）
+      {
+        "welcome": "Welcome to your dashboard, {{name}}!"
+      }
+
+    ■ 例: オブジェクト階層利用
+
+      {
+        "auth": {
+          "login": {
+            "title": "Login to your account",
+            "username": "Username",
+            "password": "Password",
+            "submit": "Log In"
+          }
+        },
+        "dashboard": {
+          "welcome": "Welcome to your dashboard, {{name}}!"
+        }
+      }
+
+- ENTRY:
+  KEY: i18n.resource.sample.call
+  EXPLAIN: useTranslationフック
+  BODY: |
+    ■ 型
+
+    useTranslation(
+      ns?: string | string[],           // namespace または配列
+      options?: UseTranslationOptions   // オプション
+    ) → {
+      t,                                // t 関数
+      i18n,                             // i18n インスタンス
+      ready                             // 初期化完了フラグ
+    }
+
+    ■ パラメタ
+
+    ・ns              利用 namespace（文字列または配列）渡さない場合は defaultNS
+    ・options         以下に詳述するフック固有のオプション群（省略可）
+
+    ■ UseTranslationOptions
+
+    ・keyPrefix?: string     キーの接頭辞を指定（例: 'some.nested.path'）
+
+        フック内で自動的に付与されるキー接頭辞
+        コンポーネント内で同じ接頭辞を共通利用したいときに便利
+        例: useTranslation('common', { keyPrefix: 'header' }) → t('title')
+          common:header.title 相当で検索
+
+    ・i18n           カスタム i18n インスタンスを指定
+
+        デフォルトの i18n インスタンスを上書きして別インスタンスを利用する場合に指定
+
+    ・useSuspense    Suspense 利用フラグ（デフォルト true）
+
+        false にするとロード中も即座にレンダーされる（ロード完了後に再レンダー）
+        サーバーサイドレンダリング時に Suspense を避けたい場合などに利用
+
+    ・nsMode?: 'default' | 'fallback'
+
+        namespace 解決の振る舞いを制御（通常はデフォルトのままで十分）。
+
+    ・bindI18n?: string | string[]（上級）
+
+        フックが再レンダーをトリガーする i18n イベント名を指定
+        既定値は言語変更やロードイベント等
+        カスタムイベント指定で再レンダーを抑制/拡張できる
+
+    ・bindI18nStore?: string | string[]（上級）
+
+        ストア（resource）変更に対して再レンダーさせるイベント名を指定。
+
+    ・transSupportBasicHtmlNodes?: boolean / transKeepBasicHtmlNodesFor?: string[]（Trans 関連）
+
+       Trans コンポーネントでの基本 HTML ノードサポートや例外設定に関する調整。
+
+    ■ 戻り値
+
+    ・t(key, opts?)   翻訳関数。opts に values / count / lng / defaultValue などを渡す
+    ・i18n            i18next のインスタンス。changeLanguage() や language 等操作可能
+    ・ready           翻訳がロード済みかの boolean（ロード中は false の場合あり）
+
+      const Comp = () => {
+        const { t, i18n } = useTranslation()  // i18n インスタンスも取得可能
+
+        const { t: t2 } = useTranslation({
+          keyPrefix: 'some.nested.path',   // キーの接頭辞を指定
+          i18n  : customI18nInstance,      // カスタム i18n インスタンス指定
+          useSuspense: false               // Suspense 無効化
+        })
+      }
+
+- ENTRY:
+  KEY: i18n.resource.sample.call
+  EXPLAIN: t 関数呼び出し例
+  BODY: |
+    ■ 型
+
+    t(key: string, options?: TOptions): string | object
+
+    ・key: 検索する翻訳キー（例: 'login.title', 'ns:login.title'）
+          配列でフォールバック複数キーも可
+
+    ■ ・options
+
+    ・values / 置換（interpolation）
+
+      { name: 'Taro' } → リソース内の {{name}} を置換
+      例: t('welcome', { name: 'Taro' })
+
+    ・count
+
+      複数形判定に使用
+      CLDR ルールに従って該当カテゴリ（one/few/many/other 等）を選択
+      例: t('inbox', { count: 3 })
+
+    ・lng
+
+      一時的に言語を指定して取得
+      例: t('key', { lng: 'ja' })
+
+    ・ns
+
+      呼び出し時のみの namespace 指定
+      例: t('auth:login.title') または t('login.title', { ns: 'auth' })
+
+    ・defaultValue
+
+      キーが無い場合に返す代替文字列
+
+    ・keyPrefix（useTranslation の options 指定が多い）
+
+      コンポーネント内で共通の接頭辞を自動付与
+
+    ・debug:true
+
+      置換内容をログ出力
+
+    ・(上級) interpolation.format
+
+      日付や数値をフォーマットするカスタム関数を i18n.init で登録
+      例: t('dateKey', { val: date, format: 'short' }) 
+
+        登録サンプル
+
+        i18n.init({
+          interpolation: {
+            format: (value, format, lng) => {
+              if (value instanceof Date) return new Intl.DateTimeFormat(lng).format(value)
+              if (format === 'uppercase') return String(value).toUpperCase()
+              return value
+            }
+          }
+        })
+
+    ・(上級) context
+
+      性別や状態などで別文言を切替（key_male / key_female 等）
+      例: t('welcome', { context: 'male' })
+
+    ・(上級) returnObjects: true
+
+      ネストしたオブジェクト（resources 内のオブジェクト）をそのまま返す
+      UI で複数値を扱うときに便利
+      resources 内の menu.items がオブジェクト配列の場合に有効
+      例: t('menu.items', { returnObjects: true })
+
+    ・(上級) joinArrays
+
+      配列を文字列として結合する際の区切り指定
+      例: "someArrayKey": ["item1", "item2", "item3"]
+          t('someArrayKey', { joinArrays: ', ' })
+
+    ・(上級) postProcess
+
+      翻訳後処理用のプロセッサ名（登録済みの postProcessor を呼ぶ）
+
+    ・(上級) replace
+      プレーン文字列の置換（低レベル）   ※ 低レベルとは、interpolation よりも前に処理される
+
+      例: t('someKey', { replace: { '%name%': 'Taro' } })
+
+
+    ■ 呼び出し例（基本・パラメタ渡し）
+
+    import { useTranslation, Trans } from 'react-i18next'
+
+    const Comp = () => {
+      const { t } = useTranslation()
+      const name = 'Taro'
+      const count = 3
+
+      t('welcome', { name })            // 単純なパラメタ渡し（interpolation）
+      t('welcome', { name: 'Hanako' })  // オブジェクトでのパラメタ渡し
+
+      t('login.title')                  // 階層キーの利用例
+
+      t('common:login.title')           // namespace + key 階層指定
+
+      t('login.title', { ns: 'common' }) // namespace指定
+
+      t('title')                        // defaultNS 利用時
+
+      t('max_users', { count })         // i18next が plural を選択
+
+      t('common:login.title', { lng: 'ja' })  // namespace や言語を明示する例
+
+      t('nonexistent.key', { defaultValue: 'Default Text' })
+
+      <div>
+        {t('welcome', { name })}
+        <Trans                          // Trans コンポーネントで HTML 要素を埋め込み
+          i18nKey="welcomeUser"         // welcomeUser はマークアップを含む例
+          values={{ name, count }}
+          components={[<strong/>, <em/>]}
+        />
+      </div>
+
+    ■ interpolation の注意（React 利用時）
+
+    ・HTML エスケープされないよう デフォルトで `escapeValue: false` に設定
+
+    ■ 例: date フォーマット用の format 実装
+
+      i18n.init({
+        interpolation: {
+          format: (value, format, lng) => {
+            if (value instanceof Date) return new Intl.DateTimeFormat(lng).format(value)
+            if (format === 'uppercase') return String(value).toUpperCase()
+            return value
+          }
+        }
+      })
+
+      t('someDateKey', { val: new Date(), format: 'short' })
+
+    ■ 補足: 運用上のポイント
+
+    ・編集可能な翻訳はバックエンド/DB に保持して UI で更新可能にすると運用が楽
+    ・plural, context（男女等）を使う場合は resources に対応するキー構成を用意
+    ・Trans を使うと複雑なマークアップを含む文の翻訳が楽

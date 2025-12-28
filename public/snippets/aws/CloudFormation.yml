@@ -2,10 +2,10 @@
 #-------------------------------
 # AWS
 #-------------------------------
-- KEY: aws.CloudFormation.category
+- ENTRY:
   CATEGORY: CloudFormation
 
-- KEY: aws.CloudFormation.xxxxx
+- ENTRY:
   EXPLAIN: |
     xxxxxx
   BODY: |

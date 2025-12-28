@@ -2,10 +2,10 @@
 #-------------------------------
 # MySQL
 #-------------------------------
-- KEY: mysql.command.title
+- ENTRY:
   CATEGORY: コマンド
 
-- KEY: mysql.command
+- ENTRY:
   EXPLAIN: コマンド
   BODY: |
     mysql -u [username] -p [password] [database] // 接続
@@ -14,10 +14,10 @@
 #-------------------------------
 # データベース
 #-------------------------------
-- KEY: mysql.db.title
+- ENTRY:
   CATEGORY: データベース
 
-- KEY: mysql.db
+- ENTRY:
   EXPLAIN: テーブル作成
   BODY: |
     CREATE/DROP DATABASE <database>; // DB作成/削除
@@ -27,7 +27,7 @@
     SHOW CREATE TABLE <table>;       // テーブルのDDL(SQL形式)
     SHOW COLUMNS FROM <table>;       // テーブルのDDL(表形式)
 
-- KEY: mysql.db.explain
+- ENTRY:
   EXPLAIN: クエリ解析
   BODY: |
     EXPLAIN <query>;         // 実行計画
@@ -36,10 +36,10 @@
 #-------------------------------
 # テーブル
 #-------------------------------
-- KEY: mysql.table.title
+- ENTRY:
   CATEGORY: テーブル
 
-- KEY: mysql.table.create
+- ENTRY:
   EXPLAIN: テーブル定義
   BODY: |
     CREATE <schema>.<table>(
@@ -58,7 +58,7 @@
       <col> DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  // 日付自動更新
     )
 
-- KEY: mysql.table.create.sample
+- ENTRY:
   EXPLAIN: テーブル定義サンプル
   BODY: |
     create table person (
@@ -75,7 +75,7 @@
       updated timestamp default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP
     );
 
-- KEY: mysql.table.create.sample.city.person
+- ENTRY:
   EXPLAIN: テーブル定義(市・人)
   BODY: |
     create table city (
@@ -104,7 +104,7 @@
     |  4 | Bill  |   NULL  | 
     ------------------------
 
-- KEY: mysql.table.alter.drop
+- ENTRY:
   EXPLAIN: テーブル変更・削除
   BODY: |
     ALTER TABLE <tableA> RENAME <tableB>;                    // テーブル名変更
@@ -118,10 +118,10 @@
 #-------------------------------
 # ビュー
 #-------------------------------
-- KEY: mysql.view.title
+- ENTRY:
   CATEGORY: ビュー
 
-- KEY: mysql.view
+- ENTRY:
   EXPLAIN: ビュー
   BODY: |
     //INSERT/UPDATE/DELETE も条件次第で可能
@@ -131,10 +131,10 @@
 #-------------------------------
 # クエリ
 #-------------------------------
-- KEY: mysql.query.title
+- ENTRY:
   CATEGORY: クエリ
 
-- KEY: mysql.query
+- ENTRY:
   EXPLAIN: クエリ
   BODY: |
     SELECT [DISTINCT] <alias>.<col> as <alias>, ...
@@ -145,7 +145,7 @@
     HAVING <condition>
     OFFSET <number> LIMIT <number>;
 
-- KEY: mysql.query.join
+- ENTRY:
   EXPLAIN: クエリ(join)
   BODY: |
     SELECT <tableA>.<col>, <tableB>.<col>
@@ -153,7 +153,7 @@
     [NATURAL] [ INNER | LEFT | RIGHT | CROSS ] JOIN <tableB>
     ON <tableA>.<col> = <tableB>.<col>;  USING (<col>,... *カラム名が一致);
 
-- KEY: mysql.query.join.sample
+- ENTRY:
   EXPLAIN: クエリ(join)サンプル
   BODY: |
     select * from city, person where city.id=person.city_id;
@@ -185,7 +185,7 @@
     | NULL | NULL   |    4 | Bill  |  NULL  |
     -----------------------------------------
 
-- KEY: mysql.query.union.sample
+- ENTRY:
   EXPLAIN: クエリ(UNION)サンプル
   BODY: |
     (select <2 columns> from <table>) union (<2 columns> from <table>) order by <colum>;
@@ -199,7 +199,7 @@
     *Error: カラム数不一致
     (select <2 columns> from <table>) union (<3 columns> from <table>) order by <colum>;
 
-- KEY: mysql.query.union
+- ENTRY:
   EXPLAIN: クエリ(UNION)
   BODY: |
     create table city (
@@ -239,7 +239,7 @@
     |  4 | Bill    |
     ----------------
 
-- KEY: mysql.query.values
+- ENTRY:
   EXPLAIN: クエリ(VALUES)
   BODY: |
     VALUES ROW(value1,value2,value3), ROW(value1,value2,value3), ...;
@@ -249,13 +249,13 @@
     *SELECT不要
     *Error: カラム数不一致 VALUES ROW(value1,value2,value3), ROW(value1);
 
-- KEY: mysql.query.with
+- ENTRY:
   EXPLAIN: クエリ(WITH句)
   BODY: |
     WITH [RECURSIVE] <with1> [(<col>,...)] AS (SELECT <col>,....), <with2>
     SELECT <col>,<col> FROM <with1>;
 
-- KEY: mysql.query.sub
+- ENTRY:
   EXPLAIN: サブクエリ
   BODY: |
     <col> IN (1,2,3)                   // (遅い)存在有無 =ANY
@@ -274,10 +274,10 @@
 #-------------------------------
 # 操作(更新,更新,削除)
 #-------------------------------
-- KEY: mysql.manip.title
+- ENTRY:
   CATEGORY: 操作(更新,更新,削除)
 
-- KEY: mysql.insert
+- ENTRY:
   EXPLAIN: 挿入(or更新)
   BODY: |
     INSERT INTO <table>(<cols>) VALUES (values),(values),...;
@@ -287,12 +287,12 @@
     // 挿入 or 削除=>新規挿入
     REPLACE INTO <table>(<cols>) VALUES (values),(values),...;
 
-- KEY: mysql.update
+- ENTRY:
   EXPLAIN: 更新
   BODY: |
     UPDATE <schema>.<table> SET <col>=value WHERE condition;
 
-- KEY: mysql.delete
+- ENTRY:
   EXPLAIN: 削除
   BODY: |
     DELETE FROM <schema>.<table> WHERE condition;  // 削除
@@ -301,10 +301,10 @@
 #-------------------------------
 # 比較
 #-------------------------------
-- KEY: mysql.compare.title
+- ENTRY:
   CATEGORY: 比較
 
-- KEY: mysql.compare.signs
+- ENTRY:
   EXPLAIN: 比較記号
   BODY: |
     =, <, <=, >, =>, <>, BETWEEN A AND B, IS
@@ -322,14 +322,14 @@
     --30分以内のdate
     INTERVAL 例: SELECT * FROM table WHERE (`date` > (NOW() - INTERVAL 30 MINUTE)
 
-- KEY: mysql.regExp
+- ENTRY:
   EXPLAIN: 正規表現
   BODY: |
     <col> LIKE '%文字列%' (%:0以上)
     <col> LIKE '_文字列_' (_:1文字) 
     <col> REGEXP [BINARY] '正規表現'      //BINARY:CASE区別
 
-- KEY: mysql.regExp.REGEXP_INSTR
+- ENTRY:
   EXPLAIN: 拡張(INDEX)
   BODY: |
     REGEXP_INSTR(<col>,'正規表現',一致位置,出現回数,返す位置,type) => INDEX
@@ -339,7 +339,7 @@
     REGEXP_INSTR('aa aaa aaaa', 'a{2}')   => 1
     REGEXP_INSTR('aa aaa aaaa', 'a{4}')   => 8
 
-- KEY: mysql.regExp.REGEXP_LIKE
+- ENTRY:
   EXPLAIN: 拡張(LIKE)
   BODY: |
     REGEXP_LIKE(<col>,'正規表現',type('c':case,'i':ins,'m':mult,...))
@@ -354,7 +354,7 @@
     REGEXP_LIKE('abc', 'ABC')                    => 1
     REGEXP_LIKE('abc', 'ABC', 'c')               => 0
 
-- KEY: mysql.regExp.REGEXP_REPLACE
+- ENTRY:
   EXPLAIN: 拡張(置換)
   BODY: |
     REGEXP_REPLACE(<col>,'正規表現','置換文字',一致位置,出現回数,type)
@@ -362,7 +362,7 @@
     REGEXP_REPLACE('a b c', 'b', 'X')                  => a X c
     REGEXP_REPLACE('abc def ghi', '[a-z]+', 'X', 1, 3) => abc def X
 
-- KEY: mysql.regExp.REGEXP_SUBSTR
+- ENTRY:
   EXPLAIN: 拡張(部分一致)
   BODY: |
     REGEXP_SUBSTR(<col>,'正規表現',一致位置,出現回数,type)
@@ -373,10 +373,10 @@
 #-------------------------------
 # 集約,結合,集計
 #-------------------------------
-- KEY: mysql.group.title
+- ENTRY:
   CATEGORY: 集約,結合,集計
 
-- KEY: mysql.group
+- ENTRY:
   EXPLAIN: 集約
   BODY: |
     COUNT([DISTINCT]<col>) //総数
@@ -385,7 +385,7 @@
     MIN(<col>)             //最小値
     SUM(<col>)             //合計値
 
-- KEY: mysql.group_concat
+- ENTRY:
   EXPLAIN: 結合
   BODY: |
     GROUP_CONCAT([DISTINCT] <col> [ORDER BY <col>] [SEPARATOR ' '])
@@ -394,7 +394,7 @@
     SELECT name, GROUP_CONCAT(DISTINCT score ORDER BY score DESC SEPARATOR ',')
       FROM student GROUP BY name;
 
-- KEY: mysql.json_agg
+- ENTRY:
   EXPLAIN: JSON形式
   BODY: |
     +----+-----------+-------+
@@ -416,7 +416,7 @@
     |  3 | {"color": "green", "shape": "square"} |
     +----+---------------------------------------+
 
-- KEY: mysql.window
+- ENTRY:
   EXPLAIN: 集計(GROUP BY不要)
   BODY: |
     // 全レコードから集計
@@ -427,10 +427,10 @@
 #-------------------------------
 # 構文
 #-------------------------------
-- KEY: mysql.syntax.title
+- ENTRY:
   CATEGORY: 構文
 
-- KEY: mysql.if.case
+- ENTRY:
   EXPLAIN: 条件節
   BODY: |
     IF(条件節, 正, 負)
@@ -438,7 +438,7 @@
     ---------------------------------------------------------
     CASE <table>.<col> WHEN value THEN value ELSE value END;
 
-- KEY: mysql.if.null
+- ENTRY:
   EXPLAIN: 条件節(NULL)
   BODY: |
     ISNULL(<col>)
@@ -463,10 +463,10 @@
 #-------------------------------
 # 型 & 関数
 #-------------------------------
-- KEY: mysql.type.title
+- ENTRY:
   CATEGORY: 型 & 関数
 
-- KEY: mysql.type.number
+- ENTRY:
   EXPLAIN: 型(数)
   BODY: |
     BIT(桁)                  :1bit
@@ -480,7 +480,7 @@
     DOUBLE [PRECISION]/REAL  :8B
     DECIMAL=DEC(桁[,小数点桁])
 
-- KEY: mysql.method.number
+- ENTRY:
   EXPLAIN: 関数(数)
   BODY: |
     MOD(<col>,modulo)
@@ -493,7 +493,7 @@
     TRUNCATE(<col>[,小数点桁])
     FORMAT(<col>,小数点桁[,Locale]) 例: xxx,xxx[.xx]
 
-- KEY: mysql.type.string
+- ENTRY:
   EXPLAIN: 型(文字)
   BODY: |
     CHAR(数)
@@ -506,7 +506,7 @@
     ENUM('value1','value2',...)
     SET('value1','value2',...)
 
-- KEY: mysql.method.string
+- ENTRY:
   EXPLAIN: 関数(文字)
   BODY: |
     CONCAT(<col>,<col>,...)
@@ -528,7 +528,7 @@
     REVERSE(<col>)
     LOAD_FILE('/dir/file')
 
-- KEY: mysql.type.date
+- ENTRY:
   EXPLAIN: 型(日付)
   BODY: |
     DATE='YYYY-MM-DD'
@@ -537,7 +537,7 @@
     DATETIME='YYYY-MM-DD HH:MM:SS'
     TIMESTAMP='YYYY-MM-DD HH:MM:SS'(TimeZone関連)
 
-- KEY: mysql.method.date
+- ENTRY:
   EXPLAIN: 関数(日付)
   BODY: |
     //期間指定(日時)
@@ -573,7 +573,7 @@
     //タイムスタンプ差分整数
     TIMESTAMPDIFF(YEAR/MONTH/WEEK/DAY,'YYYY-MM-DD','YYYY-MM-DD')
 
-- KEY: mysql.cast
+- ENTRY:
   EXPLAIN: 型変換
   BODY: |
     対象: CHAR,NCHAR,BINARY,DECIMAL,DOUBLE,FLOAT,REAL,DATE,TIME,DATETIME
@@ -583,7 +583,7 @@
     CAST('HH:MM' AS TIME)                   //文字列 => DATE/TIME変換
     CAST('YYYY-MM-DD HH:MM:SS' AS DATETIME) //文字列 => DATETIME変換
 
-- KEY: mysql.variable.set
+- ENTRY:
   EXPLAIN: 変数(set@)
   BODY: |
     SET @var1[=value], @var2[=value], ...;                     //宣言(=初期値)
@@ -594,7 +594,7 @@
     SELECT @A:=SUM(salary) FROM table1 WHERE type=1;
     UPDATE table2 SET summary=@A WHERE type=1;
 
-- KEY: mysql.variable.declare
+- ENTRY:
   EXPLAIN: 変数(Declare)
   BODY: |
     DECLARE xname VARCHAR(5) DEFAULT 'bob';
@@ -606,10 +606,10 @@
 #-------------------------------
 # 型 & 関数
 #-------------------------------
-- KEY: mysql.statement.title
+- ENTRY:
   CATEGORY: PROCEDURE, FUNCTION, TRIGGER
 
-- KEY: mysql.statement.proc
+- ENTRY:
   EXPLAIN: プロセス
   BODY: |
     delimiter //
@@ -646,7 +646,7 @@
     //
     DELIMITER ;
 
-- KEY: mysql.statement.func
+- ENTRY:
   EXPLAIN: 関数
   BODY: |
     delimiter //
@@ -676,7 +676,7 @@
     //
     DELIMITER ;
 
-- KEY: mysql.statement.trigger
+- ENTRY:
   EXPLAIN: トリガー
   BODY: |
     DELIMITER //
@@ -695,7 +695,7 @@
       END IF;
     END;
 
-- KEY: mysql.statement.repeat
+- ENTRY:
   EXPLAIN: 繰り返し(REPEAT)
   BODY: |
     BEGIN
@@ -705,7 +705,7 @@
       UNTIL @x > p1 END REPEAT;
     END;
 
-- KEY: mysql.statement.loop
+- ENTRY:
   EXPLAIN: 繰り返し(LOOP)
   BODY: |
     BEGIN
@@ -716,7 +716,7 @@
       END LOOP label1;
     END;
 
-- KEY: mysql.statement.while
+- ENTRY:
   EXPLAIN: 繰り返し(WHILE)
   BODY: |
     BEGIN
@@ -727,7 +727,7 @@
       END WHILE;
     END;
 
-- KEY: mysql.statement.cursor
+- ENTRY:
   EXPLAIN: カーソル
   BODY: |
     CREATE PROCEDURE sp2 (x VARCHAR(5))
@@ -747,7 +747,7 @@
       CLOSE cur1;
     END;
 
-- KEY: mysql.statement.case
+- ENTRY:
   EXPLAIN: 分岐(CASE)
   BODY: |
     BEGIN
@@ -762,7 +762,7 @@
       END CASE;
     END;
 
-- KEY: mysql.statement.if
+- ENTRY:
   EXPLAIN: 分岐(IF)
   BODY: |
     BEGIN
@@ -775,7 +775,7 @@
       RETURN s;
     END //
 
-- KEY: mysql.statement.prepared
+- ENTRY:
   EXPLAIN: プリペアド
   BODY: |
     PREPARE <NAME> FROM '<statement文字列に引数(?)>'; // 文字列は動的に生成可能
@@ -809,7 +809,7 @@
     +----+
     DEALLOCATE PREPARE stmt3;
 
-- KEY: mysql.transaction
+- ENTRY:
   EXPLAIN: トランザクション
   BODY: |
     START TRANSACTION;
@@ -817,7 +817,7 @@
       UPDATE table2 SET summary=@A WHERE type=1;
     COMMIT;
 
-- KEY: mysql.transaction.stored
+- ENTRY:
   EXPLAIN: トランザクション(Stored)
   BODY: |
     DELIMITER //
@@ -839,27 +839,27 @@
     END//
     DELIMITER ;
 
-# - KEY: mysql.
+# - ENTRY:
 #   EXPLAIN:
 #   BODY: |
 
-# - KEY: mysql.
+# - ENTRY:
 #   EXPLAIN:
 #   BODY: |
 
-# - KEY: mysql.transaction.deadlock
+# - ENTRY:
 #   EXPLAIN: デッドロック
 #   BODY: |
 #     SHOW ENGINE INNODB STATUS;
 
-# - KEY: mysql.
+# - ENTRY:
 #   EXPLAIN:
 #   BODY: |
 
-# - KEY: mysql.
+# - ENTRY:
 #   EXPLAIN:
 #   BODY: |
 
-# - KEY: mysql.
+# - ENTRY:
 #   EXPLAIN:
 #   BODY: |

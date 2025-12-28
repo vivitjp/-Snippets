@@ -2,11 +2,11 @@
 #-------------------------------
 # Package: Storybook
 #-------------------------------
-- KEY: pk.jotai.atom.title
+- ENTRY:
   CATEGORY: |
     atom
 
-- KEY: pk.jotai.atom.signature
+- ENTRY:
   EXPLAIN: atom 型
   BODY: |
     ● Basic
@@ -27,7 +27,7 @@
       write: (get: Getter, set: Setter, ...args: Args) => Result,
     ): WritableAtom<Value, Args, Result>
 
-- KEY: pk.jotai.atom.basic
+- ENTRY:
   EXPLAIN: atom 基礎
   BODY: |
     import { atom } from "jotai"
@@ -38,7 +38,7 @@
     export const citiesAtom = atom(["東京", "京都", "大阪"])
     export const citySelectedAtom = atom("")
 
-- KEY: pk.jotai.atom.onMount
+- ENTRY:
   EXPLAIN: onMount
   BODY: |
     const anAtom = atom(1)
@@ -60,7 +60,7 @@
       ...
     }
 
-- KEY: pk.jotai.atom.derived
+- ENTRY:
   EXPLAIN: 派生 atom
   BODY: |
     他の atom の値を加工
@@ -92,7 +92,7 @@
       },
     )
 
-- KEY: pk.jotai.atom.get.set
+- ENTRY:
   EXPLAIN: Get, Set & 引数
   BODY: |
     Get: 他の atom 値を取得
@@ -106,7 +106,7 @@
       }
     )
 
-- KEY: pk.jotai.atom.async
+- ENTRY:
   EXPLAIN: 非同期
   BODY: |
     ■ 非同期fetch: 即時コール
@@ -118,7 +118,7 @@
       return await response.json()
     })
 
-- KEY: pk.jotai.atom.async.lazy
+- ENTRY:
   EXPLAIN: 非同期(Lazy)
   BODY: |
     ■ 非同期fetch: Lazyコール
@@ -133,7 +133,7 @@
       }
     )
 
-- KEY: pk.jotai.atom.render
+- ENTRY:
   EXPLAIN: Renderメソッド内での宣言
   BODY: |
     レンダーコンポーネント内で宣言する場合は useMemo を使用
@@ -142,7 +142,7 @@
       // ...
     }
 
-- KEY: pk.jotai.atom.signal
+- ENTRY:
   EXPLAIN: Abort Control
   BODY: |
     ● 読み取り専用
@@ -197,11 +197,11 @@
 
     export default App
 
-- KEY: pk.jotai.useAtom.title
+- ENTRY:
   CATEGORY: |
     useAtom
 
-- KEY: pk.jotai.useAtom.methods
+- ENTRY:
   EXPLAIN: メソッド
   BODY: |
     ● atoms
@@ -228,7 +228,7 @@
       useCallback((get) => get(anAtom), []),
     )
 
-- KEY: pk.jotai.parent.child
+- ENTRY:
   EXPLAIN: 親子サンプル
   BODY: |
     ■ [atoms.ts]
@@ -275,7 +275,7 @@
       )
     }
 
-- KEY: pk.jotai.excel.chained
+- ENTRY:
   EXPLAIN: Excelスタイル連鎖更新
   BODY: |
     Excelの連鎖参照を実現

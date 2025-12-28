@@ -3,12 +3,12 @@
 # Lint Rules
 #-------------------------------
 
-- KEY: lint.rules.more
+- ENTRY:
   EXPLAIN: URL for more
   BODY: |
     https://eslint.org/docs/latest/rules/
 
-- KEY: lint.rules.array-callback-return
+- ENTRY:
   EXPLAIN: array-callback-return
   BODY: |
     ■ 誤
@@ -19,7 +19,7 @@
     }, {});
     // Error: cannot set property 'b' of undefined
 
-- KEY: lint.rules.constructor-super
+- ENTRY:
   EXPLAIN: constructor-super
   BODY: |
     ■ 誤
@@ -42,7 +42,7 @@
       }
     }
 
-- KEY: lint.rules.for-direction
+- ENTRY:
   EXPLAIN: for-direction
   BODY: |
     ■ 誤
@@ -53,7 +53,7 @@
     const n = -2;
     for (let i = 0; i < 10; i += n) {  }
 
-- KEY: lint.rules.getter-return
+- ENTRY:
   EXPLAIN: getter-return
   BODY: |
     ■ 誤
@@ -70,7 +70,7 @@
         }
     });
 
-- KEY: lint.rules.no-async-promise-executor
+- ENTRY:
   EXPLAIN: no-async-promise-executor
   BODY: |
     ■ 誤
@@ -95,7 +95,7 @@
       });
     });
 
-- KEY: lint.rules.no-await-in-loop
+- ENTRY:
   EXPLAIN: no-await-in-loop
   BODY: |
     ■ 誤
@@ -116,7 +116,7 @@
       return baz(await Promise.all(results));     // 並行処理
     }
 
-- KEY: lint.rules.no-class-assign
+- ENTRY:
   EXPLAIN: no-class-assign
   BODY: |
     ■ 誤
@@ -127,7 +127,7 @@
     let A = class A { }
     A = 0; // A is a variable.
 
-- KEY: lint.rules.no-compare-neg-zero
+- ENTRY:
   EXPLAIN: no-compare-neg-zero
   BODY: |
     ■ 誤
@@ -140,7 +140,7 @@
       // doSomething()...
     }
 
-- KEY: lint.rules.no-cond-assign
+- ENTRY:
   EXPLAIN: no-cond-assign
   BODY: |
     ■ 誤
@@ -167,7 +167,7 @@
       } while (someNode === someNode.parentNode); // ===
     }
 
-- KEY: lint.rules.no-const-assign
+- ENTRY:
   EXPLAIN: no-const-assign
   BODY: |
     ■ 誤
@@ -186,7 +186,7 @@
       console.log(a);
     }
 
-- KEY: lint.rules.no-constant-binary-expression
+- ENTRY:
   EXPLAIN: no-constant-binary-expression
   BODY: |
     ■ 誤
@@ -208,7 +208,7 @@
     const objIsEmpty = Object.keys(someObj).length === 0;
     const arrIsEmpty = someArr.length === 0;
 
-- KEY: lint.rules.no-constant-condition
+- ENTRY:
   EXPLAIN: no-constant-condition
   BODY: |
     ■ 誤
@@ -234,7 +234,7 @@
     var result = x !== 0 ? a : b;
     if(input === "hello" || input === "bye"){  }
 
-- KEY: lint.rules.no-constructor-return
+- ENTRY:
   EXPLAIN: no-constructor-return
   BODY: |
     ■ 誤
@@ -274,7 +274,7 @@
       }
     }
 
-- KEY: lint.rules.no-control-regex
+- ENTRY:
   EXPLAIN: no-control-regex
   BODY: |
     ■ 誤
@@ -296,7 +296,7 @@
     var pattern7 = new RegExp("\\t");
     var pattern8 = new RegExp("\\n");
 
-- KEY: lint.rules.no-debugger
+- ENTRY:
   EXPLAIN: no-debugger
   BODY: |
     ■ 誤
@@ -305,7 +305,7 @@
       return Boolean(x);
     }
 
-- KEY: lint.rules.no-dupe-args
+- ENTRY:
   EXPLAIN: no-dupe-args
   BODY: |
     ■ 誤
@@ -325,7 +325,7 @@
     var bar = function (a, b, c) {
       console.log(a);
     };
-- KEY: lint.rules.no-dupe-class-members
+- ENTRY:
   EXPLAIN: no-dupe-class-members
   BODY: |
     ■ 誤
@@ -350,7 +350,7 @@
       get car() { }
     }
 
-- KEY: lint.rules.no-dupe-else-if
+- ENTRY:
   EXPLAIN: no-dupe-else-if
   BODY: |
     ■ 誤
@@ -367,7 +367,7 @@
         bar();
     }
 
-- KEY: lint.rules.no-dupe-keys
+- ENTRY:
   EXPLAIN: no-dupe-keys
   BODY: |
     ■ 誤

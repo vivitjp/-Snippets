@@ -1,0 +1,73 @@
+---
+#-------------------------------
+# Node
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: What's Bun
+  BODY: |
+    BunはNode.jsやDenoのようなJavascriptランタイム
+
+    ・TypescriptからJavascriptへのトランスパイル
+    ・jsxからJavascriptへのトランスパイル
+    ・npmのようなパッケージのインストール&管理
+    ・webpackのようなプロジェクトのバンドル化
+    ・サーバーでJavascriptを実行
+
+    ・エンジン: WebkitのJavaScriptCore
+    ・開発言語: Zig
+
+    ・トップレベルでのasync/wait
+    ・Built inのWeb API(fetchやWebSocketなど)
+    ・Bun.writeのような高速ファイルシステムAPI
+    ・node:fsやnode:pathのようなNode.jsのコアモジュールのサポート
+    ・ほぼ全てのNode-APIのサポート
+    ・.envファイルの自動読み込み(dotenv不必要)
+
+    短所
+    ・一人プロダクトで、ドキュメントが未整備
+    ・Node.js との互換性はまだ限定的で Next.js にのみ専用の shim を用意
+    ・Node.js との互換性のために機能追加予定だが、今のところは割と力技による実装
+
+- ENTRY:
+  EXPLAIN: Transpile
+  BODY: |
+    Bunは.tsファイルを勝手にトランスパイルして実行(Denoと同じ)
+    node_modules内の.tsファイルもトランスパイル
+    Typescriptをインストールする必要なく、tsconfig.jsonも必要なし
+    configを書き換えたい場合は tsconfig.json を用意すればOK
+
+- ENTRY:
+  EXPLAIN: Transpile JSX
+  BODY: |
+    jsxからJavascriptへのトランスパイル
+    jsxもトランスパイル
+    Babelが必要なし
+
+- ENTRY:
+  EXPLAIN: パッケージ管理
+  BODY: |
+    パッケージインストーラーとしても使用可
+    node_modulesとpackage.jsonで管理
+    インストールが高速
+    bun run <スクリプト名> でpackage.jsonで設定されたスクリプト実行可
+
+- ENTRY:
+  EXPLAIN: バンドル化
+  BODY: |
+    ■ バンドルコマンド
+    bun bun index.js
+
+    index.jsが依存する全モジュールをnode_modules.bun にまとめる
+    index.jsそのものは含まれない
+
+    node_modules.bun
+    ・パッケージのソースコード
+    ・ソースコードのメタデータ
+    ・プロジェクトののメタデータ＆設定
+
+    ■ プロジェクトソースコード閲覧
+    bun node_modules.bun
+
+    ■ プロジェクトソースコード書き出し
+    ./node_modules.bun > node_modules.js

@@ -1,0 +1,599 @@
+# ----------------------------
+# JavaScript
+# ----------------------------
+
+- ENTRY:
+  EXPLAIN: Window
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    self
+    top
+    parent
+    opener
+    length
+    name
+
+    focus()
+    blur()
+    scroll(x,y)
+    scrollTo(x,y)
+    scrollBy(x,y)
+    resizeTo(x,y)
+    resizeBy(x,y)
+    moveTo(x,y)
+    moveBy(x,y)
+    stop()
+    print()
+
+    innerHeight
+    innerWidth
+    outerHeight
+    outerWidth
+    pageXOffset
+    pageYOffset
+
+    addEventListener(e,f)
+    removeEventListener()
+
+    captureEvents(es)
+    disableExternalCapture()
+    enableExternalCapture()
+    handleEvent(e)
+    releaseEvents(es)
+    routeEvent(e)
+
+    open(url, name,...)
+      _top
+      _blank
+      _self
+      _parent
+    close()
+    closed
+    home()
+
+    localStorage
+    openDatabase()
+    indexedDB
+
+    location
+    document
+    navigator
+    status
+    defaultStatus
+
+    menubar.visible
+    toolbar.visible
+    locationbar.visible
+    statusbar.visible
+    scrollbars.visible
+    personalbar.visible
+
+    clientInformation
+    offscreenBuffering
+    find()
+    showHelp(url)
+    atob(str)
+    btoa(str)
+    postMessage(msg,trg)
+    applicationCache
+    getSelection()
+
+- ENTRY:
+  EXPLAIN: Frame
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    frames
+    frames.length
+    frames[n]
+
+- ENTRY:
+  EXPLAIN: Dialog
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    alert()
+    confirm()
+    prompt()
+
+    showModalDialog(url,...)
+    showModelessDialog(url)
+    dialogArguments
+    dialogHeight
+    dialogWidth
+    dialogLeft
+    dialogTop
+    returnValue
+
+- ENTRY:
+  EXPLAIN: History
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    history.length
+    history.current
+    history.next
+    history.previous
+    history.back()
+    history.forward()
+    history.go(n)
+
+- ENTRY:
+  EXPLAIN: Location
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    location.protocol
+    location.host
+    location.hostname
+    location.port
+    location.pathname
+    location.search
+    location.hash
+    location.href
+    location.assign(url)
+    location.replace(url)
+    location.reload()
+
+- ENTRY:
+  EXPLAIN: Timer
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    setTimeout(script,ms)
+    clearTimeout(fid)
+    setInterval(script,ms)
+    clearInterval(fid)
+
+- ENTRY:
+  EXPLAIN: Document
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    document.bgColor
+    document.fgColor
+    document.linkColor
+    document.alinkColor
+    document.vlinkColor
+
+    document.open()
+    document.close()
+    document.write(msg)
+    document.writeln(msg)
+    document.clear()
+
+    document.lastModified
+    document.referrer
+    document.URL
+    document.domain
+    document.title
+    document.charset
+    document.defaultCharset
+    document.readyState
+
+    document.all
+    document.activeElement
+    document.elementFromPoint(x,y)
+    document.createElement(tag)
+
+    document.cookie
+    document.parentWindow
+    document.expando
+    document.embeds
+
+    document.getSelection()
+    document.type
+    document.clear()
+    document.empty()
+    document.createRange()
+
+    document.createStyleSheet(URL)
+    document.showHelp(URL):MS Only
+    document.handleEvent(event)
+    document.releaseEvents(events)
+    document.routeEvent()
+
+- ENTRY:
+  EXPLAIN: Anchor
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    document.anchors
+    document.anchors.length
+    document.anchors[n]
+    document.anchor.name
+    document.anchor.text
+    document.anchor.x
+    document.anchor.y
+
+- ENTRY:
+  EXPLAIN: Element
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    document.all(n)
+    document.all.id
+    document.all.length
+    document.all.item(id)
+    document.all.item(id, n)
+    document.all.item(id).length
+    document.all.tags(tag)
+    document.all.tags(tag)(n)
+    document.all.tags(tag).length
+
+    element.title
+    document.style.STYLENAME
+    document.innerHTML
+    document.innerText
+    document.tagName
+    document.className
+    document.id
+    document.lang
+    document.language
+    document.parentElement
+    document.click()
+
+- ENTRY:
+  EXPLAIN: Dom
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    getElementById()
+    getElementsByTagName()
+    getElementsByClassName()
+    getElementsByName()
+    querySelector()
+    querySelectorAll()
+
+    childNodes
+    parentNode
+    firstChild
+    lastChild
+    previousSibling
+    nextSibling
+
+    setAttribute(id, val)
+    getAttributeNode()
+    attributes.getNamedItem()
+    setAttributeNode()
+      [value/nodeValue]
+
+    createElement()
+    appendChild(el)
+
+- ENTRY:
+  EXPLAIN: Form
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    forms.length
+    form.action
+    form.encoding
+    form.method
+    form.name
+    form.target
+    form.submit()
+    form.reset()
+    form.handleEvent(event)
+    form.elements
+    form.elements.length
+
+    form.element.name
+    form.type
+    form.form
+    form.value
+    form.focus()
+    form.blur()
+
+    form.text.defaultValue
+    form.select()
+
+    form.checkbox.checked
+    form.defaultChecked
+    form.click()
+
+    form.select.length
+    form.selectedIndex
+    form.options
+    form.options[n]
+    form.options.length
+    form.option.defaultSelected
+    form.option.selected
+    form.option.text
+    form.option.value
+
+- ENTRY:
+  EXPLAIN: Image
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    images
+    images[n]
+    images[name]
+    images.length
+
+    img = new Image([w,h])
+    img.src
+    img.lowsrc
+    img.name
+    img.width
+    img.height
+    img.hspace
+    img.vspace
+    img.border
+    img.complete
+
+- ENTRY:
+  EXPLAIN: Link
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    links
+    links.length
+    links[n]
+
+    link.href
+    link.protocol
+    link.host
+    link.hostname
+    link.port
+    link.pathname
+    link.search
+    link.hash
+    link.target
+    link.text
+    link.handleEvent(e)
+
+- ENTRY:
+  EXPLAIN: Mime
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    mimeTypes
+    mimeTypes.length
+    mimeTypes[n]
+    mimeType.type
+    mimeType.description
+    mimeType.enabledPlugin
+    mimeType.suffixes
+
+- ENTRY:
+  EXPLAIN: Plugin
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    plugins
+    plugins.length
+    plugins[n]
+    plugin.name
+    plugin.description
+    plugin.filename
+    plugin.length
+    plugin[n]
+
+- ENTRY:
+  EXPLAIN: Navigator
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    navigator
+    navigator.appCodeName
+    navigator.appName
+    navigator.appVersion
+    navigator.appMinorVersion
+    navigator.userAgent
+    navigator.platform
+    navigator.cpuClass
+    navigator.language
+    navigator.browserLanguage
+    navigator.systemLanguage
+    navigator.userLanguage
+    navigator.cookieEnabled
+    navigator.onLine
+    navigator.javaEnabled()
+    navigator.userProfile
+    navigator.preference(name)
+    navigator.taintEnabled()
+
+- ENTRY:
+  EXPLAIN: Screen
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    screen.width
+    screen.height
+    screen.availWidth
+    screen.availHeight
+    screen.colorDepth
+    screen.pixelDepth
+    screen.bufferDepth
+    screen.updateInterval
+
+- ENTRY:
+  EXPLAIN: URL
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    decodeURI()
+    decodeURIComponent()
+    encodeURI()
+    encodeURIComponent()
+
+- ENTRY:
+  EXPLAIN: Misc.
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    eval()	[使用要注意]
+    escape()	[X]
+    unescape()	[X]
+
+- ENTRY:
+  EXPLAIN: Event
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    event.type
+    event.keyCode
+    event.shiftKey
+    event.ctrlKey
+    event.altKey
+    event.button
+
+    event.screenX/screenY
+    event.clientX/clientY
+    event.x/y
+    event.offsetX/offsetY
+
+    event.srcElement
+    event.fromElement
+    event.srcFilter
+    event.cancelBubble
+    event.returnValue=val
+    event.reason
+
+    event.target
+    event.type
+    event.data
+    event.which
+    event.modifiers
+    event.screenX/screenY
+    event.pageX/pageY
+    event.width/height
+    event.layerX/layerY
+
+- ENTRY:
+  EXPLAIN: Event Handler:mouse
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    onclick
+    oncontextmenu
+    ondblclick
+    onmousedown
+    onmouseenter
+    onmouseleave
+    onmousemove
+    onmouseover
+    onmouseout
+    onmouseup
+
+- ENTRY:
+  EXPLAIN: Event Handler:keyboard
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    onkeydown
+    onkeypress
+    onkeyup
+
+- ENTRY:
+  EXPLAIN: Event Handler:frame
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    onabort
+    onbeforeunload
+    onerror
+    onhashchange
+    onload
+    onpagehide
+    onpageshow
+    onresize
+    onscroll
+    onunload
+
+- ENTRY:
+  EXPLAIN: Event Handler:form
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    onblur
+    onchange
+    onfocus
+    onfocusin
+    onfocusout
+    oninput
+    oninvalid
+    onreset
+    onsearch
+    onselect
+    onsubmit
+
+- ENTRY:
+  EXPLAIN: Event Handler:drag
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    ondrag
+    ondragend
+    ondragenter
+    ondragleave
+    ondragover
+    ondragstart
+    ondrop
+
+- ENTRY:
+  EXPLAIN: Event Handler:clipboard
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    oncopy
+    oncut
+    onpaste
+
+- ENTRY:
+  EXPLAIN: Event Handler:media
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    onabort
+    oncanplay
+    oncanplaythrough
+    ondurationchange
+    onended
+    onerror
+    onloadeddata
+    onloadedmetadata
+    onloadstart
+    onpause
+    onplay
+    onplaying
+    onprogress
+    onratechange
+    onseeked
+    onseeking
+    onstalled
+    onsuspend
+    ontimeupdate
+    onvolumechange
+    onwaiting
+
+- ENTRY:
+  EXPLAIN: Event Handler:animation
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    animationend
+    animationiteration
+    animationstart
+
+- ENTRY:
+  EXPLAIN: Event Handler:other
+  OPTIONS:
+    COLS: 3
+  BODY: |
+    transitionend
+    onmessage
+    onoffline
+    ononline
+    onpopstate
+    onshow
+    onstorage
+    ontoggle
+    onwheel
+    ontouchcancel
+    ontouchend
+    ontouchmove
+    ontouchstart

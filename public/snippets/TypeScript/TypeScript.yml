@@ -2,10 +2,10 @@
 #-------------------------------
 # TypeScript 2024
 #-------------------------------
-- KEY: ts.TypeScript.category
+- ENTRY:
   CATEGORY: TypeScript 型
 
-- KEY: ts.types
+- ENTRY:
   EXPLAIN: 型(プリミティブ型)
   BODY: |
     ■ プリミティブ型
@@ -49,13 +49,13 @@
         case "B": return ...
         default: let _ng:never = props       // 警告
 
-- KEY: ts.type.Builtin
+- ENTRY:
   EXPLAIN: Primitive & Builtin リスト
   BODY: |
     type Primitive = number | string | boolean | bigint | symbol | undefined | null
     type Builtin = Primitive | Function | Date | Error | RegExp
 
-- KEY: ts.type.andOr
+- ENTRY:
   EXPLAIN: 型(AND/OR)
   BODY: |
     type P = { name:string, age: number }
@@ -87,7 +87,7 @@
     const NG: XP | XA = { name: "Eve", city:"Eve" }                       // ❌ 混用
     const NG: XP | XA = { city: "Paris", age: 18 }                        // ❌ 混用
 
-- KEY: ts.const
+- ENTRY:
   EXPLAIN: 定数&推論型
   BODY: |
     let a = 1                                // a:number型
@@ -96,7 +96,7 @@
     const b = {a:1} as const                 // narrowing: {readonly a:1}型
     type A = { readonly a:number }           // 読取専用
 
-- KEY: ts.interface
+- ENTRY:
   EXPLAIN: interface vs type
   BODY: |
     interface A { a:number, x?:string }
@@ -109,7 +109,7 @@
     type B = A & { b: number }               // intersect
     const b:B = { a: 1, b: 2 }               // 型適用
 
-- KEY: ts.assertion
+- ENTRY:
   EXPLAIN: 型指定(型アサーション)と satisfies
   BODY: |
     type A = { a: number; b: string | number }
@@ -134,7 +134,7 @@
       a: 1, b: 2
     } as const satisfies A                   //{ readonly a: 1; readonly b: 2; }
 
-- KEY: ts.typeof.keyof
+- ENTRY:
   EXPLAIN: Key取得
   BODY: |
     ■ 配列から型作成
@@ -176,7 +176,7 @@
       );
     }
 
-- KEY: ts.typeof.keyof.Record比較
+- ENTRY:
   EXPLAIN: 型取得とKV(MappedType & Record<> 比較)
   BODY: |
     ■ Object型宣言
@@ -220,21 +220,21 @@
         sales: {func:()=>{}}
     }
 
-- KEY: ts.indexing
+- ENTRY:
   EXPLAIN: 添字アクセス
   BODY: |
     type T = { a:{ x:number } }
     const a: T["a"]      = { x: 123 }
     const b: T["a"]["x"] = 123
 
-- KEY: ts.lookupTypes
+- ENTRY:
   EXPLAIN: 型内の型流用
   BODY: |
     type T = { a:string, b:number }
     type A = T["a"];                         // string
     type B = T["a"|"b"];                     // string|number
 
-- KEY: ts.index.signature
+- ENTRY:
   EXPLAIN: Object型のKey指定
   BODY: |
     type S
@@ -243,7 +243,7 @@
       = Record<PropertyKey, number>          * PropertyKey=string,number,symbol
     const c:S = { a:1, b:2, c:3 }
 
-- KEY: ts.mappedTypes
+- ENTRY:
   EXPLAIN: Mapped Types([key in T])
   BODY: |
     type A = number | string
@@ -255,7 +255,7 @@
     const o: B = { a: 1, b: "a" }
     type Z = { [key in keyof typeof o]: number }  //{ a:number, b:number }
 
-- KEY: ts.mapped.lookupTypes.mappedTypes
+- ENTRY:
   EXPLAIN: MappedType & Record<> 比較
   BODY: |
     type Sample = "A" | "B"
@@ -268,13 +268,13 @@
     const objB1:ObjB = { "A": 1 }
     const objB2:ObjB = { "A": 1, "B": 2 }
 
-- KEY: ts.alias(as)
+- ENTRY:
   EXPLAIN: エイリアス
   BODY: |
     type X<T> = { [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K] }
     type A = X<{ a: string }>                //{ getA:() => string }
 
-- KEY: ts.enum
+- ENTRY:
   EXPLAIN: 列挙体
   BODY: |
     enum ColorNo {
@@ -291,17 +291,17 @@
 #-------------------------------
 # Generics
 #-------------------------------
-- KEY: ts.generics.category
+- ENTRY:
   CATEGORY: ジェネリクス
 
-- KEY: ts.generics.type
+- ENTRY:
   EXPLAIN: ジェネリクス(型宣言)
   BODY: |
     type G<T> = { a: T }
     const a:G<number> = { a: 1 }
     const b:G<string> = { a: "x" }
 
-- KEY: ts.generics.extends
+- ENTRY:
   EXPLAIN: ジェネリクス(制約)
   BODY: |
     ■ 基礎
@@ -330,7 +330,7 @@
     type D<T extends typeof obj> = T
     const d: D<Obj> = { n: "a", a: 1 }
 
-- KEY: ts.generics.extends.if
+- ENTRY:
   EXPLAIN: ジェネリクス(三項分岐)
   BODY: |
     ■ 三項分岐 extends(=if)
@@ -346,7 +346,7 @@
     type Z<T extends boolean>                // (前半)型制約: T は Boolean
       = T extends true ? "a" : "b"           // (後半)三項分岐
 
-- KEY: ts.generics.extends.never
+- ENTRY:
   EXPLAIN: ジェネリクス(単純型変換)
   BODY: |
     ■ 三項分岐(:never) extends
@@ -359,7 +359,7 @@
       = [T] extends [any] ? T[] : never      //改善
     type Y = MakeArrayBetter<string | number> // (string|number)[] 想定通り
 
-- KEY: ts.generics.extends.infer
+- ENTRY:
   EXPLAIN: ジェネリクス(内部型取得と変換)
   BODY: |
     ■ 三項分岐(:infarで内包ターゲットの取り出し)
@@ -383,7 +383,7 @@
       = T extends [infer U extends number, ...unknown[]] ? U : never
     type Z = FirstElemIfNum<[1, 2, 3]>       // 1 : 最初の要素
 
-- KEY: ts.generics.extends.divide.string
+- ENTRY:
   EXPLAIN: ジェネリクス(文字列分割)
   BODY: |
     // ■ extends => 文字列分割
@@ -396,10 +396,10 @@
 #-------------------------------
 # Function
 #-------------------------------
-- KEY: ts.function.category
+- ENTRY:
   CATEGORY: 関数
 
-- KEY: ts.function
+- ENTRY:
   EXPLAIN: 関数(引数型,戻り値型)
   BODY: |
     const f:Function = (a:number) => a       // 関数型
@@ -414,7 +414,7 @@
     [NG] const f:E = (a:number) => a         // パラメタ少ない場合はNG
     [NG] const res = f(1)                    // 戻り値:number
 
-- KEY: ts.function.overload
+- ENTRY:
   EXPLAIN: 関数オーバーロード
   BODY: |
     function F(a:string):void
@@ -433,7 +433,7 @@
       if(typeof a==="string") {...} else {...}
     }
 
-- KEY: ts.function.callback
+- ENTRY:
   EXPLAIN: 関数Callback引数のパラメタ数
   BODY: |
     const f = (x: (a: number) => void) => {}
@@ -447,7 +447,7 @@
     f(cb, [2, 3])                            // 6
     f(cb, [2, 3, 4])                         // 6
 
-- KEY: ts.function.parameters
+- ENTRY:
   EXPLAIN: 関数引数 Sub/Super Set
   BODY: |
     type Sub = { x:number; y:number }
@@ -459,14 +459,14 @@
     super = sub                              // 多 <- 少: OK
     sub = super                              // 少 <- 多: NG(旧OK)
 
-- KEY: ts.function.react.companion
+- ENTRY:
   EXPLAIN: コンパニオン(引数型と関数同名)
   BODY: |
     ■ React Moduleの命名規則
     export type A = { name:string }
     export const A = (props:A):JSX.Element => {...}
 
-- KEY: ts.function.generic.parameters
+- ENTRY:
   EXPLAIN: ジェネリック関数パラメタ
   BODY: |
     ■ Reactでの書式(,付き)
@@ -476,7 +476,7 @@
     const g4 = <T=number,>(a: T)         => { console.log(a) }
     const g5 = <T extends number>(a: T)  => { console.log(a) }
 
-- KEY: ts.function.generic
+- ENTRY:
   EXPLAIN: ジェネリック関数型
   BODY: |
     type A1<T> = {(a: T[]): T}               // 一般関数
@@ -486,7 +486,7 @@
       B: <T>(b: T[]) => {...};
     }
 
-- KEY: ts.function.generic.jsx
+- ENTRY:
   EXPLAIN: ジェネリックJSX関数
   BODY: |
     type A<T> = { a: T }
@@ -496,7 +496,7 @@
     }
     const B = () => <A<number> a={123} />
 
-- KEY: ts.freshness
+- ENTRY:
   EXPLAIN: 関数の引数制限
   BODY: |
     const f1 = (props: { a: string }) => props.a
@@ -515,7 +515,7 @@
     // 多属性の直接代入 OK!
     f2({ a: "a", b: "b" })
 
-- KEY: ts.type.guard.predicate
+- ENTRY:
   EXPLAIN: 型ガードと型想定
   BODY: |
     type ABC = { a: number }
@@ -540,10 +540,10 @@
 #-------------------------------
 # Class
 #-------------------------------
-- KEY: ts.class.category
+- ENTRY:
   CATEGORY: Class
 
-- KEY: ts.class.variables
+- ENTRY:
   EXPLAIN: クラス変数
   BODY: |
     interface A {
@@ -571,7 +571,7 @@
     [NG] abc.b      // protected
     [NG] abc.y = 1  // Readonly
 
-- KEY: ts.class.generic
+- ENTRY:
   EXPLAIN: ジェネリッククラス
   BODY: |
     interface A<T> {
@@ -585,7 +585,7 @@
       a = 0
     }
 
-- KEY: ts.class.inheritance
+- ENTRY:
   EXPLAIN: クラス継承
   BODY: |
     class Base {
@@ -606,7 +606,7 @@
     const A = new Derived(1, 2)
     console.log(A.baseA, A.b)
 
-- KEY: ts.class.abstract
+- ENTRY:
   EXPLAIN: クラス継承専用
   BODY: |
     abstract class Base {
@@ -632,7 +632,7 @@
     const A = new Derived(1, 2)
     console.log(A.baseA, A.b, A.baseB)
 
-- KEY: ts.class
+- ENTRY:
   EXPLAIN: クラス
   BODY: |
     class ClassA {
@@ -652,7 +652,7 @@
     classA._b = 5                            // 自動 accessor
     classA.c(3)                              // public関数
 
-- KEY: ts.class.static
+- ENTRY:
   EXPLAIN: static クラス
   BODY: |
     class A {
@@ -667,10 +667,10 @@
 #-------------------------------
 # By Version
 #-------------------------------
-- KEY: ts.version.category
+- ENTRY:
   CATEGORY: New Versionの更新機能
 
-- KEY: ts.ver5.3.import
+- ENTRY:
   EXPLAIN: |
     v5.3 静的/動的 import type
   BODY: |
@@ -678,7 +678,7 @@
 
     const o = await import("a.json", { with:{type:"json"} });
 
-- KEY: ts.ver5.3.unknown
+- ENTRY:
   EXPLAIN: |
     v5.3: unkonwn型 check
   BODY: |
@@ -686,7 +686,7 @@
     if(typeof(value)==="string")
       const s:string = value;                // (安全)代入
 
-- KEY: ts.ver5.2.classDispose
+- ENTRY:
   EXPLAIN: |
     v5.2 Instance削除時実行
   BODY: |
@@ -706,7 +706,7 @@
       file[Symbol.dispose]()
     }
 
-- KEY: ts.ver5.2.methodDispose
+- ENTRY:
   EXPLAIN: |
     v5.2 Function削除時の実行
   BODY: |
@@ -730,7 +730,7 @@
       }
     }
 
-- KEY: ts.ver5.2.decoratorMetadata
+- ENTRY:
   EXPLAIN: |
     v5.2 Decorator Metadata
   BODY: |
@@ -757,7 +757,7 @@
     const md = AClass[Symbol.metadata];
      = { "bar":true,"baz":true,"foo":true }
 
-- KEY: ts.ver5.2.TupleType
+- ENTRY:
   EXPLAIN: |
     v5.2 Tuple
   BODY: |
@@ -770,13 +770,13 @@
     type Z = [...Label, ...NoLabel]
     = [number, number, string, string]
 
-- KEY: ts.ver5.1.methodReturn
+- ENTRY:
   EXPLAIN: |
     v5.1 Function Returns Undefined
   BODY: |
     割愛
 
-- KEY: ts.ver5.0.decorator.types
+- ENTRY:
   EXPLAIN: デコレータタイプ
   BODY: |
     クラス宣言  Class Decorators
@@ -785,7 +785,7 @@
     プロパティ  Property Decorators
     パラメータ  Parameter Decorators
 
-- KEY: ts.ver5.0.decorator.IIFE
+- ENTRY:
   EXPLAIN: |
     v5.0 即時関数による定義
   BODY: |
@@ -829,7 +829,7 @@
     console.log("Method Called")
     // Print:5 "Method Called"
 
-- KEY: ts.ver5.0.decorator
+- ENTRY:
   EXPLAIN: |
     v5.0 デコレータのコール順
   BODY: |
@@ -859,7 +859,7 @@
       method(name: string) { this.name = name }
     }
 
-- KEY: ts.ver5.0.generic.const
+- ENTRY:
   EXPLAIN: |
     v5.0 ジェネリック・定数
   BODY: |
@@ -876,7 +876,7 @@
     };
     const res2 = cFunc({ a: ["A", "B"] });   // readonly ["A", "B"]
 
-- KEY: ts.ver4.9.satisfies
+- ENTRY:
   EXPLAIN: |
     v4.9 Widening防止
   BODY: |
@@ -909,7 +909,7 @@
     [NG] const c = z.a.at(0);                // 配列at():NG
     const c = z.a[0];                        // 添字処理:OK
 
-- KEY: ts.4.9.classAccessor
+- ENTRY:
   EXPLAIN: |
     v4.9 アクセッサ
   BODY: |
@@ -923,14 +923,14 @@
     const res = x.a                          // get getA()
     x.a = "b"                                // set setA()
 
-- KEY: ts.4.9.NaN
+- ENTRY:
   EXPLAIN: |
     v4.9 NaNの挙動
   BODY: |
     NaN == NaN, NaN === NaN                  // Before: false
     NaN == NaN, NaN === NaN                  // After : true
 
-- KEY: ts.4.8.unknown
+- ENTRY:
   EXPLAIN: |
     v4.8 Unknown型
   BODY: |

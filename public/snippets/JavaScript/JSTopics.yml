@@ -1,35 +1,10 @@
 ---
 #-------------------------------
-# JavaScript
-#-------------------------------
-
-#-------------------------------
-# protoType
-#-------------------------------
-- KEY: js.protoType.title
-  CATEGORY: プロトタイプ
-
-- KEY: js.protoType.method
-  EXPLAIN: ProtoType 追加
-  BODY: |
-    String.addId = function (str: string) {
-      return this + (this.length ? "-" + str : str)
-    }
-    //types.d.ts への追加
-    export declare global {
-      interface String {
-        addId(id: string): string
-      }
-    }
-
-#-------------------------------
 # Class
 #-------------------------------
-- KEY: js.class.title
-  CATEGORY: クラス(Class)
-
-- KEY: js.class.private
-  EXPLAIN: プライベートプロパティ
+- ENTRY:
+  EXPLAIN: |
+    クラス: プライベートプロパティの定義方法
   BODY: |
     ■ Static版
 
@@ -87,19 +62,17 @@
 #-------------------------------
 # Object
 #-------------------------------
-- KEY: js.obj.title
-  CATEGORY: オブジェクト(Object)
-
-- KEY: js.obj.isObject
-  EXPLAIN: Object判定関数
+- ENTRY:
+  EXPLAIN: オブジェクト カスタム汎用関数
   BODY: |
+    ■ Object判定関数
+
     const isObject = (obj: any) => {
       return obj !== null && typeof obj === "object"
     }
 
-- KEY: js.obj.getStringValueOrEmpty
-  EXPLAIN: getStringValueOrEmpty
-  BODY: |
+    ■ getStringValueOrEmpty             // 数値=>文字列変換関数
+
     export const getStringValueOrEmpty = (
       value: number | null | undefined,
       returnValue = ""
@@ -117,39 +90,25 @@
       else return String(value);
     };
 
-- KEY: js.obj.isEmpty
-  EXPLAIN: Object「空」判定関数
-  BODY: |
+    ■ Object「空」判定関数
+
     const isEmpty = (obj: any) => {
       return Object.keys(obj).length === 0 && obj.constructor === Object
     }
 
-- KEY: js.obj.removeUndefined
-  EXPLAIN: object から undefined を削除
-  BODY: |
+    ■ object から undefined を削除
+
     const removeUndefined = (obj: object) => {
       return Object.fromEntries(
         Object.entries(obj).filter(([, v]) => v !== undefined)
       )
     }
 
-- KEY: js.obj.deepCopy.OK
-  EXPLAIN: 望ましい DeepCopy
+- ENTRY:
+  EXPLAIN: オブジェクト DeepCopy
   BODY: |
-    const copiedObject = structuredClone(object)
+    ■ サンプルオブジェクト
 
-- KEY: js.obj.deepCopy.NG
-  EXPLAIN: 望ましくない DeepCopy
-  BODY: |
-    //Undefined が削除される
-    const deepCopyNG = (objOrArr: object) => {
-      return JSON.parse(JSON.stringify(objOrArr))
-    }
-
-- KEY: js.obj.deepCopy.sample
-  EXPLAIN: サンプル
-  BODY: |
-    //オブジェクト
     const objectFrom = {
       a: 12,
       b: "A",
@@ -159,122 +118,119 @@
       f: [1, undefined],
       g: { a: 1, b: "B", c: [5, undefined], d: { k: 1 } },
     };
-    --------------------------------------------------
-    //■ structuredClone
+
+    ■ structuredClone: 望ましい DeepCopy
+
+    const copiedObject = structuredClone(object)
+
     const objectToClone = structuredClone(objectFrom);
     objectFrom.a = 13;
     console.log(objectFrom);
     console.log(objectToClone);  // objectFromから影響を受けない
-    --------------------------------------------------
-    //■ JSON.parse & stringify
+
+    ■ JSON.parse & stringify: 望ましくない DeepCopy
+
+    const deepCopyNG = (objOrArr: object) => {
+      return JSON.parse(JSON.stringify(objOrArr))
+    }
+
     const objectToJsonCopy = JSON.parse(JSON.stringify(objectFrom));
-    //console.log(objectToJsonCopy);
+
     const objectToJsonCopy_Result = {
       a: 12,
       b: "A",
-      // c: undefined, <--- 消失
+      // c: undefined, <--- 消失: Undefined が削除される
       d: null,
       e: true,
       f: [1, undefined],
       g: { a: 1, b: "B", c: [5, undefined], d: { k: 1 } },
     };
-    // objectFrom.f[1] = 0
-    // console.log(objectFrom.f);
-    // console.log(objectToJsonCopy.f);  // objectFromから影響を受けない
 
-- KEY: js.obj.shallowCopy
-  EXPLAIN: 配列の階層限定のDeepCopy
-  BODY: |
+    objectFrom.f[1] = 0
+    console.log(objectFrom.f);
+    console.log(objectToJsonCopy.f);
+
+    ■ shallowCopy : 浅いコピー(Object)
+
     const shallowCopy = <T,>(arr: T[]) => {
       return arr.map((list) => ({ ...list }))
     }
 
-- KEY: js.obj.deepCopy.Lodash
-  EXPLAIN: lodashのcloneDeepでDeepCopy
-  BODY: |
-    //npm i --save lodash
+    ■ lodashのcloneDeepでDeepCopy
+
+    npm i --save lodash
+
     import _ from 'lodash'
     let copyLists = _.cloneDeep(lists)
-
-- KEY: js.obj.obj2arr
-  EXPLAIN: object=>arr
-  BODY: |
-    const objArr = { id: 23, name: "apple", address: "Tokyo" }
-    const arr = Object.entries(objArr)
-    console.log(arr)
 
 #-------------------------------
 # Array
 #-------------------------------
-- KEY: js.array.title
-  CATEGORY: 配列(Array)
-
-- KEY: js.array.sequence
-  EXPLAIN: 連番配列作成
+- ENTRY:
+  EXPLAIN: 配列 基礎
   BODY: |
+    ■ 連番配列作成
+
     const arr1 = [...Array(20)].map((_, idx) => idx)
     const arr2 = Array.from({ length: 20 }, (_, i) => i)
     const arr3 = [...Array(20)].fill(0)
 
-#-------------------------------
-# Array map,reduce
-#-------------------------------
+    ■ map(配列)
 
-- KEY: js.array.method.map
-  EXPLAIN: map(配列)
-  BODY: |
     const sample: number[] = [1, 4, 7]
+
     const res: number[] = sample.map((id) => id * 2)
-    --------------------------------------------------
+
+    ■ map(オブジェクト)
+
     type Obj = { id: number }
     const sample: Obj[] = [{ id: 1 }, { id: 4 }, { id: 7 }]
+
     const res: number[] = sample.map(({ id }) => id * 2)
 
-- KEY: js.array.method.reduce
-  EXPLAIN: reduce(配列)
-  BODY: |
-    //配列サンプル
+    ■ reduce(配列)
+
     const sample: number[] = [1, 4, 7]
+
     const res: number[] = sample.reduce((acc, id) => {
       return [...acc, id * 2]
     }, [] as number[])
-    -----------------------------------------------
-    //オブジェクトサンプル
+
+    ■ reduce(オブジェクト)
+
     type Obj = { id: number }
     const sample: Obj[] = [{ id: 1 }, { id: 4 }, { id: 7 }]
+
     const res: number[] = sample.reduce((acc, { id }) => {
       return [...acc, id * 2]
     }, [] as number[])
 
-- KEY: js.array.method.reduce.average
-  EXPLAIN: reduce(平均値)
-  BODY: |
-    const getAverage = (arr: number[]) => reduce((acc, elm) => acc + elm, 0) / arr.length
+    ■ reduce(平均値)
 
-#-------------------------------
-# Array methods
-#-------------------------------
-- KEY: js.array.method.repeat
-  EXPLAIN: 配列・反復
+    const getAverage = (arr: number[]) =>
+      reduce((acc, elm) => acc + elm, 0) / arr.length
+
+- ENTRY:
+  EXPLAIN: 配列 メソッド
   BODY: |
-    arr.forEach(elm=>{})                         //void
-    arr.map(elm=>{})                             //配列
+    ■ 反復
+
+    arr.forEach(elm=>{})                        //void
+    arr.map(elm=>{})                            //配列
     arr.reduce((acc,elm,arr)=>{}, 初期値)        //any
     arr.reduceRight((acc,elm,arr)=>{}, 初期値)   //any
 
-- KEY: js.array.method.copy
-  EXPLAIN: 配列・コピー
-  BODY: |
-    arr.slice([start, end])                    //部分配列(シャローコピー)
-    arr.splice(start, [delCount, item1, item2, itemN]) //削除配列
-    arr.copyWithin([target, start, end])       //内部コピー後の配列
-    -----------------------------------------------------------
-    spliced = arr.toSpliced([start, [delCount, item1, item2, itemN]]) //2023 削除配列(新規配列)
+    ■ コピー
+
+    arr.slice([start, end])                     //部分配列(シャローコピー)
+    arr.splice(start, [delCount, item1, itemN]) //削除配列
+    arr.copyWithin([target, start, end])        //内部コピー後の配列
+
+    spliced = arr.toSpliced([start, [delCount, item1, itemN]]) //2023 削除配列(新規配列)
     [X]sliced = arr.toSliced([start, end])     //存在せず
 
-- KEY: js.array.method.search
-  EXPLAIN: 配列・検索
-  BODY: |
+    ■ 検索
+
     arr.filter(value => value>1)        //条件一致要素の配列
     arr.find(value => value>1)          //最初の該当要素
     arr.findIndex(value => value>1)     //最初の該当index
@@ -283,24 +239,21 @@
     arr.indexOf(要素)                   //最初の該当要素
     arr.lastIndexOf(要素)               //最後の該当要素
 
-- KEY: js.array.method.judge
-  EXPLAIN: 配列・判定
-  BODY: |
+    ■ 判定
+
     Array.isArray(配列)
     arr.includes(要素)                  //Boolean 判定
     arr.some(value => value>1)          //該当が1でもあれば true
     arr.every(value => value>1)         //全てが該当すれば true
 
-- KEY: js.array.method.object
-  EXPLAIN: 配列・オブジェクト反復
-  BODY: |
+    ■ オブジェクト反復
+
     arr.entries(([key, {id,name}])=>{}) //キーと値iterator
     arr.values(value => {})             //値iterator
     arr.keys(key=>{})                   //キーiterator
 
-- KEY: js.array.method.make.arrange
-  EXPLAIN: 配列・Index/生成/変更
-  BODY: |
+    ■ Index/生成/変更
+
     arr.at(index)                       //要素取得(2022)
     Array.of(1,2,3)                     //配列もどきから配列生成
     Array.from(文字列,Map,Set)          //配列生成
@@ -309,20 +262,18 @@
     arr.flatMap(value=>value)           //配列: 多重配列のフラット化
     arr.concat(配列)                    //配列合体
     arr.join(配列)                      //文字列化
-    -----------------------------------------------------------
+
     result = arr.with(index, value) //2023 指定Index要素の置換で新配列を戻す
 
-- KEY: js.array.method.pushPop
-  EXPLAIN: 配列・挿入/取得
-  BODY: |
+    ■ 挿入/取得
+
     arr.pop()                           //最後の要素取得(破壊的)
     arr.push(value)                     //末尾に追加(破壊的)
     arr.shift()                         //最初の要素取得(破壊的)
     arr.unshift(value)                  //先頭に追加(破壊的)
 
-- KEY: js.array.method.sort
-  EXPLAIN: 配列・ソート
-  BODY: |
+    ■ ソート
+
     arr.sort((a,b)=>a-b)                //昇順ソート(破壊的)
     arr.sort((a,b)=>b-a)                //降順ソート(破壊的)
     arr.reverse()                       //逆ソート(破壊的)
@@ -330,15 +281,11 @@
     sorted = arr.toSorted((a,b)=>a-b)   //昇順ソート(2023)
     sorted = arr.toReversed()           //逆ソート(2023)
 
-- KEY: js.array.method.toString
-  EXPLAIN: 配列・文字列化
-  BODY: |
-    arr.toLocaleString() //文字列化
-    arr.toString()       //文字列化
+    ■ 文字列化
 
-- KEY: js.array.function.shuffle
-  EXPLAIN: シャッフルアルゴリズム
-  BODY: |
+    arr.toLocaleString()                //文字列化
+    arr.toString()                      //文字列化
+
     ■ フィッシャーイェーツの配列シャッフルアルゴリズム
     const shuffleArray_FisherYates = (arrParam: number[]) => {
       let arr = [...arrParam]
@@ -350,134 +297,135 @@
     }
 
 #-------------------------------
-# Map (Array & Object)
+# Map
 #-------------------------------
-- KEY: js.map.title
-  CATEGORY: Map & Set
-
-- KEY: js.map.obj2map
-  EXPLAIN: Object->Map
+- ENTRY:
+  EXPLAIN: Map 変換
   BODY: |
+    ■ Object -> Map
+
     const objArr = [
       { id: 23, name: "apple" },
       { id: 45, name: "orange" },
     ]
     const map = new Map<number, string>(objArr.map(({ id, name }) => [id, name]))
 
-- KEY: js.map.map2arr
-  EXPLAIN: Map->Array
-  BODY: |
+    ■ Map -> Array
+
     const map = new Map([["a", 1],["b", 2]])
     const arr = Array.from(map)
 
-- KEY: js.map.map2obj
-  EXPLAIN: Map->Object(制限あり)
-  BODY: |
-    //keyはstringに変換
-    const map = new Map([["a", 1],["b", 2]])
+    ■ Map -> Object(制限あり)
+
+    const map = new Map([["a", 1],["b", 2]])   //keyはstringに変換
     const obj = Object.fromEntries(map)
 
-- KEY: js.map.map2map
-  EXPLAIN: Map->Map
-  BODY: |
-    const map1 = new Map<string,number>()
+    ■ Map -> Map
+
+    const map1 = new Map<string, number>()
     const map2 = new Map(map1)
 
-#-------------------------------
-# Set & Map
-#-------------------------------
+    ■ Array -> Map 生成
 
-- KEY: js.map.array2Map
-  EXPLAIN: Array->Map 型エラーに注意
+    const data = [["A","M1"],["B","M2"]];   // 型宣言に問題あり
+
+    const map1 = new Map(data);             // ⛔ 型エラー
+    const map2 = new Map(Array.from(data)); // ⛔ 型エラー
+    const map3 = new Map(data.map(n=>n));   // ⛔ 型エラー
+
+    const data:[string, string][] = [["A","M1"],["B","M2"]]; // 型指定
+
+    const map1 = new Map(data);              // ✅
+    const map2 = new Map(Array.from(data))   // ✅
+    const map3 = new Map(data.map((n) => n)) // ✅
+
+    const data = [["A","M1"],["B","M2"]] as const; // ReadOnlyで対応
+
+    const map1 = new Map(data)              // ✅
+    const map2 = new Map(Array.from(data))  // ✅
+    const map3 = new Map(data.map(n=>n))    // ✅
+
+- ENTRY:
+  EXPLAIN: Set -> Map 変換
   BODY: |
-    ■ [NG] Array => Map 生成
-    const data = [["A","M1"],["B","M2"]];  
+    ■ データ
 
-    [NG] 型エラー: Type 'string[]' is not assignable to type 'readonly [unknown, unknown]'
-
-    const map1 = new Map(data);             // [NG] 型エラー
-    const map2 = new Map(Array.from(data)); // [NG] 型エラー
-    const map3 = new Map(data.map(n=>n));   // [NG] 型エラー
-
-    ■ [OK] Array => Map 生成
-    const data = [["A","M1"],["B","M2"]] as const; <----- [OK] 注意
-
-    const map1 = new Map(data);             // [OK]
-    const map2 = new Map(Array.from(data)); // [OK]
-    const map3 = new Map(data.map(n=>n));   // [OK]
-
-- KEY: js.map.set2map
-  EXPLAIN: Obj->Set->Map
-  BODY: |
     const data = [
       { name: "A", type: "M1" },
       { name: "B", type: "M2" },
     ];
 
-    ■ Object => Set 生成
-    const noDupSet = new Set(
+    ■ オブジェクト -> Set 生成
+
+    const aSet = new Set( // 🛑 型指定不十分
       data.map((n) => [n.name, n.type]),
     );
 
-    ■ Set => Map 生成
-    const noDupMap = new Map(
-      Array.from(noDupSet, ([v1,v2])=>[v1, v2])   // Iterator必須
+    const bSet = new Set<[string, string]>( // ✅ 型指定 Mapへの変換用
+      data.map((n) => [n.name, n.type]),
     );
 
-    ■ [NG] Set => Map 生成
-    const error = new Map(noDupSet);              // NG
+    ■ Set -> Map 生成
 
-    ■ [NG] Set => Array => Map 生成: Error
-    const noDupArray = Array.from(noDupSet);
-    const error = new Map(noDupArray);            // NG
+    const aMap = new Map(aSet)   // ⛔ 型エラー
+    const bMap = new Map(bSet)   // ✅
 
-    ■ [NG] Set => Array(Iterator) => Map 生成: Error
-    const noDupArrayIte = Array.from(noDupSet, ([v1,v2])=>[v1, v2]);
-    const noDupMap = new Map(noDupArrayIte);      // これもNG!
+    const aMap = new Map(
+      Array.from(aMap, ([v1,v2])=>[v1, v2]) // ✅ Iterator必須
+    );
 
-- KEY: js.map.weakMap1
-  EXPLAIN: Map と WeakMap 比較(key 単位のスコープ分割)
+    const aArray1 = Array.from(aSet);
+    const aMap2 = new Map(aArray1);  // ⛔
+    const aMap3 = new Map(aArray1 as [string,string][]);  // ✅
+
+    const bArray1 = Array.from(bSet);
+    const bMap2 = new Map(bArray1);  // ✅
+    const bMap3 = new Map(bArray1 as [string,string][]);  // ✅
+
+- ENTRY:
+  EXPLAIN: Map と WeakMap
   BODY: |
     ■ Map
-    var map = new Map();
-    function sample3 () {
-      var obj = {};
-      map.set(obj, 1);
-      console.log(map.get(obj));        // 1
-    }
-    sample3();                          // obj は map から参照され、メモリから解放されない
+
+    ・キーは強参照
+    ・キー/値は明示的に削除しない限り残る（GCされない）
+    ・列挙・サイズ取得が可能
+    ・任意の値（オブジェクト、文字列、数値、Symbol など）をキーにできる
+    ・map.size、map.keys()、map.entries() 等で列挙できる
 
     ■ WeakMap
-    var wm = new WeakMap();
-    function foo () {
-      var bar = {};
-      wm.set(bar, 1);
-      console.log(wm.get(bar));
-    }
-    function hello () {
-      var world = {};
-      wm.set(world, 2);
-      console.log(wm.get(world));
-    }
-    foo();         // 1
-    hello();       // 2 (1はスコープ外=メモリは開放されていない！)
 
-- KEY: js.map.weakMap2
-  EXPLAIN: WeakMap(WeakMap 単位のスコープ分割)
+    ・キーは弱参照（キーは必ずオブジェクト）
+    ・キーへの他の参照が無くなれば、そのエントリは非決定的にGC対象（時間的保証なし、確認方法なし）
+    ・列挙不可・サイズ取得不可・プリミティブ不可
+    ・メモリリーク防止に向くがGCは非決定的
+    ・size なし、get/set/has/delete のみ
+
+- ENTRY:
+  EXPLAIN: Map と WeakMap サンプル
   BODY: |
-    const object = {};
-    function foo () {
-      const wm1 = new WeakMap([[object, 1]]);
-      console.log(wm1.get(object));     // 1
-    }
-    function bar () {
-      const wm2 = new WeakMap([[object, 2]]);
-      console.log(wm2.get(object));     // 2
-    }
-    foo();
-    bar();
+    ■ Map
 
-- KEY: js.map.weakMap2
+    const map = new Map();
+    let obj = {id:1};
+    map.set(obj, {cached: true});
+    obj = null;                         // オブジェクトへの参照を外しても map が強参照
+
+    console.log(map.size);              // エントリが残っている
+
+    map.forEach((v,k)=>{
+      if (/* 条件 */) map.delete(k);    // 明示的に削除の必要
+    });
+
+    ■ WeakMap
+
+    const w = new WeakMap();
+    let node = {el: 'DOM node'};
+
+    w.set(node, {metadata: 'x'});
+    node = null;                        // GC でエントリ回収(非決定的)
+
+- ENTRY:
   EXPLAIN: WeakMap 比較
   BODY: |
     WeakMap 比較
@@ -513,40 +461,41 @@
 #-------------------------------
 # 置換
 #-------------------------------
-- KEY: js.replace
-  CATEGORY: 置換
-
-- KEY: js.replace.replaceAll
-  EXPLAIN: replaceAllのオーバーロード
+- ENTRY:
+  EXPLAIN: 置換 replaceAll
   BODY: |
+    ■ 置換対象文字列
+
     let sample = "abc aws AWSS AWS DEC"
-    const re = new RegExp(`\\baws\\b`, "ig") // \\b は単語のみの検索
+    const re = new RegExp(`\\baws\\b`, "ig")      // \\b は単語のみの検索
 
-    // 第2引数は置換文字列
+    ■ 第2引数は置換文字列
+
     const result1 = sample.replaceAll(re, "*AWS*")
-    console.log(result1)  // "abc *AWS* AWSS *AWS* DEC" 
+    console.log(result1)                // "abc *AWS* AWSS *AWS* DEC" 
 
-    // 第2引数は置換CB関数(結果に対し、CaseSensitiveな挙動可能)
+    ■ 第2引数は置換CB関数(結果に対し、CaseSensitiveな挙動可能)
+
     const result2 = sample.replaceAll(re, (match:string)=>{ return `[${match}]` })
-    console.log(result2)  // "abc [aws] AWSS [AWS] DEC"
+    console.log(result2)                // "abc [aws] AWSS [AWS] DEC"
 
-    // 置換CB関数の型
+    ■ 置換CB関数の型
+
     function replacer(match:string, regexpMatch1:number, regexpMatch2:string) {
-      console.log(match)        // 一致:  "aws"
-      console.log(regexpMatch1) // index: 4
-      console.log(regexpMatch2) // 全文
+      console.log(match)                // 一致:  "aws"
+      console.log(regexpMatch1)         // index: 4
+      console.log(regexpMatch2)         // 全文
       return `[${match}]`;
     }
 
 #-------------------------------
 # 日付
 #-------------------------------
-- KEY: js.date
-  CATEGORY: Date 日付
-
-- KEY: js.json.format
-  EXPLAIN: 日付フォーマット
+- ENTRY:
+  EXPLAIN: 日付
   BODY: |
+    ■ 日付フォーマット関数
+
     export const getFormatDate = (targetDate: Date) => {
       return targetDate.toLocaleDateString("ja-JP", {
         year: "numeric",
@@ -557,19 +506,20 @@
       });
     };
 
-- KEY: js.json.excel
-  EXPLAIN: Excel日付 vs JS日付
-  BODY: |
+    ■ Excel日付 vs JS日付
+
     const DAY_MS = 24 * 60 * 60 * 1000; //日数とミリ秒を変換する係数
     const UNIX_EXCEL_DIFF = 70 * 365 + 17 + 1 + 1; //「1900/1/0」～「1970/1/1」 (日数)
     const UTC_JST_DIFF = 9 * 60 * 60 * 1000; //UTCとJSTの時差 (ミリ秒)
 
     ■ UnixTime -> ExcelDateSerial
+
     export function convertUnixTime2ExcelDateSerial(unixTimeMS: number) {
       return (unixTimeMS + UTC_JST_DIFF) / DAY_MS + UNIX_EXCEL_DIFF;
     }
 
     ■ ExcelDateSerial -> UnixTime
+
     export function convertExcelDateSerial2UnixTime(excelDataSerial: number) {
       return (excelDataSerial - UNIX_EXCEL_DIFF) * DAY_MS - UTC_JST_DIFF;
     }
@@ -577,26 +527,23 @@
 #-------------------------------
 # 乱数
 #-------------------------------
-- KEY: js.random.title
-  CATEGORY: 乱数
-
-- KEY: js.number.randomDigit
-  EXPLAIN: ランダム数(桁)
+- ENTRY:
+  EXPLAIN: ランダム
   BODY: |
+    ■ ランダム数(桁)
+
     const getRandomDigit = (digit: number) => {
       return Math.floor(Math.random() * 10 ** digit)
     }
 
-- KEY: js.number.randomMinMax
-  EXPLAIN: ランダム数(MinMax)
-  BODY: |
+    ■ ランダム数(MinMax)
+
     const getRandomMinMax = (min: number, max: number) => {
       return Math.floor(Math.random() * (max - min) + min)
     }
 
-- KEY: js.string.randomValueID
-  EXPLAIN: ランダム文字列(Reactの場合 useMemo 必須)
-  BODY: |
+    ■ ランダム文字列(Reactの場合 useMemo 必須)
+
     const randStr1 = useMemo(() => window.crypto.randomUUID(), [])
     const typedArray = new Uint32Array(6)
     const randStr2 = useMemo(() => window.crypto.getRandomValues(typedArray), [])
@@ -604,21 +551,19 @@
 #-------------------------------
 # 時間計測
 #-------------------------------
-- KEY: js.performance.title
-  CATEGORY: 処理時間
-
-- KEY: js.function.performance
+- ENTRY:
   EXPLAIN: 処理時間計測
   BODY: |
+    ■ 処理時間計測
+
     const performanceAbout = (func: () => void) => {
       const startTime = Date.now()
       func()
       console.log(`経過時間: ${Date.now() - startTime}`)
     }
 
-- KEY: js.function.performanceAccurate
-  EXPLAIN: 処理時間計測(精密)
-  BODY: |
+    ■ 処理時間計測(精密)
+
     const performanceAccurate = (func: () => void) => {
       const start = performance.now()
       func()
@@ -630,27 +575,30 @@
 #-------------------------------
 # JSON
 #-------------------------------
-- KEY: js.json.title
-  CATEGORY: JSON
-
-- KEY: js.json
-  EXPLAIN: jsonの構造表現
+- ENTRY:
+  EXPLAIN: JSON
   BODY: |
+    ■ jsonの構造表現  
+
     JSON.stringify(obj, undefined, 3)
     JSON.parse(jsonObject)
 
 #-------------------------------
 # JSON: Null, Undefined,...
 #-------------------------------
-- KEY: js.json.infinite
-  EXPLAIN: infinite/undefined/null
+- ENTRY:
+  EXPLAIN: 不正値判定
   BODY: |
+    ■ infinite()
+
     isFinite(1)                         //True
     isFinite(Number(""))                //=> 0 True
     isFinite(Number(null))              //=> 0 True
     isFinite(1/0)                       //False
     isFinite(Number(1/0))               //False
     isFinite(Number(undefined))         //False
+
+    ■ NaN
 
     Number("")                          // 0
     Number(0)                           // 0
@@ -659,10 +607,12 @@
     Number(NaN)                         // NaN
     Number("A")                         // NaN
 
+    ■ Infinity
+
     String(1 / 1)                       // 1
-    String(1 / Number(""))              // "Infinity"
+    String(1 / Number(""))              // "Infinity" 文字列化
     String(1 / Number(undefined) || "") // ""
-    String((1 / Number(null) || "")     // "Infinity"
+    String((1 / Number(null) || "")     // "Infinity" 文字列化
 
     1/0 < 0                             // false
     1/0 < 1                             // false
@@ -683,8 +633,8 @@
     String(1/0)                         // "Inifinity"
     Number(String(1/0))                 // Inifinity
 
-- KEY: js.json.Validity
-  EXPLAIN: Validity 検査
+- ENTRY:
+  EXPLAIN: 不正値判定メソッド
   BODY: |
     const isValid = (value: unknown|unknown[]): boolean => {
         const valueArray =(Array.isArray(value)) ? value : [value]
@@ -698,69 +648,36 @@
         return true
     };
 
-    console.log(isValid(1))
-    console.log(isValid("0"))
-    console.log(isValid("1"))
-    console.log(isValid("1.5"))
-    console.log(isValid(""))
-    console.log(isValid(["0", "1", "1.5", ""]))
+    isValid(1)                          // True
+    isValid("0")                        // True
+    isValid("1")                        // True
+    isValid("1.5")                      // True
+    isValid("")                         // True 
+    isValid(["0", "1", "1.5", ""])      // True
 
-    console.log(isValid(null))
-    console.log(isValid(undefined))
-    console.log(isValid(NaN))
-    console.log(isValid("A"))
-    console.log(isValid("１"))
-    console.log(isValid(["0", "1", "1.5", undefined]))
-    console.log(isValid(["0", "1", "1.5", NaN]))
-    console.log(isValid(["0", "1", "1.5", null]))
-    console.log(isValid(["0", "1", "1.5", Infinity]))
-    console.log(isValid([null, undefined, NaN, "A", "1A", "１"]))
+    isValid(null)                       // False
+    isValid(undefined)                  // False
+    isValid(NaN)                        // False
+    isValid("A")                        // False
+    isValid("１")                       // False
+    isValid(["0", "1", "1.5", undefined]) // False
+    isValid(["0", "1", "1.5", NaN])     // False
+    isValid(["0", "1", "1.5", null])    // False
+    isValid(["0", "1", "1.5", Infinity]) // False
+    isValid([null, undefined, NaN, "A", "1A", "１"]) // False
 
-#-------------------------------
-# JSON: CSV => JSON
-#-------------------------------
-- KEY: js.json.csv
-  EXPLAIN: csv => json
+- ENTRY:
+  EXPLAIN: ProtoType
   BODY: |
-    //改善の余地が大きい（最初の行のヘッダ有無確認必要）
-    const convertCsv2Json = (text: string, headers: string[], div = "\t") => {
-      
-      //数字の1,000,000桁区切りコンマを削除
-      const re = new RegExp(",", "ig"); 
+    ■ ProtoType 追加
 
-      const jsonArr: { [key: string]: string }[] = [];
-      text
-        .split("\n")
-        .filter(Boolean)
-        .forEach((line) => {
-          const obj: { [key: string]: string } = {};
+    String.addId = function (str: string) {
+      return this + (this.length ? "-" + str : str)
+    }
 
-          line.split(div).forEach((v, i) => {
-            //文字と数値の違いで挙動を変えること
-            obj[headers[i]] = v.trim().replace(re, "");
-          });
-          jsonArr.push(obj);
-        });
-      return jsonArr;
-    };
-
-    // SAMPLE
-    const TABLE_TITLE_配列 = ["DO検索用", "検索エリア", "DO値"] as const;
-    type TABLE_KEY = (typeof TABLE_TITLE_配列)[number];
-    type TABLE_型 = Record<TABLE_KEY, string>;
-
-    const TABLE_DATA = `
-    0	1	≦20
-    20	2	20～40
-    40	3	40～50
-    50	4	50～60
-    60	5	60～100
-    100	6	100～140
-    140	7	140～200
-    200	8	≧200
-    `;
-
-    const TBOM_TABLE = c2j(
-      TABLE_DATA,
-      TABLE_TITLE_配列 as unknown as string[],
-    ) as TABLE_型[];
+    //types.d.ts への追加
+    export declare global {
+      interface String {
+        addId(id: string): string
+      }
+    }

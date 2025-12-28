@@ -2,10 +2,10 @@
 #-------------------------------
 # AWS
 #-------------------------------
-- KEY: aws.SystemManagers.category
+- ENTRY:
   CATEGORY: システムマネージャー
 
-- KEY: aws.SystemManagers.parameterStore
+- ENTRY:
   EXPLAIN: |
     パラメータストア
   BODY: |
@@ -31,7 +31,7 @@
       シークレット情報の自動更新	Parameter Storeの機能としては不可。AWS CLIやLambda等を活用して作り込みすることで対応可能
       利用料金	無料、但し、暗号化に利用されるKMSにてCMK(カスタマーマスターキー: ユーザ生成キー)利用時、KMSのAPI呼び出し料金が必要
 
-- KEY: aws.SystemManagers.SecretsManager
+- ENTRY:
   EXPLAIN: |
     Secrets Manager
   BODY: |

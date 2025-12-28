@@ -2,10 +2,10 @@
 #-------------------------------
 # AWS
 #-------------------------------
-- KEY: aws.CloudWatch.category
+- ENTRY:
   CATEGORY: CloudWatch
 
-- KEY: aws.CloudWatch.xxxxx
+- ENTRY:
   EXPLAIN: |
     xxxxxx
   BODY: |

@@ -3,7 +3,7 @@
 # Package: Storybook
 #-------------------------------
 
-- KEY: pk.storybook.templateV6
+- ENTRY:
   EXPLAIN: Storybook基本
   BODY: |
     import React from "react"
@@ -34,7 +34,7 @@
       label: "Button",
     }
 
-- KEY: pk.storybook.controls
+- ENTRY:
   EXPLAIN: control リスト
   BODY: |
     name:     { control: 'text' },    // テキスト
@@ -46,7 +46,7 @@
     myEnum:   { control: 'enum' },    // Enum
     color:    { control: "color" },   // 色
 
-- KEY: pk.storybook.argTypesList
+- ENTRY:
   EXPLAIN: argTypes MUI リスト
   BODY: |
     const attributes = [

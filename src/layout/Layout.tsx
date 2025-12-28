@@ -1,7 +1,6 @@
 import {
   Body,
   HeaderTitle,
-  HeaderOptions,
   Playground,
   Section,
   HeaderWrapper,
@@ -21,7 +20,7 @@ export const Layout = () => {
   const refBody = useRef<HTMLDivElement>(null)
 
   const selectedMenu = zooMenu((state) => state.selectedMenu)
-  const { SnippetsStyleSelection, Snippets, isPending, CopyButton } =
+  const { Snippets, isPending } =
     useSnippets(selectedMenu)
 
   useEffect(() => {
@@ -32,10 +31,6 @@ export const Layout = () => {
     <Section data-testid="layout" ref={refBody}>
       <HeaderWrapper>
         <HeaderTitle>Sunabar Snippets</HeaderTitle>
-        <HeaderOptions>
-          {SnippetsStyleSelection}
-          <CopyButton />
-        </HeaderOptions>
       </HeaderWrapper>
 
       <Body data-testid="body">

@@ -2,10 +2,10 @@
 #-------------------------------
 # Aurora
 #-------------------------------
-- KEY: aws.Aurora.category
+- ENTRY:
   CATEGORY: 概要
 
-- KEY: aws.Aurora.RDS比較
+- ENTRY:
   EXPLAIN: |
     Auroraとは
   BODY: |
@@ -30,7 +30,7 @@
       • 料金は、実際に使用した分だけ支払う従量課金制
       • Aurora Serverless は、MySQL 互換の Aurora のみ対応
 
-- KEY: aws.Aurora.構成
+- ENTRY:
   EXPLAIN: |
     Aurora DB クラスター構成
   BODY: |
@@ -75,7 +75,7 @@
       • Protection Group: 6つのストレージノードのグループ
       • Storage Node: 6つのストレージノードのうちの1つ
 
-- KEY: aws.Aurora.PostgreSQL
+- ENTRY:
   EXPLAIN: |
     PostgreSQL のバージョン
   BODY: |
@@ -88,7 +88,7 @@
       • 2.3.y: 10.7系との互換性
     • Patch Version: Aurora独自のバージョン
 
-- KEY: aws.Aurora.ライフサイクル
+- ENTRY:
   EXPLAIN: |
     ライフサイクル
   BODY: |
@@ -125,7 +125,7 @@
         • DB クラスターのスナップショット
         • DB インスタンスのスナップショット
 
-- KEY: aws.Aurora.パラメタグループによる設定
+- ENTRY:
   EXPLAIN: |
     パラメタグループによる設定
   BODY: |
@@ -145,7 +145,7 @@
           • DB インスタンスの起動時に特定インスタンスに適用
       • パラメータ変更に伴うテスト
 
-- KEY: aws.Aurora.監視
+- ENTRY:
   EXPLAIN: |
     ワークロード監視(Performance Insights)
   BODY: |
@@ -178,7 +178,7 @@
       • Performance Insights Dashboard にOS、DBのパフォーマンスメトリクス追加可能
       • 統計情報などの表示が可能
 
-- KEY: aws.Aurora.メンテナンス
+- ENTRY:
   EXPLAIN: |
     メンテナンス
   BODY: |
@@ -218,7 +218,7 @@
               --apply-action system-update \
               --opt-in-type immediate
 
-- KEY: aws.Aurora.IAM認証のサポート
+- ENTRY:
   EXPLAIN: |
     IAM認証の「認証トークン」
   BODY: |
@@ -231,7 +231,7 @@
       $export PGPASSWORD="$(aws rds generate-db-auth-token --hostname <DB_HOSTNAME> --port 5432 --username foo)"
       $psql "host=$HOST port=5432 dbname=$DBNAME uer=foo sslmode=verify-full sslrootcert=certificateFile"
 
-- KEY: aws.Aurora.パスワード管理
+- ENTRY:
   EXPLAIN: |
     パスワード管理(rds_password ロール)
   BODY: |
@@ -248,7 +248,7 @@
       • RDS/Aurora PostgreSQL 10.6以降で利用可能
       • rds_superuser は rds_password ロールを常に持つ
 
-- KEY: aws.Aurora.リアルタイム監視
+- ENTRY:
   EXPLAIN: |
     リアルタイム監視
   BODY: |
@@ -258,7 +258,7 @@
       • DBアクティビティ情報は暗号化
       • パートナー製品による監査に対応
 
-- KEY: aws.Aurora.削除保護
+- ENTRY:
   EXPLAIN: |
     Deletion Protection(インスタンス削除保護)
   BODY: |
@@ -270,7 +270,7 @@
       • インスタンスの削除リクエストはブロック
       • リクエスト前に削除保護の無効化が必要
 
-- KEY: aws.Aurora.CloudWatchLogsとの連携
+- ENTRY:
   EXPLAIN: |
     CloudWatch Logs との連携
   BODY: |
@@ -302,7 +302,7 @@
         • メッセージレベルに応じたアラーム
         • 事前に想定されるパターンに応じて自動処理
 
-- KEY: aws.Aurora.S3からのデータインポート
+- ENTRY:
   EXPLAIN: |
     S3からのデータインポート
   BODY: |
@@ -325,10 +325,10 @@
 #-------------------------------
 # 実装
 #-------------------------------
-- KEY: aws.Aurora.use.category
+- ENTRY:
   CATEGORY: 実装
 
-- KEY: aws.Aurora.use.XXX
+- ENTRY:
   EXPLAIN: Nodejsでの実装
   BODY: |
     ■ パッケージ(AWS SDK for JavaScript v3)
@@ -401,19 +401,19 @@
         }
     }
 
-- KEY: aws.Aurora.use.XXX
+- ENTRY:
   EXPLAIN: |
     実装
   BODY: |
     XXXX
 
-- KEY: aws.Aurora.use.XXX
+- ENTRY:
   EXPLAIN: |
     実装
   BODY: |
     XXXX
 
-- KEY: aws.Aurora.use.XXX
+- ENTRY:
   EXPLAIN: |
     実装
   BODY: |

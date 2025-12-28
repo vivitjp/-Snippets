@@ -3,10 +3,10 @@
 # Docker
 #-------------------------------
 
-- KEY: docker.install.category
+- ENTRY:
   CATEGORY: インストール
 
-- KEY: docker.install.linux
+- ENTRY:
   EXPLAIN: Linux インストール
 
   BODY: |
@@ -37,10 +37,10 @@
       ・docker-ce-cli:                  Docker コマンドラインインターフェース
       ・containerd.io:                  コンテナランタイム
 
-- KEY: docker.Dockerfile.category
+- ENTRY:
   CATEGORY: Dockerfile
 
-- KEY: docker.Dockerfile.basicCommand
+- ENTRY:
   EXPLAIN: Dockerfile 定義
   BODY: |
     FROM <IMAGE>                        # ベースイメージ指定
@@ -60,7 +60,7 @@
     ENTRYPOINT ["COMMAND"]              # 優先度高い起動時実行コマンド
     CMD ["COMMAND", "PARAM", ...]       # コンテナ起動時の実行命令
 
-- KEY: docker.Dockerfile.basicCommand
+- ENTRY:
   EXPLAIN: サンプル
   BODY: |
     ■ FROM: ベースイメージを指定
@@ -119,10 +119,10 @@
     ■ 実行
     docker run -d --name my-running-app -p 8080:8080 my-node-app  #daemon実行
 
-- KEY: docker.command.category
+- ENTRY:
   CATEGORY: コマンド
 
-- KEY: docker.command.image
+- ENTRY:
   EXPLAIN: image
   BODY: |
     ■ イメージ操作コマンド
@@ -144,7 +144,7 @@
     docker image pull <IMAGE_NAME[:TAG]>     //ダウンロード
     docker image push <REGISTRY_URL/RESPOSITRY_NAME>[:VERSION] //アップロード
 
-- KEY: docker.command.container
+- ENTRY:
   EXPLAIN: container
   BODY: |
     ■ コンテナ作成 & 管理
@@ -184,7 +184,7 @@
       --interactive(-i)                   // 
       --tty(-t)                           // terminal
 
-- KEY: docker.container.Utilities
+- ENTRY:
   EXPLAIN: container Utilities
   BODY: |
     ■ コンテナ情報取得 & 操作
@@ -203,7 +203,7 @@
     docker container cp <PATH/LOCAL_FILE> <myCont>:<PATH>  //ファイルコピー(local2Cont)
     docker container cp <myCont>:<PATH/LOCAL_FILE> .       //ファイルコピー(Cont2local)
 
-- KEY: docker.network
+- ENTRY:
   EXPLAIN: network
   BODY: |
     ■ ネットワーク操作コマンド

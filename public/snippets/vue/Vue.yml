@@ -7,15 +7,15 @@
 # Async
 #-------------------------------
 
-- KEY: vue.install
+- ENTRY:
   EXPLAIN: インストール
   BODY: |
     npm install vue@3.2.47 vue-router@4.1.6 vuex@4.0.2 vue-i18n@9.2.0
 
-- KEY: vue.example.title
+- ENTRY:
   CATEGORY: Examples
 
-- KEY: vue.example.git
+- ENTRY:
   EXPLAIN: GitHub URL
   BODY: |
     https://github.com/nuxt/examples
@@ -65,7 +65,7 @@
     v-bind:html
     v-bind:text
 
-- KEY: vue.example.hello-world
+- ENTRY:
   EXPLAIN: |
     変数の使い方
   BODY: |
@@ -90,7 +90,7 @@
     }
     </style>
 
-- KEY: vue.example.useState
+- ENTRY:
   EXPLAIN: |
     state-management: useState() & イベントハンドラ
   BODY: |
@@ -123,7 +123,7 @@
       </NuxtExample>
     </template>
 
-- KEY: vue.example.auto-imports
+- ENTRY:
   EXPLAIN: |
     auto-imports: ref()
   BODY: |
@@ -172,12 +172,12 @@
       />
     </template>
 
-# - KEY: vue.
+# - ENTRY:
 #   EXPLAIN: |
 
 #   BODY: |
 
-# - KEY: vue.
+# - ENTRY:
 #   EXPLAIN: |
 
 #   BODY: |

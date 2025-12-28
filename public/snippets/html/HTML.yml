@@ -1,6 +1,6 @@
 #                                                                                  # HTML INPUT
 #
-- KEY: html.quickStart
+- ENTRY:
   EXPLAIN: Quick Start
   BODY: |
     <!DOCTYPE html>
@@ -39,7 +39,7 @@
       </body>
     </html>
 
-- KEY: html.特殊文字
+- ENTRY:
   EXPLAIN: 特殊文字
   BODY: |
     &amp;         // &
@@ -50,7 +50,7 @@
     &lt;          // <
     &gt;          // >
 
-- KEY: html.root
+- ENTRY:
   EXPLAIN: Root タグまとめ
   BODY: |
     ■ <!DOCTYPE>              HTMLバージョン宣言
@@ -87,13 +87,13 @@
 
       [JS] document.body
 
-- KEY: html.comment
+- ENTRY:
   EXPLAIN: コメント
   BODY: |
     <!-- -->  
     <comment>
 
-- KEY: html.header
+- ENTRY:
   EXPLAIN: <h1> ヘッダ
   BODY: |
     <h1>ヘッドライン</h1>
@@ -103,7 +103,7 @@
     <h5>ヘッドライン</h5>
     <h6>ヘッドライン</h6>
 
-- KEY: html.hgroup
+- ENTRY:
   EXPLAIN: <hgroup> 非ヘッダーグループ
   BODY: |
     文書のセクションの、複数レベルの見出し
@@ -113,7 +113,7 @@
       <h2>Living Standard</h2>
     </hgroup>
 
-- KEY: html.paragraph
+- ENTRY:
   EXPLAIN: <p> パラグラフ
   BODY: |
     <p>～</p>間には インライン要素 のみ内包可能と定義
@@ -122,7 +122,7 @@
     <p>テキスト一行目。
     テキスト二行目。</p>
 
-- KEY: html.section
+- ENTRY:
   EXPLAIN: <section> セクション
   BODY: |
     <section>
@@ -134,7 +134,7 @@
       </section>
     </section>
 
-- KEY: html.article
+- ENTRY:
   EXPLAIN: <article> アーティクル
   BODY: |
     投稿、記事など、ドキュメント、ページの完全自己完結型記事
@@ -154,7 +154,7 @@
       </footer>
     </article>
 
-- KEY: html.nav
+- ENTRY:
   EXPLAIN: <nav> ナビ
   BODY: |
     <nav class="cls_nav">
@@ -171,7 +171,7 @@
       </ol>
     </nav>
 
-- KEY: html.header
+- ENTRY:
   EXPLAIN: <header> ヘッダー
   BODY: |
     <head>と混同しないように
@@ -182,7 +182,7 @@
       <h3>New Arrivals!</h2>
     </header>
 
-- KEY: html.footer
+- ENTRY:
   EXPLAIN: <footer> フッター
   BODY: |
     <section>や<article>などの先頭に置かれる<header>の対としてのフッター
@@ -191,7 +191,7 @@
       <h3>更新日:2020</h3>
     </footer>
 
-- KEY: html.aside
+- ENTRY:
   EXPLAIN: <aside> サイド(余談)
   BODY: |
     文書のメインコンテンツと間接的な関係しか持っていない文書の部分を表現
@@ -201,7 +201,7 @@
       <p>サイドメニューや注意書き</p>
     </aside>
 
-- KEY: html.details.summary
+- ENTRY:
   EXPLAIN: <details><summary> 折りたたみ
   BODY: |
     ウィジェットがopen状態時に内容表示、ラベルは<summary>要素
@@ -220,7 +220,7 @@
       </details>
     </details>
 
-- KEY: html.main
+- ENTRY:
   EXPLAIN: <main> 主要内容
   BODY: |
     文書の<body>の主要な内容
@@ -231,7 +231,7 @@
       <p>次の章がここに</p>
     </main>"
 
-- KEY: html.figure.figcaption
+- ENTRY:
   EXPLAIN: <figure><figcaption> Caption付Image
   BODY: |
     キャプション文字列
@@ -246,20 +246,20 @@
       <figcaption style="text-align:center">写真説明</figcaption>
     </figure>"
 
-- KEY: html.br
+- ENTRY:
   EXPLAIN: <br> 改行
   BODY: |
     できるだけ使用を避け、文章単位をdiv,pなどで処理が推薦
 
     ここで改行<br>次の行
 
-- KEY: html.nobr
+- ENTRY:
   EXPLAIN: <nobr> 改行禁止(非)
   BODY: |
     StyleSheet推奨スタイルシートの "white-space:no-wrap"
     通常は横幅にあわせて自動的改行されるが、<nobr>～</nobr>内は改行しない
 
-- KEY: html.wbr
+- ENTRY:
   EXPLAIN: <wbr> 改行可能
   BODY: |
     改行可能箇所の明示(Word Break)
@@ -269,7 +269,7 @@
     世界一番長い英単語「super<wbr>califra<wbr>gilistic<wbr>expiali<wbr>docious」<br>
     リンク:https://developer.<wbr>mozilla.<wbr>org/<wbr>ja/<wbr>docs/Web/API
 
-- KEY: html.a
+- ENTRY:
   EXPLAIN: <a> リンク
   BODY: |
     別ファイルへのリンク、名前付け、メール送信など
@@ -297,7 +297,7 @@
     <a href="#jump">ジャンプ</a>
     <a id="jump">タイトル(ここに飛ぶ)</a>  //name="jump"はhtml5で廃止
 
-- KEY: html.base
+- ENTRY:
   EXPLAIN: <base> 基準URL
   BODY: |
     リンク先基準となる絶対URL、基準ターゲットウィンドウ(ターゲットフレーム)指定
@@ -311,7 +311,7 @@
       <a href="index.html">XXX</a>    <-- http://www.test.com/index.htmlへのリンク
     </body>
 
-- KEY: html.map.area
+- ENTRY:
   EXPLAIN: <map><area> マップ
   BODY: |
     イメージ上のクリックする場所によって別のリンク先にジャンプする機能
@@ -324,7 +324,7 @@
       <area shape="default" href="d.htm">
     </map>
 
-- KEY: html.ul
+- ENTRY:
   EXPLAIN: <ul><li> リスト(順序無)
   BODY: |
     <ul style="list-style-type: TYPE_NAME">
@@ -335,7 +335,7 @@
 
     TYPE_NAME: none, disc, circle, square
 
-- KEY: html.ol
+- ENTRY:
   EXPLAIN: <ol><li> リスト(順序有)
   BODY: |
     <ol style="list-style-type: TYPE_NAME">
@@ -350,100 +350,100 @@
                lower-alpha, upper-alpha
                decimal, decimal-leading-zero,
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <dl> 定義リスト
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <dt> 定義語
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <dd> 定義説明
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <dir> ディレクトリ(非)
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <menu> メニュー(非)
 #
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <menuitem> アイテム(非)
 #
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <command> 略語(非)
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <form> フォーム
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <input> インプット
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <select> セレクト
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <optgroup> 選択肢グループ
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <option> 選択肢
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <textarea> 長文
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <button> ボタン
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <fieldset> 枠
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <legend> 枠名
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <label>
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <output> 結果(非)
 #
 
-- KEY: html.datalist
+- ENTRY:
   EXPLAIN: <datalist>[HTML5](非?)
   BODY: |
     ■ <datalist>
@@ -458,228 +458,228 @@
       </datalist>
     </label>
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <table> テーブル
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <caption> キャプション
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <colgroup> カラムグループ
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <col> カラム設定
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <thead> テーブルヘッダ
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <tbody> テーブルボディ
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <tfoot> テーブルフッタ
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <tr> 行
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <th> テーブルヘッダ項目
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <td> テーブルデータ
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <font> スタイルシート推薦
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <b> 太字
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <i> イタリック
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <tt> テレタイプ文字(非)
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <u> 下線
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <s> 打ち消し線
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <strike> 打ち消し線(非)
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <big> やや大きく(非)
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <small> やや小さく
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <blink> 点滅(非)
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <basefont> 基本フォント(非)
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <address> eMailアドレス
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <blockquote> 引用
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <q> 短い引用括弧
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <ins> 挿入(下線付)
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <del> 削除(打消線付)
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <sub> 下付き
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <sup> 上付き
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <em> 強調+イタリック
 #       COLOR  em
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <strong> 強調
 #       COLOR  strong
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <acronym> 略語(非)
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <abbr> 略語(下線+Tip)
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <cite> 参照(イタリック)
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <dfn> 定義(下線+Tip)
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <code> コード(固定幅Font)
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <kbd> キーボード(フォント)
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <samp> サンプル(フォント)
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <var> 変数(イタリック)
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <mark> マーク(背景黄)
 #
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <data> データ定義(for JS)
 #
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <img> 画像
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <audio> 音
 #
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <video> 動画
 #
 
-- KEY: html.source
+- ENTRY:
   EXPLAIN: <source>
   BODY: |
     <video> や <audio> や <picture> の子要素
@@ -693,7 +693,7 @@
       <source src="xxx.ogg" type="audio/ogg" onerror="error()">
     </audio>
 
-- KEY: html.track
+- ENTRY:
   EXPLAIN: <track> トラック情報
   BODY: |
     <video src="brave.webm">
@@ -702,7 +702,7 @@
       <track kind="subtitles" src="brave.de.vtt" srclang="de" label="Deutsch">
     </video>
 
-- KEY: html.picture
+- ENTRY:
   EXPLAIN: <picture> ピクチャ
   BODY: |
     レスポンシブイメージを実現するための要素
@@ -715,23 +715,23 @@
       <img src="small.jpg" alt="The wolf runs through the snow.">
     </picture>
 
-- KEY: html.applet
+- ENTRY:
   EXPLAIN: <applet> アプレット(廃止)
   BODY: |
     Java アプレット。HTML5で廃止、代わりに<object>を使用。
 
-- KEY: html.script
+- ENTRY:
   EXPLAIN: <script> スクリプト
   BODY: |
     主に JavaScript を実行するために使用
     VBScript など別のスクリプトも実行可能
 
-- KEY: html.noscript
+- ENTRY:
   EXPLAIN: <noscript> JS未対応MSG
   BODY: |
     ブラウザで JavaScript が無効に設定されている場合のメッセージ
 
-- KEY: html.object
+- ENTRY:
   EXPLAIN: <object> オブジェクト
   BODY: |
     <applet><embed><bgsound><img>などの代わりの汎用的なタグ
@@ -744,121 +744,121 @@
       </object>
     </object>
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <param> Objectパラメータ
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <embed> Object埋めこみ
 #
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <noembed> 未対応MSG(非)
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <hr> 水平線
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <iframe> インラインフレーム
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <frame> フレーム(非)
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <frameset> フレームセット(非)
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <noframes> 未対応MSG(非)
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <layer> レイヤ(非)
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <ilayer> インラインレイヤ(非)
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <nolayer> 未対応MSG(非)
 
-- KEY: html.pre
+- ENTRY:
   EXPLAIN: <pre> 整形済みテキスト
   BODY: |
     pre は PREformatted text(整形済みテキスト) の略
     ソースコードなどのスペースや改行をそのまま表示。
     < や > や & は特殊文字なので &lt; &gt; &amp; に要変換
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <xmp> 例(非)
 #       <pre> と同様、ソースコード中のスペースや改行をそのまま表示
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <plaintext> テキスト(非)
 #       <pre> と同様、ソースコード中のスペースや改行をそのまま表示
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <listing> リスティング(非)
 #       <pre> と同様、ソースコード中のスペースや改行をそのまま表示
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <style> スタイル
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <span> インライン要素
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <div> ブロック要素
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <center> 中央揃え(非)
 #       スタイルシート: text-align の使用推奨
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <multicol> 段組み(非)
 #       スタイルシート: columns の使用推奨
 
-# - KEY: html.xxxxxx
+# - ENTRY:
 #   EXPLAIN: ZZZZZ
 #   BODY: |
 #     ■ <spacer> スペーサー(非)
 #       スタイルシート: margin,padding の使用推奨
 
-- KEY: html.bdo
+- ENTRY:
   EXPLAIN: <bdo> 国際化情報
   BODY: |
     bdo は、i18n BiDirectional Over-ride の略。
@@ -868,12 +868,12 @@
     単純に右から左に表示するには <html> や <div> や <span> などの dir 属性を用る
     <bdo> を用いるのはごく稀なケース
 
-- KEY: html.bdi
+- ENTRY:
   EXPLAIN: <bdi> 双方向テキスト
   BODY: |
     <bdo>方向解釈のヘルプ
 
-- KEY: html.ruby
+- ENTRY:
   EXPLAIN: <ruby><rt><rb> ルビ
   BODY: |
     ■ <rt>
@@ -935,7 +935,7 @@
       </rtc>
     </ruby>
 
-- KEY: html.meta
+- ENTRY:
   EXPLAIN: <meta> メタ
   BODY: |
     ■ charset
@@ -952,7 +952,7 @@
     <meta name="keywords" content="HTML,CSS,JavaScript">
     <meta name="referrer" content="no-referrer">
 
-- KEY: html.link
+- ENTRY:
   EXPLAIN: <link> リンク
   BODY: |
     <head>に記述、href属性で指定文書を参照
@@ -974,7 +974,7 @@
 # ■ <server> SS JS(非)
 #   ServerSide JavaScript(古)
 
-- KEY: html.canvas
+- ENTRY:
   EXPLAIN: <canvas> キャンバス
   BODY: |
     <canvas id="cv1" width="140" height="100"></canvas>
@@ -1006,7 +1006,7 @@
     }
     </script>
 
-- KEY: html.meter
+- ENTRY:
   EXPLAIN: <meter> メーター
   BODY: |
     最大値(max)への現在値(value)をグラフで
@@ -1016,7 +1016,7 @@
     <meter max=100 value=50 low=20 high=80>70 / 100</meter>
     <meter max=100 value=90 low=20 high=80>70 / 100</meter>
 
-- KEY: html.progress
+- ENTRY:
   EXPLAIN: <progress> 進捗状況
   BODY: |
     最大値(max)への現在値(value)をグラフで
@@ -1036,7 +1036,7 @@
 
     <progress id="prog1" max=100 value=0></progress>
 
-- KEY: html.time
+- ENTRY:
   EXPLAIN: <time> 日時,時刻
   BODY: |
     記事の発行日時などを正確に判断することが可能
@@ -1045,7 +1045,7 @@
 
     <time datetime="2011-06-11">2011年6月11日</time>
 
-- KEY: html.template
+- ENTRY:
   EXPLAIN: <template> テンプレート
   BODY: |
     スクリプトで利用される要素のテンプレートを定義
@@ -1091,12 +1091,12 @@
     };
     </script>
 
-- KEY: html.slot
+- ENTRY:
   EXPLAIN: <slot> スロット(Shadow DOM)
   BODY: |
     Shadow DOM で置換対象枠を指定
 
-- KEY: html.dialog
+- ENTRY:
   EXPLAIN: <dialog> ダイアログ
   BODY: |
     JavaScript でダイアログの表示・クローズを制御可能
@@ -1132,20 +1132,20 @@
 #     ■ <svg> SVG要素
 #
 
-- KEY: html.attr.id.class
+- ENTRY:
   EXPLAIN: 【属性】id,class
   BODY: |
     id=値                               // id名
     class=値                            // class名
 
-- KEY: html.attr.data
+- ENTRY:
   EXPLAIN: 【属性】data-NAME
   BODY: |
     data-NAME=値                        // 任意名の属性
 
     <div data-insdate="2011-05-29">データ</div>
 
-- KEY: html.attr.name
+- ENTRY:
   EXPLAIN: 【属性】name
   BODY: |
     name=値                             // 名前
@@ -1160,7 +1160,7 @@
       <input type="button" value="OK" onclick="func()">
     </form>
 
-- KEY: html.attr.accesskey
+- ENTRY:
   EXPLAIN: 【属性】accesskey(非)
   BODY: |
     accesskey=値                        // アクセスキー(非)
@@ -1169,7 +1169,7 @@
     <label for="t1" accesskey="b">ブラウザ名(<u>B</u>)：</label>
     <input type="text" id="t1" name="BROWSER">
 
-- KEY: html.attr.autocapitalize
+- ENTRY:
   EXPLAIN: 【属性】autocapitaliz (Safari?)
   BODY: |
     autocapitalize=値                   // 大文字
@@ -1183,7 +1183,7 @@
 
     <input type="text" autocapitalize="off" name="login_id">
 
-- KEY: html.attr.align
+- ENTRY:
   EXPLAIN: 【属性】align
   BODY: |
     align=left|center|right|justify     // アラインメント
@@ -1191,7 +1191,7 @@
     h1,p,div,
     table,caption,legend,col,colgroup,tbody,tr,th,td
 
-- KEY: html.attr.style
+- ENTRY:
   EXPLAIN: 【属性】style
   BODY: |
     style=CSS値                         // スタイル指定
@@ -1200,7 +1200,7 @@
       スタイルシート指定
     </div>
 
-- KEY: html.attr.MIMEtype
+- ENTRY:
   EXPLAIN: 【属性】MIME type
   BODY: |
     type=MIMEタイプ
@@ -1215,7 +1215,7 @@
     text/javascript(JavaScriptスクリプト)
     text/css(CSSファイル)
 
-- KEY: html.attr.char
+- ENTRY:
   EXPLAIN: 【属性】char(非)
   BODY: |
     char= 桁揃え
@@ -1224,7 +1224,7 @@
     テーブルのセルでのみ有効
     作動しないケースが多い
 
-- KEY: html.attr.contenteditable
+- ENTRY:
   EXPLAIN: 【属性】contenteditable
   BODY: |
     contenteditable=true/false/inherit  // 編集許可
@@ -1233,7 +1233,7 @@
 
     <div contenteditable=true>編集可能テキスト</div>
 
-- KEY: html.attr.contextmenu
+- ENTRY:
   EXPLAIN: 【属性】contextmenu(非)
   BODY: |
     contextmenu=右Clickメニュー
@@ -1248,7 +1248,7 @@
       </menu>
     </form>
 
-- KEY: html.attr.crossorigin
+- ENTRY:
   EXPLAIN: 【属性】crossorigin
   BODY: |
     crossorigin= CORS指定
@@ -1286,7 +1286,7 @@
 
 #     ■ dir= 表示の方向制御
 
-- KEY: html.attr.disabled
+- ENTRY:
   EXPLAIN: 【属性】disabled
   BODY: |
     disabled 無効化
@@ -1295,7 +1295,7 @@
       編集不可内容
     </textarea>
 
-- KEY: html.attr.draggable
+- ENTRY:
   EXPLAIN: 【属性】draggable
   BODY: |
     draggable=ドラッグ可能
@@ -1329,14 +1329,14 @@
     }
     </script>
 
-- KEY: html.attr.dropzone
+- ENTRY:
   EXPLAIN: 【属性】dropzone
   BODY: |
     dropzone= ドロップゾーン
 
     Drag & Drop で使用
 
-- KEY: html.attr.hidden
+- ENTRY:
   EXPLAIN: 【属性】hidden
   BODY: |
     hidden 要素を隠蔽
@@ -1345,7 +1345,7 @@
       <div hidden>BBB</div>
     <div>CCC</div>
 
-- KEY: html.attr.hidefocus
+- ENTRY:
   EXPLAIN: 【属性】hidefocus(非)
   BODY: |
     hidefocus= フォーカス隠蔽
@@ -1358,7 +1358,7 @@
     <a href="xxx.htm">XXX</a>
     <a href="xxx.htm" hidefocus="true">XXX</a>
 
-- KEY: html.attr.inputmode
+- ENTRY:
   EXPLAIN: 【属性】inputmode(CSSに移動)
   BODY: |
     inputmode= 入力モード
@@ -1388,7 +1388,7 @@
       <input type="text" inputmode="tel">
     </div>
 
-- KEY: html.attr.is
+- ENTRY:
   EXPLAIN: 【属性】is
   BODY: |
     is= カスタマイズドビルトイン
@@ -1406,7 +1406,7 @@
 
     <button is="a-button">Click Me!</button>
 
-- KEY: html.attr.itemscope.itemtype
+- ENTRY:
   EXPLAIN: 【属性】itemscope
   BODY: |
     ● itemscope スコープ(構造化データ)
@@ -1433,7 +1433,7 @@
       <a href="https://youtu.be/0AY1XIkX7bY" itemprop="trailer">Trailer</a>
     </div>
 
-- KEY: html.attr.lang
+- ENTRY:
   EXPLAIN: 【属性】lang
   BODY: |
     lang= 言語
@@ -1442,7 +1442,7 @@
 
     en-US(米国英語)、ja-osaka(大阪弁)などの方言設定も可能
 
-- KEY: html.attr.language
+- ENTRY:
   EXPLAIN: 【属性】language
   BODY: |
     language= スクリプト言語
@@ -1452,7 +1452,7 @@
     language="VBScript" (VBScript)
     language="VBS" (VBScript)
 
-- KEY: html.attr.nonce
+- ENTRY:
   EXPLAIN: 【属性】nonce [HTML5.1]
   BODY: |
     nonce= 改竄チェック
@@ -1471,7 +1471,7 @@
 
     <script nonce="hUygTfgbgFcdRt5eDqpLfB6f==">正規のスクリプト</script>
 
-- KEY: html.attr.onbeforeunload
+- ENTRY:
   EXPLAIN: 【属性】onbeforeunload
   BODY: |
     onbeforeunload= Unloadコール
@@ -1484,7 +1484,7 @@
     window.onbeforeunload = function(e){ return "TEST"; }
     </script>
 
-- KEY: html.attr.onmessage
+- ENTRY:
   EXPLAIN: 【属性】onmessage
   BODY: |
     onmessage= 受信ハンドラ
@@ -1511,7 +1511,7 @@
     setInterval(function(){ postMessage('hoge' + count++); },1000);
     </script>
 
-- KEY: html.attr.onpopstate
+- ENTRY:
   EXPLAIN: 【属性】onpopstate
   BODY: |
     onpopstate= hisotry遷移
@@ -1532,7 +1532,7 @@
 
     <input type="button" onclick="history.back()" value="Back">
 
-- KEY: html.attr.ping
+- ENTRY:
   EXPLAIN: 【属性】ping
   BODY: |
     ping= ping通知
@@ -1545,7 +1545,7 @@
       ping="http://www.stats.com/log?a.htm"
     >LINK</a>
 
-- KEY: html.attr.rel
+- ENTRY:
   EXPLAIN: 【属性】rel
   BODY: |
     rel= 関係
@@ -1577,7 +1577,7 @@
     <link rel="icon"       href="image/favicon.png" type="image-x-icon">
     <link rel="license"    href="license.html">
 
-- KEY: html.attr.slot
+- ENTRY:
   EXPLAIN: 【属性】slot
   BODY: |
     slot= スロット(Shadow DOM)
@@ -1608,7 +1608,7 @@
     }
     </script>
 
-- KEY: html.attr.spellcheck
+- ENTRY:
   EXPLAIN: 【属性】spellcheck
   BODY: |
     spellcheck=true/false               // スペルチェック
@@ -1618,7 +1618,7 @@
     例えば Opera では、単語の下に赤い波線
     <textarea spellcheck="true">This is a boook.</textarea>
 
-- KEY: html.attr.tabindex
+- ENTRY:
   EXPLAIN: 【属性】tabindex
   BODY: |
     tabindex= タブ順序
@@ -1632,7 +1632,7 @@
       <input type="text" tabindex="2">2<br>
     </form>
 
-- KEY: html.attr.target
+- ENTRY:
   EXPLAIN: 【属性】target
   BODY: |
     target= ターゲット
@@ -1653,7 +1653,7 @@
     //helpというフレームに
     <a href="www.text.html" target="help">to Help</a>
 
-- KEY: html.attr.title
+- ENTRY:
   EXPLAIN: 【属性】title
   BODY: |
     title= バルーンヘルプ
@@ -1664,7 +1664,7 @@
       このテキストのToolTipが表示される
     </DIV>
 
-- KEY: html.attr.translate
+- ENTRY:
   EXPLAIN: 【属性】translate
   BODY: |
     translate=yes(default)/no           // 翻訳可否
@@ -1679,7 +1679,7 @@
       </code>
     </pre>
 
-- KEY: html.attr.unselectable
+- ENTRY:
   EXPLAIN: 【属性】unselectable
   BODY: |
     unselectable= 選択禁止
@@ -1688,7 +1688,7 @@
 
     <div unselectable=on>選択できない文字列</div>
 
-- KEY: html.attr.color
+- ENTRY:
   EXPLAIN: 【属性】color
   BODY: |
     =color 色指定
@@ -1696,7 +1696,7 @@
     color="#000000" RGB値
     color="blue" 色名前
 
-- KEY: html.attr.url
+- ENTRY:
   EXPLAIN: 【属性】url
   BODY: |
     =url url

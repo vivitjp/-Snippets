@@ -5,7 +5,7 @@
 #-------------------------------
 # Distribution
 #-------------------------------
-- KEY: linux.distribution
+- ENTRY:
   EXPLAIN: ディストリビューション
   BODY: |
     ■ debian(debian_xxx)
@@ -57,7 +57,7 @@
 # Directory
 #-------------------------------
 
-- KEY: linux.directory
+- ENTRY:
   EXPLAIN: Linuxディレクトリ
   BODY: |
     /                                   # ルートディレクトリ
@@ -82,7 +82,7 @@
 #-------------------------------
 # User
 #-------------------------------
-- KEY: linux.time
+- ENTRY:
   EXPLAIN: 時間定義
   BODY: |
     1970/01/01 を基準として
@@ -90,7 +90,7 @@
 #-------------------------------
 # User
 #-------------------------------
-- KEY: linux.user.password
+- ENTRY:
   EXPLAIN: ユーザ & パスワード
   BODY: |
     w                                   # ログインユーザの作業内容
@@ -111,7 +111,7 @@
     > uid=0(root) gid=0(root) groups=0(root)
     > 1(bin) 2(daemon) 3(sys) 4(adm) 6(disk)
 
-- KEY: linux.user.group
+- ENTRY:
   EXPLAIN: ユーザ & グループ管理
   BODY: |
     useradd <user>                      # ユーザ追加
@@ -130,7 +130,7 @@
 #-------------------------------
 # 日付・時間
 #-------------------------------
-- KEY: linux.date.time
+- ENTRY:
   EXPLAIN: 日付と時間
   BODY: |
     date --set="2003/10/8 16:20"        # カーネル日付時刻設定
@@ -145,7 +145,7 @@
 #-------------------------------
 # FD(file/directory) Permission
 #-------------------------------
-- KEY: linux.fd.permission
+- ENTRY:
   EXPLAIN: permission
   BODY: |
     1文字目 : -(ファイル) d(ディレクトリ) l(シンボリック・リンク)
@@ -165,7 +165,7 @@
     drwxrwxrwt                          # D: 全userが書/変更(削除/名変更所有者のみ)
     lrwxrwxrwx                          # L: リンク(パーミッションはリンク元継承)
 
-- KEY: linux.fd.permission.change
+- ENTRY:
   EXPLAIN: permission 変更
   BODY: |
     ■ 数字とアルファベットによる指定比較
@@ -200,7 +200,7 @@
     chmod u+s <F/D>                     # userSet(他実行時user権限)
     chmod g+s <F/D>                     # groupSet(他実行時group権限)
 
-- KEY: linux.fd.owner.group
+- ENTRY:
   EXPLAIN: 所有者グループ変更
   BODY: |
     chown <user> <F/D>                  # F/Dの所有者変更
@@ -213,7 +213,7 @@
 #-------------------------------
 # /etc/
 #-------------------------------
-- KEY: linux.etc.password
+- ENTRY:
   EXPLAIN: パスワード
   BODY: |
     # more /etc/passwd
@@ -228,31 +228,31 @@
 #-------------------------------
 # Shell
 #-------------------------------
-- KEY: linux.shell
+- ENTRY:
   EXPLAIN: shell関連
   BODY: |
     echo $0                             # 現在のShell /usr/bin/bash
 
-- KEY: linux.shell.bash
+- ENTRY:
   EXPLAIN: bash 設定
   BODY: |
     ~/.bash_profile                     # ログイン時に1回実行
     ~/.bashrc                           # shell起動時に1回実行
     source ~/.bashrc                    # 現shellですぐに有効化
 
-- KEY: linux.command.alias
+- ENTRY:
   EXPLAIN: alias作成・削除
   BODY: |
     alias ll='ls -al'                   # Alias作成
     unalias ll
 
-- KEY: linux.command.which
+- ENTRY:
   EXPLAIN: コマンドbin位置
   BODY: |
     which <command>
     > /usr/bin/<command>
 
-- KEY: linux.command.pipe
+- ENTRY:
   EXPLAIN: 連結(|,<,<<,>>,>)
   BODY: |
     ls -l | more                        # コマンド結果を more に連結
@@ -265,7 +265,7 @@
     > Happy Linux
     > END                               # 終了---_END_が入力終端文字列
 
-- KEY: linux.command.utils
+- ENTRY:
   EXPLAIN: time.nice
   BODY: |
     time <command>                      # 実行時間の計測
@@ -281,7 +281,7 @@
 #-------------------------------
 # Path
 #-------------------------------
-- KEY: linux.path
+- ENTRY:
   EXPLAIN: PATH関連
   BODY: |
     echo $PATH                          # PATH表示
@@ -291,7 +291,7 @@
 #-------------------------------
 # System
 #-------------------------------
-- KEY: linux.system
+- ENTRY:
   EXPLAIN: system関連
   BODY: |
     shutdown -r now                     # 再起動(FSチェック)
@@ -305,7 +305,7 @@
 #-------------------------------
 # System Job & Kill
 #-------------------------------
-- KEY: linux.system.job
+- ENTRY:
   EXPLAIN: ジョブ(jobs,fg,bg,top,at)
   BODY: |
     vi a.txt &                          # BackGround(bg)で実行
@@ -326,7 +326,7 @@
     nohup <command>                     # ctrl+c:中断, terminalEnd:継続
     nohup <command> &                   # ctrl+c:-,    terminalEnd:継続
 
-- KEY: linux.system.ps
+- ENTRY:
   EXPLAIN: 停止・終了(stop,kill)
   BODY: |
     ps -e                               # プロセス表示 (-e 全プロセス)
@@ -344,7 +344,7 @@
     kill -KILL <PID>                    # プロセス<PID> を終了
     killall -HUP <COMMAND>              # プロセス<COMMAND> を終了(root)
 
-- KEY: linux.system.cron
+- ENTRY:
   EXPLAIN: 定期実行
   BODY: |
     crontab -e                          # 設定ファイル crontab 編集
@@ -356,7 +356,7 @@
 #-------------------------------
 # File & Directory
 #-------------------------------
-- KEY: linux.fd.ls.cd
+- ENTRY:
   EXPLAIN: ファイルリスト
   BODY: |
     ls                                  # カレント・ディレクトリ
@@ -367,7 +367,7 @@
     ls -F                               # 種類(@:シンボリックリンク, /:ディレクトリ,*:実行可能)
     ls -R                               # サブディレクトリ
 
-- KEY: linux.fd.file
+- ENTRY:
   EXPLAIN: ファイル
   BODY: |
     touch <file>                        # 更新時刻の更新(なければ作成)
@@ -384,7 +384,7 @@
     mv <dir??/> <dir存在/>              # ファイル移動 (??は数値01,02,03,...)
     mv <dir/> <dir非存在/>              # ディレクトリ名変更
 
-- KEY: linux.fd.directory
+- ENTRY:
   EXPLAIN: ディレクトリ
   BODY: |
     pwd                                 # カレントPATH
@@ -402,28 +402,28 @@
     rmdir <dir> [<dir>]                 # 削除(複数可)
     rmdir -rfp <dir>                    # 削除(-r:再帰 -f:強制 -p:親も削除)
 
-- KEY: linux.fd.link
+- ENTRY:
   EXPLAIN: リンク
   BODY: |
     ln -s ~/moto.txt ./saki/            # シンボリックリンク(ファイル)
     ln -s /home/src ~/                  # シンボリックリンク(ディレクトリ)
     ln /home/src ~/                     # ハードリンク(ディレクトリ)
 
-- KEY: linux.fd.loop
+- ENTRY:
   EXPLAIN: 一括処理
   BODY: |
     for nm in *                         # Loop 開始(変数 nm)
     > do head -n 1 $nm                  # 任意のコマンド
     > done                              # Loop END
 
-- KEY: linux.fd.split.cat
+- ENTRY:
   EXPLAIN: 分割結合
   BODY: |
     split -l <行> <file> <分割file>.<aa~>     # file分割(行)
     split -d <bytek> <file> <分割file>.<aa~>  # file分割(byte)
     cat <分割file>.?? > <結合file>             # file結合
 
-- KEY: linux.fd.df
+- ENTRY:
   EXPLAIN: ディスク容量
   BODY: |
     df
@@ -434,7 +434,7 @@
 #-------------------------------
 # TEXT
 #-------------------------------
-- KEY: linux.text.echo.more.head
+- ENTRY:
   EXPLAIN: 表示
   BODY: |
     echo this                           # 文字列出力
@@ -449,7 +449,7 @@
     head -n 3 <file>                    # fileの最初の指定行内容
     tail -n 3 -f <file>                 # fileの最後の指定行内容(-f 更新)
 
-- KEY: linux.text.utilities
+- ENTRY:
   EXPLAIN: 差分、結合、カウント
   BODY: |
     diff <file1> <file2>                # 2ファイル差分
@@ -470,7 +470,7 @@
     wc -l <file>                        # 行数
     wc -l *                             # ディレクトリ内のファイルの行数一覧
 
-- KEY: linux.text.sort
+- ENTRY:
   EXPLAIN: ソート
   BODY: |
     sort <file>                         # 結果出力
@@ -486,7 +486,7 @@
     sort <file2> > <result2>            # マージソートの準備ソート2
     sort -mu <result[1-2]> > <result>   # -m:マージソート, -u:重複圧縮
 
-- KEY: linux.text.code
+- ENTRY:
   EXPLAIN: コード(改行・文字)変換
   BODY: |
     nkf -j -Lu <file> > <file>          # 文字コード変換
@@ -498,7 +498,7 @@
       -Lw: CR+LF                        # Windows改行コード
       -Lm: CR                           # Mac改行コード
 
-- KEY: linux.text.replace
+- ENTRY:
   EXPLAIN: 置換(dd,expand,tr)
   BODY: |
     dd if=<file> of=<file> conv=lcase
@@ -516,7 +516,7 @@
     cat file | tr [:punct:] , > <file>     # 全記号をカンマ(,)に変更
     cat file | tr "[:upper:]" "[:lower:]"  # 小文字に変換
 
-- KEY: linux.text.replace.sed
+- ENTRY:
   EXPLAIN: 置換(sed)
   BODY: |
     sed -e "s/KEY_FIND/KEY_REPLACE/g" <file>
@@ -539,7 +539,7 @@
     ^                                   # 行頭を表す
     $                                   # 行末を表す
 
-- KEY: linux.text.extract
+- ENTRY:
   EXPLAIN: 抽出(awk,cut)
   BODY: |
     awk '{print $3}' <file>             # スペース区切りの3番目抽出(1~)
@@ -554,7 +554,7 @@
 #-------------------------------
 # 検索
 #-------------------------------
-- KEY: linux.text.find.grep
+- ENTRY:
   EXPLAIN: grep検索
   BODY: |
     grep REG FILES                      # 正規表現を用いてファイル内の文言を検索
@@ -562,7 +562,7 @@
     file2.txt:this is my file 
     sample.txt:test file like this
 
-- KEY: linux.text.find.locate
+- ENTRY:
   EXPLAIN: ファイル位置検索
   BODY: |
     locate <file_name>                  # Index検索(updatedbによって定期更新必要)
@@ -573,7 +573,7 @@
     find <dir> -mtime 3                 # 3日前に更新
     ... -fprint result                  # 結果をファイルに出力
 
-- KEY: linux.text.find.wildcard
+- ENTRY:
   EXPLAIN: ワイルドカード
   BODY: |
     ?     任意の1文字---ドット・ファイルのドット"."除外)
@@ -594,7 +594,7 @@
 #-------------------------------
 # ドキュメント編集
 #-------------------------------
-- KEY: linux.editor.vi
+- ENTRY:
   EXPLAIN: 編集(vi)
   BODY: |
     vi <file>                           # <file>編集
@@ -611,7 +611,7 @@
 #-------------------------------
 # Network
 #-------------------------------
-- KEY: linux.network
+- ENTRY:
   EXPLAIN: ネットワーク
   BODY: |
     /etc/init.d/network start           # 接続開始
@@ -627,7 +627,7 @@
 #-------------------------------
 # 圧縮
 #-------------------------------
-- KEY: linux.zip
+- ENTRY:
   EXPLAIN: 圧縮
   BODY: |
     zip <name>.zip <file>               # 圧縮単一ファイル

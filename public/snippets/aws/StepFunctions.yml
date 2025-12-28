@@ -2,10 +2,10 @@
 #-------------------------------
 # AWS
 #-------------------------------
-- KEY: aws.StepFunctions.category
+- ENTRY:
   CATEGORY: StepFunctions
 
-- KEY: aws.StepFunctions.xxxxx
+- ENTRY:
   EXPLAIN: |
     xxxxxx
   BODY: |

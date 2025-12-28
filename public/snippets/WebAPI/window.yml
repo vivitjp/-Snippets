@@ -3,21 +3,21 @@
 # Windows
 #-------------------------------
 
-- KEY: win.clipboard
+- ENTRY:
   EXPLAIN: クリップボードにコピー
   BODY: |
     const copyToClipboard = async (text: string) => {
       await navigator.clipboard.writeText(text) //非同期
     }
 
-- KEY: win.darkMode
+- ENTRY:
   EXPLAIN: ダークモードの検出
   BODY: |
     const isDarkMode = () =>
       window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
     console.log(isDarkMode())
 
-- KEY: win.scroll
+- ENTRY:
   EXPLAIN: スクロール
   BODY: |
     const scrollToTop = (element: HTMLElement) =>

@@ -2,10 +2,10 @@
 #-------------------------------
 # AWS
 #-------------------------------
-- KEY: aws.APIGateway.category
+- ENTRY:
   CATEGORY: APIGateway
 
-- KEY: aws.APIGateway.xxxxx
+- ENTRY:
   EXPLAIN: |
     xxxxxx
   BODY: |

@@ -1,5 +1,5 @@
 ---
-- KEY: cloud.services
+- ENTRY:
   EXPLAIN: Cloud サービス
   BODY: |
     SaaS (Software as a Service)        ソフトウェアをサービスとして提供
@@ -10,7 +10,7 @@
     FaaS (Function as a Service)        特定の機能やロジックをサービスとして提供
     IDaaS (Identity as a Service)       ID管理やアクセス管理をサービスとして提供
 
-- KEY: cloud.general
+- ENTRY:
   EXPLAIN: Cloud 全般
   BODY: |
     ■ AWS 
@@ -33,7 +33,7 @@
     Cloudflare Workers                  サーバーレスアプリケーション
     Cloudflare Pages                    JAMstack サイトのホスティング
 
-- KEY: cloud.PssS
+- ENTRY:
   EXPLAIN: PaaSアーキテクチャ(メジャー以外)
   BODY: |
     ■ フロンエンド
@@ -73,7 +73,7 @@
     GraphQL          AppSync            Hasura Cloud
     DWH              Redshift           Snowflake
 
-- KEY: cloud.services.db
+- ENTRY:
   EXPLAIN: DB サービスの比較
   TABLE:
     OPTION:
@@ -100,15 +100,15 @@
       TiDB Serverless	MySQL互換 (分散型)	無料枠あり（永続的、月間最大25GB/2500万CUまで）。高い水平スケーラビリティが特徴。
       Cloudflare D1	SQLite互換 (エッジ)	無料枠あり（1日10億リクエストまで）。Cloudflare Workersと連携し、エッジでの高速なアクセスを提供。
 
-# - KEY: cloud.general
+# - ENTRY:
 #   EXPLAIN: Cloud 全般
 #   BODY: |
 
-# - KEY: cloud.general
+# - ENTRY:
 #   EXPLAIN: Cloud 全般
 #   BODY: |
 
-- KEY: cloud.services.id
+- ENTRY:
   EXPLAIN: ID サービスの比較
   TABLE:
     OPTION:

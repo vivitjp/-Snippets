@@ -1,0 +1,1619 @@
+---
+#-------------------------------
+# TypeORM
+#-------------------------------
+
+#-------------------------------
+# Quick Start
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: Quick:Entity
+  BODY: |
+    @Entity('users')
+    export class User {
+      @PrimaryColumn({ type: 'varchar', comment: 'ID', length: 50 })
+      id: string;
+      @Column({ type: 'varchar', comment: '氏名', length: 255 })
+      name?: string;
+      @Column({ type: 'varchar', comment: '生年月', length: 255 })
+      birth_date?: string;
+      @Column({ type: 'tinyint', comment: '性別' })
+      gender?: number;
+    }
+
+- ENTRY:
+  EXPLAIN: Quick:NestService
+  BODY: |
+    @Injectable()
+    export class UsersService {
+      constructor(
+        @InjectRepository(User)
+        private usersRepository: Repository<User>,
+      ) {}
+
+      async findByEmail(id: string): Promise<User> {
+        const query: SelectQueryBuilder<User> =
+          this.usersRepository.createQueryBuilder('users')
+          .select(["id","name","birth_date"])
+          .where('users.id = :id', { id });
+
+        const user = await query.getOne();
+        return user;
+      }
+    }
+
+- ENTRY:
+  EXPLAIN: Quick:Req引数Entity&検証
+  BODY: |
+    export class CreateUsersRequest {
+      @MaxLength(255, { message: "---" })
+      @IsNotEmpty({ message: "---" })
+      name: string;
+
+      @Matches(/^(\d{4})-(\d{2})$/, { message: "---" })
+      @Length(7, 7, { message: "---" })
+      @IsNotEmpty({ message: "---" })
+      birth_date: string;
+
+      @IsInt({ message: "---" })
+      @IsNotEmpty({ message: "---" })
+      cities_id: number;
+
+      @IsNotEmpty({ message: "---") })
+      @IsInt({ message: "---" })
+      @Transform(({ value }) => Number(value))
+      times_id: number;
+
+      @IsOptional()
+      @MaxLength(255, { message: "---" })
+      @CustomIsJISString({ message: "---" })      // Custom Validator
+      @Transform(({ value }) => value.replaceAll('\r\n', '\n'))
+      memo: string;
+    }
+
+- ENTRY:
+  EXPLAIN: dataSource設定
+  BODY: |
+    const myDataSource = new DataSource({
+      type: "mysql",
+      host: "localhost",
+      port: 3306,
+      username: "test",
+      password: "test",
+      database: "test",
+
+      // Entity導入方法(個別)
+      // import { User } from "./entity/User"
+      entities: [User],
+
+      // Entity導入方法(Dir別)
+      entities: ["entity/*.js"],
+    })
+
+    @Entity()
+    export class User {
+      @PrimaryGeneratedColumn({ comment:'ID' })
+      id: number;
+    }
+
+    ■ コール方法
+    1) Manager
+    const person = await dataSource.manager.findOneBy(Person, { id: 1 })
+    2) Repository
+    const person = await dataSource.getRepository(Person).findOneBy({ id: 1 })
+
+#-------------------------------
+# Entity
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: Entity定義と継承
+  BODY: |
+    ■ Entity
+    @Entity('example')                            // Entity名
+    class Example { ... }
+
+    ■ Entity継承
+    class Base {                                  // @Entityなし
+      @Column()
+      title: string
+    }
+
+    ■ Entity継承(abstract)
+    abstract class Base {                         // 継承専用クラス
+      @Column()
+      title: string
+    }
+
+    @Entity('example')                            // Entity名
+    class Example extends Base { ... }
+
+    ■ Entity継承(TableInheritance)
+    @Entity('example')                            // Entity名
+    @TableInheritance({
+      column: { type:"int", name:"type" }         // 単一行の継承
+    })
+    class Example extends Base { ... }
+
+- ENTRY:
+  EXPLAIN: カラム命名
+  BODY: |
+    ■ @Entity() なし
+    export class Name {
+      @Column()
+      first: string
+      
+      @Column()
+      last: string
+    }
+
+    ■ @Entity() あり
+    @Entity()
+    export class User {
+      @PrimaryGeneratedColumn()
+      id: string
+      
+      @Column(() => Name)
+      name: Name
+    }
+
+    +-------------+--------------+
+    | id          | int(11)      | PRIMARY KEY AUTO_INCREMENT
+    | nameFirst   | varchar(255) | *この名前に注意
+    | nameLast    | varchar(255) |
+    +-------------+--------------+
+
+- ENTRY:
+  EXPLAIN: 隣接リスト(自己巡回参照)
+  BODY: |
+    @Entity()
+    export class Category {
+      @PrimaryGeneratedColumn()
+      id: number
+
+      @ManyToOne((type) => Category, (category) => category.children)
+      parent: Category
+
+      @OneToMany((type) => Category, (category) => category.parent)
+      children: Category[]
+    }
+
+- ENTRY:
+  EXPLAIN: Tree構造
+  BODY: |
+    @Entity()
+    @Tree("nested-set")
+    export class Category {
+      @PrimaryGeneratedColumn()
+      id: number
+
+      @TreeChildren()
+      children: Category[]
+
+      @TreeParent()
+      parent: Category
+
+      @TreeLevelColumn()
+      level: number
+    }
+
+- ENTRY:
+  EXPLAIN: Entity Primary
+  BODY: |
+    @PrimaryGeneratedColumn({ comment: 'ID' })    // シーケンスPK自動生成(挿入時)
+    id: number;
+
+    @PrimaryGeneratedColumn("uuid")               // HEXによるUUID自動挿入
+    id: string
+
+    @PrimaryColumn({
+      type: 'varchar',
+      length: 50,
+      comment: 'ID'
+    })
+    id: string;
+
+- ENTRY:
+  EXPLAIN: Entity 自動更新
+  BODY: |
+    @CreateDateColumn()                           // 日付自動生成(挿入時)
+    created_at: Date;
+
+    @UpdateDateColumn()                           // 日付自動生成(挿入時・更新時)
+    updated_at: Date;
+
+    @DeleteDateColumn()                           // 日付自動生成(soft-delete時)
+    updated_at: Date;
+
+    @VersionColumn()                              // EntityVersion記録
+    entity_version: number;
+
+- ENTRY:
+  EXPLAIN: Entity Index
+  BODY: |
+    ■ 単一index
+    @Index()                                      // 検索DBIndex作成
+    @Column()
+    name: string;
+
+    ■ 複合index(Not Unique)
+    @Entity()
+    @Index(["firstName","lastName"])              // Default: Unique:false
+    export class User {
+        @PrimaryGeneratedColumn()
+        id: number
+        
+        @Column()
+        firstName: string
+        
+        @Column()
+        lastName: string
+        ...
+    }
+
+    ■ 複合index(Unique)
+    @Entity()
+    @Index(
+      ["firstName","middleName","lastName"],
+      { unique:true }                             // Unique 指定
+    )
+    export class User {
+        @PrimaryGeneratedColumn()
+        id: number
+        
+        @Column()
+        firstName: string
+        
+        @Column()
+        middleName: string
+        
+        @Column()
+        lastName: string
+        ...
+    }
+
+    ■ 複合index: 非Lock生成(Postgres)
+    @Index(
+      ["firstName", "middleName"],
+      { concurrent: true }                        // 非Lock生成
+    )
+
+#-------------------------------
+# Entity: Column Type
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: カラムタイプ
+  BODY: |
+    ■ 数値
+    bit, int, integer, tinyint, smallint, mediumint,
+    bigint, float, double, double precision, dec, 
+    decimal, numeric, fixed, 
+    ■ Boolean
+    bool, boolean, 
+    ■ 日付
+    date, datetime, timestamp, time, year, 
+    ■ 文字
+    char, nchar, national char,
+    ■ 文字列(var)
+    varchar, nvarchar, national varchar,
+    ■ 文字列(text)
+    text, tinytext, mediumtext, longtext,
+    ■ 文字列(string)
+    linestring, multilinestring,
+    ■ Blob
+    blob, tinyblob, mediumblob, longblob, 
+    ■ id
+    uuid,
+    ■ binary
+    binary, varbinary, 
+    ■ 他
+    enum, set, json, geometry, point, polygon,
+    multipoint, multipolygon, geometrycollection, 
+    inet4, inet6
+
+- ENTRY:
+  EXPLAIN: カラムOptions
+  BODY: |
+    name:          string,                        // DBのカラム名(上書き優先)
+    primary:       boolean,                       // =@PrimaryColumn
+    unique:        boolean,                       // unique設定
+    default:       Type,                          // default値
+    nullable:      boolean,                       // null許容(default: false)
+    update:        boolean,                       // save()でUDPATE時使用(default: true)
+    insert:        boolean,                       // INSERT時使用(default: true)
+    select:        boolean,                       // SELECT時使用(default: true)
+    onUpdate:      string,                        // updateのTrigger記述(用法不明)
+    comment:       string,                        // フリーコメント
+    asExpression:  string,                        // カラムExpression(MYSQL)?
+
+    //文字
+    length:        number,                        // 文字列長(文字列関連のみ有効)
+    charset:       string,                        // 文字セット(utf8mb4など)
+    collation:     string,                        // Collation(utf8mb4_0900_ai_ciなど)
+
+    //数
+    width:         number,                        // 表示幅
+    precision:     number,                        // (decimalカラム小数点)
+    scale:         number,                        // (decimalカラム小数点桁数)
+    zerofill:      boolean,                       // (MYSQL:unsigned)
+    unsigned:      boolean,                       // (MYSQL)
+
+    //型
+    enum:          string[]|anyEnum,              // type:"enum"で使用される型配列
+    enumName:      string,                        // "enum"名
+    generatedType: "VIRTUAL"|"STORED",            // @Generated(MYSQL)
+    hstoreType:    "object"|"string",             // HSTORE (Postgres)
+    array:         boolean,                       // cockroachdb (Postgres)
+
+    transformer: {
+      from(value:DBType): EntityType,
+      to(value:EntityType): DBType
+    }
+
+- ENTRY:
+  EXPLAIN: カラム書式
+  BODY: |
+    @Column('varchar')
+    name: string;
+
+    @Column('varchar', { comment:'名前' })
+    name: string;
+
+    @Column({ type:'varchar', length:255, comment:'名前' })
+    name: string;
+
+- ENTRY:
+  EXPLAIN: カラム書式(enum)
+  BODY: |
+    export enum Key { A="a", B="b", C="c" }
+
+    @Column({ type: "enum", enum: Key, default: Key.A })
+    key: Key
+
+    export const Keys = ["a","b","c"] as const
+    export type Key = typeof Keys[number]
+
+    @Column({ type: "enum", enum: Keys, default: "a"})
+    key: Key
+
+- ENTRY:
+  EXPLAIN: カラム書式(set)
+  BODY: |
+    export const Keys = ["a","b","c"] as const
+    export type Key = typeof Keys[number]
+
+    @Column({ type: "set", enum: ["a","b","c"], default: ["a","b"]})
+    keys: Key[]
+
+- ENTRY:
+  EXPLAIN: カラム書式(単純配列)
+  BODY: |
+    export Class Keys{
+      @Column("simple-array")
+      names: string[]
+    }
+
+    const keys = new Keys()
+    keys.names = ["A", "B", "C", "D"]
+
+- ENTRY:
+  EXPLAIN: カラム書式(単純オブジェクト)
+  BODY: |
+    export Class Key{
+      @Column("simple-json")
+      info: { name:string, age:number }
+    }
+
+    const key = new Key()
+    key.info = { name:"A", age:7 }
+
+- ENTRY:
+  EXPLAIN: 自動生成Id
+  BODY: |
+    @Column()
+    @Generated("uuid")
+    uuid: string
+
+#-------------------------------
+# View
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: View Entity by SQL
+  BODY: |
+    //SQLによるVIEW生成
+    @ViewEntity({
+      expression: `
+        SELECT post.id AS id, post.name AS name, category.name AS categoryName
+        FROM post
+        LEFT JOIN category ON post.categoryId = category.id
+      `
+    })
+    export class PostCategory {
+      @ViewColumn()
+      id: number
+
+      @Index()                                    // 単一カラムINDEX
+      @Index("name-idx", { unique: true })        // (INDEX名、オプション)
+      @ViewColumn({ name: "postName", ... })
+      name: string
+
+      @ViewColumn()
+      categoryName: string
+    }
+
+    const postCategories = await dataSource.manager.find(PostCategory)
+    const postCategory = await dataSource.manager.findOneBy(PostCategory, { id: 1 })
+
+- ENTRY:
+  EXPLAIN: View Entity by QB
+  BODY: |
+    //QueryBuilderによるVIEW生成
+    @ViewEntity({
+      materialized: true,                         // PostgreSQLオプション
+      expression: (dataSource: DataSource) => dataSource
+        .createQueryBuilder()
+        .select("post.id", "id")
+        .addSelect("post.name", "name")
+        .addSelect("category.name", "categoryName")
+        .from(Post, "post")
+        .leftJoin(Category, "category", "category.id = post.categoryId")
+        //パラメタバインディング
+        [X].where("category.name = :name", { name: "Cars" })
+        //リテラル
+        [O].where("category.name = 'Cars'")
+    })
+    export class PostCategory {
+      @ViewColumn()
+      id: number
+
+      @Index()                                    // 単一カラムINDEX
+      @Index("name-idx", { unique: true })        // (INDEX名、オプション)
+      @ViewColumn({ name: "postName", ... })
+      name: string
+
+      @ViewColumn()
+      categoryName: string
+    }
+
+    const postCategories = await dataSource.manager.find(PostCategory)
+    const postCategory = await dataSource.manager.findOneBy(PostCategory, { id: 1 })
+
+#-------------------------------
+# Entity Relation
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: Entity Cascade
+  BODY: |
+    @Entity()
+    export class B {
+      ...
+      @ManyToMany((type) => A, (a) => a.b, 
+        { cascade: true },                        // options:true,
+                                                  // ["insert"],["update"],["insert","update"]
+      )
+      @JoinTable()                                // @ManyToManyで使用
+      a: A[]
+
+      @ManyToOne(type => A)
+      @JoinColumn({ name: "a_id" })               // @ManyToOneで使用
+      a: A;
+
+      @JoinColumn([                               // 複数の場合
+        { name: "category_id", referencedColumnName: "id" },
+        { name: "locale_id", referencedColumnName: "locale_id" }
+      ])
+    }
+
+- ENTRY:
+  EXPLAIN: Entity関係 OneToOne
+  BODY: |
+    @Entity("user")
+    export class User {
+      @PrimaryColumn({ type: 'varchar', length: 50, })
+      user_id: string;
+
+      @OneToOne(() => Setting, (setting) => setting.user)
+      setting?: Setting;                          // コネクタ(実際のテーブルにない)
+    }
+
+    @Entity("setting")
+    export class Setting {
+      @PrimaryColumn({ type:'varchar', name:'setting_id', length:50 })
+      setting_id: string;                         // PKでありFK
+
+      @OneToOne(() => User, (user) => user.setting)
+      @JoinColumn({ name: 'setting_id' })         // 一方のみでの設定
+      readonly user?: User;                       // コネクタ(実際のテーブルにない)
+    }
+
+- ENTRY:
+  EXPLAIN: Entity関係 OneToMany
+  BODY: |
+    ■ User(Many)
+    @Entity("user")
+    export class User {
+      @PrimaryColumn({ type: 'varchar', length: 50, })
+      user_id: string;
+
+      @Column({ type: 'int' })
+      city_id?: number;
+
+      @ManyToOne(() => City, (city) => city.users, migrationOption)
+      @JoinColumn({ name: 'city_id', referencedColumnName: 'user_id' })
+      readonly city: City;                        // コネクタ(実際のテーブルにない)
+    }
+
+    ■ City(One)
+    @Entity("city")
+    export class City {
+      @PrimaryGeneratedColumn({ type: 'int' })
+      readonly city_id: number;
+
+      @OneToMany(() => User, (user) => user.city, migrationOption)
+      readonly users?: User[];                    // コネクタ(実際のテーブルにない)
+    }
+
+    ■ Migration Options
+    migrationOption: {
+      createForeignKeyConstraints: false,
+      persistence: false
+    })
+
+- ENTRY:
+  EXPLAIN: Entity関係 ManyToMany
+  BODY: |
+    ■ User(many)
+    @Entity("user")
+    export class User {
+      @PrimaryColumn({ type: 'varchar', length: 50, })
+      user_id: string;
+
+      @Column({ type: 'int' })
+      offer_id?: number;
+
+      @ManyToMany(() => Offer)
+      @JoinTable({
+        name: 'offer',
+        joinColumn: {
+          name: 'users_id',
+          referencedColumnName: 'offer_id'
+        },
+        inverseJoinColumn: {
+          name: 'offer_id',
+          referencedColumnName: 'user_id'
+        },
+      })
+      readonly offers?: Offer[];                  // コネクタ(実際のテーブルにない)
+    }
+
+    ■ Offer(many)
+    @Entity("offer")
+    export class Offer {
+      @PrimaryColumn({ type: 'int' })
+      offer_id: number;
+
+      @OneToMany(() => User, (user) => user.offers, migrationOption)
+      readonly users?: User[];                    // コネクタ(実際のテーブルにない)
+    }
+
+    ■ Migration Options
+    migrationOption: {
+      createForeignKeyConstraints: false,
+      persistence: false
+    })
+
+- ENTRY:
+  EXPLAIN: Manager Repository 比較
+  BODY: |
+    ■ Manager
+    const myDataSource = new DataSource(/*...*/)
+    const manager = myDataSource.manager
+    const user = await manager.findOneBy(User, { id: 1 })
+    user.name = "john"
+    await myDataSource.manager.save(user)
+
+    ■ Repository
+    const userRepository = dataSource.getRepository(User)
+    const user = await userRepository.findOneBy({ id: 1 })
+    user.name = "john"
+    await userRepository.save(user)
+
+- ENTRY:
+  EXPLAIN: 🔵Manager
+  BODY: |
+    ■ SQL
+    const rawData = await manager.query(`SELECT * FROM USERS`)
+
+    ■ Transaction
+    await manager.transaction(async (manager) => { ... })
+
+    ■ ID
+    const userId = manager.getId(user)
+
+    ■ Create
+    const user = manager.create(User)
+    const user = manager.create(User, { id:1, name: "John" })
+
+    ■ Merge
+    const user = new User()
+    manager.merge(User, user, { name: "John" }, { city: "Tokyo" })
+
+    ■ Preload
+    const partialUser = { id: 1, name: "John" }
+    const user = await manager.preload(User, partialUser)
+
+    ■ Save
+    await manager.save(user)                      // Insert or Update
+    await manager.save([category1, category2])    // Insert or Update 複数
+
+    ■ Insert
+    await manager.insert(User, { name:"John" })   // Insert 
+    await manager.insert(User, [                  // Insert 複数
+      { name:"John" }, { name:"Karen" }
+    ])
+
+    ■ Update
+    await manager.update(
+      User,                                       // Entity
+      { age: 18 },                                // Where
+      { category: "A" }                           // Set
+    )
+    // =UPDATE user SET category='A' WHERE age=18
+
+    await manager.update(
+      User,                                       // Entity
+      1,                                          // Where(id=)
+      { name: "John" }                            // Set
+    )
+    // =UPDATE user SET name='John' WHERE id=1
+
+    ■ Upsert
+    await manager.upsert(
+      User,                                       // Entity
+      [{id:1,name:"John"},{id:2,name:"Karen"}],   // Set
+      ["id"]                                      // 重複Check対象
+    )
+    // =INSERT INTO user VALUES (id=1, name='John'), (id=2, name='Karen')
+    //  ON CONFLICT(id) DO UPDATE name = EXCLUDED.name
+
+      //サンプル
+      async upsert(data: Partial<DataGeneral>): Promise<boolean> {
+        try {
+          const result: InsertResult = await this.repoGeneral.upsert(
+            { ...data }, //SQL:values
+            { conflictPaths: ['name'] }, //重複チェックカラム **Unique Index化必須!
+          );
+          return true;       //!!result?.raw?.affectedRows; true しか返さない
+        } catch (error) {
+          console.log(error?.sqlMessage);
+          throw error;
+        }
+      }
+
+    ■ Delete/Remove
+    await manager.delete(User, 1)                 // Delete By Id
+    await manager.delete(User, [1, 2, 3])         // Transactional
+    await manager.delete(User, { name: "John" })  // 条件
+
+    const removedUser = await manager.remove(user) // 削除 and return entity
+    const removedUser = await manager.remove([category1, category2])  // Transactional
+
+    ■ Clear/Release
+    await manager.clear(User)                     // テーブルデータ全削除
+    await manager.release()                       // カスタムRepogitory解放
+
+    ■ inc/dec
+    await manager.increment/decrement(
+      User,                                       // Entity
+      { name: "John" },                           // Where
+      "age",                                      // 変更対象カラム
+      3                                           // 変更数
+    )
+
+    ■ Exists
+    const exists:boolean = await manager.exists(
+      User,                                       // Entity
+      { where: { name: "John" } }                 // Where
+    )
+    const exists:boolean = await manager.existsBy(
+      User,                                       // Entity
+      { name: "John" }                            // Where
+    )
+
+    ■ find
+    const user = await manager.find(
+      User,                                       // Entity
+      { where: {  name: "John" } }                // Where
+    )
+    const user = await manager.findBy(
+      User,                                       // Entity
+      { name: "John" }                            // Where
+    )
+    const user = await manager.findOne(
+      User,                                       // Entity
+      { where: { name: "John" } }                 // Where
+    )
+    const user = await manager.findOneBy(
+      User,                                       // Entity
+      { name: "John" }                            // Where
+    )
+    const user = await manager.findOneOrFail(
+      User,                                       // Entity
+      { where: { name: "John" } }                 // Where
+    )
+
+    ■ Count
+    const count = await manager.count(
+      User,                                       // Entity
+      { where:{ name:"John" } }                   // Where
+    )
+    const count = await manager.countBy(
+      User,                                       // Entity
+      { name: "John" }                            // Where
+    )
+    const [user, userCount] = await manager.findAndCount(
+      User,                                       // Entity
+      {where:{ name:"John" }}                     // Where
+    )
+    const [user, userCount] = await manager.findAndCountBy(
+      User,                                       // Entity
+      { name: "John" }                            // Where
+    )
+
+- ENTRY:
+  EXPLAIN: 🔵Repository
+  BODY: |
+    ■ Find
+    const Tims = await repository.find({ where: { name: "Tim" }})
+    const Tims = await repository.findBy({ name: "Tim" })
+
+    const Tim = await repository.findOne({ where: { name: "Tim" }})
+    const Tim = await repository.findOneBy({ name: "Tim" })
+    const Tim = await repository.findOneOrFail({ where: { name: "Tim" }})
+    const Tim = await repository.findOneByOrFail({ name: "Tim" })
+
+    ■ Query
+    const rawData = await repository.query(`SELECT * FROM USERS`)
+
+    ■ Transaction
+    await connection.transaction(async (manager) => {
+        const userRepository = manager.withRepository(UserRepository)
+        await userRepository.createAndSave("Tim")
+        const Tim = await userRepository.findByName("Tim")
+    })
+
+    ■ Exists
+    const exists = await repository.exists({ where: { name: "Tim" }})
+    const exists = await repository.existsBy({ name: "Tim" })
+
+    ■ Count
+    const count = await repository.count({ where: { name: "Tim" }})
+    const count = await repository.countBy({ name: "Tim" })
+
+    ■ Find & Count
+    const [user, userCount] = await repository.findAndCount({ where: { name:"Tim" }})
+    const [user, userCount] = await repository.findAndCountBy({ name: "Tim" })
+
+    ■ ID
+    if (repository.hasId(user)) { ... }
+    const userId = repository.getId(user)
+
+    ■ Create & Clear
+    const user = repository.create()              // =new User()
+    const user = repository.create({ id: 1, name: "John" })
+
+    await repository.clear()
+
+    ■ Merge(カラム値追加)
+    const user = new User()
+    repository.merge(user, { name:"John" }, { city:"Tokyo" })
+
+    ■ Preload
+    const partialUser = { id: 1, name:"John" }
+    const user = await repository.preload(partialUser)  // 取得と上書き
+
+    ■ Save
+    await repository.save(user)
+    await repository.save([category1, category2])
+
+    ■ Insert
+    await repository.insert({ name: "Tim" })
+    await repository.insert([                     // 複数配列
+      { name: "Tim" },{ name: "John" }
+    ])
+
+    ■ Update
+    await repository.update(
+      { age: 18 },                                // where
+      { category: "A" }                           // set
+    )
+    // =UPDATE user SET category='A' WHERE age=18
+
+    await repository.update(
+      1,                                          // ID
+      { name: "John" }                            // set
+    )
+    // =UPDATE user SET name = 'John' WHERE id = 1
+
+    ■ Upsert
+    await repository.upsert(
+      [{ id:12, name:"John" },{ id:13, name:"Tim" }],
+      ["id"]                                      // 重複Checkカラム
+    )
+    // =INSERT INTO user VALUES (id=12, name='John'),(id=13, name='Tim')
+    //   ON CONFLICT(id) DO UPDATE name=EXCLUDED.name
+
+    ■ Remove/Delete/Restore
+    await repository.remove(user)
+    await repository.remove([category1, category2])
+
+    await repository.delete(1)                    // by ID
+    await repository.delete([1, 2, 3])            // by 複数ID
+    await repository.delete({ name: "Tim" })      // 条件
+
+    ■ Soft Delete & Restore
+    await repository.softDelete(1)
+    await repository.restore(1)
+
+    ■ Soft Remove & Recover
+    const entities = await repository.find({...})
+    const entities = await repository.softRemove(entities)
+    await repository.recover(entitiesAfterSoftRemove)
+
+    await repository.increment({ name: "Tim" }, "age", 3)
+    await repository.decrement({ name: "Tim" }, "age", 3)
+
+    ■ 数学Methods
+    const sum = await repository.sum("age", { name: "Tim" })
+    const ave = await repository.average("age", { name: "Tim" })
+    const min = await repository.minimum("age", { name: "Tim" })
+    const max = await repository.maximum("age", { name: "Tim" })
+
+    ■ Managerなど取得
+    const manager = repository.manager
+    const metadata = repository.metadata
+    const queryRunner = repository.queryRunner
+    const target = repository.target              // Target Entity
+
+    ■ Repository拡張
+    export const UserRepository = dataSource.getRepository(User).extend({
+        findByName(name: string) {
+            return this.createQueryBuilder("user")
+                .where("user.name = :name", { name }).getMany()
+        },
+    })
+
+    export class UserController {
+        users() { return UserRepository.findByName("Tim") }
+    }
+
+    ■ QueryBuilder使用
+    const users = await repository
+        .createQueryBuilder("user")
+        .where("user.name = :name", { name: "John" })
+        .getMany()
+
+- ENTRY:
+  EXPLAIN: Repository SQL
+  BODY: |
+    repository.find({ OPTIONS })
+
+    ■ SELECT
+    select: { name: true, address: true },
+    // =SELECT "name", "address" FROM "user"
+
+    ■ WHERE(AND)
+    where: { name: "A", address: "B" },
+    // =SELECT * FROM "user" WHERE "name"='A' AND "address"='B'
+
+    ■ WHERE(OR)
+    where: [{ name: "A", address: "B" }, { name: "C", address: "D" }],
+    // =WHERE ("name" = 'A' AND "address" = 'B')
+    //     OR ("name" = 'C' AND "address" = 'D')
+
+    ■ LEFT JOIN
+    relations: { profile: true, photos: true },
+    // =SELECT * FROM "user"
+    //  LEFT JOIN "profile" ON "profile"."id" = "user"."profileId"
+    //  LEFT JOIN "photos" ON "photos"."id" = "user"."photoId"
+
+    relations: { profile: true, videos: { videoAttr: true }},
+    // =SELECT * FROM "user"
+    //  LEFT JOIN "profile" ON "profile"."id" = "user"."profileId"
+    //  LEFT JOIN "videos" ON "videos"."id" = "user"."videoId"
+    //  LEFT JOIN "video_attr" ON "video_attrs"."id" = "videos"."video_attrId"
+
+    ■ LEFT JOIN AND WHERE
+    relations: { project: true },
+    where: { project: { name: "A", address: "B" } }
+    // =SELECT * FROM "user"
+    //  LEFT JOIN "project" ON "project"."id" = "user"."projectId"
+    //  WHERE "project"."name" = 'A' AND "project"."address" = 'B'
+
+    ■ ORDER
+    order: { name: "ASC", id: "DESC" },
+    // =ORDER BY "name" ASC, "id" DESC
+
+    ■ OFFSET,LIMIT
+    skip: 5, take: 10,                            // 同時使用すべし
+    // =OFFSET 5 LIMIT 10
+
+    ■ SOFT DELETED
+    withDeleted: true,                            // softDelete or softRemove
+
+    ■ CACHE
+    cache: true,
+    cache: { duration: 60000 },                   // dataSource(1分)
+    cache: { id: "users_id", milliseconds: 25000 },
+    await dataSource.queryResultCache.remove(["users_id"]) // キャッシュ手動削除
+
+    ■ LOCK
+    lock: { mode: "optimistic", version: 1 },
+
+- ENTRY:
+  EXPLAIN: カラム条件
+  BODY: |
+    ■ 文字列
+    Not("A")                                      // WHERE NOT(COLUMN = 'A')
+    IsNull(),                                     // WHERE COLUMN IS NULL
+    Like("%out%"),                                // WHERE COLUMN LIKE '%out%'
+    ILike("%out%"),                               // WHERE COLUMN ILIKE '%out%'
+    In(["A", "B"]),                               // WHERE COLUMN IN ('A','B')
+    Any(["A", "B"]),                              // WHERE COLUMN Any ('A','B')
+
+    ■ 文字列配列
+    ArrayContains(["A"]),                         // WHERE COLUMN @> '{A}'
+    ArrayContainedBy(["A"]),                      // WHERE COLUMN <@ '{A}'
+    ArrayOverlap(["A"]),                          // WHERE COLUMN && '{A}'
+
+    ■ 数値
+    Equal(7)                                      // WHERE COLUMN = 7
+    LessThan(7)                                   // WHERE COLUMN < 7
+    LessThanOrEqual(7)                            // WHERE COLUMN <=7
+    MoreThan(7)                                   // WHERE COLUMN > 7
+    MoreThanOrEqual(7)                            // WHERE COLUMN >=7
+    Between(1, 10)                                // WHERE COLUMN BETWEEN 1 AND 10
+
+    ■ ROW(SQL直書き)
+    Raw("COLUMN - 4"),                            // WHERE COLUMN1 = COLUMN2 - 4
+    Raw((a) => `${a} > NOW()`),                   // WHERE COLUMN > NOW()
+    Raw((a) => `${a} > :date`,{date:"2020-10-06"}), // WHERE COLUMN > '2020-10-06'
+    Raw((a) => `${a} IN (:...x)`, {x:["A","B"]}), // WHERE COLUMN IN ('A','B')
+
+    ■ OR, AND
+    Or(Equal("A"), ILike("B%")),                  // WHERE COLUMN='A' OR COLUMN ILIKE 'B%'
+    And(Not(Equal("A")), ILike("B%"))             // WHERE NOT(COLUMN='A') OR COLUMN ILIKE 'B%'
+
+- ENTRY:
+  EXPLAIN: Query Builder 3種類
+  BODY: |
+    ■ 1.DataSource
+    const user = await dataSource
+      .createQueryBuilder()
+      .select("user")
+      .from(User, "user")
+      .where("user.id = :id", { id: 1 })
+      .getOne()
+
+    ■ 2.Entity Manager
+    const user = await dataSource
+      .manager
+      .createQueryBuilder(User, "user")           // =SELECT * FROM
+      .where("user.id = :id", { id: 1 })
+      .getOne()
+
+    ■ 3.Repository
+    const user = await dataSource
+      .getRepository(User)
+      .createQueryBuilder("user")                 // =SELECT * FROM
+      .where("user.id = :id", { id: 1 })
+      .getOne()
+
+- ENTRY:
+  EXPLAIN: Query Builder 5 SQLs
+  BODY: |
+    ■ SELECT
+    const user = await dataSource.createQueryBuilder()
+      .select("user")
+      .from(User, "user")
+      .where("user.id = :id", { id: 1 })
+      .getOne()
+
+    ■ INSERT
+    await dataSource.createQueryBuilder()
+      .insert()
+      .into(User)
+      .values([{ name:"A" },{ name:"B" }])
+      .execute()
+
+    ■ UPDATE
+    await dataSource.createQueryBuilder()
+      .update(User)
+      .set({ name:"A" })
+      .where("id = :id", { id: 1 })
+      .execute()
+
+    ■ DELETE
+    await dataSource.createQueryBuilder()
+      .delete()
+      .from(User)
+      .where("id = :id", { id: 1 })
+      .execute()
+
+    ■ RELATION
+    await dataSource.createQueryBuilder()
+      .relation(User,"photos")
+      .of(id)
+      .loadMany();
+
+- ENTRY:
+  EXPLAIN: QB:SELECT節
+  BODY: |
+    ■ 1. Entities
+    const timber = await dataSource.createQueryBuilder("user")
+    .where(...)
+    .getOne()                                     // 単独
+
+    const timber = await dataSource.createQueryBuilder("user")
+    .where(...)
+    .getOneOrFail()                               // EntityNotFoundError
+
+    const timber = await dataSource.createQueryBuilder("user")
+    .where(...)
+    .getMany()                                    // 配列
+
+    ■ 2. Raw Results
+    // createQueryBuilder(型)にない戻り値を返す
+    const { sum } = await dataSource.createQueryBuilder("user")
+      .select("SUM(user.count)", "sum")
+      .where(...)
+      .getRawOne()                                // 単独
+
+    const photosSums = await dataSource.createQueryBuilder("user")
+      .select("user.id")
+      .addSelect("SUM(user.count)", "sum")
+      .groupBy("user.id")
+      .getRawMany()                               // 配列
+
+    ■ Count
+    const count = await dataSource.createQueryBuilder("user")
+      .where(...)
+      .getCount()
+
+    ■ Alias
+    createQueryBuilder("user")
+    = createQueryBuilder()
+      .select("user")
+      .from(User, "user")
+
+    ■ Distinct
+    createQueryBuilder("user")
+      .distinctOn(["user.id"])
+
+- ENTRY:
+  EXPLAIN: QB:SELECT WHERE節
+  BODY: |
+    ■ 引数処理
+    .where("user.name = :name", { name: "Tim" })
+    .where("user.name = :name").setParameter("name", "Tim")
+
+    ■ 配列引数処理
+    .where("user.name IN (:...names)", { names: [ "A","B","C" ] })
+      = WHERE user.name IN ('A','B','C')
+
+    ■ AND処理
+    .where("user.name = :name", { name: "Tim" })
+    .andWhere("user.age = :age", { age: 20 })
+
+    ■ 反復処理: 先頭のorWhereを適宜処理
+    .andWhere(
+      new Brackets/NotBrackets((qb) => {          // Brackets or NotBrackets
+        array.forEach((item, index) => {
+          qb.orWhere(
+            `user.name = :name${index}`,          // 反復処理対策
+            { [`name${index}`]: item }
+          )
+        })
+      }),
+    )
+
+    ■ ⛔引数名重複
+    .where('user.linkedGroup = :id', { id: groupId })
+    .andWhere('user.linkedSet = :id', { id: setId });
+
+    .where("user.name = :name", { name: "Tim" })
+    .orWhere("user.name = :name", { name: "Jim" })
+
+    ■ ⛔引数名重複
+    .andWhere(
+      new Brackets/NotBrackets((qb) => {
+        qb.where("user.name = :name", { name: "Tim" })
+          .orWhere("user.name = :name", { name: "Jim" })
+      }),
+    )
+
+- ENTRY:
+  EXPLAIN: QB:SELECT ORDERBY節
+  BODY: |
+    ■ 単数ソートキー
+    .orderBy("user.id")
+    .orderBy("user.id", "DESC"/"ASC")
+
+    ■ 複数ソートキー
+    .orderBy("user.name").addOrderBy("user.id")
+    .orderBy({ "user.name": "ASC", "user.id": "DESC" })
+
+- ENTRY:
+  EXPLAIN: QB:SELECT GROUPBY節
+  BODY: |
+    ■ 単数キー
+    .groupBy("user.id")
+      = SELECT ... FROM users user GROUP BY user.id
+
+    ■ 複数キー
+    .groupBy("user.name").addGroupBy("user.id")
+
+- ENTRY:
+  EXPLAIN: QB:SELECT LIMIT節 OFFSET節
+  BODY: |
+    ■ Limit & Offset
+    .limit(10).offset(10)
+
+    ⭕推奨: 複雑なQuery, Paginationなど
+    ■ Take & Skip
+    .take(10).skip(10)
+
+- ENTRY:
+  EXPLAIN: QB:SELECT OUTER JOIN
+  BODY: |
+    ■ Entity定義
+    @Entity()
+    export class User {
+      @PrimaryGeneratedColumn()
+      id: number
+
+      @Column()
+      name: string
+
+      @Column()
+      act: boolean
+
+      @OneToMany((type) => Photo, (photo) => photo.user)
+      photos: Photo[]
+
+    @Entity()
+    export class Photo {
+      @PrimaryGeneratedColumn()
+      id: number
+
+      @Column()
+      url: string
+
+      @Column()
+      isOK: boolean
+
+      @ManyToOne((type) => User, (user) => user.photos)
+      user: User
+
+    ■ Left Outer Join: JOIN外部に条件
+    const user = await createQueryBuilder("user")
+      .leftJoinAndSelect(
+        "user.photos",                            // ConnectColumn
+        "photo"                                   // TargetEntity
+      )
+      .where("user.act = :act, { act: true })
+      .andWhere("photo.isOK = :isOK", { isOK:false })
+      .getOne()
+
+        SELECT user.*, photo.* FROM users user
+        LEFT JOIN photos photo
+        ON photo.user = user.id
+        WHERE user.name = 'Timber' AND photo.isOK = FALSE
+
+    ■ Left Outer Join: JOIN内部に条件
+    const user = await createQueryBuilder("user")
+      .leftJoinAndSelect(
+        "user.photos",                            // ConnectColumn
+        "photo",                                  // TargetEntity
+        "photo.isOK= :isOK",                      // Target条件
+        { isOK:false }                            // 条件変数
+      )
+      .where("user.name = :name", { name: "Tim" })
+      .getOne()
+
+        SELECT user.*, photo.* FROM users user
+        LEFT JOIN photos photo
+        ON photo.user = user.id AND photo.isOK = FALSE
+        WHERE user.name = 'Tim'
+
+- ENTRY:
+  EXPLAIN: QB:SELECT INNER JOIN【WIP】
+  BODY: |
+    ■ Inner Join
+    const user = await createQueryBuilder("user")
+      .innerJoin(
+        "user.photos",
+        "photo"
+      )
+      .where("user.name = :name", { name: "Tim" })
+      .getOne()
+
+- ENTRY:
+  EXPLAIN: QB:SELECT LEFT OUTER JOIN & MAP【WIP】
+  BODY: |
+    ■ Join & Mapping
+    export class User {
+        ...
+        profilePhoto: Photo
+    }
+
+    const user = await createQueryBuilder("user")
+    .leftJoinAndMapOne/leftJoinAndMapMany(
+      "user.profilePhoto",                        // 追加属性付与
+      "user.photos",                              // ConnectColumn
+      "photo",                                    // TargetEntity
+      "photo.isForProfile = TRUE",                // 絞り込み条件変数
+    )
+    .where("user.name = :name", { name: "Tim" })
+    .getOne/getMany()
+
+- ENTRY:
+  EXPLAIN: QB:SELECT SubQuery WHERE
+  BODY: |
+    ■ WHERE: 直書き一括パターン
+    const qb = await dataSource.getRepository(Post).createQueryBuilder("post")
+    const posts = qb
+      .where(
+        "post.title IN " +
+          qb.subQuery()
+            .select("user.name")
+            .from(User, "user")
+            .where("user.ok = :ok")
+            .getQuery(),
+      )
+      .setParameter("ok", true)
+      .getMany()
+
+    ■ WHERE: コールバック一括パターン
+    const posts = await dataSource.getRepository(Post).createQueryBuilder("post")
+      .where((qb) => {
+        const subQuery = qb
+          .subQuery()
+          .select("user.name")
+          .from(User, "user")
+          .where("user.ok = :ok")
+          .getQuery()
+        return "post.title IN " + subQuery
+      })
+      .setParameter("ok", true)
+      .getMany()
+
+    ■ WHERE: 分割パターン
+    const userQb = await dataSource.getRepository(User).createQueryBuilder("user")
+        .select("user.name")
+        .where("user.ok = :ok", { ok: true })
+
+    const posts = await dataSource.getRepository(Post).createQueryBuilder("post")
+        .where("post.title IN (" + userQb.getQuery() + ")")
+        .setParameters(userQb.getParameters())
+        .getMany()
+
+- ENTRY:
+  EXPLAIN: QB:SELECT SubQuery FROM
+  BODY: |
+    ■ FROM: コールバック一括パターン
+    const posts = await dataSource.createQueryBuilder()
+        .select("user.name", "name")
+        .from((subQuery) => {
+            return subQuery
+              .select("user.name", "name")
+              .from(User, "user")
+              .where("user.ok = :ok", { ok: true })
+        }, "user")
+        .getRawMany()
+
+    ■ FROM: 分割パターン
+    const userQb = await dataSource.getRepository(User).createQueryBuilder("user")
+        .select("user.name", "name")
+        .where("user.ok = :ok", { ok: true })
+
+    const posts = await dataSource.createQueryBuilder()
+        .select("user.name", "name")
+        .from("(" + userQb.getQuery() + ")", "user")
+        .setParameters(userQb.getParameters())
+        .getRawMany()
+
+- ENTRY:
+  EXPLAIN: QB:SELECT SubQuery SELECT
+  BODY: |
+    ■ SELECT: コールバック一括パターン
+    const posts = await dataSource.createQueryBuilder()
+        .select("post.id", "id")
+        .addSelect((subQuery) => {
+            return subQuery
+              .select("user.name", "name")
+              .from(User, "user")
+              .limit(1)
+        }, "name")
+        .from(Post, "post")
+        .getRawMany()
+
+- ENTRY:
+  EXPLAIN: QB:SELECT SQL取得
+  BODY: |
+    const sql = createQueryBuilder("user")
+      .where("user.name = :name", { name: "Tim" })
+      .getSql()
+
+    const users = await createQueryBuilder("user")
+      .where("user.name = :name", { name: "Tim" })
+      .printSql()
+      .getMany()
+
+- ENTRY:
+  EXPLAIN: QB:SELECT Raw結果【WIP】
+  BODY: |
+    const { sum } = await dataSource.getRepository(User)
+      .createQueryBuilder("user")
+      .select("SUM(user.photosCount)", "sum")     // GroupBy せずにSUM()??
+      .where("user.id = :id", { id: 1 })
+      .getRawOne()
+
+    const photosSums = await dataSource.getRepository(User)
+      .createQueryBuilder("user")
+      .select("user.id")
+      .addSelect("SUM(user.photosCount)", "sum")
+      .groupBy("user.id")
+      .getRawMany()
+
+- ENTRY:
+  EXPLAIN: QB:SELECT Stream【WIP】
+  BODY: |
+    const stream = await dataSource.getRepository(User)
+      .createQueryBuilder("user")
+      .where("user.id = :id", { id: 1 })
+      .stream()
+
+- ENTRY:
+  EXPLAIN: QB:LOCK【WIP】
+  BODY: |
+    const users = await dataSource.getRepository(User)
+      .createQueryBuilder("user")
+      .setLock("pessimistic_read")                解説?
+      .setLock("pessimistic_write")               解説?
+      .setLock("dirty_read")                      解説?
+      .setLock("optimistic", existUser.version)   解説?
+      .setOnLocked("nowait")                      解説?
+      .setOnLocked("skip_locked")                 解説?
+      .getMany()
+
+- ENTRY:
+  EXPLAIN: QB:INDEX指定
+  BODY: |
+    const users = await dataSource.getRepository(User)
+      .createQueryBuilder("user")
+      .useIndex("index_name")                     // Index使用指示
+      .getMany()
+
+- ENTRY:
+  EXPLAIN: QB:最大実行時間
+  BODY: |
+    const users = await dataSource.getRepository(User)
+      .createQueryBuilder("user")
+      .maxExecutionTime(1000)                     // milliseconds
+      .getMany()
+
+- ENTRY:
+  EXPLAIN: QB:論理削除レコード取得
+  BODY: |
+    const users = await dataSource.getRepository(User)
+      .createQueryBuilder()
+      .select("user.id", "id")
+      .withDeleted()
+      .getMany()
+
+- ENTRY:
+  EXPLAIN: QB:Debug(Query&引数)
+  BODY: |
+    const queryAndParams = await dataSource
+      .getRepository(User)
+      .createQueryBuilder("user")
+      .where("user.id = :id", { id: 1 })
+      .getQueryAndParameters()
+
+- ENTRY:
+  EXPLAIN: QB:Common Table Expression
+  BODY: |
+    ■ 直書きスタイル
+    const users = await connection.getRepository(User)
+      .createQueryBuilder('user')
+      .select("user.id", 'id')
+      .addCommonTableExpression(`SELECT "userId" FROM "post"`, 'CTE')
+      .where(`user.id IN (SELECT "userId" FROM 'CTE')`)
+      .getMany();
+
+    ■ 分割スタイル
+    const insertQueryBuilder = connection.getRepository(User)
+      .createQueryBuilder()
+      .insert({ name: 'John Smith' })
+      .returning(['id']);                         // コール先で使用
+
+    const users = await connection.getRepository(User)
+      .createQueryBuilder('user')
+      .addCommonTableExpression(insertQueryBuilder, 'CTE')
+      .where(`user.id IN (SELECT "id" FROM 'CTE')`)
+      .getMany();
+
+- ENTRY:
+  EXPLAIN: QB:Cache
+  BODY: |
+    設定: { 
+      type: "mysql", host: "localhost", username: "test",
+      ...
+      cache: true,                                // 単純有効化
+      cache: { duration: 30000 },                 // 時間指定(ms) 30s
+      cache: {                                    // 詳細設定
+        type: "database",
+        tableName: "my-query-result-cache"        // Cache格納テーブル
+      },
+      cache: {                                    // 別ホストでキャッシュ
+        type: "redis",
+        options: { 
+          socket: { host: "localhost", port: 6379 }
+        }
+      },
+    }
+
+    const users = await dataSource
+      .getRepository(User)
+      .find({
+        where: { isAdmin: true },
+        cache: true,                              //Default 1000ms
+        cache: 60000,                             //時間指定(1分)
+      })
+
+    const users = await dataSource
+      .createQueryBuilder(User, "user")
+      .where("user.isAdmin = :isAdmin", { isAdmin: true })
+      .cache(60000)                               // 1 min
+      .getMany()
+
+    ■ Cache ID
+
+    const users = await dataSource
+      .getRepository(User)
+      .find({
+        where: { isAdmin: true },
+        cache: { id: "users_admins", milliseconds: 25000 },
+      })
+
+    const users = await dataSource
+      .createQueryBuilder(User, "user")
+      .where("user.isAdmin = :isAdmin", { isAdmin: true })
+      .cache("users_admins", 25000)
+      .getMany()
+
+- ENTRY:
+  EXPLAIN: QB:INSERT
+  BODY: |
+    await dataSource
+      .createQueryBuilder()
+      .insert()
+      .into(User)
+      .values([{ name: "Tim" },{ name: "Kei" }])
+      .execute()
+
+    ■ コールバック関数による動的変更
+    await dataSource
+      .createQueryBuilder()
+      .insert()
+      .into(User)
+      .values({ name:"Tim", zip: ()=>"CONCAT('001','-','0012')" })
+      .execute()
+
+    ■ ID衝突=>UPDATE                              // <postgres>Optional: skip
+    await dataSource
+      .createQueryBuilder()
+      .insert()
+      .into(User)
+      .values({ name: "Timber", extId: "abc123" })
+      .orUpdate(
+        ["name"],                                 // UPDATEカラム
+        ["extId"],                                // 既存ID
+        { skipUpdateIfNoValuesChanged: true }     // 同値ならSkip
+      )
+      .execute()
+
+    ■ ID衝突=>Ignore
+    await dataSource
+      .createQueryBuilder()
+      .insert()
+      .into(User)
+      .values({ name:"Timber", extId:"abc123" })  
+      .orIgnore()	                                // Error(mySQL) / Do Nothing(postgres)
+      .execute()
+
+- ENTRY:
+  EXPLAIN: QB:UPDATE
+  BODY: |
+    await dataSource
+      .createQueryBuilder()
+      .update(User)
+      .set({ name: "Tim" })
+      .where("id = :id", { id: 1 })
+      .execute()
+
+    ■ コールバック関数による動的変更
+    await dataSource
+      .createQueryBuilder()
+      .update(User)
+      .set({ name:"Tim", age: ()=>"age + 1" })
+      .where("id = :id", { id:1 })
+      .execute()
+
+- ENTRY:
+  EXPLAIN: QB:DELETE
+  BODY: |
+    await myDataSource
+      .createQueryBuilder()
+      .delete()
+      .from(User)
+      .where("id = :id", { id: 1 })
+      .execute()
+
+    ■ Soft Delete
+    await myDataSource
+      .getRepository(User)
+      .createQueryBuilder()
+      .softDelete()
+      .where("id = :id", { id: 1 })
+      .execute();
+
+    ■ Soft Restore
+    await myDataSource
+      .getRepository(User)
+      .createQueryBuilder()
+      .restore()
+      .where("id = :id", { id: 1 })
+      .execute();
+
+- ENTRY:
+  EXPLAIN: TRANSACTION
+  BODY: |
+    await myDataSource
+      .transaction(async (transactionalEntityManager) => {
+        ...
+      })
+
+    await myDataSource.manager
+      .transaction(
+        "SERIALIZABLE",                           //Optional Isolation レベル
+        async (manager) => {                      // transactionalEntityManager
+          await manager.save(users)
+          await manager.save(photos)
+          ...
+        }
+      )
+
+    ■ 全体フロー(createQueryRunner)
+    const queryRunner = dataSource.createQueryRunner()
+    await queryRunner.connect()
+    //SQL
+    await queryRunner.query("SELECT * FROM users")
+    //find()
+    const users = await queryRunner.manager.find(User)
+
+    await queryRunner.startTransaction()
+    try {
+      await queryRunner.manager.save(user)
+      await queryRunner.manager.save(photos)
+      await queryRunner.commitTransaction()
+    } catch (err) {
+      await queryRunner.rollbackTransaction()
+    } finally {
+      await queryRunner.release()
+    }

@@ -3,7 +3,7 @@
 # JS DOM
 #-------------------------------
 
-- KEY: dom.document
+- ENTRY:
   EXPLAIN: リスト:Document
   BODY: |
     el = d.createElement()                        // el生成
@@ -17,7 +17,7 @@
     NL = d.querySelectorAll('#slct')              // 取得: 複(遅) by ID
     NL = d.querySelectorAll('.slct')              // 取得: 複(遅) by class
 
-- KEY: dom.node
+- ENTRY:
   EXPLAIN: リスト:Node
   BODY: |
     ■ 属性
@@ -43,7 +43,7 @@
     node.isSameNode()                             // 廃止
     node.normalize()                              // 正規化(テキストNodeマージ)
 
-- KEY: dom.node.parent
+- ENTRY:
   EXPLAIN: リスト:ParentNode
   BODY: |
     n  = parentNode.childElementCount             // 子群数
@@ -58,7 +58,7 @@
     parentNode.replaceChild(nd,old)               // 置換
     parentNode.replaceChildren(...from,...to)     // 全置換
 
-- KEY: dom.node.child
+- ENTRY:
   EXPLAIN: リスト:ChildNode
   BODY: |
     childNode.remove()                            // 自身削除
@@ -66,14 +66,14 @@
     childNode.after(el)                           // 自身の弟に
     childNode.replaceWith(el)                     // 自身入替
 
-- KEY: dom.htmlCollection
+- ENTRY:
   EXPLAIN: リスト:HTMLCollection
   BODY: |
     numb = HC.length                              // サイズ
     node = HC.item(n)                             // n番目のel
     node = HC[n]                                  // n番目のel
 
-- KEY: dom.nodeList
+- ENTRY:
   EXPLAIN: リスト:NodeList
   BODY: |
     numb = NL.length                              // サイズ
@@ -84,7 +84,7 @@
     iter = NL.keys()                              // 配列[key]
     iter = NL.values()                            // 配列[val]
 
-- KEY: dom.element
+- ENTRY:
   EXPLAIN: リスト:Element
   BODY: |
     ■ 属性
@@ -150,7 +150,7 @@
     el.shadowRoot                                 // シャドールート
     el.attachShadow()                             // シャドーツリー
 
-- KEY: dom.createElement
+- ENTRY:
   EXPLAIN: createElement
   BODY: |
     var element = document.createElement(tagName[, options]);
@@ -179,7 +179,7 @@
     customElements.define('expanding-list', ExpandingList, { extends: "ul" });
     let expandingList = document.createElement('ul', { is : 'expanding-list' })
 
-- KEY: dom.getElementById
+- ENTRY:
   EXPLAIN: getElementById
   BODY: |
     element:Element = document.getElementById(id);
@@ -191,7 +191,7 @@
       elem.style.color = newColor;
     }
 
-- KEY: dom.getElementsByClassName
+- ENTRY:
   EXPLAIN: getElementsByClassName
   BODY: |
     指定クラス名を "すべて" 持つすべての子要素の配列風オブジェクト(HTMLCollection)を返す
@@ -208,7 +208,7 @@
       return elm.nodeName === 'DIV';
     });
 
-- KEY: dom.getElementsByTagName
+- ENTRY:
   EXPLAIN: getElementsByTagName
   BODY: |
     指定されたタグ名を持つ要素の HTMLCollection を返す。
@@ -223,7 +223,7 @@
     const div1Paras = div1.getElementsByTagName('p');
     const num = div1Paras.length;  //<TAG id=div1>内の<p>の数
 
-- KEY: dom.querySelector
+- ENTRY:
   EXPLAIN: querySelector
   BODY: |
     element:Element = document.querySelector(selectors:DOMString);
@@ -235,7 +235,7 @@
     const el = document.querySelector("div.user-panel.main input[name='login']");
     const el = document.querySelector("div.user-panel:not(.main) input[name='login']");
 
-- KEY: dom.querySelectorAll
+- ENTRY:
   EXPLAIN: querySelectorAll
   BODY: |
     elementList:NodeList = parentNode.querySelectorAll(selectors:DOMString);
@@ -254,7 +254,7 @@
     const container = document.querySelector("#userlist");
     const els = container.querySelectorAll("li[data-active='1']");
 
-- KEY: dom.getElementsByTagNameNS
+- ENTRY:
   EXPLAIN: getElementsByTagNameNS
   BODY: |
     SVG で使用する際に、指定されたタグ名を持つ要素の HTMLCollection を返す。
@@ -263,14 +263,14 @@
 
     var allParas = document.getElementsByTagNameNS("http://www.w3.org/1999/xhtml", "p")
 
-- KEY: dom.nodeName
+- ENTRY:
   EXPLAIN: nodeName
   BODY: |
     [読取専用] ノードの名前を文字列で返す。
 
     str:String = node.nodeName;
 
-- KEY: dom.nodeType
+- ENTRY:
   EXPLAIN: nodeType
   BODY: |
     [読取専用] ノードの種類を表す整数のコードを返す
@@ -296,7 +296,7 @@
     if (node.nodeType != Node.COMMENT_NODE)
       console.log("ルールに沿ったコメントを記述して下さい。");
 
-- KEY: dom.textContent
+- ENTRY:
   EXPLAIN: textContent
   BODY: |
     ■ ノードおよびその子孫のテキストの内容を表す
@@ -326,7 +326,7 @@
     document.getElementById('divA').textContent = 'This text is different!';
     <div id="divA">This text is different!</div>
 
-- KEY: dom.parentNode
+- ENTRY:
   EXPLAIN: parentNode
   BODY: |
     parentNode:Element/Document/DocumentFragment = node.parentNode;
@@ -335,7 +335,7 @@
       node.parentNode.removeChild(node);   //指定ノード削除
     }
 
-- KEY: dom.offsetParent
+- ENTRY:
   EXPLAIN: offsetParent
   BODY: |
     [読取専用] 要素を含む最も近くにある(包含階層で最も近い)位置指定されたオブジェクトへの参照を返す
@@ -351,7 +351,7 @@
 
     parentObj = element.offsetParent;
 
-- KEY: dom.childNodes
+- ENTRY:
   EXPLAIN: childNodes
   BODY: |
     [読取専用] 最初の子ノード index が 0 の NodeList を返す
@@ -377,7 +377,7 @@
       box.removeChild(box.firstChild);
     }
 
-- KEY: dom.firstChild
+- ENTRY:
   EXPLAIN: firstChild
   BODY: |
     ノードのツリーの中で最初の子ノード(or null)
@@ -397,7 +397,7 @@
       console.log(p01.firstChild.nodeName)  // <span> 取得
     </script>
 
-- KEY: dom.lastChild
+- ENTRY:
   EXPLAIN: lastChild
   BODY: |
     ノードの子要素の内、最後のものを返す。lastChild として返されるのはノード
@@ -408,7 +408,7 @@
     var tr = document.getElementById("row1");  // table 要素の特定の行を取得
     var corner_td = tr.lastChild;                // 特定の行の内、最後のセルを取得
 
-- KEY: dom.nextSibling
+- ENTRY:
   EXPLAIN: nextSibling
   BODY: |
     nextNode = node.nextSibling
@@ -441,7 +441,7 @@
     4. SCRIPT
     ************************
 
-- KEY: dom.previousSibling
+- ENTRY:
   EXPLAIN: previousSibling
   BODY: |
     直前のノードを返す。指定ノードがリストの中で先頭の場合: null
@@ -451,7 +451,7 @@
     document.getElementById("b1").previousSibling;    // null
     document.getElementById("b2").previousSibling.id; // "b1"
 
-- KEY: dom.appendChild
+- ENTRY:
   EXPLAIN: appendChild
   BODY: |
     特定の親ノードの子ノードリストの末尾にノードを追加
@@ -464,7 +464,7 @@
     [X] var aBlock = doc.createElement('block').appendChild(doc.createElement('b'));
     注意: チェーンメソッドは期待通りに動かない
 
-- KEY: dom.cloneNode
+- ENTRY:
   EXPLAIN: cloneNode
   BODY: |
     現在のノードの複製を返す。ノードのすべての属性とその値をコピー(HTML属性のイベント含)
@@ -484,7 +484,7 @@
     var p = document.getElementById("para1");
     var p_prime = p.cloneNode(true);
 
-- KEY: dom.contains
+- ENTRY:
   EXPLAIN: contains
   BODY: |
     指定ノードの子孫ノードに、特定の子ノード(※自身も含む)が含まれるかを示す真偽値を返す。
@@ -495,7 +495,7 @@
       return (node === document.body) ? false : document.body.contains(node);
     }
 
-- KEY: dom.hasChildNodes
+- ENTRY:
   EXPLAIN: hasChildNodes
   BODY: |
     指定したノードが、子ノードを持つか否かを示す真偽値を返す。
@@ -507,7 +507,7 @@
       foo.removeChild( foo.childNodes[0] );
     }
 
-- KEY: dom.isEqualNode
+- ENTRY:
   EXPLAIN: isEqualNode
   BODY: |
     var isEqualNode:Boolean = node.isEqualNode(otherNode);
@@ -525,7 +525,7 @@
     divList[0].isEqualNode(divList[1])  // false
     divList[0].isEqualNode(divList[2])  // true
 
-- KEY: dom.isSameNode
+- ENTRY:
   EXPLAIN: isSameNode[廃止]
   BODY: |
     isSameNode:Bpoolean = node.isSameNode(org);

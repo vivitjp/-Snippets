@@ -2,10 +2,10 @@
 #-------------------------------
 # Amplify
 #-------------------------------
-- KEY: aws.Amplify.be.category
+- ENTRY:
   CATEGORY: 概説
 
-- KEY: aws.Amplify.be.概説
+- ENTRY:
   EXPLAIN: Amplifyについて
   BODY: |
     ■ All-in-one:
@@ -31,7 +31,7 @@
       FEのコード（Gitリポジトリ）と連携、ビルド、ホスティング、CI/CDパイプラインを自動化
       ブランチごとにテスト環境を自動構築、GUIでモデル定義、コンテンツ、ユーザー管理UI
 
-- KEY: aws.Amplify.be.install
+- ENTRY:
   EXPLAIN: Amplify CLI インストール
   BODY: |
     ■ Backend: Amplify CLI のインストール
@@ -52,7 +52,7 @@
       > sudo ./aws/install
       > aws --version
 
-- KEY: aws.Amplify.be.開発フロー
+- ENTRY:
   EXPLAIN: 開発フロー
   BODY: |
     ■ ローカル端末にAmplify CLI のインストール
@@ -161,10 +161,10 @@
 
         /aws-exports.js
 
-- KEY: aws.Amplify.be.CLI.category
+- ENTRY:
   CATEGORY: Amplify CLI コマンド
 
-- KEY: aws.Amplify.be.基本コマンド
+- ENTRY:
   EXPLAIN: 基本コマンド一覧
   BODY: |
     amplify configure                   AWSプロファイル・リージョンの設定
@@ -183,7 +183,7 @@
 
     公式CLIリファレンス: https://docs.amplify.aws/cli/reference/
 
-- KEY: aws.Amplify.be.configure
+- ENTRY:
   EXPLAIN: amplify configure, init
   BODY: |
     ■ amplify configure [options]
@@ -215,7 +215,7 @@
       詳細は公式ドキュメント参照:
         https://docs.amplify.be.aws/cli/reference/init/
 
-- KEY: aws.Amplify.be.list
+- ENTRY:
   EXPLAIN: amplify list,status
   BODY: |
     ■ amplify list
@@ -241,7 +241,7 @@
       | Api      | blackbelt     | Update    | awscloudformation |
       | Auth     | gbsjfjfldk..  | No Change | awscloudformation |
 
-- KEY: aws.Amplify.be.pull
+- ENTRY:
   EXPLAIN: pull
   BODY: |
     ■ チーム開発でのバックエンド同期 
@@ -281,7 +281,7 @@
         もし git pull で .amplify にコンフリクトが発生した場合、まずはGitで競合を解決
         その後、念のために amplify pull を実行、ローカルの状態をクラウドと完全同期
 
-- KEY: aws.Amplify.be.push
+- ENTRY:
   EXPLAIN: push
   BODY: |
     ■ バックエンド変更のクラウド反映

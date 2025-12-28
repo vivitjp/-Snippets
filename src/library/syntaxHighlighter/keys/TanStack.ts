@@ -14,6 +14,10 @@ export const keysTanStack: KeyDef = {
     "useInfiniteQuery",
     "useIsFetching",
     "useIsMutating",
+    "localStorage",
+    "IndexedDB",
+    "AsyncStorage",
+    "ReactQueryPersistClientProvider",
   ],
   // ■ 青
   RoyalBlue: [
@@ -21,6 +25,10 @@ export const keysTanStack: KeyDef = {
     "removeQueries",
     "getQueryData",
     "setQueryData",
+    "prefetchQuery",
+    "fetchQuery",
+    "fetchQueries",
+    "ensureQueryData",
     "cancelQueries",
     "refetchQueries",
     "refetch",
@@ -47,6 +55,12 @@ export const keysTanStack: KeyDef = {
     "QueryClientProvider",
     "getNextPageParam",
     "getPreviousPageParam",
+    "persistQueryClient",
+    "createSyncStoragePersister",
+    "removeClient",
+    "getItem",
+    "createSyncStoragePersister",
+    "persistQueryClient",
   ],
   // ■ 青緑
   CadetBlue: [
@@ -63,6 +77,7 @@ export const keysTanStack: KeyDef = {
   // ■ 緑
   ForestGreen: [
     "queryKey",
+    "predicate",
     "enabled",
     "staleTime",
     "refetchOnWindowFocus",
@@ -105,11 +120,22 @@ export const keysTanStack: KeyDef = {
     "fetchStatus",
     "dataUpdatedAt",
     "isMutating",
+    "refetchActive",
+    "refetchInactive",
+    "storage",
+    "key",
+    "defaultOptions",
+    "queries",
+    "client",
+    "persister",
+    "initialIsOpen",
   ],
   // ■ ゴールド
-  Goldenrod: ["mutation", "queryClient", "", "", ""],
+  DarkOrange: ["mutation", "queryClient", "", "", ""],
   // ■ オレンジ
-  DarkOrange: ["async", "await", "", ""],
+  Goldenrod: ["async", "await", "throw", "try", "catch", "return", ""],
   // ■ 紫
-  DarkOrchid: ["fetch", "then", "", ""],
+  DarkOrchid: ["fetch", "then", "produce", "stale", "signal", ""],
+  // ■ グレー
+  "#777": ["・refetchQuery"],
 }

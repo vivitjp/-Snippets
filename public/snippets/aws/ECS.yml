@@ -2,10 +2,10 @@
 #-------------------------------
 # AWS
 #-------------------------------
-- KEY: aws.ECS.category
+- ENTRY:
   CATEGORY: 概要
 
-- KEY: aws.ECS.概要
+- ENTRY:
   EXPLAIN: |
     概要
   BODY: |
@@ -44,7 +44,7 @@
           • Fargate: AWSが管理するサーバレスコンテナ実行環境(優先選択)
           • EC2インスタンス: でDockerを実行
 
-- KEY: aws.ECS.ECSの構成要素
+- ENTRY:
   EXPLAIN: |
     ECSの構成要素
   BODY: |
@@ -96,7 +96,7 @@
     │ └──────────────────────┘ └─────────────────────────┘ │
     └──────────────────────────────────────────────────────┘
 
-- KEY: aws.ECS.ECSにおけるコンテナの実行方法
+- ENTRY:
   EXPLAIN: |
     コンテナの実行方法と更新
   BODY: |
@@ -117,10 +117,10 @@
       • サービスが新しいリビジョンのタスクを起動
       • 古いタスクを停止
 
-- KEY: aws.ECS.category.実装
+- ENTRY:
   CATEGORY: 実装
 
-- KEY: aws.ECS.実装
+- ENTRY:
   EXPLAIN: |
     実装
   BODY: |

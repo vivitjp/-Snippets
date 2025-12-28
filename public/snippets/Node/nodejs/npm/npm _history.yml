@@ -1,0 +1,203 @@
+---
+#-------------------------------
+# npm History
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: モジュールの依存関係についての歴史
+  BODY: |
+    ■ URL
+    https://zenn.dev/saggggo/articles/dbd739508ac212
+
+- ENTRY:
+  EXPLAIN: npm v2(~2015年以前)
+  BODY: |
+    ・依存関係が深くなると、IDR構造が深くなる
+        特にWindowsのpath文字列には256文字の制限
+    ・パッケージの重複
+        ディスク容量圧迫とインストール時間増加
+
+    node_modules/
+    |-- mod-a
+    |   `-- node_modules
+    |       `-- mod-b
+    `-- mod-c
+        `-- node_modules
+            `-- mod-b      <---- 重複
+
+- ENTRY:
+  EXPLAIN: npm v3(2015-06)
+  BODY: |
+    ・重複削除(dedupe)の導入
+
+    ■ v2
+    node_modules/
+    |-- mod-a
+    |   `-- node_modules
+    |       `-- mod-b
+    |-- mod-c
+    |   `-- node_modules
+    |       `-- mod-b
+    |-- mod-d
+    |   `-- node_modules
+    |       `-- mod-b
+
+    ■ v3のdedupe後(基本的に現在まで続く)
+    node_modules/
+    |-- mod-a
+    |   `-- node_modules
+    |       `-- mod-b
+    |-- mod-b          <---- 重複を巻き上げ(hoisting)
+    |-- mod-c
+    `-- mod-d
+
+    ■ 新たな問題点
+    直接依存していないモジュールをrequire可能
+      hoistingによってdependenciesに未記入モジュールがnode_modules以下に出現
+    dedupeのinstallのコスト増加
+    install 順で node_modules 以下のディレクトリ構造変化(致命的)
+
+- ENTRY:
+  EXPLAIN: yarn(2016-10)
+  BODY: |
+    ・木構造が不変のアルゴリズム
+    ・ロックファイル(yarn.lock)によるバージョニング
+        package.jsonだけでは依存モジュールのバージョンは未確定
+    ・しかし、node_modules以下のTREE情報は含まず
+    ・yarnのアルゴリズム(versionや設定で変動)管理が必要
+
+    # yarn lockfile v1
+
+    mod-a@^1.0.0:
+      version "1.0.0"
+      resolved "https://registry.yarnpkg.com/mod-a/-/mod-a-1.0.0.tgz#d27..."
+      integrity sha512-LHS...==
+      dependencies:
+        mod-b "^1.0.0"
+
+    mod-b@^1.0.0:
+      version "1.0.0"
+      resolved "https://registry.yarnpkg.com/mod-b/-/mod-b-1.0.0.tgz#0d6..."
+      integrity sha512-w3+jME...==
+
+    mod-b@^2.0.0:
+      version "2.0.0"
+      resolved "https://registry.yarnpkg.com/mod-b/-/mod-b-2.0.0.tgz#d3c..."
+      integrity sha512-F1m...==
+
+    mod-c@^1.0.0:
+      version "1.0.0"
+      resolved "https://registry.yarnpkg.com/mod-c/-/mod-c-1.0.0.tgz#849..."
+      integrity sha512-aUh...==
+      dependencies:
+        mod-b "^2.0.0"
+
+- ENTRY:
+  EXPLAIN: npm v5(2017-05)
+  BODY: |
+    ロックファイル(package-lock.json)導入して TREE を保存
+    しかし、決定論的に木構造は決まらない
+
+    {
+      "name": "node",
+      "version": "1.0.0",
+      "lockfileVersion": 1,
+      "requires": true,
+      "dependencies": {
+        "mod-a": {
+          "version": "1.0.0",
+          "resolved": "https://registry.npmjs.org/mod-a/-/mod-a-1.0.0.tgz",
+          "integrity": "sha512-LHS...==",
+          "requires": {
+            "mod-b": "1.0.0"
+          },
+          "dependencies": {
+            "mod-b": {
+              "version": "1.0.0",
+              "resolved": "https://registry.npmjs.org/mod-b/-/mod-b-1.0.0.tgz",
+              "integrity": "sha512-w3+...=="
+            }
+          }
+        },
+        "mod-b": {
+          "version": "2.0.0",
+          "resolved": "https://registry.npmjs.org/mod-b/-/mod-b-2.0.0.tgz",
+          "integrity": "sha512-F1m...=="
+        },
+        "mod-c": {
+          "version": "1.0.0",
+          "resolved": "https://registry.npmjs.org/mod-c/-/mod-c-1.0.0.tgz",
+          "integrity": "sha512-aUh...==",
+          "requires": {
+            "mod-b": "2.0.0"
+          }
+        }
+      }
+    }
+
+- ENTRY:
+  EXPLAIN: pnpmの新アプローチ(2017-06)
+  BODY: |
+    pnpmはnpm v3のdedupeとhoistingの仕組みを否定
+    シンボリックリンクを利用した node_modules で重複を排除
+    初期のnpm と同様の TREE 構造を持つ
+
+    node_modules/
+    |-- .pnpm
+    |   |-- mod-a@1.0.0
+    |   |   `-- node_modules
+    |   |       |-- mod-a
+    |   |       `-- mod-b -> ../../mod-b@1.0.0/node_modules/mod-b
+    |   |-- mod-b@1.0.0
+    |   |   `-- node_modules
+    |   |       `-- mod-b
+    |   |-- mod-b@2.0.0
+    |   |   `-- node_modules
+    |   |       `-- mod-b
+    |   |-- mod-c@1.0.0
+    |   |   `-- node_modules
+    |   |       |-- mod-b -> ../../mod-b@2.0.0/node_modules/mod-b
+    |   |       `-- mod-c
+    |   `-- node_modules
+    |       `-- mod-b -> ../mod-b@1.0.0/node_modules/mod-b
+    |-- mod-a -> .pnpm/mod-a@1.0.0/node_modules/mod-a
+    `-- mod-c -> .pnpm/mod-c@1.0.0/node_modules/mod-c
+
+- ENTRY:
+  EXPLAIN: yarn PnPの発表のみ(2018-09)
+  BODY: |
+    ・Plug'n'Play(PnP)という機能
+    ・node_modules を作らない代わりに .pnp.cjs 作成
+    ・node の require をオーバーライド
+    ・未対応パッケージが多い
+
+- ENTRY:
+  EXPLAIN: npm v7(2020-10)
+  BODY: |
+    ・npm install の順番によらず、決定論的にnode_modulesの木構造が決まる
+    ・yarn v1と同等の機能を持つ
+    ・package-lock.json v2 (パフォーマンス改善)
+
+- ENTRY:
+  EXPLAIN: npm v9.4(2023-01)
+  BODY: |
+    ・--install-strategy=linked オプション追加
+    ・シンボリックリンク方式がnpmでも利用可能
+
+    |-- .store
+    |   |-- mod-a@1.0.0-JLAJKScwD0n7X1X9XwbV7g
+    |   |   `-- node_modules
+    |   |       |-- mod-a
+    |   |       `-- mod-b -> ../../mod-b@1.0.0-zk-UsSOKv0TQtzcw9jp6dw/node_modules/mod-b
+    |   |-- mod-b@1.0.0-zk-UsSOKv0TQtzcw9jp6dw
+    |   |   `-- node_modules
+    |   |       `-- mod-b
+    |   |-- mod-b@2.0.0-_cHnd1clcmzVpQqwPsnTQg
+    |   |   `-- node_modules
+    |   |       `-- mod-b
+    |   `-- mod-c@1.0.0-BvKdLXHRNfrMG-mNfxZeZA
+    |       `-- node_modules
+    |           |-- mod-b -> ../../mod-b@2.0.0-_cHnd1clcmzVpQqwPsnTQg/node_modules/mod-b
+    |           `-- mod-c
+    |-- mod-a -> .store/mod-a@1.0.0-JLAJKScwD0n7X1X9XwbV7g/node_modules/mod-a
+    `-- mod-c -> .store/mod-c@1.0.0-BvKdLXHRNfrMG-mNfxZeZA/node_modules/mod-c

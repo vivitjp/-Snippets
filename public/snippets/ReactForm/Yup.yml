@@ -1,0 +1,428 @@
+---
+#-------------------------------
+# Yup
+#-------------------------------
+- ENTRY:
+  CATEGORY: 概要
+
+- ENTRY:
+  EXPLAIN: 機能 & インストール
+  BODY: |
+    ■ 機能
+
+    ・Yup: スキーマベースのバリデーションライブラリ。オブジェクト形状・型・制約を宣言的に定義
+    ・TypeScript と組み合わせるとスキーマから型を生成して型安全
+    ・React Hook Form とは相性良好、@hookform/resolvers の yupResolver で簡単連携
+    ・resolver を使うと RHF のフィールドエラー形式に自動変換(フォーム側のエラー処理がシンプル)
+    ・メッセージやロケールのカスタマイズが簡単（yup.setLocale や各ルールのメッセージ）
+    ・非同期検証（サーバ重複チェック等）は test() で Promise を返す形で実装可能(パフォーマンス設計に注意)
+
+    ■ パッケージインストール
+
+    npm install yup @hookform/resolvers
+
+    ■ 比較
+    ・代替：Zod（型安全＋TS親和性高い）、Joi、superstruct 等
+    ・大規模で型安全を最重視するなら Zod が最近人気（TS 型との親和性が高い）
+
+    ・既に Yup に慣れている / 豊富なバリデーション API を使いたい → Yup
+    ・TypeScript と厳密に型を連携させたい → Zod
+    ・サーバ側と同じルールを共有したい（NodeでJoi等採用している）→ Joi 等検討
+
+- ENTRY:
+  EXPLAIN: サンプルコンポーネント
+  BODY: |
+    import { useForm } from 'react-hook-form'
+    import { yupResolver } from '@hookform/resolvers/yup'
+    import * as yup from 'yup'
+
+    // スキーマ定義
+    const schema = yup.object({
+      name: yup.string().required('必須'),
+      email: yup.string().email('メール形式で入力').required('必須'),
+      age: yup.number().positive().integer().nullable(),
+    }).required()
+
+    // TypeScript: スキーマから型推論
+    type FormValues = yup.InferType<typeof schema>
+
+    export function MyForm() {
+      const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
+        resolver: yupResolver(schema),
+        defaultValues: { name: '', email: '', age: undefined },
+      })
+
+      const onSubmit = (data: FormValues) => { console.log(data) }
+
+      return (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <input {...register('name')} />
+          {errors.name && <span>{errors.name.message}</span>}
+          <input {...register('email')} />
+          {errors.email && <span>{errors.email.message}</span>}
+          <input type="number" {...register('age')} />
+          <button type="submit">送信</button>
+        </form>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: スニペット各種
+  BODY: |
+    ■ 基本（名前・メール・年齢）
+
+    import * as yup from 'yup'
+    const basic = yup.object({
+      name: yup.string().trim().min(2, '2文字以上').required('必須'),
+      email: yup.string().email('メール形式').required('必須'),
+      age: yup.number().integer().positive().min(18, '18歳以上').nullable(),
+    })
+
+    ■ ネスト（住所）
+
+    const nested = yup.object({
+      address: yup.object({
+        zip: yup.string().matches(/^\d{3}-?\d{4}$/, '郵便番号形式'),
+        city: yup.string().required(),
+      }).required(),
+    })
+
+    ■ 配列（オブジェクト配列）
+
+    const list = yup.object({
+      items: yup.array().of(
+        yup.object({ 
+          title: yup.string().required(),
+          qty: yup.number().integer().min(1)
+        })
+      ).min(1, '1つ以上必要'),
+    })
+
+    ■ 条件付き（when / ref）
+
+    const cond = yup.object({
+      password: yup.string().min(8).required(),
+      confirm: yup.string().oneOf([yup.ref('password')], '一致しない').required(),
+      newsletter: yup.boolean(),
+      email: yup.string().when('newsletter', {
+        is: true,
+        then: (s: any) => s.required('ニュースレター購読時は必須').email(),
+        otherwise: (s: any) => s.nullable(),
+      }),
+    })
+
+    ■ 非同期カスタム検証の例（API 重複チェック）
+
+    const asyncCheck = yup.object({
+      username: yup.string().test('unique', '既に使われている', async (val) => {
+        if (!val) return true
+        const ok = await api.checkUsername(val)
+        return ok
+      })
+    })
+
+    ■ transform / default / nullable の例
+
+    const misc = yup.object({
+      count: yup.number().transform((v, o) => (o === '' ? undefined : v)).default(0),
+      tag: yup.string().nullable(),
+    })
+
+    ■ TypeScript での型推論
+
+    const schema = yup.object({
+      name: yup.string().required(),
+      age: yup.number().nullable()
+    })
+    type FormData = yup.InferType<typeof schema>
+
+    ■ ロケール / メッセージ一括設定
+
+    import * as yup from 'yup'
+    yup.setLocale({
+      mixed: { required: '必須項目' },
+      string: { email: '正しいメール形式で入力' }
+    })
+
+    ■ 補足
+
+    ・クライアント検証は UX 向上に有効だが、サーバ側でも必ずバリデーションを行う
+    ・非同期検証はデバウンスやキャッシュを検討して API 負荷を抑える
+    ・スキーマは小さく分割して再利用する（.concat / shape を活用）
+
+- ENTRY:
+  CATEGORY: スキーマ
+
+- ENTRY:
+  EXPLAIN: 一覧
+  BODY: |
+    yup.string()                        // 文字列
+    yup.number()                        // 数値
+    yup.boolean()                       // 真偽値
+    yup.date()                          // 日付
+    yup.array()                         // 配列
+    yup.object()                        // オブジェクト
+    yup.mixed()                         // 任意型のベース
+    yup.lazy()                          // 動的にスキーマを切り替える
+    yup.ref()                           // 他フィールド参照
+
+- ENTRY:
+  EXPLAIN: yup.string()
+  BODY: |
+    yup.string().required('必須')
+    yup.string().email('メール形式で入力')
+    yup.string().min(3, '3文字以上').max(50, '50文字以内')
+    yup.string().matches(/^[a-zA-Z0-9_-]+$/, '半角英数と-_のみ許可')
+    yup.string().trim().nullable()
+    yup.string().oneOf(['A', 'B', 'C'], '選択が無効')
+    yup.string().length(10, '10文字で入力')
+    yup.string().url('URL形式で入力')
+    yup.string().test('custom', 'カスタム検証に失敗', (value) => {
+      // カスタム検証ロジック（例: サーバチェックは非同期で実装）
+      return typeof value === 'string' && value !== ''
+    })
+
+- ENTRY:
+  EXPLAIN: yup.number()
+  BODY: |
+    yup.number().required('必須')
+    yup.number().integer('整数で入力')
+    yup.number().min(0, '0以上')
+    yup.number().max(100, '100以下')
+    yup.number().positive('正の数')
+    yup.number().negative('負の数')
+    yup.number().nullable()
+    yup.number().transform((v, o) => (o === '' ? undefined : v))
+    yup.number().test('custom', 'カスタム数値検証', (value) => typeof value === 'number' && !isNaN(value))
+
+- ENTRY:
+  EXPLAIN: yup.boolean()
+  BODY: |
+    yup.boolean().required()
+    yup.boolean().oneOf([true], '同意が必要')
+    yup.boolean().nullable()
+
+- ENTRY:
+  EXPLAIN: yup.date()
+  BODY: |
+    yup.date().required('必須')
+    yup.date().min(new Date(2000, 0, 1), '2000年以降')
+    yup.date().max(new Date(), '未来日は禁止')
+    yup.date().nullable()
+    yup.date().transform((val, orig) => (orig === '' ? null : val))
+
+- ENTRY:
+  EXPLAIN: yup.array()
+  BODY: |
+    yup.array().of(yup.string())
+    yup.array().min(1, '1つ以上')
+    yup.array().max(5, '5つ以下')
+    yup.array().length(3, '3つ固定')
+    yup.array().of(yup.object({ id: yup.string().required() }))
+
+- ENTRY:
+  EXPLAIN: yup.object()
+  BODY: |
+    yup.object().shape({ name: yup.string().required() })
+    yup.object().noUnknown(true)
+    yup.object().required()
+
+- ENTRY:
+  EXPLAIN: yup.mixed()
+  BODY: |
+    yup.mixed().required()
+    yup.mixed().oneOf(['a', 'b'])
+    yup.mixed().notOneOf([null])
+    yup.mixed().nullable()
+    yup.mixed().test('isFile', 'ファイル必須', (v) => v instanceof File)
+
+- ENTRY:
+  EXPLAIN: yup.lazy()
+  BODY: |
+    yup.lazy((value) => {
+      return Array.isArray(value) ? yup.array().of(yup.string()) : yup.string()
+    })
+
+- ENTRY:
+  EXPLAIN: yup.ref()
+  BODY: |
+    ■ 基本: 他フィールドを参照する
+    yup.ref('otherField')
+
+    ■ 確認用（パスワード一致）
+    const schemaConfirm = yup.object({
+      password: yup.string().required('必須'),
+      confirm: yup.string().oneOf([yup.ref('password')], 'パスワードが一致しません').required('必須'),
+    })
+
+    ■ 数値参照で上限を動的に設定する例
+    const schemaMax = yup.object({
+      maxAmount: yup.number().required(),
+      amount: yup.number().max(yup.ref('maxAmount'), '上限を超えています'),
+    })
+
+    ■ 非同期検証で ref を使う例（this.resolve を使って解決）
+    const schemaAsync = yup.object({
+      otherField: yup.string(),
+      code: yup.string().test('match-with-other', '一致しない', async function (val) {
+        const other = this.resolve(yup.ref('otherField'))  <--- this 使用のため、アロー関数不可⛔️
+        // 例: const ok = await api.verify(val, other)
+        return true
+      }),
+    })
+
+- ENTRY:
+  CATEGORY: チェーンメソッド
+
+- ENTRY:
+  EXPLAIN: 一覧
+  BODY: |
+    ...().required(msg)                 // 必須
+    ...().nullable()                    // null 許可 
+    ...().defined()                     // 定義済みにする
+    ...().default(val)                  // デフォルト値
+    ...().transform(fn)                 // 変換
+    ...().min(n, msg)                   // 文字数・数値の最小値 
+    ...().max(n, msg)                   // 文字数・数値の最大値
+    ...().length(n, msg)                // 文字数・配列長の固定
+    ...().email(msg)                    // メール形式  
+    ...().url(msg)                      // URL形式
+    ...().matches(regex, msg)           // 正規表現マッチ
+    ...().integer()                     // 整数
+    ...().positive()                    // 正の数
+    ...().negative()                    // 負の数
+    ...().oneOf([vals], msg)            // 指定値のいずれか
+    ...().notOneOf([vals], msg)         // 指定値以外
+    ...().test(name, msg, fn)           // カスタム同期
+    ...().when(refOrKeys, builder)      // 条件付きバリデーション
+    ...().of(schema)                    // 配列要素スキーマ
+    ...().shape(obj)                    // オブジェクト形状定義
+    ...().concat(schema)                // スキーマ結合
+    ...().strict()                      // 厳格モード
+    ...().noUnknown()                   // 未知フィールド禁止
+
+- ENTRY:
+  EXPLAIN: required()
+  BODY: |
+    ■ 必須チェック
+    yup.string().required('必須です')
+    yup.number().required('必須です')
+
+    ■ 条件付きで必須にする（when 内で）
+    yup.object({
+      enabled: yup.boolean(),
+      value: yup.string().when('enabled', { is: true, then: (s: any) => s.required('有効時は必須') }),
+    })
+
+- ENTRY:
+  EXPLAIN: nullable()
+  BODY: |
+    ■ null を許容して null を valid とする
+    yup.string().nullable()
+
+    ■ nullable と required を組合せて明示的に null を拒否する
+    yup.string().nullable().required('nullは不可')
+
+- ENTRY:
+  EXPLAIN: default()
+  BODY: |
+    ■ デフォルト値の利用例
+    yup.string().default('unknown')
+    yup.number().default(0)
+
+    ■ transform と組合せて空文字をデフォルト化
+    yup.string().transform((v, o) => (o === '' ? undefined : v)).default('')
+
+- ENTRY:
+  EXPLAIN: transform()
+  BODY: |
+    ■ 入力の正規化例（全角数字を半角に）
+    yup.string().transform(
+      (value) => value && value.replace(/[０-９]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 65248))
+    )
+
+    ■ 空文字を undefined に変換して nullable と組合せ
+    yup.number().transform((v, o) => (o === '' ? undefined : v))
+
+- ENTRY:
+  EXPLAIN: min/max/length
+  BODY: |
+    ■ 文字数制限
+    yup.string().min(3, '3文字以上').max(10, '10文字以下')
+    yup.string().length(5, '5文字で入力')
+
+    ■ 数値の範囲
+    yup.number().min(0, '0以上').max(100, '100以下')
+
+- ENTRY:
+  EXPLAIN: email()/url()/matches()
+  BODY: |
+    yup.string().email('正しいメール形式で入力')
+    yup.string().url('正しいURLで入力')
+    yup.string().matches(/^\d{3}-?\d{4}$/, '郵便番号形式で入力')
+
+- ENTRY:
+  EXPLAIN: integer()/positive()/negative()
+  BODY: |
+    yup.number().integer('整数で入力')
+    yup.number().positive('正の数で入力')
+    yup.number().negative('負の数で入力')
+
+- ENTRY:
+  EXPLAIN: oneOf()/notOneOf()
+  BODY: |
+    yup.string().oneOf(['red', 'green', 'blue'], '選択が無効')
+    yup.string().notOneOf(['admin'], '使用禁止ワード')
+
+- ENTRY:
+  EXPLAIN: test()
+  BODY: |
+    ■ 同期カスタム検証（関数表現で this が使える）
+    yup.string().test('no-spaces', '空白を含めないでください', function (val) {
+      return !/\s/.test(String(val || ''))
+    })
+
+    ■ 非同期検証の例（API 呼び出し）
+    yup.string().test('unique', '既に使われています', async function (val) {
+      if (!val) return true
+      // const ok = await api.checkUnique(val)
+      return true
+    })
+
+- ENTRY:
+  EXPLAIN: when()
+  BODY: |
+    ■ 単純な when（フィールド単体）
+    yup.string().when('toggle', {
+      is: true,
+      then: (s: any) => s.required('有効時は必須'),
+      otherwise: (s: any) => s.nullable(),
+    })
+
+    ■ 複数フィールドを参照する例
+    yup.string().when(['a', 'b'], (a: any, b: any, schema: any) => {
+      return a === b ? schema.required('a と b が等しい場合は必須') : schema
+    })
+
+- ENTRY:
+  EXPLAIN: of()/shape()/concat()
+  BODY: |
+    ■ 配列要素にスキーマを適用
+    yup.array().of(yup.object({ id: yup.string().required() }))
+
+    ■ shape を使ったオブジェクト定義
+    yup.object().shape({ name: yup.string().required(), age: yup.number().nullable() })
+
+    ■ concat でスキーマ合成
+    const base = yup.object({ id: yup.string().required() })
+    const extra = yup.object({ meta: yup.object() })
+    base.concat(extra)
+
+- ENTRY:
+  EXPLAIN: strict()/noUnknown()
+  BODY: |
+    ■ strict: transform を無効化して厳密にチェック
+    yup.string().strict()
+
+    ■ noUnknown: オブジェクトに未知フィールドを許可しない
+    yup.object().noUnknown(true)

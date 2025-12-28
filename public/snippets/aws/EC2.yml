@@ -2,10 +2,10 @@
 #-------------------------------
 # EC2
 #-------------------------------
-- KEY: aws.EC2.category
+- ENTRY:
   CATEGORY: 概論
 
-- KEY: aws.EC2.スペック
+- ENTRY:
   EXPLAIN: |
     マシンスペック
   BODY: |
@@ -51,7 +51,7 @@
       • メモリ
       • ネットワーク帯域幅
 
-- KEY: aws.EC2.EBS
+- ENTRY:
   EXPLAIN: |
     EBS(Amazon Elastic Block Store)
   BODY: |
@@ -68,7 +68,7 @@
     • EBSはEC2インスタンスに接続している間のみ課金される
     • EC2インスタンスを停止してもEBSは課金される
 
-- KEY: aws.EC2.AMI
+- ENTRY:
   EXPLAIN: |
     AMI(Amazon Machine Image)
   BODY: |
@@ -79,7 +79,7 @@
     • AWS Marketplaceを活⽤することでソフトウェアを含んだ環境もAMIから構築可能
     • 5000+あるAMIから特定のソフトウェアを含んだ環境を簡単に構築できる
 
-- KEY: aws.EC2.利用と停止
+- ENTRY:
   EXPLAIN: |
     利用、停止、スケーリング
   BODY: |
@@ -100,10 +100,10 @@
 #-------------------------------
 #  構築からアクセス
 #-------------------------------
-- KEY: aws.EC2.構築からアクセス
+- ENTRY:
   CATEGORY: 構築からアクセス
 
-- KEY: aws.EC2.構築からアクセス.構築
+- ENTRY:
   EXPLAIN: |
     EC2インスタンス作成
   BODY: |
@@ -204,10 +204,10 @@
 #-------------------------------
 #  SDK
 #-------------------------------
-- KEY: aws.EC2.sdk.category
+- ENTRY:
   CATEGORY: SDK
 
-- KEY: aws.EC2.sdk.keyPair.describe
+- ENTRY:
   EXPLAIN: |
     keyPair 取得(describe)
   BODY: |
@@ -237,7 +237,7 @@
       }
     };
 
-- KEY: aws.EC2.sdk.keyPair.create
+- ENTRY:
   EXPLAIN: |
     keyPair 作成(create)
   BODY: |
@@ -269,7 +269,7 @@
       }
     };
 
-- KEY: aws.EC2.sdk.keyPair.delete
+- ENTRY:
   EXPLAIN: |
     keyPair 削除(delete)
   BODY: |
@@ -298,7 +298,7 @@
       }
     };
 
-- KEY: aws.EC2.sdk.SecurityGroups.describe
+- ENTRY:
   EXPLAIN: |
     SecurityGroups 取得(describe)
   BODY: |
@@ -340,7 +340,7 @@
       }
     };
 
-- KEY: aws.EC2.sdk.SecurityGroups.create
+- ENTRY:
   EXPLAIN: |
     SecurityGroups 作成(create)
   BODY: |
@@ -373,7 +373,7 @@
       }
     };
 
-- KEY: aws.EC2.sdk.SecurityGroups.addIngress
+- ENTRY:
   EXPLAIN: |
     SecurityGroups イングレス追加(addIngress)
   BODY: |
@@ -413,7 +413,7 @@
       }
     };
 
-- KEY: aws.EC2.sdk.SecurityGroups.delete
+- ENTRY:
   EXPLAIN: |
     SecurityGroups 削除(delete)
   BODY: |
@@ -442,7 +442,7 @@
       }
     };
 
-- KEY: aws.EC2.sdk.instance.describe
+- ENTRY:
   EXPLAIN: |
     Instance 取得(describe)
   BODY: |
@@ -495,7 +495,7 @@
       }
     };
 
-- KEY: aws.EC2.sdk.instance.InstanceTypes
+- ENTRY:
   EXPLAIN: |
     Instance タイプ(InstanceTypes)
   BODY: |
@@ -544,7 +544,7 @@
       }
     };
 
-- KEY: aws.EC2.sdk.instance.monitor
+- ENTRY:
   EXPLAIN: |
     Instance 監視(monitor)
   BODY: |
@@ -580,12 +580,12 @@
       }
     };
 
-- KEY: aws.EC2.sdk.instance.unmonitor
+- ENTRY:
   EXPLAIN: |
     Instance 監視停止(unmonitor)
   BODY: |
 
-- KEY: aws.EC2.sdk.instance.start
+- ENTRY:
   EXPLAIN: |
     Instance 開始(start)
   BODY: |
@@ -622,7 +622,7 @@
       }
     };
 
-- KEY: aws.EC2.sdk.instance.run
+- ENTRY:
   EXPLAIN: |
     Instance 生成(run)
   BODY: |
@@ -673,7 +673,7 @@
       }
     };
 
-- KEY: aws.EC2.sdk.instance.stop
+- ENTRY:
   EXPLAIN: |
     Instance 停止(stop)
   BODY: |
@@ -706,7 +706,7 @@
       }
     };
 
-- KEY: aws.EC2.sdk.instance.terminate
+- ENTRY:
   EXPLAIN: |
     Instance 終了(terminate)
   BODY: |
@@ -739,7 +739,7 @@
       }
     };
 
-- KEY: aws.EC2.sdk.instance.reboot
+- ENTRY:
   EXPLAIN: |
     Instance 再起動(reboot)
   BODY: |
@@ -767,7 +767,7 @@
       }
     };
 
-- KEY: aws.EC2.sdk.Address.allocate
+- ENTRY:
   EXPLAIN: |
     Address 割り当て(allocate)
   BODY: |
@@ -794,7 +794,7 @@
       }
     };
 
-- KEY: aws.EC2.sdk.Address.associate
+- ENTRY:
   EXPLAIN: |
     Address 関連付け(associate)
   BODY: |
@@ -834,7 +834,7 @@
       }
     };
 
-- KEY: aws.EC2.sdk.Address.disassociate
+- ENTRY:
   EXPLAIN: |
     Address 関連解除(disassociate)
   BODY: |
@@ -860,7 +860,7 @@
       }
     };
 
-- KEY: aws.EC2.sdk.Address.release
+- ENTRY:
   EXPLAIN: |
     Address 解放(release)
   BODY: |
@@ -887,7 +887,7 @@
       }
     };
 
-- KEY: aws.EC2.sdk.Address.describe
+- ENTRY:
   EXPLAIN: |
     Address 取得(describe)
   BODY: |

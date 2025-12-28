@@ -2,17 +2,17 @@
 #-------------------------------
 # Pandas  https://qiita.com/fujine/items/dbe2f5e4101d6299ff12
 #-------------------------------
-- KEY: py.lib.pandas.title
+- ENTRY:
   CATEGORY: Pandas
 
-- KEY: py.lib.pandas.install
+- ENTRY:
   EXPLAIN: Pandas(インストール)
   BODY: |
     pip install pandas pandas-stubs
 
     # pandas-stubs: Public type stubs for pandas(型ファイル)
 
-- KEY: py.lib.pandas.file
+- ENTRY:
   EXPLAIN: Pandas(Fromファイル)
   BODY: |
     FILE_NAME = "data\\sample.csv"
@@ -23,7 +23,7 @@
     from pathlib import Path
     p = Path(FILE_NAME)
 
-- KEY: py.lib.pandas.iomemory
+- ENTRY:
   EXPLAIN: Pandas(FromIO仮想メモリ)
   BODY: |
     from io import StringIO
@@ -44,7 +44,7 @@
     with StringIO('\n'.join('x' + '0'*10000 + 'a')) as f:
     df = pd.read_csv(f)
 
-- KEY: py.lib.pandas.iterator
+- ENTRY:
   EXPLAIN: Pandas(分割読み込み)
   BODY: |
     ■ メモリ節約のために行数指定読み込みを反復
@@ -53,7 +53,7 @@
           print(df)
           print("-" * 60)
 
-- KEY: py.lib.pandas.options
+- ENTRY:
   EXPLAIN: Pandas(出力オプション)
   BODY: |
     df = pd.read_csv(FILE_NAME, options...)
@@ -84,7 +84,7 @@
     prefix     => pandas.DataFrame.add_prefix を使用
     mangle_dupe_cols
 
-- KEY: py.lib.pandas.dtype
+- ENTRY:
   EXPLAIN: Pandas(データ型NP変換)
   BODY: |
     import numpy as np
@@ -104,7 +104,7 @@
     0  2023/4/1  東京    10.3    23.3       2.6      NaN
     1  2023/4/1  大阪    10.4    25.1       2.3      NaN
 
-- KEY: py.lib.pandas.replace
+- ENTRY:
   EXPLAIN: Pandas(データ変換)
   BODY: |
     # ■ 値変換(null=>0)
@@ -140,7 +140,7 @@
     # ■ 欠損値フィルタ(無効化でファイル読み込みパフォーマンス向上)
     df = pd.read_csv(FILE_NAME, na_filter=False)
 
-- KEY: py.lib.pandas.columns
+- ENTRY:
   EXPLAIN: Pandas(カラム一覧)
   BODY: |
     df = pd.read_csv(FILE_NAME)
@@ -149,7 +149,7 @@
     ------------------------------------------------------------
     ['Date', 'Area', 'MinTemp', 'MaxTemp', 'WindSpeed', 'Rainfall']
 
-- KEY: py.lib.pandas.rows
+- ENTRY:
   EXPLAIN: Pandas(行)
   BODY: |
     # ■ HEAD/TAIL行数
@@ -178,7 +178,7 @@
     # ■ 空行スキップ(default:True)
     df = pd.read_csv(FILE_NAME, skip_blank_lines=False)
 
-- KEY: py.lib.pandas.memory
+- ENTRY:
   EXPLAIN: Pandas(読み込みメモリ)
   BODY: |
     # ■ Default 使用メモリ制限(部分的に読み込みながらデータ型推定)
@@ -187,7 +187,7 @@
     # ■ 全体を読み込んでからデータ型推定
     df = pd.read_csv(FILE_NAME, low_memory=False)
 
-- KEY: py.lib.pandas.type.date
+- ENTRY:
   EXPLAIN: Pandas(日付)
   BODY: |
     ■ 日付データをdatetimeに変換
@@ -209,6 +209,6 @@
     2023-04-01  東京     10.3     23.3        NaN       NaN
     2023-04-01  大阪     10.4      NaN        2.3       NaN
 
-# - KEY: py.lib.pandas.type.int
+# - ENTRY:
 #   EXPLAIN: Pandas(数)
 #   BODY: |

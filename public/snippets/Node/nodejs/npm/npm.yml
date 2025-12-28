@@ -1,0 +1,463 @@
+---
+#-------------------------------
+# npm
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: 各種PATH表示
+  BODY: |
+    npm root               //<DRIVE>:\<WORKING_DIR>\<PACKAGE名>\node_modules
+    npm root -g            //C:\Users\<ユーザ名>\AppData\Roaming\npm\node_modules
+    npm bin                //<DRIVE>:\<WORKING_DIR>\<PACKAGE名>\node_modules\.bin
+    npm bin -g             //C:\Users\<ユーザ名>\AppData\Roaming\npm
+
+- ENTRY:
+  EXPLAIN: 初期化
+  BODY: |
+    ■ package.json 作成
+    npm init                                      // 初期化
+    npm init -y                                   // [-y] 全質問にYES
+
+    ■ package.json
+    {
+      "name": "sample",
+      "version": "1.0.0",
+      "description": "sample project.",
+      "main": "app.js",
+      "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+      },
+      "author": "",
+      "license": "ISC",
+      "dependencies": {
+        "webpack": "^5.31.2"
+      }
+    }
+
+- ENTRY:
+  EXPLAIN: package.json
+  BODY: |
+    ■ name (package名)
+    "name": "mypack",
+
+      1-214字、英小文字、数字、記号(-._)、先頭(._以外)
+      スコープ付の場合、@スコープ名/ というプレフィックス付
+      コアモジュールの名前と重複不可
+
+    ■ version
+    "version": "0.1.0",                           // セマンティック バージョニング
+
+    npm version 1.1.0                             // v1.1.0
+    npm version patch                             // v1.1.1(patchをカウントアップ)
+    npm version minor -m "%sにバージョンアップ"     // [-m] gitへの明示的なメッセージ(%sはバージョン)
+
+    ■ [description]                               // (Optional) 説明文
+
+    ■ [keyword]                                   // (Optional) キーワード
+    "keyword": ["some","design","theme"],         // 文字列の配列
+
+      CLI, webからの検索に使用
+      CLIでは、npm search <キー> で検索可能
+
+    ■ main                                        // エントリポイント
+    "main": "index.js",                           default
+
+    [sample/index.js]
+    module.export = 'Hello World'
+
+    > require('./sample')
+    Hello World
+
+    ■ author/contributors                         // 開発者
+    "author":{
+      "name": "John Wick",
+      "email": "john@wick.com",
+      "url": "http://www.johnwick.com"
+    },
+    "author": "name sirname <email> (url)"
+
+      一人で開発: author
+      複数で開発: contributors
+
+    ■ [license/private]                           // (Optional) ライセンス
+    "license": "ISC,MIT,Apache-2.0,...",
+    "license": "UNLICENSED", //第三者の仕様不許可
+    "private": true, //非公開
+
+      プロジェクトルート直下に LICENSE というファイルを作成。
+      詳細を記述してレジストリに公開。定型文を利用すること。
+
+      非公開なら npm publish という公開コマンドでエラーとなり、思わぬ公開を防止
+
+    ■ dependencies                                // 依存package
+    "dependencies": {
+      "<package名>": "^1.2.3"
+    },
+
+    npm install <package名>
+    require('<command>')で使用可能                 // nodeの場合
+
+      依存パッケージを管理する項目で、手動では変更しない方がよい。
+      1) ファイル package.json に情報追記
+      2) ディレクトリ node_modules に依存パッケージの実態配置
+      3) ファイル package-lock.json に情報追記
+
+    ■ [devDependencies]                           //(Optional) 開発用依存package
+    "devDependencies": {
+      "<package名>": "^1.2.3"
+    },
+
+    npm i -D(--save-dev) <package名>
+
+      テストやビルドに使用するパッケージ
+      開発用フラグ(-D)を付けてインストールした依存パッケージがここに追記
+
+    ■ [peerDependencies]                          //(Optional) 間接依存package
+
+      何かのライブラリのプラグイン開発によく使用される。
+      同一パッケージの別バージョン向けなどを管理することができる。
+
+    ■ [optionalDependencies]                      //(Optional) 非必須依存package
+    npm i -O(--save-optional) <package名>
+
+      package.json を使用した一括インストールでインストールに失敗してもエラーにならない
+      非必須のパッケージを指定
+
+    ■ [bundledDependencies]                       //(Optional) 公開バンドルpackage指定
+    "bundledDependencies": ["<package名>"],
+
+      npm レジストリに公開する時に、バンドルしたいパッケージを指定
+      他とは異なり、パッケージ名の配列
+
+    ■ bin                                         // 実行可能ファイル指定
+    "bin": {
+      "rimraf": "./bin.js"
+    },
+
+      script で指定実行するために登録するコマンド
+      node_modules/.bin の中に、rimraf というシンボリックリンク作成
+      リンク先は /projdir/node_modules/rimraf/bin.js
+      node_modules/.bin内にリンクを集約するのは、PATH を通して実行が可能になるため
+
+      サンプル
+      [/projdir/sayhi.js]
+      #!/usr/bin/env node                         // 必須
+      'use strict'
+      // console.log(process.args)                // 実行ファイル名, PATH, 引数の順番
+      process.args.slice(2).forEach(name=>console.log(`Hi ${name}`))
+
+      "bin": {
+        "sayhi": "./sayhi.js"
+      },
+      "scripts": {
+        "sayhi": "sayhi"
+      },
+
+      $npm run sayhi john smith
+      > Hi john
+      > Hi smith
+
+    ■ repository                                  // リポジトリ
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/bpm/cli.git",
+    }
+
+      パッケージコード管理のリポジトリ
+
+    ■ engines                                     // npmバージョン
+    "engines": {
+      "node": ">=10",
+      "npm": "^6.0.0"
+    }
+
+      パッケージ動作に必要な npm のバージョンを記載。以下オプション必須
+      npm config set engine-strict true
+
+    ■ acceptDependencies                          // 新(v7):環境対応バージョン
+
+    dependentiesで指定したver以外に、環境次第で利用可能なパッケージVerを指定可能
+    dedupedの個数が増えると予想
+
+    ■ exports                                     // 読み込まれるファイルのパス
+    "exports": "./dist/index.js"
+
+      記述がある場合 "main" よりも優先して読み込まれる
+      Pure ESM の場合 Conditional Exports もされていない模様
+
+    ■ type                                        // モジュールタイプ
+    "type": "module",                             // .js ファイルを ESM として解釈する
+
+    ■ カスタムフィールド                            
+    "jest": {
+      "testMatch": ["**/test/jest/**/*.js"],
+      "clearMocks": true,
+      "restoreMocks": true
+    }
+
+      外部に設定ファイルを置かず、ここに既述するパッケージも多い
+
+- ENTRY:
+  EXPLAIN: package.json Script
+  BODY: |
+    "scripts": {
+      "test": "<script>"
+    },
+    npm run test
+
+      コマンド run で実行するプロジェクト内のタスク(ビルド、テスト、ローカル実行など)を記述
+      スクリプト自体、UNIX系では /bin/sh、Windows系では cmd.exeが実行
+      どちらの環境でも動くようにスクリプトを記述しなければならない
+
+    ■ scripts(シェルコマンド)
+    例えば、rimraf(dir削除), mkdirp(dir生成) は script 内で利用可能
+
+    "scripts": {
+      "creat-dir": "mkdirp foo/bar",
+      "remove-dir": "rimraf foo"
+    },
+    npm run create-dir
+    npm run remove-dir
+
+
+    ■ 引数 -- オプション
+    npm run create-dir -- bar
+    > mkdirp foo/bar "bar"  と解釈され、2つのディレクトリ作成
+
+    /projdir/foo/bar
+    /projdir/bar
+
+    ■ pre, post プレフィックス付
+    "scripts": {
+      "precreat-dir": "echo \"ディレクトリ作成開始\"",
+      "creat-dir": "mkdirp foo/bar",
+      "postcreat-dir": "echo \"ディレクトリ作成終了\"",
+    },
+
+    ■ イベントフック
+    //パッケージング
+    prepare
+    prepublishOnly
+    publish, postpublish
+    prepack
+    postpack
+
+    //インストール・アンインストール
+    preinstall
+    intall, postinstall
+    preuninstall, uninstall
+    postuninstall
+
+    //バージョニング
+    preversion
+    version
+    postversion
+
+- ENTRY:
+  EXPLAIN: クローン
+  BODY: |
+    package-lock.json
+    直接編集禁止。削除禁止。
+    npm install されたパッケージの実際にインストールされたver番号情報を持つファイル
+
+    npm ci
+
+      ci フラグによって、package-lock.json のバージョン記述を忠実に再現したインストールを行う
+      新規プロジェクト参加者が git clone 後の動作確認に使用
+      npm install と同じように全依存パッケージをインストールするが、一度 node_modules を全削除
+
+- ENTRY:
+  EXPLAIN: バージョン管理
+  BODY: |
+    ■ セマンティック バージョニング(v2)              //ルール名
+
+      major.minor.patch
+      major(メジャー)                              // 互換性のない更新
+      minor(マイナー)                              // 互換性保持、機能追加
+      patch(パッチ)                                // 互換性保持、不具合修正
+
+    ■ マイナー&パッチ(^: キャレット)                // 左端のゼロ以外の数字を変更しない変更を許可
+
+      "<package名>": "^1.2.3"                     // 1.2.3以上、2.0.0未満
+      "<package名>": "^0.1.2"                     // 0.1.2以上、0.2.0未満
+      "<package名>": "^0.0.1"                     // 0.0.1以上、0.0.2未満
+
+    ■ パッチ限定(~: チルダ)                        // 右端以下のバージョンがあがることを許可
+
+      "<package名>": "~1.1.1"                     // >=1.1.1 <1.2.0
+      "<package名>": "~0.1.2"                     // >=0.1.2 <0.2.0
+
+    ■ 範囲指定記法(-: ハイフン)                     // 指定した範囲を許可(欠落部分はゼロに置換)
+
+      "<package名>": "1.2.3 - 2.3.4"              // >=1.2.3 <=2.3.4
+      "<package名>": "1.2 - 2.3.4"                // >=1.2.0 <=2.3.4
+
+    ■ メジャー指定
+
+      "<package名>": "1"                          // >=1.0.0 <2.0.0
+      "<package名>": ""                           // >=0.0.0(全バージョン)
+
+    ■ メジャー.マイナー指定
+
+      "<package名>": "1.1"
+
+    ■ フルバージョン指定
+
+      "<package名>": "1.1.1"                      // 厳密なバージョン指定。非推薦。
+
+- ENTRY:
+  EXPLAIN: インストール
+  BODY: |
+    npm i(install)
+
+      package.json に記載された依存パッケージモジュールの一括インストール
+
+    npm i <package名>                             // ローカル
+
+      $ npm i ejs                                 //ローカルインストール
+      $ npm list                                  //インストール確認
+
+    npm i <package名>@1.1.0                           ver指定
+
+    npm i -g(--global) <package名>                    グローバル(要注意)
+
+      $ npm i -g ejs   //グローバルインストール
+      $ npm list -g    //インストール確認
+      //実行例:コマンドがパスなしで打てる
+      ejs-cli "*.ejs" --out dest/ --options data.json
+
+    npm i -S(--save) <package名>                  // デフォルト:依存関係記録
+
+    npm i --no-save <package名>                   // 依存関係<非>記載
+
+    npm i -D(--save-dev) <package名>              // 開発依存関係
+
+      package.json の devDependencies に依存関係追記
+
+    npm i -O(--save-optional) <package名>         // optionalDependencies
+
+- ENTRY:
+  EXPLAIN: リスト
+  BODY: |
+    npm list(ls/la/ll)[ --all][ --depth=0]        // インストールされたパッケージリスト
+    npm list <KEY>                                // KEYを含むパッケージ表示
+    npm ls                                        // 依存関係をTREEで表示
+    npm la                                        // パッケージ説明付き
+    npm ll                                        // = la
+    npm dedupe                                    // 構造を単純化して表示
+
+      --all            デフォルトで全表示
+      --depth=0        オプションで依存関係の深さを表示
+          0: パッケージ依存ツリーのトップのみ
+          1: 1段目のパッケージまで,...
+
+    npm list -g                                   // PATHとグローバル パッケージ
+
+- ENTRY:
+  EXPLAIN: アップデート
+  BODY: |
+    npm update -D                                 // 全アップデート
+
+      tag、semverを尊重して全パッケージを最新バージョン(構成で指定)に更新
+      不足しているパッケージもインストール
+      マイナーバージョンまで最新化
+
+    npm audit                                     // 既知の脆弱性のレポート表示
+
+    npm outdated                                  // 未更新のpackage確認
+    npm outdated -g                               // -g グローバル
+
+- ENTRY:
+  EXPLAIN: 整合性チェック
+  BODY: |
+    npm cache verify
+
+      モジュール(キャッシュ)不整合起因のエラーが疑わしい時：
+      ・キャッシュの整合性チェック
+      ・モジュールの再インストール
+
+      rm -rf node_modules
+      npm cache verify
+      npm i                             // または npm ci
+
+- ENTRY:
+  EXPLAIN: アンインストール
+  BODY: |
+    npm un/uninstall <PACKAGE名>                  // 削除 
+    npm un/uninstall -g <PACKAGE名>               // グローバル
+    npm un/uninstall --save/-S <PACKAGE名>        // デフォルト:依存関係の削除
+
+- ENTRY:
+  EXPLAIN: コマンド実行
+  BODY: |
+    npm run <SCRIPT名>                            // スクリプト実行
+
+      "scripts": {
+        "mytask": "echo 'Hello World!'"
+      },
+
+    npx                                           // ローカルコマンド実行
+
+      Node.jsのプロジェクト外のコマンド実行。PATHも汚染しない。
+      v7以降は初回の実行時に可否を問うので、安全性向上。
+        1)ローカル、グローバルにコマンドがあれば実行
+        2)なければ、npmレジストリからダウンロードして実行
+        2回目以降からはキャッシュ実行して高速化
+
+      npx <コマンド名>
+      npx -p <パッケージ名> <コマンド名>            // パッケージ名とコマンド名が異なる場合
+      npx --yes <コマンド名>                       // 実行可否を問わない
+
+- ENTRY:
+  EXPLAIN: 他コマンドリスト
+  BODY: |
+    npm access                                    // 公開packageのアクセスレベル設定
+    npm adduser                                   // レジストリユーザーアカウント追加
+    npm bugs                                      // Webブラウザのpackageのバグ
+    npm completion                                // タブ補完
+    npm config                                    // 構成ファイル管理
+    npm deprecate                                 // packageのバージョンを非推奨
+    npm diff                                      // レジストリdiffコマンド
+    npm dist-tag                                  // package配布タグを変更
+    npm docs                                      // Webブラウザのpackageのドキュメント
+    npm doctor                                    // 環境確認
+    npm edit                                      // インストールpackage編集
+    npm exec                                      // packageからコマンド実行
+    npm explain                                   // インストールpackage説明
+    npm explore                                   // インストールpackage参照
+    npm find-dupes                                // packageツリーで重複検索
+    npm fund                                      // 資金調達情報を取得
+    npm help                                      // ヘルプドキュメント検索
+    npm help-search                               // ヘルプ検索
+    npm hook                                      // レジストリフック管理
+    npm install-ci-test                           // バージョン厳守インストールテスト
+    npm install-test                              // packageインストールテスト
+    npm link                                      // packageフォルダをシンボリックリンク
+    npm logout                                    // レジストリからログアウト
+    npm org                                       // 組織管理
+    npm owner                                     // package所有者管理
+    npm pack                                      // packageからtarball作成
+    npm ping                                      // レジストリにping
+    npm prefix                                    // プレフィックスを表示
+    npm profile                                   // レジストリプロファイル設定変更
+    npm prune                                     // 無関係なpackage削除
+    npm publish                                   // ●packageを公開
+    npm rebuild                                   // ●packageを再構築
+    npm repo                                      // ブラウザでpackageリポジトリページを開く
+    npm restart                                   // package再起動
+    npm run-script                                // 任意のpackageスクリプト実行
+    npm search                                    // ●パッケージ検索
+    npm set-script                                // package.json の script でタスク設定
+    npm shrinkwrap                                // 公開用に依存関係のverをロック
+    npm star                                      // お気に入りのpackageにマーク
+    npm stars                                     // お気に入りとしてpackage表示
+    npm start                                     // package開始
+    npm stop                                      // package停止
+    npm team                                      // 組織チーム管理
+    npm test                                      // packageテスト
+    npm token                                     // 認証トークン管理
+    npm unpublish                                 // ●レジストリからpackage削除
+    npm unstar                                    // お気に入りpackageから削除
+    npm version                                   // package ver
+    npm view                                      // ●レジストリ情報
+    npm whoami                                    // npmユーザー名表示

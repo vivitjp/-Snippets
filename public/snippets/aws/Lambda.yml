@@ -2,10 +2,10 @@
 #-------------------------------
 # Lambda関数の基本
 #-------------------------------
-- KEY: aws.lambda.category
+- ENTRY:
   CATEGORY: Lambda関数の基本
 
-- KEY: aws.Lambda.概論
+- ENTRY:
   EXPLAIN: |
     Lambda関数
   BODY: |
@@ -25,7 +25,7 @@
       • ユーザがS3にアップロードしてARNで指定することも可能
       • Lambda関数の実行時間はデフォルト3秒から最大900秒(15分)まで、実行時間を超えるとタイムアウト
 
-- KEY: aws.Lambda.アプリケーションの管理
+- ENTRY:
   EXPLAIN: |
     アプリケーションの管理
   BODY: |
@@ -44,7 +44,7 @@
       • デプロイパッケージのアップロードやテンプレート更新
       • AWS SAM CLIはテンプレート検証、ローカル開発、テスト、デバッグが可能
 
-- KEY: aws.Lambda.同時実行数制限
+- ENTRY:
   EXPLAIN: |
     同時実行数制限と自動スケーリング
   BODY: |
@@ -65,7 +65,7 @@
         • 初期値はリージョンによって異なる(緩和不可)
           例: us-east-1は500、ap-northeast-1は1000
 
-- KEY: aws.Lambda.サポートイベントソース
+- ENTRY:
   EXPLAIN: |
     サポートイベントソースと呼び出し(トリガー)
   BODY: |
@@ -102,7 +102,7 @@
         • パーミッション、IAMロールの設定ミスなどによるエラー:
           • 場合はリトライされず、特定のステータスコードが返される
 
-- KEY: aws.Lambda.VPC内で実行する場合
+- ENTRY:
   EXPLAIN: |
     VPC内で実行する場合(トリガー)
   BODY: |
@@ -119,7 +119,7 @@
         • ENI作成時間により初回実行時にレイテンシー(10s~60s程度)が発生する
         • ENIは複数のLambda関数で共有される
 
-- KEY: aws.Lambda.アクセス許可
+- ENTRY:
   EXPLAIN: |
     アクセス許可(トリガー)
   BODY: |
@@ -139,7 +139,7 @@
         • API GatewayからのLambda関数の呼び出しを許可するポリシー
         • SNSからのLambda関数の呼び出しを許可するポリシー
 
-- KEY: aws.Lambda.Lambda関数のライフサイクル
+- ENTRY:
   EXPLAIN: |
     Lambda関数のライフサイクル
   BODY: |
@@ -173,7 +173,7 @@
       • 凍結されたバックグラウンドプロセスは、次回関数を呼び出した際に再開
         • ただし、コンテナが再利用される場合のみで保証なし(この挙動に依存しないこと)
 
-- KEY: aws.Lambda.制限事項
+- ENTRY:
   EXPLAIN: |
     制限事項
   BODY: |
@@ -199,10 +199,10 @@
 #-------------------------------
 # Lambda関数の使い方
 #-------------------------------
-- KEY: aws.lambda.Lambda関数の使い方.category
+- ENTRY:
   CATEGORY: Lambda関数の使い方
 
-- KEY: aws.Lambda.Lambda関数の使い方.概論
+- ENTRY:
   EXPLAIN: |
     基本
   BODY: |
@@ -237,7 +237,7 @@
       • エラーコードはAWS Lambdaの管理コンソールから確認可能
       • エラーコードはAWS CLIやAWS SDKを使用して取得可能
 
-- KEY: aws.Lambda.Lambda関数の使い方.実装の基本
+- ENTRY:
   EXPLAIN: |
     実装の基本
   BODY: |
@@ -255,7 +255,7 @@
       • Lambda関数内で永続化する場合、Amazon S3やDynamoDBを使用
       • Amazon S3やDynamoDBはAWS Lambdaから直接アクセス可能
 
-- KEY: aws.Lambda.Lambda関数の使い方.Lambda関数の作成
+- ENTRY:
   EXPLAIN: |
     マネジメントコンソールからのLambda関数の作成
   BODY: |
@@ -273,7 +273,7 @@
       • 設計図を使用することで、Lambda関数の作成が簡単になる
       • 設計図はAWS Management ConsoleからLambda関数を作成する際に選択可能
 
-- KEY: aws.Lambda.Lambda関数の使い方.デプロイパッケージ
+- ENTRY:
   EXPLAIN: |
     デプロイパッケージ
   BODY: |
@@ -291,7 +291,7 @@
       • 50MBを超える場合、S3にアップロードしてARN指定
       • 解凍後のサイズは250MBまで
 
-- KEY: aws.Lambda.Lambda関数の使い方1.マネジメントコンソール
+- ENTRY:
   EXPLAIN: |
     マネジメントコンソール
   BODY: |
@@ -308,7 +308,7 @@
         • AWS CloudTrail: Lambda関数の実行履歴を記録
         • AWS Config: Lambda関数の設定変更を記録
 
-- KEY: aws.Lambda.Lambda関数の使い方.環境変数
+- ENTRY:
   EXPLAIN: |
     環境変数
   BODY: |
@@ -333,7 +333,7 @@
       • let value = process.env.VALUE_NAME
       • let secret = process.env.SECRET_NAME
 
-- KEY: aws.Lambda.Lambda関数の使い方.予約済み環境変数
+- ENTRY:
   EXPLAIN: |
     予約済み環境変数
   TABLE:
@@ -367,7 +367,7 @@
       PYTHONPATH	(Python) Python ライブラリパス ($LAMBDA_RUNTIME_DIR)。
       TZ	環境のタイムゾーン (:UTC)。実行環境は、システムクロックを同期するために NTP を使用します。
 
-- KEY: aws.Lambda.Lambda関数の使い方.バージョニング
+- ENTRY:
   EXPLAIN: |
     バージョニング
   BODY: |
@@ -381,7 +381,7 @@
       • 例: arn:aws:lambda:us-east-1:123456789012:function:my-function:1     <-- バージョン番号
       • 例: arn:aws:lambda:us-east-1:123456789012:function:my-function:PROD  <-- エイリアス名
 
-- KEY: aws.Lambda.Lambda関数の使い方.Layers
+- ENTRY:
   EXPLAIN: |
     Layers
   BODY: |
@@ -416,7 +416,7 @@
       • node.js: /opt/nodejs/node_modules
       • Lambda関数のコードは/var/taskに展開される
 
-- KEY: aws.Lambda.Lambda関数の使い方.タグ付け
+- ENTRY:
   EXPLAIN: |
     グループ化とフィルタリング
   BODY: |
@@ -425,7 +425,7 @@
     • 請求に含まれるLambda関数のリストをグループ化
     • コンソールとAWS CLIからLambda関数をフィルタリング
 
-- KEY: aws.Lambda.Lambda関数の使い方.モニタリング
+- ENTRY:
   EXPLAIN: |
     モニタリング
   BODY: |
@@ -455,7 +455,7 @@
       ConcurrentExecutions	count	同時実行数
       UnreservedConcurrentExecutions	count	予約されていない同時実行数
 
-- KEY: aws.Lambda.CloudWatch
+- ENTRY:
   EXPLAIN: |
     CloudWatch の ログ出力
   BODY: |
@@ -470,7 +470,7 @@
         console.log('Key: ' + key);
     };
 
-- KEY: aws.Lambda.Schedule実行
+- ENTRY:
   EXPLAIN: |
     Schedule 実行
   BODY: |
@@ -499,10 +499,10 @@
 #-------------------------------
 # カスタムランタイム
 #-------------------------------
-- KEY: aws.lambda.カスタムランタイム.category
+- ENTRY:
   CATEGORY: カスタム・ランタイム
 
-- KEY: aws.Lambda.カスタムランタイム
+- ENTRY:
   EXPLAIN: |
     カスタム・ランタイム
   BODY: |
@@ -524,7 +524,7 @@
     • あるいは Layer に登録してもOK
     • bootstrap から実行バイナリを実行
 
-- KEY: aws.Lambda.カスタムランタイムbootstrap実装
+- ENTRY:
   EXPLAIN: |
     bootstrap実装
   BODY: |
@@ -561,7 +561,7 @@
         • DB接続のクローズ、HTTPクライアントのクローズなど
         • 他サービスへデータ送信、次イベント処理前の追加処理など
 
-- KEY: aws.Lambda.カスタムランタイムbootstrapサンプル
+- ENTRY:
   EXPLAIN: |
     bootstrapサンプル(shell script)
   BODY: |
@@ -587,7 +587,7 @@
       curl -X POST "http://${AWS_LAMBDA_RUNTIME_API}/2018-06-01/runtime/invocation/$REQUEST_ID/response" -d "$RESPONSE"
     done
 
-- KEY: aws.Lambda.カスタムランタイム.interface
+- ENTRY:
   EXPLAIN: |
     カスタムランタイムのための HTTP API
   BODY: |
@@ -638,10 +638,10 @@
 #-------------------------------
 #  SDK
 #-------------------------------
-- KEY: aws.Lambda.SDK.category
+- ENTRY:
   CATEGORY: SDK
 
-- KEY: aws.Lambda.SDK.createFunction
+- ENTRY:
   EXPLAIN: |
     作成(createFunction) zip UPLoad
   BODY: |
@@ -676,7 +676,7 @@
     };
     export { createFunction };
 
-- KEY: aws.Lambda.SDK.GetFunctionCommand
+- ENTRY:
   EXPLAIN: |
     関数取得(GetFunctionCommand)
   BODY: |
@@ -690,7 +690,7 @@
 
     export { getFunction };
 
-- KEY: aws.Lambda.SDK.ListFunctionsCommand
+- ENTRY:
   EXPLAIN: |
     一覧取得(ListFunctionsCommand)
   BODY: |
@@ -704,7 +704,7 @@
 
     export { listFunctions };
 
-- KEY: aws.Lambda.SDK.InvokeCommand
+- ENTRY:
   EXPLAIN: |
     コール(InvokeCommand)
   BODY: |
@@ -726,7 +726,7 @@
 
     export { invoke };
 
-- KEY: aws.Lambda.SDK.DeleteFunctionCommand
+- ENTRY:
   EXPLAIN: |
     削除(DeleteFunctionCommand)
   BODY: |
@@ -740,7 +740,7 @@
 
     export { deleteFunction };
 
-- KEY: aws.Lambda.SDK.UpdateFunctionCodeCommand
+- ENTRY:
   EXPLAIN: |
     更新(UpdateFunctionCodeCommand)
   BODY: |
@@ -774,7 +774,7 @@
 
     export { updateFunctionCode };
 
-- KEY: aws.Lambda.SDK.UpdateFunctionConfigurationCommand
+- ENTRY:
   EXPLAIN: |
     設定更新(UpdateFunctionConfigurationCommand)
   BODY: |

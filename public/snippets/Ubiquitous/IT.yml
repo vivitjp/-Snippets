@@ -3,13 +3,13 @@
 # Ubiquitous: IT
 #-------------------------------
 
-- KEY: ubi.it.windows
+- ENTRY:
   EXPLAIN: Windows Search
   BODY: |
     サイズ:   >100KB
     名前:     ~=234
 
-- KEY: ubi.it.vscode
+- ENTRY:
   EXPLAIN: VSCode(設定)
   BODY: |
     command:     ctrl+shift+[p]
@@ -20,14 +20,14 @@
     同一選択:     ctrl+shift+[L] / [D]
     Ruler(縦線):  setting.jsonで編集
 
-- KEY: ubi.it.design
+- ENTRY:
   EXPLAIN: デザイン
   BODY: |
     Figma
     Miro
     Storybook
 
-- KEY: ubi.it.agile
+- ENTRY:
   EXPLAIN: 開発手法
   BODY: |
     ウォーターフォール
@@ -47,7 +47,7 @@
     MVC(Model,View,Controller)
     DDD(ドメイン駆動設計)
 
-- KEY: ubi.it.framework
+- ENTRY:
   EXPLAIN: ライブラリ/フレームワーク
   BODY: |
     JS: Vue
@@ -61,7 +61,7 @@
     トランスパイル
     バンドル
 
-- KEY: ubi.it.rendering
+- ENTRY:
   EXPLAIN: レンダリング
   BODY: |
     SSR: ServerSide Rendering
@@ -69,14 +69,14 @@
     ISR: Incremental Static Regeneration
     SP: Single Page Application
 
-- KEY: ubi.it.compo.design
+- ENTRY:
   EXPLAIN: Atomicデザイン
   BODY: |
     Atom
     Molecules
     Organism
 
-- KEY: ubi.it.db
+- ENTRY:
   EXPLAIN: DB
   BODY: |
     Relational Database System(RDS/RDBS)
@@ -91,13 +91,13 @@
     Query
     Mutation
 
-- KEY: ubi.it.design.pattern
+- ENTRY:
   EXPLAIN: デザインパターン
   BODY: |
     Closure
     Factory
 
-- KEY: ubi.it.server
+- ENTRY:
   EXPLAIN: FE & BE
   BODY: |
     サーバ
@@ -110,7 +110,7 @@
     Node(Express)
     Deno
 
-- KEY: ubi.it.security
+- ENTRY:
   EXPLAIN: セキュリティ
   BODY: |
     Authorization
@@ -120,7 +120,7 @@
     Token
     JWT(Jason Web Token, ジョット)
 
-- KEY: ubi.it.variable
+- ENTRY:
   EXPLAIN: 変数名
   BODY: |
     camelCase
@@ -128,7 +128,7 @@
     snake_case
     kebab-case
 
-- KEY: ubi.it.clientSide.storage
+- ENTRY:
   EXPLAIN: クライアントサイドストレージ
   BODY: |
     ストレージ
@@ -137,14 +137,14 @@
     IndexedDB
     LocalStorage
 
-- KEY: ubi.it.JavaScript
+- ENTRY:
   EXPLAIN: JavaScript/TypeScript
   BODY: |
     オブジェクトリテラル
     分割代入(Spread構文)
     残余引数(Rest構文)
 
-- KEY: ubi.it.react
+- ENTRY:
   EXPLAIN: React
   BODY: |
     v18
@@ -152,7 +152,7 @@
     Fallback
     Spinner
 
-- KEY: ubi.it.react.state
+- ENTRY:
   EXPLAIN: ステート管理
   BODY: |
     ReduxToolkit
@@ -161,7 +161,7 @@
     zuStand
     Jotai
 
-- KEY: ubi.it.css
+- ENTRY:
   EXPLAIN: CSS
   BODY: |
     CSS
@@ -171,13 +171,13 @@
     Emotion
     Tailwind
 
-- KEY: ubi.it.component
+- ENTRY:
   EXPLAIN: コンポーネント
   BODY: |
     モダル
     Overlay
 
-- KEY: ubi.it.formUI
+- ENTRY:
   EXPLAIN: Form & UI
   BODY: |
     MUI
@@ -185,7 +185,7 @@
     Chakra
     HeadlessUI
 
-- KEY: ubi.it.fetch
+- ENTRY:
   EXPLAIN: Fetch & Caching
   BODY: |
     fetch
@@ -193,7 +193,7 @@
     React Query
     SWR
 
-- KEY: ubi.it.test
+- ENTRY:
   EXPLAIN: テスト
   BODY: |
     Mock
@@ -205,13 +205,13 @@
     PlayWright
     Cypress
 
-- KEY: ubi.it.lint
+- ENTRY:
   EXPLAIN: Lint
   BODY: |
     Lint
     esLint
 
-- KEY: ubi.it.cloud
+- ENTRY:
   EXPLAIN: Cloud
   BODY: |
     クラウド

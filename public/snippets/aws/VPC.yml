@@ -2,10 +2,10 @@
 #-------------------------------
 # AWS
 #-------------------------------
-- KEY: aws.vpc.category
+- ENTRY:
   CATEGORY: VPC(Virtual Private Cloud)概要
 
-- KEY: aws.vpc.components
+- ENTRY:
   EXPLAIN: |
     様々なコンポーネント
   OPTIONS:
@@ -26,7 +26,7 @@
     Elastic ネットワーク アダプタ
     PrivateLink
 
-- KEY: aws.vpc.type
+- ENTRY:
   EXPLAIN: |
     様々な定義サンプル
   BODY: |
@@ -95,10 +95,10 @@
     │             │          │       └────────────────┘ │
     └─────────────┘          └──────────────────────────┘
 
-- KEY: aws.vpc.category.VPC作成ウィザード
+- ENTRY:
   CATEGORY: VPC作成ウィザード
 
-- KEY: aws.vpc.wizard
+- ENTRY:
   EXPLAIN: |
     VPCウィザード
   BODY: |
@@ -108,7 +108,7 @@
     3.選択をクリック
     4.[VPCの作成]をクリック
 
-- KEY: aws.vpc.makeVPC0
+- ENTRY:
   EXPLAIN: |
     VPC作成のステップ: インターネットへの接続を設定するVPCを作成
   BODY: |
@@ -126,7 +126,7 @@
     │ └─────────────────┘   └─────────────────┘             │
     └───────────────────────────────────────────────────────┘
 
-- KEY: aws.vpc.makeVPC1
+- ENTRY:
   EXPLAIN: |
     VPC作成のステップ1: アドレスレンジを選択
   BODY: |
@@ -144,7 +144,7 @@
     │ テナンシー:         デフォルト                 │
     └──────────────────────────────────────────────┘
 
-- KEY: aws.vpc.makeVPC2
+- ENTRY:
   EXPLAIN: |
     VPC作成のステップ2: Availability ZoneにおけるSubnetを選択
   BODY: |
@@ -186,7 +186,7 @@
           .255     ブロードキャストアドレス
                     (VPCではブロードキャストは非サポート)
 
-- KEY: aws.vpc.makeVPC3
+- ENTRY:
   EXPLAIN: |
     VPC作成のステップ3: インターネットへの経路を設定
   BODY: |
@@ -224,7 +224,7 @@
     ■ 仮想ルータとルートテーブルの関係(ルートLook up）
       省略
 
-- KEY: aws.vpc.makeVPC4
+- ENTRY:
   EXPLAIN: |
     VPC作成のステップ4: VPCへのIN/OUTトラフィックを許可(Security group)
   BODY: |
@@ -282,7 +282,7 @@
       • 他のサブネットのIGW/VGW向けのルーティングは指定したENIに向けること（非対称になる）
       • 指定できるCIDRはすでに作成されているサブネットと完全一致が必要
 
-- KEY: aws.vpc.makeVPC5
+- ENTRY:
   EXPLAIN: |
     VPC作成のステップ5: VPCセットアップの補足
   BODY: |
@@ -300,10 +300,10 @@
       • VPC内のEC2インスタンスからのみ参照可能
         (VPNや専用線経由では参照できない。Route 53 Resolver for Hybridsで解決)
 
-- KEY: aws.vpc.category.設計と運用
+- ENTRY:
   CATEGORY: 設計と運用
 
-- KEY: aws.vpc.design.point
+- ENTRY:
   EXPLAIN: |
     VPC設計のポイント
   BODY: |
@@ -314,7 +314,7 @@
     • 適切なセキュリティ対策を適用する
     • システムの境界を明らかにし、VPCをどのように分割するか将来を見据えてしっかりと検討する
 
-- KEY: aws.vpc.aws.cloud.vpc
+- ENTRY:
   EXPLAIN: |
     AWSクラウドとVPC
   BODY: |
@@ -325,7 +325,7 @@
       • パブリックサブネットからは → 自動割当てまたはEIPのパブリックIPから直接アクセス
     • S3, DynamoDBへのアクセスはVPCエンドポイント(Gateway型)が利用可能
 
-- KEY: aws.vpc.endpoint
+- ENTRY:
   EXPLAIN: |
     VPC Endpoint概要
   BODY: |
@@ -379,7 +379,7 @@
         Gateway型       ユーザー側で意識する必要なし
         PrivateLink     マルチAZ設計: マルチAZで配置するように設定
 
-- KEY: aws.vpc.setting
+- ENTRY:
   EXPLAIN: |
     VPCの設定方法
   BODY: |
@@ -419,7 +419,7 @@
       • AWS CloudFormationデザイナー
         • GUIでテンプレートの作成が可能
 
-- KEY: aws.vpc.operation
+- ENTRY:
   EXPLAIN: |
     VPCの運用
   BODY: |

@@ -1,7 +1,7 @@
 # ----------------------------
 # CSS 色
 # ----------------------------
-- KEY: color.blue.dark
+- ENTRY:
   EXPLAIN: 青色系(暗)
   BODY: |
     <div class="colorTr"><div class="colorName" style="color:DodgerBlue">■ DodgerBlue </div><div class="colorReversed" style="color:DodgerBlue">■ DodgerBlue </div><div class="colorName" style="background-color:DodgerBlue">■ DodgerBlue </div><div class="colorReversed" style="background-color:DodgerBlue">■ DodgerBlue </div></div>
@@ -14,7 +14,7 @@
     <div class="colorTr"><div class="colorName" style="color:Navy">■ Navy </div><div class="colorReversed" style="color:Navy">■ Navy </div><div class="colorName" style="background-color:DarkBlue">■ DarkBlue </div><div class="colorReversed" style="background-color:DarkBlue">■ DarkBlue </div></div>
     <div class="colorTr"><div class="colorName" style="color:MidnightBlue">■ MidnightBlue </div><div class="colorReversed" style="color:MidnightBlue">■ MidnightBlue </div><div class="colorName" style="background-color:MidnightBlue">■ MidnightBlue </div><div class="colorReversed" style="background-color:MidnightBlue">■ MidnightBlue </div></div>
 
-- KEY: color.blue.light
+- ENTRY:
   EXPLAIN: 青色系(明)
   BODY: |
     <div class="colorTr"><div class="colorName" style="color:LightSteelBlue">■ LightSteelBlue </div><div class="colorReversed" style="color:LightSteelBlue">■ LightSteelBlue </div><div class="colorName" style="background-color:LightSteelBlue">■ LightSteelBlue </div><div class="colorReversed" style="background-color:LightSteelBlue">■ LightSteelBlue </div></div>
@@ -24,7 +24,7 @@
     <div class="colorTr"><div class="colorName" style="color:LightSkyBlue">■ LightSkyBlue </div><div class="colorReversed" style="color:LightSkyBlue">■ LightSkyBlue </div><div class="colorName" style="background-color:LightSkyBlue">■ LightSkyBlue </div><div class="colorReversed" style="background-color:LightSkyBlue">■ LightSkyBlue </div></div>
     <div class="colorTr"><div class="colorName" style="color:DeepSkyBlue">■ DeepSkyBlue </div><div class="colorReversed" style="color:DeepSkyBlue">■ DeepSkyBlue </div><div class="colorName" style="background-color:DeepSkyBlue">■ DeepSkyBlue </div><div class="colorReversed" style="background-color:DeepSkyBlue">■ DeepSkyBlue </div></div>
 
-- KEY: color.cyan.dark
+- ENTRY:
   EXPLAIN: シアン色系(暗)
   BODY: |
     <div class="colorTr">    <div class="colorName" style="color:LightSeaGreen">■ LightSeaGreen </div>    <div class="colorReversed" style="color:LightSeaGreen">■ LightSeaGreen </div>    <div class="colorName" style="background-color:LightSeaGreen">■ LightSeaGreen </div>    <div class="colorReversed" style="background-color:LightSeaGreen">■ LightSeaGreen </div>    </div>
@@ -32,7 +32,7 @@
     <div class="colorTr">    <div class="colorName" style="color:DarkCyan">■ DarkCyan </div>    <div class="colorReversed" style="color:DarkCyan">■ DarkCyan </div>    <div class="colorName" style="background-color:DarkCyan">■ DarkCyan </div>    <div class="colorReversed" style="background-color:DarkCyan">■ DarkCyan </div>    </div>
     <div class="colorTr">    <div class="colorName" style="color:Teal">■ Teal </div>    <div class="colorReversed" style="color:Teal">■ Teal </div>    <div class="colorName" style="background-color:Teal">■ Teal </div>    <div class="colorReversed" style="background-color:Teal">■ Teal </div>    </div>
 
-- KEY: color.cyan.light
+- ENTRY:
   EXPLAIN: シアン色系(明)
   BODY: |
     <div class="colorTr">    <div class="colorName" style="color:LightCyan">■ LightCyan </div>    <div class="colorReversed" style="color:LightCyan">■ LightCyan </div>    <div class="colorName" style="background-color:LightCyan">■ LightCyan </div>    <div class="colorReversed" style="background-color:LightCyan">■ LightCyan </div>    </div>
@@ -42,7 +42,7 @@
     <div class="colorTr">    <div class="colorName" style="color:MediumTurquoise">■ MediumTurquoise </div>    <div class="colorReversed" style="color:MediumTurquoise">■ MediumTurquoise </div>    <div class="colorName" style="background-color:MediumTurquoise">■ MediumTurquoise </div>    <div class="colorReversed" style="background-color:MediumTurquoise">■ MediumTurquoise </div>    </div>
     <div class="colorTr">    <div class="colorName" style="color:DarkTurquoise">■ DarkTurquoise </div>    <div class="colorReversed" style="color:DarkTurquoise">■ DarkTurquoise </div>    <div class="colorName" style="background-color:DarkTurquoise">■ DarkTurquoise </div>    <div class="colorReversed" style="background-color:DarkTurquoise">■ DarkTurquoise </div>    </div>
 
-- KEY: color.green.dark
+- ENTRY:
   EXPLAIN: 緑色系(暗)
   BODY: |
     <div class="colorTr">    <div class="colorName" style="color:DarkOliveGreen">■ DarkOliveGreen </div>    <div class="colorReversed" style="color:DarkOliveGreen">■ DarkOliveGreen </div>    <div class="colorName" style="background-color:DarkOliveGreen">■ DarkOliveGreen </div>    <div class="colorReversed" style="background-color:DarkOliveGreen">■ DarkOliveGreen </div>    </div>
@@ -53,7 +53,7 @@
     <div class="colorTr">    <div class="colorName" style="color:Green">■ Green </div>    <div class="colorReversed" style="color:Green">■ Green </div>    <div class="colorName" style="background-color:Green">■ Green </div>    <div class="colorReversed" style="background-color:Green">■ Green </div>    </div>
     <div class="colorTr">    <div class="colorName" style="color:DarkGreen">■ DarkGreen </div>    <div class="colorReversed" style="color:DarkGreen">■ DarkGreen </div>    <div class="colorName" style="background-color:DarkGreen">■ DarkGreen </div>    <div class="colorReversed" style="background-color:DarkGreen">■ DarkGreen </div>    </div>
 
-- KEY: color.green.light
+- ENTRY:
   EXPLAIN: 緑色系(明)
   BODY: |
     <div class="colorTr">    <div class="colorName" style="color:YellowGreen">■ YellowGreen </div>    <div class="colorReversed" style="color:YellowGreen">■ YellowGreen </div>    <div class="colorName" style="background-color:YellowGreen">■ YellowGreen </div>    <div class="colorReversed" style="background-color:YellowGreen">■ YellowGreen </div>    </div>
@@ -70,7 +70,7 @@
     <div class="colorTr">    <div class="colorName" style="color:MediumAquamarine">■ MediumAquamarine </div>    <div class="colorReversed" style="color:MediumAquamarine">■ MediumAquamarine </div>    <div class="colorName" style="background-color:MediumAquamarine">■ MediumAquamarine </div>    <div class="colorReversed" style="background-color:MediumAquamarine">■ MediumAquamarine </div>    </div>
     <div class="colorTr">    <div class="colorName" style="color:MediumSeaGreen">■ MediumSeaGreen </div>    <div class="colorReversed" style="color:MediumSeaGreen">■ MediumSeaGreen </div>    <div class="colorName" style="background-color:MediumSeaGreen">■ MediumSeaGreen </div>    <div class="colorReversed" style="background-color:MediumSeaGreen">■ MediumSeaGreen </div>    </div>
 
-- KEY: color.purple.dark
+- ENTRY:
   EXPLAIN: 紫色系(暗)
   BODY: |
     <div class="colorTr">    <div class="colorName" style="color:Lavender">■ Lavender </div>    <div class="colorReversed" style="color:Lavender">■ Lavender </div>    <div class="colorName" style="background-color:Lavender">■ Lavender </div>    <div class="colorReversed" style="background-color:Lavender">■ Lavender </div>    </div>
@@ -81,7 +81,7 @@
     <div class="colorTr">    <div class="colorName" style="color:Fuchsia">■ Fuchsia </div>    <div class="colorReversed" style="color:Fuchsia">■ Fuchsia </div>    <div class="colorName" style="background-color:Fuchsia">■ Fuchsia </div>    <div class="colorReversed" style="background-color:Fuchsia">■ Fuchsia </div>    </div>
     <div class="colorTr">    <div class="colorName" style="color:Magenta">■ Magenta </div>    <div class="colorReversed" style="color:Magenta">■ Magenta </div>    <div class="colorName" style="background-color:Magenta">■ Magenta </div>    <div class="colorReversed" style="background-color:Magenta">■ Magenta </div>    </div>
 
-- KEY: color.purple.light
+- ENTRY:
   EXPLAIN: 紫色系(明)
   BODY: |
     <div class="colorTr">    <div class="colorName" style="color:MediumOrchid">■ MediumOrchid </div>    <div class="colorReversed" style="color:MediumOrchid">■ MediumOrchid </div>    <div class="colorName" style="background-color:MediumOrchid">■ MediumOrchid </div>    <div class="colorReversed" style="background-color:MediumOrchid">■ MediumOrchid </div>    </div>
@@ -96,7 +96,7 @@
     <div class="colorTr">    <div class="colorName" style="color:SlateBlue">■ SlateBlue </div>    <div class="colorReversed" style="color:SlateBlue">■ SlateBlue </div>    <div class="colorName" style="background-color:SlateBlue">■ SlateBlue </div>    <div class="colorReversed" style="background-color:SlateBlue">■ SlateBlue </div>    </div>
     <div class="colorTr">    <div class="colorName" style="color:MediumSlateBlue ">■ MediumSlateBlue  </div>    <div class="colorReversed" style="color:MediumSlateBlue ">■ MediumSlateBlue  </div>    <div class="colorName" style="background-color:MediumSlateBlue ">■ MediumSlateBlue  </div>    <div class="colorReversed" style="background-color:MediumSlateBlue ">■ MediumSlateBlue  </div>    </div>
 
-- KEY: color.brawn.dark
+- ENTRY:
   EXPLAIN: 茶色系(暗)
   BODY: |
     <div class="colorTr">    <div class="colorName" style="color:Burlywood">■ Burlywood </div>    <div class="colorReversed" style="color:Burlywood">■ Burlywood </div>    <div class="colorName" style="background-color:Burlywood">■ Burlywood </div>    <div class="colorReversed" style="background-color:Burlywood">■ Burlywood </div>    </div>
@@ -112,7 +112,7 @@
     <div class="colorTr">    <div class="colorName" style="color:Sienna">■ Sienna </div>    <div class="colorReversed" style="color:Sienna">■ Sienna </div>    <div class="colorName" style="background-color:Sienna">■ Sienna </div>    <div class="colorReversed" style="background-color:Sienna">■ Sienna </div>    </div>
     <div class="colorTr">    <div class="colorName" style="color:Maroon">■ Maroon </div>    <div class="colorReversed" style="color:Maroon">■ Maroon </div>    <div class="colorName" style="background-color:Maroon">■ Maroon </div>    <div class="colorReversed" style="background-color:Maroon">■ Maroon </div>    </div>
 
-- KEY: color.brawn.light
+- ENTRY:
   EXPLAIN: 茶色系(明)
   BODY: |
     <div class="colorTr">    <div class="colorName" style="color:Cornsilk">■ Cornsilk </div>    <div class="colorReversed" style="color:Cornsilk">■ Cornsilk </div>    <div class="colorName" style="background-color:Cornsilk">■ Cornsilk </div>    <div class="colorReversed" style="background-color:Cornsilk">■ Cornsilk </div>    </div>
@@ -121,7 +121,7 @@
     <div class="colorTr">    <div class="colorName" style="color:NavajoWhite">■ NavajoWhite </div>    <div class="colorReversed" style="color:NavajoWhite">■ NavajoWhite </div>    <div class="colorName" style="background-color:NavajoWhite">■ NavajoWhite </div>    <div class="colorReversed" style="background-color:NavajoWhite">■ NavajoWhite </div>    </div>
     <div class="colorTr">    <div class="colorName" style="color:Wheat">■ Wheat </div>    <div class="colorReversed" style="color:Wheat">■ Wheat </div>    <div class="colorName" style="background-color:Wheat">■ Wheat </div>    <div class="colorReversed" style="background-color:Wheat">■ Wheat </div>    </div>
 
-- KEY: color.yellow.dark
+- ENTRY:
   EXPLAIN: 黄色系(暗)
   BODY: |
     <div class="colorTr">    <div class="colorName" style="color:LightYellow">■ LightYellow </div>    <div class="colorReversed" style="color:LightYellow">■ LightYellow </div>    <div class="colorName" style="background-color:LightYellow">■ LightYellow </div>    <div class="colorReversed" style="background-color:LightYellow">■ LightYellow </div>    </div>
@@ -129,7 +129,7 @@
     <div class="colorTr">    <div class="colorName" style="color:LightGoldenrodYellow ">■ LightGoldenrodYellow  </div>    <div class="colorReversed" style="color:LightGoldenrodYellow ">■ LightGoldenrodYellow  </div>    <div class="colorName" style="background-color:LightGoldenrodYellow ">■ LightGoldenrodYellow  </div>    <div class="colorReversed" style="background-color:LightGoldenrodYellow ">■ LightGoldenrodYellow  </div>    </div>
     <div class="colorTr">    <div class="colorName" style="color:PapayaWhip">■ PapayaWhip </div>    <div class="colorReversed" style="color:PapayaWhip">■ PapayaWhip </div>    <div class="colorName" style="background-color:PapayaWhip">■ PapayaWhip </div>    <div class="colorReversed" style="background-color:PapayaWhip">■ PapayaWhip </div>    </div>
 
-- KEY: color.yellow.light
+- ENTRY:
   EXPLAIN: 黄色系(明)
   BODY: |
     <div class="colorTr">    <div class="colorName" style="color:Yellow">■ Yellow </div>    <div class="colorReversed" style="color:Yellow">■ Yellow </div>    <div class="colorName" style="background-color:Yellow">■ Yellow </div>    <div class="colorReversed" style="background-color:Yellow">■ Yellow </div>    </div>
@@ -140,7 +140,7 @@
     <div class="colorTr">    <div class="colorName" style="color:DarkKhaki">■ DarkKhaki </div>    <div class="colorReversed" style="color:DarkKhaki">■ DarkKhaki </div>    <div class="colorName" style="background-color:DarkKhaki">■ DarkKhaki </div>    <div class="colorReversed" style="background-color:DarkKhaki">■ DarkKhaki </div>    </div>
     <div class="colorTr">    <div class="colorName" style="color:Gold">■ Gold </div>    <div class="colorReversed" style="color:Gold">■ Gold </div>    <div class="colorName" style="background-color:Gold">■ Gold </div>    <div class="colorReversed" style="background-color:Gold">■ Gold </div>    </div>
 
-- KEY: color.orange
+- ENTRY:
   EXPLAIN: オレンジ色系
   BODY: |
     <div class="colorTr">    <div class="colorName" style="color:OrangeRed">■ OrangeRed </div>    <div class="colorReversed" style="color:OrangeRed">■ OrangeRed </div>    <div class="colorName" style="background-color:OrangeRed">■ OrangeRed </div>    <div class="colorReversed" style="background-color:OrangeRed">■ OrangeRed </div>    </div>
@@ -149,7 +149,7 @@
     <div class="colorTr">    <div class="colorName" style="color:DarkOrange">■ DarkOrange </div>    <div class="colorReversed" style="color:DarkOrange">■ DarkOrange </div>    <div class="colorName" style="background-color:DarkOrange">■ DarkOrange </div>    <div class="colorReversed" style="background-color:DarkOrange">■ DarkOrange </div>    </div>
     <div class="colorTr">    <div class="colorName" style="color:Orange">■ Orange </div>    <div class="colorReversed" style="color:Orange">■ Orange </div>    <div class="colorName" style="background-color:Orange">■ Orange </div>    <div class="colorReversed" style="background-color:Orange">■ Orange </div>    </div>
 
-- KEY: color.red.light
+- ENTRY:
   EXPLAIN: 赤系(明)
   BODY: |
     <div class="colorTr">    <div class="colorName" style="color:LightSalmon">■ LightSalmon </div>    <div class="colorReversed" style="color:LightSalmon">■ LightSalmon </div>    <div class="colorName" style="background-color:LightSalmon">■ LightSalmon </div>    <div class="colorReversed" style="background-color:LightSalmon">■ LightSalmon </div>    </div>
@@ -157,7 +157,7 @@
     <div class="colorTr">    <div class="colorName" style="color:DarkSalmon">■ DarkSalmon </div>    <div class="colorReversed" style="color:DarkSalmon">■ DarkSalmon </div>    <div class="colorName" style="background-color:DarkSalmon">■ DarkSalmon </div>    <div class="colorReversed" style="background-color:DarkSalmon">■ DarkSalmon </div>    </div>
     <div class="colorTr">    <div class="colorName" style="color:LightCoral">■ LightCoral </div>    <div class="colorReversed" style="color:LightCoral">■ LightCoral </div>    <div class="colorName" style="background-color:LightCoral">■ LightCoral </div>    <div class="colorReversed" style="background-color:LightCoral">■ LightCoral </div>    </div>
 
-- KEY: color.red.dark
+- ENTRY:
   EXPLAIN: 赤系(暗)
   BODY: |
     <div class="colorTr">    <div class="colorName" style="color:IndianRed">■ IndianRed </div>    <div class="colorReversed" style="color:IndianRed">■ IndianRed </div>    <div class="colorName" style="background-color:IndianRed">■ IndianRed </div>    <div class="colorReversed" style="background-color:IndianRed">■ IndianRed </div>    </div>
@@ -166,7 +166,7 @@
     <div class="colorTr">    <div class="colorName" style="color:DarkRed">■ DarkRed </div>    <div class="colorReversed" style="color:DarkRed">■ DarkRed </div>    <div class="colorName" style="background-color:DarkRed">■ DarkRed </div>    <div class="colorReversed" style="background-color:DarkRed">■ DarkRed </div>    </div>
     <div class="colorTr">    <div class="colorName" style="color:Red">■ Red </div>    <div class="colorReversed" style="color:Red">■ Red </div>    <div class="colorName" style="background-color:Red">■ Red </div>    <div class="colorReversed" style="background-color:Red">■ Red </div>    </div>
 
-- KEY: color.pink.dark
+- ENTRY:
   EXPLAIN: ピンク系
   BODY: |
     <div class="colorTr">    <div class="colorName" style="color:Pink">■ Pink </div>    <div class="colorReversed" style="color:Pink">■ Pink </div>    <div class="colorName" style="background-color:Pink">■ Pink </div>    <div class="colorReversed" style="background-color:Pink">■ Pink </div>    </div>
@@ -176,7 +176,7 @@
     <div class="colorTr">    <div class="colorName" style="color:PaleVioletRed">■ PaleVioletRed </div>    <div class="colorReversed" style="color:PaleVioletRed">■ PaleVioletRed </div>    <div class="colorName" style="background-color:PaleVioletRed">■ PaleVioletRed </div>    <div class="colorReversed" style="background-color:PaleVioletRed">■ PaleVioletRed </div>    </div>
     <div class="colorTr">    <div class="colorName" style="color:MediumVioletRed">■ MediumVioletRed </div>    <div class="colorReversed" style="color:MediumVioletRed">■ MediumVioletRed </div>    <div class="colorName" style="background-color:MediumVioletRed">■ MediumVioletRed </div>    <div class="colorReversed" style="background-color:MediumVioletRed">■ MediumVioletRed </div>   </div>
 
-- KEY: color.gray
+- ENTRY:
   EXPLAIN: グレー系
   BODY: |
     <div class="colorTr">    <div class="colorName" style="color:Gainsboro">■ Gainsboro </div>    <div class="colorReversed" style="color:Gainsboro">■ Gainsboro </div>    <div class="colorName" style="background-color:Gainsboro">■ Gainsboro </div>    <div class="colorReversed" style="background-color:Gainsboro">■ Gainsboro </div>    </div>
@@ -189,7 +189,7 @@
     <div class="colorTr">    <div class="colorName" style="color:SlateGray">■ SlateGray </div>    <div class="colorReversed" style="color:SlateGray">■ SlateGray </div>    <div class="colorName" style="background-color:SlateGray">■ SlateGray </div>    <div class="colorReversed" style="background-color:SlateGray">■ SlateGray </div>    </div>
     <div class="colorTr">    <div class="colorName" style="color:DarkSlateGray">■ DarkSlateGray </div>    <div class="colorReversed" style="color:DarkSlateGray">■ DarkSlateGray </div>    <div class="colorName" style="background-color:DarkSlateGray">■ DarkSlateGray </div>    <div class="colorReversed" style="background-color:DarkSlateGray">■ DarkSlateGray </div>    </div>
 
-- KEY: color.white.blue
+- ENTRY:
   EXPLAIN: 白(青系)
   BODY: |
     <div class="colorTr">    <div class="colorName" style="color:MintCream">■ MintCream </div>    <div class="colorReversed" style="color:MintCream">■ MintCream </div>    <div class="colorName" style="background-color:MintCream">■ MintCream </div>    <div class="colorReversed" style="background-color:MintCream">■ MintCream </div>    </div>
@@ -198,13 +198,13 @@
     <div class="colorTr">    <div class="colorName" style="color:GhostWhite">■ GhostWhite </div>    <div class="colorReversed" style="color:GhostWhite">■ GhostWhite </div>    <div class="colorName" style="background-color:GhostWhite">■ GhostWhite </div>    <div class="colorReversed" style="background-color:GhostWhite">■ GhostWhite </div>    </div>
     <div class="colorTr">    <div class="colorName" style="color:WhiteSmoke">■ WhiteSmoke </div>    <div class="colorReversed" style="color:WhiteSmoke">■ WhiteSmoke </div>    <div class="colorName" style="background-color:WhiteSmoke">■ WhiteSmoke </div>    <div class="colorReversed" style="background-color:WhiteSmoke">■ WhiteSmoke </div>    </div>
 
-- KEY: color.white.green
+- ENTRY:
   EXPLAIN: 白(緑系)
   BODY: |
     <div class="colorTr">    <div class="colorName" style="color:Honeydew">■ Honeydew </div>    <div class="colorReversed" style="color:Honeydew">■ Honeydew </div>    <div class="colorName" style="background-color:Honeydew">■ Honeydew </div>    <div class="colorReversed" style="background-color:Honeydew">■ Honeydew </div>    </div>
     <div class="colorTr">    <div class="colorName" style="color:Beige">■ Beige </div>    <div class="colorReversed" style="color:Beige">■ Beige </div>    <div class="colorName" style="background-color:Beige">■ Beige </div>    <div class="colorReversed" style="background-color:Beige">■ Beige </div>    </div>
 
-- KEY: color.white.red
+- ENTRY:
   EXPLAIN: 白(赤系)
   BODY: |
     <div class="colorTr">    <div class="colorName" style="color:Snow">■ Snow </div>    <div class="colorReversed" style="color:Snow">■ Snow </div>    <div class="colorName" style="background-color:Snow">■ Snow </div>    <div class="colorReversed" style="background-color:Snow">■ Snow </div>    </div>

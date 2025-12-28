@@ -2,10 +2,10 @@
 #-------------------------------
 # AWS
 #-------------------------------
-- KEY: aws.sdk.category
+- ENTRY:
   CATEGORY: SDK
 
-- KEY: aws.sdk.git
+- ENTRY:
   EXPLAIN: |
     SDK for JS in GitHub
   BODY: |
@@ -26,7 +26,7 @@
       V2: import {...} from 'aws-sdk'
       V3: import {...} from '@aws-sdk/{service}'
 
-- KEY: aws.sdk.env
+- ENTRY:
   EXPLAIN: |
     環境変数による認証情報設定
   BODY: |
@@ -68,10 +68,10 @@
       認証情報ファイル:           ~/.aws/credentials および ~/.aws/config ファイル
       EC2/ECS/LambdaのIAMロール: AWSインフラストラクチャ上で実行時の自動的に割り当てロール
 
-- KEY: aws.sdk.category.ec2
+- ENTRY:
   CATEGORY: EC2
 
-- KEY: aws.sdk.ec2.method
+- ENTRY:
   EXPLAIN: |
     メソッド(EC2)
   TABLE:
@@ -99,7 +99,7 @@
       DisassociateAddressCommand	DisassociateAddress	Elastic IPアドレスの関連付けを解除
       ReleaseAddressCommand	ReleaseAddress	Elastic IPアドレスを解放
 
-- KEY: aws.sdk.ec2.sample
+- ENTRY:
   EXPLAIN: |
     サンプル実装(EC2)
   BODY: |
@@ -158,10 +158,10 @@
         ]
       }
 
-- KEY: aws.sdk.category.s3
+- ENTRY:
   CATEGORY: S3
 
-- KEY: aws.sdk.s3.method
+- ENTRY:
   EXPLAIN: メソッド(S3)
   TABLE:
     OPTION:
@@ -188,7 +188,7 @@
       GetBucketPolicyCommand	GetBucketPolicy	バケットのポリシーを取得
       DeleteBucketPolicyCommand	DeleteBucketPolicy	バケットのポリシーを削除
 
-- KEY: aws.sdk.s3.sample
+- ENTRY:
   EXPLAIN: サンプル実装(S3)
   BODY: |
     ■ パッケージ
@@ -213,10 +213,10 @@
       }
     }
 
-- KEY: aws.sdk.category.Lambda
+- ENTRY:
   CATEGORY: Lambda
 
-- KEY: aws.sdk.Lambda.method
+- ENTRY:
   EXPLAIN: メソッド(Lambda)
   TABLE:
     OPTION:
@@ -241,15 +241,15 @@
       CreateAliasCommand	CreateAlias	Lambda関数のエイリアスを作成
       UpdateAliasCommand	UpdateAlias	Lambda関数のエイリアスを更新
 
-- KEY: aws.sdk.Lambda.sample
+- ENTRY:
   EXPLAIN: サンプル実装(Lambda)
   BODY: |
     作成中
 
-- KEY: aws.sdk.category.DynamoDB
+- ENTRY:
   CATEGORY: DynamoDB
 
-- KEY: aws.sdk.DynamoDB.method
+- ENTRY:
   EXPLAIN: メソッド(DynamoDB)
   TABLE:
     OPTION:
@@ -275,7 +275,7 @@
       BatchWriteItemCommand	BatchWriteItem	複数のアイテムを一括で書き込み
       BatchGetItemCommand	BatchGetItem	複数のアイテムを一括で取得
 
-- KEY: aws.sdk.DynamoDB.sample
+- ENTRY:
   EXPLAIN: サンプル実装(DynamoDB)
   BODY: |
     作成中

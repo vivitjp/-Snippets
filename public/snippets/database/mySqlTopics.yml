@@ -3,7 +3,7 @@
 # mySqlTopics  ⛔要編集
 #-------------------------------
 
-- KEY: mysql.topics
+- ENTRY:
   EXPLAIN: コマンド
   BODY: |
     DROP TABLE IF EXISTS m_users_access_levels;

@@ -2,10 +2,10 @@
 #-------------------------------
 # GraphQL
 #-------------------------------
-- KEY: gql.top.category
+- ENTRY:
   CATEGORY: Kick Start
 
-- KEY: gql.kick.start.schema
+- ENTRY:
   EXPLAIN: スキーマ定義
   BODY: |
     ■ スキーマ定義 (Schema Definition)
@@ -37,10 +37,10 @@
       createPost(title: String!, content: String!, authorId: ID!): Post!
     }
 
-- KEY: gql.kick.start.query
+- ENTRY:
   EXPLAIN: クエリ
   BODY: |
-    ■ サンプルクエリ
+    ■ サンプル
     query GetAllUserNames {
       allUsers {
         id
@@ -65,7 +65,7 @@
       }
     }
 
-    ■ サンプルクエリ(引数付き)
+    ■ サンプル(引数付き)
     query GetUserWithPosts($userId: ID!) {
       user(id: $userId) {
         username
@@ -98,10 +98,10 @@
         }
       }
 
-- KEY: gql.kick.start.mutation
+- ENTRY:
   EXPLAIN: ミューテーション
   BODY: |
-    ■ サンプルミューテーション
+    ■ サンプル
     mutation CreateNewPost($title: String!, $content: String!, $authorId: ID!) {
       createPost(title: $title, content: $content, authorId: $authorId) {
         # 作成成功後、サーバーから返してほしい情報を指定
@@ -133,7 +133,7 @@
       }
     }
 
-- KEY: gql.キーワード
+- ENTRY:
   EXPLAIN: |
     キーワード
   TABLE:
@@ -141,40 +141,42 @@
       ALIGN:
         - left
         - left
+        - left
       HAS_TITLE: false
       WIDTH:
         - 15%
+        - 15%
     BODY: |
-      スキーマ (Schema)	APIを通じてアクセスできるデータの形や、可能な操作（クエリ・ミューテーション）の全体像を定義するもの。
-      クエリ (Query)	クライアントがサーバーからデータを取得するために使用する操作。どのフィールドが必要かをクライアントが指定できる。
-      ミューテーション (Mutation)	クライアントがサーバー上のデータを変更（作成・更新・削除）するために使用する操作。
-      リゾルバ (Resolver)	スキーマで定義された特定のフィールドや操作（クエリ・ミューテーション）が要求された際に、実際にデータをデータベースなどから取得・処理するサーバー側のロジック（関数）。
-      フィールド (Field)	スキーマ内の型が持つ具体的なデータ属性。クライアントはクエリで取得したいフィールドを選択する。
-      スカラー型 (Scalar Types)	それ以上分解できない、基本的なデータ型（例: String, Int, Boolean, Float, ID）。
-      非ヌル (Non-Null / !)	フィールドの定義で型の末尾に ! を付けることで、その値が null にならないことを保証する制約。
-      リスト (List / [])	フィールドが単一の値ではなく、その型の値の配列であることを示す（例: [Post], [String!]!）。
-      クエリ変数 (Variables)	クエリやミューテーションの実行時に、動的な値を外部から安全に注入するための仕組み（例: 検索IDや入力フォームの値）。
-      フラグメント (Fragment)	複数のクエリや場所で共通して使用するフィールドの集合を定義し、再利用可能にする機能。
-      ディレクティブ (Directives)	クエリやスキーマ定義に付加的な指示やメタデータを与えるための構文（例: @include(if: ...) や @deprecated）。
-      イントロスペクション (Introspection)	スキーマ自体をクエリする（問い合わせる）機能。開発ツールがAPIの構造を動的に解析するのに利用する。
-      サブスクリプション (Subscription)	サーバーからクライアントへリアルタイムでデータ更新をプッシュするための操作（通常WebSocketを使用）。
-      ルートフィールド (Root Field / Root Operation)	スキーマの開始点となる特別な型（通常は Query, Mutation, Subscription の3つ）。
-      タイプデフ (TypeDefs)	スキーマ定義言語 (SDL) を使って記述された、具体的な型定義の文字列やファイル。
+      スキーマ	Schema	APIを通じてアクセスできるデータの形や、可能な操作（クエリ・ミューテーション）の全体像を定義するもの。
+      クエリ	Query	クライアントがサーバーからデータを取得するために使用する操作。どのフィールドが必要かをクライアントが指定できる。
+      ミューテーション	Mutation	クライアントがサーバー上のデータを変更（作成・更新・削除）するために使用する操作。
+      リゾルバ	Resolver	スキーマで定義された特定のフィールドや操作（クエリ・ミューテーション）が要求された際に、実際にデータをデータベースなどから取得・処理するサーバー側のロジック（関数）。
+      フィールド	Field	スキーマ内の型が持つ具体的なデータ属性。クライアントはクエリで取得したいフィールドを選択する。
+      スカラー型	Scalar Types	それ以上分解できない、基本的なデータ型（例: String, Int, Boolean, Float, ID）。
+      非ヌル	Non-Null / !	フィールドの定義で型の末尾に ! を付けることで、その値が null にならないことを保証する制約。
+      リスト	List / []	フィールドが単一の値ではなく、その型の値の配列であることを示す（例: [Post], [String!]!）。
+      クエリ変数	Variables	クエリやミューテーションの実行時に、動的な値を外部から安全に注入するための仕組み（例: 検索IDや入力フォームの値）。
+      フラグメント	Fragment	複数のクエリや場所で共通して使用するフィールドの集合を定義し、再利用可能にする機能。
+      ディレクティブ	Directives	クエリやスキーマ定義に付加的な指示やメタデータを与えるための構文（例: @include(if: ...) や @deprecated）。
+      イントロスペクション	Introspection	スキーマ自体をクエリする（問い合わせる）機能。開発ツールがAPIの構造を動的に解析するのに利用する。
+      サブスクリプション	Subscription	サーバーからクライアントへリアルタイムでデータ更新をプッシュするための操作（通常WebSocketを使用）。
+      ルートフィールド	Root Field / Root Operation	スキーマの開始点となる特別な型（通常は Query, Mutation, Subscription の3つ）。
+      タイプデフ	TypeDefs	スキーマ定義言語 (SDL) を使って記述された、具体的な型定義の文字列やファイル。
 
 #-------------------------------
 # Apollo Server
 #-------------------------------
-- KEY: gql.server.category
-  CATEGORY: サーバ
+- ENTRY:
+  CATEGORY: サーバ（Apollo & Axios）
 
-- KEY: gql.server.top
+- ENTRY:
   EXPLAIN: パッケージ
   BODY: |
     ■ 必要なパッケージのインストール (Node.js + Express + Apollo Server)
     npm install express @apollo/server graphql
     npm install -D typescript @types/node ts-node @apollo/server @types/express
 
-- KEY: gql.server.top
+- ENTRY:
   EXPLAIN: プロジェクト構成例
   BODY: |
     ■ プロジェクト構成例
@@ -187,9 +189,11 @@
     ├── package.json
     ├── tsconfig.json
 
-- KEY: gql.server.外部API呼び出し
-  EXPLAIN: src/apiService.ts (外部API呼び出し)
+- ENTRY:
+  EXPLAIN: APIコール(axios)
   BODY: |
+    ■ src/apiService.ts
+
     import axios, { AxiosError } from 'axios';
 
     ■ 型定義
@@ -272,9 +276,11 @@
         }
     };
 
-- KEY: gql.server.schema
-  EXPLAIN: src/schema.ts (スキーマ定義)
+- ENTRY:
+  EXPLAIN: スキーマ定義
   BODY: |
+    ■ src/schema.ts
+
     export const typeDefs = `#graphql
       type Post {
         id: ID!
@@ -300,9 +306,11 @@
       }
     `;
 
-- KEY: gql.server.resolvers
-  EXPLAIN: src/resolvers.ts (リゾルバ)
+- ENTRY:
+  EXPLAIN: リゾルバ
   BODY: |
+    ■ src/resolvers.ts 
+
     import { fetchPosts, fetchPostById, createPost, deletePost } from './apiService';
     import { GraphQLError } from 'graphql';
 
@@ -357,9 +365,11 @@
       },
     };
 
-- KEY: gql.server.index
-  EXPLAIN: src/index.ts (サーバー起動処理)
+- ENTRY:
+  EXPLAIN: サーバー起動処理
   BODY: |
+    ■ src/index.ts
+
     import { ApolloServer } from '@apollo/server';
     import { expressMiddleware } from '@apollo/server/express4';
     import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
@@ -405,16 +415,16 @@
 #-------------------------------
 # Apollo Client
 #-------------------------------
-- KEY: gql.client.category
-  CATEGORY: クライアント
+- ENTRY:
+  CATEGORY: クライアント(Apollo)
 
-- KEY: gql.client.top
+- ENTRY:
   EXPLAIN: パッケージ
   BODY: |
     npm install @apollo/client graphql
     npm install -D typescript ts-node @types/node # ts-nodeは実行用
 
-- KEY: gql.client.client
+- ENTRY:
   EXPLAIN: client.ts (Apollo Client設定)
   BODY: |
     import { ApolloClient, InMemoryCache, gql, ApolloQueryResult } from '@apollo/client';
@@ -488,7 +498,7 @@
 
     main();
 
-- KEY: gql.client.useMutation
+- ENTRY:
   EXPLAIN: useMutationの使用例(App.tsx)
   BODY: |
     ■ App.tsx や index.tsx 
@@ -511,7 +521,7 @@
 
     ReactDOM.createRoot(document.getElementById('root')!).render(<App />);
 
-- KEY: gql.client.useMutation.form
+- ENTRY:
   EXPLAIN: Form使用例
   BODY: |
     ■ CreatePostForm.tsx
@@ -594,7 +604,7 @@
 
     export default CreatePostForm;
 
-- KEY: gql.client.useMutation.キャッシュオプション
+- ENTRY:
   EXPLAIN: キャッシュオプション
   BODY: |
     const CREATE_POST = gql`...`;
@@ -624,7 +634,7 @@
       // ... handleSubmit ロジック ...
     };
 
-- KEY: gql.client.useQuery
+- ENTRY:
   EXPLAIN: useQueryの使用例
   BODY: |
     import React from 'react';
@@ -705,3 +715,122 @@
     };
 
     export default PostList;
+
+#-------------------------------
+# codegen
+#-------------------------------
+- ENTRY:
+  CATEGORY: GraphQL Code Generator
+
+- ENTRY:
+  EXPLAIN: 解説
+  BODY: |
+    ■ GraphQL Code Generator（graphql-codegen）
+
+    ・スキーマとドキュメント（クエリ/ミューテーション/フラグメント）から型定義や型付きコード自動生成
+    ・TypeScript, Apollo/Urql/React, Query/graphl-request など向けの豊富なプラグイン
+
+    ■ 主な利点
+
+    ・型安全: クエリの変数とレスポンスの型を自動生成して、型エラーを早期に検出できます
+    ・生産性: 手動での型定義が不要になりリファクタが楽になります
+    ・多様な出力: types / operations / hooks / SDK など用途に応じた出力が可能
+
+- ENTRY:
+  EXPLAIN: フロントエンド 導入（最小構成）
+  BODY: |
+    ■ パッケージインストール
+
+       npm i -D
+       @graphql-codegen/cli
+       @graphql-codegen/typescript
+       @graphql-codegen/typescript-operations
+       @graphql-codegen/typescript-react-apollo
+
+    ■ `codegen.yml` 例
+
+      schema: https://api.example.com/graphql
+      documents: src/**/*.graphql
+      generates:
+        src/__generated__/graphql.tsx:
+          plugins:
+            - typescript
+            - typescript-operations
+            - typescript-react-apollo
+          config:
+            withHooks: true
+            withHOC: false
+            withComponent: false
+            scalars:
+              DateTime: string
+
+- ENTRY:
+  EXPLAIN: フロントエンド generate 実行
+  BODY: |
+    ■ スクリプト追加/実行:
+
+    ・package.json に追加
+
+      "generate": "graphql-codegen --config codegen.yml"
+
+    ・`yarn generate` 実行
+
+    ■ よく使うプラグイン
+
+    ・`@graphql-codegen/typescript`             : スキーマから TypeScript 型生成
+    ・`@graphql-codegen/typescript-operations`  : queries/mutationsから variables/result 型生成
+    ・`@graphql-codegen/typescript-react-apollo`: Apollo 用の型付き hooks 生成
+
+- ENTRY:
+  EXPLAIN: 導入から運用までの流れ
+  BODY: |
+    ■ バックエンド準備
+
+    ・スキーマ確定（SDL または実行中サーバー）
+    ・スキーマ公開（schema.graphql ファイル or introspection エンドポイント）
+
+    ■ フロントエンド準備
+
+    ・ドキュメント準備（.graphql ファイル / gql テンプレート）
+    ・codegen.yml 作成（schema, documents, generates, plugins）
+
+    ■ 実行（開発）
+
+    ・スキーマ最新化（バックエンド）
+    ・yarn graphql-codegen 実行（ローカル）
+    ・生成物出力（types, operations, hooks）
+    ・IDEで確認、開発継続
+
+    ■ 実行（CI/リリース）
+
+    ・バックエンド CI でスキーマ検証・公開
+    ・フロントCIで yarn generate 実行（ビルド前）
+    ・型チェック合格後ビルド・デプロイ
+
+    ■ 注意点（短）
+
+    ・カスタムスカラーは scalars マッピング必須
+    ・.tsx 内の gql を拾うなら documents の glob を拡張
+    ・スキーマ変更はフロント同期リリースを検討
+
+- ENTRY:
+  EXPLAIN: 設定と注意点
+  BODY: |
+    ■ よくある設定と注意点
+
+    ・`documents` に `.tsx` 内の `gql` を含める場合は glob を `"src/**/*.{graphql,ts,tsx}"` のように拡張
+    ・カスタムスカラーは `scalars` で必ずマッピングする（例: DateTime: string）
+    ・認証付きスキーマを取得する場合は `schema` の下に `headers` を設定し、CIでは環境変数を使う
+    ・生成ファイルをコミットするかどうかは方針次第。
+      CI でのみ生成する運用も可能だが、IDE の型補完のためにリポジトリに含めるケースが多い
+
+    ■ 運用フロー
+
+    ・開発: `graphql-codegen --watch` で変更を監視し自動生成
+    ・CI: ビルド前に `yarn generate` を実行して型整合性を保証
+
+    ■ 実務ヒント
+
+    ・生成先を `src/__generated__` に分けると IDE とビルドが使いやすくなる
+    ・`namingConvention` や `avoidOptionals` の設定で出力型の形を調整する
+    ・大規模プロジェクトでは `generates` を分割して API ごとに出力先を分離すると高速化に寄与します

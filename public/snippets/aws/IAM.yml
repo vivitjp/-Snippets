@@ -2,10 +2,10 @@
 #-------------------------------
 # IAM
 #-------------------------------
-- KEY: aws.iam.category
+- ENTRY:
   CATEGORY: IAM 概要と機能
 
-- KEY: aws.iam.概要
+- ENTRY:
   EXPLAIN: 概要
   BODY: |
     • AWSリソースをセキュアに操作するために、認証・認可の仕組みを提供するマネージドサービス
@@ -17,7 +17,7 @@
     • データ変更は結果整合性を保ちながら全リージョンに伝搬
     • AWS IAM自体の利用は無料
 
-- KEY: aws.iam.resourceAccess
+- ENTRY:
   EXPLAIN: |
     AWSリソースにアクセスするしくみ
   BODY: |
@@ -58,10 +58,10 @@
         Endpoints
         Bucket with objects
 
-- KEY: aws.iam.機能.category
+- ENTRY:
   CATEGORY: 機能目次
 
-- KEY: aws.iam.機能
+- ENTRY:
   EXPLAIN: 機能
   BODY: |
     ■ A) IDと認証情報の管理
@@ -92,10 +92,10 @@
       • 不要な認証情報を削除する
       • 認証情報を定期的にローテーションする
 
-- KEY: aws.iam.A.id.category
+- ENTRY:
   CATEGORY: 機能 A) IDと認証情報の管理
 
-- KEY: aws.iam.A.id.1
+- ENTRY:
   EXPLAIN: 1) ルートユーザー
   BODY: |
     ■ AWSアカウントのルートユーザー
@@ -137,7 +137,7 @@
       • ルートユーザーでサインインし、セキュリティ認証情報のページからアクセスキーを削除
       • ルートユーザーの認証情報を他者に開示したり、プログラムに埋め込んだりしないこと！
 
-- KEY: aws.iam.A.id.2
+- ENTRY:
   EXPLAIN: 2) 個々のIAMユーザー
   BODY: |
     ■ IAMユーザー
@@ -166,7 +166,7 @@
         • アクセス許可をいつでも変更、無効化できる
         • Amazon CloudTrailログからアクションを追跡できる
 
-- KEY: aws.iam.A.id.3
+- ENTRY:
   EXPLAIN: 3) パスワードポリシー
   BODY: |
     • 最小文字数
@@ -181,7 +181,7 @@
 
     注意: ルートユーザーのパスワードポリシーには適用されない
 
-- KEY: aws.iam.A.id.4
+- ENTRY:
   EXPLAIN: 4) アクセスキー注意点
   BODY: |
     • 複数ユーザが同一AWSリソースへのアクセス権を共有したい
@@ -195,7 +195,7 @@
       • プレーンテキストでの保管
       • ハードコーディング(AWS認証情報ファイル/環境変数)
 
-- KEY: aws.iam.A.id.5
+- ENTRY:
   EXPLAIN: 5) 特権ユーザーへのMFA
   BODY: |
     ■ 特権ユーザーに対してMFAを有効化
@@ -220,10 +220,10 @@
     • USBスティック型
       • Yubikeyセキュリティキー 有料(4,500円程度)
 
-- KEY: aws.iam.B.access.category
+- ENTRY:
   CATEGORY: 機能 B) アクセス権限の管理
 
-- KEY: aws.iam.B.access.01.policy
+- ENTRY:
   EXPLAIN: ポリシー
   BODY: |
     ■ ポリシー
@@ -252,7 +252,7 @@
         • パーミッションのトラブルシューティング
         • Condition、ポリシー変数、リソースベースのポリシーを入れたテスト
 
-- KEY: aws.iam.B.access.01.policydocument
+- ENTRY:
   EXPLAIN: ポリシードキュメント
   BODY: |
     ■ Version
@@ -384,7 +384,7 @@
         • IAMの条件コンテキストキー
         https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/reference_policies_iam-condition-keys.html
 
-- KEY: aws.iam.B.access.02
+- ENTRY:
   EXPLAIN: |
     認可: ポリシータイプ
   BODY: |
@@ -403,7 +403,7 @@
       • S3のバケットのACL、VPCのサブネットのACL
     ■ 5) セッションポリシー
 
-- KEY: aws.iam.B.access.1
+- ENTRY:
   EXPLAIN: 1) ID(アイデンティティ)ベースのポリシー
   BODY: |
     ■ 管理ポリシー
@@ -441,7 +441,7 @@
       • アクセス許可の境界
         • 管理ポリシーとインラインポリシーの交差権限のみが有効になる
 
-- KEY: aws.iam.B.access.2-1
+- ENTRY:
   EXPLAIN: 2) リソースベースのポリシー
   BODY: |
     ■ 同一アカウントの場合
@@ -470,14 +470,14 @@
         }
       }
 
-- KEY: aws.iam.B.access.2-2
+- ENTRY:
   EXPLAIN: ※ 最小権限を付与する
   BODY: |
     • IAMポリシーを作成する場合、タスクの実行に必要なアクセス許可のみ付与する
     • 最小限のアクセス権限から開始し、必要に応じてアクセス権限を追加する
     • あとでアクセス権限を強化するより安全なアプローチ
 
-- KEY: aws.iam.B.access.2-3
+- ENTRY:
   EXPLAIN: ※ IAMグループ
   BODY: |
     • IAMユーザーの集合
@@ -488,22 +488,22 @@
     • 組織またはジョブ機能に関連したIAMグループを作成し、IAMグループに対してアクセスIAMポリシーを関連付ける
     • 会社内で組織異動がある場合は、そのIAMユーザーが所属するIAMグループを変更すればよい
 
-# - KEY: aws.iam.B.access.3
+# - ENTRY:
 #   EXPLAIN: 3) パーミッションバウンダリー
 #   BODY: |
-# - KEY: aws.iam.B.access.4
+# - ENTRY:
 #   EXPLAIN: 4) アクセスコントロールポリシー(ACL)
 #   BODY: |
-# - KEY: aws.iam.B.access.5
+# - ENTRY:
 #   EXPLAIN: 5) セッションポリシー
 #   BODY: |
-- KEY: aws.iam.C.delegation.category
+- ENTRY:
   CATEGORY: 機能 C) 権限の委任
 
   # • Amazon EC2インスタンスで実行するアプリケーションに対し、ロールを使用する
   # • ロールを使用したアクセス許可の委任
 
-- KEY: aws.iam.C.delegation.1
+- ENTRY:
   EXPLAIN: |
     1) IAMロール
   BODY: |
@@ -525,7 +525,7 @@
       • Amazon EC2、AWS Lambda等のAWSサービス
       • SAML2.0または OpenID Connect (OIDC) と互換性があるIDプロバイダーによって認証された外部ユーザー
 
-- KEY: aws.iam.C.delegation.1-2
+- ENTRY:
   EXPLAIN: |
     ※ AWS Security Token Service (STS)
   BODY: |
@@ -565,7 +565,7 @@
       • IAMロールによる権限はEC2上に恒久的に保管されるものではなくテンポラリ
       • ローテーション等は自動で行われる
 
-- KEY: aws.iam.C.delegation.2
+- ENTRY:
   EXPLAIN: |
     2) ロールを使用したアクセス許可の委任: ユースケース
   BODY: |
@@ -577,7 +577,7 @@
       4. SAML2.0ベースのAWSマネジメントコンソールへのシングルサインオン(SSO)
       5. Amazon Cognitoを用いたモバイルアプリのWeb IDフェデレーション
 
-- KEY: aws.iam.C.delegation.2-1
+- ENTRY:
   EXPLAIN: |
     ユースケース 1. IAMロールによるクロスアカウントアクセス
   BODY: |
@@ -614,7 +614,7 @@
       "Resource": "arn:aws:iam::111122223333:role/s3-role"
     }]}
 
-- KEY: aws.iam.C.delegation.2-1-2
+- ENTRY:
   EXPLAIN: |
     ※ MFA保護
   BODY: |
@@ -637,7 +637,7 @@
         }
       }
 
-- KEY: aws.iam.C.delegation.2-2
+- ENTRY:
   EXPLAIN: |
     ユースケース 2. クロスアカウントアクセスにより権限管理を効率化
   BODY: |
@@ -651,7 +651,7 @@
         • IAMユーザーには読み取り権限のみを付与
         • IAMロールには更新権限を付与
 
-- KEY: aws.iam.C.delegation.2-3
+- ENTRY:
   EXPLAIN: |
     ユースケース 3. SAML2.0ベースのIDフェデレーション
   BODY: |
@@ -660,7 +660,7 @@
     • 組織で生成した SAMLアサーション を認証レスポンスの一部として使用し、一時的セキュリティ認証情報を取得
     • 各ユーザーは一時的セキュリティ認証情報でAWSリソースにアクセス
 
-- KEY: aws.iam.C.delegation.2-4
+- ENTRY:
   EXPLAIN: |
     ユースケース 4. SAML2.0ベースのAWSマネジメントコンソールへのシングルサインオン(SSO)
   BODY: |
@@ -678,7 +678,7 @@
       • 入退社など一元的な管理が可能
       • イントラネットからのみアクセス可能なログイン画面
 
-- KEY: aws.iam.C.delegation.2-5
+- ENTRY:
   EXPLAIN: |
     ユースケース 5. Amazon Cognitoを用いたモバイルアプリのWeb IDフェデレーション
   BODY: |
@@ -687,7 +687,7 @@
       • 例えばスマートフォンアプリとS3だけでシステムが作成可能
     • Google, Facebook, Amazon(Login with Amazon), twitter, Amazon Cognito 及び OIDC準拠の IdP に対応
 
-- KEY: aws.iam.C.delegation.3
+- ENTRY:
   EXPLAIN: |
     2) ロールを使用したアクセス許可の委任: まとめ
   BODY: |
@@ -703,10 +703,10 @@
       • EC2上のアプリケーションに最低権限を与えることに適している
       • IAMユーザーの認証情報を外部に漏えいしてしまうリスクを低減させる
 
-- KEY: aws.iam.D.lifeCycle.category
+- ENTRY:
   CATEGORY: 機能 D) IDと権限のライフサイクル管理
 
-- KEY: aws.iam.D.lifeCycle.1
+- ENTRY:
   EXPLAIN: 1) WSアカウントのアクティビティの監視
   BODY: |
     ■ AWS CloudTrail
@@ -737,7 +737,7 @@
         • AWS Config           IAM ユーザー、グループ、ロール、ポリシーを含むAWSリソース設定
         • Amazon S3            S3バケットへのアクセスリクエスト
 
-- KEY: aws.iam.D.lifeCycle.2
+- ENTRY:
   EXPLAIN: 2) アクセスレベルで IAM 権限を確認
   BODY: |
     ■ アクセスレベルとは？
@@ -767,7 +767,7 @@
       • 「アクセスアドバイザー」
         • 必要なアクションに、必要な最小限の権限が付与されているか？
 
-- KEY: aws.iam.D.lifeCycle.3
+- ENTRY:
   EXPLAIN: 3) 不要な認証情報削除
   BODY: |
     ■ IAM認証情報レポート(Credential Report)
@@ -792,7 +792,7 @@
         • 生成AWS CLI: aws iam generate-credential-report
         • 取得AWS CLI: aws iam get-credential-report
 
-- KEY: aws.iam.D.lifeCycle.4
+- ENTRY:
   EXPLAIN: 4) 認証情報を定期的にローテーション
   BODY: |
     ■ IAMユーザーのパスワードやAccess
@@ -821,10 +821,10 @@
       • 新しい認証情報でテストを行い、古いAccess KeyはInactiveにする
       • 万が一問題が起きた時は再びActivateすることが可能
 
-- KEY: aws.iam.E.tips.category
+- ENTRY:
   CATEGORY: IAM Tips
 
-- KEY: aws.iam.E.tips.1
+- ENTRY:
   EXPLAIN: |
     Tips1: IAM基本の設定
   BODY: |
@@ -846,7 +846,7 @@
       • キープレフィックスで home/ 以下にそのユーザのみの権限を付与
       • Share 配下には、各々、開発者、管理者のみに許可
 
-- KEY: aws.iam.E.tips.2
+- ENTRY:
   EXPLAIN: |
     Tips2: IAMコンソールでIAMエンティティ検索
   BODY: |
@@ -857,7 +857,7 @@
       • IAMエンティティ(ユーザー、グループ、ロール、ID プロバイダー)
       • ポリシーなど
 
-- KEY: aws.iam.E.tips.3
+- ENTRY:
   EXPLAIN: |
     Tips3: パスワードを紛失
   BODY: |
@@ -881,7 +881,7 @@
         • 新しいアクセスキーの作成を管理者に依頼
         • まだ古いキーも使用するなら、キーを削除しないように依頼
 
-- KEY: aws.iam.E.tips.4
+- ENTRY:
   EXPLAIN: |
     Tips4: MFAの管理
   BODY: |

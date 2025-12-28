@@ -2,12 +2,12 @@
 #-------------------------------
 # TSChallenge
 #-------------------------------
-- KEY: ts.challenge.url
+- ENTRY:
   EXPLAIN: URL
   BODY: |
     https://github.com/type-challenges/type-challenges
 
-- KEY: ts.challenge.
+- ENTRY:
   EXPLAIN: XXXXX
   BODY: |
 

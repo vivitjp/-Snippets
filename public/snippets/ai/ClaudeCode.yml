@@ -2,11 +2,11 @@
 #-------------------------------
 # Claude Code
 #-------------------------------
-- KEY: claudeCode.category
+- ENTRY:
   CATEGORY: |
     Claude Code
 
-- KEY: claudeCode.モデル
+- ENTRY:
   EXPLAIN: モデル
   BODY: |
     ■ Claude 3 ファミリー (Opus, Sonnet, Haiku)
@@ -41,7 +41,7 @@
       「ハイブリッド推論」：迅速な応答と段階的な深い思考を切り替える能力
       拡張思考モード（extended thinking mode）で思考プロセス可視化
 
-- KEY: claudeCode.プロンプト
+- ENTRY:
   EXPLAIN: プロンプト
   BODY: |
     # 背景
@@ -57,7 +57,7 @@
     # 参考情報
     （ここに本記事の内容をコピペ）
 
-- KEY: claudeCode.機能要件書
+- ENTRY:
   EXPLAIN: 機能要件書
   BODY: |
     .claude/
@@ -95,7 +95,7 @@
 #-------------------------------
 # Claude Code md
 #-------------------------------
-- KEY: claudeCode.CLAUDE.md
+- ENTRY:
   EXPLAIN: CLAUDE.md
   BODY: |
     ~/.claude/CLAUDE.md
