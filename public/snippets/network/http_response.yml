@@ -4,7 +4,6 @@
 #-------------------------------
 
 - ENTRY:
-  KEY: http.response.all
   EXPLAIN: 5分類
   BODY: |
     情報レスポンス               (100-199)
@@ -14,7 +13,6 @@
     サーバーエラーレスポンス      (500-599)
 
 - ENTRY:
-  KEY: http.response.100s
   EXPLAIN: 情報レスポンス
   BODY: |
     100 Continue                暫定レスポンス(問題なく、継続可、無視OK)
@@ -23,7 +21,6 @@
     103 Early Hints             Link と併用、サーバーが準備中にリソースの先読み開始を可能に
 
 - ENTRY:
-  KEY: http.response.200s
   EXPLAIN: 成功レスポンス
   BODY: |
     200 OK                      成功
@@ -38,7 +35,6 @@
     226 IM Used (HTTP Delta encoding)
 
 - ENTRY:
-  KEY: http.response.300s
   EXPLAIN: リダイレクトメッセージ
   BODY: |
     300 Multiple Choice         複数レスポンスからひとつ選択。
@@ -52,7 +48,6 @@
     308 Permanent Redirect      =301 別URIに「元」メソッドで取得するよう誘導
 
 - ENTRY:
-  KEY: http.response.400s
   EXPLAIN: クライアントエラーレスポンス
   BODY: |
     400 Bad Request                     構文無効
@@ -86,7 +81,6 @@
     451 Unavailable For Legal Reasons   違法なリソースをリクエスト
 
 - ENTRY:
-  KEY: http.response.500s
   EXPLAIN: サーバーエラーレスポンス
   BODY: |
     500 Internal Server Error           処理方法不明

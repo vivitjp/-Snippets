@@ -1,23 +1,404 @@
 ---
 #-------------------------------
-# Package: Storybook
+# zustand
 #-------------------------------
 
 - ENTRY:
-  EXPLAIN: zustand Store
+  CATEGORY: zustand
+
+- ENTRY:
+  EXPLAIN: Zustand の概説
   BODY: |
-    type CountState={
-      count: number
-      addCount: (by: number) => void
-      randomCount: () => void 
-      resetCount: () => void
-    }
+    ■ Zustand とは
 
-    export const useCount = create<CountState>()((set, get) => ({
-      count: 1,
-      addCount: (by) => set((state) => ({ count: state.count + by })),
-      randomCount: 
-      resetCount: () => set(() => ({ count: 1 })),
-    }))
+    ・React アプリケーション向けの小型で高速な状態管理ライブラリ
+    ・「Zustand」はドイツ語で「状態」を意味する
+    ・Redux のような複雑さなしに、シンプルな API で状態管理が可能
+    ・TypeScript との相性が良く、型安全な開発をサポート
+    ・Flux パターンに基づくが、ボイラープレートコードが最小限
 
-    //const count = useCount((state) => state.count)
+    ■ 主な特徴
+
+    ・軽量: バンドルサイズが小さく、パフォーマンスが高い
+    ・シンプル: Redux のような Action/Reducer の概念が不要
+    ・柔軟: Middleware による拡張が可能
+    ・React 専用: React Hooks と統合され、useStore で簡単に使用
+    ・Immutable 更新: Immer のようなライブラリ不要でミュータブルな書き方可能
+
+    ■ インストール
+
+      npm install zustand
+
+- ENTRY:
+  EXPLAIN: Redux との違い
+  BODY: |
+    ■ Redux との比較
+
+    項目                Zustand      Redux
+    ------------------ -----------  -----------
+    学習コスト          低           高
+    ボイラープレート     最小         多
+    ファイル数          少           多 (Action, Reducer, etc.)
+    パフォーマンス       高          中 (最適化が必要)
+    TypeScript サポート 優           優
+    ミドルウェア        可能         豊富
+    デバッグツール      限定的        Redux DevTools
+
+    ■ Zustand の利点 (Redux に対して)
+
+    ・シンプルさ: create() で Store を作成し、set/get で操作するだけ
+    ・Context Provider 不要: React の Context を使用せずグローバルにアクセス可能
+    ・ミュータブル更新: state.count += 1 のように直感的に書ける
+    ・スケーラビリティ: 小規模から大規模アプリまで対応
+
+    ■ Redux の利点 (Zustand に対して)
+
+    ・予測可能性: Action を通じた厳格な状態更新フロー
+    ・エコシステム: Middleware, DevTools, 永続化ライブラリが充実
+    ・コミュニティ: 大規模プロジェクトでの実績多数
+
+    ■ どちらを選ぶか
+
+    ・小～中規模アプリ: Zustand が適する
+    ・大規模アプリや複雑なロジック: Redux が適する
+    ・Redux からの移行: Zustand は Redux の軽量版として使える
+
+- ENTRY:
+  EXPLAIN: Jotai との違い
+  BODY: |
+    ■ Jotai との比較
+
+    項目            Zustand      Jotai
+    --------------  -----------  -----------
+    アーキテクチャ  Store ベース Atom ベース
+    状態の単位      単一 Store   個別 Atom
+    学習コスト      中           低
+    パフォーマンス   高           高
+    複雑さ          中           低
+    スケーラビリティ 高           中
+
+    ■ Zustand の利点 (Jotai に対して)
+
+    ・Store ベース: Redux に近い構造で、複雑な状態管理に強い
+    ・単一の Store: 状態の集約が容易
+    ・Middleware 対応: 永続化やログなどの拡張が可能
+    ・TypeScript フレンドリー: Store の型定義がシンプル
+
+    ■ Jotai の利点 (Zustand に対して)
+
+    ・Atom ベース: 細かい状態の分割が可能
+    ・シンプルさ: 最小限の API で直感的に使用
+    ・React との統合: Recoil に似た使い勝手
+    ・柔軟性: 状態の依存関係を柔軟に定義
+
+    ■ どちらを選ぶか
+
+    ・Redux ライクな状態管理: Zustand
+    ・Recoil ライクな原子単位の管理: Jotai
+    ・チームの好みや既存コードとの整合性で選択
+
+- ENTRY:
+  CATEGORY: Store
+
+- ENTRY:
+  EXPLAIN: Store の作成と使い方
+  BODY: |
+    ■ Store の作成
+
+    ・create() 関数で Store を作成
+    ・初期状態と更新関数を定義
+    ・TypeScript の場合はジェネリックで型指定
+
+    ■ 基本的な Store
+
+      import { create } from 'zustand'
+
+      interface BearState {
+        bears: number
+        increase: () => void
+        removeAll: () => void
+      }
+
+      const useBearStore = create<BearState>((set) => ({
+        bears: 0,
+        increase: () => set((state) => ({ bears: state.bears + 1 })),
+        removeAll: () => set({ bears: 0 }),
+      }))
+
+    ■ Store の使用
+
+    ・React コンポーネントで useStore Hook を使用
+    ・必要な状態や関数を選択的に取得
+
+      function BearCounter() {
+        const bears = useBearStore((state) => state.bears)
+        return <h1>{bears} around here ...</h1>
+      }
+
+      function Controls() {
+        const increase = useBearStore((state) => state.increase)
+        return <button onClick={increase}>one up</button>
+      }
+
+    ■ Store の特徴
+
+    ・グローバル: どのコンポーネントからでもアクセス可能
+    ・リアクティブ: 状態変更で自動再レンダリング
+    ・メモ化: selector 関数でパフォーマンス最適化
+
+- ENTRY:
+  EXPLAIN: set & get
+  BODY: |
+    ■ set 関数
+
+    ・状態を更新するための関数
+    ・引数に更新関数または新しい状態オブジェクトを渡す
+    ・ミュータブルな書き方が可能 (Immer 不要)
+
+    ■ set の使い方
+
+      // 関数形式 (推奨)
+      set((state) => ({ count: state.count + 1 }))
+
+      // オブジェクト形式
+      set({ count: 0 })
+
+      // ミュータブル更新
+      set((state) => {
+        state.count += 1
+        return state
+      })
+
+    ■ get 関数
+
+    ・現在の状態を取得するための関数
+    ・非同期処理や計算で使用
+    ・selector 内で使用すると再レンダリングの原因になるので注意
+
+    ■ get の使い方
+
+      const useStore = create((set, get) => ({
+        count: 0,
+        increment: () => set((state) => ({ count: state.count + 1 })),
+        asyncIncrement: async () => {
+          const currentCount = get().count
+          await someAsyncOperation()
+          set({ count: currentCount + 1 })
+        },
+      }))
+
+    ■ 注意点
+
+    ・set は同期的に状態を更新
+    ・get は現在の状態をスナップショットとして取得
+    ・非同期処理では get で現在の状態を取得してから set で更新
+
+- ENTRY:
+  CATEGORY: Middleware
+
+- ENTRY:
+  EXPLAIN: Middleware
+  BODY: |
+    ■ Middleware
+
+    ・Store の機能を拡張
+    ・persist: 状態の永続化
+    ・devtools: Redux DevTools との統合
+    ・immer: Immer ライブラリの統合
+
+    ■ persist Middleware
+
+    ・Store の状態を localStorage や sessionStorage に保存
+    ・ページリロード後も状態を保持
+
+      import { persist } from 'zustand/middleware'
+
+      const useStore = create(
+        persist(
+          (set, get) => ({
+            count: 0,
+            increment: () => set((state) => ({ count: state.count + 1 })),
+          }),
+          {
+            name: 'counter-storage', // localStorage のキー
+          }
+        )
+      )
+
+    ■ devtools Middleware
+
+    ・Redux DevTools と連携し、状態の変更履歴を可視化・デバッグ可能にする
+
+      import { devtools } from 'zustand/middleware'
+
+      const useStore = create(
+        devtools((set, get) => ({
+          // store definition
+        }), { name: 'MyStore' })
+      )
+
+    ■ Selectors
+
+    ・パフォーマンス最適化のための選択関数
+    ・useStore の第2引数に selector を渡す
+
+      const count = useStore((state) => state.count)
+      const increment = useStore((state) => state.increment)
+
+    ■ Subscribe
+
+    ・状態変更を購読
+    ・React 外での使用やデバッグに便利
+
+      const unsubscribe = useStore.subscribe(
+        (state) => console.log('state changed', state),
+        (state) => state.count // selector (optional)
+      )
+
+- ENTRY:
+  CATEGORY: 実装サンプル
+
+- ENTRY:
+  EXPLAIN: TODO アプリの実装例
+  BODY: |
+    ■ TODO アプリの実装例
+
+    ・Store の作成
+    ・コンポーネントの実装
+    ・TypeScript 対応
+
+    ■ types.ts
+
+      export interface Todo {
+        id: number
+        text: string
+        completed: boolean
+      }
+
+      export interface TodoStore {
+        todos: Todo[]
+        addTodo: (text: string) => void
+        toggleTodo: (id: number) => void
+        removeTodo: (id: number) => void
+        clearCompleted: () => void
+      }
+
+    ■ store.ts
+
+      import { create } from 'zustand'
+      import { persist } from 'zustand/middleware'
+      import { Todo, TodoStore } from './types'
+
+      export const useTodoStore = create<TodoStore>()(
+        persist(
+          (set, get) => ({
+            todos: [],
+            addTodo: (text: string) =>
+              set((state) => ({
+                todos: [
+                  ...state.todos,
+                  { id: Date.now(), text, completed: false },
+                ],
+              })),
+            toggleTodo: (id: number) =>
+              set((state) => ({
+                todos: state.todos.map((todo) =>
+                  todo.id === id ? { ...todo, completed: !todo.completed } : todo
+                ),
+              })),
+            removeTodo: (id: number) =>
+              set((state) => ({
+                todos: state.todos.filter((todo) => todo.id !== id),
+              })),
+            clearCompleted: () =>
+              set((state) => ({
+                todos: state.todos.filter((todo) => !todo.completed),
+              })),
+          }),
+          {
+            name: 'todo-storage',
+          }
+        )
+      )
+
+    ■ TodoList.tsx
+
+      import React from 'react'
+      import { useTodoStore } from './store'
+
+      export const TodoList: React.FC = () => {
+        const { todos, toggleTodo, removeTodo } = useTodoStore()
+
+        return (
+          <ul>
+            {todos.map((todo) => (
+              <li key={todo.id}>
+                <input
+                  type="checkbox"
+                  checked={todo.completed}
+                  onChange={() => toggleTodo(todo.id)}
+                />
+                <span style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}>
+                  {todo.text}
+                </span>
+                <button onClick={() => removeTodo(todo.id)}>Delete</button>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+
+    ■ AddTodo.tsx
+
+      import React, { useState } from 'react'
+      import { useTodoStore } from './store'
+
+      export const AddTodo: React.FC = () => {
+        const [text, setText] = useState('')
+        const addTodo = useTodoStore((state) => state.addTodo)
+
+        const handleSubmit = (e: React.FormEvent) => {
+          e.preventDefault()
+          if (text.trim()) {
+            addTodo(text.trim())
+            setText('')
+          }
+        }
+
+        return (
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder="Add a new todo"
+            />
+            <button type="submit">Add</button>
+          </form>
+        )
+      }
+
+    ■ App.tsx
+
+      import React from 'react'
+      import { AddTodo } from './AddTodo'
+      import { TodoList } from './TodoList'
+      import { useTodoStore } from './store'
+
+      export const App: React.FC = () => {
+        const { todos, clearCompleted } = useTodoStore()
+        const completedCount = todos.filter((todo) => todo.completed).length
+
+        return (
+          <div>
+            <h1>Todo App with Zustand</h1>
+            <AddTodo />
+            <TodoList />
+            {completedCount > 0 && (
+              <button onClick={clearCompleted}>
+                Clear {completedCount} completed todo(s)
+              </button>
+            )}
+          </div>
+        )
+      }

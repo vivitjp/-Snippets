@@ -32,7 +32,9 @@ export const syntaxHighlight = ({
         if (!keys.length) return
 
         keys.forEach((key) => {
-          if (!key) return
+          if (!key || ["eq", "lt", "gt"].includes(key)) {
+            return // skip <> 系の文字
+          }
           const re = new RegExp(`\\b${key}\\b`, case_sense)
           result = result.replaceAll(
             re,
@@ -76,6 +78,8 @@ const switcher = (key: string) => {
       return "\u0063lass"
     case "id":
       return "\u0069d"
+    case "label":
+      return "\u006cabel"
     default:
       return key
   }
@@ -84,12 +88,13 @@ const switcher = (key: string) => {
   // &#x0073
 }
 
-const HTML_ESCAPE_REPLACE_RE = /[&<>"]/g
+const HTML_ESCAPE_REPLACE_RE = /[&<>'"]/g
 const HTML_REPLACEMENTS: { [key: string]: string } = {
   "&": "&amp;",
   "<": "&lt;",
   ">": "&gt;",
   '"': "&quot;",
+  "'": "&#39;",
 }
 function replaceUnsafeChar(ch: string): string {
   return HTML_REPLACEMENTS[ch]

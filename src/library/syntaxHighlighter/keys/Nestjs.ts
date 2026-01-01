@@ -2,7 +2,7 @@ import { KeyDef } from "../../../types/type"
 
 export const keysNestjs: KeyDef = {
   // ■ Main(赤)
-  IndianRed: [
+  Crimson: [
     "nestjs",
     "nest",
     "controller",

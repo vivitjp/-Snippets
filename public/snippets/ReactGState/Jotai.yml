@@ -1,31 +1,36 @@
 ---
 #-------------------------------
-# Package: Storybook
+# Package: Jotai
 #-------------------------------
+- ENTRY:
+  CATEGORY: Jotai
+
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ インストール
+
+      npm install jotai
+
+    ■ 概要
+
+    ・Jotai は React 向けの軽量な状態管理ライブラリ
+    ・Atom ベースのアプローチで、状態を細かく分割して管理可能
+    ・シンプルな API で学習コストが低い
+    ・React の Suspense や Concurrent Mode とも相性が良い
+    ・TypeScript にも対応し、型安全な状態管理が可能
+
+    ■ メソッド一覧
+
+    ・atom: 状態の単位である atom を作成
+    ・useAtom: atom の値と更新関数を取得
+    ・useAtomValue: atom の値のみを取得
+    ・useSetAtom: atom の更新関数のみを取得
+    ・Provider: atom のコンテキストを提供
+
 - ENTRY:
   CATEGORY: |
     atom
-
-- ENTRY:
-  EXPLAIN: atom 型
-  BODY: |
-    ● Basic
-    function atom<Value>(initialValue: Value): PrimitiveAtom<Value>
-
-    ● 読み取り専用
-    function atom<Value>(read: (get: Getter) => Value): Atom<Value>
-
-    ● 派生 atom(読み取り/書き込み)
-    function atom<Value, Args extends unknown[], Result>(
-      read: (get: Getter) => Value,
-      write: (get: Getter, set: Setter, ...args: Args) => Result,
-    ): WritableAtom<Value, Args, Result>
-
-    ● 派生 atom(書き込み専用)
-    function atom<Value, Args extends unknown[], Result>(
-      read: Value,
-      write: (get: Getter, set: Setter, ...args: Args) => Result,
-    ): WritableAtom<Value, Args, Result>
 
 - ENTRY:
   EXPLAIN: atom 基礎
@@ -38,9 +43,44 @@
     export const citiesAtom = atom(["東京", "京都", "大阪"])
     export const citySelectedAtom = atom("")
 
+    ■ atom
+
+- ENTRY:
+  EXPLAIN: atom 型定義
+  BODY: |
+    ■ 基礎
+
+    function atom<Value>(initialValue: Value): PrimitiveAtom<Value>
+
+    ■ 読み取り専用
+
+    function atom<Value>(
+      read: (get: Getter) => Value
+    ): Atom<Value>
+
+    ■ 派生 atom(読み取り/書き込み)
+
+    function atom<Value, Args extends unknown[], Result>(
+      read: (get: Getter) => Value,
+      write: (get: Getter, set: Setter, ...args: Args) => Result,
+    ): WritableAtom<Value, Args, Result>
+
+    ■ 派生 atom(書き込み専用)
+
+    function atom<Value, Args extends unknown[], Result>(
+      read: Value,
+      write: (get: Getter, set: Setter, ...args: Args) => Result,
+    ): WritableAtom<Value, Args, Result>
+
 - ENTRY:
   EXPLAIN: onMount
   BODY: |
+    ■ onMount
+
+      atom 作成後に一度だけ実行されるコールバックを登録
+
+    ■ 例
+
     const anAtom = atom(1)
     anAtom.onMount = (setAtom) => {
       console.log('atom is mounted in provider')
@@ -61,67 +101,62 @@
     }
 
 - ENTRY:
-  EXPLAIN: 派生 atom
+  EXPLAIN: atom 定義と Get & Set
   BODY: |
-    他の atom の値を加工
-    export const doubledCountAtom = atom((get) => get(numberAtom) * 2)
-    export const uppercaseAtom    = atom((get) => get(textAtom).toUpperCase())
+    ■ 値
 
-    ■ 値atom
-    const priceAtom = atom(10)
+      const priceAtom = atom(10)
 
     ■ 読み取り専用
-    const readOnlyAtom = atom((get) => get(priceAtom) * 2)
+
+      const readOnlyAtom = atom((get) => get(priceAtom) * 2)
 
     ■ 書き込み専用
-    const writeOnlyAtom = atom(
-      null,                             // `null` 書き込み専用
-      (get, set, update) => {           // 引数あり
-        set(priceAtom, get(priceAtom) - update.discount) // `update`: 単一値 for updating this atom
-        // or we can pass a function as the second parameter the function will be invoked,
-        // receiving the atom's current value as its first parameter
-        set(priceAtom, (price) => price - update.discount) // 
-      },
-    )
+
+      const writeOnlyAtom = atom(
+        null,                             // `null` 書き込み専用
+        (get, set, update) => {
+          set(priceAtom, get(priceAtom) - update.discount)     // 1. 他の atom 書き込み可能
+          set(priceAtom, (price) => price - update.discount)   // 2. 関数形式も可能
+        },
+      )
 
     ■ 読み取り/書き込み
-    const readWriteAtom = atom(
-      (get) => get(priceAtom) * 2,      // 読み取り
-      (get, set, newPrice) => {
-        set(priceAtom, newPrice / 2)    // 複数の atoms 書き込み可能
-      },
-    )
 
-- ENTRY:
-  EXPLAIN: Get, Set & 引数
-  BODY: |
-    Get: 他の atom 値を取得
-    Set: 他の atom に値を代入
-    引数: methodsの引数を設定
+      const readWriteAtom = atom(
+        (get) => get(priceAtom) * 2,      // 読み取り
+        (get, set, newPrice) => {
+          set(priceAtom, newPrice / 2)    // 複数の atoms 書き込み可能
+        },
+      )
 
-    export const addingCountDerivedAtom = atom(
-      (get) => get(countDerivedAtom),                  // Get(null にすれば WriteOnly)
-      (get, set, num: number) => {                     // Method(複数不可)
-        set(countDerivedAtom, get(countDerivedAtom) + num)
-      }
-    )
+      export const addingCountDerivedAtom = atom(
+        (get) => get(countDerivedAtom),            // Get(null にすれば WriteOnly)
+        (get, set, num: number) => {               // Method(複数不可)
+          set(countDerivedAtom, get(countDerivedAtom) + num)
+        }
+      )
+
+    ■ 派生(他の atom の値を加工)
+
+      export const doubledCountAtom = atom((get) => get(numberAtom) * 2)
+      export const uppercaseAtom    = atom((get) => get(textAtom).toUpperCase())
 
 - ENTRY:
   EXPLAIN: 非同期
   BODY: |
-    ■ 非同期fetch: 即時コール
+    ■ 非同期: 即時コール
 
     export const urlAtom = atom("http://localhost:5099/posts")
 
-    export const fetchUrlAtom = atom(async (get) => {
-      const response = await fetch(get(urlAtom))
-      return await response.json()
-    })
+    export const fetchUrlAtom = atom(
+      async (get) => {
+        const response = await fetch(get(urlAtom))
+        return await response.json()
+      }
+    )
 
-- ENTRY:
-  EXPLAIN: 非同期(Lazy)
-  BODY: |
-    ■ 非同期fetch: Lazyコール
+    ■ 非同期: Lazyコール
 
     export const fetchDataAtom = atom("")
 
@@ -134,29 +169,45 @@
     )
 
 - ENTRY:
-  EXPLAIN: Renderメソッド内での宣言
+  EXPLAIN: useMemoとの併用
   BODY: |
-    レンダーコンポーネント内で宣言する場合は useMemo を使用
-    const Component = ({ value }) => {
-      const valueAtom = useMemo(() => atom({ value }), [value])
-      // ...
-    }
+    ■ 目的
+
+    ・props や状態に基づいて atom を動的に作成
+    ・不要な再作成を防ぎ、パフォーマンスを最適化
+
+    ■ 実装
+
+      import { atom, useAtom } from 'jotai'
+      import { useMemo } from 'react'
+
+      const Component = ({ value }) => {
+        const valueAtom = useMemo(() => atom({ value }), [value])
+        const [state, setState] = useAtom(valueAtom)
+
+        return (
+          <div>{state.value}</div>  
+        )
+      }
 
 - ENTRY:
-  EXPLAIN: Abort Control
+  EXPLAIN: Abort Control(signal)
   BODY: |
-    ● 読み取り専用
+    ■ 読み取り専用
+
     const readOnlyDerivedAtom = atom(
       async (get, { signal }) => { ... },  // signalで動作中断
     )
 
-    ● 派生非同期
+    ■ 派生非同期
+
     const writableDerivedAtom = atom(
       async (get, { signal }) => { ... },  // signalで動作中断
       (get, set, arg) => { ... },
     )
 
-    ● フルサンプル
+    ■ フルサンプル
+
     import { Suspense } from 'react'
     import { atom, useAtom } from 'jotai'
 
@@ -199,45 +250,114 @@
 
 - ENTRY:
   CATEGORY: |
-    useAtom
+    メソッド
 
 - ENTRY:
-  EXPLAIN: メソッド
+  EXPLAIN: useAtom()
   BODY: |
-    ● atoms
-      const countAtom = atom(0)
-      const flagAtom = atom(false)
+    ■ 目的
 
-    ● [VALUE, SETTER] useAtom(anAtom)
+    ・atom の値と更新関数を取得
+
+    ■ 実装
+
       const [count, setCount] = useAtom(countAtom)
-
-    ● [VALUE] useAtomValue(anAtom)
-      const count = useAtomValue(countAtom)    // VALUE
-
-    ● [SETTER] useSetAtom(anAtom)
-      const setFlag = useSetAtom(flagAtom)     // SETTER
+      
+      const [flag, setFlag] = useAtom(flagAtom)
       const handle = () => setFlag(true)
 
-    ● [VALUE,SETTER] useAtomValue(anAtom),useSetAtom(anAtom)
-      const count = useAtomValue(countAtom)    // VALUE
-      const setCount = useSetAtom(countAtom)   // SETTER
-      const handle = () => setCount(count+1)
+- ENTRY:
+  EXPLAIN: useAtomValue()
+  BODY: |
+    ■ 目的
 
-    ● [VALUE] useAtomCallback
-    useAtomCallback(
-      useCallback((get) => get(anAtom), []),
-    )
+    ・atom の値のみを取得
+
+    ■ 実装
+
+      const count = useAtomValue(countAtom)    // 値
+      const handle = () => console.log(count)
 
 - ENTRY:
-  EXPLAIN: 親子サンプル
+  EXPLAIN: useSetAtom()
   BODY: |
-    ■ [atoms.ts]
+    ■ 目的
+
+    ・atom の更新関数のみを取得
+
+    ■ 実装
+
+      const setFlag = useSetAtom(flagAtom)     // セッター
+      const handle = () => setFlag(true)
+
+- ENTRY:
+  EXPLAIN: useAtomValue()
+  BODY: |
+    ■ 目的
+
+    ・atom の値のみを取得
+
+    ■ 実装
+
+      const count = useAtomValue(countAtom)    // 値
+      const handle = () => console.log(count)
+
+- ENTRY:
+  EXPLAIN: useSetAtom()
+  BODY: |
+
+    ■ 目的
+
+    ・atom の更新関数のみを取得
+
+    ■ 実装
+
+      const count = useAtomValue(countAtom)    // 値
+      const setCount = useSetAtom(countAtom)   // セッター
+      const handle = () => setCount(count+1)
+
+- ENTRY:
+  EXPLAIN: useAtomCallback()
+  BODY: |
+    ■ 目的
+
+    ・atom の値を取得するコールバックを作成
+
+    ■ 実装
+
+      import { useAtomCallback } from 'jotai/utils'
+      import { useCallback } from 'react'
+      import { countAtom } from './atoms'
+
+      const logCount = useAtomCallback(
+        useCallback((get) => {
+          const count = get(countAtom)
+          console.log('Current count:', count)
+        }, []),
+      )
+
+      <button onClick={logCount}>Log Count</button>
+
+- ENTRY:
+  EXPLAIN: サンプル
+  BODY: |
+    ■ ディレクトリ構成
+
+    /src
+      /components
+        Counter.tsx
+      atoms.ts
+      Component.tsx
+
+    ■ atoms.ts
+
     import { atom } from "jotai"
       
     export const countAtom = atom(0)
     export const countDerivedAtom = atom(0)
 
-    ■ 子コンポーネント
+    ■ Counter.tsx: 子コンポーネント
+
     import { useAtom } from "jotai"
     import { countAtom } from "../atoms"
 
@@ -259,7 +379,8 @@
       )
     }
 
-    ■ 親コンポーネント
+    ■ Component.tsx: 親コンポーネント
+
     import { useAtom } from "jotai"
     import { countAtom } from "./atoms"
     import { Counter } from "./components/Counter"
@@ -278,7 +399,7 @@
 - ENTRY:
   EXPLAIN: Excelスタイル連鎖更新
   BODY: |
-    Excelの連鎖参照を実現
+    ■ Excelの連鎖参照を実現
 
     [atoms.ts]
     import { atom } from "jotai"
@@ -306,3 +427,627 @@
         </Flex>
       )
     }
+
+- ENTRY:
+  CATEGORY: jotai/utils
+
+- ENTRY:
+  EXPLAIN: メソッドリスト
+  BODY: |
+    ■ メソッド一覧
+
+    ・useAtomCallback: atom の値を取得するコールバックを作成
+    ・atomWithStorage: ローカルストレージやセッションストレージと同期する atom を作成
+    ・atomWithDefault: デフォルト値を持つ atom を作成
+    ・selectAtom: atom の値を選択的に取得する派生 atom を作成
+    ・splitAtom: 配列を分割して複数の atom にする
+    ・freezeAtom: atom の値を変更不可にする
+    ・debounceAtom: atom の更新をデバウンスする
+    ・loadable: 非同期 atom の状態を管理するためのユーティリティ
+    ・atomFamily: パラメータ化された atom を作成するユーティリティ
+    ・scopeAtom: atom を特定のスコープに関連付けるユーティリティ
+
+- ENTRY:
+  EXPLAIN: atomWithStorage
+  BODY: |
+    ■ 解説
+
+    ・ローカルストレージやセッションストレージと同期する atom を作成
+    ・ページのリロード後も状態が保持
+
+    ■ サンプル
+
+    import { atomWithStorage } from 'jotai/utils'
+
+    const darkModeAtom = atomWithStorage('darkMode', false)
+
+    const App = () => {
+      const [darkMode, setDarkMode] = useAtom(darkModeAtom)
+      return (
+        <button onClick={() => setDarkMode(!darkMode)}>
+          {darkMode ? 'ライトモード' : 'ダークモード'}
+        </button>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: atomWithDefault
+  BODY: |
+    ■ 解説
+
+    ・他の atom の値が未設定（null や undefined）の場合にデフォルト値を提供する派生 atom を作成
+
+    ■ サンプル
+
+    import { atom, atomWithDefault } from 'jotai'
+    import { atomWithDefault } from 'jotai/utils'
+
+    const baseAtom = atom<string | null>(null)
+    const derivedAtom = atomWithDefault(baseAtom, 'デフォルト値')
+
+    const App = () => {
+      const [value] = useAtom(derivedAtom) // null の場合は 'デフォルト値'
+      return <div>{value}</div>
+    }
+
+- ENTRY:
+  EXPLAIN: selectAtom
+  BODY: |
+    ■ 解説
+
+    ・atom の値から特定の部分を選択的に取得する派生 atom を作成
+    ・メモ化によりパフォーマンスが向上
+
+    ■ サンプル
+
+    import { atom } from 'jotai'
+    import { selectAtom } from 'jotai/utils'
+
+    const userAtom = atom({ name: 'John', age: 30 })
+    const nameAtom = selectAtom(userAtom, (user) => user.name)
+
+    const App = () => {
+      const name = useAtomValue(nameAtom) // 'John'
+      return <div>名前: {name}</div>
+    }
+
+- ENTRY:
+  EXPLAIN: splitAtom
+  BODY: |
+    ■ 解説
+
+    ・配列 atom を個別の atom に分割
+    ・各要素を独立して操作できるように
+
+    ■ サンプル
+
+    import { atom } from 'jotai'
+    import { splitAtom } from 'jotai/utils'
+
+    const itemsAtom = atom([1, 2, 3])
+    const itemAtomsAtom = splitAtom(itemsAtom)
+
+    const App = () => {
+      const itemAtoms = useAtomValue(itemAtomsAtom)
+      return (
+        <ul>
+          {itemAtoms.map((itemAtom, index) => (
+            <li key={index}>
+              <ItemComponent itemAtom={itemAtom} />
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: freezeAtom
+  BODY: |
+    ■ 解説
+
+    ・atom の値を Object.freeze で凍結
+    ・変更不可に
+    ・イミュータビリティを強制
+
+    ■ サンプル
+
+    import { atom } from 'jotai'
+    import { freezeAtom } from 'jotai/utils'
+
+    const dataAtom = freezeAtom(atom({ a: 1, b: 2 }))
+
+    const App = () => {
+      const [data] = useAtom(dataAtom)           // data は凍結されているため変更不可
+      return <div>{JSON.stringify(data)}</div>
+    }
+
+- ENTRY:
+  EXPLAIN: debounceAtom
+  BODY: |
+    ■ 解説
+
+    ・atom の更新をデバウンス
+    ・指定された時間内に複数の更新が発生した場合、最後の更新のみを適用
+
+    ■ サンプル
+
+    import { atom } from 'jotai'
+    import { debounceAtom } from 'jotai/utils'
+
+    const inputAtom = debounceAtom(atom(''), 300)
+
+    const App = () => {
+      const [input, setInput] = useAtom(inputAtom)
+      return (
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="デバウンス入力"
+        />
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: loadable
+  BODY: |
+    ■ 解説
+
+    ・非同期 atom のロード状態（loading, hasError, data）を管理するためのユーティリティ
+
+    ■ サンプル
+
+    import { atom } from 'jotai'
+    import { loadable } from 'jotai/utils'
+
+    const asyncAtom = atom(async () => {
+      const response = await fetch('/api/data')
+      return response.json()
+    })
+    const loadableAtom = loadable(asyncAtom)
+
+    const App = () => {
+      const loadableState = useAtomValue(loadableAtom)
+      if (loadableState.state === 'loading') return <div>Loading...</div>
+      if (loadableState.state === 'hasError') return <div>Error</div>
+      return <div>{JSON.stringify(loadableState.data)}</div>
+    }
+
+- ENTRY:
+  EXPLAIN: atomFamily
+  BODY: |
+    ■ 解説
+
+    ・パラメータに基づいて動的に atom を生成するユーティリティ
+    ・同じパラメータに対しては同じ atom を返
+
+    ■ サンプル
+
+    import { atom } from 'jotai'
+    import { atomFamily } from 'jotai/utils'
+
+    const todoFamily = atomFamily((id: string) => atom({ id, text: '', completed: false }))
+
+    const TodoItem = ({ id }: { id: string }) => {
+      const [todo, setTodo] = useAtom(todoFamily(id))
+      return (
+        <div>
+          <input
+            value={todo.text}
+            onChange={(e) => setTodo({ ...todo, text: e.target.value })}
+          />
+          <input
+            type="checkbox"
+            checked={todo.completed}
+            onChange={(e) => setTodo({ ...todo, completed: e.target.checked })}
+          />
+        </div>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: scopeAtom
+  BODY: |
+    ■ 解説
+
+    ・atom を特定のスコープに関連付け
+    ・異なるスコープ間で同じ atom を独立して使用できるように
+
+    ■ サンプル
+
+    import { atom } from 'jotai'
+    import { scopeAtom } from 'jotai/utils'
+
+    const countAtom = scopeAtom(atom(0), 'counterScope')
+
+    const Counter = () => {
+      const [count, setCount] = useAtom(countAtom)
+      return (
+        <div>
+          <button onClick={() => setCount(count - 1)}>-</button>
+          {count}
+          <button onClick={() => setCount(count + 1)}>+</button>
+        </div>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: resetAtom
+  BODY: |
+    ■ 解説
+
+    ・atom の値を初期値にリセットするためのユーティリティ
+
+    ■ サンプル
+
+    import { atom } from 'jotai'
+    import { resetAtom } from 'jotai/utils'
+
+    const countAtom = atom(0)
+    const resetCountAtom = resetAtom(countAtom)
+
+    const App = () => {
+      const [count, setCount] = useAtom(countAtom)
+      const reset = useSetAtom(resetCountAtom)
+      return (
+        <div>
+          <button onClick={() => setCount(count + 1)}>Increment</button>
+          <button onClick={reset}>Reset</button>
+          <div>Count: {count}</div>
+        </div>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: atomWithStorage
+  BODY: |
+    ■ 解説
+
+    ・atomWithStorage は、localStorage や sessionStorage と同期する atom を作成
+    ・ページのリロードやブラウザの再起動後も状態が保持
+    ・ストレージのキーとデフォルト値を指定
+
+    ■ サンプル
+
+    import { atomWithStorage } from 'jotai/utils'
+
+    const countAtom = atomWithStorage('count', 0)
+
+    function Counter() {
+      const [count, setCount] = useAtom(countAtom)
+      return (
+        <div>
+          <p>Count: {count}</p>
+          <button onClick={() => setCount(c => c + 1)}>+1</button>
+        </div>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: atomWithDefault
+  BODY: |
+    ■ 解説
+
+    ・atomWithDefault は、別の atom の値に基づいてデフォルト値を持つ atom を作成
+    ・読み取り専用の atom で、依存する atom の値が変更されると自動的に更新
+
+    ■ サンプル
+
+    import { atom, atomWithDefault } from 'jotai/utils'
+
+    const baseAtom = atom(1)
+    const derivedAtom = atomWithDefault((get) => get(baseAtom) * 2)
+
+    function App() {
+      const [base, setBase] = useAtom(baseAtom)
+      const derived = useAtomValue(derivedAtom)
+      return (
+        <div>
+          <p>Base: {base}</p>
+          <p>Derived: {derived}</p>
+          <button onClick={() => setBase(b => b + 1)}>+1</button>
+        </div>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: selectAtom
+  BODY: |
+    ■ 解説
+
+    ・selectAtom は、既存の atom から特定のプロパティや値を選択して新しい読み取り専用の atom を作成
+    ・元の atom の変更を監視し、選択した部分のみを更新
+
+    ■ サンプル
+
+    import { atom, selectAtom } from 'jotai/utils'
+
+    const userAtom = atom({ name: 'John', age: 30 })
+    const nameAtom = selectAtom(userAtom, (user) => user.name)
+
+    function UserProfile() {
+      const name = useAtomValue(nameAtom)
+      return <p>Name: {name}</p>
+    }
+
+- ENTRY:
+  EXPLAIN: splitAtom
+  BODY: |
+    ■ 解説
+
+    ・splitAtom は、配列を表す atom を個別の atom に分割
+    ・各要素に対して個別の atom を作成し、配列の変更を個別の atom に反映
+
+    ■ サンプル
+
+    import { atom, splitAtom } from 'jotai/utils'
+
+    const listAtom = atom(['item1', 'item2', 'item3'])
+    const itemAtoms = splitAtom(listAtom)
+
+    function ItemList() {
+      const items = useAtomValue(itemAtoms)
+      return (
+        <ul>
+          {items.map((itemAtom, index) => (
+            <Item key={index} itemAtom={itemAtom} />
+          ))}
+        </ul>
+      )
+    }
+
+    function Item({ itemAtom }: { itemAtom: PrimitiveAtom<string> }) {
+      const [item, setItem] = useAtom(itemAtom)
+      return <li>{item}</li>
+    }
+
+- ENTRY:
+  EXPLAIN: freezeAtom
+  BODY: |
+    ■ 解説
+
+    ・freezeAtom は、atom の値を Object.freeze で凍結し、変更不可に
+    ・開発時に不変性を強制するのに役立つ
+
+    ■ サンプル
+
+    import { atom, freezeAtom } from 'jotai/utils'
+
+    const dataAtom = freezeAtom(atom({ a: 1, b: 2 }))
+
+    function DataComponent() {
+      const data = useAtomValue(dataAtom)
+      // data は凍結されているので変更不可
+      return <p>Data: {JSON.stringify(data)}</p>
+    }
+
+- ENTRY:
+  EXPLAIN: debounceAtom
+  BODY: |
+    ■ 解説
+
+    ・debounceAtom は、atom の更新をデバウンス
+    ・指定した遅延時間内に複数の更新が発生した場合、最後の更新のみを適用
+
+    ■ サンプル
+
+    import { atom, debounceAtom } from 'jotai/utils'
+
+    const inputAtom = atom('')
+    const debouncedInputAtom = debounceAtom(inputAtom, 500)
+
+    function SearchInput() {
+      const [input, setInput] = useAtom(inputAtom)
+      const debouncedInput = useAtomValue(debouncedInputAtom)
+
+      return (
+        <div>
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Search..."
+          />
+          <p>Debounced: {debouncedInput}</p>
+        </div>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: loadable
+  BODY: |
+    ■ 解説
+
+    ・loadable は、非同期 atom のロード状態を管理
+    ・loading、hasError、data の状態を提供し、Suspense やエラーハンドリングを容易に
+
+    ■ サンプル
+
+    import { atom, loadable } from 'jotai/utils'
+
+    const asyncDataAtom = atom(async () => {
+      const response = await fetch('/api/data')
+      return response.json()
+    })
+    const loadableDataAtom = loadable(asyncDataAtom)
+
+    function DataComponent() {
+      const data = useAtomValue(loadableDataAtom)
+
+      if (data.state === 'loading') return <p>Loading...</p>
+      if (data.state === 'hasError') return <p>Error: {data.error.message}</p>
+      return <p>Data: {JSON.stringify(data.data)}</p>
+    }
+
+- ENTRY:
+  EXPLAIN: atomFamily
+  BODY: |
+    ■ 解説
+
+    ・atomFamily は、パラメータに基づいて動的に atom を作成するファミリーを生成
+    ・同じパラメータに対しては同じ atom を返し、メモ化
+
+    ■ サンプル
+
+    import { atomFamily } from 'jotai/utils'
+
+    const todoFamily = atomFamily((id: string) => atom({ id, text: '', completed: false }))
+
+    function TodoItem({ id }: { id: string }) {
+      const [todo, setTodo] = useAtom(todoFamily(id))
+      return (
+        <div>
+          <input
+            type="checkbox"
+            checked={todo.completed}
+            onChange={(e) => setTodo({ ...todo, completed: e.target.checked })}
+          />
+          <input
+            value={todo.text}
+            onChange={(e) => setTodo({ ...todo, text: e.target.value })}
+          />
+        </div>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: scopeAtom
+  BODY: |
+    ■ 解説
+
+    ・scopeAtom は、atom を特定のスコープに関連付け
+    ・異なるスコープ間で同じ atom を独立して使用できる
+
+    ■ サンプル
+
+    import { atom, createScope, scopeAtom } from 'jotai/utils'
+
+    const myScope = createScope()
+    const countAtom = scopeAtom(atom(0), myScope)
+
+    function Counter() {
+      const [count, setCount] = useAtom(countAtom, myScope)
+      return (
+        <div>
+          <p>Count: {count}</p>
+          <button onClick={() => setCount(c => c + 1)}>+1</button>
+        </div>
+      )
+    }
+
+- ENTRY:
+  CATEGORY: jotai/utils 他
+
+- ENTRY:
+  EXPLAIN: 各種ユーティリティ
+  BODY: |
+    atomWithImmer:                        Immer を使用して不変データ構造を簡単に操作
+    atomWithReducer:                      reducer 関数を使用して状態を管理
+    atomWithMachine:                      状態マシンと連携
+    atomWithQuery:                        React Query と連携
+    atomWithMutation:                     React Query のミューテーションと連携
+    atomWithObservable:                   RxJS の Observable と連携
+    atomWithWebSocket:                    WebSocket と連携
+    atomWithStorageEvent:                 他のタブやウィンドウでのストレージ変更を反映
+    atomWithReset:                        atom の値をリセット可能にするユーティリティ
+    atomWithDefaultGetter:                デフォルト値を動的に取得
+    atomWithProxy:                        Proxy を使用して動的にプロパティを管理
+    atomWithHash:                         URL のハッシュ部分と同期
+    atomWithLocation:                     URL のパスやクエリパラメータと同期
+    atomWithHistory:                      履歴管理と連携
+    atomWithStorageListener:              ストレージ変更をリッスン
+    atomWithDebouncedEffect:              atom の更新に対してデバウンス効果を適用するユーティリティ
+    atomWithThrottledEffect:              atom の更新に対してスロットル効果を適用するユーティリティ
+    atomWithCache:                        キャッシュ機能を
+    atomWithErrorBoundary:                エラーバウンダリと連携
+    atomWithLogging:                      atom の変更をログに記録するユーティリティ
+    atomWithPerformance:                  atom のパフォーマンスを計測するユーティリティ
+    atomWithValidation:                   atom の値を検証するユーティリティ
+    atomWithUndoRedo:                     元に戻す/やり直す機能を
+    atomWithSession:                      セッションストレージと同期
+    atomWithLocalStorage:                 ローカルストレージと同期
+    atomWithAsyncStorage:                 非同期ストレージと同期
+    atomWithCookie:                       クッキーと同期
+    atomWithIndexedDB:                    IndexedDB と同期
+    atomWithClipboard:                    クリップボードと同期
+    atomWithMediaQuery:                   メディアクエリと同期
+    atomWithOnlineStatus:                 オンライン/オフライン状態と同期
+    atomWithGeolocation:                  ジオロケーションと同期
+    atomWithBatteryStatus:                バッテリー状態と同期
+    atomWithNetworkInformation:           ネットワーク情報と同期
+    atomWithViewportSize:                 ビューポートサイズと同期
+    atomWithScrollPosition:               スクロール位置と同期
+    atomWithWindowSize:                   ウィンドウサイズと同期
+    atomWithTheme:                        テーマ設定と同期
+    atomWithLanguage:                     言語設定と同期
+    atomWithTimeZone:                     タイムゾーン設定と同期
+    atomWithDateTime:                     日付と時刻設定と同期
+    atomWithCurrency:                     通貨設定と同期
+    atomWithLocale:                       ロケール設定と同期
+    atomWithAccessibilitySettings:        アクセシビリティ設定と同期
+    atomWithUserPreferences:              ユーザー設定と同期
+    atomWithSystemSettings:               システム設定と同期
+    atomWithAppSettings:                  アプリ設定と同期
+    atomWithFeatureFlags:                 フィーチャーフラグと同期
+    atomWithABTesting:                    A/B テスト設定と同期
+    atomWithExperimentation:              実験設定と同期
+    atomWithAnalyticsSettings:            分析設定と同期
+    atomWithNotificationSettings:         通知設定と同期
+    atomWithPrivacySettings:              プライバシー設定と同期
+    atomWithSecuritySettings:             セキュリティ設定と同期
+    atomWithBackupSettings:               バックアップ設定と同期
+    atomWithSyncSettings:                 同期設定と同期
+    atomWithUpdateSettings:               更新設定と同期
+    atomWithConnectionSettings:           接続設定と同期
+    atomWithDisplaySettings:              表示設定と同期
+    atomWithSoundSettings:                サウンド設定と同期
+    atomWithInputSettings:                入力設定と同期
+    atomWithOutputSettings:               出力設定と同期
+    atomWithPerformanceSettings:          パフォーマンス設定と同期
+    atomWithDebugSettings:                デバッグ設定と同期
+    atomWithLoggingSettings:              ログ設定と同期
+    atomWithTestingSettings:              テスト設定と同期
+    atomWithDevelopmentSettings:          開発設定と同期
+    atomWithProductionSettings:           本番設定と同期
+    atomWithCustomSettings:               カスタム設定と同期
+    atomWithUserProfile:                  ユーザープロファイルと同期
+    atomWithUserSession:                  ユーザーセッションと同期
+    atomWithUserPermissions:              ユーザー権限と同期
+    atomWithUserRoles:                    ユーザーロールと同期
+    atomWithUserGroups:                   ユーザーグループと同期
+    atomWithUserNotifications:            ユーザー通知と同期
+    atomWithUserMessages:                 ユーザーメッセージと同期
+    atomWithUserActivities:               ユーザーアクティビティと同期
+    atomWithUserHistory:                  ユーザー履歴と同期
+    atomWithUserPreferences:              ユーザー設定と同期
+    atomWithUserStatistics:               ユーザー統計と同期
+    atomWithUserAnalytics:                ユーザー分析と同期
+    atomWithUserFeedback:                 ユーザーフィードバックと同期
+    atomWithUserSupport:                  ユーザーサポートと同期
+    atomWithUserBilling:                  ユーザー請求情報と同期
+    atomWithUserSubscriptions:            ユーザーサブスクリプションと同期
+    atomWithUserPayments:                 ユーザー支払い情報と同期
+    atomWithUserOrders:                   ユーザー注文情報と同期
+    atomWithUserWishlist:                 ユーザーウィッシュリストと同期
+    atomWithUserCart:                     ユーザーカート情報と同期
+    atomWithUserReviews:                  ユーザーレビューと同期
+    atomWithUserRatings:                  ユーザーレーティングと同期
+    atomWithUserFavorites:                ユーザーフェイバリットと同期
+    atomWithUserBookmarks:                ユーザーブックマークと同期
+    atomWithUserHistory:                  ユーザー履歴と同期
+    atomWithUserActivities:               ユーザーアクティビティと同期
+    atomWithUserSessions:                 ユーザーセッションと同期
+    atomWithUserTokens:                   ユーザートークンと同期
+    atomWithUserIdentities:               ユーザー識別情報と同期
+    atomWithUserProfiles:                 ユーザープロファイルと同期
+    atomWithUserAccounts:                 ユーザーアカウントと同期
+    atomWithUserSettings:                 ユーザー設定と同期
+    atomWithUserData:                     ユーザーデータと同期
+    atomWithAppData:                      アプリデータと同期
+    atomWithGlobalState:                  グローバル状態と同期
+    atomWithLocalState:                   ローカル状態と同期
+    atomWithRemoteState:                  リモート状態と同期
+    atomWithSharedState:                  共有状態と同期
+    atomWithPersistentState:              永続状態と同期
+    atomWithTransientState:               一時状態と同期
+    atomWithComputedState:                計算状態と同期
+    atomWithDerivedState:                 派生状態と同期
+    atomWithMutableState:                 可変状態と同期

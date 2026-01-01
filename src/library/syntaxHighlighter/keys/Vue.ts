@@ -2,7 +2,7 @@ import { KeyDef } from "../../../types/type"
 
 export const keysVue: KeyDef = {
   // ■ Main(赤)
-  IndianRed: [
+  Crimson: [
     "vue",
     "nuxt",
     "ref",

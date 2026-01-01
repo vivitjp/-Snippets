@@ -2,7 +2,7 @@ import { KeyDef } from "../../../types/type"
 
 export const keysRTL: KeyDef = {
   // ■ Main(赤)
-  IndianRed: ["render", "screen", "userEvent", "fireEvent", ""],
+  Crimson: ["render", "screen", "userEvent", "fireEvent", ""],
   // ■ 青
   RoyalBlue: [
     "click",

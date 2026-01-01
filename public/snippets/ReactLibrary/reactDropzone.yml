@@ -1,12 +1,11 @@
 ---
 #-------------------------------
-# dragAndDrops
+# react-dropzone
 #-------------------------------
 - ENTRY:
   CATEGORY: react-dropzone
 
 - ENTRY:
-  KEY: dragAndDrops.基礎.installation
   EXPLAIN: インストールと基本的な使い方
   BODY: |
     ■ インストール
@@ -73,7 +72,6 @@
     }
 
 - ENTRY:
-  KEY: dragAndDrops.useDropzone.options
   EXPLAIN: useDropzone のオプション詳細
   BODY: |
     ■ accept
@@ -197,7 +195,6 @@
       }
 
 - ENTRY:
-  KEY: dragAndDrops.useDropzone.options
   EXPLAIN: コールバックオプション
   BODY: |
     ■ onDrop
@@ -277,7 +274,6 @@
       }
 
 - ENTRY:
-  KEY: dragAndDrops.useDropzone.caveats
   EXPLAIN: 注意点
   BODY: |
     ■ 前提条件
@@ -333,7 +329,6 @@
       デフォルトで stopPropagation される場合あり。カスタムハンドラ注意
 
 - ENTRY:
-  KEY: dragAndDrops.ファイルの読み込み
   EXPLAIN: カスタムhooks(ファイルの読み込み)
   BODY: |
     ■ カスタムhooksに整形
@@ -407,7 +402,6 @@
     }
 
 - ENTRY:
-  KEY: dragAndDrops.FileSystemAccessAPI
   EXPLAIN: File System Access API
   BODY: |
     ■ 概要

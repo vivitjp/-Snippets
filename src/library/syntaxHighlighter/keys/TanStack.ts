@@ -2,7 +2,7 @@ import { KeyDef } from "../../../types/type"
 
 export const keysTanStack: KeyDef = {
   // ■ Main(赤)
-  IndianRed: [
+  Crimson: [
     "tanStack",
     "graphql",
     "react",

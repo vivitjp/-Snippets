@@ -2,7 +2,7 @@ import { KeyDef } from "../../../types/type"
 
 export const keysAWSCloud: KeyDef = {
   // ■ Main(赤)
-  IndianRed: [
+  Crimson: [
     "Amazon",
     "AWS",
     "Google",

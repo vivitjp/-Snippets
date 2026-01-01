@@ -1,6 +1,6 @@
 import { KeyDef } from "../../../types/type"
 
-export const keysPackageRHF: KeyDef = {
+export const keysRHF: KeyDef = {
   // ■ Main(赤)
   Crimson: [
     "useForm",

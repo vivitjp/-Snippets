@@ -2,7 +2,7 @@ import { KeyDef } from "../../../types/type"
 
 export const keysExpress: KeyDef = {
   // ■ Main(赤)
-  IndianRed: ["express", "app", "node", "err"],
+  Crimson: ["express", "app", "node", "err"],
   // ■ 青
   RoyalBlue: [
     "send",

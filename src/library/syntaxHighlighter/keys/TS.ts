@@ -2,7 +2,7 @@ import { KeyDef } from "../../../types/type"
 
 export const keysTS: KeyDef = {
   // ■ Main(赤)
-  IndianRed: [
+  Crimson: [
     "TS",
     "TypeScript",
     "interface",
@@ -14,6 +14,12 @@ export const keysTS: KeyDef = {
     "typeof",
     "readonly",
     "satisfies",
+    "tsc",
+    "babel",
+    "WebPack",
+    "Vite",
+    "esbuild",
+    "Rollup",
   ],
   // ■ 青
   RoyalBlue: [
@@ -71,6 +77,30 @@ export const keysTS: KeyDef = {
     "PropertyDescriptor",
     "Disposable",
     "AsyncDisposable",
+    "autoImports",
+    "completeFunctionCalls",
+    "enabled",
+    "includeCompletionsForModuleExports",
+    "includeCompletionsWithInsertText",
+    "names",
+    "paths",
+    "importModuleSpecifier",
+    "quoteStyle",
+    "includeCompletionsForImportStatements",
+    "includeCompletionsWithSnippetText",
+    "autoImportFileExcludePatterns",
+    "autoFixOnSave",
+    "enableBetterFunctionCompletion",
+    "enableImportFixes",
+    "enableRefactorings",
+    "enableSuggestions",
+    "insertSpaceAfterCommaDelimiter",
+    "placeOpenBraceOnNewLineForControlBlocks",
+    "semicolons",
+    "trimTrailingWhitespace",
+    "sortImports",
+    "removeUnusedImports",
+    "",
     "",
     "",
     "",

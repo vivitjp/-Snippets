@@ -2,7 +2,7 @@ import { KeyDef } from "../../../types/type"
 
 export const keysMUI: KeyDef = {
   // ■ Main(赤)
-  IndianRed: [
+  Crimson: [
     "Box",
     "Container",
     "item",

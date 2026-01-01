@@ -6,7 +6,6 @@
   CATEGORY: i18n
 
 - ENTRY:
-  KEY: i18n.基礎
   EXPLAIN: インストール と初期設定
   BODY: |
     ■ インストール
@@ -58,9 +57,7 @@
       export default i18n
 
 - ENTRY:
-  KEY: i18n.基礎
-  EXPLAIN: |
-    設定: ブラウザ言語検出と外部翻訳ファイル
+  EXPLAIN: 設定 ブラウザ言語検出と外部翻訳ファイル
   BODY: |
     ■ 設定ファイル（i18n.ts）: ブラウザ言語検出
 
@@ -89,7 +86,6 @@
       export default i18n
 
 - ENTRY:
-  KEY: i18n.基礎
   EXPLAIN: App とコンポーネント
   BODY: |
     ■ App(i18n.ts)
@@ -114,7 +110,6 @@
       }
 
 - ENTRY:
-  KEY: i18n.検出とバックエンド
   EXPLAIN: 言語検出・バックエンド
   BODY: |
     ■ 言語検出(i18next-browser-languagedetector)
@@ -140,7 +135,6 @@
       })
 
 - ENTRY:
-  KEY: i18n.TypeScript
   EXPLAIN: TypeScript での型定義
   BODY: |
     ■ react-i18next
@@ -167,7 +161,6 @@
     ・キー抽出と型生成のワークフローを作ると便利
 
 - ENTRY:
-  KEY: i18n.翻訳運用とベストプラクティス
   EXPLAIN: 翻訳ファイル管理・運用
   BODY: |
     ■ 名前空間と分割
@@ -189,7 +182,6 @@
     ・翻訳後に PR / マージで反映するワークフロー作成
 
 - ENTRY:
-  KEY: i18n.resource.sample.resource
   EXPLAIN: リソースサンプル
   BODY: |
     ■ public/locales/en/common.json
@@ -237,7 +229,6 @@
       {{name}} と {{ name }} は同じ意味
 
 - ENTRY:
-  KEY: i18n.resource.sample.resource
   EXPLAIN: リソース 複数形処理
   BODY: |
     ■ plural（複数形処理）
@@ -276,7 +267,6 @@
     ・言語ごとにキー設計を簡潔に（例: one / other だけ使う）する
 
 - ENTRY:
-  KEY: i18n.resource.sample.resource
   EXPLAIN: ns と オブジェクト階層の使い分け
   BODY: |
     ■ namespace (ns) と オブジェクト階層の使い分け
@@ -319,7 +309,6 @@
       }
 
 - ENTRY:
-  KEY: i18n.resource.sample.call
   EXPLAIN: useTranslationフック
   BODY: |
     ■ 型
@@ -391,7 +380,6 @@
       }
 
 - ENTRY:
-  KEY: i18n.resource.sample.call
   EXPLAIN: t 関数呼び出し例
   BODY: |
     ■ 型

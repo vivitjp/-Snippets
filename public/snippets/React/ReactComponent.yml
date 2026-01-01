@@ -8,40 +8,53 @@
 - ENTRY:
   EXPLAIN: 関数コンポーネント
   BODY: |
-    ■ コンポーネントの引数型
+    ■ FC(FunctionComponent) コンポーネント
+
     type Props = {
       foo: string;
       age?: number;
     }
 
-    ■ コンポーネント
     const MyComponent: React.FC<Props> = ({ foo, age=0 }) => {
-        return <span>{foo}:{age}</span>
+      return <span>{foo}:{age}</span>
     }
 
-    ■ コール(2方法)
-    <MyComponent foo="bar" />
-    { MyComponent({ foo: "hoo", age: 20 }) }
+    ■ コール方法(2方法)
+
+    <MyComponent foo="bar" />                        // JSXタグ形式
+
+    { MyComponent({ foo: "hoo", age: 20 }) }         // 関数呼び出し形式
+
+    ■ コール方法の違いによる再レンダー挙動の違いに注意
+
+    ・JSXタグ形式(<MyComponent ... />)
+
+      Reactのレンダリングサイクルに組み込まれ、状態管理やライフサイクルメソッドが適切に機能
+
+    ・関数呼び出し形式(MyComponent(...))
+
+      通常のJavaScript関数として扱われ、Reactのライフサイクルや状態管理の恩恵を受けない
+
+    どちらを使うべきか? 
+
+    ・通常はJSXタグ形式が推奨: これにより、Reactの機能をフルに活用でき、予期せぬ挙動を避けられる
+    ・関数呼び出し形式は、特定のユースケース（例:条件付きレンダリングなど）でのみ使用を検討
+    ・一貫性を保つ: プロジェクト全体でどちらの形式を使用するかを統一し、コードの可読性と保守性を向上
 
 - ENTRY:
   EXPLAIN: クラスコンポーネント
   BODY: |
-    ■ コンポーネントの引数型
+    ■ クラスコンポーネント
     type Props = {
       foo: string;
       age?: number;
     }
      
-    ■ コンポーネント
     class MyComponent extends React.Component<Props, {}> {
       render() {
         return <span>{this.props.foo}:{this.props.age || 0}</span>
       }
     }
-
-    ■ コール(2方法)
-    <MyComponent foo="bar" />
-    { MyComponent({ foo: "hoo", age: 20 }) }
 
 #-------------------------------
 # React Component Samples

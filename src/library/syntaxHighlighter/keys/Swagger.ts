@@ -2,7 +2,7 @@ import { KeyDef } from "../../../types/type"
 
 export const keysSwagger: KeyDef = {
   // ■ Main(赤)
-  IndianRed: [
+  Crimson: [
     "DocumentBuilder",
     "SwaggerModule",
     "ApiProperty",

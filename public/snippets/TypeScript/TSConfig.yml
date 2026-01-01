@@ -1,7 +1,9 @@
 ---
 #-------------------------------
-# Samples
+# TSConfig
 #-------------------------------
+- ENTRY:
+  CATEGORY: Samples
 
 - ENTRY:
   EXPLAIN: Nextjs Sample
@@ -68,22 +70,36 @@
 # TSConfig Compiler Options
 #-------------------------------
 - ENTRY:
-  EXPLAIN: Include Exclude
-  BODY: |
-    ■ include
+  CATEGORY: TSConfig Compiler Options
 
-    対象ファイルPATH
+#-------------------------------
+# Include, Exclude, References
+#-------------------------------
+- ENTRY:
+  EXPLAIN: Include, Exclude, References
+  BODY: |
+    ■ include: 対象ファイルPATH配列
+
     "include": ["src"]
 
-    ■ exclude
+    ※ デフォルト: 全ファイル(.ts, .tsx, .d.ts)
 
-    除外ファイルPATH
-    "exclude": ["temp"]
+      tsconfig.json が存在するディレクトリ(+サブディレクトリ)内の全 TS ファイルが対象
 
-- ENTRY:
-  EXPLAIN: References
-  BODY: |
+    ■ 🔴 exclude: 除外ファイルPATH配列
+
+    "exclude": ["temp", "dist", "build", "scripts"]
+
+    ※ デフォルト: node_modules, bower_components, jspm_packages, <outDir>
+
+      tsconfig.json が存在するディレクトリ(+サブディレクトリ)内の全 TS ファイルが対象【外】
+
+    ■ References: プロジェクト参照配列
+
     "references": [{ "path": "./tsconfig.node.json" }]
+
+    ※ プロジェクト参照: 大規模プロジェクトで複数の tsconfig.json を管理する場合に使用
+      各サブプロジェクトが独自の tsconfig.json を持ち、相互に参照可能
 
 #-------------------------------
 # Async
@@ -92,35 +108,28 @@
 - ENTRY:
   EXPLAIN: strict
   BODY: |
-    ■ strict
+    ■ 🔴 strict                        // 以下すべて true に設定
 
-      以下すべて on に設定
+      alwaysStrict                      // ECMAScriptのstrict モードで解釈
+      noImplicitAny                     // 推論による any を抑制
+      noImplicitThis                    // 暗黙的にany型となる this 式でエラーを発生
+      strictBindCallApply               // call,bind,apply で元関数に対する引数をチェック
+      strictFunctionTypes               // パラメータをより正しくチェック
+      strictNullChecks                  // null と undefined を厳密に区別して扱う
+      strictPropertyInitialization      // コンストラクターで値セットしない属性エラー
+      useUnknownInCatchVariables        // catch 内の変数型を any から unknown に変更可能に
 
-      alwaysStrict
-      noImplicitAny
-      noImplicitThis
-      strictBindCallApply
-      strictFunctionTypes
-      strictNullChecks
-      strictPropertyInitialization
-      useUnknownInCatchVariables
+    ■ alwaysStrict                      // ECMAScriptのstrict モードで解釈
 
-    ■ alwaysStrict
-
-      ECMAScriptのstrict モードで解釈
       "use strict" 出力
                                                   
-    ■ noImplicitAny
-
-      推論による any を抑制
+    ■ noImplicitAny                     // 推論による any を抑制
 
       function fn(s) {                  => Parameter 's' implicitly has an 'any' type.
         console.log(s.subtr(3));
       }
 
-    ■ noImplicitThis
-
-      暗黙的にany型となる this 式でエラーを発生
+    ■ noImplicitThis                    // 暗黙的にany型となる this 式でエラーを発生
 
       class Rectangle {
         age: number;
@@ -133,9 +142,7 @@
         }
       }
 
-    ■ strictBindCallApply
-
-      call,bind,apply で元関数に対する引数をチェック
+    ■ strictBindCallApply               // call,bind,apply で元関数に対する引数をチェック
 
       function fn(x: string) {
         return parseInt(x);
@@ -145,9 +152,7 @@
       const n2 = fn.call(undefined, false); => Argument of type 'boolean' is not 
                                                assignable to parameter of type 'string'
 
-    ■ strictFunctionTypes
-
-      パラメータをより正しくチェック
+    ■ strictFunctionTypes               // パラメータをより正しくチェック
 
       function fn(x: string) {
         console.log("Hello, " + x.toLowerCase());
@@ -155,9 +160,7 @@
       type StringOrNumberFunc = (ns: string | number) => void;  //パラメタの型違い
       let func: StringOrNumberFunc = fn;     // Type '(x: string) => void' is not assignable ...
 
-    ■ strictNullChecks
-
-      nullとundefinedは言語により事実上無視
+    ■ strictNullChecks                  // null と undefined を厳密に区別して扱う
 
       declare const username: string;
       const users = [
@@ -168,9 +171,7 @@
       const loggedInUser = users.find((u) => u.name === username);
       console.log(loggedInUser.age);    // 'loggedInUser' is possibly 'undefined'
 
-    ■ strictPropertyInitialization
-
-      コンストラクターで値セットしない属性エラー
+    ■ strictPropertyInitialization      // コンストラクターで値セットしない属性エラー
 
       class UserAccount {
         name: string;                   // コンストラクタで値を設定
@@ -183,9 +184,7 @@
         }
       }
 
-    ■ useUnknownInCatchVariables
-
-      catch 内の変数型を any から unknown に変更可能に
+    ■ useUnknownInCatchVariables        // catch 内の変数型を any から unknown に変更可能に
 
       try {
         // ...
@@ -196,85 +195,52 @@
       }
 
 - ENTRY:
-  EXPLAIN: |
-    LINT: allow Unreachable Code
+  EXPLAIN: Lint
   BODY: |
-    ■ allowUnreachableCode
+    ■ allowUnreachableCode              // 到達不可能なコードに対する警告
 
-    到達不可能なコードに対する警告
-
-    function fn(n: number) {
-      if (n > 5) return true;
-      else return false;
-      return true;                      // Unreachable code detected.
-    }
-
-- ENTRY:
-  EXPLAIN: |
-    LINT: allow Unused Labels
-  BODY: |
-    ■ allowUnusedLabels
-
-    利用していない Label についての警告
-
-    function verifyAge(age: number) {   // 'return'の記述が抜けている
-      if (age > 18) {
-        verified: true;                 // Unused label.
+      function fn(n: number) {
+        if (n > 5) return true;
+        else return false;
+        return true;                    // Unreachable code detected.
       }
-    }
 
-- ENTRY:
-  EXPLAIN: |
-    LINT: exact Optional Property Types
-  BODY: |
-    ■ exactOptionalPropertyTypes
+    ■ allowUnusedLabels                 // 利用していない Label についての警告
 
-    型の ? 処理方法で厳格なルール適用
+      function verifyAge(age: number) { // 'return'の記述が抜けている
+        if (age > 18) {
+          verified: true;               // Unused label.
+        }
+      }
 
-    colorThemeOverride?: "dark" | "light";    // 明示的なundefinedがない
-    settings.colorThemeOverride = undefined;  // NG
+    ■ exactOptionalPropertyTypes        // 型のオプショナル(?)処理方法で厳格なルール適用
 
-- ENTRY:
-  EXPLAIN: |
-    LINT: no Fallthrough Cases In Switch
-  BODY: |
-    ■ noFallthroughCasesInSwitch
+      colorThemeOverride?: "dark" | "light";    // 明示的なundefinedがない
+      settings.colorThemeOverride = undefined;  // NG
 
-    次の case へ処理を持ち越し抑制
+    ■ noFallthroughCasesInSwitch        // 次の case へ処理を持ち越し抑制
 
-    switch (a) {
-      case 0:                           // Fallthrough case in switch.
-        console.log("even");
-      case 1:
-        console.log("odd");
-        break;
-    }
+      switch (a) {
+        case 0:                           // Fallthrough case in switch.
+          console.log("even");
+        case 1:
+          console.log("odd");
+          break;
+      }
 
-- ENTRY:
-  EXPLAIN: |
-    LINT: no Implicit Override
-  BODY: |
-    ■ noImplicitOverride
+    ■ noImplicitOverride                // 明示的な オーバーロード(Override)使用？
 
-    明示的な オーバーロード(Override)が使用されているか？
+      class Album {
+        download() { ... }                // Default behavior
+      }
 
-    class Album {
-      download() { ... }                // Default behavior
-    }
+      class SharedAlbum extends Album {
+        override download() { ... }       // Override 必要になる
+      }
 
-    class SharedAlbum extends Album {
-      override download() { ... }       // Override 必要になる
-    }
+    ■ noImplicitReturns                 // 関数内の全コードパスが値を返却しているか?
 
-- ENTRY:
-  EXPLAIN: |
-    LINT: no Implicit Returns
-  BODY: |
-    ■ noImplicitReturns
-
-    関数内の全コードパスが値を返却しているか?
-
-    function func(color: "blue" | "red"): string {
+      function func(color: "blue" | "red"): string {
         if (color === "blue") {
           return "beats";
         } else {
@@ -282,253 +248,122 @@
         }
       }
 
-- ENTRY:
-  EXPLAIN: |
-    LINT: no Property Access From Index Signature
-  BODY: |
-    ■ noPropertyAccessFromIndexSignature
+    ■ noPropertyAccessFromIndexSignature  // index signature によるアクセス制限
 
-    index signature によるアクセス制限
+      interface GameSettings {
+        speed: "fast" | "medium" | "slow"; // 宣言された属性
+        [key: string]: string;             // 拡張可能な属性( index signature )
+      }
 
-    interface GameSettings {
-      speed: "fast" | "medium" | "slow"; // 宣言された属性
-      [key: string]: string;             // 拡張可能な属性( index signature )
-    }
-
-    const settings = getSettings();
-    settings.speed;
-    settings.name;                      // 'name' は indexedSignatureで生成
+      const settings = getSettings();
+      settings.speed;
+      settings.name;                    // 'name' は indexedSignatureで生成
                                         // settings["name"]でアクセス
-- ENTRY:
-  EXPLAIN: |
-    LINT: no Unchecked Indexed Access
-  BODY: |
-    ■ noUncheckedIndexedAccess
 
-    index signature によるアクセスに undefined 追加
+    ■ noUncheckedIndexedAccess          // index signature によるアクセスに undefined 追加
 
-    interface EnvironmentVars {
-      NAME: string;
-      [propName: string]: string;
-    }
-    declare const env: EnvironmentVars;
+      interface EnvironmentVars {
+        NAME: string;
+        [propName: string]: string;
+      }
+      declare const env: EnvironmentVars;
 
-    const sysName = env.NAME;           // string
-    const nodeEnv = env.NODE_ENV;       // string | undefined
+      const sysName = env.NAME;         // string
+      const nodeEnv = env.NODE_ENV;     // string | undefined
 
-- ENTRY:
-  EXPLAIN: |
-    LINT: no Unused Locals
-  BODY: |
-    ■ noUnusedLocals
+    ■ noUnusedLocals                    // 非利用ローカル変数にエラー
 
-    非利用ローカル変数にエラー
+      const createKeyboard = (modelID: number) => {
+        const id = 23;                    // 'id' is declared but its value is never read.
+        return { type: "keyboard", modelID };
+      };
 
-    const createKeyboard = (modelID: number) => {
-      const id = 23;                    // 'id' is declared but its value is never read.
-      return { type: "keyboard", modelID };
-    };
+    ■ noUnusedParameters                // 非利用関数パラメータにエラー
+
+      const func = (id: number) => {    // 'id' is declared but its value is never read.
+        const someID = 23;
+        return { type: "keyboard", modelID: someID };
+      };
 
 - ENTRY:
-  EXPLAIN: |
-    LINT: no Unused Parameters
+  EXPLAIN: Module
   BODY: |
-    ■ noUnusedParameters
+    ■ allowArbitraryExtensions          // .cssなど .js, .ts 以外は型fileを{file}.d.{ext} で検索
 
-    非利用関数パラメータにエラー
+      [app.css]
+      .cookie-banner {
+        display: none;
+      }
 
-    const func = (id: number) => {      // 'id' is declared but its value is never read.
-      const someID = 23;
-      return { type: "keyboard", modelID: someID };
-    };
+      [app.d.css.ts]                    // ファイル名確認
+      declare const css: {
+        cookieBanner: string;
+      };
+      export default css;
 
-- ENTRY:
-  EXPLAIN: |
-    Module: Module
-  BODY: |
-    ■ 実装コード
+      [App.tsx]
+      import styles from "./app.css";
+      styles.cookieBanner;              // string: 型が定義済
 
-    import { valueOfPi } from "./constants";
-    export const twoPi = valueOfPi * 2;
+    ■ allowImportingTsExtensions        // .ts 拡張子のインポート許可
 
-    ■ module: "ESNext" / "ES2020"
+    ・.ts,.mts,.tsx などTS固有の拡張子で相互にインポート
+    ・TS インポートパスは JS出力ファイルで実行時に解決できない
+    ・このフラグは --noEmit または --emitDeclarationOnly が有効な場合にのみ許可
+    ・リゾルバー(バンドラー、ランタイム)が .ts ファイル間のインポートを機能させる
 
-    import { valueOfPi } from "./constants";
-    export const twoPi = valueOfPi * 2;
+    ■ allowUmdGlobalAccess              // AMDとCommonJSの両方の性質を持つ記述
 
-    ■ module: "CommonJS"
+    ・UMD = Universal Module Definition
+    ・モジュール内部から UMD へグローバルにアクセス可能
+    ・このフラグなしで UMD モジュールを利用するには import 宣言文が必要
+    ・特定のライブラリ(jQuery,Lodashなど）が実行時に利用可能であると分かっている
+      しかし、import 文ではそのライブラリにアクセスできないような web プロジェクト
 
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.twoPi = void 0;
-    const constants_1 = require("./constants");
-    exports.twoPi = constants_1.valueOfPi * 2;
+      例: allowUmdGlobalAccess: true
+      
+      import * as $ from "jquery";        // import 文なしで jQuery にアクセス
+      $(document).ready(() => {
+        console.log("Document is ready");
+      });
 
-    ■ module: "UMD"
+    ■ 🔴 baseUrl                       // 相対PATHモジュール名解決の基点ディレクトリ設定(ルートフォルダ)
 
-    (function (factory) {
-        if (typeof module === "object" && typeof module.exports === "object") {
-            var v = factory(require, exports);
-            if (v !== undefined) module.exports = v;
-        }
-        else if (typeof define === "function" && define.amd) {
-            define(["require", "exports", "./constants"], factory);
-        }
-    })(function (require, exports) {
-        "use strict";
-        Object.defineProperty(exports, "__esModule", { value: true });
-        exports.twoPi = void 0;
-        const constants_1 = require("./constants");
-        exports.twoPi = constants_1.valueOfPi * 2;
-    });
+      "baseUrl": "./"
 
-    ■ module: "AMD"
+      例: MyProj
+      ├── ex.ts
+      ├── hello
+      │   └── world.ts
+      └── tsconfig.json
 
-    define(["require", "exports", "./constants"], function (require, exports, constants_1) {
-        "use strict";
-        Object.defineProperty(exports, "__esModule", { value: true });
-        exports.twoPi = void 0;
-        exports.twoPi = constants_1.valueOfPi * 2;
+      import { helloWorld } from "hello/world";
 
-    ■ module: "System"
+    ■ customConditions                  // モジュール解決のカスタム条件指定
 
-    System.register(["./constants"], function (exports_1, context_1) {
-        "use strict";
-        var constants_1, twoPi;
-        var __moduleName = context_1 && context_1.id;
-        return {
-            setters: [
-                function (constants_1_1) {
-                    constants_1 = constants_1_1;
-                }
-            ],
-            execute: function () {
-                exports_1("twoPi", twoPi = constants_1.valueOfPi * 2);
-            }
-        };
-    });
+    ・package.json の export / import 以外の追加条件
+    ・リゾルバーへのデフォルト条件に追加
+    ・併用条件 "moduleResolution": "node16","nodenext","bundler"
 
-- ENTRY:
-  EXPLAIN: |
-    Module: allow Arbitrary Extensions
-  BODY: |
-    ■ allowArbitraryExtensions
+      "customConditions": ["my-condition"]
 
-    .cssなど .js, .ts 以外は型fileを{file}.d.{ext} で検索
+    ※ "moduleResolution": "node16", "nodenext"
+      ・Node.js>v12 ECMAScript import と CommonJS require の両方がサポート
 
-    [app.css]
-    .cookie-banner {
-      display: none;
-    }
+    ■ moduleSuffixes                    // モジュールの拡張子を指定
 
-    [app.d.css.ts]                      // ファイル名確認
-    declare const css: {
-      cookieBanner: string;
-    };
-    export default css;
+      "moduleSuffixes": [".ios", ".native", ""]
+      => 以下順で検索 ./foo.ios.ts, ./foo.native.ts, ./foo.ts.
 
-    [App.tsx]
-    import styles from "./app.css";
-    styles.cookieBanner;                // string: 型が定義済
+    ■ noResolve                         //  起動時に import チェックを不実行
 
-- ENTRY:
-  EXPLAIN: |
-    Module: allow Importing Ts Extensions
-  BODY: |
-    ■ allowImportingTsExtensions
+    ■ paths & baseUrl                   // "baseUrl"からの相対パス配列定義
 
-    .ts,.mts,.tsx などTS固有の拡張子で相互にインポート
-    TS インポートパスは JS出力ファイルで実行時に解決できない
-    このフラグは --noEmit または --emitDeclarationOnly が有効な場合にのみ許可
-    リゾルバー(バンドラー、ランタイム)が .ts ファイル間のインポートを機能させる
-
-- ENTRY:
-  EXPLAIN: |
-    Module: allow Umd Global Access
-  BODY: |
-    ■ allowUmdGlobalAccess
-
-    UMD(Universal Module Definition): AMDとCommonJSの両方の性質を持つ記述
-
-    モジュール内部から UMD へグローバルにアクセス可能
-    このフラグなしで UMD モジュールを利用するには import 宣言文が必要
-
-    特定のライブラリ(jQuery,Lodashなど）が実行時に利用可能であると分かっているが、
-    import 文ではそのライブラリにアクセスできないような web プロジェクト
-
-- ENTRY:
-  EXPLAIN: |
-    Module: base Url
-  BODY: |
-    ■ baseUrl
-
-    相対PATHモジュール名解決の基点ディレクトリ設定(ルートフォルダ)
-
-    "baseUrl": "./"
-
-    ├── ex.ts
-    ├── hello
-    │   └── world.ts
-    └── tsconfig.json
-
-    import { helloWorld } from "hello/world";
-    console.log(helloWorld);
-
-- ENTRY:
-  EXPLAIN: |
-    Module: custom Conditions
-  BODY: |
-    ■ customConditions
-
-    package.json の export / import 以外の追加条件
-    リゾルバーへのデフォルト条件に追加
-    併用条件 "moduleResolution": "node16","nodenext","bundler"
-
-    "customConditions": ["my-condition"]
-
-- ENTRY:
-  EXPLAIN: |
-    Module: module Resolution
-  BODY: |
-    ■ "moduleResolution": "node16", "nodenext"
-    Node.js>v12 ECMAScript import と CommonJS require の両方がサポート
-
-- ENTRY:
-  EXPLAIN: |
-    Module: module Suffixes
-  BODY: |
-    ■ moduleSuffixes
-
-    モジュールの拡張子を指定
-
-    "moduleSuffixes": [".ios", ".native", ""]
-    => 以下順で検索 ./foo.ios.ts, ./foo.native.ts, ./foo.ts.
-
-- ENTRY:
-  EXPLAIN: |
-    Module: no Resolve
-  BODY: |
-    ■ noResolve
-
-    起動時に import チェックを不実行
-
-- ENTRY:
-  EXPLAIN: |
-    Module: paths
-  BODY: |
-    ■ paths & baseUrl
-
-    "baseUrl"からの相対パス配列定義
-
-    1) 定義
     "baseUrl": ".",                     // "paths"に必要
     "paths": {                          // "baseUrl"からの相対パス
-      "jquery": ["node_modules/jquery/dist/jquery"]
+      "jquery": ["node_modules/jquery/dist/jquery"] // => import "jquery" と記述可能になる
     }
 
-      => import "jquery" と記述可能になる
-
-    2) 定義
     "baseUrl": "src",
     "paths": {
       "app/*": ["app/*"],
@@ -539,118 +374,168 @@
       "tests/*": ["tests/*"]
     },
 
-- ENTRY:
-  EXPLAIN: |
-    Module: resolve Json Module
-  BODY: |
-    ■ resolveJsonModule
+    ■ パスエイリアス
 
-    .json ファイルをモジュールインポート可能にして型チェック実施
-
-    [data.json]
-    {
-      "repo": "TypeScript",
-      "dry": false,
-      "debug": false
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]  // src ディレクトリの場合
+      "@/*": ["./app/*"]  // app ディレクトリの場合
     }
 
-    import settings from "./data.json";
-    settings.dry === 2;                 // 型Error
-    settings.debug === true;
+      ※ Nextjs, Vite などのバンドラー側でも同様にエイリアス設定が必要
+      
+      ※ Nextjs 例(file: next.config.js)
+
+      webpack: (config) => {
+        config.resolve.alias['@'] = path.join(__dirname, 'src')
+        return config
+      },
+
+      ※ Vite 例(file: vite.config.ts)
+
+      import { defineConfig } from 'vite';
+      import path from 'path';
+      export default defineConfig({
+        resolve: {
+          alias: {
+            '@': path.resolve(__dirname, 'src'),
+          },
+        },
+      });
+
+    ■ 🔴 resolveJsonModule              // .json ファイルをモジュールインポート可能+型チェック実施
+
+      [data.json]
+      {
+        "repo": "TypeScript",
+        "dry": false,
+        "debug": false
+      }
+
+      import settings from "./data.json";
+      settings.dry === 2;                 // 型Error
+      settings.debug === true;
+
+    ■ resolvePackageJsonExports         // package.json 内の exports 参照 (node16以下、デフォルト)
+
+    ■ resolvePackageJsonImports         // package.json 内の imports 参照 (node16以下、デフォルト)
+
+    ■ rootDir                           // ソースRootディレクトリ
+
+    ・デフォルト: tsconfig.json が存在するディレクトリ
+    ・以下では src/ が該当し、出力ディレクトリに src/ が含まれない
+
+      MyProj
+      ├── tsconfig.json
+      ├── src
+      │   ├── a.ts
+      │   ├── b.ts
+      │   ├── sub
+      │   │   ├── c.ts
+      ├── types.d.ts
+
+    ■ rootDirs                          // 仮想的ディレクトリ(エミュレート)
+
+    ・複数のディレクトリを単一のルートとして扱う
+    ・ビルド出力時にディレクトリ構造を維持
+    ・複数のソースディレクトリを1つの出力ディレクトリにマージする場合に有用
+
+      "rootDirs": ["src/views", "generated/templates/views"]
+
+      src
+        └─ views
+          └─ view1.ts (can import "./template1", "./view2`)
+          └─ view2.ts (can import "./template1", "./view1`)
+      generated
+        └─ templates
+          └─ views
+              └─ template1.ts (can import "./view1", "./view2")
+
+    ■ 🔴 typeRoots                      // 型include先ディレクトリ変更
+
+    ・以下、デフォルトinclude
+
+        ./node_modules/@types/
+        ../node_modules/@types/
+        ../../node_modules/@types/
+
+      "typeRoots": ["./typings", "./vendor/types"]
+
+    ■ types                             // グローバルに含める型定義ファイル指定
+
+    ・types 未指定: すべての @types パッケージを含む (typeRoots 内)
+    ・特定の型定義のみ含める
+      "types": ["node", "lodash", "express"]
 
 - ENTRY:
-  EXPLAIN: |
-    Module: resolve Package Json Exports
+  EXPLAIN: Module変換
   BODY: |
-    ■ resolvePackageJsonExports
+    ■ 実装コードの違い例
 
-    package.json 内の exports 参照
-    node16以下、デフォルト
+      import { valueOfPi } from "./constants";
+      export const twoPi = valueOfPi * 2;
+
+    ■ module: "ESNext" / "ES2020"
+
+      import { valueOfPi } from "./constants";
+      export const twoPi = valueOfPi * 2;
+
+    ■ module: "CommonJS"
+
+      "use strict";
+      Object.defineProperty(exports, "__esModule", { value: true });
+      exports.twoPi = void 0;
+      const constants_1 = require("./constants");
+      exports.twoPi = constants_1.valueOfPi * 2;
+
+    ■ module: "UMD"
+
+      (function (factory) {
+          if (typeof module === "object" && typeof module.exports === "object") {
+              var v = factory(require, exports);
+              if (v !== undefined) module.exports = v;
+          }
+          else if (typeof define === "function" && define.amd) {
+              define(["require", "exports", "./constants"], factory);
+          }
+      })(function (require, exports) {
+          "use strict";
+          Object.defineProperty(exports, "__esModule", { value: true });
+          exports.twoPi = void 0;
+          const constants_1 = require("./constants");
+          exports.twoPi = constants_1.valueOfPi * 2;
+      });
+
+    ■ module: "AMD"
+
+      define(["require", "exports", "./constants"], function (require, exports, constants_1) {
+          "use strict";
+          Object.defineProperty(exports, "__esModule", { value: true });
+          exports.twoPi = void 0;
+          exports.twoPi = constants_1.valueOfPi * 2;
+
+    ■ module: "System"
+
+      System.register(["./constants"], function (exports_1, context_1) {
+          "use strict";
+          var constants_1, twoPi;
+          var __moduleName = context_1 && context_1.id;
+          return {
+              setters: [
+                  function (constants_1_1) {
+                      constants_1 = constants_1_1;
+                  }
+              ],
+              execute: function () {
+                  exports_1("twoPi", twoPi = constants_1.valueOfPi * 2);
+              }
+          };
+      });
 
 - ENTRY:
-  EXPLAIN: |
-    Module: resolve Package Json Imports
+  EXPLAIN: Emit
   BODY: |
-    ■ resolvePackageJsonImports
-
-    package.json内の imports 参照
-
-- ENTRY:
-  EXPLAIN: |
-    Module: root Dir
-  BODY: |
-    ■ rootDir
-
-    ソースRootディレクトリ
-
-    デフォルト: 型定義ファイル以外の最長の共通パス
-    以下では src/ が該当し、出力ディレクトリに src/ が含まれない
-
-    MyProj
-    ├── tsconfig.json
-    ├── src
-    │   ├── a.ts
-    │   ├── b.ts
-    │   ├── sub
-    │   │   ├── c.ts
-    ├── types.d.ts
-
-- ENTRY:
-  EXPLAIN: |
-    Module: root Dirs
-  BODY: |
-    ■ rootDirs
-
-    仮想的ディレクトリ(エミュレート)
-
-    "rootDirs": ["src/views", "generated/templates/views"]
-
-    src
-    └─ views
-       └─ view1.ts (can import "./template1", "./view2`)
-       └─ view2.ts (can import "./template1", "./view1`)
-    generated
-    └─ templates
-       └─ views
-          └─ template1.ts (can import "./view1", "./view2")
-
-- ENTRY:
-  EXPLAIN: |
-    Module: type Roots
-  BODY: |
-    ■ typeRoots
-
-    デフォルトinclude root 変更 
-
-    デフォルトinclude
-      ./node_modules/@types/
-      ../node_modules/@types/
-      ../../node_modules/@types/
-
-    "typeRoots": ["./typings", "./vendor/types"]
-
-- ENTRY:
-  EXPLAIN: |
-    Module: types
-  BODY: |
-    ■ types
-
-    デフォルトinclude変更 
-
-    デフォルトinclude
-      ./node_modules/@types/
-      ../node_modules/@types/
-      ../../node_modules/@types/
-
-    "types": ["node", "lodash", "express"]
-
-- ENTRY:
-  EXPLAIN: |
-    Emit: declaration
-  BODY: |
-    ■ declaration: boolean
-
-    全変数の型を定義
+    ■ 🔴 declaration: boolean(=false)   // 全変数の型を定義
 
     [helloWorld.ts]
     export let helloWorld = "hi";
@@ -658,70 +543,41 @@
     [helloWorld.d.ts]                   // 型ファイル生成
     export declare let helloWorld: string;
 
-- ENTRY:
-  EXPLAIN: |
-    Emit: declaration Dir
-  BODY: |
-    ■ declarationDir: string
-
-    型定義出力ルートディレクトリ
+    ■ declarationDir: string            // 型定義出力ルートディレクトリ
 
     "declaration": true,
     "declarationDir": "./types"         // 以下に型ファイル
 
-- ENTRY:
-  EXPLAIN: |
-    Emit: declaration Map
-  BODY: |
-    ■ declarationMap: boolean
-
-    .d.tsのソースマップ生成
+    ■ 🔴 declarationMap: boolean(=false) // .d.tsのソースマップ生成
 
     エディターは、Go to Definitionのような機能で元の.tsファイルにジャンプできる
 
-- ENTRY:
-  EXPLAIN: |
-    Emit: downlevel Iteration
-  BODY: |
-    ■ downlevelIteration: boolean
+    ■ downlevelIteration: boolean(=false) // ダウンレベルでの反復処理サポート
 
-    ダウンレベルでの反復処理サポート
     ECMAScript 6以下で Symbol.iterator がない場合は正確な挙動せず
 
-    for / of => for
-    const arr = [1, ...arr2]; => const arr = [1].concat(arr2);
+      for / of => for
+      const arr = [1, ...arr2]; => const arr = [1].concat(arr2);
 
-    ・問題点
-    let missing = [0, , 1];             // 1番目の要素欠落
+      ・問題点
+      let missing = [0, , 1];             // 1番目の要素欠落
 
-    let spreaded = [...missing];
-    ("1" in spreaded);                  // true
+      let spreaded = [...missing];
+      ("1" in spreaded);                  // true
 
-    let concated = [].concat(missing);
-    ("1" in concated);                  // false
+      let concated = [].concat(missing);
+      ("1" in concated);                  // false
 
-- ENTRY:
-  EXPLAIN: |
-    Emit: emit BOM
-  BODY: |
     ■ emitBOM: boolean
 
     バイトオーダーマーク(BOM)出力
 
-- ENTRY:
-  EXPLAIN: |
-    Emit: emit Declaration Only
-  BODY: |
     ■ emitDeclarationOnly: boolean
 
     .d.ts型ファイルのみ出力
     JS生成に TypeScript 以外のトランスパイラ使用
     d.ts型ファイルのみ必要時
 
-- ENTRY:
-  EXPLAIN: |
-    Emit: import Helpers
-  BODY: |
     ■ importHelpers: boolean
 
     Spread構文,async 機能などのダウンレベル
@@ -734,10 +590,6 @@
       var arr2 = __spreadArray([1], __read(arr), false);
     }
 
-- ENTRY:
-  EXPLAIN: |
-    Emit: imports Not Used As Values
-  BODY: |
     ■ importsNotUsedAsValues: "remove", "preserve", "error"
 
     import 動作制御
@@ -746,25 +598,17 @@
     preserve: 未使用値/型の import 保持(副作用保持)
     error:    import 保持(=preserve)、値の import が型としてのみ使用されたらエラー
 
-- ENTRY:
-  EXPLAIN: |
-    Emit: inline Source Map
-  BODY: |
     ■ inlineSourceMap
 
-    ソースマップを.js.map => .js 埋め込み
-    .map 不許可 web サーバーでデバッグ
-    sourceMapとは互いに排他的
+    ・ソースマップを.js.map => .js 埋め込み
+    ・.map 不許可 web サーバーでデバッグ
+    ・sourceMapとは互いに排他的
 
-    "use strict";
-    const helloWorld = "hi";
-    console.log(helloWorld);
-    //# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb......
+      "use strict";
+      const helloWorld = "hi";
+      console.log(helloWorld);
+      //# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb......
 
-- ENTRY:
-  EXPLAIN: |
-    Emit: inline Sources
-  BODY: |
     ■ inlineSources
 
     inlineSourcesとinlineSourceMapを有効にしてビルド
@@ -777,10 +621,6 @@
     console.log(helloWorld);
     //# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3Vy.....
 
-- ENTRY:
-  EXPLAIN: |
-    Emit: map Root
-  BODY: |
     ■ mapRoot
 
     デバッガがマップファイルを探索すべき場所
@@ -788,36 +628,30 @@
     "sourceMap": true,
     "mapRoot": "https://my-website.com/debug/sourcemaps/"
 
-- ENTRY:
-  EXPLAIN: |
-    Emit: newLine
-  BODY: |
     ■ newLine
 
     ファイル出力の改行コード指定
     "CRLF"(dos) または "LF"(unix)
 
-- ENTRY:
-  EXPLAIN: |
-    Emit: no Emit
-  BODY: |
-    ■ noEmit
+    ■ 🔴 noEmit
 
-    TSC は トランスパイル(JS変換)しない
+    トランスパイル(JS変換)しない
     つまり、JS変換ソースコード、ソースマップ、型定義ファイルを出力しない
     *.ts 別ツール(Babel,...)がトランスパイル実施する
+
     Next.js(create next-app), Viteでは noEmit: true
-    Next.js はトランスコンパイル結果を出力する必要はない(詳細必要)
+    Next.js はトランスコンパイル結果を出力する必要はない(内部処理するため)
+    Vite は esbuild を使用して高速トランスパイル
 
     ● noEmit:false
     ├── dist
     │   ├── index.js
     │   └── index.js.map
 
-- ENTRY:
-  EXPLAIN: |
-    Emit: no Emit Helpers
-  BODY: |
+    ※ 型定義ファイル(.d.ts)のみ出力する場合は
+      noEmit: false,
+      emitDeclarationOnly: true
+
     ■ noEmitHelpers
 
     importHelpersでヘルパ関数をインポートする代わりに、グローバルヘルパ関数への実装提供
@@ -860,18 +694,10 @@
         });
     }); };
 
-- ENTRY:
-  EXPLAIN: |
-    Emit: no Emit On Error
-  BODY: |
     ■ noEmitOnError: boolean(=false)
 
     エラー時にコンパイルされたファイルを出力しない
 
-- ENTRY:
-  EXPLAIN: |
-    Emit: out Dir
-  BODY: |
     ■ outDir: string
 
     "outDir": "dist"
@@ -882,10 +708,6 @@
     ├── index.ts
     └── tsconfig.json
 
-- ENTRY:
-  EXPLAIN: |
-    Emit: out File
-  BODY: |
     ■ outFile: string
 
     "outDir": "dist"
@@ -895,26 +717,22 @@
     併用条件 module: None/System/AMD
     CommonJS, ES6 モジュールをバンドルするために使用不可
 
-- ENTRY:
-  EXPLAIN: |
-    Emit: preserve Const Enums
-  BODY: |
     ■ preserveConstEnums: boolean(=false)
 
     生成されたコード内の const enum 宣言を消去しない
     "const enum" は参照の代わりに enum 値を発行、runtimeの全体的なメモリフットプリント削減
 
-    ■ コード例
-    const enum Album {
-      JimmyEatWorldFutures = 1,
-      TubRingZooHypothesis = 2,
-      DogFashionDiscoAdultery = 3,
-    }
+      ・コード例
+      const enum Album {
+        JimmyEatWorldFutures = 1,
+        TubRingZooHypothesis = 2,
+        DogFashionDiscoAdultery = 3,
+      }
 
-    const selectedAlbum = Album.JimmyEatWorldFutures;
-    if (selectedAlbum === Album.JimmyEatWorldFutures) {
-      console.log("That is a great choice.");
-    }
+      const selectedAlbum = Album.JimmyEatWorldFutures;
+      if (selectedAlbum === Album.JimmyEatWorldFutures) {
+        console.log("That is a great choice.");
+      }
 
     ■ preserveConstEnums: false
 
@@ -927,6 +745,7 @@
     }
 
     ■ preserveConstEnums: true
+
     "use strict";
     var Album;
     (function (Album) {
@@ -939,10 +758,6 @@
         console.log("That is a great choice.");
     }
 
-- ENTRY:
-  EXPLAIN: |
-    Emit: preserve Value Imports(Deprecated)
-  BODY: |
     ■ preserveValueImports: boolean
 
     isolatedModules との併用
@@ -952,18 +767,10 @@
     import { Animal } from "./animal.js";
     eval("console.log(new Animal().isDangerous())");
 
-- ENTRY:
-  EXPLAIN: |
-    Emit: remove Comments
-  BODY: |
     ■ removeComments: boolean(=false)
 
     true: JSDocなど全コメントを削除
 
-- ENTRY:
-  EXPLAIN: |
-    Emit: source Map
-  BODY: |
     ■ sourceMap
 
     コンパイル後の記法で書かれたJSは読みにくい => sourceMapで元コード表示
@@ -978,16 +785,17 @@
     //# sourceMappingURL=// helloWorld.js.map   <--------- SourceMap
 
     [helloWorld.js.map] も同時に出力
-    {
-      "version": 3,
-      "file": "ex.js",
-      "sourceRoot": "",
-      "sources": ["../ex.ts"],
-      "names": [],
-      "mappings": ";;AAAa,QAAA,UAAU,GAAG,IAAI,CAAA"
-    }
 
-    ■ Viteのセキュリティ対策
+      {
+        "version": 3,
+        "file": "ex.js",
+        "sourceRoot": "",
+        "sources": ["../ex.ts"],
+        "names": [],
+        "mappings": ";;AAAa,QAAA,UAAU,GAAG,IAAI,CAAA"
+      }
+
+    ・Viteのセキュリティ対策
 
       export default defineConfig({
           plugins: [react()],
@@ -996,15 +804,11 @@
           }
       })
 
-    ■ Next.js
+    ・Next.js
 
       開発中: デフォルトで有効
       運用中: 無効 (productionBrowserSourceMaps: true すると有効化可能)
 
-- ENTRY:
-  EXPLAIN: |
-    Emit: source Root
-  BODY: |
     ■ source Root
 
     sourceMap: true 時に sourceMap を出力するPATH
@@ -1012,10 +816,6 @@
     "sourceMap": true,
     "sourceRoot": "https://my-website.com/debug/source/"
 
-- ENTRY:
-  EXPLAIN: |
-    Emit: strip Internal
-  BODY: |
     ■ stripInternal: boolean(=false)
 
     JSDoc コメントに @internal アノテーションがあるコードを出力しない
@@ -1033,70 +833,56 @@
     }
 
 - ENTRY:
-  EXPLAIN: |
-    JS: allow Js
+  EXPLAIN: JS
   BODY: |
-    ■ allowJs: boolean
+    ■ 🔴 allowJs: boolean                  // JS から TS への部分的移行時に便利
 
-    JS から TS への部分的移行時に便利
+      [card.js]
+      export const defaultCardDeck = "Heart";
 
-    [card.js]
-    export const defaultCardDeck = "Heart";
+    ・allowJs: false
 
-    ■ allowJs: false
-    [index.ts]
-    import { defaultCardDeck } from "./card";     // Error
+      [index.ts]
+      import { defaultCardDeck } from "./card";     // Error
 
-    ■ allowJs: true
-    [index.ts]
-    import { defaultCardDeck } from "./card";     // OK
+    ・allowJs: true
 
-- ENTRY:
-  EXPLAIN: |
-    JS: check Js
-  BODY: |
-    ■ checkJs
+      [index.ts]
+      import { defaultCardDeck } from "./card";     // OK
 
-    allowJs と連携動作
-    JS ファイルでエラー報告
-    JS ファイルの先頭に // @ts-check を含めても同じ
+    ■ 🔴 checkJs: boolean                  // allowJs と連携動作、JS ファイルでエラー報告
 
-    ■ checkJs: false
-    [constants.js]
-    module.exports.pi = parseFloat(3.142);
+      ※ JS ファイルの先頭に // @ts-check を含めても同じ
 
-    [index.ts]
-    import { pi } from "./constants";
-    console.log(pi);
+    ・checkJs: false
 
-    ■ checkJs: true
-    [constants.js]
-    module.exports.pi = parseFloat(3.142);   //Error
-    >> Argument of type 'number' is not assignable to parameter of type 'string'.
+      [constants.js]
+      module.exports.pi = parseFloat(3.142);
 
-- ENTRY:
-  EXPLAIN: |
-    JS: max Node Module Js Depth
-  BODY: |
+      [index.ts]
+      import { pi } from "./constants";
+      console.log(pi);
+
+    ・checkJs: true
+
+      [constants.js]
+      module.exports.pi = parseFloat(3.142);   //Error
+      >> Argument of type 'number' is not assignable to parameter of type 'string'.
+
     ■ maxNodeModuleJsDepth: number(=0)
 
-    node_modules を検索して JavaScript ファイルをロードする依存関係の最大深
-    allowJs が有効な場合にのみ使用
-    理想的には 0(デフォルト) のまま
+    ・node_modules を検索して JavaScript ファイルをロードする依存関係の最大深
+    ・allowJs が有効な場合にのみ使用
+    ・理想的には 0(デフォルト) のまま
 
 - ENTRY:
-  EXPLAIN: |
-    Editor: disable Size Limit
+  EXPLAIN: Editor
   BODY: |
     ■ disableSizeLimit: boolean(=false)
 
     大規模なプロジェクトでメモリ肥大化問題回避のため割り当てメモリ量に上限設定
     フラグをオンにすると、制限解除
 
-- ENTRY:
-  EXPLAIN: |
-    Editor: plugins
-  BODY: |
     ■ plugins: string[]
 
     エディター用サービスプラグインリスト(以下サンプル)
@@ -1106,27 +892,20 @@
     ts-graphql-plugin                   validation and auto-completion in GraphQL
 
 - ENTRY:
-  EXPLAIN: |
-    Interop: allow Synthetic Default Imports
+  EXPLAIN: Interop(相互運用)
   BODY: |
-    ■ allowSyntheticDefaultImports
+    ■ 🔴 allowSyntheticDefaultImports
 
     デフォルトオブジェクトがない場合、Babel などのトランスパイラーが自動作成
 
-    true:
-      import React from "react";
-    false:
-      import * as React from "react";
+    true:    import React from "react";
+    false:   import * as React from "react";
 
-- ENTRY:
-  EXPLAIN: |
-    Interop: es Module Interop
-  BODY: |
-    ■ esModuleInterop: boolean(=false)
+    ■ 🔴 esModuleInterop: boolean(=false)
 
     false: TS は CommonJS/AMD/UMD モジュールを ES6 モジュールと同様に扱う
 
-    ■ esModuleInterop: false 
+    ・esModuleInterop: false 
 
     インポート宣言には2つの問題あり
     import * as moment from "moment"    = const moment = require("moment")
@@ -1136,84 +915,72 @@
     TSがimportされたものを関数のように扱うのは仕様に反する
     CommonJS/AMD/UMD モジュールを含むほとんどのライブラリは TSほど厳密には準拠していない
 
-    ■ esModuleInterop: true
+    ・esModuleInterop: true
 
     TSがトランスパイルしたコードは両方の問題を修正
     コンパイラの動作変更を変更
     トランスパイルコードの互換性確保のため、shim を提供する2つのヘルパー関数
 
-    ■ コード例
+      ・例
 
-    import * as fs from "fs";
-    import _ from "lodash";
-    fs.readFileSync("file.txt", "utf8");
-    _.chunk(["a", "b", "c", "d"], 2);
+      import * as fs from "fs";
+      import _ from "lodash";
+      fs.readFileSync("file.txt", "utf8");
+      _.chunk(["a", "b", "c", "d"], 2);
 
-    ■ esModuleInterop: false 
+    ・esModuleInterop: false 
 
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    const fs = require("fs");
-    const lodash_1 = require("lodash");
-    fs.readFileSync("file.txt", "utf8");
-    lodash_1.default.chunk(["a", "b", "c", "d"], 2);
+      "use strict";
+      Object.defineProperty(exports, "__esModule", { value: true });
+      const fs = require("fs");
+      const lodash_1 = require("lodash");
+      fs.readFileSync("file.txt", "utf8");
+      lodash_1.default.chunk(["a", "b", "c", "d"], 2);
 
-    ■ esModuleInterop: true
+    ・esModuleInterop: true
 
-    "use strict";
-    var __createBinding = ();
-    var __setModuleDefault = ();
-    var __importStar = () {};
-    var __importDefault = () {};
-    Object.defineProperty(exports, "__esModule", { value: true });
-    const fs = __importStar(require("fs"));
-    const lodash_1 = __importDefault(require("lodash"));
-    fs.readFileSync("file.txt", "utf8");
-    lodash_1.default.chunk(["a", "b", "c", "d"], 2);
+      "use strict";
+      var __createBinding = ();
+      var __setModuleDefault = ();
+      var __importStar = () {};
+      var __importDefault = () {};
+      Object.defineProperty(exports, "__esModule", { value: true });
+      const fs = __importStar(require("fs"));
+      const lodash_1 = __importDefault(require("lodash"));
+      fs.readFileSync("file.txt", "utf8");
+      lodash_1.default.chunk(["a", "b", "c", "d"], 2);
 
-- ENTRY:
-  EXPLAIN: |
-    Interop: force Consistent Casing In File Names
-  BODY: |
     ■ forceConsistentCasingInFileNames: boolean
 
     システムの大文字と小文字の区別規則に従う
     ディスク上の大文字小文字と異なるファイルインクルードにエラー発行
 
-- ENTRY:
-  EXPLAIN: |
-    Interop: isolated Modules
-  BODY: |
-    ■ isolatedModules: boolean(=true Next,Viteなどフロント開発)
+    ■ 🔴 isolatedModules: boolean(=true Next,Viteなどフロント開発)
 
     ReactやNextが内部でBabelを使用しているため必須で true
 
-    ■ 型出力(Exports of Non-Value Identifiers)
-    モジュール単位でのimportチェックを実施するので、未使用は削除され参照できない
-    import { SomeType, hello } from "./someModule";
-    Babelは、SomeTypeが値なのか型なのか判断できななくなるので警告を出す
+      ・型出力(Exports of Non-Value Identifiers)
+      モジュール単位でのimportチェックを実施するので、未使用は削除され参照できない
+      import { SomeType, hello } from "./someModule";
+      Babelは、SomeTypeが値なのか型なのか判断できななくなるので警告を出す
 
-    ■ モジュール以外
-    名前空間が使用できない
-    *.d.tsは例外
+      ・モジュール以外
+      名前空間が使用できない
+      *.d.tsは例外
 
-    ■ const enum members への参照
+      ・const enum members への参照
 
-      declare const enum Numbers {
-        Zero = 0,
-        One = 1,
-      }
-      console.log(Numbers.Zero + Numbers.One);
+        declare const enum Numbers {
+          Zero = 0,
+          One = 1,
+        }
+        console.log(Numbers.Zero + Numbers.One);
 
-      コンパイル時に、以下に置き換わる
+        コンパイル時に、以下に置き換わる
 
-      "use strict";
-      console.log(0 + 1);
+        "use strict";
+        console.log(0 + 1);
 
-- ENTRY:
-  EXPLAIN: |
-    Interop: preserve Symlinks
-  BODY: |
     ■ preserveSymlinks: boolean(=false)
 
     同フラグを Node.js に反映するためで、シンボリックリンクの実際のパスを解決しない
@@ -1226,10 +993,6 @@
     モジュールとパッケージへの参照(import や /// <reference type="..." /> ディレクティブなど)
     シンボリック リンク ファイルのパスではなく、シンボリック リンク ファイルの場所を基準に解決
 
-- ENTRY:
-  EXPLAIN: |
-    Interop: verbatim Module Syntax
-  BODY: |
     ■ verbatimModuleSyntax
 
     インポート省略
@@ -1260,37 +1023,24 @@
     type 修飾子を使用するものはすべて完全削除
 
 - ENTRY:
-  EXPLAIN: |
-    後方互換: charset
+  EXPLAIN: 後方互換
   BODY: |
     ■ charset: string(="UTF-8")
 
     default: UTF-8
     UTF-16(BE,LE), UTF-8 BOM も正しく検出
 
-- ENTRY:
-  EXPLAIN: |
-    後方互換: keyof Strings Only
-  BODY: |
     ■ keyofStringsOnly
 
     旧仕様(v2.9以前)
     string | number の代わりに string を返すように keyof 型演算子を変更
     文字列インデックス署名を持つ型に適用される場合の数値
 
-- ENTRY:
-  EXPLAIN: |
-    後方互換: no Implicit Use Strict
-  BODY: |
     ■ (不要) noImplicitUseStrict
 
     デフォルトで、ES6 以外のターゲットには「use strict」(プロローグ)を発行
     設定によりプロローグ無効
 
-- ENTRY:
-  EXPLAIN: |
-    後方互換: no Strict Generic Checks
-  BODY: |
     ■ noStrictGenericChecks: boolean(=false)
 
     タイプ引数の統合を実施しない
@@ -1308,18 +1058,10 @@
               type which could be unrelated to 'U'.
     }
 
-- ENTRY:
-  EXPLAIN: |
-    後方互換: out(Deprecated)
-  BODY: |
     ■ out
 
     代わりに outFile を使用
 
-- ENTRY:
-  EXPLAIN: |
-    後方互換: suppress Excess Property Errors(非推奨)
-  BODY: |
     ■ suppressExcessPropertyErrors
 
     代わりに // @ts-ignore を使用
@@ -1331,10 +1073,6 @@
     Object literal may only specify known properties, 
     and 'm' does not exist in type 'Point'.
 
-- ENTRY:
-  EXPLAIN: |
-    後方互換: suppress Implicit Any Index Errors(非推奨)
-  BODY: |
     ■ suppressImplicitAnyIndexErrors
 
     代わりに @ts-ignore を使用
@@ -1347,68 +1085,62 @@
       Property 'foo' does not exist on type '{ x: number; }'.
 
 - ENTRY:
-  EXPLAIN: |
-    言語環境: emit Decorator Metadata
+  EXPLAIN: 言語環境
   BODY: |
     ■ emitDecoratorMetadata
 
-    実験的モジュール Reflect-metadata で動作するデコレータの出力タイプ
+      実験的モジュール Reflect-metadata で動作するデコレータの出力タイプ
 
-    ■ Decorators サンプル
-    function LogMethod(
-      target: any,
-      propertyKey: string | symbol,
-      descriptor: PropertyDescriptor
-    ) {
-      console.log(target, propertyKey, descriptor);
-    }
+      ・Decorators サンプル
+      function LogMethod(
+        target: any,
+        propertyKey: string | symbol,
+        descriptor: PropertyDescriptor
+      ) {
+        console.log(target, propertyKey, descriptor);
+      }
 
-    class Demo {
-      @LogMethod
-      public foo(bar: number) { ... }
-    }
-    const demo = new Demo();
+      class Demo {
+        @LogMethod
+        public foo(bar: number) { ... }
+      }
+      const demo = new Demo();
 
-    ■ トランスパイル
-    "use strict";
-    var __decorate = (this && this.__decorate) ||
-      function (decorators, target, key, desc) { };
-    function LogMethod(target, propertyKey, descriptor) {
-      console.log(target, propertyKey, descriptor);
-    }
-    class Demo {
-      foo(bar) { ... }
-    }
+      ・トランスパイル
 
-    ■ __decorate(emitDecoratorMetadata: false)
-    __decorate([
-        LogMethod
-    ], Demo.prototype, "foo", null);
-    const demo = new Demo();
+      "use strict";
+      var __decorate = (this && this.__decorate) ||
+        function (decorators, target, key, desc) { };
+      function LogMethod(target, propertyKey, descriptor) {
+        console.log(target, propertyKey, descriptor);
+      }
+      class Demo {
+        foo(bar) { ... }
+      }
 
-    ■ __decorate(emitDecoratorMetadata: false)
-    __decorate([
-        LogMethod,
-        __metadata("design:type", Function),      // meta-data 追加
-        __metadata("design:paramtypes", [Number]),
-        __metadata("design:returntype", void 0)
-    ], Demo.prototype, "foo", null);
-    const demo = new Demo();
+      ・__decorate(emitDecoratorMetadata: false)
 
-- ENTRY:
-  EXPLAIN: |
-    言語環境: experimental Decorators
-  BODY: |
+      __decorate([
+          LogMethod
+      ], Demo.prototype, "foo", null);
+      const demo = new Demo();
+
+      ・__decorate(emitDecoratorMetadata: false)
+
+      __decorate([
+          LogMethod,
+          __metadata("design:type", Function),      // meta-data 追加
+          __metadata("design:paramtypes", [Number]),
+          __metadata("design:returntype", void 0)
+      ], Demo.prototype, "foo", null);
+      const demo = new Demo();
+
     ■ experimentalDecorators
 
     デコレータ使用可能
     Next.js は true 推奨
     サンプル: emitDecoratorMetadata 参照
 
-- ENTRY:
-  EXPLAIN: |
-    言語環境: jsx
-  BODY: |
     ■ jsx
 
       jsx の出力制御
@@ -1422,68 +1154,58 @@
       preserve:       .jsx 出力: JSX 変更なし
       react-native:   .js 出力: JSX 変更なし
 
+      ・code:
 
-    ■ code:
+      export const HelloWorld = () => <h1>Hello world</h1>;
 
-    export const HelloWorld = () => <h1>Hello world</h1>;
+      ・Default: "react"
 
-    ■ Default: "react"
+      import React from 'react';
+      export const HelloWorld = () => React.createElement("h1", null, "Hello world");
 
-    import React from 'react';
-    export const HelloWorld = () => React.createElement("h1", null, "Hello world");
+      ・Preserve: "preserve"
+      ・React Native: "react-native"
 
-    ■ Preserve: "preserve"
-    ■ React Native: "react-native"
+      import React from 'react';
+      export const HelloWorld = () => <h1>Hello world</h1>;
 
-    import React from 'react';
-    export const HelloWorld = () => <h1>Hello world</h1>;
+      ・React 17: "react-jsx"
 
-    ■ React 17: "react-jsx"
+      import { jsx as _jsx } from "react/jsx-runtime";
+      export const HelloWorld = () => _jsx("h1", { children: "Hello world" });
 
-    import { jsx as _jsx } from "react/jsx-runtime";
-    export const HelloWorld = () => _jsx("h1", { children: "Hello world" });
+      ・React 17 dev: "react-jsxdev"
 
-    ■ React 17 dev: "react-jsxdev"
+      import { jsxDEV as _jsxDEV } from "react/jsx-dev-runtime";
+      const _jsxFileName = "/home/runner/work/TypeScript-Website/TypeScript-Website/packages/typescriptlang-org/index.tsx";
+      export const HelloWorld = () => _jsxDEV("h1", { children: "Hello world" }, void 0, false, { fileName: _jsxFileName, lineNumber: 9, columnNumber: 32 }, this);
 
-    import { jsxDEV as _jsxDEV } from "react/jsx-dev-runtime";
-    const _jsxFileName = "/home/runner/work/TypeScript-Website/TypeScript-Website/packages/typescriptlang-org/index.tsx";
-    export const HelloWorld = () => _jsxDEV("h1", { children: "Hello world" }, void 0, false, { fileName: _jsxFileName, lineNumber: 9, columnNumber: 32 }, this);
-
-- ENTRY:
-  EXPLAIN: |
-    言語環境: jsx Factory
-  BODY: |
     ■ jsxFactory: string
 
     クラシック JSX ランタイムによる JSX 要素コンパイルでコール関数変更
 
-    ■ 例: preact 
+      ・例: preact 
 
+      import { h } from "preact";
+      const HelloWorld = () => <div>Hello</div>;
 
-    import { h } from "preact";
-    const HelloWorld = () => <div>Hello</div>;
+      ・jsxFactory: "h"
 
-    ■ jsxFactory: "h"
+      「React.createElement」の代わりに「h」または「preact.h」使用
 
-    「React.createElement」の代わりに「h」または「preact.h」使用
+      const preact_1 = require("preact");
+      const HelloWorld = () => (0, preact_1.h)("div", null, "Hello");
 
-    const preact_1 = require("preact");
-    const HelloWorld = () => (0, preact_1.h)("div", null, "Hello");
+      またはファイルごとに使用
 
-    またはファイルごとに使用
+      /** @jsx h */
+      import { h } from "preact";
 
-    /** @jsx h */
-    import { h } from "preact";
-
-- ENTRY:
-  EXPLAIN: |
-    言語環境: jsx Fragment Factory
-  BODY: |
     ■ jsxFragmentFactory
 
     React JSX ターゲット: JSX フラグメント ファクトリ関数指定
 
-    ■ 設定
+    ・設定
     "compilerOptions": {
       "target": "esnext",
       "module": "commonjs",
@@ -1492,7 +1214,7 @@
       "jsxFragmentFactory": "Fragment"            // 例
     }
 
-    ■ コード
+    ・コード
     import { h, Fragment } from "preact";
     const HelloWorld = () => (
       <>
@@ -1500,20 +1222,16 @@
       </>
     );
 
-    ■ "jsxFragmentFactory": "Fragment"
+    ・"jsxFragmentFactory": "Fragment"
     const preact_1 = require("preact");
     const HelloWorld = () => ((0, preact_1.h)(preact_1.Fragment, null,
         (0, preact_1.h)("div", null, "Hello")));
 
-- ENTRY:
-  EXPLAIN: |
-    言語環境: jsx Import Source
-  BODY: |
     ■ jsxImportSource
 
     TypeScript 4.1 導入 react-jsx, react-jsxdev 用 jsx, jsxs ファクトリ関数インポート
 
-    ■ 設定
+    ・設定
     "compilerOptions": {
       "target": "esnext",
       "module": "commonjs",
@@ -1522,7 +1240,7 @@
       "types": ["preact"]                         // 追加
     }
 
-    ■ jsxImportSource: 無効
+    ・jsxImportSource: 無効
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const jsx_runtime_1 = require("react/jsx-runtime");
@@ -1530,16 +1248,12 @@
       return (0, jsx_runtime_1.jsx)("h1", { children: "Hello World" });
     }
 
-    ■ "jsxImportSource": "preact"
+    ・"jsxImportSource": "preact"
     function App() {
       return (0, jsx_runtime_1.jsx)("h1", { children: "Hello World" });
     }
     exports.App = App;
 
-- ENTRY:
-  EXPLAIN: |
-    言語環境: lib
-  BODY: |
     ■ lib
 
     default: 組み込み JS API(Mathなど)の型定義
@@ -1551,15 +1265,15 @@
       ★ TS Playground での設定方法。以下の行を先頭に追加
          // @lib: dom,esnext
 
-    ■ コード内指定
+    ・コード内指定
     /// <reference lib="esnext" />             * 単独指定
     ["a", "i", "u"].toReversed();
 
-    ■ コード内指定(TS Playground専用)
+    ・コード内指定(TS Playground専用)
     // @lib: dom,esnext                        * dom,esnext の間にスペースなし！
     ["a", "i", "u"].toReversed();
 
-    ■ Library List
+    ・Library List
     ES5           Core definitions for all ES3 and ES5 functionality
     ES2015(ES6)   array.find, Promise, Proxy, Symbol, Map, Set, Reflect, etc.
     ES2016(ES7)   array.include, etc.
@@ -1590,27 +1304,15 @@
     "legacy":   4.6 以前と同じ動作、"import","export"を確認
     "force"     非宣言ファイルはモジュール扱い
 
-- ENTRY:
-  EXPLAIN: |
-    言語環境: no Lib
-  BODY: |
     ■ noLib: boolean
 
     ライブラリの自動組み込み無効 => lib 無視
 
-- ENTRY:
-  EXPLAIN: |
-    言語環境: react Namespace(非推奨)
-  BODY: |
     ■ reactNamespace
 
     代わりに jsxFactory 使用
     "target": "react" で createElement に呼び出されるオブジェクト指定
 
-- ENTRY:
-  EXPLAIN: |
-    言語環境: target
-  BODY: |
     ■ target
 
     JSコンパイルの対象バージョン
@@ -1619,15 +1321,12 @@
     ターゲット変更で lib のデフォルト値も変更
     ESNext 最新バージョン(注意:バージョン非特定)
 
-    ■ 設定
+    ・設定
     "compilerOptions": {
       "target": "es5",
     }
 
-- ENTRY:
-  EXPLAIN: |
-    言語環境: use Define For Class Fields
-  BODY: |
+
     ■ useDefineForClassFields: boolean
 
     true:  "target": >="ES2022"(+"ESNext")
@@ -1639,23 +1338,18 @@
     今後の ECMA ランタイム動作で変更
 
 - ENTRY:
-  EXPLAIN: |
-    コンパイラ: diagnostics
+  EXPLAIN: コンパイラ
   BODY: |
-    ■ diagnostics
+    ■ 🔴 diagnostics
 
-    デバッグ用の診断情報出力
+    tsc --diagnostics  デバッグ用の診断情報出力
     extendedDiagnostics のサブセットでユーザー向け解釈が容易
 
-- ENTRY:
-  EXPLAIN: |
-    コンパイラ: explain Files
-  BODY: |
     ■ explainFiles
 
     プロジェクトの一部として認識するファイルの名前、コンパイルの一部である理由出力
 
-    ■ 設定
+    ・設定
     "compilerOptions": {
       "target": "es5",
       "module": "commonjs",
@@ -1678,18 +1372,10 @@
     index.ts
       Matched by include pattern '**/*' in 'tsconfig.json'
 
-- ENTRY:
-  EXPLAIN: |
-    コンパイラ: extended Diagnostics
-  BODY: |
-    ■ extendedDiagnostics
+    ■ 🔴 extendedDiagnostics
 
     コンパイル時にの所要時間計測
 
-- ENTRY:
-  EXPLAIN: |
-    コンパイラ: generate Cpu Profile
-  BODY: |
     ■ generateCpuProfile
 
     コンパイラ実行中に v8 CPU プロファイルを発行
@@ -1698,10 +1384,6 @@
 
     npm run tsc --generateCpuProfile tsc-output.cpuprofile
 
-- ENTRY:
-  EXPLAIN: |
-    コンパイラ: list Emitted Files
-  BODY: |
     ■ listEmittedFiles
 
     生成ファイル名を端末に出力
@@ -1709,7 +1391,7 @@
     ビルド チェーンの一部として TypeScript をトランスパイルしたい
     予期したファイルをTS がインクルードしたか調査
 
-    ■ 設定
+    ・設定
     "compilerOptions": {
       "declaration": true,
       "listEmittedFiles": true
@@ -1724,17 +1406,13 @@
     path/to/example/index.js
     path/to/example/index.d.ts
 
-- ENTRY:
-  EXPLAIN: |
-    コンパイラ: list Files
-  BODY: |
     ■ listFiles
 
     コンパイルしたファイル名出力
     予期した(ライブラリを含め)ファイルが含まれているか調査
     TypeScript > 4.2 "explainFiles"推奨(理由付き)
 
-    ■ 設定
+    ・設定
     "compilerOptions": {
       "listFiles": true
     }
@@ -1752,69 +1430,48 @@
     path/to/example/node_modules/typescript/lib/lib.scripthost.d.ts
     path/to/example/index.ts
 
-- ENTRY:
-  EXPLAIN: |
-    コンパイラ: trace Resolution
-  BODY: |
     ■ traceResolution
 
     モジュールが含まれていない理由をデバッグ
     TypeScript 処理ファイルの解決プロセスに関する情報出力
 
 - ENTRY:
-  EXPLAIN: |
-    プロジェクト: composite
+  EXPLAIN: プロジェクト
   BODY: |
-    ■ composite:boolean(=true)
+    ■ 🔴 composite: boolean(=true)
 
     ビルドツールがプロジェクトが指定ファイルをビルドしたか迅速判断できるよう特定制約を強制
       *(--build モードで TS 自体を含む)
 
-    ■ 併用条件
+    ・併用条件
     rootDir 設定済: デフォルトで tsconfig.json ファイルを含むディレクトリ
     ファイルはインクルードパターンと一致するか、ファイル配列にリスト済の必要あり
       * 制約違反時 tsc はどのファイルが未指定か通知
     declaration: true(defaults)
 
-- ENTRY:
-  EXPLAIN: |
-    プロジェクト: disable Referenced Project Load
-  BODY: |
     ■ disableReferencedProjectLoad: boolean(=false)
 
     エディターの定義へのジャンプのため全プロジェクトをメモリにロード
     プロジェクトが大きい場合、自動読み込みを無効化
       * エディターでファイルを開くと、プロジェクトを動的ロード
 
-- ENTRY:
-  EXPLAIN: |
-    プロジェクト: disable Solution Searching
-  BODY: |
     ■ disableSolutionSearching
 
     複合プロジェクトの定義ジャンプでプロジェクトを含めないことを宣言する方法を提供
     大規模な複合プロジェクトの応答性を向上させる
 
-- ENTRY:
-  EXPLAIN: |
-    プロジェクト: disable Source Of Project Reference Redirect
-  BODY: |
     ■ disableSourceOfProjectReferenceRedirect
 
     複合プロジェクトで、d.ts が「モジュール間の境界(?)」として使用された 3.7 前に戻す
     3.7以降、信頼できる情報源は TypeScript ファイル
 
-- ENTRY:
-  EXPLAIN: |
-    プロジェクト: incremental
-  BODY: |
-    ■ incremental
+    ■ 🔴 incremental
 
     前コンパイルからのプロジェクトグラフ情報をディスク保存
     出力フォルダーに .tsbuildinfo 作成
     純粋にコンパイルを高速化するために使用、実行時不必要なのでなので削除OK
 
-    ■ 設定
+    ・設定
     {
       "compilerOptions": {
         "incremental": true,
@@ -1828,10 +1485,6 @@
     tsc はそのファイルで出力ファイルを型チェックして更新
     純粋にコンパイルを高速化するために使用
 
-- ENTRY:
-  EXPLAIN: |
-    プロジェクト: ts Build Info File
-  BODY: |
     ■ tsBuildInfoFile
 
     incrementalで保存するPATH指定
@@ -1846,49 +1499,35 @@
     }
 
 - ENTRY:
-  EXPLAIN: |
-    Output: no Error Truncation
+  EXPLAIN: Output
   BODY: |
     ■ noErrorTruncation: boolean(=false)
 
     エラーメッセージを省略しない
 
-    ■ noErrorTruncation: false
+    ・noErrorTruncation: false
     // String representation of type of 'x' should be truncated in error message
     var s: string = x;
     Type '{ propertyWithAnExceedinglyLongName1: string; ...' is not assignable to type 'string'.
     Variable 'x' is used before being assigned.
 
-- ENTRY:
-  EXPLAIN: |
-    Output: preserve Watch Output
-  BODY: |
     ■ preserveWatchOutput
 
     変更のたびに画面クリアせず、watch モードで古いコンソール出力を保持
 
-- ENTRY:
-  EXPLAIN: |
-    Output: pretty
-  BODY: |
     ■ pretty: boolean(=true)
 
     色とコンテキストを使用してエラーとメッセージを様式化
 
 - ENTRY:
-  EXPLAIN: |
-    完成度: skip Default Lib Check
+  EXPLAIN: 完成度
   BODY: |
     ■ skipDefaultLibCheck: boolean
 
     代わりにskipLibCheckを使用
     デフォルトのライブラリ宣言ファイルの型チェックをスキッ
 
-- ENTRY:
-  EXPLAIN: |
-    完成度: skip Lib Check
-  BODY: |
-    ■ skipLibCheck
+    ■ 🔴 skipLibCheck
 
     宣言ファイルの型チェックをスキップ
 
@@ -1897,8 +1536,7 @@
     ワークフローでは機能しない可能性があり、TS3.8以降、追跡戦略を指定する watchOptions 導入
 
 - ENTRY:
-  EXPLAIN: |
-    Watch: watch Options
+  EXPLAIN: Watch
   BODY: |
     ■ watchOptions: string(="useFsEvents")
 
@@ -1908,10 +1546,6 @@
     useFsEvents(def):             変更にOSのネイティブ イベント使用
     useFsEventsOnParentDirectory: OSのネイティブ イベントでファイルの親DIRの変更検知
 
-- ENTRY:
-  EXPLAIN: |
-    Watch: watch Directory
-  BODY: |
     ■ watchDirectory: string(="useFsEvents")
 
     非再帰的ディレクトリツリー監視戦略
@@ -1920,10 +1554,6 @@
     DynamicPriorityPolling:       変更頻度の低いディレクトリのチェック頻度を低く
     useFsEvents(def):             変更にOSのネイティブ イベント使用
 
-- ENTRY:
-  EXPLAIN: |
-    Watch: fallback Polling
-  BODY: |
     ■ fallbackPolling
 
     ファイル システム イベント使用時、以下の条件でポーリング戦略を指定:
@@ -1937,10 +1567,6 @@
 
     遅延監視は、一度に多くのファイル変更が発生する場合(npm install, node_modules 変更)に便利
 
-- ENTRY:
-  EXPLAIN: |
-    Watch: synchronous Watch Directory
-  BODY: |
     ■ synchronousWatchDirectory
 
     再帰的監視をサポートしないプラットフォーム上で: 
@@ -1948,43 +1574,34 @@
     ・短いタイムアウトを与える方法ではない
     ・同期的コールバックでディレクトリウォッチャー状態更新
 
-    ■ 設定
+    ・設定
     "watchOptions": {
       "synchronousWatchDirectory": true
     }
 
-- ENTRY:
-  EXPLAIN: |
-    Watch: exclude Directories
-  BODY: |
     ■ excludeDirectories
 
     --watch で監視するファイル数を大幅に削減
     TSが追跡する開いているファイル数削減に便利(Linux)
 
-    ■ 設定
+    ・設定
     "watchOptions": {
       "excludeDirectories": ["**/node_modules", "_build", "temp/*"]
     }
 
-- ENTRY:
-  EXPLAIN: |
-    Watch: exclude Files
-  BODY: |
     ■ excludeFiles
 
     監視対象から特定のファイルセットを除外
 
-    ■ 設定
+    ・設定
     "watchOptions": {
       "excludeFiles": ["temp/file.ts"]
     }
 
 - ENTRY:
-  EXPLAIN: |
-    Type Acquisition: Enable
+  EXPLAIN: Type Acquisition
   BODY: |
-    ■ Enable
+    ■ Type Acquisition: enable
 
     型の自動取得を無効化
 
@@ -1992,43 +1609,31 @@
     モジュールの型をバックグラウンドおよび node_modules/ 外にDL
       * TS プロジェクトではプロジェクトに型を明示的に含める必要がある
 
-    ■ 設定
+    ・設定
     "typeAcquisition": {
       "enable": false
     }
 
-- ENTRY:
-  EXPLAIN: |
-    Type Acquisition: include
-  BODY: |
     ■ include
 
     TS がグローバルな依存関係を理解するために追加のガイダンスを必要とする JS プロジェクトがある場合
     または disableFilenameBasedTypeAcquisition によって組み込み推論を無効にしている場合
 
-    ■ 設定
+    ・設定
     "typeAcquisition": {
       "include": ["jquery"]
     }
 
-- ENTRY:
-  EXPLAIN: |
-    Type Acquisition: exclude
-  BODY: |
     ■ typeAcquisition
 
     JS プロジェクトの特定のモジュールの型取得を無効化
     テスト用ライブラリに有効
 
-    ■ 設定
+    ・設定
     "typeAcquisition": {
       "exclude": ["jest", "mocha"]
     }
 
-- ENTRY:
-  EXPLAIN: |
-    Type Acquisition: disable Filename Based Type Acquisition
-  BODY: |
     ■ disableFilenameBasedTypeAcquisition
 
     TS の型取得ではプロジェクト内のファイル名で追加する型が推測可能

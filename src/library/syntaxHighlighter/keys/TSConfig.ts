@@ -2,7 +2,7 @@ import { KeyDef } from "../../../types/type"
 
 export const keysTSConfig: KeyDef = {
   // ■ Main(赤)
-  IndianRed: [
+  Crimson: [
     "allowUnreachableCode",
     "allowUnusedLabels",
     "alwaysStrict",

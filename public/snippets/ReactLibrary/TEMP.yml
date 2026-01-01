@@ -6,25 +6,23 @@
   CATEGORY: TEMP
 
 - ENTRY:
-  KEY: TEMP.基礎
-  EXPLAIN: XXXXX
+  EXPLAIN: インストール & 概要
   BODY: |
     ■ インストール
 
       XXXX
 
-    ■ 使い方
+    ■ 概要
 
       XXXX
 
 - ENTRY:
-  KEY: TEMP.基礎
-  EXPLAIN: XXXXX
+  EXPLAIN: 実装
   BODY: |
-    ■ インストール
+    ■ 実装
 
       XXXX
 
-    ■ 使い方
+    ■ オプション
 
       XXXX
