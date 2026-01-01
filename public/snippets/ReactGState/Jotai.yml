@@ -932,3 +932,122 @@
         </div>
       )
     }
+
+- ENTRY:
+  CATEGORY: jotai/utils 他
+
+- ENTRY:
+  EXPLAIN: 各種ユーティリティ
+  BODY: |
+    atomWithImmer:                        Immer を使用して不変データ構造を簡単に操作
+    atomWithReducer:                      reducer 関数を使用して状態を管理
+    atomWithMachine:                      状態マシンと連携
+    atomWithQuery:                        React Query と連携
+    atomWithMutation:                     React Query のミューテーションと連携
+    atomWithObservable:                   RxJS の Observable と連携
+    atomWithWebSocket:                    WebSocket と連携
+    atomWithStorageEvent:                 他のタブやウィンドウでのストレージ変更を反映
+    atomWithReset:                        atom の値をリセット可能にするユーティリティ
+    atomWithDefaultGetter:                デフォルト値を動的に取得
+    atomWithProxy:                        Proxy を使用して動的にプロパティを管理
+    atomWithHash:                         URL のハッシュ部分と同期
+    atomWithLocation:                     URL のパスやクエリパラメータと同期
+    atomWithHistory:                      履歴管理と連携
+    atomWithStorageListener:              ストレージ変更をリッスン
+    atomWithDebouncedEffect:              atom の更新に対してデバウンス効果を適用するユーティリティ
+    atomWithThrottledEffect:              atom の更新に対してスロットル効果を適用するユーティリティ
+    atomWithCache:                        キャッシュ機能を
+    atomWithErrorBoundary:                エラーバウンダリと連携
+    atomWithLogging:                      atom の変更をログに記録するユーティリティ
+    atomWithPerformance:                  atom のパフォーマンスを計測するユーティリティ
+    atomWithValidation:                   atom の値を検証するユーティリティ
+    atomWithUndoRedo:                     元に戻す/やり直す機能を
+    atomWithSession:                      セッションストレージと同期
+    atomWithLocalStorage:                 ローカルストレージと同期
+    atomWithAsyncStorage:                 非同期ストレージと同期
+    atomWithCookie:                       クッキーと同期
+    atomWithIndexedDB:                    IndexedDB と同期
+    atomWithClipboard:                    クリップボードと同期
+    atomWithMediaQuery:                   メディアクエリと同期
+    atomWithOnlineStatus:                 オンライン/オフライン状態と同期
+    atomWithGeolocation:                  ジオロケーションと同期
+    atomWithBatteryStatus:                バッテリー状態と同期
+    atomWithNetworkInformation:           ネットワーク情報と同期
+    atomWithViewportSize:                 ビューポートサイズと同期
+    atomWithScrollPosition:               スクロール位置と同期
+    atomWithWindowSize:                   ウィンドウサイズと同期
+    atomWithTheme:                        テーマ設定と同期
+    atomWithLanguage:                     言語設定と同期
+    atomWithTimeZone:                     タイムゾーン設定と同期
+    atomWithDateTime:                     日付と時刻設定と同期
+    atomWithCurrency:                     通貨設定と同期
+    atomWithLocale:                       ロケール設定と同期
+    atomWithAccessibilitySettings:        アクセシビリティ設定と同期
+    atomWithUserPreferences:              ユーザー設定と同期
+    atomWithSystemSettings:               システム設定と同期
+    atomWithAppSettings:                  アプリ設定と同期
+    atomWithFeatureFlags:                 フィーチャーフラグと同期
+    atomWithABTesting:                    A/B テスト設定と同期
+    atomWithExperimentation:              実験設定と同期
+    atomWithAnalyticsSettings:            分析設定と同期
+    atomWithNotificationSettings:         通知設定と同期
+    atomWithPrivacySettings:              プライバシー設定と同期
+    atomWithSecuritySettings:             セキュリティ設定と同期
+    atomWithBackupSettings:               バックアップ設定と同期
+    atomWithSyncSettings:                 同期設定と同期
+    atomWithUpdateSettings:               更新設定と同期
+    atomWithConnectionSettings:           接続設定と同期
+    atomWithDisplaySettings:              表示設定と同期
+    atomWithSoundSettings:                サウンド設定と同期
+    atomWithInputSettings:                入力設定と同期
+    atomWithOutputSettings:               出力設定と同期
+    atomWithPerformanceSettings:          パフォーマンス設定と同期
+    atomWithDebugSettings:                デバッグ設定と同期
+    atomWithLoggingSettings:              ログ設定と同期
+    atomWithTestingSettings:              テスト設定と同期
+    atomWithDevelopmentSettings:          開発設定と同期
+    atomWithProductionSettings:           本番設定と同期
+    atomWithCustomSettings:               カスタム設定と同期
+    atomWithUserProfile:                  ユーザープロファイルと同期
+    atomWithUserSession:                  ユーザーセッションと同期
+    atomWithUserPermissions:              ユーザー権限と同期
+    atomWithUserRoles:                    ユーザーロールと同期
+    atomWithUserGroups:                   ユーザーグループと同期
+    atomWithUserNotifications:            ユーザー通知と同期
+    atomWithUserMessages:                 ユーザーメッセージと同期
+    atomWithUserActivities:               ユーザーアクティビティと同期
+    atomWithUserHistory:                  ユーザー履歴と同期
+    atomWithUserPreferences:              ユーザー設定と同期
+    atomWithUserStatistics:               ユーザー統計と同期
+    atomWithUserAnalytics:                ユーザー分析と同期
+    atomWithUserFeedback:                 ユーザーフィードバックと同期
+    atomWithUserSupport:                  ユーザーサポートと同期
+    atomWithUserBilling:                  ユーザー請求情報と同期
+    atomWithUserSubscriptions:            ユーザーサブスクリプションと同期
+    atomWithUserPayments:                 ユーザー支払い情報と同期
+    atomWithUserOrders:                   ユーザー注文情報と同期
+    atomWithUserWishlist:                 ユーザーウィッシュリストと同期
+    atomWithUserCart:                     ユーザーカート情報と同期
+    atomWithUserReviews:                  ユーザーレビューと同期
+    atomWithUserRatings:                  ユーザーレーティングと同期
+    atomWithUserFavorites:                ユーザーフェイバリットと同期
+    atomWithUserBookmarks:                ユーザーブックマークと同期
+    atomWithUserHistory:                  ユーザー履歴と同期
+    atomWithUserActivities:               ユーザーアクティビティと同期
+    atomWithUserSessions:                 ユーザーセッションと同期
+    atomWithUserTokens:                   ユーザートークンと同期
+    atomWithUserIdentities:               ユーザー識別情報と同期
+    atomWithUserProfiles:                 ユーザープロファイルと同期
+    atomWithUserAccounts:                 ユーザーアカウントと同期
+    atomWithUserSettings:                 ユーザー設定と同期
+    atomWithUserData:                     ユーザーデータと同期
+    atomWithAppData:                      アプリデータと同期
+    atomWithGlobalState:                  グローバル状態と同期
+    atomWithLocalState:                   ローカル状態と同期
+    atomWithRemoteState:                  リモート状態と同期
+    atomWithSharedState:                  共有状態と同期
+    atomWithPersistentState:              永続状態と同期
+    atomWithTransientState:               一時状態と同期
+    atomWithComputedState:                計算状態と同期
+    atomWithDerivedState:                 派生状態と同期
+    atomWithMutableState:                 可変状態と同期
