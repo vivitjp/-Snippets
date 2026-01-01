@@ -78,6 +78,8 @@ const switcher = (key: string) => {
       return "\u0063lass"
     case "id":
       return "\u0069d"
+    case "label":
+      return "\u006cabel"
     default:
       return key
   }

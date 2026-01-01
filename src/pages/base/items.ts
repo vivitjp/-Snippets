@@ -319,6 +319,11 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.HTML, codeKeys.JS, codeKeys.React],
       },
       {
+        name: "React Dom",
+        fileName: "React/ReactDom",
+        codeKeyTypes: [codeKeys.React, codeKeys.ReactDom],
+      },
+      {
         name: "React Component",
         fileName: "React/ReactComponent",
         codeKeyTypes: [codeKeys.HTML, codeKeys.JS, codeKeys.React],
@@ -434,9 +439,14 @@ export const menuItems: menuByCategories[] = [
     category: "React State",
     items: [
       {
-        name: "🔺Zustand",
+        name: "Redux",
+        fileName: "ReactGState/redux",
+        codeKeyTypes: [codeKeys.JS, codeKeys.React, codeKeys.Redux],
+      },
+      {
+        name: "Zustand",
         fileName: "ReactGState/zustand",
-        codeKeyTypes: [codeKeys.JS, codeKeys.React],
+        codeKeyTypes: [codeKeys.JS, codeKeys.React, codeKeys.Zustand],
       },
       {
         name: "Jotai",

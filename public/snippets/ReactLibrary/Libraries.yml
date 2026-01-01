@@ -281,24 +281,589 @@
   BODY: |
     ■ 実装
 
-      import { useAsync } from 'react-async-hook';
+    import { useAsync } from 'react-async-hook';
 
-      const fetchData = async (url) => {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error('Network response was not ok');
-        return response.json();
+    const fetchData = async (url) => {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Network response was not ok');
+      return response.json();
+    };
+
+    const MyComponent = () => {
+      const { loading, error, value } = useAsync(() => fetchData('https://api.example.com/data'), []);
+
+      if (loading) return <div>Loading...</div>;
+      if (error) return <div>Error: {error.message}</div>;
+
+      return (
+        <div>
+          <h1>Data:</h1>
+          <pre>{JSON.stringify(value, null, 2)}</pre>
+        </div>
+      );
+    };
+
+#-------------------------------
+# react-dnd
+#-------------------------------
+- ENTRY:
+  CATEGORY: react-dnd
+
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ インストール
+
+      npm install react-dnd react-dnd-html5-backend
+
+    ■ 概要
+
+    ・React アプリケーションでドラッグ＆ドロップ機能を実装するためのライブラリ
+    ・React のコンポーネントベースのアーキテクチャに適した柔軟で拡張性の高いドラッグ＆ドロップソリューションを提供
+    ・HTML5 のドラッグ＆ドロップ API を抽象化し、React コンポーネントとして扱いやすくする
+
+    ■ 主な特徴
+
+    ・ドラッグソースとドロップターゲットの定義: コンポーネントをドラッグ可能にしたり、ドロップ可能な領域を指定可能
+    ・状態管理: ドラッグ中のアイテム情報やドロップ先の状態を簡単に管理
+    ・カスタマイズ可能: ドラッグイメージ、ドロップ効果、イベントハンドリングなどを柔軟にカスタマイズ可能
+    ・複数バックエンドサポート: HTML5 以外にもタッチデバイス向けのバックエンドなど、様々な環境に対応可能
+    ・TypeScript サポート: 型定義が提供されており、型安全な開発が可能
+    ・コミュニティ: オープンソースで活発にメンテナンスされており、多くのプラグインや拡張機能が存在
+
+    ■ 注意点
+
+    ・ドラッグ＆ドロップの挙動はブラウザ依存の部分があるため、クロスブラウザ対応に注意
+    ・パフォーマンス: 大量のドラッグ＆ドロップ操作が発生する場合、最適化が必要になることがある
+    ・アクセシビリティ: キーボード操作やスクリーンリーダー対応など、アクセシビリティ面での考慮が必要
+    ・SSR 環境ではドラッグ＆ドロップ機能が制限される場合があるため、クライアントサイドでのみ有効にする工夫が必要
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ 実装
+
+    import { DndProvider, useDrag, useDrop } from 'react-dnd';
+    import { HTML5Backend } from 'react-dnd-html5-backend';
+
+    const ItemType = {
+      BOX: 'box',
+    };
+
+    const DraggableBox = ({ id, text }) => {
+      const [{ isDragging }, drag] = useDrag(() => ({
+        type: ItemType.BOX,
+        item: { id },
+        collect: (monitor) => ({
+          isDragging: monitor.isDragging(),
+        }),
+      }));
+
+      return (
+        <div
+          ref={drag}
+          style={{
+            opacity: isDragging ? 0.5 : 1,
+            padding: '8px',
+            margin: '4px',
+            backgroundColor: 'lightblue',
+            cursor: 'move',
+          }}
+        >
+          {text}
+        </div>
+      );
+    };
+
+    const DroppableArea = ({ onDrop }) => {
+      const [, drop] = useDrop(() => ({
+        accept: ItemType.BOX,
+        drop: (item) => onDrop(item.id),
+      }));
+
+      return (
+        <div
+          ref={drop}
+          style={{
+            height: '200px',
+            border: '2px dashed gray',
+            padding: '16px',
+            marginTop: '16px',
+          }}
+        >
+          Drop here
+        </div>
+      );
+    };
+
+    const MyDndComponent = () => {
+      const handleDrop = (id) => {
+        console.log(`Dropped item with id: ${id}`);
       };
 
-      const MyComponent = () => {
-        const { loading, error, value } = useAsync(() => fetchData('https://api.example.com/data'), []);
+      return (
+        <DndProvider backend={HTML5Backend}>
+          <DraggableBox id="box1" text="Drag me!" />
+          <DroppableArea onDrop={handleDrop} />
+        </DndProvider>
+      );
+    };
 
-        if (loading) return <div>Loading...</div>;
-        if (error) return <div>Error: {error.message}</div>;
+#-------------------------------
+# react-draggable
+#-------------------------------
+- ENTRY:
+  CATEGORY: react-draggable
 
-        return (
-          <div>
-            <h1>Data:</h1>
-            <pre>{JSON.stringify(value, null, 2)}</pre>
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ インストール
+
+      npm install react-draggable
+
+    ■ 概要
+
+    ・React アプリケーションでドラッグ可能な UI コンポーネントを簡単に実装するためのライブラリ
+    ・ドラッグ操作の開始、進行、終了時のイベントハンドリングが容易
+    ・ドラッグ可能な要素の位置制御や制約設定が可能
+
+    ■ 主な特徴
+
+    ・ドラッグ可能コンポーネント: `Draggable` コンポーネントを使用して、任意の要素をドラッグ可能に
+    ・イベントハンドリング: `onStart`、`onDrag`、`onStop` イベントでドラッグ操作を細かく制御
+    ・位置制御: `position`、`defaultPosition` プロパティで初期位置や現在位置を管理
+    ・制約設定: `bounds` プロパティでドラッグ範囲を制限可能（親要素内、特定の座標範囲など）
+    ・カスタマイズ可能: ドラッグ中のスタイル変更やカーソル変更など、柔軟にカスタマイズ可能
+    ・TypeScript サポート: 型定義が提供されており、型安全な開発が可能
+    ・コミュニティ: オープンソースで活発にメンテナンスされており、多くのプラグインや拡張機能が存在
+
+    ■ 注意点
+
+    ・ドラッグ操作はマウスイベントに依存するため、タッチデバイスでの挙動に注意
+    ・パフォーマンス: 大量のドラッグ操作が発生する場合、最適化が必要になることがある
+    ・アクセシビリティ: キーボード操作やスクリーンリーダー対応など、アクセシビリティ面での考慮が必要
+    ・SSR 環境ではドラッグ機能が制限される場合があるため、クライアントサイドでのみ有効にする工夫が必要
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ 実装
+
+    import Draggable from 'react-draggable';
+
+    const MyDraggableComponent = () => {
+      const handleStart = (e, data) => {
+        console.log('Drag started:', data);
+      };
+
+      const handleDrag = (e, data) => {
+        console.log('Dragging:', data);
+      };
+
+      const handleStop = (e, data) => {
+        console.log('Drag stopped:', data);
+      };
+
+      return (
+        <Draggable
+          onStart={handleStart}
+          onDrag={handleDrag}
+          onStop={handleStop}
+          bounds="parent"
+        >
+          <div
+            style={{
+              width: '100px',
+              height: '100px',
+              backgroundColor: 'lightgreen',
+              textAlign: 'center',
+              lineHeight: '100px',
+              cursor: 'move',
+            }}
+          >
+            Drag me!
           </div>
-        );
+        </Draggable>
+      );
+    };
+
+#-------------------------------
+# react-flow-renderer
+#-------------------------------
+- ENTRY:
+  CATEGORY: react-flow-renderer
+
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ インストール
+
+      npm install react-flow-renderer
+
+    ■ 概要
+
+    ・React アプリケーションでインタラクティブなフローチャートやダイアグラムを作成するためのライブラリ
+    ・ノード、エッジ、レイアウト、ズーム、パンなどの機能を提供
+    ・ドラッグ＆ドロップでノードの配置や接続が可能
+
+    ■ 主な特徴
+
+    ・ノードとエッジ: カスタムノードとエッジを定義して、複雑なダイアグラムを構築可能
+    ・インタラクション: ノードのドラッグ＆ドロップ、エッジの接続、ズーム、パンなどの操作をサポート
+    ・レイアウトアルゴリズム: 自動レイアウト機能でノードの配置を最適化
+    ・状態管理: ノードとエッジの状態を簡単に管理・更新可能
+    ・カスタマイズ可能: スタイル、テーマ、イベントハンドリングなどを柔軟にカスタマイズ可能
+    ・TypeScript サポート: 型定義が提供されており、型安全な開発が可能
+    ・コミュニティ: オープンソースで活発にメンテナンスされており、多くのプラグインや拡張機能が存在
+
+    ■ 注意点
+
+    ・大量のノードやエッジを扱う場合、パフォーマンス最適化が必要になることがある
+    ・アクセシビリティ: キーボード操作やスクリーンリーダー対応など、アクセシビリティ面での考慮が必要
+    ・SSR 環境では一部機能が制限される場合があるため、クライアントサイドでのみ有効にする工夫が必要
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ 実装
+
+    import ReactFlow, { MiniMap, Controls, Background } from 'react-flow-renderer';
+
+    const elements = [
+      { id: '1', type: 'input', data: { label: 'Input Node' }, position: { x: 250, y: 0 } },
+      { id: '2', data: { label: 'Default Node' }, position: { x: 100, y: 100 } },
+      { id: '3', data: { label: 'Another Node' }, position: { x: 400, y: 100 } },
+      { id: 'e1-2', source: '1', target: '2', animated: true },
+      { id: 'e1-3', source: '1', target: '3' },
+    ];
+
+    const MyFlow = () => (
+      <div style={{ height: 500 }}>
+        <ReactFlow elements={elements}>
+          <MiniMap />
+          <Controls />
+          <Background color="#aaa" gap={16} />
+        </ReactFlow>
+      </div>
+    );
+
+#-------------------------------
+# react-intersection-observer
+#-------------------------------
+
+- ENTRY:
+  CATEGORY: react-intersection-observer
+
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ インストール
+
+      npm install react-intersection-observer
+
+    ■ 概要
+
+    ・React アプリケーションで Intersection Observer API を簡単に利用するためのライブラリ
+    ・要素がビューポートに入ったり出たりするタイミングを検出し、遅延読み込みやアニメーションのトリガーなどに活用可能
+    ・フックとコンポーネントの両方で提供され、柔軟な実装が可能
+
+    ■ 主な特徴
+
+    ・useInView フック: 要素の表示状態を監視し、ビューポート内に入ったかどうかを判定
+    ・InView コンポーネント: JSX 内で直接使用でき、子要素の表示状態を監視
+    ・カスタマイズ可能: ルート、マージン、閾値などのオプションを設定可能
+    ・SSR サポート: サーバーサイドレンダリング環境でも動作
+    ・TypeScript サポート: 型定義が提供されており、型安全な開発が可能
+    ・コミュニティ: オープンソースで活発にメンテナンスされており、多くのプラグインや拡張機能が存在
+
+    ■ 注意点
+
+    ・Intersection Observer API は一部古いブラウザでサポートされていないため、必要に応じてポリフィルを導入
+    ・大量の要素を監視する場合、パフォーマンス最適化が必要になることがある
+    ・アクセシビリティ: 要素の表示状態に依存する機能は、スクリーンリーダーなどでの利用を考慮することが重要
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ 実装
+
+    import { useInView } from 'react-intersection-observer';
+
+    const MyComponent = () => {
+      const { ref, inView } = useInView({
+        threshold: 0.1,                 // 要素が10%表示されたら inView が true に
+      });
+
+      return (
+        <div ref={ref} style={{ height: '200px', backgroundColor: inView ? 'lightgreen' : 'lightcoral' }}>
+          {inView ? 'In View' : 'Out of View'}
+        </div>
+      );
+    };
+
+    ■ InView コンポーネントの例
+
+    import { InView } from 'react-intersection-observer';
+
+    const MyInViewComponent = () => (
+      <InView threshold={0.1}>
+        {({ inView, ref }) => (
+          <div ref={ref} style={{ height: '200px', backgroundColor: inView ? 'lightgreen' : 'lightcoral' }}>
+            {inView ? 'In View' : 'Out of View'}
+          </div>
+        )}
+      </InView>
+    );
+
+#-------------------------------
+# react-multi-progress
+#-------------------------------
+
+- ENTRY:
+  CATEGORY: react-multi-progress
+
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ インストール
+
+      npm install react-multi-progress
+
+    ■ 概要
+
+    ・React アプリケーションで複数の進捗バーを簡単に表示・管理するためのライブラリ
+    ・複数のタスクやプロセスの進行状況を視覚的に表現可能
+    ・カスタマイズ可能なスタイルとアニメーションを提供
+
+    ■ 主な特徴
+
+    ・複数進捗バー: 複数の進捗バーを同時に表示し、各バーの進行状況を個別に管理可能
+    ・カスタマイズ可能: 色、サイズ、アニメーションなどのスタイルを柔軟に設定可能
+    ・レスポンシブデザイン: 画面サイズに応じて自動的に調整されるレスポンシブな進捗バー
+    ・TypeScript サポート: 型定義が提供されており、型安全な開発が可能
+    ・コミュニティ: オープンソースで活発にメンテナンスされており、多くのプラグインや拡張機能が存在
+
+    ■ 注意点
+
+    ・大量の進捗バーを表示する場合、パフォーマンス最適化が必要になることがある
+    ・アクセシビリティ: スクリーンリーダー対応など、アクセシビリティ面での考慮が必要
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ 実装
+
+    import MultiProgress from 'react-multi-progress';
+
+    const MyMultiProgress = () => {
+      const progressData = [
+        { label: 'Task 1', value: 70, color: 'blue' },
+        { label: 'Task 2', value: 40, color: 'green' },
+        { label: 'Task 3', value: 90, color: 'orange' },
+      ];
+
+      return (
+        <MultiProgress
+          data={progressData}
+          height={20}
+          showLabels={true}
+          animate={true}
+        />
+      );
+    };
+
+#-------------------------------
+# react-stay-scrolled
+#-------------------------------
+
+- ENTRY:
+  CATEGORY: react-stay-scrolled
+
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ インストール
+
+      npm install react-stay-scrolled
+
+    ■ 概要
+
+    ・React アプリケーションでスクロール位置を維持するためのライブラリ
+    ・動的にコンテンツが追加・削除される場合でも、ユーザーのスクロール位置を保持可能
+    ・チャットアプリケーションやフィード表示など、リアルタイムで更新されるコンテンツに最適
+
+    ■ 主な特徴
+
+    ・スクロール位置の維持: コンテンツの変更時にスクロール位置を自動的に調整
+    ・カスタマイズ可能: スクロールの挙動やトリガー条件を柔軟に設定可能
+    ・簡単な統合: 既存のコンポーネントに簡単に組み込むことが可能
+    ・TypeScript サポート: 型定義が提供されており、型安全な開発が可能
+    ・コミュニティ: オープンソースで活発にメンテナンスされており、多くのプラグインや拡張機能が存在
+
+    ■ 注意点
+
+    ・大量のコンテンツ更新が発生する場合、パフォーマンス最適化が必要になることがある
+    ・アクセシビリティ: スクリーンリーダー対応など、アクセシビリティ面での考慮が必要
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ 実装
+
+    import { StayScrolled } from 'react-stay-scrolled';
+    import { useState } from 'react';
+
+    const MyChatComponent = () => {
+      const [messages, setMessages] = useState([
+        'Hello!',
+        'How are you?',
+      ]);
+
+      const addMessage = (msg) => {
+        setMessages((prev) => [...prev, msg]);
       };
+
+      return (
+        <div>
+          <StayScrolled>
+            <div style={{ height: '300px', overflowY: 'auto', border: '1px solid black' }}>
+              {messages.map((msg, index) => (
+                <div key={index}>{msg}</div>
+              ))}
+            </div>
+          </StayScrolled>
+          <button onClick={() => addMessage('New message!')}>Add Message</button>
+        </div>
+      );
+    };
+
+#-------------------------------
+# react-viewer
+#-------------------------------
+
+- ENTRY:
+  CATEGORY: react-viewer
+
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ インストール
+
+      npm install react-viewer
+
+    ■ 概要
+
+    ・React アプリケーションで画像のギャラリー表示や拡大表示を実装するためのライブラリ
+    ・モーダルウィンドウ内で画像を表示し、ズーム、パン、スライドショーなどの機能を提供
+    ・ユーザーが画像を直感的に操作できるインターフェースを提供
+
+    ■ 主な特徴
+
+    ・ギャラリー表示: 複数の画像をサムネイル形式で表示し、クリックで拡大表示可能
+    ・ズームとパン: 画像のズームイン・ズームアウトやパン操作が可能
+    ・スライドショー: 自動的に画像を切り替えるスライドショー機能を提供
+    ・カスタマイズ可能: スタイル、アニメーション、ナビゲーションボタンなどを柔軟に設定可能
+    ・TypeScript サポート: 型定義が提供されており、型安全な開発が可能
+    ・コミュニティ: オープンソースで活発にメンテナンスされており、多くのプラグインや拡張機能が存在
+
+    ■ 注意点
+
+    ・大量の画像を扱う場合、パフォーマンス最適化が必要になることがある
+    ・アクセシビリティ: スクリーンリーダー対応など、アクセシビリティ面での考慮が必要
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ 実装
+    import React, { useState } from 'react';
+    import Viewer from 'react-viewer';  
+    import 'react-viewer/dist/index.css';
+
+    const MyImageViewer = () => {
+      const [visible, setVisible] = useState(false);
+      const images = [
+        { src: 'https://example.com/image1.jpg', alt: 'Image 1' },
+        { src: 'https://example.com/image2.jpg', alt: 'Image 2' },
+        { src: 'https://example.com/image3.jpg', alt: 'Image 3' },
+      ];
+
+      return (
+        <div>
+          <button onClick={() => setVisible(true)}>Open Image Viewer</button>
+          <Viewer
+            visible={visible}
+            onClose={() => setVisible(false)}
+            images={images}
+            downloadable={true}
+            zoomable={true}
+          />
+        </div>
+      );
+    };
+
+#-------------------------------
+# recharts
+#-------------------------------
+
+- ENTRY:
+  CATEGORY: recharts
+
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ インストール
+
+      npm install recharts
+
+    ■ 概要
+
+    ・React アプリケーションでデータ可視化のためのチャートを簡単に作成するためのライブラリ
+    ・SVG ベースのチャートコンポーネントを提供し、折れ線グラフ、棒グラフ、円グラフなど多様なチャートタイプをサポート
+    ・レスポンシブデザインやアニメーション、インタラクティブな機能も備えている
+
+    ■ 主な特徴
+
+    ・多様なチャートタイプ: 折れ線グラフ、棒グラフ、円グラフ、エリアチャート、散布図など、多くのチャートタイプをサポート
+    ・カスタマイズ可能: 軸、凡例、ツールチップ、色、スタイルなどを柔軟にカスタマイズ可能
+    ・レスポンシブデザイン: 画面サイズに応じて自動的に調整されるレスポンシブなチャート
+    ・アニメーション: チャートの描画や更新時にアニメーション効果を追加可能
+    ・インタラクティブ機能: ツールチップ表示、ズーム、パンなどのインタラクティブな操作が可能
+    ・TypeScript サポート: 型定義が提供されており、型安全な開発が可能
+    ・コミュニティ: オープンソースで活発にメンテナンスされており、多くのプラグインや拡張機能が存在
+
+    ■ 注意点
+
+    ・大量のデータポイントを扱う場合、パフォーマンス最適化が必要になることがある
+    ・アクセシビリティ: スクリーンリーダー対応など、アクセシビリティ面での考慮が必要
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ 実装
+
+    import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+
+    const data = [
+      { name: 'Jan', uv: 4000, pv: 2400, amt: 2400 },
+      { name: 'Feb', uv: 3000, pv: 1398, amt: 2210 },
+      { name: 'Mar', uv: 2000, pv: 9800, amt: 2290 },
+      { name: 'Apr', uv: 2780, pv: 3908, amt: 2000 },
+      { name: 'May', uv: 1890, pv: 4800, amt: 2181 },
+      { name: 'Jun', uv: 2390, pv: 3800, amt: 2500 },
+      { name: 'Jul', uv: 3490, pv: 4300, amt: 2100 },
+    ];
+
+    const MyLineChart = () => (
+      <ResponsiveContainer width="100%" height={400}>
+        <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{ r: 8 }} />
+          <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+        </LineChart>
+      </ResponsiveContainer>
+    );

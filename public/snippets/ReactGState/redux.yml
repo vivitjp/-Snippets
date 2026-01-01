@@ -1,0 +1,534 @@
+---
+#-------------------------------
+# redux
+#-------------------------------
+- ENTRY:
+  CATEGORY: 概要
+
+- ENTRY:
+  EXPLAIN: 概要
+  BODY: |
+    ■ Redux とは
+
+    ・JavaScript アプリケーションの予測可能な状態管理ライブラリ
+    ・Flux アーキテクチャに基づき、アプリケーションの状態を一元管理
+    ・React と組み合わせて使用されることが多いが、独立したライブラリ
+    ・主な概念: Action, Reducer, Store, Dispatch, Subscribe
+
+    ■ 主な利点
+
+    ・予測可能な状態更新: すべての状態変更が Action を通じて行われる
+    ・デバッグの容易さ: タイムトラベルデバッグが可能（Redux DevTools）
+    ・テストのしやすさ: 純粋関数である Reducer のテストが容易
+    ・ミドルウェアの拡張性: 非同期処理やログなどの機能を追加可能
+
+    ■ 主な欠点
+
+    ・ボイラープレートコードの多さ: シンプルな機能でも多くのコードが必要
+    ・学習コスト: 概念が多く、初心者には難しい
+    ・パフォーマンス: 大規模アプリでは最適化が必要
+
+- ENTRY:
+  EXPLAIN: Redux の進化まとめ
+  BODY: |
+    ■ Redux の歴史的進化
+
+    1. オリジナル Redux (2015): 基本的な Action/Reducer/Store
+    2. Ducks パターン (2016): コードの整理
+    3. Re-ducks パターン (2017): 構造化の強化
+    4. Redux Toolkit (2019): 公式ツールキットによる簡略化
+
+    ■ 現在の推奨
+
+    ・新規プロジェクトでは Redux Toolkit を使用
+    ・既存プロジェクトの移行も検討
+    ・Zustand や Recoil などの代替ライブラリも人気
+
+    ■ 注意点
+
+    ・Redux は複雑な状態管理に適する
+    ・シンプルなアプリでは Context API + useReducer で十分
+    ・パフォーマンス最適化（memoization, selector）を忘れずに
+
+- ENTRY:
+  CATEGORY: Store
+
+- ENTRY:
+  EXPLAIN: Store の役割
+  BODY: |
+    ■ Store の役割
+
+    ・アプリケーション全体の状態を一元管理するオブジェクト
+    ・状態の読み取り、更新、購読を担う
+    ・Redux のコアとなる部分
+
+    ■ 主なメソッド
+
+    ・getState(): 現在の状態を取得
+    ・dispatch(action): Action を発行し、状態を更新
+    ・subscribe(listener): 状態変更時にコールバックを実行
+    ・replaceReducer(nextReducer): Reducer を置き換え（ホットリロード用）
+
+    ■ Store の作成
+
+    Redux の createStore 関数で作成。Reducer を渡す。
+
+    ■ 実装例
+
+      import { createStore } from 'redux';
+      import rootReducer from './reducers';
+
+      const store = createStore(rootReducer);
+
+      // 状態の取得
+      console.log(store.getState());
+
+      // Action の dispatch
+      store.dispatch({ type: 'INCREMENT' });
+
+      // 状態変更の購読
+      const unsubscribe = store.subscribe(() => {
+        console.log('State changed:', store.getState());
+      });
+
+- ENTRY:
+  EXPLAIN: Store サンプル
+  BODY: |
+    ■ 実装例
+
+      import { createStore } from 'redux';
+
+      // シンプルなカウンターリデューサー
+      const counterReducer = (state = { count: 0 }, action) => {
+        switch (action.type) {
+          case 'INCREMENT':
+            return { count: state.count + 1 };
+          case 'DECREMENT':
+            return { count: state.count - 1 };
+          default:
+            return state;
+        }
+      };
+
+      const store = createStore(counterReducer);
+
+      // 初期状態の取得
+      console.log('Initial State:', store.getState());
+
+      // Action を dispatch
+      store.dispatch({ type: 'INCREMENT' });
+      console.log('After INCREMENT:', store.getState());
+
+      store.dispatch({ type: 'DECREMENT' });
+      console.log('After DECREMENT:', store.getState());
+
+      // 状態変更の購読
+      const unsubscribe = store.subscribe(() => {
+        console.log('State changed:', store.getState());
+      });
+
+      // さらに Action を dispatch
+      store.dispatch({ type: 'INCREMENT' }); // 購読者が呼ばれる
+      store.dispatch({ type: 'INCREMENT' }); // 購読者が呼ばれる
+
+      // 購読解除
+      unsubscribe();
+
+      store.dispatch({ type: 'DECREMENT' }); // 購読者は呼ばれない
+
+- ENTRY:
+  EXPLAIN: 複数の Store サンプル
+  BODY: |
+    ■ 複数の Store を使用した実装例
+
+      import { createStore, combineReducers } from 'redux';
+
+      // カウンターリデューサー
+      const counterReducer = (state = { count: 0 }, action) => {
+        switch (action.type) {
+          case 'INCREMENT':
+            return { count: state.count + 1 };
+          case 'DECREMENT':
+            return { count: state.count - 1 };
+          default:
+            return state;
+        }
+      };
+
+      // ユーザーリデューサー
+      const userReducer = (state = { name: '' }, action) => {
+        switch (action.type) {
+          case 'SET_NAME':
+            return { name: action.payload };
+          default:
+            return state;
+        }
+      };
+
+      // 複数のリデューサーを結合
+      const rootReducer = combineReducers({
+        counter: counterReducer,
+        user: userReducer,
+      });
+
+      const store = createStore(rootReducer);
+
+      // 初期状態の取得
+      console.log('Initial State:', store.getState());
+
+      // Action を dispatch
+      store.dispatch({ type: 'INCREMENT' });
+      store.dispatch({ type: 'SET_NAME', payload: 'Alice' });
+
+      console.log('Updated State:', store.getState());
+
+- ENTRY:
+  EXPLAIN: subscribe
+  BODY: |
+    ■ subscribe メソッド
+
+    ・Store の状態が変更されたときにコールバック関数を登録
+    ・状態変更時に登録したリスナーが呼び出される
+    ・購読解除のための関数を返す
+
+    ■ ユースケース
+
+    ・UI コンポーネントの再レンダリング
+    ・ログ記録や分析
+    ・非同期処理のトリガー
+
+    ■ 実際的な使用例
+
+      import { createStore } from 'redux';
+
+      // シンプルなカウンターリデューサー
+      const counterReducer = (state = { count: 0 }, action) => {
+        switch (action.type) {
+          case 'INCREMENT':
+            return { count: state.count + 1 };
+          case 'DECREMENT':
+            return { count: state.count - 1 };
+          default:
+            return state;
+        }
+      };
+
+      const store = createStore(counterReducer);
+
+      // 複数のリスナーを登録
+      const listener1 = () => {
+        console.log('Listener 1: Count is', store.getState().count);
+      };
+
+      const listener2 = () => {
+        console.log('Listener 2: Count changed to', store.getState().count);
+      };
+
+      const unsubscribe1 = store.subscribe(listener1);
+      const unsubscribe2 = store.subscribe(listener2);
+
+      // Action を dispatch
+      store.dispatch({ type: 'INCREMENT' }); // 両方のリスナーが呼ばれる
+      store.dispatch({ type: 'INCREMENT' }); // 両方のリスナーが呼ばれる
+
+      // リスナー1を解除
+      unsubscribe1();
+
+      store.dispatch({ type: 'DECREMENT' }); // リスナー2のみが呼ばれる
+
+- ENTRY:
+  EXPLAIN: subscribe コンポーネントの再描画サンプル
+  BODY: |
+    ■ subscribe を使ったコンポーネントの再描画サンプル
+
+    ・Redux Store の状態変更に応じてコンポーネントを手動で再描画
+    ・React-Redux の useSelector/useDispatch を使わない場合に有用
+
+    ■ 実装例
+
+      import React, { useEffect, useState } from 'react';
+      import { createStore } from 'redux';
+
+      // シンプルなカウンターリデューサー
+      const counterReducer = (state = { count: 0 }, action) => {
+        switch (action.type) {
+          case 'INCREMENT':
+            return { count: state.count + 1 };
+          case 'DECREMENT':
+            return { count: state.count - 1 };
+          default:
+            return state;
+        }
+      };
+
+      const store = createStore(counterReducer);
+
+      const CounterComponent = () => {
+        const [count, setCount] = useState(store.getState().count);
+
+        useEffect(() => {
+          // Store の状態変更を購読
+          const unsubscribe = store.subscribe(() => {
+            setCount(store.getState().count); // 状態が変わったら更新
+          });
+
+          // クリーンアップで購読解除
+          return () => unsubscribe();
+        }, []);
+
+        return (
+          <div>
+            <h1>Count: {count}</h1>
+            <button onClick={() => store.dispatch({ type: 'INCREMENT' })}>+</button>
+            <button onClick={() => store.dispatch({ type: 'DECREMENT' })}>-</button>
+          </div>
+        );
+      };
+
+      export default CounterComponent;
+
+- ENTRY:
+  CATEGORY: 構成パターン
+
+- ENTRY:
+  EXPLAIN: Ducks パターン
+  BODY: |
+    ■ Ducks パターンとは
+
+    ・Redux のボイラープレートを減らすためのファイル構成パターン
+    ・Action Types, Action Creators, Reducer を1つのファイルにまとめる
+    ・「ducks」= アヒルの意味で、1つのファイルにすべてを詰め込むイメージ
+
+    ■ Ducks の構造
+
+    ・Action Types: 文字列定数
+    ・Action Creators: Action オブジェクトを返す関数
+    ・Reducer: 状態を更新する純粋関数
+    ・すべてを export し、index.js で combine
+
+    ■ 利点
+
+    ・ファイル数が減る
+    ・関連コードがまとまる
+    ・再利用しやすくなる
+
+    ■ 欠点
+
+    ・ファイルが肥大化する可能性
+    ・命名の衝突に注意
+
+    ■ 実装例 (カウンター)
+
+      // widgets/counter.js
+      const INCREMENT = 'counter/INCREMENT';
+      const DECREMENT = 'counter/DECREMENT';
+
+      export const increment = () => ({ type: INCREMENT });
+      export const decrement = () => ({ type: DECREMENT });
+
+      const initialState = { count: 0 };
+
+      export default function reducer(state = initialState, action) {
+        switch (action.type) {
+          case INCREMENT:
+            return { ...state, count: state.count + 1 };
+          case DECREMENT:
+            return { ...state, count: state.count - 1 };
+          default:
+            return state;
+        }
+      }
+
+- ENTRY:
+  EXPLAIN: Re-ducks パターン
+  BODY: |
+    ■ Re-ducks パターンとは
+
+    ・Ducks パターンを拡張したパターン
+    ・Selectors, Operations (Thunks), Constants を追加
+    ・より構造化されたアプローチ
+
+    ■ Re-ducks の構造
+
+    ・constants.js: Action Types
+    ・actions.js: Action Creators
+    ・operations.js: Thunks などの非同期処理
+    ・selectors.js: 状態から値を選択する関数
+    ・reducer.js: Reducer
+    ・index.js: エクスポートのまとめ
+
+    ■ 利点
+
+    ・関心の分離が明確
+    ・テストしやすくなる
+    ・スケーラビリティが高い
+
+    ■ 実装例 (カウンター)
+
+      // constants.js
+      export const INCREMENT = 'counter/INCREMENT';
+      export const DECREMENT = 'counter/DECREMENT';
+
+      // actions.js
+      import { INCREMENT, DECREMENT } from './constants';
+
+      export const increment = () => ({ type: INCREMENT });
+      export const decrement = () => ({ type: DECREMENT });
+
+      // selectors.js
+      export const getCount = state => state.counter.count;
+
+      // reducer.js
+      import { INCREMENT, DECREMENT } from './constants';
+
+      const initialState = { count: 0 };
+
+      export default function reducer(state = initialState, action) {
+        switch (action.type) {
+          case INCREMENT:
+            return { ...state, count: state.count + 1 };
+          case DECREMENT:
+            return { ...state, count: state.count - 1 };
+          default:
+            return state;
+        }
+      }
+
+      // index.js
+      export { default } from './reducer';
+      export * from './actions';
+      export * from './selectors';
+
+- ENTRY:
+  CATEGORY: Toolkit
+
+- ENTRY:
+  EXPLAIN: Redux Toolkit
+  BODY: |
+    ■ Redux Toolkit とは
+
+    ・Redux の公式ツールキット
+    ・Redux のボイラープレートを大幅に削減
+    ・Immer によるミュータブルな書き方
+    ・Redux DevTools の自動設定
+    ・RTK Query によるデータフェッチの統合
+
+    ■ 主な機能
+
+    ・configureStore: Store の作成を簡略化
+    ・createSlice: Action Types, Action Creators, Reducer を自動生成
+    ・createAsyncThunk: 非同期 Action の作成
+    ・createEntityAdapter: 正規化された状態管理
+
+    ■ Ducks/Re-ducks からの進化
+
+    ・Ducks のようにコードをまとめるが、より簡潔
+    ・Re-ducks の構造を維持しつつ、自動生成で効率化
+    ・TypeScript サポートが強化
+
+    ■ 実装例 (カウンター)
+
+      import { createSlice, configureStore } from '@reduxjs/toolkit';
+
+      const counterSlice = createSlice({
+        name: 'counter',
+        initialState: { count: 0 },
+        reducers: {
+          increment: state => { state.count += 1 },
+          decrement: state => { state.count -= 1 },
+        },
+      });
+
+      const store = configureStore({
+        reducer: counterSlice.reducer,
+      });
+
+      // Action Creators は自動生成
+      store.dispatch(counterSlice.actions.increment());
+
+      console.log(store.getState()); // { counter: { count: 1 } }
+
+- ENTRY:
+  CATEGORY: 実装
+
+- ENTRY:
+  EXPLAIN: 完全なカウンターアプリ
+  BODY: |
+    ■ Redux Toolkit を使用したカウンターアプリ
+
+    ・Store の作成
+    ・Slice の定義
+    ・React コンポーネントでの使用
+
+    ■ store.js
+
+      import { configureStore } from '@reduxjs/toolkit';
+      import counterReducer from './counterSlice';
+
+      export const store = configureStore({
+        reducer: {
+          counter: counterReducer,
+        },
+      });
+
+    ■ counterSlice.js
+
+      import { createSlice } from '@reduxjs/toolkit';
+
+      export const counterSlice = createSlice({
+        name: 'counter',
+        initialState: { value: 0 },
+        reducers: {
+          increment: state => { state.value += 1 },
+          decrement: state => { state.value -= 1 },
+          incrementByAmount: (state, action) => {
+            state.value += action.payload;
+          },
+        },
+      });
+
+      export const { increment, decrement, incrementByAmount } = counterSlice.actions;
+      export default counterSlice.reducer;
+
+    ■ Counter.js (React コンポーネント)
+
+      import React from 'react';
+      import { useSelector, useDispatch } from 'react-redux';
+      import { increment, decrement, incrementByAmount } from './counterSlice';
+
+      export function Counter() {
+        const count = useSelector(state => state.counter.value);
+        const dispatch = useDispatch();
+
+        return (
+          <div>
+            <div>
+              <button onClick={() => dispatch(increment())}>
+                +
+              </button>
+              <span>{count}</span>
+              <button onClick={() => dispatch(decrement())}>
+                -
+              </button>
+            </div>
+            <button onClick={() => dispatch(incrementByAmount(5))}>
+              +5
+            </button>
+          </div>
+        );
+      }
+
+    ■ index.js
+
+      import React from 'react';
+      import ReactDOM from 'react-dom';
+      import { Provider } from 'react-redux';
+      import { store } from './store';
+      import { Counter } from './Counter';
+
+      ReactDOM.render(
+        <Provider store={store}>
+          <Counter />
+        </Provider>,
+        document.getElementById('root')
+      );

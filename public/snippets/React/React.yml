@@ -898,23 +898,14 @@
 # Hooks: useEffect
 #-------------------------------
 - ENTRY:
-  EXPLAIN: useEffect(基本)
-  BODY: |
-    const [xxxxx, setXxxxx] = useState<Set<string>>()
-
-#-------------------------------
-# useEffect
-#-------------------------------
-- ENTRY:
-  CATEGORY: |
-    Hooks: useEffect
+  CATEGORY: useEffect
 
 - ENTRY:
-  EXPLAIN: useEffect(シンプル)
+  EXPLAIN: useEffect
   BODY: |
     useEffect(() => {
       // 処理
-    })                    // 毎回レンダリング時に実行
+    })                    // 毎レンダリング時に実行
 
     useEffect(() => {
       // 処理
@@ -970,6 +961,8 @@
   BODY: |
     ■ fetch (v18)
 
+    ・この方法はあまり推奨されません。AbortController を使う方法が良いです。
+
     useEffect(() => {
       let isRead = false
 
@@ -982,6 +975,27 @@
 
       return () => {
         isRead = true
+      }
+    }, [])
+
+    ■ AbortController (v18)
+    useEffect(() => {
+      const controller = new AbortController()
+      const signal = controller.signal
+
+      fetch(URL, { signal })
+        .then((res) => res.json())
+        .then((json) => setXxx(json))
+        .catch((err) => {
+          if (err.name === 'AbortError') {
+            console.log('Fetch aborted')
+          } else {
+            // その他のエラー処理
+          }
+        })
+
+      return () => {
+        controller.abort()  // フェッチを中止
       }
     }, [])
 
@@ -1092,12 +1106,14 @@
     }, [a, b])  // 依存変数が変化した時に再計算
 
     ■ オブジェクト/配列のメモ化
+
     const memoizedObject = useMemo(() => ({
       key1: value1,
       key2: value2,
     }), [value1, value2])
 
     ■ 関数のメモ化
+
     const memoizedCallback = useMemo(() => {
       return () => {
         doSomething(a, b)
@@ -1105,11 +1121,13 @@
     }, [a, b])
 
     ■ コンポーネントのメモ化
+
     const MemoizedComponent = useMemo(() => {
       return <MyComponent prop1={value1} prop2={value2} />
     }, [value1, value2])
 
     ■ 副作用がある場合は useEffect を使う
+
     useEffect(() => {
       // 副作用のある処理
       performSideEffect(data)
@@ -1360,7 +1378,6 @@
       ({ text, setText, title, ...args }, ref) => {
         const id = useId()
 
-        ■ ハンドラ
         const handleChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
           const value = e.currentTarget.value
           setText(value)
@@ -1388,7 +1405,6 @@
     ■ サンプル (flip関数)
 
     const [isTrue, flipFlag] = useReducer((flag: boolean) => !flag, false)
-
 
     ■ サンプル (カウンター)
 
@@ -1721,10 +1737,29 @@
     import { useSyncExternalStore } from 'react';
 
     const state = useSyncExternalStore(
-      subscribe,
-      getSnapshot,
-      getServerSnapshot?
+      subscribe,                        // ストアの変更を購読する関数
+      getSnapshot,                      // 現在の状態を取得する関数
+      getServerSnapshot?                // サーバーサイドレンダリング用の関数（オプション）
     );
+
+      ・subscribe
+
+        const subscribe = (callback) => {
+          const unsubscribe = store.subscribe(callback);
+          return unsubscribe;
+        };
+
+      ・getSnapshot
+
+        const getSnapshot = () => {
+          return store.getState();
+        };
+
+      ・getServerSnapshot (オプション)
+
+        const getServerSnapshot = () => {
+          return store.getState();
+        };
 
     ■ サンプル実装(Redux ストアとの同期)
 
@@ -1790,8 +1825,14 @@
   CATEGORY: カスタムHook
 
 - ENTRY:
-  EXPLAIN: カスタムHook(クロージャ)
+  EXPLAIN: カスタムHook
   BODY: |
+    ■ 用途
+
+      複数コンポーネントで共通のロジックを再利用
+
+    ■ サンプル
+
     import { useCallback, useState } from "react"
 
     export type Xxx<T> = {
@@ -1801,11 +1842,11 @@
     export const useXxx = <T,>({ init }: Xxx<T>) => {
       const [value, setValue] = useState<typeof init>(init)
 
-      const method = 🔵useCallback((val: typeof init) => {
+      const method = useCallback((val: typeof init) => {
         setValue(val)
       }, [])
 
-      const JsxCompo = 🔵useCallback(() => {
+      const JsxCompo = useCallback(() => {
         return <div>Hello</div>
       }, [])
 
@@ -1815,18 +1856,27 @@
 - ENTRY:
   EXPLAIN: レンダーHooks
   BODY: |
+    ■ 用途
+
+      UI描画ロジックと状態管理ロジックをセットで再利用
+
+    ■ サンプル
+
+    import { useCallback, useMemo, useState } from "react"
+    import { Checks } from "../components/Checks"
+
     type UseChecks = [boolean, () => JSX.Element]
 
     export const useChecks = (labels: string[]): UseChecks => {
       const [checkList, setCheckList] = useState(() => labels.map(() => false))
 
-      const handleCheck = 🔵useCallback((target: number) => {
+      const handleCheck = useCallback((target: number) => {
         setCheckList((checks) => checks.map((_, index: number) => index === target))
       }, [])
 
-      const isAllChecked = 🔵useMemo(() => checkList.every((x) => x), [checkList] )
+      const isAllChecked = useMemo(() => checkList.every((x) => x), [checkList] )
 
-      const renderChecks = 🔵useCallback(() => (
+      const renderChecks = useCallback(() => (
         <Checks checkList={checkList} labels={labels} handler={handleCheck} />
       ), [checkList, labels, handleCheck])
 
@@ -1850,7 +1900,7 @@
 
     ・抽象化過剰: 過度分割による追跡困難
     ・隠れた依存: 内部副作用やコンテキストの非可視化
-    ・再レンダー問題: 毎回生成されるオブジェクト・関数による不要再レンダー 🔴
+    ・再レンダー問題: 毎回生成されるオブジェクト・関数による不要再レンダー => useCallback/useMemo必須
     ・依存配列リスク: useEffect等の依存漏れによるバグリスク
 
     ■ Render Hooks
@@ -1887,32 +1937,39 @@
 - ENTRY:
   EXPLAIN: 再レンダー問題
   BODY: |
-    ■ 悪い例
+    ■ 悪い例: メモ化された子（浅い比較: props の === を使う）
 
-    // メモ化された子（浅い比較: props の === を使う）
-    const Child = React.memo(({ onAction, options }: { onAction: () => void; options: { label: string } }) => {
-      const renders = useRef(0);
-      console.log("Child render", ++renders.current);
-      return (
-        <div>
-          <div>{options.label}</div>
-          <button onClick={onAction}>Child Action</button>
-        </div>
-      );
-    });
+    const Child = React.memo(           // 🔴 Childは毎回レンダリングされる
+      ({ onAction, options }: {
+        onAction: () => void;           // 🔴 オブジェクトや関数は参照で比較
+        options: { label: string }      //     毎回新しい参照になる
+      }) => {
+        const renders = useRef(0);
+        console.log("Child render", ++renders.current);
 
-    // カスタムHook（悪い実装：関数/オブジェクトを毎回生成して返す）
+        return (
+          <div>
+            <div>{options.label}</div>
+            <button onClick={onAction}>Child Action</button>
+          </div>
+        );
+      }
+    );
+
+    ■ 悪い例: カスタムHook（悪い実装：関数/オブジェクトを毎回生成して返す）
+
     function useBadCounter() {
       const [count, setCount] = useState(0);
       
-      const handler = () => setCount((c) => c + 1);   // 🔵改善：useCallback必要
+      const handler = () => setCount((c) => c + 1);   // 🔴 useCallback必要
 
-      const options = { label: `count=${count}` };    // 🔵改善：useMemo必要
+      const options = { label: `count=${count}` };    // 🔴 useMemo必要
 
       return { count, handler, options };
     }
 
-    // 親コンポーネント
+    ■ 悪い例: 親コンポーネント
+
     export function ParentBad() {
       const { count, handler, options } = useBadCounter();  // 毎回新しい handler/options を受け取る
       

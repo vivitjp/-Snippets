@@ -51,7 +51,15 @@
   BODY: |
     ■ インストール
 
-    npm install react-router-dom 
+    npm install react-router-dom
+
+    ■ Reactバージョンとの関係
+
+    | React バージョン | react-router-dom バージョン |
+    |------------------|------------------------------|
+    | 16.x             | 5.x, 6.x                     |
+    | 17.x             | 5.x, 6.x                     |
+    | 18.x             | 6.x                          |
 
     ■ 基本使い方（最小サンプル）
 

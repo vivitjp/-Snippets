@@ -1,11 +1,42 @@
 import { KeyDef } from "../../../types/type"
 
 export const keyReactLibrary: KeyDef = {
-  // ■ ReactUtilities の主要キーワード
-  Crimson: ["react-virtuoso", "ag-grid-react", "linkify-react"],
-  // ■ 青
-  RoyalBlue: ["Virtuoso", "AgGridReact", "Linkify", "componentDecorator"],
-  // ■ 緑
+  // ■ React Library の主要ライブラリ名
+  Crimson: [
+    "react-virtuoso",
+    "ag-grid-react",
+    "linkify-react",
+    "react-async-hook",
+    "react-dnd",
+    "react-draggable",
+    "react-flow-renderer",
+    "react-intersection-observer",
+    "react-multi-progress",
+  ],
+  // ■ コンポーネント名、フック名、主要クラス
+  RoyalBlue: [
+    "Virtuoso",
+    "AgGridReact",
+    "Linkify",
+    "componentDecorator",
+    "useAsync",
+    "useAsyncCallback",
+    "useAsyncMemo",
+    "useAsyncEffect",
+    "DndProvider",
+    "useDrag",
+    "useDrop",
+    "HTML5Backend",
+    "Draggable",
+    "ReactFlow",
+    "MiniMap",
+    "Controls",
+    "Background",
+    "useInView",
+    "InView",
+    "MultiProgress",
+  ],
+  // ■ プロパティ名、オプション名
   ForestGreen: [
     "totalCount",
     "itemContent",
@@ -23,10 +54,34 @@ export const keyReactLibrary: KeyDef = {
     "nl2br",
     "format",
     "formatHref",
+    "loading",
+    "error",
+    "value",
+    "ItemType",
+    "isDragging",
+    "accept",
+    "drop",
+    "onStart",
+    "onDrag",
+    "onStop",
+    "bounds",
+    "elements",
+    "type",
+    "data",
+    "position",
+    "source",
+    "target",
+    "animated",
+    "ref",
+    "threshold",
+    "height",
+    "showLabels",
+    "animate",
+    "label",
   ],
   // ■ 値や定数
-  DarkOrange: [],
-  // 紫
+  DarkOrange: ["BOX", "input", "parent"],
+  // ■ React 関連のユーティリティ
   DarkViolet: [
     "cloneElement",
     "createElement",

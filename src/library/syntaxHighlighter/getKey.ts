@@ -34,7 +34,9 @@ import { keysRHF } from "./keys/RHF"
 import { keysPrisma } from "./keys/Prisma"
 import { keysPython } from "./keys/Python"
 import { keysReact } from "./keys/React"
+import { keysReactDom } from "./keys/ReactDom"
 import { keysReactRouter } from "./keys/ReactRouter"
+import { keysRedux } from "./keys/Redux"
 import { keysRegExp } from "./keys/RegExp"
 import { keysRTL } from "./keys/RTL"
 import { keysSVG } from "./keys/SVG"
@@ -47,13 +49,13 @@ import { keysTypeORM } from "./keys/TypeORM"
 import { keysVite } from "./keys/Vite"
 import { keysVue } from "./keys/Vue"
 import { keysYup } from "./keys/Yup"
+import { keysZustand } from "./keys/zustand"
 import { keysJSUtilities } from "./keys/JSUtilities"
 
 // 以下のオブジェクトをソートしてください
 export const codeKeys = {
   AWSAurora: "AWSAurora",
   AWSCloud: "AWSCloud",
-  Misc: "Misc",
   Chakra: "Chakra",
   ClassTransformer: "ClassTransformer",
   ClassValidator: "ClassValidator",
@@ -76,18 +78,21 @@ export const codeKeys = {
   Lint: "Lint",
   Linux: "Linux",
   lodash: "lodash",
+  Misc: "Misc",
   Mongo: "Mongo",
-  NPM: "NPM",
   MUI: "MUI",
   Nestjs: "Nestjs",
   Nextjs: "Nextjs",
   Nodejs: "Nodejs",
+  NPM: "NPM",
   Package: "Package",
   Prisma: "Prisma",
   Python: "Python",
   React: "React",
-  ReactRouter: "ReactRouter",
+  ReactDom: "ReactDom",
   ReactLibrary: "ReactLibrary",
+  ReactRouter: "ReactRouter",
+  Redux: "Redux",
   RegExp: "RegExp",
   RHF: "keysRHF",
   RTL: "RTL",
@@ -102,6 +107,7 @@ export const codeKeys = {
   Vite: "Vite",
   Vue: "Vue",
   Yup: "Yup",
+  Zustand: "Zustand",
 } as const
 
 export const defaultSnippetsStyle = codeKeys.Unknown
@@ -144,8 +150,10 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   Prisma: keysPrisma,
   Python: keysPython,
   React: keysReact,
+  ReactDom: keysReactDom,
   ReactLibrary: keyReactLibrary,
   ReactRouter: keysReactRouter,
+  Redux: keysRedux,
   RegExp: keysRegExp,
   RTL: keysRTL,
   Sql: keysSql,
@@ -158,6 +166,7 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   Vite: keysVite,
   Vue: keysVue,
   Yup: keysYup,
+  Zustand: keysZustand,
 }
 
 export const getMergedKeys = (codeKeyTypes: string[] | undefined) => {
