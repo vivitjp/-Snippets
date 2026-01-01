@@ -1,0 +1,304 @@
+---
+#-------------------------------
+# React Virtuoso
+#-------------------------------
+- ENTRY:
+  CATEGORY: React Virtuoso
+
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ インストール
+
+      npm install react-virtuoso
+
+    ■ 概要
+
+    React アプリケーション向けの高性能な仮想化リストコンポーネントライブラリ
+    大量のデータを効率的にレンダリング
+    スクロールパフォーマンスを最適化するために設計
+
+    主な特徴:
+    ・仮想化レンダリング:     表示されているアイテムのみをレンダリングし、パフォーマンスを向上
+    ・可変高さサポート:       各アイテムの高さが異なる場合でも対応可能
+    ・グループ化とセクション: アイテムをグループ化し、セクションヘッダーを追加可能
+    ・無限スクロール:        スクロールに応じてデータを動的にロード可能
+    ・カスタマイズ可能:      レンダリング方法やスタイルを柔軟にカスタマイズ可能
+
+    ■ 実装
+
+      import { Virtuoso } from 'react-virtuoso';
+
+      const items = Array.from({ length: 1000 }, (_, index) => `Item ${index + 1}`);
+
+      const MyVirtuosoList = () => (
+        <Virtuoso
+          style={{ height: '400px', width: '300px' }}
+          totalCount={items.length}
+          itemContent={(index) => <div>{items[index]}</div>}
+        />
+      );
+
+- ENTRY:
+  EXPLAIN: フルオプション
+  BODY: |
+    ■ フルオプション
+
+      const render = (index) => <div>{items[index]}</div>
+
+      <Virtuoso
+        style={{ height: '400px', width: '300px' }}     // コンテナスタイル
+        totalCount={items.length}                       // アイテム総数
+        itemContent={render}                            // レンダリング関数
+        overscan={200}                                  // 事前にレンダリングするアイテムの数
+        initialTopMostItemIndex={0}                     // 初期表示位置のアイテムインデックス
+        components={{                                   // カスタムコンポーネントの指定
+          Header: () => <div>Header</div>,
+          Footer: () => <div>Footer</div>,
+        }}
+        groupCounts={[100, 200, 300]}                   // グループ化の設定
+        endReached={() => {                             // スクロールが終端に達したときのコールバック
+          console.log('End reached');
+        }}
+      />
+
+    ■ overscan
+
+    ・スクロールパフォーマンスを向上させるために、表示範囲外のアイテムも事前にレンダリングする数を指定
+    ・ユーザーがスクロールした際に、スムーズな表示を実現
+    ・overscan の値を大きくすると、スクロールが速い場合でも表示が途切れにくくなる
+    ・あまり大きすぎるとメモリ使用量が増加。適切なバランスが重要
+
+    ■ groupCounts
+
+    ・アイテムをグループ化する際の各グループのアイテム数を配列で指定
+    ・大量のアイテムをセクションごとに整理
+    ・ユーザーが特定のカテゴリやグループに簡単にアクセス
+    ・グループ内でのスクロールも最適化
+    ・パフォーマンスが向上
+    ・キャッシュの効率化にも寄与
+
+#-------------------------------
+# ag-grid-react
+#-------------------------------
+- ENTRY:
+  CATEGORY: ag-grid-react
+
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ インストール
+
+      npm install ag-grid-react ag-grid-community
+
+    ■ 概要
+
+    ・ag-grid-react は React アプリケーション向けの強力なデータグリッドライブラリ
+    ・ag-Grid Ltd. が提供するオープンソースベースのライブラリ
+    ・大量のデータを表形式で表示・操作するためのコンポーネント
+    ・テーブルやスプレッドシートのような UI を簡単に構築
+    ・React の他に Angular、Vue.js、Vanilla JS 版もある
+    ・データ駆動型の React アプリでよく使われ、開発効率を大幅に向上させる
+
+    主な特徴:
+    ・パフォーマンス: 仮想化技術により、数万行のデータを高速にレンダリング可能。メモリ効率が良く、大規模データセットに適する
+    ・機能豊富: 
+      ・ソート、フィルタリング、グループ化、ピボットテーブル
+      ・セル編集、行選択、ドラッグ＆ドロップ
+      ・カスタムレンダラー、テーマ、イベントハンドリング
+      ・Excel 風の機能（エクスポート、クリップボード操作）
+    ・カスタマイズ性: 列定義、スタイル、プラグインで柔軟に拡張可能。CSS や React の props で制御
+    ・ライセンス: 無料の Community 版と、有料の Enterprise 版（高度な機能追加）。Community 版で基本的な使用は十分
+
+    ■ 注意点
+    ・依存関係として `ag-grid-community` が必要
+    ・ドキュメントは公式サイト (ag-grid.com) で詳細を確認。React 特有の統合方法が記載
+    ・大規模プロジェクトでは、Enterprise 版の検討を推奨（高度なフィルタリングやチャート統合など）
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    import { AgGridReact } from 'ag-grid-react';
+    import 'ag-grid-community/styles/ag-grid.css';
+    import 'ag-grid-community/styles/ag-theme-alpine.css';
+
+    const MyGrid = () => {
+      const rowData = [
+        { make: 'Toyota', model: 'Celica', price: 35000 },
+        // ... データ
+      ];
+
+      const columnDefs = [
+        { field: 'make' },
+        { field: 'model' },
+        { field: 'price' },
+      ];
+
+      return (
+        <div className="ag-theme-alpine" style={{ height: 400, width: 600 }}>
+          <AgGridReact
+            rowData={rowData}
+            columnDefs={columnDefs}
+          />
+        </div>
+      );
+    };
+
+#-------------------------------
+# linkify-react
+#-------------------------------
+- ENTRY:
+  CATEGORY: linkify-react
+
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ インストール
+
+      npm install linkify-react linkifyjs
+
+    ■ 概要
+
+    ・テキスト中の URL、メールアドレス、@メンション、ハッシュタグなどを自動で検出してリンク化
+    ・表示のカスタマイズや href の変換、リンクの属性制御、カスタムレンダラーの指定が可能
+    ・内部リンク（React Router）や外部リンクで挙動を分ける実装が容易
+    ・自動検出: URL、email、hashtag、mention などを識別して自動で a 要素に変換
+    ・format / formatHref: 表示テキストと href を別々に整形可能
+    ・componentDecorator: React 要素でリンク出力を完全に制御可能（例: React Router の `Link` を使用）
+    ・options: `nl2br`、`className`、`target`、`rel`、`validate` 等の細かい制御
+
+    ■ 注意点
+
+    ・ユーザー生成コンテンツをそのまま渡す場合は XSS に注意。HTML を含む入力は事前に `DOMPurify` 等でサニタイズすることを推奨
+    ・`encodeRequired: false` などで `dangerouslySetInnerHTML` を使う表示と組み合わせる場合、二重処理や実行される可能性に注意
+    ・SSR 環境では linkifyjs の一部プラグインやブラウザ依存コードに注意（基本は問題ないが確認推奨）
+    ・リンク自動検出の挙動は `linkifyjs` のバージョンやオプションに依存するため、README を参照して調整
+
+    ■ 参考
+
+      https://github.com/soapbox/linkifyjs
+      https://github.com/soapbox/linkify-react
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ 実装
+
+      import Linkify from 'linkify-react';
+
+      const text = 'Visit https://example.com or mail me@example.com';
+
+      const MyComponent = () => (
+        <Linkify>
+          {text}
+        </Linkify>
+      );
+
+    ■ オプション例（詳細）
+
+      const options = {
+        target: '_blank',                     // リンクの target
+        rel: 'noopener noreferrer',           // セキュリティ向上
+        className: 'my-link',                 // 共通クラス
+        nl2br: false,                         // 改行を <br/> に変換するか
+        format: (value, type) => {            // 表示文字列のカスタマイズ
+          if (type === 'url' && value.length > 50) return value.slice(0, 47) + '...'
+          return value
+        },
+        formatHref: (href, type) => {         // 実際の href をカスタマイズ
+          if (type === 'email') return `mailto:${href}`
+          return href
+        },
+      };
+
+      <Linkify options={options}>{text}</Linkify>
+
+    ■ カスタムレンダラー（React Router で内部リンク化）
+
+      import { Link } from 'react-router-dom';
+      import Linkify from 'linkify-react';
+
+      const componentDecorator = (href, text, key) => {
+        // ドメインが自サイトなら React Router の Link に変換
+        const isInternal = href.startsWith('/') || href.includes('example.com')
+        if (isInternal) return <Link to={href} key={key}>{text}</Link>
+        return <a href={href} key={key} target="_blank" rel="noopener noreferrer">{text}</a>
+      }
+
+      <Linkify componentDecorator={componentDecorator}>{text}</Linkify>
+
+#-------------------------------
+# react-async-hook
+#-------------------------------
+- ENTRY:
+  CATEGORY: react-async-hook
+
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ インストール
+
+      npm install react-async-hook
+
+    ■ 概要
+
+    ・React コンポーネント内で非同期関数を簡単に扱うためのカスタムフックライブラリ
+    ・非同期処理の状態管理（読み込み中、成功、エラー）を簡潔に実装可能
+    ・Promise ベースの非同期関数を React のライフサイクルに統合
+
+    ・主なフック:
+      ・useAsync: 非同期関数の実行と状態管理
+      ・useAsyncCallback: コールバックとして非同期関数を使用
+      ・useAsyncMemo: 非同期計算結果をメモ化  
+      ・useAsyncEffect: 非同期副作用の管理
+
+    ・状態管理: 各フックは `loading`、`error`、`value` の状態を提供し、UI の条件分岐が容易
+    ・キャンセル対応: コンポーネントのアンマウント時に非同期処理をキャンセル可能
+    ・TypeScript サポート: 型定義が提供され、型安全な非同期処理が可能
+    ・軽量: 最小限の依存関係で、React アプリに簡単に組み込み可能
+    ・コミュニティ: オープンソースで活発にメンテナンスされており、ドキュメントも充実
+
+    ■ 注意点
+
+    ・非同期関数は Promise を返す必要がある
+    ・状態管理はシンプルだが、複雑なシナリオでは独自のロジックが必要になる場合がある
+    ・React のバージョンに依存するため、互換性を確認
+    ・エラーハンドリングは各フックで提供されるが、アプリ全体の戦略を考慮することが重要  
+    ・パフォーマンス: 頻繁に更新される非同期処理では、レンダリングの最適化が必要になる場合がある
+    ・SSR 環境では非同期処理の挙動に注意。クライアントサイドでの実行を考慮
+
+    ■ 非同期データ管理ライブラリ(tanStack)との共存
+
+    ・tanStack Query などと比較して、react-async-hook はよりシンプルで軽量な選択肢
+    ・tanStack Query はキャッシュ管理、バックグラウンド更新、データの同期化などの高度な機能を提供
+    ・react-async-hook は単純な非同期関数の実行と状態管理に焦点を当てている
+    ・アプリケーションの要件に応じて、両方のライブラリを併用することも可能  
+    ・例えば、react-async-hook を使って一時的な非同期処理を管理し、tanStack Query を使ってサーバーからのデータフェッチとキャッシュを管理するシナリオなど  
+    ・ただし、両方のライブラリを使用する場合は、状態管理の重複や競合に注意が必要
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ 実装
+
+      import { useAsync } from 'react-async-hook';
+
+      const fetchData = async (url) => {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
+      };
+
+      const MyComponent = () => {
+        const { loading, error, value } = useAsync(() => fetchData('https://api.example.com/data'), []);
+
+        if (loading) return <div>Loading...</div>;
+        if (error) return <div>Error: {error.message}</div>;
+
+        return (
+          <div>
+            <h1>Data:</h1>
+            <pre>{JSON.stringify(value, null, 2)}</pre>
+          </div>
+        );
+      };

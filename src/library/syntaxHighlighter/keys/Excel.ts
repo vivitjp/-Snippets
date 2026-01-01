@@ -1,7 +1,7 @@
 import { KeyDef } from "../../../types/type"
 
 export const keysExcel: KeyDef = {
-  IndianRed: [
+  Crimson: [
     "KEY",
     //Search
     "VLOOKUP",

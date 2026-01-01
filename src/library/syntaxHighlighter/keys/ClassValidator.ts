@@ -1,7 +1,7 @@
 import { KeyDef } from "../../../types/type"
 
 export const keysClassValidator: KeyDef = {
-  IndianRed: ["registerDecorator", "ValidationOptions", "ValidationArguments"],
+  Crimson: ["registerDecorator", "ValidationOptions", "ValidationArguments"],
   RoyalBlue: [
     "IsDefined",
     "IsOptional",

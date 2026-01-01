@@ -6,7 +6,7 @@
   CATEGORY: コンポーネント
 
 - ENTRY:
-  EXPLAIN: 一般
+  EXPLAIN: 関数コンポーネント
   BODY: |
     ■ 関数コンポーネント (引数で型指定)
 
@@ -51,17 +51,45 @@
 
     ■ children への引数
 
-    type Props = {
-      title: string;
-      children: (value: string) => React.ReactNode // 明示的に型を定義
+    type CompoProps = {
+      data: { name: string; age: number }[]
+      children: (data: { name: string; age: number }[]) => React.ReactNode
     }
 
-    const LabeledWithArg: React.FC<Props> = ({ title, children }) => (
-      <div>
-        <h1>{title}</h1>
-        {children("子要素の値")}
-      </div>
-    )
+    const Table: React.FC<CompoProps> = ({ data, children }) => {
+      return (
+        <div>
+          <h1>TABLE</h1>
+          {children(data)}
+        </div>
+      )
+    }
+
+    type Props = {
+      title: string;
+    }
+
+    export const LabeledWithCallback: React.FC<Props> = ({ title }) => {
+      const data: { name: string; age: number }[] = [
+        { name: "Alice", age: 30 },
+        { name: "Bob", age: 25 },
+      ]
+
+      return (
+        <div>
+          <h1>{title}</h1>
+          <Table data={data}>
+            {(data) => {
+              return data.map(d => (
+                <div key={d.name}>
+                  <span>{d.name}</span><span>{d.age}</span>
+                </div>)
+              )
+            }}
+          </Table>
+        </div>
+      )
+    }
 
 - ENTRY:
   EXPLAIN: HTML要素
@@ -174,6 +202,9 @@
       )}
     </Toggler>
 
+#-------------------------------
+# Reactの型
+#-------------------------------
 - ENTRY:
   CATEGORY: |
     Reactの型: 要素ノード
@@ -388,6 +419,121 @@
     )
 
 #-------------------------------
+# Reactの型: その他のユーティリティ型
+#-------------------------------
+
+- ENTRY:
+  CATEGORY: |
+    Reactの型: その他のユーティリティ型
+
+- ENTRY:
+  EXPLAIN: React.ComponentProps
+  BODY: |
+    ■ 用途
+
+    ・HTML 要素の Props 型を取得
+
+    ■ 使用例
+
+    type InputProps = React.ComponentProps<'input'>  // HTMLInputElement の Props 型
+
+    const TextInput = (props: InputProps) => {
+      return <input {...props} />
+    }
+
+- ENTRY:
+  EXPLAIN: React.ComponentPropsWithRef
+  BODY: |
+    ■ 用途
+
+    ・ref を含む Props 型を取得
+
+    ■ 使用例
+
+    type ButtonProps = React.ComponentPropsWithRef<'button'>
+
+    const MyButton = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => (
+      <button ref={ref} {...props} />
+    ))
+
+- ENTRY:
+  EXPLAIN: React.ComponentPropsWithoutRef
+  BODY: |
+    ■ 用途
+
+    ・ref を除外した Props 型を取得
+
+    ■ 使用例
+
+    type CleanButtonProps = React.ComponentPropsWithoutRef<'button'>
+
+- ENTRY:
+  EXPLAIN: React.CSSProperties
+  BODY: |
+    ■ 用途
+
+    ・スタイルオブジェクトの型
+
+    ■ 使用例
+
+    const style: React.CSSProperties = {
+      color: 'red',
+      fontSize: '14px'
+    }
+
+- ENTRY:
+  EXPLAIN: React.ReactFragment
+  BODY: |
+    ■ 用途
+
+    ・`<></>` や `<React.Fragment>` の型
+
+    ■ 使用例
+
+    const fragment: React.ReactFragment = <><div>1</div><div>2</div></>
+
+- ENTRY:
+  EXPLAIN: React.ReactPortal
+  BODY: |
+    ■ 用途
+
+    ・`ReactDOM.createPortal` の戻り値型
+
+    ■ 使用例
+
+    import { createPortal } from 'react-dom'
+
+    const portal: React.ReactPortal = createPortal(<div>Portal</div>, document.body)
+
+- ENTRY:
+  EXPLAIN: React.Key
+  BODY: |
+    ■ 用途
+
+    ・リストアイテムの key の型
+
+    ■ 使用例
+
+    const items: Array<{ key: React.Key; value: string }> = [
+      { key: '1', value: 'item1' }
+    ]
+
+- ENTRY:
+  EXPLAIN: React.RefCallback
+  BODY: |
+    ■ 用途
+
+    ・コールバック ref の型
+
+    ■ 使用例
+
+    const refCallback: React.RefCallback<HTMLDivElement> = (element) => {
+      if (element) {
+        console.log(element.offsetHeight)
+      }
+    }
+
+#-------------------------------
 # Handler
 #-------------------------------
 - ENTRY:
@@ -586,6 +732,133 @@
     }
 
 #-------------------------------
+# Reactのその他の機能
+#-------------------------------
+- ENTRY:
+  CATEGORY: その他の機能
+
+- ENTRY:
+  EXPLAIN: Error Boundaries
+  BODY: |
+    ■ 用途
+
+    ・コンポーネントツリーの JavaScript エラーをキャッチし、フォールバック UI を表示
+
+    ■ 実装例
+
+    class ErrorBoundary extends React.Component {
+      constructor(props) {
+        super(props)
+        this.state = { hasError: false }
+      }
+
+      static getDerivedStateFromError(error) {
+        return { hasError: true }
+      }
+
+      componentDidCatch(error, errorInfo) {
+        console.log(error, errorInfo)
+      }
+
+      render() {
+        if (this.state.hasError) {
+          return <h1>Something went wrong.</h1>
+        }
+
+        return this.props.children
+      }
+    }
+
+- ENTRY:
+  EXPLAIN: Portals
+  BODY: |
+    ■ 用途
+
+    ・DOM ツリーの外側に子要素をレンダリング
+
+    ■ 使用例
+
+    import { createPortal } from 'react-dom'
+
+    const Modal = ({ children }) => {
+      return createPortal(
+        children,
+        document.getElementById('modal-root')
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: React.lazy
+  BODY: |
+    ■ 用途
+
+    ・コンポーネントの遅延読み込み
+
+    ■ 使用例
+
+    const LazyComponent = React.lazy(() => import('./LazyComponent'))
+
+    const App = () => (
+      <Suspense fallback={<div>Loading...</div>}>
+        <LazyComponent />
+      </Suspense>
+    )
+
+- ENTRY:
+  EXPLAIN: React.memo
+  BODY: |
+    ■ 用途
+
+    ・コンポーネントのメモ化
+
+    ■ 使用例
+
+    const MyComponent = React.memo(({ value }) => {
+      return <div>{value}</div>
+    })
+
+- ENTRY:
+  EXPLAIN: React.forwardRef
+  BODY: |
+    ■ 用途
+
+    ・ref を子コンポーネントに転送
+
+    ■ 使用例
+
+    const FancyButton = React.forwardRef((props, ref) => (
+      <button ref={ref} className="FancyButton">
+        {props.children}
+      </button>
+    ))
+
+- ENTRY:
+  EXPLAIN: React.StrictMode
+  BODY: |
+    ■ 用途
+
+    ・開発時に潜在的な問題を検出
+
+    ■ 使用例
+
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+
+- ENTRY:
+  EXPLAIN: React.Suspense
+  BODY: |
+    ■ 用途
+
+    ・遅延コンポーネントのローディング状態を処理
+
+    ■ 使用例
+
+    <React.Suspense fallback={<div>Loading...</div>}>
+      <LazyComponent />
+    </React.Suspense>
+
+#-------------------------------
 # Hooks
 #-------------------------------
 - ENTRY:
@@ -607,6 +880,7 @@
     ・useDeferredValue            // 遅延値管理
     ・useId                       // 一意ID生成
     ・useSyncExternalStore        // 外部ストア同期
+    ・useInsertionEffect           // CSS-in-JS ライブラリ向けスタイル注入
 
 #-------------------------------
 # Hooks: useState
@@ -1205,6 +1479,7 @@
     ■ Component ( Context 利用例 )
 
     import { useContextHooks } from "....."
+
     export const Component = () => {
       const { data } = useContextHooks()
       return <Component data={data} />
@@ -1216,7 +1491,30 @@
 - ENTRY:
   EXPLAIN: useId ユニークID生成
   BODY: |
+    ■ 用途
+    ・コンポーネントごとに一意のIDを生成
+    ・フォーム要素のラベルやARIA属性に使用
+    ・サーバーサイドレンダリング(SSR)とクライアントサイドレンダリング(CSR)で一貫性のあるIDを提供
+    ・React 18以降で利用可能
+
+    ■ 基本
+    import { useId } from 'react';
+
     const xxxid = React.useId()
+
+    ■ サンプル
+
+    import React, { useId } from 'react';
+    export const UseIdExample = () => {
+      const inputId = useId();
+
+      return (
+        <div>
+          <label htmlFor={inputId}>Name:</label>
+          <input id={inputId} type="text" />
+        </div>
+      );
+    };
 
 #-------------------------------
 # Hooks: useImperativeHandle
@@ -1250,6 +1548,240 @@
 
       return <input ref={inputRef} />
     })
+
+#-------------------------------
+# useSuspense / React.Lazy
+#-------------------------------
+- ENTRY:
+  CATEGORY: useSuspense / React.Lazy
+
+- ENTRY:
+  EXPLAIN: useSuspense
+  BODY: |
+    ■ 用途
+
+    ・非同期データの取得やコンポーネントの遅延読み込み時にローディングUIを表示
+    ・React 18以降で利用可能
+    ・Suspenseコンポーネント内で使用
+
+    ■ 基本
+
+    import React, { Suspense } from "react"
+
+    const LazyComponent = React.lazy(() => import("./LazyComponent"))
+
+    export const UseSuspense = () => {
+      return (
+        <Suspense fallback={<div>Loading...</div>}>
+          <LazyComponent />
+        </Suspense>
+      )
+    }
+
+    ■ コンポーネントの遅延読み込み
+
+    import React from "react"
+
+    export const LazyComponent = () => {
+      return <div>This is a lazy loaded component.</div>
+    }
+
+    ■ 非同期データの取得
+
+    import React, { useEffect, useState } from "react"
+
+    export const LazyComponent = () => {
+      const [data, setData] = useState<string | null>(null)
+
+      useEffect(() => {
+        // 擬似的な非同期データ取得
+        const timer = setTimeout(() => {
+          setData("Fetched Data")
+        }, 2000)
+
+        return () => clearTimeout(timer)
+      }, [])
+
+      if (!data) {
+        return <div>Loading data...</div>
+      }
+
+      return <div>Data: {data}</div>
+    }
+
+#-------------------------------
+# Hooks: useTransition
+#-------------------------------
+- ENTRY:
+  EXPLAIN: useTransition
+  BODY: |
+    ■ 用途
+
+    ・UI の遷移状態を管理し、緊急性の低い更新を遅らせる
+    ・React 18 以降で利用可能
+
+    ■ 基本
+
+    import { useTransition } from 'react';
+
+    const [isPending, startTransition] = useTransition();
+
+    startTransition(() => {
+      // 緊急性の低い更新
+      setState(newValue);
+    });
+
+    ■ サンプル
+
+    const SearchComponent = () => {
+      const [query, setQuery] = useState('');
+      const [results, setResults] = useState([]);
+      const [isPending, startTransition] = useTransition();
+
+      const handleChange = (e) => {
+        const value = e.target.value;
+        setQuery(value);
+
+        startTransition(() => {
+          // 検索結果の更新を遅らせる
+          const filtered = expensiveSearch(value);
+          setResults(filtered);
+        });
+      };
+
+      return (
+        <div>
+          <input value={query} onChange={handleChange} />
+          {isPending && <div>Loading...</div>}
+          <ul>
+            {results.map(item => <li key={item.id}>{item.name}</li>)}
+          </ul>
+        </div>
+      );
+    };
+
+#-------------------------------
+# Hooks: useDeferredValue
+#-------------------------------
+- ENTRY:
+  EXPLAIN: useDeferredValue
+  BODY: |
+    ■ 用途
+
+    ・値の更新を遅らせ、緊急性の低い部分のレンダリングを遅らせる
+    ・React 18 以降で利用可能
+
+    ■ 基本
+
+    import { useDeferredValue } from 'react';
+
+    const deferredValue = useDeferredValue(value);
+
+    ■ サンプル
+
+    const SearchResults = ({ query }) => {
+      const deferredQuery = useDeferredValue(query);
+
+      // 遅延されたクエリで検索を実行
+      const results = useMemo(() => {
+        return expensiveSearch(deferredQuery);
+      }, [deferredQuery]);
+
+      return (
+        <ul>
+          {results.map(item => <li key={item.id}>{item.name}</li>)}
+        </ul>
+      );
+    };
+
+    const SearchComponent = () => {
+      const [query, setQuery] = useState('');
+
+      return (
+        <div>
+          <input value={query} onChange={e => setQuery(e.target.value)} />
+          <SearchResults query={query} />
+        </div>
+      );
+    };
+
+#-------------------------------
+# Hooks: useSyncExternalStore
+#-------------------------------
+- ENTRY:
+  EXPLAIN: useSyncExternalStore
+  BODY: |
+    ■ 用途
+
+    ・外部ストア（Redux, Zustand など）と同期
+    ・React 18 以降で利用可能
+
+    ■ 基本実装
+
+    import { useSyncExternalStore } from 'react';
+
+    const state = useSyncExternalStore(
+      subscribe,
+      getSnapshot,
+      getServerSnapshot?
+    );
+
+    ■ サンプル実装(Redux ストアとの同期)
+
+    const useStore = (selector) => {
+      return useSyncExternalStore(
+        store.subscribe,
+        () => selector(store.getState())
+      );
+    };
+
+    const Counter = () => {
+      const count = useStore(state => state.count);
+
+      return (
+        <div>
+          <div>Count: {count}</div>
+          <button onClick={() => store.dispatch({ type: 'increment' })}>
+            Increment
+          </button>
+        </div>
+      );
+    };
+
+#-------------------------------
+# Hooks: useInsertionEffect
+#-------------------------------
+- ENTRY:
+  EXPLAIN: useInsertionEffect
+  BODY: |
+    ■ 用途
+
+    ・CSS-in-JS ライブラリ向けの Hook
+    ・DOM 挿入前にスタイルを注入
+    ・useLayoutEffect より前に実行
+    ・React 18 以降で利用可能
+
+    ■ 実装
+
+    import { useInsertionEffect } from 'react';
+
+    useInsertionEffect(() => {
+      // DOM 挿入前に実行される
+      // スタイルの注入などに使用
+    }, [dependencies]);
+
+    ■ サンプル
+
+    const useCSS = (css: string) => {
+      useInsertionEffect(() => {
+        const style = document.createElement('style');
+        style.textContent = css;
+        document.head.appendChild(style);
+        return () => {
+          document.head.removeChild(style);
+        };
+      }, [css]);
+    };
 
 #-------------------------------
 # Custom & Render Hooks

@@ -1,7 +1,7 @@
 import { KeyDef } from "../../../types/type"
 
 export const keysExcelVBS: KeyDef = {
-  IndianRed: [
+  Crimson: [
     "workbook",
     "Workbook",
     "ExcelScript",

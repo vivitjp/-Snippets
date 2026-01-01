@@ -1,10 +1,42 @@
 import React from "react"
 
-const MyBtn = React.forwardRef<
-  HTMLButtonElement,
-  React.ComponentPropsWithRef<'button'>
->(
-  (props, ref) => <button ref={ref} {...props} />
-)
+type CompoProps = {
+  data: { name: string; age: number }[]
+  children: (data: { name: string; age: number }[]) => React.ReactNode
+}
 
-MyBtn.displayName = 'MyBtn'
+// ComponentWithChildren
+const Table: React.FC<CompoProps> = ({ data, children }) => {
+  return (
+    <div>
+      <h1>TABLE</h1>
+      {children(data)}
+    </div>
+  )
+}
+
+type Props = {
+  title: string;
+}
+
+export const LabeledWithCallback: React.FC<Props> = ({ title }) => {
+  const data: { name: string; age: number }[] = [
+    { name: "Alice", age: 30 },
+    { name: "Bob", age: 25 },
+  ]
+
+  return (
+    <div>
+      <h1>{title}</h1>
+      <Table data={data}>
+        {(data) => {
+          return data.map(d => (
+            <div key={d.name}>
+              <span>{d.name}</span><span>{d.age}</span>
+            </div>)
+          )
+        }}
+      </Table>
+    </div>
+  )
+}

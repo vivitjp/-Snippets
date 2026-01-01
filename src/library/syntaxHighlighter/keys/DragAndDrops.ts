@@ -1,8 +1,8 @@
 import { KeyDef } from "../../../types/type"
 
-export const keysDragAndDrops: KeyDef = {
+export const keysreactDropzone: KeyDef = {
   // ■ React Dropzone の主要キーワード
-  IndianRed: [
+  Crimson: [
     "useDropzone",
     "react-dropzone",
     "Dropzone",

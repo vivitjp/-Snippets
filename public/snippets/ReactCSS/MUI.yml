@@ -241,13 +241,17 @@
       spacing: 8, // 基本の間隔ユニット
     });
 
-    ■ オプション解説
+    ■ createTheme() で自動的に定義される主要なプロパティ
 
-    ・palette:        色の定義。primary / secondary / error / warning / info / success など
-    ・typography:     フォントファミリ、サイズ、ウェイトなどのテキストスタイル
-    ・spacing:        レイアウトの間隔ユニット（デフォルトは8px）
-    ・breakpoints:    レスポンシブデザインのブレークポイント定義 
-    ・components:     コンポーネントごとのデフォルトプロップやスタイルの上書き
+    palette:          色のパレット（primary, secondary, error など）
+    typography:       フォントサイズ、ウェイト、ファミリーなどのタイポグラフィ設定
+    spacing:          スペーシング関数（例: theme.spacing(2) で 16px）
+    breakpoints:      レスポンシブデザイン用のブレークポイント（xs, sm, md, lg, xl）
+    shape:            形状設定（borderRadius など）
+    components:       各コンポーネントのデフォルトスタイルオーバーライド
+    shadows:          シャドウの配列
+    transitions:      アニメーションのトランジション設定
+    zIndex:           z-index の値（appBar, drawer など）
 
 - ENTRY:
   EXPLAIN: |

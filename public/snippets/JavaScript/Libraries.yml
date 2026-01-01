@@ -1,10 +1,6 @@
 ---
 #-------------------------------
-# JavaScript
-#-------------------------------
-
-#-------------------------------
-# libraries（数学）
+# NPM ライブラリ
 #-------------------------------
 - ENTRY:
   CATEGORY: NPM ライブラリ
@@ -14,181 +10,1035 @@
   BODY: |
     https://www.npmjs.com/
 
+#-------------------------------
+# formulajs(エクセル)
+#-------------------------------
 - ENTRY:
-  EXPLAIN: |
-    エクセル: formulajs
-  BODY: |
-    ■ Microsoft Excel関数のJavaScript実装を構築
+  CATEGORY: formulajs(エクセル)
 
-    officail: https://formulajs.info/
-    github: 
-    npm:    https://www.npmjs.com/package/@formulajs/formulajs
-    cdn:    <script src="https://cdn.jsdelivr.net/npm/jstat@1.9.2/dist/jstat.min.js"></script>
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ 概要
+
+      Microsoft Excel関数のJavaScript実装を構築
+
+    ■ リンク
+
+      officail: https://formulajs.info/
+      github:   https://github.com/formulajs/formulajs
+      npm:      https://www.npmjs.com/package/@formulajs/formulajs
+      cdn:      <script src="https://cdn.jsdelivr.net/npm/jstat@1.9.2/dist/jstat.min.js"></script>
 
     ■ Install
-    npm i @formulajs/formulajs
+
+      npm i @formulajs/formulajs
+
+    ■ IMPORT
+
+      import * as formulajs from '@formulajs/formulajs';
+      // or
+      const formulajs = require('@formulajs/formulajs');
 
 - ENTRY:
-  EXPLAIN: |
-    統計: simple-statistics
+  EXPLAIN: 実装
   BODY: |
-    github: https://github.com/simple-statistics/simple-statistics
-    URL:    https://simple-statistics.github.io/docs/
+    ■ impo
 
-    // IMPORT
-    import * as ss from 'simple-statistics'
-    import {min} from 'simple-statistics'
+      import * as formulajs from '@formulajs/formulajs';
+
+    ■ 数学関数
+
+      const sum   = formulajs.SUM(1, 2, 3, 4);        // 10
+      const avg   = formulajs.AVERAGE(1, 2, 3, 4);    // 2.5
+      const max   = formulajs.MAX(1, 2, 3, 4);        // 4
+      const min   = formulajs.MIN(1, 2, 3, 4);        // 1
+      const sqrt  = formulajs.SQRT(16);               // 4
+      const power = formulajs.POWER(2, 3);            // 8
+
+    ■ 論理関数
+
+      const ifResult  = formulajs.IF(1 > 0, 'Yes', 'No'); // 'Yes'
+      const andResult = formulajs.AND(true, false);       // false
+      const orResult  = formulajs.OR(true, false);        // true
+
+    ■ 検索関数
+
+      const CELLS = [[1, 'One'], [2, 'Two'], [3, 'Three']]
+      const vlookupResult = formulajs.VLOOKUP(2, CELLS, 2, false);      // 'Two'
+
+      const CELLS = [['One', 'Two', 'Three'], [1, 2, 3]]
+      const hlookupResult = formulajs.HLOOKUP('Two', CELLS, 2, false);  // 2
+
+      const matchResult = formulajs.MATCH(2, [1, 2, 3, 4]);             // 2
+
+    ■ 文字列関数
+
+      const concat = formulajs.CONCATENATE('Hello', ' ', 'World');   // 'Hello World'
+      const left   = formulajs.LEFT('Hello World', 5);               // 'Hello'
+      const right  = formulajs.RIGHT('Hello World', 5);              // 'World'
+      const mid    = formulajs.MID('Hello World', 7, 5);             // 'World'
+      const len    = formulajs.LEN('Hello');                         // 5
+      const upper  = formulajs.UPPER('hello');                       // 'HELLO'
+      const lower  = formulajs.LOWER('HELLO');                       // 'hello'
+
+    ■ 日付関数
+
+      const now   = formulajs.NOW();                   // 現在の日付と時刻を表すシリアル値
+      const today = formulajs.TODAY();                 // 現在の日付を表すシリアル値
+      const year  = formulajs.YEAR(new Date());        // 年
+      const month = formulajs.MONTH(new Date());       // 月
+      const day   = formulajs.DAY(new Date());         // 日
+
+    ■ 統計関数
+
+      const count  = formulajs.COUNT([1, 2, 3, null, 4]);   // 4 (nullを除く)
+      const counta = formulajs.COUNTA([1, 2, 3, null, 4]);  // 5 (nullを含む)
+      const stdev  = formulajs.STDEV.P([1, 2, 3, 4, 5]);    // 標準偏差
+
+    ■ 財務関数
+
+      const pv  = formulajs.PV(0.05/12, 60, -100);          // 現在価値
+      const fv  = formulajs.FV(0.05/12, 60, -100);          // 将来価値
+      const pmt = formulajs.PMT(0.05/12, 60, 10000);        // 月額支払い
 
 #-------------------------------
-# libraries（数学）
+# simple-statistics(統計)
 #-------------------------------
 - ENTRY:
-  CATEGORY: 数学ライブラリ
+  CATEGORY: simple-statistics(統計)
 
 - ENTRY:
-  EXPLAIN: 四捨五入
+  EXPLAIN: インストール & 概要
   BODY: |
-    /**
-    * 四捨五入
-    * @param value 数値
-    * @param fp 整数:少数点,マイナスで任意の桁
-    * @returns 四捨五入された数値
-    */
-    const round = (value: number, fp = 0) => {
-      const k = value < 0 ? -1 : 1
-      return (k * Math.round(value * k * 10 ** fp)) / 10 ** fp
-    }
+    ■ 概要
+
+      JavaScript 用のシンプルで高速な統計ライブラリ
+      基本的な統計分析から高度な統計手法まで幅広くサポート
+
+    ■ 主要機能
+
+    ・記述統計: 平均、中央値、分散、標準偏差、四分位範囲など
+    ・回帰分析: 線形回帰、多項式回帰、ロジスティック回帰など
+    ・確率分布: 正規分布、二項分布、ポアソン分布など
+    ・クラスタリング: k-means クラスタリング
+    ・その他の統計手法: 相関係数、ヒストグラム、サンプリングなど
+
+    ■ URL
+
+      github: https://github.com/simple-statistics/simple-statistics
+      URL:    https://simple-statistics.github.io/docs/
+      npm:    https://www.npmjs.com/package/simple-statistics
+
+    ■ インストール
+
+      npm install simple-statistics
 
 - ENTRY:
-  EXPLAIN: 切り上げ
+  EXPLAIN: 実装
   BODY: |
-    /**
-    * 切り上げ
-    * @param value 数値
-    * @param fp 整数:少数点,マイナスで任意の桁
-    * @returns 切り上げされた数値
-    */
-    const roundUp = (value: number, fp = 0) => {
-      const k = value < 0 ? -1 : 1
-      return (k * Math.ceil(value * k * 10 ** fp)) / 10 ** fp
-    }
+    ■ 実装
 
-- ENTRY:
-  EXPLAIN: 切り下げ
-  BODY: |
-    /**
-    * 切り下げ
-    * @param value 数値
-    * @param fp 整数:少数点,マイナスで任意の桁
-    * @returns 切り下げされた数値
-    */
-    const roundDown = (value: number, fp = 0) => {
-      const k = value < 0 ? -1 : 1
-      return (k * Math.floor(value * k * 10 ** fp)) / 10 ** fp
-    }
+      import * as ss from 'simple-statistics'
+      import {min} from 'simple-statistics'
 
-- ENTRY:
-  EXPLAIN: Excel Ceiling
-  BODY: |
-    /**
-    * Excel Ceiling(指定基準値の最も近い倍数に数値切り上げ)
-    * @param value 数値
-    * @param significance 倍数の基準値
-    *    以下、エクセルと仕様一致
-    *    1) 0値では 0 を返す
-    *    2) マイナス値では null を返す
-    * @param fp 整数:少数点
-    * @returns 切り上げ後、丸め誤差を削除した数値
-    */
-    const ceiling = (target: number, significance: number, fp: number) => {
-      if (significance === 0) return 0
-      if (significance < 0) return null
-      return (
-        Math.round(Math.ceil(target / significance) * significance * 10 ** fp) /
-        10 ** fp
-      )
-    }
+    ■ 記述統計
 
-- ENTRY:
-  EXPLAIN: MIN & MAX(文字列)
-  BODY: |
-    /**
-    * MIN & MAX
-    * @param 文字列数字配列(["","20","10"]) 空文字対応
-    * @returns 空白や０以外で最も MIN/MAX を"数値"で返す
-    *
-    * エクセルの MIN(PARAM1[, PARAM2,...])は空白を除外するが、
-    * JSの Math.min関数は0も精査するので、簡単な置換では戻り値に違いがでる
-    */
+      const data = [1, 2, 3, 4, 5];
 
-    function min(...args: string[]) {
-      return args.reduce((acc, cur) => {
-        const curNum = Number(cur)
-        if (isNaN(curNum) || cur === "") return acc
-        return acc === null || (acc !== null && acc > curNum) ? curNum : acc
-      }, null as null | number)
-    }
+      const mean = ss.mean(data);                    // 平均: 3
+      const median = ss.median(data);                // 中央値: 3
+      const mode = ss.mode(data);                    // 最頻値: [1,2,3,4,5] (すべて同じ)
+      const variance = ss.variance(data);            // 分散: 2
+      const stdDev = ss.standardDeviation(data);     // 標準偏差: 1.414...
+      const minVal = ss.min(data);                   // 最小値: 1
+      const maxVal = ss.max(data);                   // 最大値: 5
+      const quantile25 = ss.quantile(data, 0.25);    // 第1四分位数: 2
+      const quantile75 = ss.quantile(data, 0.75);    // 第3四分位数: 4
 
-    function max(...args: string[]) {
-      return args.reduce((acc, cur) => {
-        const curNum = Number(cur)
-        if (isNaN(curNum) || cur === "") return acc
-        return acc === null || (acc !== null && acc < curNum) ? curNum : acc
-      }, null as null | number)
-    }
+    ■ 回帰分析
+
+      const points = [[0, 0], [1, 1], [2, 2], [3, 3]];
+
+      const regression = ss.linearRegression(points);  // 線形回帰: {m: 1, b: 0}
+      const line = ss.linearRegressionLine(regression); // 回帰直線関数
+      const predicted = line(4);                       // x=4 の予測値: 4
+
+    ■ 確率分布
+
+      // 正規分布
+      const normalPdf = ss.normal.pdf(0);             // 確率密度関数: 0.3989...
+      const normalCdf = ss.normal.cdf(0);             // 累積分布関数: 0.5
+
+      // 二項分布
+      const binomialPmf = ss.binomial.pmf(2, 5, 0.5); // 確率質量関数: 0.3125 (n=5, p=0.5, k=2)
+
+      // ポアソン分布
+      const poissonPmf = ss.poisson.pmf(3, 2);        // 確率質量関数: 0.1804... (λ=2, k=3)
+
+    ■ その他の統計手法
+
+      const sample = ss.sample(data, 3, false);       // サンプリング: [2, 4, 1] (重複なし)
+      const shuffled = ss.shuffle(data);              // シャッフル: [3, 1, 5, 2, 4] (ランダム)
+      const correlation = ss.sampleCorrelation([1,2,3], [1,2,3]); // 相関係数: 1
 
 #-------------------------------
-# JSON: CSV => JSON
-#-------------------------------
-
-- ENTRY:
-  CATEGORY: CSV
-
-#-------------------------------
-# JSON: CSV => JSON
+# big.js
 #-------------------------------
 - ENTRY:
-  EXPLAIN: CSV => JSON 変換メソッド
+  CATEGORY: big.js (高精度な十進数計算)
+
+- ENTRY:
+  EXPLAIN: インストール & 概要
   BODY: |
-    //改善の余地が大きい（最初の行のヘッダ有無確認必要）
+    ■ インストール
 
-    const convertCsv2Json = (text: string, headers: string[], div = "\t") => {
-      //数字の1,000,000桁区切りコンマを削除
-      const re = new RegExp(",", "ig"); 
+      npm install big.js
 
-      const jsonArr: { [key: string]: string }[] = [];
-      text
-        .split("\n")
-        .filter(Boolean)
-        .forEach((line) => {
-          const obj: { [key: string]: string } = {};
+    ■ 概要
 
-          line.split(div).forEach((v, i) => {
-            //文字と数値の違いで挙動を変えること
-            obj[headers[i]] = v.trim().replace(re, "");
-          });
-          jsonArr.push(obj);
-        });
-      return jsonArr;
+    JavaScript で高精度な十進数計算を行うための軽量ライブラリ
+    浮動小数点の誤差を避け、金融計算など正確な数値処理が必要な場面で有用
+
+    主要機能:
+    ・任意精度の十進数計算
+    ・基本的な算術演算 (加算、減算、乗算、除算)
+    ・四捨五入と切り捨て
+    ・比較演算
+    ・数値の文字列変換
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ 実装
+
+      import Big from 'big.js';
+
+      const a = Big(0.1);
+      const b = Big(0.2);
+
+    ■ 主なメソッド
+
+      const sum = a.plus(b);            
+      sum.toString();                   // 0.3
+      
+      const product = a.times(b);
+      product.toString();               // 0.02
+      
+      const quotient = b.div(a);        // 2
+      quotient.toString();
+      
+      const rounded = sum.round(1);     // 0.3 (小数点以下1桁に四捨五入)
+      rounded.toString();
+      
+      const isEqual = a.eq(b);          // false
+      
+      const isLessThan = a.lt(b);       // true
+      
+      const str = sum.toString();       // '0.3'
+      
+      const num = sum.toNumber();       // 0.3 (JavaScriptのnumber型に変換)
+
+    ■ 注意点
+
+      big.js は十進数計算に特化しており、整数や浮動小数点数の直接的な操作には向かない
+      大量の数値を扱う場合、パフォーマンスに注意が必要
+      他の数値ライブラリと併用する場合、型変換に注意が必要
+      ライブラリのバージョンによってはAPIが変更される可能性があるため、ドキュメントを確認することが重要
+
+#-------------------------------
+# csv-parse
+#-------------------------------
+- ENTRY:
+  CATEGORY: csv-parse (CSVパース)
+
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ インストール
+
+      npm install csv-parse
+
+    ■ 概要
+
+    ・Node.js 用の高速で柔軟な CSV パーサーライブラリ
+    ・CSVデータを解析、オブジェクトや配列に変換するために使用
+    ・ストリームベースの処理が可能で、大量のデータを効率的に扱える
+    ・カスタマイズ可能なオプションが豊富で、様々な CSV フォーマットに対応可能
+
+    ■ 実装
+
+      const csvData = 
+      `name,age,city
+      Alice,30,New York
+      Bob,25,Los Angeles`;
+
+      import { parse } from 'csv-parse';
+
+      parse(csvData, {
+        columns: true,                  // ヘッダー行をキーとして使用
+        skip_empty_lines: true          // 空行をスキップ
+      }, (err, records) => {
+        if (err) {
+          console.error(err);
+        } else {
+          console.log(records);
+        }
+      });
+
+    ■ 出力例
+
+      [
+        { name: 'Alice', age: '30', city: 'New York' },
+        { name: 'Bob', age: '25', city: 'Los Angeles' }
+      ]
+
+- ENTRY:
+  EXPLAIN: フルオプション
+  BODY: |
+    ■ 例
+
+    import { parse } from 'csv-parse';
+
+    const options = {
+      delimiter: ',',                   // 区切り文字、TSVなら: '\t'
+      quote: '"',                       // 引用符
+      escape: '\\',                     // エスケープ文字
+      columns: true,                    // ヘッダー行をキーとして使用
+      skip_empty_lines: true,           // 空行をスキップ
+      trim: true,                       // 各フィールドの前後の空白を削除
+      relax_quotes: false,              // 不正な引用符を許可
+      from_line: 2,                     // 解析開始行 (1から始まる)
+      to_line: null,                    // 解析終了行 (nullで全行)
+      cast: (value, context) => {       // 値の型変換関数
+        if (context.column === 'age') {
+          return parseInt(value, 10);
+        }
+        return value;
+      },
+      on_record: (record, context) => { // レコードごとの処理関数
+        // カスタム処理
+        return record;
+      }
     };
 
-    // SAMPLE
-    const TABLE_TITLE_配列 = ["DO検索用", "検索エリア", "DO値"] as const;
-    type TABLE_KEY = (typeof TABLE_TITLE_配列)[number];
-    type TABLE_型 = Record<TABLE_KEY, string>;
+    parse(csvData, options, (err, records) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log(records);
+      }
+    });
 
-    const TABLE_DATA = `
-    0	1	≦20
-    20	2	20～40
-    40	3	40～50
-    50	4	50～60
-    60	5	60～100
-    100	6	100～140
-    140	7	140～200
-    200	8	≧200
-    `;
+#-------------------------------
+# Dompurify
+#-------------------------------
+- ENTRY:
+  CATEGORY: Dompurify
 
-    const table = convertCsv2Json(
-      TABLE_DATA,
-      TABLE_TITLE_配列 as unknown as string[],
-    ) as TABLE_型[];
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ インストール
+
+      npm install dompurify 
+
+    ■ 概要
+
+    ・クライアントサイドおよびサーバーサイドで動作する強力な HTML サニタイズライブラリ
+    ・クロスサイトスクリプティング (XSS) 攻撃からウェブアプリケーションを保護
+    ・ユーザー生成コンテンツを安全に処理するために使用
+
+    主な特徴:
+    ・高速で効率的なサニタイズ処理
+    ・幅広いブラウザと環境での互換性
+    ・カスタマイズ可能なサニタイズオプション
+    ・セキュリティベストプラクティスに準拠
+    ・DOMベースのサニタイズで、正確なHTML解析と修正を実現
+
+    ■ 実装
+
+      import DOMPurify from 'dompurify';
+
+      const dirtyHTML = '<img src=x onerror=alert(1)>';  // HTML文字列
+      const cleanHTML = DOMPurify.sanitize(dirtyHTML);   // <img src="x">
+
+    ■ フルオプション
+
+      const cleanHTML = DOMPurify.sanitize(
+        dirtyHTML,                                       // サニタイズ対象のHTML文字列
+        {
+          ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a'], // 許可するタグ
+          ALLOWED_ATTR: ['href'],                        // 許可する属性
+          KEEP_CONTENT: false,                           // 不正なタグの内容を保持するか
+          RETURN_TRUSTED_TYPE: false                     // Trusted Types を返すか
+        }
+      );
+
+    ■ RETURN_TRUSTED_TYPE
+
+    ・Trusted Types: ウェブアプリケーションが動的生成するコンテンツのセキュリティ強化するためのブラウザAPI
+    ・true に設定すると、サニタイズされた出力が TrustedHTML 型として返される
+    ・これにより、ブラウザのセキュリティポリシーと連携し、悪意のあるスクリプトの実行を防止
+    ・TrustedHTML 型を返されたブラウザは、これを安全なHTMLとして扱う
+    ・アプリケーションが Trusted Types をサポートしていることを確認する必要がある
+    ・確認方法:
+
+      if (window.trustedTypes) {
+        // Trusted Types がサポートされている
+      }
+
+#-------------------------------
+# async-retry
+#-------------------------------
+- ENTRY:
+  CATEGORY: async-retry
+
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ インストール
+
+      npm install async-retry
+
+    ■ 概要
+
+    ・非同期関数を自動的にリトライするためのライブラリ
+    ・ネットワークエラーや一時的な障害が発生した場合に有用
+    ・Promise ベースで、簡単に統合可能
+    ・指定した回数までリトライ可能
+    ・リトライ間隔のカスタマイズ（指数バックオフなど）
+    ・エラーハンドリングと条件付きリトライ
+    ・軽量で依存関係が少ない
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ 実装
+
+      import retry from 'async-retry';
+
+      const fetchData = async () => {
+        // 何らかの非同期処理
+        return await fetch('https://api.example.com/data');
+      };
+
+      retry(async (bail) => {
+        const result = await fetchData();
+        // 成功したら結果を返す
+        return result;
+      }, {
+        retries: 3,        // リトライ回数
+        minTimeout: 1000,  // 最小待機時間 (ms)
+        maxTimeout: 5000,  // 最大待機時間 (ms)
+      }).then(result => {
+        console.log('Success:', result);
+      }).catch(err => {
+        console.error('Failed after retries:', err);
+      });
+
+    ■ フルオプション
+
+      retry(async (bail, attempt) => {
+        if (err.code === 'ECONNREFUSED') {   // bail(err) を呼ぶとリトライを中止
+          bail(err);
+        }
+        return await fetchData();
+      }, {
+        retries: 5,                          // リトライ回数
+        factor: 2,                           // バックオフ倍率
+        minTimeout: 1000,                    // 最小待機時間
+        maxTimeout: 10000,                   // 最大待機時間
+        randomize: true,                     // ランダム化
+        onRetry: (err, attempt) => {         // リトライ時のコールバック
+          console.log(`Retry attempt ${attempt}: ${err.message}`);
+        }
+      });
+
+#-------------------------------
+# encoding-japanese
+#-------------------------------
+- ENTRY:
+  CATEGORY: encoding-japanese
+
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ インストール
+
+      npm install encoding-japanese
+
+    ■ 概要
+
+    ・JavaScript で日本語の文字エンコーディングを扱うためのライブラリ
+    ・Shift_JIS, EUC-JP, UTF-8 などの変換をサポート
+    ・ブラウザと Node.js 両方で動作
+    ・様々なエンコーディング間の変換
+    ・ArrayBuffer, Uint8Array, String 間の変換
+    ・エンコーディングの自動検出
+    ・軽量で依存関係なし
+
+    ■ コード一覧
+
+    "SJIS"
+    "EUCJP"
+    "UTF8"
+    "JIS"
+    "UNICODE"
+    "AUTO"
+
+- ENTRY:
+  EXPLAIN: メソッドと実装
+  BODY: |
+    ■ detect(dataArray)                 // エンコーディング自動検出
+
+      import Encoding from 'encoding-japanese';
+
+      const sjisArray = [0x82, 0xa0, 0x82, 0xa2, 0x82, 0xa4]; // 'あいう' の Shift_JIS バイト配列
+      const detected = Encoding.detect(sjisArray);  // 'SJIS'
+
+    ■ convert(data, options)            // エンコーディング変換
+
+      import Encoding from 'encoding-japanese';
+
+      const utf8String = 'こんにちは';
+      const sjisArray = Encoding.convert(utf8String, {  // UTF-8 -> Shift_JIS
+        to: 'SJIS',
+        from: 'UTF8'
+      });
+
+      ・変換オプション
+      
+      to(string): 変換先のエンコーディングを指定
+      
+        例: 'SJIS', 'UTF8', 'EUCJP', 'JIS', 'UNICODE'。デフォルトは 'UTF8'
+
+      from(string): 変換元のエンコーディングを指定
+      
+        'AUTO' で自動検出可能。例: 'SJIS', 'AUTO'。デフォルトは 'AUTO'
+
+      type(string): 出力タイプを指定
+      
+        'string'(文字列), 'arraybuffer'(ArrayBuffer), 'array'(バイト配列)。デフォルトは 'string'
+
+      bom(boolean): UTF-8 変換時に BOM(Byte Order Mark) 付与
+      
+        true で付ける。デフォルトは false。
+
+      trim(boolean): 変換後の文字列の前後空白をトリムするかどうか
+      
+        true でトリム。デフォルトは false
+
+    ■ codeToString(data, encoding)      // ArrayBuffer, Uint8Array などのバイナリデータを文字列に変換
+
+      import Encoding from 'encoding-japanese';
+
+      const arrayBuffer = new ArrayBuffer(10);
+      const string = Encoding.codeToString(arrayBuffer);  // 自動検出で変換
+
+    ■ stringToCode(string, encoding)    // 文字列を ArrayBuffer, Uint8Array などのバイナリデータに変換  
+
+      import Encoding from 'encoding-japanese';
+
+      const utf8String = 'こんにちは';
+      const sjisArray = Encoding.stringToCode(utf8String, 'SJIS');  // 自動検出で変換
+
+    ■ toUnicode(data, options)        // 指定エンコーディングから Unicode 文字列に変換
+
+      import Encoding from 'encoding-japanese';
+
+      const sjisArray = [0x82, 0xa0, 0x82, 0xa2, 0x82, 0xa4]; // 'あいう' の Shift_JIS バイト配列
+      const unicodeString = Encoding.toUnicode(sjisArray, { from: 'SJIS' });
+
+    ■ fromUnicode(data, options)      // Unicode 文字列から指定エンコーディングに変換
+      
+      import Encoding from 'encoding-japanese';
+
+      const unicodeString = 'あいう';
+      const sjisArray = Encoding.fromUnicode(unicodeString, { to: 'SJIS' });
+
+#-------------------------------
+# html-react-parser
+#-------------------------------
+- ENTRY:
+  CATEGORY: html-react-parser
+
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ インストール
+
+      npm install html-react-parser
+
+    ■ 概要
+
+    ・HTML 文字列を React JSX コンポーネントに変換
+    ・サーバーサイドレンダリングや動的コンテンツ生成に有用
+    ・DOMPurify と組み合わせた XSS 対策にも使用可能
+    ・カスタムコンポーネントの置換
+    ・イベントハンドラーの追加
+    ・軽量で高速
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ 実装
+
+      import parse from 'html-react-parser';
+
+      const htmlString = '<p>Hello <strong>world</strong>!</p>\';  // HTML文字列
+      const reactElement = parse(htmlString);
+      console.log(reactElement);        // <p>Hello <strong>world</strong>!</p>
+
+    ■ parse(htmlString, options)
+
+      ・htmlString: 変換する HTML 文字列
+      ・options: カスタマイズオプション (省略可能)
+        ・replace: (domNode) => ReactElement | null
+          特定の DOM ノードをカスタムコンポーネントに置換する関数
+
+        ・library:
+          オプションで使用する React ライブラリのメソッドを指定可能
+          デフォルトの React メソッドをオーバーライド可能
+          cloneElement, createElement, isValidElement, Fragment など
+
+      const options = {
+        replace: (domNode) => {
+          if (domNode.name === 'strong') {
+            return <b>{domNode.children}</b>;
+          }
+        },
+        library: {
+          cloneElement: React.cloneElement,
+          createElement: React.createElement,
+          isValidElement: React.isValidElement,
+          Fragment: React.Fragment
+        }
+      };
+
+      const reactElement = parse(htmlString, options);
+      console.log(reactElement);        // JSX <p>Hello <b>world</b>!</p>
+
+    ■ DOMPurify と組み合わせた XSS 対策
+
+      import DOMPurify from 'dompurify';
+      import parse from 'html-react-parser';
+
+      const dirtyHTML = '<img src=x onerror=alert(1)>';  // HTML文字列
+      const cleanHTML = DOMPurify.sanitize(dirtyHTML);   // <img src="x">
+      const reactElement = parse(cleanHTML);
+      console.log(reactElement);                         // JSX <img src="x">
+
+#-------------------------------
+# iconv-lite
+#-------------------------------
+- ENTRY:
+  CATEGORY: iconv-lite
+
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ インストール
+
+      npm install iconv-lite
+
+    ■ 概要
+
+    ・Node.js で文字エンコーディング変換を行うためのライブラリ
+    ・Shift_JIS, EUC-JP, UTF-8 などの変換をサポート
+    ・ストリームベースの処理が可能
+    ・様々なエンコーディングの変換
+    ・ストリーム対応で大量データ処理に適する
+    ・高速で軽量
+    ・BOM 処理
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ 実装
+
+      const iconv = require('iconv-lite');
+
+      // 文字列をエンコーディング変換
+      const buf = iconv.encode('こんにちは', 'Shift_JIS');
+      const str = iconv.decode(buf, 'Shift_JIS');
+
+    ■ encoding/decoding 文字列
+
+      'Shift_JIS', 'EUC-JP', 'UTF-8', 'UTF-16LE', 'ISO-2022-JP' など多数対応
+
+    ■ iconv.encode(string, encoding, options)
+
+      options:
+      ・addBOM (boolean):     UTF-8 変換時に BOM を付
+      ・stripBOM (boolean):   変換時に BOM を削除
+
+      const bufWithBom = iconv.encode('hello', 'UTF-8', { addBOM: true });
+
+    ■ iconv.decode(buffer, encoding, options)
+
+      options:
+      ・addBOM (boolean):     UTF-8 変換時に BOM を付
+      ・stripBOM (boolean):   変換時に BOM を削除
+
+      const strFromBom = iconv.decode(bufWithBom, 'UTF-8', { stripBOM: true });
+
+      // ストリーム変換
+    ■ iconv.decodeStream(encoding) / iconv.encodeStream(encoding)
+
+      目的: ストリームデータのエンコーディング変換を行うためのストリームを生成
+      使い方: Node.js のストリームと組み合わせて使用
+
+      実装例:
+
+        const fs = require('fs');
+        const stream = fs.createReadStream('input.txt')
+          .pipe(iconv.decodeStream('Shift_JIS'))
+          .pipe(iconv.encodeStream('UTF-8'))
+          .pipe(fs.createWriteStream('output.txt'));
+
+#-------------------------------
+# immer
+#-------------------------------
+- ENTRY:
+  CATEGORY: immer
+
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ インストール
+
+      npm install immer
+
+    ■ 概要
+
+    ・JavaScript で不変データを扱うためのライブラリ
+    ・produce 関数を使ってイミュータブルな更新を簡単に実現
+      produce は元のデータを変更せず、新しいデータを返す
+    ・Redux などのステート管理で有用
+    ・produce 関数でドラフトベースの更新
+    ・パフォーマンスが良く、メモリ効率が高い
+    ・ネストされたオブジェクトや配列の更新が簡単
+    ・TypeScript 対応
+
+- ENTRY:
+  EXPLAIN: produce()
+  BODY: |
+    ■ 定義
+
+      produce(baseState, recipe) => newState
+
+    ・baseState: 元の不変データ
+    ・recipe: ドラフトデータを操作する関数
+    ・newState: 更新後の新しい不変データ
+
+    ■ 実装
+
+      import { produce } from 'immer';
+
+      const state = { count: 0, todos: [{ text: 'Learn immer', done: false }] };
+
+      const newState = produce(state, draft => {    // produce でイミュータブルな更新
+        draft.count += 1;
+        draft.todos[0].done = true;
+      });
+
+      // newState: { count: 1, todos: [{ text: 'Learn immer', done: true }] }
+
+- ENTRY:
+  EXPLAIN: produce() カリー化
+  BODY: |
+    ■ 定義
+
+      produce(curriedRecipe) => (baseState) => newState
+
+      ・curriedRecipe: ドラフトデータを操作する関数
+      ・baseState: 元の不変データ
+      ・newState: 更新後の新しい不変データ
+
+    ■ 実装
+
+      const toggleTodo = produce((draft, id) => {
+        const todo = draft.todos.find(t => t.id === id);
+        if (todo) todo.done = !todo.done;
+      });
+
+      const newState = toggleTodo(state, 1);
+
+- ENTRY:
+  EXPLAIN: enableMapSet()
+  BODY: |
+    ■ 定義
+
+    ・immer が Map と Set を扱えるようにする関数
+    ・enableMapSet を呼び出すと、produce が Map と Set をサポート
+    ・Map と Set のイミュータブルな更新が可能
+    ・enableMapSet を一度呼び出すだけで、以降の produce で有効
+
+    ■ Map の例
+
+      import { produce, enableMapSet } from 'immer';
+
+      enableMapSet();  // Map と Set を有効化
+
+      const originalMap = new Map([['key1', 'value1'], ['key2', 'value2']]);
+
+      const newMap = produce(originalMap, draft => {
+        draft.set('key3', 'value3');  // 新しいエントリを追加
+        draft.delete('key1');         // エントリを削除
+      });
+
+      console.log(newMap);  // Map { 'key2' => 'value2', 'key3' => 'value3' }
+
+    ■ Set の例
+
+      const originalSet = new Set(['a', 'b', 'c']);
+
+      const newSet = produce(originalSet, draft => {
+        draft.add('d');     // 要素を追加
+        draft.delete('a');  // 要素を削除
+      });
+
+      console.log(newSet);  // Set { 'b', 'c', 'd' }
+
+#-------------------------------
+# moji
+#-------------------------------
+- ENTRY:
+  CATEGORY: moji
+
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ インストール
+
+      npm install moji
+
+    ■ 概要
+
+    ・日本語の文字変換を行うためのライブラリ
+    ・ひらがな、カタカナ、全角半角、漢字などの相互変換が可能
+    ・文字列の正規化やフィルタリングに有用
+    ・軽量で依存関係なし
+    ・ブラウザと Node.js 両方で動作
+
+    ■ 主な特徴
+
+    ・文字種変換: ひらがな ↔ カタカナ、全角 ↔ 半角、漢字 ↔ ひらがななど
+    ・チェーン可能: convert() を連鎖して複数変換
+    ・フィルタ: reject() で特定の文字を除去
+    ・範囲指定: range() で変換範囲を限定
+    ・正規化: 文字列の統一
+
+    ■ 注意点
+
+    ・変換は文字種ごとに適用され、混在文字列では部分的に変換
+    ・漢字変換はサポートされていない（ひらがな/カタカナ/全半角のみ）
+    ・大文字小文字変換は別途 toLowerCase() 等を使用
+    ・パフォーマンスは文字列長に比例。大量処理時は注意
+    ・バージョンによりAPIが変更される可能性あり。ドキュメント確認推奨
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ 実装
+
+      const moji = require('moji');
+
+      // ひらがな → カタカナ
+      moji('あいうえお').convert('HG', 'KK').toString();  // 'アイウエオ'
+
+      // カタカナ → ひらがな
+      moji('アイウエオ').convert('KK', 'HG').toString();  // 'あいうえお'
+
+      // 全角 → 半角
+      moji('１２３').convert('ZE', 'HE').toString();      // '123'
+
+      // 半角 → 全角
+      moji('abc').convert('HE', 'ZE').toString();        // 'ａｂｃ'
+
+    ■ 変換タイプ一覧
+
+      'HG': ひらがな
+      'KK': カタカナ
+      'HS': 半角カタカナ
+      'HK': 半角カタカナ (HS と同じ)
+      'ZK': 全角カタカナ
+      'HE': 半角英数字
+      'ZE': 全角英数字
+      'HN': 半角カナ
+      'ZN': 全角カナ
+
+    ■ チェーン変換例
+
+      moji('ＰｈｐはＰＨＰ')
+        .convert('ZE', 'HE')            // 全角英数字 → 半角
+        .convert('KK', 'HG')            // カタカナ → ひらがな
+        .toString();                    // 'phpはphp' ??? 
+
+    ■ reject()                          // フィルタリング
+
+      moji('abc123あいう')
+        .reject('HE')                   // 半角英数字を除去
+        .toString();                    // 'あいう'
+
+    ■ range()                           // 範囲指定
+
+      moji('abc123あいう')
+        .range(3, 6)                    // インデックス 3～5 の範囲を指定
+        .convert('HG', 'KK')            // ひらがな → カタカナ
+        .toString();                    // 'abcアイウ'
+
+#-------------------------------
+# node-forge
+#-------------------------------
+- ENTRY:
+  CATEGORY: node-forge
+
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ インストール
+
+      npm install node-forge
+
+    ■ 概要
+
+    ・JavaScript で暗号化と PKI を扱うためのライブラリ
+    ・RSA、AES、DES などの暗号アルゴリズムをサポート
+    ・証明書、鍵ペアの生成と管理
+    ・TLS 接続の構築
+    ・ブラウザと Node.js 両方で動作
+    ・Pure JavaScript 実装で依存関係なし
+
+    ■ 主な特徴
+
+    ・暗号化/復号: AES、DES、3DES、RC2、RSA など
+    ・ハッシュ: MD5、SHA-1、SHA-256、SHA-384、SHA-512
+    ・鍵生成: RSA 鍵ペア、ECDSA 鍵
+    ・証明書: X.509 証明書の生成と検証
+    ・TLS: クライアント/サーバー接続
+    ・ASN.1: DER/PEM 形式のエンコード/デコード
+
+    ■ 注意点
+
+    ・セキュリティ: 最新バージョンを使用し、脆弱性を確認
+    ・パフォーマンス: 暗号化処理は重いので注意
+    ・ライセンス: BSD ライセンス
+    ・ブラウザ使用時は Web Crypto API との比較検討
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ RSA 鍵ペア生成
+
+      const forge = require('node-forge');
+
+      const keypair = forge.pki.rsa.generateKeyPair({ bits: 2048 });
+      const publicKey = forge.pki.publicKeyToPem(keypair.publicKey);
+      const privateKey = forge.pki.privateKeyToPem(keypair.privateKey);
+
+      console.log('Public Key:', publicKey);
+      console.log('Private Key:', privateKey);
+
+    ■ AES 暗号化/復号
+
+      const forge = require('node-forge');
+
+      const key = forge.random.getBytesSync(16);  // 128-bit key
+      const iv = forge.random.getBytesSync(16);   // Initialization vector
+
+      // 暗号化
+      const cipher = forge.cipher.createCipher('AES-CBC', key);
+      cipher.start({ iv: iv });
+      cipher.update(forge.util.createBuffer('Hello World'));
+      cipher.finish();
+      const encrypted = cipher.output.getBytes();
+
+      // 復号
+      const decipher = forge.cipher.createDecipher('AES-CBC', key);
+      decipher.start({ iv: iv });
+      decipher.update(forge.util.createBuffer(encrypted));
+      decipher.finish();
+      const decrypted = decipher.output.getBytes();
+
+      console.log('Decrypted:', decrypted);  // 'Hello World'
+
+    ■ 自己署名証明書生成
+
+      const forge = require('node-forge');
+
+      const keys = forge.pki.rsa.generateKeyPair(2048);
+      const cert = forge.pki.createCertificate();
+
+      cert.publicKey = keys.publicKey;
+      cert.serialNumber = '01';
+      cert.validity.notBefore = new Date();
+      cert.validity.notAfter = new Date();
+      cert.validity.notAfter.setFullYear(cert.validity.notBefore.getFullYear() + 1);
+
+      const attrs = [{
+        name: 'commonName',
+        value: 'example.com'
+      }, {
+        name: 'countryName',
+        value: 'US'
+      }, {
+        shortName: 'ST',
+        value: 'Virginia'
+      }, {
+        name: 'localityName',
+        value: 'Blacksburg'
+      }, {
+        name: 'organizationName',
+        value: 'Test'
+      }, {
+        shortName: 'OU',
+        value: 'Test'
+      }];
+
+      cert.setSubject(attrs);
+      cert.setIssuer(attrs);
+      cert.setExtensions([{
+        name: 'basicConstraints',
+        cA: true
+      }, {
+        name: 'keyUsage',
+        keyCertSign: true,
+        digitalSignature: true,
+        nonRepudiation: true,
+        keyEncipherment: true,
+        dataEncipherment: true
+      }, {
+        name: 'extKeyUsage',
+        serverAuth: true,
+        clientAuth: true,
+        codeSigning: true,
+        emailProtection: true,
+        timeStamping: true
+      }, {
+        name: 'nsCertType',
+        client: true,
+        server: true,
+        email: true,
+        objsign: true,
+        sslCA: true,
+        emailCA: true,
+        objCA: true
+      }, {
+        name: 'subjectAltName',
+        altNames: [{
+          type: 6, // URI
+          value: 'http://example.org/webid#me'
+        }, {
+          type: 7, // IP
+          ip: '127.0.0.1'
+        }]
+      }, {
+        name: 'subjectKeyIdentifier'
+      }]);
+
+      cert.sign(keys.privateKey);
+
+      const pem = forge.pki.certificateToPem(cert);
+      console.log('Certificate:', pem);

@@ -1,7 +1,7 @@
 import { KeyDef } from "../../../types/type"
 
 export const keysSVG: KeyDef = {
-  IndianRed: ["svg", "React", "SVGPathElement", "SVGCircleElement"],
+  Crimson: ["svg", "React", "SVGPathElement", "SVGCircleElement"],
   DarkViolet: [
     "g",
     "use",

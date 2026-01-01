@@ -16,7 +16,7 @@
 
     ■ コンポーネント
     const MyComponent: React.FC<Props> = ({ foo, age=0 }) => {
-        return <span>{foo}:{age}</span>
+      return <span>{foo}:{age}</span>
     }
 
     ■ コール(2方法)

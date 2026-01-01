@@ -2,7 +2,7 @@ import { KeyDef } from "../../../types/type"
 
 export const keysChakra: KeyDef = {
   // ■ Main(赤)
-  IndianRed: [
+  Crimson: [
     "Box",
     "Center",
     "Container",

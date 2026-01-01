@@ -2,7 +2,7 @@ import { KeyDef } from "../../../types/type"
 
 export const keysDOM: KeyDef = {
   // ■ Main(赤)
-  IndianRed: [
+  Crimson: [
     "createElement",
     "createTextNode",
     "getElementById",

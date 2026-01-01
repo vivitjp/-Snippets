@@ -83,38 +83,302 @@
 
 - ENTRY:
   EXPLAIN: TSC Tips
-  TABLE:
-    OPTION:
-      ALIGN:
-        - left
-        - left
-      HAS_TITLE: false
-      WIDTH:
-        - 30%
-    BODY: |
-      ・まずは strict モードを有効に	strict: true をルートで有効にして型品質を担保
-      ・CIでは型チェックのみ実行	npx tsc --noEmit ビルドとは別に型チェックを走らせる（早く失敗を検知）
-      ・開発時は増分コンパイル	incremental: true と .tsbuildinfo により再ビルドが高速化
-      ・大型リポジトリはプロジェクト参照を使う	composite: true と references で並列/段階的ビルドが可能
-      ・外部型のチェック高速化	サードパーティ型で問題なければ skipLibCheck: true を設定型チェックを早める
-      ・Babel 等でトランスパイルするなら	isolatedModules: true を有効にして単一ファイル単位の変換に適合させる
-      ・エクスポート用型定義を出す	ライブラリなら declaration: true / declarationMap: true を使い、emitDeclarationOnly を検討
-      ・モジュール互換の問題対処	esModuleInterop: true と allowSyntheticDefaultImports: true で import の互換性を改善
-      ・パスエイリアス管理	baseUrl + paths を使い、ビルドツール（webpack/vite）側でも同じ alias を設定
-      ・型のみのインポートを明示	不要な実行時の依存を避けるため import type { Foo } from 'x' を使う
-      ・漸進的マイグレーション	allowJs: true + checkJs: false で JS を併用しつつ段階的に TS 化
-      ・実行時の JSON 取り込み	resolveJsonModule: true を使うと import data from './a.json' が型付きで可能
-      ・パフォーマンス診断	ビルドプロファイルは tsc --diagnostics / tsc --extendedDiagnostics で解析
-      ・エディタ/tsserver の負荷対策	大規模プロジェクトでは exclude を適切に設定し、typeRoots を整理する
-      ・型のコスト対策	巨大な型演算はコンパイル遅延の原因、冗長なユーティリティ型や非常に深いネストを見直す
-      ・型方針をドキュメント化	tsconfig.json のコメントやリポジトリ README に推奨ルール（noImplicitAny など）を書いて統一
+  BODY: |
+    【strict: true】 モードを有効にして型品質を担保
+
+    【npx tsc --noEmit】 CIでは型チェックのみ実行、ビルドとは別に型チェックを走らせる（早く失敗を検知）
+
+    【incremental: true】 .tsbuildinfo により再ビルドが高速化、開発時は増分コンパイル
+
+    【composite: true】 references 大型リポジトリはプロジェクト参照を使い、並列/段階的ビルド
+
+    【skipLibCheck: true】 外部型のチェック高速化、サードパーティ型で問題なければ設定型チェックを早める
+
+    【isolatedModules: true】 Babel 等でトランスパイルするなら有効にして単一ファイル単位の変換に適合させる
+
+    【declaration/declarationMap: true】 ライブラリならエクスポート用型定義を出すを使い、emitDeclarationOnly を検討
+
+    【モジュール互換の問題対処】 esModuleInterop: true と allowSyntheticDefaultImports: true で import の互換性を改善
+
+    【パスエイリアス管理】 baseUrl + paths を使い、ビルドツール（webpack/vite）側でも同じ alias を設定
+
+    【型のみのインポートを明示】 不要な実行時の依存を避けるため import type { Foo } from 'x' を使う
+
+    【漸進的マイグレーション】 allowJs: true + checkJs: false で JS を併用しつつ段階的に TS 化
+
+    【実行時の JSON 取り込み】 resolveJsonModule: true を使うと import data from './a.json' が型付きで可能
+
+    【パフォーマンス診断】 ビルドプロファイルは tsc --diagnostics / tsc --extendedDiagnostics で解析
+
+    【エディタ/tsserver の負荷対策】 大規模プロジェクトでは exclude を適切に設定し、typeRoots を整理する
+
+    【型のコスト対策】 巨大な型演算はコンパイル遅延の原因、冗長なユーティリティ型や非常に深いネストを見直す
+
+    【型方針をドキュメント化】 tsconfig.json のコメントやリポジトリ README に推奨ルール（noImplicitAny など）を書いて統一
+
+- ENTRY:
+  EXPLAIN: Suggestions
+  BODY: |
+    ■ typescript.Suggest
+
+    "typescript.suggest.autoImports": true              // 自動インポート候補を表示
+    "typescript.suggest.completeFunctionCalls": true    // 関数呼び出しの括弧と引数を自動補
+    "typescript.suggest.enabled": true                  // 全般的なコード補完を有効化
+    "typescript.suggest.includeCompletionsForModuleExports": true // モジュールのエクスポートも補完候補に含める
+    "typescript.suggest.includeCompletionsWithInsertText": true    // 補完テキストを含む候補を表示
+    "typescript.suggest.names": true                    // 変数名の候補を表示
+    "typescript.suggest.paths": true                    // パス補完を有効化
+
+    ■ typescript.Preferences
+
+    "typescript.preferences.importModuleSpecifier": "relative"  // 相対パスでインポートを生成
+    "typescript.preferences.quoteStyle": "single"               // シングルクォートで囲む
+    "typescript.preferences.includeCompletionsForImportStatements": true // インポート文の補完を含める
+    "typescript.preferences.includeCompletionsWithSnippetText": true      // スニペットテキストを含む補完を有効化
+    "typescript.preferences.autoImportFileExcludePatterns": { "**/node_modules/**": true } // 自動インポートから node_modules を除外
+
+    ■ typescript.CodeFix
+
+    "typescript.codeFix.autoFixOnSave": true               // 保存時に自動修正を適用
+    "typescript.codeFix.enableBetterFunctionCompletion": true // 関数補完の改善を有効化
+    "typescript.codeFix.enableImportFixes": true           // インポート修正を有効化
+    "typescript.codeFix.enableRefactorings": true          // リファクタリングを有効化
+    "typescript.codeFix.enableSuggestions": true           // コード修正の提案を有効化
+
+    ■ typescript.format
+
+    "typescript.format.enable": true                       // フォーマット機能を有効化
+    "typescript.format.insertSpaceAfterCommaDelimiter": true // カンマの後にスペースを挿入
+    "typescript.format.placeOpenBraceOnNewLineForControlBlocks": false // 制御ブロックの開き波括弧を新しい行に配置しない
+    "typescript.format.semicolons": "insert"              // セミコロンを自動挿入
+    "typescript.format.trimTrailingWhitespace": true       // 行末の空白を削除
+
+    ■ typescript.preferences.organizeImports
+    "typescript.preferences.organizeImports.sortImports": true        // インポートをソート
+    "typescript.preferences.organizeImports.removeUnusedImports": true // 未使用のインポートを削除
+
+- ENTRY:
+  EXPLAIN: トランスパイル
+  BODY: |
+    ■ トランスパイルとは
+
+    ・TypeScript (TS) や JSX などの高レベル言語を、ブラウザや Node.js で実行可能な JavaScript に変換するプロセス
+    ・主な目的: 最新の言語機能を古い環境で動作させる、型チェック後のコード生成
+    ・コンパイルとの違い: コンパイルは低レベル言語 (機械語) への変換、トランスパイルは同レベル言語間の変換
+
+    ■ 選び方のポイント
+
+    ・速度重視: esbuild, SWC
+    ・型安全重視: tsc, Next.js
+    ・柔軟性重視: Babel
+    ・フレームワーク使用: Next.js, Vite
+    ・大規模プロジェクト: 高速ツール + tsc 型チェックの組み合わせ
+
+    ■ Tips
+
+    ・開発時は高速ツール、本番ビルド時は安定ツール
+    ・ソースマップを有効にしてデバッグしやすくする
+    ・CI/CD で型チェックを別途実行 (esbuild 等では型チェックされない)
+
+- ENTRY:
+  EXPLAIN: トランスパイラ
+  BODY: |
+    ■ tsc (TypeScript Compiler)
+
+    ・TypeScript 公式コンパイラ
+    ・機能: TS → JS 変換、ソースマップ生成
+    ・バンドル機能: なし
+    ・型チェック: あり
+    ・利点: 標準的、設定豊富 (tsconfig.json)
+    ・欠点: 遅い (大規模プロジェクトで数秒〜数分)、
+    ・使用例: スタンドアロン、ビルドスクリプト
+
+    ■ Babel
+
+    ・JS トランスパイラ、プラグイン中心
+    ・機能: JS → 互換 JS、TS サポート (プラグイン)、React 対応
+    ・バンドル機能: 限定的
+    ・型チェック: なし
+    ・利点: 柔軟性高、プラグイン豊富、ブラウザ互換性調整
+    ・欠点: 遅い、設定が複雑、バンドル機能が限定的
+    ・使用例: カスタム変換、ライブラリ開発
+
+    ・ babel のバンドル機能が限定的な理由
+      ・Babel は主にコード変換に特化しており、バンドルは専門外
+      ・バンドラ (webpack, Rollup など) と組み合わせて使用
+      ・Babel 自体のバンドル機能は基本的なものであり、最適化や依存関係管理には限界あり
+
+    ■ Next.js
+
+    ・React フレームワーク、内部で tsc や SWC を使用
+    ・機能: TS/JSX → JS、SSR/SSG 対応、自動最適化
+    ・バンドル機能: 内蔵 (webpack ベース)
+    ・型チェック: あり (tsc ベース)
+    ・利点: フルスタック開発、Vercel 統合
+    ・欠点: 設定が複雑、ビルド時間が長い場合あり
+    ・使用例: Web アプリ開発
+
+    ■ Vite
+
+    ・ビルドツール、開発時は esbuild、本番時は Rollup
+    ・機能: 高速 HMR、TS サポート、プラグイン豊富
+    ・バンドル機能: 内蔵 (Rollup ベース)
+    ・型チェック: なし (tsc と組み合わせ推奨)
+    ・利点: 開発速度が速い (esbuild 採用)
+    ・欠点: 本番ビルドは Rollup のためやや遅い
+    ・使用例: モダン Web 開発
+
+    ■ esbuild
+
+    ・Go 言語製トランスパイラ
+    ・機能: TS/JSX → JS、バンドル、ミニファイ
+    ・バンドル機能: 内蔵
+    ・型チェック: なし (tsc と組み合わせ推奨)
+    ・利点: 非常に速い (他のツールの 10-100 倍)、シンプル
+    ・欠点: 一部機能未成熟
+    ・使用例: 高速ビルド、Vite の開発サーバー
+
+    ■ SWC (Speedy Web Compiler)
+
+    ・Rust 製トランスパイラ
+    ・機能: TS/JSX → JS、バンドル、ミニファイ
+    ・バンドル機能: 内蔵
+    ・型チェック: なし (tsc と組み合わせ推奨)
+    ・利点: 高速 (esbuild 並み)、Next.js 標準採用
+    ・欠点: 設定が複雑、一部 Babel プラグイン未対応
+    ・使用例: Next.js ビルド、Rust エコシステム
+
+- ENTRY:
+  EXPLAIN: モジュールバンドラ
+  BODY: |
+    ■ バンドルとは?
+
+      ・複数のモジュールやファイルを1つのファイルにまとめるプロセス
+      ・目的: ネットワーク要求の削減、依存関係の管理、最適化
+
+    ■ モジュールバンドラの選び方ポイント
+
+      ・プロジェクト規模: 小規模は Parcel、大規模は WebPack
+      ・パフォーマンス: esbuild や SWC ベースのツール
+      ・設定の柔軟性: WebPack は高度なカスタマイズが可能
+      ・エコシステム: プラグインやローダーの豊富さ
+      ・フレームワーク統合: Next.js や Vite など
+
+    ■ WebPack
+
+    ・モジュールバンドラ、依存関係解析と最適化に特化
+    ・機能: モジュール結合、コード分割、アセット管理
+    ・利点: 柔軟な設定、多数のローダー/プラグイン
+    ・欠点: 設定が複雑、学習コスト高い
+    ・使用例: 大規模アプリケーションのビルド
+
+    ・基本的な TypeScript 対応設定例 (webpack.config.js):
+
+      config.module.rules = [
+        {
+          test: /\.tsx?$/,
+          use: 'ts-loader',
+          exclude: /node_modules/,
+        },
+      ];
+
+    ■ Rollup
+
+    ・モジュールバンドラ、ライブラリ向けに最適化
+    ・機能: モジュール結合、ツリーシェイキング、プラグイン豊富
+    ・利点: 小さなバンドルサイズ、ESM サポート
+    ・欠点: 設定が複雑、大規模アプリには不向き
+    ・使用例: ライブラリ開発、ESM 出力
+
+    ・基本的な設定例 (rollup.config.js):
+
+      import typescript from '@rollup/plugin-typescript';
+
+      export default {
+        input: 'src/index.ts',
+        output: {
+          file: 'dist/bundle.js',
+          format: 'cjs',
+        },
+        plugins: [typescript()],
+      };
+
+    ■ Parcel
+
+    ・ゼロコンフィグバンドラ、初心者向け
+    ・機能: 自動依存解析、ホットリロード、アセット管理
+    ・利点: 設定不要、使いやすい
+    ・欠点: 大規模アプリには不向き、カスタマイズ性低い
+    ・使用例: 小規模プロジェクト、プロトタイピング
+
+    ・基本的な設定例 (package.json):
+
+      {
+        "scripts": {
+          "build": "parcel build src/index.html",
+          "start": "parcel src/index.html"
+        }
+      }
+
+- ENTRY:
+  EXPLAIN: ビルド時のオプション
+  BODY: |
+    ■ TreeShaking
+
+    ・未使用コードを削除し、バンドルサイズを削減
+    ・Rollup や WebPack でサポート
+    ・ESM モジュールを使用することで効果的に機能
+
+     ・WebPack での設定例: production モードではデフォルトで有効
+
+      module.exports = {
+        mode: 'production',
+        optimization: {
+          usedExports: true,            // Tree Shaking を有効化
+        },
+      };
+
+      ※ Nextjs や Vite ではデフォルトで有効
+        無効にしたい場合: Nextjs: next.config.js で optimization.usedExports = false
+
+    ■ Code Splitting
+
+    ・コードを複数のチャンクに分割し、必要な部分だけをロード
+    ・WebPack の dynamic import() で実現可能
+    ・初期ロード時間の短縮に有効
+
+    ■ Minification
+
+    ・コードを圧縮し、ファイルサイズを削減
+    ・Terser や UglifyJS などのツールを使用
+    ・可読性は低下するが、パフォーマンス向上に寄与
+
+    ・Terser を WebPack で使用する例:
+
+      const TerserPlugin = require('terser-webpack-plugin');
+
+      module.exports = {
+        optimization: {
+          minimize: true,
+          minimizer: [new TerserPlugin()],
+        },
+      };
+
+      ※ Nextjs や Vite ではデフォルトで有効
+      無効にしたい場合: Nextjs: next.config.js で optimization.minimize = false
+
+    ■ Source Maps
+
+    ・圧縮コードと元のソースコードを対応付けるマッピングファイル
+    ・デバッグ時に役立つ
+    ・ビルドツールで自動生成可能
 
 #-------------------------------
 # Tips
 #-------------------------------
 
 - ENTRY:
-  CATEGORY: TypeScript Tips & Snippets
+  CATEGORY: Tips
 
 #-------------------------------
 # ENUM
@@ -154,8 +418,10 @@
 # union
 #-------------------------------
 - ENTRY:
-  EXPLAIN: union を object から生成
+  EXPLAIN: Object/Array -> Union型
   BODY: |
+    ■ Object -> Union型
+
     const person = {
       a: "Name",
       b: "Address",
@@ -165,9 +431,8 @@
 
     結果: "Name" | "Address"
 
-- ENTRY:
-  EXPLAIN: union を array から生成
-  BODY: |
+    ■ Array -> Union型
+
     const person = [ "Name", "Address" ] as const
     type Person = (typeof person)[number]
 
@@ -199,18 +464,20 @@
   EXPLAIN: 判別可能なUnion型
   BODY: |
     interface Square {
-      kind: "square"
+      kind: "square"  <-- 判別子
       size: number
     }
+
     interface Rectangle {
-      kind: "rectangle"
+      kind: "rectangle"  <-- 判別子
       width: number
       height: number
     }
+
     type Shape = Square | Rectangle
 
     const area = (s: Shape) => {
-      switch (s.kind) {
+      switch (s.kind) {  <-- 判別子
         case "square":    return s.size * s.size
         case "rectangle": return s.width * s.height
         default:          return null
@@ -278,44 +545,37 @@
 # 型ガード
 #-------------------------------
 - ENTRY:
-  EXPLAIN: 型ガード(ユーザ定義)
+  EXPLAIN: 型ガード
   BODY: |
-    ■ 解説
+    ■ ユーザ定義型
 
     "is A" は「戻り値側の型述語（type predicate）」
 
     ・関数が true を返したときに呼び出し元で arg が A と見なされる
     ・関数が false を返したときに呼び出し元で arg が A ではないと見なされる
 
-    ■ サンプル
+      interface A { a: number; common: string }
+      interface B { b: number; common: string }
 
-    interface A { a: number; common: string }
-    interface B { b: number; common: string }
+      function isFoo(arg: any): arg is A {  // 関数名 isXxxx で定義
+        return arg.a !== undefined
+      }
 
-    function isFoo(arg: any): arg is A {  // 関数名 isXxxx で定義
-      return arg.a !== undefined
-    }
+      if (isFoo(x)) {
+        // ここでは x は A として扱える（型狭窄）
+        console.log(x.a)
+      } else {
+        // ここでは x は A ではない
+      }
 
-    if (isFoo(x)) {
-      // ここでは x は A として扱える（型狭窄）
-      console.log(x.a)
-    } else {
-      // ここでは x は A ではない
-    }
+    ■ 型ガード(文字列)
 
-#-------------------------------
-# 型判定
-#-------------------------------
-- ENTRY:
-  EXPLAIN: 型ガード(文字列)
-  BODY: |
     const isString = (value: unknown): value is string => {
       return typeof value === "string" && value !== null
     }
 
-- ENTRY:
-  EXPLAIN: 型ガード(文字列配列)
-  BODY: |
+    ■ 型ガード(文字列配列)
+
     const isStringArray = (value: unknown): value is string[] => {
       return (
         typeof value === "object" &&
@@ -325,23 +585,21 @@
       )
     }
 
-- ENTRY:
-  EXPLAIN: 型ガード(object)
-  BODY: |
-    // 全属性を"Optional"、全値はunknown型を返す
-    type WouldBe<T> = { [P in keyof T]?: unknown }
+    ■ 型ガード(object)
+
+    type WouldBe<T> = { [P in keyof T]?: unknown }  // 全属性 "Optional"、全値 unknown型
 
     const isTypeObject = <T extends Record<string, unknown>>(
       value: unknown
     ): value is WouldBe<T> => typeof value === "object" && value !== null
 
-- ENTRY:
-  EXPLAIN: 型ガード(任意の型)
-  BODY: |
+    ■ 型ガード(任意の型)
+
     type Foo = {
       a: string
       b: number
     }
+
     const isFoo = (value: unknown): value is Foo =>
       isTypeObject<Foo>(value) &&
       typeof value.a === "string" &&
@@ -356,24 +614,24 @@
     function func(A: "foo") {}
 
     const objA = { A: "foo" }
-    func(objA.A) //NG: objA.A = string
+    func(objA.A)                        //NG: objA.A = string
 
     const objB = { B: "foo" as const }
-    func(objB.B) //OK
+    func(objB.B)                        //OK
 
     const objC = { C: "foo" } as const
-    func(objC.C) //OK
+    func(objC.C)                        //OK
 
     const objD: { [key: string]: "foo" } = {
       D: "foo",
     }
-    func(objD.D) //OK
+    func(objD.D)                        //OK
 
 #-------------------------------
 # ReadOnly
 #-------------------------------
 - ENTRY:
-  EXPLAIN: 読み取り専用型
+  EXPLAIN: ReadonlyArray<> 読み取り専用型
   BODY: |
     const foo: number[] = [1, 2, 3]
     foo.push(4) // OK
@@ -385,11 +643,12 @@
 # Utility Partial
 #-------------------------------
 - ENTRY:
-  EXPLAIN: Partial型を用いたObject型生成
+  EXPLAIN: Record, Partial を用いたObject型生成の比較
   BODY: |
     const obj = {"A": 1, "B": 2, "C": 3};
 
     ■ 意図する挙動：Partial<T>
+
     const objA: Partial<Record<keyof typeof obj, number>> = {
         A: 1,
         B: 2,
@@ -397,6 +656,7 @@
     }
 
     ■ 意図とは異なる挙動：Record<K, T>
+
     const objB: Record<Partial<keyof typeof obj>, number> = {
         A: 1,
         B: 2,

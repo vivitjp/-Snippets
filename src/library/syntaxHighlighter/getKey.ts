@@ -1,13 +1,14 @@
 import { KeyDef } from "../../types/type"
 import { keysAWSAurora } from "./keys/AWSAurora"
 import { keysAWSCloud } from "./keys/AWSCloud"
-import { keysReactUtilitiesMisc } from "./keys/ReactUtilitiesMisc"
+import { keyReactLibrary } from "./keys/ReactLibrary"
 import { keysChakra } from "./keys/Chakra"
 import { keysClassTransformer } from "./keys/ClassTransformer"
 import { keysClassValidator } from "./keys/ClassValidator"
 import { keysCSS } from "./keys/CSS"
 import { keysCurl } from "./keys/curl"
 import { keysDOM } from "./keys/DOM"
+import { keysLodash } from "./keys/lodash"
 import { keysDocker } from "./keys/Docker"
 import { keysEnv } from "./keys/Env"
 import { keysExcel } from "./keys/Excel"
@@ -27,12 +28,12 @@ import { keysMongo } from "./keys/Mongo"
 import { keysNPM } from "./keys/npm"
 import { keysNestjs } from "./keys/Nestjs"
 import { keysNextjs } from "./keys/Nextjs"
+import { keysNodejs } from "./keys/Nodejs"
 import { keysPackage } from "./keys/Package"
-import { keysPackageRHF } from "./keys/PackageRHF"
+import { keysRHF } from "./keys/RHF"
 import { keysPrisma } from "./keys/Prisma"
 import { keysPython } from "./keys/Python"
 import { keysReact } from "./keys/React"
-import { keysDragAndDrops } from "./keys/DragAndDrops"
 import { keysReactRouter } from "./keys/ReactRouter"
 import { keysRegExp } from "./keys/RegExp"
 import { keysRTL } from "./keys/RTL"
@@ -46,6 +47,7 @@ import { keysTypeORM } from "./keys/TypeORM"
 import { keysVite } from "./keys/Vite"
 import { keysVue } from "./keys/Vue"
 import { keysYup } from "./keys/Yup"
+import { keysJSUtilities } from "./keys/JSUtilities"
 
 // 以下のオブジェクトをソートしてください
 export const codeKeys = {
@@ -70,22 +72,24 @@ export const codeKeys = {
   Jest: "Jest",
   Jotai: "Jotai",
   JS: "JS",
-  PackageRHF: "keysPackageRHF",
+  JSUtilities: "JSUtilities",
   Lint: "Lint",
   Linux: "Linux",
-  MUI: "MUI",
+  lodash: "lodash",
   Mongo: "Mongo",
+  NPM: "NPM",
+  MUI: "MUI",
   Nestjs: "Nestjs",
   Nextjs: "Nextjs",
-  NPM: "NPM",
+  Nodejs: "Nodejs",
   Package: "Package",
   Prisma: "Prisma",
   Python: "Python",
   React: "React",
-  DragAndDrops: "DragAndDrops",
   ReactRouter: "ReactRouter",
-  ReactUtilitiesMisc: "ReactUtilitiesMisc",
+  ReactLibrary: "ReactLibrary",
   RegExp: "RegExp",
+  RHF: "keysRHF",
   RTL: "RTL",
   Sql: "Sql",
   SVG: "SVG",
@@ -125,20 +129,22 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   Jest: keysJest,
   Jotai: keysJotai,
   JS: keysJS,
-  keysPackageRHF: keysPackageRHF,
+  JSUtilities: keysJSUtilities,
+  keysRHF: keysRHF,
   Lint: keysLint,
   Linux: keysLinux,
+  lodash: keysLodash,
   MUI: keysMUI,
   Mongo: keysMongo,
   Nestjs: keysNestjs,
   Nextjs: keysNextjs,
   NPM: keysNPM,
+  Nodejs: keysNodejs,
   Package: keysPackage,
   Prisma: keysPrisma,
   Python: keysPython,
   React: keysReact,
-  ReactUtilitiesMisc: keysReactUtilitiesMisc,
-  DragAndDrops: keysDragAndDrops,
+  ReactLibrary: keyReactLibrary,
   ReactRouter: keysReactRouter,
   RegExp: keysRegExp,
   RTL: keysRTL,

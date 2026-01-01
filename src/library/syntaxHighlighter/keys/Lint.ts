@@ -2,7 +2,7 @@ import { KeyDef } from "../../../types/type"
 
 export const keysLint: KeyDef = {
   // ■ Main(赤)
-  IndianRed: [
+  Crimson: [
     "eslint",
     "typescriptEslint",
     "react",

@@ -11,11 +11,25 @@
     Next.jsを使うべき5つの理由 + 実装Tips
     https://qiita.com/Yuki_Oshima/items/5c0dfd8f7af8fb76af8f
 
-    ■ SSR/SSG
-    ■ ファイルベースルーティング
-    ■ 開発サーバの部分的な高速リロード(Fast Refresh)
-    ■ 画像最適化
-    ■ ゼロコンフィグ
+    ・SSR/SSG
+
+      サーバーサイドレンダリング(SSR)と静的サイト生成(SSG)をサポート
+
+    ・ファイルベースルーティング
+
+      ファイルシステムに基づく直感的なルーティング
+
+    ・開発サーバの部分的な高速リロード(Fast Refresh)
+
+      変更した部分のみを即座に反映
+
+    ・画像最適化
+
+      組み込みの画像コンポーネントで自動最適化
+
+    ・ゼロコンフィグ
+
+      最小限の設定で始められる
 
 - ENTRY:
   EXPLAIN: インストール
@@ -113,22 +127,163 @@
     Root: .env 環境変数
   BODY: |
     ■ サーバーサイド
-      [.env]
-      ENDPOINT='https://example.com/'
 
-      [page.tsx]
-      const endPoint = process.env.ENDPOINT || '';
+    [.env]
+    ENDPOINT='https://example.com/'
+
+    [page.tsx]
+    const endPoint = process.env.ENDPOINT || '';
 
     ■ クライアントサイド
 
-      * AWSでの認証時には注意: パラメータストアを利用すること
+    ※ AWSでの認証時には注意: パラメータストアを利用すること
 
-      [.env]
-      NEXT_PUBLIC_ENDPOINT='https://example.com/'
+    接頭辞付与: NEXT_PUBLIC_ 
 
-      [page.tsx]
-      const endPoint = process.env.NEXT_PUBLIC_ENDPOINT || '';
+    [.env]
+    NEXT_PUBLIC_ENDPOINT='https://example.com/'
 
+    [page.tsx]
+    const endPoint = process.env.NEXT_PUBLIC_ENDPOINT || '';
+
+- ENTRY:
+  EXPLAIN: 設定
+  BODY: |
+    ■ next.config.mjs
+
+    /** @type {import('next').NextConfig} */
+    const nextConfig = {
+      reactStrictMode: true,
+      swcMinify: true,
+      experimental: {
+        appDir: true,                   // App Router 有効化
+      },
+    }
+
+    export default nextConfig
+
+    ■ 詳細な設定項目
+
+    reactStrictMode: true,              // React Strict Mode 有効化。開発時に潜在的な問題を検出
+    swcMinify: true,                    // SWC を使用したミニファイ有効化。ビルド速度向上
+    experimental: {
+      appDir: true,                     // App Router 有効化(v13~)
+    },
+
+    ■ 静的エクスポート
+
+    output: 'export',                   // 静的HTML生成。サーバー不要
+    output: 'standalone',               // 単一ファイル出力。Docker用
+
+    ■ ベースパス
+
+    basePath: '/subdir',                // ルート以外のPATHでホスティング 
+
+    ■ 画像最適化
+
+    images: {
+      domains: ['example.com'],         // 外部画像ドメイン許可
+      unoptimized: true,                // 最適化無効(静的エクスポート時)
+    },
+
+    ■ 環境変数
+
+    env: {
+      CUSTOM_KEY: 'value',              // ビルド時に埋め込み
+    },
+
+    ■ リライト
+
+    async rewrites() {
+      return [
+        {
+          source: '/api/:path*',
+          destination: 'https://api.example.com/:path*',
+        },
+      ];
+    },
+
+    ■ リダイレクト
+
+    async redirects() {
+      return [
+        {
+          source: '/old-path',
+          destination: '/new-path',
+          permanent: true,
+        },
+      ];
+    },
+
+    ■ ヘッダー
+
+    async headers() {
+      return [
+        {
+          source: '/api/:path*',
+          headers: [
+            { key: 'Cache-Control', value: 'no-cache' },
+          ],
+        },
+      ];
+    },
+
+    ■ TypeScript 設定
+
+    typescript: {
+      ignoreBuildErrors: true,          // ビルドエラー無視(本番用)
+    },
+
+    ■ ESLint 設定
+
+    eslint: {
+      ignoreDuringBuilds: true,         // ビルド時ESLint無視
+    },
+
+    ■ トランスパイル
+
+    transpilePackages: ['package-name'], // 特定のnpmパッケージをトランスパイル
+
+    ■ コンパイラ
+
+    compiler: {
+      removeConsole: true,              // 本番ビルドでconsole削除
+      styledComponents: true,           // styled-components の SSR 有効化
+      emotion: true,                    // emotion の SSR 有効化
+      reactRemoveProperties: {          // プロパティ削除
+        properties: ['^data-test$'],     // data-test 属性を削除
+      },
+      relay: {                          // Relay の設定
+        src: './src',
+        artifactDirectory: './__generated__',
+      },
+    },
+
+    ■ Webpack 設定
+
+    webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+      // エイリアス追加
+      config.resolve.alias['@'] = path.join(__dirname, '.');
+
+      // プラグイン追加
+      config.plugins.push(
+        new webpack.DefinePlugin({
+          __BUILD_ID__: JSON.stringify(buildId),
+        })
+      );
+
+      // ローダー追加
+      config.module.rules.push({
+        test: /\.svg$/,
+        use: ['@svgr/webpack'],
+      });
+
+      return config;
+    },
+
+#-------------------------------
+# ディレクトリ構成
+#-------------------------------
 - ENTRY:
   CATEGORY: ディレクトリ構成
 
@@ -156,7 +311,7 @@
 - ENTRY:
   EXPLAIN: 構成 AppRouter(v13~)
   BODY: |
-    ■ 13以前
+    ■ v.13 以前
     ./
       src/                              // Root
         └── pages/
@@ -165,26 +320,26 @@
                 ├── page.tsx            // /hello?id=123
                 └── [id].tsx            // /hello/123
 
-    ■ 13以後(appの場合)
+    ■ v.13 以後(appの場合)
     ./
-      app/                              // 名称指定: Root
-        ├── page.tsx                    // 名称指定: export default コンポーネント
-        ├── layout.tsx                  // 名称指定: Root Layout(HTML/BODY)
-        ├── loading.tsx                 // 名称指定: Root Loading Component
-        ├── template.tsx                // 名称指定: 共通UI定義(ページ遷移で毎回レンダリング)
-        ├── global-error.tsx            // 名称指定: Root Error Page
+      app/                              // 指定名称: Root
+        ├── page.tsx                    // 指定名称: export default コンポーネント
+        ├── layout.tsx                  // 指定名称: Root Layout(HTML/BODY)
+        ├── loading.tsx                 // 指定名称: Root Loading Component
+        ├── template.tsx                // 指定名称: 共通UI定義(ページ遷移で毎回レンダリング)
+        ├── global-error.tsx            // 指定名称: Root Error Page
         ├── hello/                      // PATH: /hello
-        │   ├── error.tsx               // 名称指定: /hello Level Error Page
-        │   ├── layout.tsx              // 名称指定: /hello Level Layout(Section)
-        │   ├── loading.tsx             // 名称指定: /Hello Loading
-        │   ├── page.tsx                // 名称指定(デフォルトファイル)
-        │   ├── template.tsx            // 名称指定: 共通UI定義
+        │   ├── error.tsx               // 指定名称: /hello Level Error Page
+        │   ├── layout.tsx              // 指定名称: /hello Level Layout(Section)
+        │   ├── loading.tsx             // 指定名称: /Hello Loading
+        │   ├── page.tsx                // 指定名称(デフォルトファイル)
+        │   ├── template.tsx            // 指定名称: 共通UI定義
         │   └── [id]/                   // 引数: /hello/123
         │       ├── page.tsx
         │       └── [name]/             // 引数: /hello/123/john
         │           └── page.tsx
         ├── address/                    // PATH: /address
-        │   ├── page.tsx                // 名称指定
+        │   ├── page.tsx                // 指定名称
         │   └── _components             // プライベートpath(ルーティング非対象)
         │       └── partsA.tsx
         ├── patha/                      // PATH: /patha
@@ -198,7 +353,7 @@
         │       └── page.tsx
         ├── api/                        // 名称任意
         │   └── name/                   // API PATH /api/name
-        │       └── route.tsx           // 名称指定: API route file(GET,POST,...)
+        │       └── route.tsx           // 指定名称: API route file(GET,POST,...)
         ├── segment/                    // 名称任意
         │   ├── @seg/                   // Parallel Routes Slot
         │   │   └── page.tsx
@@ -211,8 +366,12 @@
 - ENTRY:
   EXPLAIN: AppRouter Query
   BODY: |
-    ■ DIR: ./app/hello/page.tsx
-    ■ URL: http://localhost:3000/hello?id=123
+    ■ DIR
+      ./app/hello/page.tsx
+
+    ■ URL
+      http://localhost:3000/hello?id=123
+
     ■ コード
       "use client"                      // useSearchParams に必須
 
@@ -229,7 +388,7 @@
 
     ■ 注: "use client"
     ・useSearchParams などの hooks は client 側での実装なので "use client" 必須
-    ・ない場合の Error
+    ・指定ない場合の Error
 
         × You're importing a component that needs useSearchParams.
         It only works in a Client Component but none of its parents are 
@@ -238,8 +397,11 @@
 - ENTRY:
   EXPLAIN: AppRouter 動的Routing(引数-単数)
   BODY: |
-    ■ DIR: ./app/hello/[id]/page.tsx    // 13以前とは形式異なる
-    ■ URL: http://localhost:3000/hello/123
+    ■ DIR
+      ./app/hello/[id]/page.tsx    // 13以前とは形式異なる
+
+    ■ URL
+      http://localhost:3000/hello/123
 
     ■ コード
       type Props = {
@@ -257,8 +419,11 @@
 - ENTRY:
   EXPLAIN: AppRouter 動的Routing(引数-複数)
   BODY: |
-    ■ DIR: ./app/hello/[id]/[name]/page.tsx
-    ■ URL: http://localhost:3000/hello/123/john
+    ■ DIR
+      ./app/hello/[id]/[name]/page.tsx
+
+    ■ URL
+      http://localhost:3000/hello/123/john
 
     ■ コード
       type Props = {
@@ -276,9 +441,12 @@
 - ENTRY:
   EXPLAIN: AppRouter 動的Routing(引数-配列) 必須
   BODY: |
-    ■ DIR: ./app/patha/[...ids]/page.tsx            // 一重[...引数]
-    ■ URL: http://localhost:3000/patha/abc/123/efg  // OK: 複数の連続するパラメタ
-    ■ URL: http://localhost:3000/patha/             // NG: NOパラメタ
+    ■ DIR
+      ./app/patha/[...ids]/page.tsx            // 一重[...引数]
+
+    ■ URL
+      http://localhost:3000/patha/abc/123/efg  // OK: 複数の連続するパラメタ
+      http://localhost:3000/patha/             // NG: NOパラメタ
 
     ■ コード
       type Props = {
@@ -293,9 +461,12 @@
 - ENTRY:
   EXPLAIN: AppRouter 動的Routing(引数-配列) Optional
   BODY: |
-    ■ DIR: ./app/pathb/[[...ids]]/page.tsx          // 二重[[...引数]]
-    ■ URL: http://localhost:3000/pathb/abc/123/efg  // OK: 複数の連続するパラメタ
-    ■ URL: http://localhost:3000/pathb/             // OK: NOパラメタ
+    ■ DIR
+      ./app/pathb/[[...ids]]/page.tsx          // 二重[[...引数]]
+
+    ■ URL
+      http://localhost:3000/pathb/abc/123/efg  // OK: 複数の連続するパラメタ
+      http://localhost:3000/pathb/             // OK: NOパラメタ
 
     ■ コード
       type Props = {
@@ -316,29 +487,29 @@
   BODY: |
     ■ Root Layout(HTML: Server Component By default)
 
-      import type { Metadata } from "next";
-      import { Inter } from "next/font/google";
-      import "./globals.css";
+    import type { Metadata } from "next";
+    import { Inter } from "next/font/google";
+    import "./globals.css";
 
-      const inter = Inter({ subsets: ["latin"] });
+    const inter = Inter({ subsets: ["latin"] });
 
-      export const metadata: Metadata = {
-        title: "Next Sample 13",
-        description: "Generated by create next app",
-      };
+    export const metadata: Metadata = {
+      title: "Next Sample 13",
+      description: "Generated by create next app",
+    };
 
-      export default function RootLayout({ children }: Readonly<{
-        children: React.ReactNode;
-      }>) {
-        return (
-          <html lang="ja">                // Root Level には HTML & Body
-            <body className={inter.className}>
-              <div>Root Layout</div>
-              <div>{children}</div>
-            </body>
-          </html>
-        );
-      }
+    export default function RootLayout({ children }: Readonly<{
+      children: React.ReactNode;
+    }>) {
+      return (
+        <html lang="ja">                // Root Level には HTML & Body
+          <body className={inter.className}>
+            <div>Root Layout</div>
+            <div>{children}</div>
+          </body>
+        </html>
+      );
+    }
 
 - ENTRY:
   EXPLAIN: |
@@ -390,8 +561,7 @@
   CATEGORY: 各種 Predefined FD
 
 - ENTRY:
-  EXPLAIN: |
-    Not Found
+  EXPLAIN: Not Found
   BODY: |
     ■ DIR: ./app/not-found.tsx          // Server Compo
 
@@ -425,8 +595,7 @@
       }
 
 - ENTRY:
-  EXPLAIN: |
-    Loading Component(自動表示)
+  EXPLAIN: Loading Component(自動表示)
   BODY: |
     ■ Loading(Root & Local)
 
@@ -535,7 +704,7 @@
     /** @type {import('next').NextConfig} */
     const nextConfig = {
       experimental: {
-        typedRoutes: true,
+        typedRoutes: true,              // 有効化 ※ next 14.3~
       },
     };
     export default nextConfig;

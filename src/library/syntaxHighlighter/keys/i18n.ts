@@ -2,7 +2,7 @@ import { KeyDef } from "../../../types/type"
 
 export const keysI18n: KeyDef = {
   // ■ Main(赤)
-  IndianRed: ["i18next", "i18n"],
+  Crimson: ["i18next", "i18n"],
   // ■ 青
   RoyalBlue: [
     "init",

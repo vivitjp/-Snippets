@@ -222,39 +222,56 @@ export const menuItems: menuByCategories[] = [
     category: "JavaScript",
     items: [
       {
-        name: "JS Objects",
+        name: "Objects",
         fileName: "JavaScript/JSObjects",
         codeKeyTypes: [codeKeys.JS],
       },
       {
-        name: "JS Methods",
+        name: "Methods",
         fileName: "JavaScript/JSMethods",
         codeKeyTypes: [codeKeys.JS],
       },
       {
-        name: "JS Topics",
+        name: "Topics",
         fileName: "JavaScript/JSTopics",
         codeKeyTypes: [codeKeys.JS],
       },
       {
-        name: "JS DOM",
+        name: "DOM",
         fileName: "JavaScript/DOM",
         codeKeyTypes: [codeKeys.DOM],
       },
       {
-        name: "JS 正規表現",
+        name: "正規表現",
         fileName: "JavaScript/RegularExpression",
         codeKeyTypes: [codeKeys.RegExp],
-      },
-      {
-        name: "JS ライブラリ",
-        fileName: "JavaScript/Libraries",
-        codeKeyTypes: [codeKeys.JS],
       },
       {
         name: "JQuery to JS",
         fileName: "",
         codeKeyTypes: [],
+      },
+    ],
+  },
+  {
+    category: "JS Library",
+    items: [
+      {
+        name: "ライブラリ",
+        fileName: "JavaScript/Libraries",
+        codeKeyTypes: [codeKeys.JS, codeKeys.JSUtilities],
+        case_sensitive: false,
+      },
+      {
+        name: "lodash",
+        fileName: "JavaScript/lodash",
+        codeKeyTypes: [codeKeys.lodash],
+        case_sensitive: false,
+      },
+      {
+        name: "カスタム",
+        fileName: "JavaScript/LibraryCustom",
+        codeKeyTypes: [codeKeys.JS],
       },
     ],
   },
@@ -311,18 +328,13 @@ export const menuItems: menuByCategories[] = [
         fileName: "React/ReactRouting",
         codeKeyTypes: [codeKeys.HTML, codeKeys.JS, codeKeys.ReactRouter],
       },
-      // {
-      //   name: "🔺React 型定義", ⚠
-      //   fileName: "React/ReactTypeScript",
-      //   codeKeyTypes: [codeKeys.JS, codeKeys.React],
-      // },
     ],
   },
   {
     category: "React Framework",
     items: [
       {
-        name: "🔺Nextjs",
+        name: "Nextjs",
         fileName: "ReactFrameWork/front/Nextjs",
         codeKeyTypes: [codeKeys.Nextjs],
       },
@@ -377,12 +389,12 @@ export const menuItems: menuByCategories[] = [
       {
         name: "ReactHookForm",
         fileName: "ReactForm/ReactHookForm",
-        codeKeyTypes: [codeKeys.PackageRHF],
+        codeKeyTypes: [codeKeys.RHF],
       },
       {
         name: "Yup",
         fileName: "ReactForm/Yup",
-        codeKeyTypes: [codeKeys.PackageRHF, codeKeys.Yup],
+        codeKeyTypes: [codeKeys.RHF, codeKeys.Yup],
         case_sensitive: false,
       },
     ],
@@ -466,24 +478,24 @@ export const menuItems: menuByCategories[] = [
     ],
   },
   {
-    category: "React Utilities",
+    category: "React Library",
     items: [
       {
         name: "i18n",
-        fileName: "ReactUtilities/i18n",
+        fileName: "ReactLibrary/i18n",
         codeKeyTypes: [codeKeys.i18n, codeKeys.React],
         case_sensitive: false,
       },
       {
-        name: "dragAndDrops",
-        fileName: "ReactUtilities/DragAndDrops",
-        codeKeyTypes: [codeKeys.JS, codeKeys.React, codeKeys.DragAndDrops],
+        name: "reactDropzone",
+        fileName: "ReactLibrary/reactDropzone",
+        codeKeyTypes: [codeKeys.JS, codeKeys.React, codeKeys.ReactLibrary],
         case_sensitive: false,
       },
       {
-        name: "Misc",
-        fileName: "ReactUtilities/Misc",
-        codeKeyTypes: [codeKeys.ReactUtilitiesMisc, codeKeys.JS],
+        name: "Libraries",
+        fileName: "ReactLibrary/Libraries",
+        codeKeyTypes: [codeKeys.ReactLibrary],
         case_sensitive: false,
       },
     ],
@@ -494,7 +506,8 @@ export const menuItems: menuByCategories[] = [
       {
         name: "🔺Nodejs(Topics)",
         fileName: "Node/nodejs/NodeTopics",
-        codeKeyTypes: [],
+        codeKeyTypes: [codeKeys.Nodejs],
+        case_sensitive: false,
       },
       {
         name: "環境変数",

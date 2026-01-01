@@ -1,7 +1,7 @@
 import { KeyDef } from "../../../types/type"
 
 export const keysVite: KeyDef = {
-  IndianRed: [
+  Crimson: [
     "vite",
     "vitejs",
     "defineConfig",

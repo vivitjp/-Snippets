@@ -2,7 +2,7 @@ import { KeyDef } from "../../../types/type"
 
 export const keysAWSAurora: KeyDef = {
   // ■ Main(赤)
-  IndianRed: [
+  Crimson: [
     "aws",
     "rds",
     "sdk",
