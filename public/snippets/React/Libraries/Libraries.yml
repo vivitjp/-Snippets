@@ -155,7 +155,7 @@
   BODY: |
     ■ インストール
 
-      npm install linkify-react linkifyjs
+      npm install linkify-react linkifyjs @types/linkifyjs
 
     ■ 概要
 
@@ -505,7 +505,7 @@
   BODY: |
     ■ インストール
 
-      npm install react-viewer
+      npm install react-viewer @types/react-viewer
 
     ■ 概要
 

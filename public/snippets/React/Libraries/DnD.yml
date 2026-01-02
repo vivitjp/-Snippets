@@ -116,7 +116,7 @@
   BODY: |
     ■ インストール
 
-      npm install react-draggable
+      npm install react-draggable @types/react-draggable
 
     ■ 概要
 

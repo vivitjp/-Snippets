@@ -32,7 +32,7 @@
 
     ■ インストール
 
-      npm install xlsx
+      npm install xlsx @types/xlsx
 
 - ENTRY:
   EXPLAIN: 実装

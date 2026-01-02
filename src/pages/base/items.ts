@@ -527,29 +527,54 @@ export const menuItems: menuByCategories[] = [
     items: [
       {
         name: "Nodejs(Topics)",
-        fileName: "Node/nodejs/NodeTopics",
+        fileName: "Node/NodeTopics",
         codeKeyTypes: [codeKeys.Nodejs],
         case_sensitive: false,
       },
       {
         name: "環境変数",
-        fileName: "/Node/nodejs/env",
+        fileName: "/Node/env",
         codeKeyTypes: [codeKeys.Env],
       },
       {
         name: "Express",
-        fileName: "Node/nodejs/Express",
+        fileName: "Node/Express",
         codeKeyTypes: [codeKeys.Express],
       },
       {
         name: "Express API",
-        fileName: "Node/nodejs/ExpressAPI",
+        fileName: "Node/ExpressAPI",
         codeKeyTypes: [codeKeys.Express],
       },
       {
         name: "🔺Bun",
         fileName: "Node/bun",
         codeKeyTypes: [],
+      },
+    ],
+  },
+  {
+    category: "NPM",
+    items: [
+      {
+        name: "npm/yarn",
+        fileName: "Node/npm/npm_yarn",
+        codeKeyTypes: [codeKeys.NPM],
+      },
+      {
+        name: "npm",
+        fileName: "Node/npm/npm",
+        codeKeyTypes: [codeKeys.NPM],
+      },
+      {
+        name: "🔺pnpm",
+        fileName: "Node/npm/pnpm",
+        codeKeyTypes: [codeKeys.NPM],
+      },
+      {
+        name: "module管理史",
+        fileName: "Node/npm/npm _history",
+        codeKeyTypes: [codeKeys.NPM],
       },
     ],
   },
@@ -606,46 +631,6 @@ export const menuItems: menuByCategories[] = [
         fileName: "vue/Nuxt",
         codeKeyTypes: [codeKeys.HTML, codeKeys.Vue],
       },
-    ],
-  },
-  {
-    category: "パッケージ管理",
-    items: [
-      {
-        name: "npm/yarn",
-        fileName: "Node/nodejs/npm/npm_yarn",
-        codeKeyTypes: [codeKeys.NPM],
-      },
-      {
-        name: "npm",
-        fileName: "Node/nodejs/npm/npm",
-        codeKeyTypes: [codeKeys.NPM],
-      },
-      {
-        name: "🔺pnpm",
-        fileName: "Node/nodejs/npm/pnpm",
-        codeKeyTypes: [codeKeys.NPM],
-      },
-      {
-        name: "module管理史",
-        fileName: "Node/nodejs/npm/npm _history",
-        codeKeyTypes: [codeKeys.NPM],
-      },
-      // {
-      //   name: "Webpack",
-      //   fileName: "",
-      //   codeKeyTypes: [],
-      // },
-      // {
-      //   name: "Babel",
-      //   fileName: "",
-      //   codeKeyTypes: [],
-      // },
-      // {
-      //   name: "Turbopack",
-      //   fileName: "",
-      //   codeKeyTypes: [],
-      // },
     ],
   },
   {
