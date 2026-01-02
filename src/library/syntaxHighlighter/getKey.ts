@@ -35,7 +35,7 @@ import { keysPython } from "./keys/Python"
 import { keysReact } from "./keys/React"
 import { keysReactDom } from "./keys/ReactDom"
 import { keysReactRouter } from "./keys/ReactRouter"
-import { keysRedux } from "./keys/Redux"
+import { keysRedis } from "./keys/Redis"
 import { keysRegExp } from "./keys/RegExp"
 import { keysRTL } from "./keys/RTL"
 import { keysSVG } from "./keys/SVG"
@@ -55,6 +55,7 @@ import { keysJSUtilities } from "./keys/JSUtilities"
 import { keysReactLibrariesGraph } from "./keys/ReactLibrariesGraph"
 import { keysReactLibrariesDnD } from "./keys/ReactLibrariesDnD"
 import { keysVitest } from "./keys/Vitest"
+import { keysRedux } from "./keys/Redux"
 
 // 以下のオブジェクトをソートしてください
 export const codeKeys = {
@@ -95,6 +96,7 @@ export const codeKeys = {
   ReactDom: "ReactDom",
   ReactLibrary: "ReactLibrary",
   ReactRouter: "ReactRouter",
+  Redis: "Redis",
   ReactLibrariesDnD: "ReactLibrariesDnD",
   ReactLibrariesLang: "ReactLibrariesLang",
   ReactLibrariesExcel: "ReactLibrariesExcel",
@@ -160,6 +162,7 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   ReactDom: keysReactDom,
   ReactLibrary: keyReactLibrary,
   ReactRouter: keysReactRouter,
+  Redis: keysRedis,
   ReactLibrariesDnD: keysReactLibrariesDnD,
   ReactLibrariesLang: keysReactLibrariesLang,
   ReactLibrariesExcel: keysReactLibrariesExcel,

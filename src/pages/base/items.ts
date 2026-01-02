@@ -747,8 +747,8 @@ export const menuItems: menuByCategories[] = [
       },
       {
         name: "Redis",
-        fileName: "",
-        codeKeyTypes: [],
+        fileName: "database/Redis",
+        codeKeyTypes: [codeKeys.Redis],
       },
     ],
   },
