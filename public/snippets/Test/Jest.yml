@@ -2,416 +2,1162 @@
 #-------------------------------
 # Jest
 #-------------------------------
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ インストール
+
+      npm install jest @types/jest --save-dev
+
+    ■ 概要
+
+    ・JavaScript 用の人気のあるテスティングフレームワーク
+    ・シンプルで直感的な API を提供し、ユニットテスト、統合テスト、エンドツーエンドテストに対応
+    ・スナップショットテスト、モック機能、コードカバレッジ測定などの豊富な機能を備える
+    ・React や Node.js プロジェクトで広く使用されている
+
+    ■ 主な特徴
+
+    ・使いやすさ: シンプルな設定と直感的な API により、迅速にテストを開始可能
+    ・スナップショットテスト: UI コンポーネントのレンダリング結果を保存し、変更を検出
+    ・モック機能: 関数やモジュールのモックが容易に行える
+    ・コードカバレッジ: 組み込みのカバレッジ測定ツールで、テストの網羅性を確認可能
+
+    ■ 注意点
+
+    ・大規模プロジェクトでは設定が複雑になる場合があるため、ドキュメントを参照することが重要
+    ・一部の非同期コードのテストには注意が必要で、適切なハンドリングが求められる
+
+    ■ 比較ポイント
+
+    ・パフォーマンス: 大規模プロジェクトでのパフォーマンスに注意が必要
+    ・設定の柔軟性: 多様な設定オプションがあり、プロジェクトに合わせたカスタマイズが可能
+    ・エコシステムとの統合: React Testing Library など、多くのライブラリと連携可能
+    ・TypeScript サポート: 型定義が充実しており、型安全なテストが可能
+
+    ■ 選択基準
+
+    - 既存の Jest テストコードが多い場合や、Jest の特定機能が必要な場合は Jest を選択
+    - Vite ベースのプロジェクトで高速なテスト実行を求める
+
+- ENTRY:
+  EXPLAIN: 初期設定
+  BODY: |
+    ■ package.json
+
+      {
+        "scripts": {
+          "test": "jest"
+        },
+        "jest": {
+          "testEnvironment": "node",    // または "jsdom" (ブラウザ環境向け), "default" は "jsdom"
+          "transform": {
+            "^.+\\.tsx?$": "ts-jest"
+          },
+          "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"]
+        }
+      }
+
+      ※ "testEnvironment": "node", "jsdom"(default: ブラウザ環境向け), "happy-dom" など
+
+    ■ tsconfig.json (TypeScript 使用時)
+
+      {
+        "compilerOptions": {
+          "jsx": "react",
+          "module": "commonjs",
+          "target": "es6",
+          "esModuleInterop": true,
+          "skipLibCheck": true,
+          "forceConsistentCasingInFileNames": true    // 大文字と小文字の区別を強制
+        }
+      }
+
+- ENTRY:
+  EXPLAIN: サンプル
+  BODY: |
+    ■ サンプルコンポーネント (Button.tsx)
+
+      import React from 'react';
+
+      const Button = ({ onClick, label }) => {
+        return <button onClick={onClick}>{label}</button>;
+      };
+
+      export default Button;
+
+    ■ サンプルテスト (Button.test.tsx)
+
+      import { render, screen, fireEvent } from '@testing-library/react';
+      import '@testing-library/jest-dom';
+      import Button from './Button';
+
+      describe('Button component', () => {
+        it('renders with correct label', () => {
+          render(<Button onClick={() => {}} label="OK" />);
+          expect(screen.getByText('OK')).toBeInTheDocument();
+        });
+
+        it('calls onClick when clicked', () => {
+          const handleClick = jest.fn();
+          render(<Button onClick={handleClick} label="OK" />);
+          fireEvent.click(screen.getByText('OK'));
+          expect(handleClick).toHaveBeenCalledTimes(1);
+        });
+      });
 
 #-------------------------------
-# Setup & 破棄
+# 定義
+#-------------------------------
+- ENTRY:
+  CATEGORY: 定義
+
+- ENTRY:
+  EXPLAIN: jest コマンド
+  BODY: |
+    npx jest [options]
+
+    --watch:                          ファイル変更を監視し、変更時に自動でテストを再実行
+    --watchAll:                       すべてのファイルを監視し、変更時にテストを再実行
+    --bail:                           最初の失敗でテストを中止
+    --onlyChanged:                    変更されたファイルに関連するテストのみを実行（Git リポジトリ内で有効）
+    --maxWorkers <num>:               テストの並列実行に使用するワーカースレッドの数を指定
+    --runInBand:                      テストをシングルスレッドで実行（並列実行を無効化）
+    --showLeaks:                      メモリリークの可能性があるテストを検出して表示
+
+    --findRelatedTests <files>:       指定したファイルに関連するテストのみを実行
+    --testNamePattern <pattern>:      指定したパターンにマッチするテスト名のみを実行
+    --testPathPattern <pattern>:      指定したパターンにマッチするテストファイルのみを実行
+
+    --colors / --no-colors:           コンソール出力に色を付けるかどうかを指定
+    --silent:                         テスト実行中のコンソール出力を抑制
+    --verbose:                        各テストケースの詳細な実行結果を表示
+    --json:                           テスト結果を JSON 形式で出力
+    --outputFile <path>:              テスト結果を指定したファイルに出力
+    --testResultsProcessor <module>:  テスト結果を処理するカスタムモジュールを指定
+    --useStderr:                      テスト結果を標準エラー出力に出力
+    --listTests:                      実行されるテストファイルの一覧を表示
+
+    --coverage:                       コードカバレッジレポートを生成
+    --coverageDirectory <dir>:        コードカバレッジレポートの出力先ディレクトリを指定
+    --collectCoverageFrom <patterns>: コードカバレッジ収集対象のファイルパターンを指定
+
+    --config <path>:                  指定した設定ファイルを使用してテストを実行
+    --showConfig:                     現在の Jest 設定を表示
+    --env <environment>:              テスト環境を指定（node, jsdom）
+
+    --updateSnapshot:                 既存のスナップショットを更新
+    --detectOpenHandles:              テスト終了後に開いたままのハンドルを検出
+    --forceExit:                      テスト完了後にプロセスを強制終了
+    --no-cache:                       キャッシュを使用せずにテストを実行
+    --passWithNoTests:                テストが見つからなくても成功として扱う
+    --testTimeout <num>:              各テストケースのタイムアウト時間をミリ秒で指定
+
+#-------------------------------
+# テストスイート
+#-------------------------------
+- ENTRY:
+  CATEGORY: テストスイート
+
+- ENTRY:
+  EXPLAIN: describe()
+  BODY: |
+    ■ 定義
+
+    ・テストスイートを定義するための関数
+    ・関連するテストケースをグループ化し、可読性を向上させる
+
+      describe('テストスイートの説明', () => {
+        // テストケース
+      });
+
+      describe('Array operations', () => {
+        it('should add elements correctly', () => {
+          const arr = [];
+          arr.push(1);
+          expect(arr).toHaveLength(1);
+        });
+
+        it('should remove elements correctly', () => {
+          const arr = [1, 2, 3];
+          arr.pop();
+          expect(arr).toEqual([1, 2]);
+        });
+      });
+
+    ■ バリエーション
+
+      describe.only.('テストスイートの説明', ()=>{ })       // 実行指定
+
+      describe.skip.('テストスイートの説明', ()=>{ })       // 実行せず
+
+      describe.each([])('テストスイートの説明', ()=>{ })    // 配列
+      describe.each([[1, 2, 3], [4, 5, 9]])(
+        'sum(%i, %i)',
+        (a, b, expected) => {
+          it(`returns ${expected}`, () => {
+            expect(a + b).toBe(expected);
+          });
+        }
+      );
+
+    ■ ネスト
+
+    ・describe ブロックはネスト可能で、階層的にテストを構造化できる
+
+      describe('Outer suite', () => {
+        describe('Inner suite', () => {
+          it('should do something', () => {
+            // テストロジック
+          });
+        });
+      });
+
+- ENTRY:
+  EXPLAIN: it()
+  BODY: |
+    ■ 定義
+
+    ・個々のテストケースを定義するための関数
+    ・テストの期待される動作を説明する文字列と、実際のテストロジックを含む関数を受け取る
+
+      it('テストケースの説明', () => {
+        // テストロジック
+      });
+
+      it('adds two numbers correctly', () => {
+        const sum = (a, b) => a + b;
+        expect(sum(1, 2)).toBe(3);
+      });
+
+    ■ バリエーション
+
+      it('テストケースの説明', ()=>{ ... })         // 実行(同期)
+
+      it('テストケースの説明', async ()=>{ await }) // 実行(非同期)
+
+      it.only.('テストケースの説明', ()=>{ })       // 単独実行(複数可)
+
+      it.skip.('テストケースの説明', ()=>{ })       // 非実行
+
+      it.each([])('テストケースの説明', ()=>{ })    // 配列を引数に実行
+
+      it.todo('テストケースの説明', ()=>{ })        // 実行予定（未実装）
+
+      it.concurrent('テストケースの説明', ()=>{ })  // 非同期同時実行
+
+    ■ 配列
+
+      const cases = [
+        [1, 2, 3],
+        [4, 5, 9],
+        [3, 3, 6],
+      ];
+
+      it.each(cases)('sum(%i, %i) should return %i', (a, b, expected) => {
+        expect(a + b).toBe(expected);
+      });
+
+    ■ オブジェクト配列
+
+      const cases = [
+        { a: 1, b: 2, expected: 3 },
+        { a: 4, b: 5, expected: 9 },
+        { a: 3, b: 3, expected: 6 },
+      ];
+
+      it.each(cases)('sum($a, $b) should return $expected', ({ a, b, expected }) => {
+        expect(a + b).toBe(expected);
+      });
+
+    ■ リテラルオブジェクト配列
+
+      it.each`
+        a    | b    | expected
+        ${1} | ${2} | ${3}
+        ${4} | ${5} | ${9}
+        ${3} | ${3} | ${6}
+      `('sum($a, $b) should return $expected', ({ a, b, expected }) => {
+        expect(a + b).toBe(expected);
+      }); 
+
+    ■ 非同期
+
+      it('fetches data asynchronously', async () => {
+        const fetchData = () =>
+          new Promise((resolve) => {
+            setTimeout(() => resolve('data'), 100);
+          });
+
+        const data = await fetchData();
+        expect(data).toBe('data');
+      });
+
+    ■ 非同期の同時実行
+
+      it.concurrent('fetches multiple data concurrently', async () => {
+        const fetchData = (value) =>
+          new Promise((resolve) => {
+            setTimeout(() => resolve(value), 100);
+          });
+
+        const results = await Promise.all([
+          fetchData('data1'),
+          fetchData('data2'),
+          fetchData('data3'),
+        ]);
+
+        expect(results).toEqual(['data1', 'data2', 'data3']);
+      });
+
+- ENTRY:
+  EXPLAIN: before / after
+  BODY: |
+    ■ beforeEach() / afterEach()
+
+    ・各テストケースの前後に実行される関数を定義
+    ・テストのセットアップやクリーンアップに使用
+
+      beforeEach(() => {
+        // 各テスト前のセットアップ
+      });
+
+      afterEach(() => {
+        // 各テスト後のティアダウン
+      });
+
+    ■ beforeAll() / afterAll()
+
+    ・テストスイート全体の前後に一度だけ実行される関数を定義
+    ・リソースの初期化や解放に使用
+
+      beforeAll(() => {
+        // テストスイート全体のセットアップ
+      });
+
+      afterAll(() => {
+        // テストスイート全体のティアダウン
+      });
+
+    ■ 実行順
+
+    1. beforeAll
+    2. beforeEach(各テストケース)
+    3. it (各テストケース)
+    4. afterEach(各テストケース)
+    5. afterAll
+
+#-------------------------------
+# 逆引き
+#-------------------------------
+- ENTRY:
+  CATEGORY: 逆引き
+
+- ENTRY:
+  EXPLAIN: |
+    目的別アサーションメソッド早見表
+  BODY: |
+    ■ 数値の一致を検査したい
+
+      expect(5).toBe(5);
+      expect(5).not.toBe(3);
+
+    ■ 数値の比較をしたい
+
+      expect(5).toBeGreaterThan(3);
+      expect(3).toBeLessThan(5);
+      expect(5).toBeGreaterThanOrEqual(5);
+      expect(4).toBeLessThanOrEqual(5);
+
+    ■ 文字列の部分一致を検査したい
+
+      expect('Hello world').toContain('world');
+      expect('Hello world').not.toContain('WORLD');
+
+    ■ 文字列の部分一致を正規表現で検査したい
+
+      expect('Hello world').toMatch(/world/);
+      expect('Hello world').not.toMatch(/WORLD/); 
+
+    ■ 配列の部分一致を検査したい
+
+      expect([1, 2, 3]).toContain(2);
+      expect([1, 2, 3]).not.toContain(4);
+
+    ■ 配列の部分配列一致を検査したい
+
+      expect([1, 2, 3, 4]).toEqual(expect.arrayContaining([2, 3]));
+      expect([1, 2, 3, 4]).not.toEqual(expect.arrayContaining([5]));
+
+    ■ オブジェクトや配列の深い等価性を検査したい
+
+      expect({ a: 1, b: 2 }).toEqual({ a: 1, b: 2 });
+      expect([1, 2, 3]).toEqual([1, 2, 3]);
+
+    ■ オブジェクトの抱合性を検査したい
+
+      expect({ a: 1, b: 2, c: 3 }).toMatchObject({ a: 1, b: 2 });
+      expect({ a: 1, b: 2, c: 3 }).not.toMatchObject({ a: 2 });
+
+    ■ 小数の近似一致を検査したい
+
+      expect(0.1 + 0.2).toBeCloseTo(0.3, 5);
+      expect(0.1 + 0.2).not.toBeCloseTo(0.4);
+
+    ■ オブジェクトのプロパティ存在を検査したい
+
+      const obj = { a: { b: 1 }, c: 2 };
+      expect(obj).toHaveProperty('a');
+      expect(obj).toHaveProperty('a.b', 1);
+
+    ■ インスタンスかどうかを検査したい
+
+      expect(new Date()).toBeInstanceOf(Date);
+      expect({}).not.toBeInstanceOf(Date);
+
+    ■ モック関数の呼び出しを検査したい
+
+      const mock = jest.fn();
+      mock('arg');
+      expect(mock).toHaveBeenCalled();
+      expect(mock).toHaveBeenCalledTimes(1);
+      expect(mock).toHaveBeenCalledWith('arg');
+
+    ■ 例外の投げを検査したい
+
+      expect(() => { throw new Error('err'); }).toThrow();
+      expect(() => {}).not.toThrow();
+
+    ■ Promise の成功 / 失敗を検査したい (非同期)
+
+      await expect(Promise.resolve(1)).resolves.toBe(1);
+      await expect(Promise.reject(new Error('err'))).rejects.toThrow('err');
+
+#-------------------------------
+# アサーションメソッド
+#-------------------------------
+- ENTRY:
+  CATEGORY: expect()
+
+- ENTRY:
+  EXPLAIN: |
+    expect(): アサーション実行関数
+  BODY: |
+    ■ アサーションを行うための関数
+
+      expect(value).toBe(expectedValue);
+      expect(2 + 2).toBe(4);
+      expect(array).toHaveLength(3);
+      expect(object).toEqual({ a: 1, b: 2 });
+
+- ENTRY:
+  EXPLAIN: |
+    expect.extend(): カスタムマッチャー追加
+  BODY: |
+    ■ 定義
+
+      expect.extend(customMatchers)
+
+    ■ 実装例
+
+      const customMatchers = {
+        toBeWithinRange(received, floor, ceiling) {
+          const pass = received >= floor && received <= ceiling;
+          if (pass) {
+            return {
+              message: () =>
+                `expected ${received} not to be within range ${floor} - ${ceiling}`,
+              pass: true,
+            };
+          } else {
+            return {
+              message: () =>
+                `expected ${received} to be within range ${floor} - ${ceiling}`,
+              pass: false,
+            };
+          }
+        },
+      };
+
+- ENTRY:
+  EXPLAIN: |
+    expect.setState()/getState(): カスタムステート
+  BODY: |
+    ■ setState 定義
+
+      expect.setState(stateObject);     // カスタム状態の設定
+
+    ■ 実装例
+
+      expect.setState({ customData: 123 });
+
+    ■ getState 定義
+
+      expect.getState();                // カスタム状態の取得
+
+    ■ 実装例
+
+      const state = expect.getState();
+      console.log(state.customData);    // 123
+
+- ENTRY:
+  EXPLAIN: |
+    expect.hasAssertions()/assertions(): アサーション存在
+  BODY: |
+    ■ hasAssertions 定義
+
+      expect.hasAssertions()            // アサーション存在
+
+    ■ 実装例
+
+      it('should have at least one assertion', () => {
+        expect.hasAssertions();         // アサーションが少なくとも1つ存在することを検証
+        expect(1 + 1).toBe(2);          // アサーション
+      }); 
+
+    ■ assertions 定義
+
+      expect.assertions(num);          // 指定した数のアサーションが実行されることを検証
+
+    ■ 実装例
+
+      it('should execute exactly 2 assertions', () => {
+        expect.assertions(2);
+        expect(1 + 1).toBe(2);
+        expect(2 + 2).toBe(4);  
+      });
+
+- ENTRY:
+  EXPLAIN: |
+    expect.any(): 任意の値
+  BODY: |
+    ■ 定義
+
+      expect.any(constructor);          // 指定した型の任意の値と一致
+
+    ■ 実装例
+
+      expect('hello').toEqual(expect.any(String));
+      expect(123).toEqual(expect.any(Number));
+
+      const data = {
+        id: 1,
+        name: 'Alice',
+        createdAt: new Date(),
+      };
+
+      expect(data).toEqual({
+        id: expect.any(Number),
+        name: expect.any(String),
+        createdAt: expect.any(Date),
+      });
+
+- ENTRY:
+  EXPLAIN: |
+    expect.anything(): null/undefined以外
+  BODY: |
+    ■ 定義
+
+      expect.anything();                // null または undefined 以外の任意の値と一致
+
+    ■ 実装例
+
+      expect('some value').toEqual(expect.anything());
+      expect(0).toEqual(expect.anything());
+      expect(false).toEqual(expect.anything());
+
+      const data = {
+        id: 1,
+        name: 'Bob',
+        email: null,
+      };
+
+      expect(data).toEqual({
+        id: expect.anything(),
+        name: expect.anything(),
+        email: null,    // email は null として明示的にチェック
+      });
+
+- ENTRY:
+  EXPLAIN: |
+    expect.objectContaining(): 部分オブジェクト一致
+  BODY: |
+    ■ 定義
+
+      expect.objectContaining(partialObject);  // 部分オブジェクトと一致
+
+    ■ 実装例
+
+      const received = {
+        id: 1,
+        name: 'Charlie',
+        age: 30,
+        email: 'charlie@example.com',
+      };
+
+      expect(received).toEqual(expect.objectContaining({
+        id: expect.any(Number),
+        name: expect.any(String),
+      }));
+
+- ENTRY:
+  EXPLAIN: |
+    expect.arrayContaining(): 部分配列一致
+  BODY: |
+    ■ 定義
+
+      expect.arrayContaining(partialArray);    // 部分配列と一致
+
+    ■ 実装例
+
+      const received = [1, 2, 3, 4, 5];
+
+      expect(received).toEqual(expect.arrayContaining([2, 3]));
+
+      const stringArray = ['apple', 'banana', 'cherry'];
+
+      expect(stringArray).toEqual(expect.arrayContaining(['banana']));
+
+- ENTRY:
+  EXPLAIN: |
+    expect.stringContaining(): 部分文字列一致
+  BODY: |
+    ■ 定義
+
+      expect.stringContaining(substring);      // 部分文字列と一致
+
+    ■ 実装例
+
+      const received = 'The quick brown fox jumps over the lazy dog';
+
+      expect(received).toEqual(expect.stringContaining('brown fox'));
+      expect(received).not.toEqual(expect.stringContaining('purple cat'));
+
+- ENTRY:
+  EXPLAIN: |
+    expect.stringMatching(): 正規表現一致
+  BODY: |
+    ■ 定義
+
+      expect.stringMatching(regex);            // 正規表現と一致
+
+    ■ 実装例
+
+      const received = 'The quick brown fox jumps over the lazy dog';
+
+      expect(received).toEqual(expect.stringMatching(/quick.*fox/));
+      expect(received).not.toEqual(expect.stringMatching(/purple.*cat/));
+
+#-------------------------------
+# マッチャー
 #-------------------------------
 
 - ENTRY:
-  EXPLAIN: before/afterEach
-  BODY: |
-    beforeEach(() => {
-      initializeDatabase();
-    });
-    afterEach(() => {
-      clearDatabase();
-    });
-    test('TITLE', () => {
-      expect(isSelected(VALUE)).toBeTruthy();
-    });
+  CATEGORY: マッチャー
 
 - ENTRY:
-  EXPLAIN: before/afterAll
+  EXPLAIN: |
+    toBe(): プリミティブな値の厳密な等価性
   BODY: |
-    beforeAll(() => {
-      return initializeDatabase();
-    });
-    afterAll(() => {
-      return clearDatabase();
-    });
-    test('TITLE', () => {
-      expect(isSelected(VALUE)).toBeTruthy();
-    });
+    ■ プリミティブな値の厳密な等価性
+
+      expect(2 + 2).toBe(4);                    # => ⭕ (4)
+      expect(2 + 2).toBe(5);                    # => ❌ (expected 5, received 4)
+      expect(2 + 2).not.toBe(5);                # => ⭕ (4 is not 5)
+
+    ■ 文字列
+
+      expect('hello').toBe('hello');            # => ⭕ (同じ文字列)
+      expect('hello').toBe('world');            # => ❌ (異なる文字列)
+      expect('hello').not.toBe('world');        # => ⭕ (異なる文字列)
+
+    ■ オブジェクトでは参照の等価性をチェック
+
+      const objA = { x: 1 };
+      const objB = { x: 1 };
+      expect(objA).toBe(objA);                  # => ⭕ (同じ参照)
+      expect(objA).toBe(objB);                  # => ❌ (異なる参照)
+      expect(objA).not.toBe(objB);              # => ⭕ (異なる参照)
+
+- ENTRY:
+  EXPLAIN: |
+    toContain() / toContainEqual(): 配列や文字列の部分一致
+  BODY: |
+    ■ 配列や文字列が特定の要素を含んでいるか
+
+      expect([1, 2, 3]).toContain(2);                     # => ⭕ (2 を含む)
+      expect([1, 2, 3]).toContain(4);                     # => ❌ (4 を含まない)
+      expect('hello world').toContain('world');           # => ⭕ (部分文字列)
+      expect('hello').toContain('WORLD');                 # => ❌ (大文字小文字を区別)
+
+      const list = [{ id: 1 }, { id: 2 }];
+      expect(list).toContain({ id: 2 });                  # => ❌ (異なる参照)
+      expect(list).toContain({ id: 3 });                  # => ❌ (存在しない)
+      expect(list).toContain([{ id: 1 }, { id: 2 }]);     # => ❌ (異なる参照)
+
+    ■ toContainEqual(): 深い等価性でチェック
+
+      const list = [{ id: 1 }, { id: 2 }];
+      expect(list).toContainEqual({ id: 1 });              # => ⭕ (深い一致)
+      expect(list).toContainEqual({ id: 2 });              # => ⭕ (深い一致)
+      expect(list).toContainEqual({ id: 3 });              # => ❌ (存在しない)
+      expect(list).toContainEqual([{ id: 1 }, { id: 2 }]); # => ❌ (異なる参照)
+
+- ENTRY:
+  EXPLAIN: |
+    toMatch() / toMatchObject(): 文字列,正規表現,オブジェクトの部分一致
+  BODY: |
+    ■ 文字列や正規表現の部分一致
+
+      expect('hello world').toMatch('world');    # => ⭕ (部分文字列)
+      expect('hello world').toMatch(/world/);    # => ⭕ (正規表現)
+      expect('hello world').toMatch(/WORLD/i);   # => ⭕ (大文字小文字無視)
+
+    ■ 失敗例
+
+      expect('hello world').toMatch('WORLD');    # => ❌ (大文字小文字区別)
+      expect('hello world').not.toMatch('world');# => ❌ (部分文字列が存在)
+      expect('hello world').not.toMatch(/world/);# => ❌ (正規表現がマッチ)
+
+    ■ 正規表現オブジェクト作成
+
+      expect('hello world').toMatch(new RegExp('world', 'i')); # => ⭕ (大文字小文字無視)
+      expect('hello world').toMatch(new RegExp('WORLD'));      # => ❌ (大文字小文字区別)
+
+    ■ toMatchObject(): オブジェクトの部分一致
+
+      const received = { a: 1, b: 2, c: 3 };
+      expect(received).toMatchObject({ a: 1, b: 2 });  # => ⭕ (部分一致)
+      expect(received).toMatchObject({ a: 2 });        # => ❌ (異なる値)
+
+- ENTRY:
+  EXPLAIN: |
+    toEqual(): オブジェクトや配列の深い等価性
+  BODY: |
+    ■ オブジェクトや配列の内容が等しいか
+
+      expect({ a: 1, b: 2 }).toEqual({ a: 1, b: 2 });  # => ⭕ (深い一致)
+      expect({ a: 1, b: 2 }).toEqual({ b: 2, a: 1 });  # => ⭕ (順序無視)
+
+      const objA = { x: 1 };
+      const objB = { x: 2 };
+      expect(objA).toEqual(objB);               # => ❌ (異なる値)
+
+    ■ 深い比較を行い、ネストされたプロパティもチェック可能
+      
+      const nestedA = { a: { b: 1 } };
+      const nestedB = { a: { b: 1 } };
+      expect(nestedA).toEqual(nestedB);         # => ⭕ (深い一致)
+
+      const nestedA = { a: { b: 1 } };
+      const nestedB = { a: { b: 2 } };
+      expect(nestedA).toEqual(nestedB);         # => ❌ (異なるNested値)
+
+    ■ 配列でフォールバック複数キーも可能
+
+      expect([1, 2, 3]).toEqual([1, 2, 3]);     # => ⭕ (同じ要素)
+      expect([1, 2, 3]).toEqual([1, 2, 4]);     # => ❌ (異なる要素)
+
+    ■ 注意点
+
+    ・toEqual はオブジェクトのプロトタイプチェーンを考慮しない
+    ・関数や特殊なオブジェクト（Date、Map、Set など）は正しく比較されない場合がある
+
+- ENTRY:
+  EXPLAIN: |
+    toEqual() vs toStrictEqual(): 深い等価性の違い
+  BODY: |
+    ■ オブジェクト
+
+      expect({ a: 1, b: undefined }).toEqual({ a: 1 });      # => ⭕ (undefined 無視)
+      expect({ a: 1, b: undefined }).toStrictEqual({ a: 1 }); # => ❌ (undefined 考慮)
+
+    ■ 配列
+
+      const arrA = [1, 2, , 4];
+      const arrB = [1, 2, undefined, 4];
+      expect(arrA).toEqual(arrB);               # => ⭕ (スパース配列は undefined として扱われる)
+      expect(arrA).toStrictEqual(arrB);         # => ❌ (スパース配列は異なる扱い)
+
+    ■ クラスインスタンス
+
+      class A { x = 1 }
+      expect(new A()).toEqual({ x: 1 });        # => ⭕ (プロパティのみ比較)
+      expect(new A()).toStrictEqual({ x: 1 });  # => ❌ (インスタンスの型も比較)
+
+- ENTRY:
+  EXPLAIN: |
+    toHaveLength(): 配列や文字列の長さ
+  BODY: |
+    ■ 配列や文字列の長さ
+
+      expect([1, 2, 3]).toHaveLength(3);        # => ⭕ (長さ 3)
+      expect([1, 2]).toHaveLength(3);           # => ❌ (expected 3, received 2)
+      expect('abc').toHaveLength(3);            # => ⭕ (文字列長)
+
+      expect('abcd').toHaveLength(3);           # => ❌ (expected 3, received 4)
+
+- ENTRY:
+  EXPLAIN: |
+    toHaveProperty(): オブジェクト属性
+  BODY: |
+    ■ toHaveProperty(): オブジェクトのプロパティ存在
+
+      const obj = { a: { b: 1 }, c: 2 };
+      expect(obj).toHaveProperty('a');         # => ⭕ (プロパティ 'a' が存在)
+      expect(obj).toHaveProperty('a.b', 1);    # => ⭕ (ネストされたプロパティ 'a.b' が存在し、値が 1)
+
+      expect(obj).toHaveProperty('d');         # => ❌ (プロパティ 'd' は存在しない)
+      expect(obj).toHaveProperty('a.b', 2);    # => ❌ (値が異なる)
+
+- ENTRY:
+  EXPLAIN: |
+    toBeInstanceOf(): インスタンス判定
+  BODY: |
+    ■ toBeInstanceOf(): オブジェクトが特定のクラスのインスタンスか
+
+      class MyClass {}
+      const instance = new MyClass();
+
+      expect(instance).toBeInstanceOf(MyClass); # => ⭕ (MyClass のインスタンス)
+      expect({}).toBeInstanceOf(MyClass);       # => ❌ (異なる型)
+
+    ■ 失敗例
+
+      expect(instance).toBeInstanceOf(Object);  # => ⭕ (すべてのオブジェクトは Object のインスタンス)
+      expect(instance).toBeInstanceOf(Array);   # => ❌ (異なる型)
+
+- ENTRY:
+  EXPLAIN: |
+    非同期チェーン
+  BODY: |
+    ■ Promise の成功
+
+      await expect(Promise.resolve(1)).resolves.toBe(1);          # => ⭕ (成功時の値)
+
+      test('TITLE', async () => {
+        const fetchData = () =>
+          new Promise((resolve) => {
+            setTimeout(() => resolves(1), 100);
+          }); 
+
+        await expect(fetchData()).resolves.toBe(1);               # => ⭕ (成功時の値)  
+      });
+
+    ■ Promise の失敗
+
+      await expect(Promise.reject(new Error('err'))).rejects.toThrow('err'); # => ⭕ (失敗時の例外)
+
+      test('TITLE', async () => {
+        const fetchData = () =>
+          new Promise((_, reject) => {
+            setTimeout(() => reject(new Error('err')), 100);
+          }); 
+
+        await expect(fetchData()).rejects.toThrow('err');          # => ⭕ (失敗時の例外)  
+      });
+
+- ENTRY:
+  EXPLAIN: 数値系
+  BODY: |
+    ■ 数値の比較
+
+      expect(5).toBeGreaterThan(3);            # => ⭕ (5 > 3)
+      expect(3).toBeLessThan(5);               # => ⭕ (3 < 5)
+      expect(5).toBeGreaterThanOrEqual(5);     # => ⭕ (5 >= 5)
+      expect(4).toBeLessThanOrEqual(5);        # => ⭕ (4 <= 5)
+
+    ■ NaN チェック
+
+      expect(NaN).toBeNaN();                   # => ⭕ (NaN)
+      expect(5).not.toBeNaN();                 # => ⭕ (5 is not NaN)
+
+    ■ toBeCloseTo(expected, precision?): 小数の近似一致
+
+      expect(0.1 + 0.2).toBeCloseTo(0.3, 5);   # => ⭕ (小数点以下5桁まで一致)
+      expect(0.1 + 0.2).not.toBeCloseTo(0.4);  # => ⭕ (0.4とは近似一致しない)
+
+    ■ Big.js 使用例
+
+      const Big = require('big.js');
+
+      expect(new Big(0.1).plus(new Big(0.2)).toNumber()).toBeCloseTo(0.3);
+      expect(new Big(0.1).plus(new Big(0.2)).toNumber()).toBeCloseTo(0.3, 10); # => ⭕ (高精度計算)
+
+- ENTRY:
+  EXPLAIN: 定義・NULL・真偽
+  BODY: |
+    ■ 真偽値の検証
+
+      expect(true).toBe(true);                 # => ⭕ (true)
+      expect(false).toBe(false);               # => ⭕ (false)
+      expect(true).not.toBe(false);            # => ⭕ (true is not false)
+      expect(false).not.toBe(true);            # => ⭕ (false is not true)
+
+    ■ null
+
+      expect(null).toBeNull();                 # => ⭕ (null)
+      expect(undefined).not.toBeNull();        # => ⭕ (undefined is not null)
+      expect(0).toBeNull();                    # => ❌ (0 は null ではない)
+
+    ■ undefined
+
+      expect(undefined).toBeUndefined();       # => ⭕ (undefined)
+      expect(null).not.toBeUndefined();        # => ⭕ (null is not undefined)
+
+    ■ defined
+
+      expect(5).toBeDefined();                 # => ⭕ (定義済)
+      expect(undefined).not.toBeDefined();     # => ⭕ (undefined is not defined)
+      expect(a).toBeDefined();                 # => ❌ (a は undefined)
+
+    ■ toBeTruthy: 真値
+
+      expect(1).toBeTruthy();                  # => ⭕ (1 は真値)
+      expect('non-empty').toBeTruthy();        # => ⭕ (非空文字列は真値)
+      expect(0).not.toBeTruthy();              # => ⭕ (0 は偽値)
+      expect('').not.toBeTruthy();             # => ⭕ (空文字列は偽値)
+
+    ■ toBeFalsy: 偽値
+
+      expect(0).toBeFalsy();                   # => ⭕ (0 は偽値)
+      expect('').toBeFalsy();                  # => ⭕ (空文字列は偽値)
+      expect(1).not.toBeFalsy();               # => ⭕ (1 は真値)
+      expect('non-empty').not.toBeFalsy();     # => ⭕ (非空文字列は真値)
 
 #-------------------------------
-# Describe & test(it)
-#-------------------------------
-- ENTRY:
-  EXPLAIN: describe種類
-  BODY: |
-    describe('Group Title', ()=>{ })
-    describe.only.('Group Title', ()=>{ })  # 実行指定
-    describe.skip.('Group Title', ()=>{ })  # 実行せず
-    describe.each([])('Group Title', ()=>{ }) # 配列
-
-- ENTRY:
-  EXPLAIN: it種類
-  BODY: |
-    it('Title', ()=>{ ... })         # 実行(同期)
-    it('Title', async ()=>{ await }) # 実行(非同期)
-    it.only.('Title', ()=>{ })       # 単独実行(複数可)
-    it.skip.('Title', ()=>{ })       # 非実行
-    it.each([])('Title', ()=>{ })    # 配列を引数に実行
-    it.todo('Title', ()=>{ })        # 実行予定
-    it.concurrent('Title', ()=>{ })  # 非同期同時実行
-
-- ENTRY:
-  EXPLAIN: it(同期・非同期)
-  BODY: |
-    it('Title', ()=>{ ... })   # 実行(同期)
-    it('Title', async ()=>{    # 実行(非同期)
-      await query()
-      expect(A).toBe(B)
-    })
-    it('Title', ()=>{          # 実行(非同期)
-      query().then(()=>{ expect(A).toBe(B) })
-    })
-
-#-------------------------------
-# 配列パラメタ
-#-------------------------------
-- ENTRY:
-  EXPLAIN: パラメタ(配列)
-  BODY: |
-    test.each([
-      [1, 2, 3],
-      [2, 3, 5],
-    ])("adds %i + %i to equal %i", (a, b, total) => {
-      expect(sum(a, b)).toBe(total)
-    })
-
-- ENTRY:
-  EXPLAIN: パラメタ(オブジェクト配列)
-  BODY: |
-    test.each([
-      { a: 1, b: 2, total: 3 },
-      { a: 2, b: 3, total: 5 },
-    ])("adds $a + $b to equal $total", ({ a, b, total }) => {
-      expect(sum(a, b)).toBe(total)
-    })
-
-- ENTRY:
-  EXPLAIN: パラメタ(リテラルオブジェクト配列)
-  BODY: |
-    test.each`
-      a    | b    | total
-      ${1} | ${2} | ${3}
-      ${2} | ${3} | ${5}
-    `("adds $a + $b to equal $total", ({ a, b, total }) => {
-      expect(sum(a, b)).toBe(total)
-    })
-
-#-------------------------------
-# Mock関数
+# モック関数
 #-------------------------------
 
 - ENTRY:
-  EXPLAIN: Mock関数(コールバック)
-  BODY: |
-    const mockFn = jest.fn(x => x ** 2);
-    const result = getArr([1,2,3], mockFn);
-    expect(mockFn.mock.calls.length).toBe(3);     //呼び出し回数
-    expect(mockFn.mock.calls[0][0]).toBe(1);      //パラメタ1
-    expect(mockFn.mock.calls[1][0]).toBe(2);      //パラメタ2
-    expect(mockFn.mock.results[0].value).toBe(1); //結果
-    expect(mockFn.mock.results[1].value).toBe(4); //結果
+  CATEGORY: モック関数
 
 - ENTRY:
-  EXPLAIN: Mock関数(戻り値)
+  EXPLAIN: jest.fn()
   BODY: |
-    const mockFn = jest.fn();
-    mockFn.mockReturnValueOnce(4)  //戻り値1指定
-          .mockReturnValueOnce(9); //戻り値2指定
-    expect(mockFn()).toBe(4);
-    expect(mockFn()).toBe(9);
+    ■ 定義
 
-#-------------------------------
-# SpyOn
-#-------------------------------
+      const mockFunction = jest.fn(callback関数?); // モック関数の作成
+      mockFunction(args...);                      // モック関数の呼び出し
+
+    ■ 実装
+
+      const mock = jest.fn();
+      mock('arg1', 'arg2');
+
+      expect(mock).toHaveBeenCalled();                       # => ⭕ (少なくとも1回呼び出し)
+      expect(mock).toHaveBeenCalledTimes(1);                 # => ⭕ (1回呼び出し)
+      expect(mock).toHaveBeenCalledWith('arg1', 'arg2');     # => ⭕ (指定引数で呼び出し)
+      expect(mock).toHaveBeenLastCalledWith('arg1', 'arg2'); # => ⭕ (最後の呼び出し)
+
+      mock('arg3');
+      expect(mock).toHaveBeenCalledTimes(2);                 # => ⭕ (2回呼び出し)
+      expect(mock).toHaveBeenCalledWith('arg3');             # => ⭕ (指定引数で呼び出し)
+      expect(mock).toHaveBeenLastCalledWith('arg3');         # => ⭕ (最後の呼び出し)
+
+
+    ■ 呼び出し履歴の取得
+
+      const mock = jest.fn();
+      mock('first');
+      mock('second');
+
+      const calls = mock.mock.calls;                        // 呼び出し履歴の配列
+      console.log(calls);                                   // [ ['first'], ['second'] ]
+
+      const lastCallArgs = mock.mock.lastCall;              // 最後の呼び出しの引数
+      console.log(lastCallArgs);                            // ['second']
+
+    ■ 詳細検証
+
+      const getArr = (arr, fn) => arr.map(fn);
+      const mockCB = jest.fn(x => x ** 2);
+      const result = getArr([1,2,3], mockCB);               // [1, 4, 9]
+
+      expect(mockCB.mock.calls.length).toBe(3);             # => ⭕ (3回呼び出し)
+      expect(mockCB.mock.calls[0][0]).toBe(1);              # => ⭕ (最初の呼び出し引数)
+      expect(mockCB.mock.calls[1][0]).toBe(2);              # => ⭕ (2回目の呼び出し引数)
+      expect(mockCB.mock.results[0].value).toBe(1);         # => ⭕ (最初の戻り値)
+      expect(mockCB.mock.results[1].value).toBe(4);         # => ⭕ (2回目の戻り値)
+
+    ■ 戻り値
+
+      const mock = jest.fn()
+        .mockReturnValueOnce(10)        // 1回目の呼び出しで 10 を返す
+        .mockReturnValueOnce(20)        // 2回目の呼び出しで 20 を返す
+        .mockReturnValue(30);           // それ以降は 30 を返す
+
+      console.log(mock());              // 10
+      console.log(mock());              // 20
+      console.log(mock());              // 30
+      console.log(mock());              // 30
+
+    ■ 戻り値検証
+
+      const mock = jest.fn().mockReturnValue(3);
+      mock();
+      expect(mock).toHaveReturned();                        # => ⭕ (少なくとも1回戻り値あり)
+      expect(mock).toHaveReturnedWith(3);                   # => ⭕ (指定した戻り値)
+      expect(mock).toHaveLastReturnedWith(3);               # => ⭕ (最後の戻り値)
+
 - ENTRY:
   EXPLAIN: spyOn
   BODY: |
-    const spy = jest.spyOn(axios, 'get');  //Axios:GET 上書き
-    spy.mockResolvedValue({                //戻り値
-      data:{id:1, title:'Hello'}
-    });
-    const res = await getJsonAxios(1);     //コール
-    expect(res.title).toBe("Hello");
-    spy.mockRestore();                     //リセット
+    ■ 定義
 
-#-------------------------------
-# Matcher: Expect
-#-------------------------------
+      jest.spyOn(object, 'methodName');        // オブジェクトのメソッドをスパイ
 
-- ENTRY:
-  EXPLAIN: null,undefined以外
-  BODY: |
-    const mockFn = jest.fn();
-    [1].map(x => mockFn(x));
-    expect(mockFn).toBeCalledWith(expect.anything());
-    //null,undefined 以外、すべてに一致
+    ■ 目的
 
-- ENTRY:
-  EXPLAIN: any(型)に一致
-  BODY: |
-    function randomCall(fn: (arg: number) => void) {
-      return fn(Math.floor(Math.random() * 6 + 1))
-    }
-    const mockFn = jest.fn()
-    randomCall(mockFn)
-    expect(mockFn).toBeCalledWith(expect.any(Number))
+    ・既存のオブジェクトメソッドの呼び出しを監視・モック化
+    ・元の実装を保持しつつ、呼び出し回数や引数、戻り値を検証可能
 
-- ENTRY:
-  EXPLAIN: 配列要素包含
-  BODY: |
-    const expected = ["A", "B"]
-    expect(["A", "B", "C"]).toEqual(expect.arrayContaining(expected))
-    expect(["B", "C"]).not.toEqual(expect.arrayContaining(expected))
+    ■ メソッド
 
-- ENTRY:
-  EXPLAIN: 配列正規表現複数包含
-  BODY: |
-    const expected = [
-      expect.stringMatching(/^A/),
-      expect.stringMatching(/^[BR]o/)
-    ]
-    expect(["Ali", "Rob", "Eve"]).toEqual(expect.arrayContaining(expected))
-    expect(["Rob", "Eve"]).not.toEqual(expect.arrayContaining(expected))
+      const spy = jest.spyOn(object, 'methodName')
+        .mockReturnValue(mockedValue);          // メソッドの戻り値をモック化
 
-- ENTRY:
-  EXPLAIN: オブジェクト属性包含
-  BODY: |
-    const expected = { a: "a" }
-    expect({ a: "a" }).toEqual(expect.objectContaining(expected))
-    expect({ a: "a", b: "b" }).toEqual(expect.objectContaining(expected))
-    expect({ b: "b" }).toEqual(expect.not.objectContaining(expected))
+      spy.mock.calls;                           // 呼び出し履歴の配列
+      spy.mock.results;                         // 戻り値履歴の配列
+      spy.mockRestore();                        // 元の実装に戻す
 
-- ENTRY:
-  EXPLAIN: 文字列部分一致
-  BODY: |
-    const expected = "Hello"
-    expect("Hello world!").toEqual(expect.stringContaining(expected))
-    expect("Hi world!").toEqual(expect.not.stringContaining(expected))
+    ■ 実装例(object)
 
-- ENTRY:
-  EXPLAIN: 正規表現部分一致
-  BODY: |
-    const expected = /Hello/
-    expect("Hello world!").toEqual(expect.stringMatching(expected))
-    expect("Hi world!").toEqual(expect.not.stringMatching(expected))
+      const myModule = {
+        fetchData: () => 'real data',
+      };
 
-#-------------------------------
-# Matcher
-#-------------------------------
+      test('spyOn example', () => {
+        const spy = jest.spyOn(myModule, 'fetchData')
+          .mockReturnValue('mocked data');       // 戻り値をモック(上書き)
 
-- ENTRY:
-  EXPLAIN: プリミティブ(参照一致)
-  BODY: |
-    expect(7).toBe(7);               //プリミティブ一致
-    const obj = { A: "a" }
-    expect(obj).not.toBe({ A: "a" }) //不一致
+        const result = myModule.fetchData();
 
-- ENTRY:
-  EXPLAIN: オブジェクト型と値(再帰的)
-  BODY: |
-    const object = { id: "A", name: { first: "B" } }
-    expect(object).toEqual({ id: "A", name: { first: "B" } })
-    expect(object).not.toEqual({ id: "A", name: { first: "C" } })
+        expect(spy).toHaveBeenCalled();         # => ⭕ (メソッドが呼び出された)
+        expect(result).toBe('mocked data');     # => ⭕ (モックされた戻り値)
 
-- ENTRY:
-  EXPLAIN: toEqualとの違い
-  BODY: |
-    //■ 違い1: undefined
-    const object = { id: "A", name: undefined }
-    expect(object).toEqual({ id: "A" })
-    expect(object).not.toStrictEqual({ id: "A" })
-     
-    //■ 違い2: arrayの空要素
-    const arr = [, 2, 3]
-    expect(arr).toEqual([undefined, 2, 3])
-    expect(arr).not.toStrictEqual([undefined, 2, 3])
-    expect(arr).toStrictEqual([, 2, 3])
-     
-    //■ 違い3: インスタンス
-    class A { x = 1 }
-    expect(new A()).toEqual({ x: 1 })
-    expect(new A()).not.toStrictEqual({ x: 1 })
+        spy.mockRestore();                       // 元の実装に戻す
+      });
 
-- ENTRY:
-  EXPLAIN: 反転
-  BODY: |
-    expect(7).not.toBe(8);
+    ■ 実装例(クラス)
 
-- ENTRY:
-  EXPLAIN: 部分一致(配列/文字列)
-  BODY: |
-    expect(["A","B","C"]).toContain('A');
-    expect("ABCDEFG").toContain('CD');
-
-- ENTRY:
-  EXPLAIN: 配列要素の型と値
-  BODY: |
-    expect([{A: "a"},{B: "b"}]).toContainEqual({A: "a"});
-    expect([1,2,3]).toContainEqual(1)
-
-- ENTRY:
-  EXPLAIN: 文字列/正規表現
-  BODY: |
-    expect("ABCDEFG").toMatch("CD")
-    expect("ABCDEFG").toMatch(/CD/)
-    expect("ABCDEFG").toMatch(/cd/i)
-    expect("ABCDEFG").toMatch(new RegExp("CD"))
-    expect("ABCDEFG").toMatch(new RegExp("cd", "i"))
-
-- ENTRY:
-  EXPLAIN: Object属性セット判定
-  BODY: |
-    const object = { a: "a", b: "b" }
-    expect(object).toMatchObject({ a: "a", b: "b" })
-    expect(object).toMatchObject({ a: "a" })
-    expect(object).not.toMatchObject({ a: "x" })
-
-- ENTRY:
-  EXPLAIN: lengthの一致
-  BODY: |
-    expect([1, 2, 3]).toHaveLength(3);
-    expect('abc').toHaveLength(3);
-    expect('').not.toHaveLength(5);
-
-- ENTRY:
-  EXPLAIN: オブジェクト属性
-  BODY: |
-    const object = {
-      flag: true,
-      age: 4,
-      sub: { type: ["a", "b"], area: 20, color: "white" },
-    }
-    expect(object).toHaveProperty("flag")
-    expect(object).toHaveProperty("age", 4)
-    expect(object).toHaveProperty("sub.area", 20)
-    expect(object).not.toHaveProperty("sub.open")
-    expect(object).toHaveProperty(["sub", "area"], 20)
-    expect(object).toHaveProperty("sub.type", ["a", "b"])
-    expect(object).toHaveProperty(["sub", "type"], ["a", "b"])
-    expect(object).toHaveProperty(["sub", "type", 0], "a")
-    expect(object).not.toHaveProperty(["sub", "open"])
-
-- ENTRY:
-  EXPLAIN: インスタンス
-  BODY: |
-    class A {}
-    expect(new A()).toBeInstanceOf(A);
-    expect(() => {}).toBeInstanceOf(Function);
-    expect(new A()).not.toBeInstanceOf(Function);
-
-- ENTRY:
-  EXPLAIN: 非同期 resolve/rejects
-  BODY: |
-    test('TITLE', async () => {
-      await expect(fetchData()).resolves.toBe(EXPECTED);
-    });
-    test('TITLE', async () => {
-      await expect(fetchData()).rejects.toMatch(EXPECTED);
-    });
-
-- ENTRY:
-  EXPLAIN: 関数呼び出し
-  BODY: |
-    ■.toHaveBeenCalled()
-      const mockFn = jest.fn()
-      method(mockFn, "A")
-      expect(mockFn).toHaveBeenCalled()
-    ■.toHaveBeenCalledTimes(number)
-    ■.toHaveBeenCalledWith(arg1, arg2, ...)
-    ■.toHaveBeenLastCalledWith(arg1, arg2, ...)
-    ■.toHaveBeenNthCalledWith(nthCall, arg1, arg2, ...)
-
-- ENTRY:
-  EXPLAIN: 関数戻り値
-  BODY: |
-    ■.toHaveReturned()=toReturn()
-      const mockFn = jest.fn(()=>true)
-      mockFn()
-      expect(mockFn).functionReturned()
-    ■.toHaveReturnedTimes(number)
-      mockFn()
-      mockFn()
-      expect(mockFn).toHaveReturnedTimes(2)
-    ■.toHaveReturnedWith(value)     //戻り値
-      const data = {id: 123};
-      const method = jest.fn(data => data.id);
-      method(data);
-      expect(method).toHaveReturnedWith(123);
-    ■.toHaveLastReturnedWith(value)
-    ■.toHaveNthReturnedWith(nthCall, value)
-
-- ENTRY:
-  EXPLAIN: 数値比較
-  BODY: |
-    ■.toBeCloseTo(数,小数点)          //浮動小数点等価性
-      expect(0.2 + 0.1).not.toBe(0.3)
-      expect(0.2 + 0.1).toBeCloseTo(0.3, 5)
-    ■.toBeGreaterThan(数)            //以上かつ不等
-    ■.toBeGreaterThanOrEqual(数)     //以上
-    ■.toBeLessThan(数)               //未満
-    ■.toBeLessThanOrEqual(数)        //以下
-    ■.toBeNaN()
-      expect(NaN).toBeNaN();
-      expect(1).not.toBeNaN();
-
-- ENTRY:
-  EXPLAIN: 定義
-  BODY: |
-    ■.toBeDefined()                  //非undefinedの検証
-      expect(method()).toBeDefined();
-    ■.toBeUndefined()                //undefinedの検証
-      expect(method(1)).toBeUndefined();
-
-- ENTRY:
-  EXPLAIN: 真偽・NULL
-  BODY: |
-    ■.toBeTruthy()               //真
-      expect(method()).toBeTruthy();
-    ■.toBeFalsy()                //偽
-      expect(method()).toBeFalsy();
-    ■.toBeNaN()                  //NaNの検証
-    ■.toBeNull()                 //nullの検証
-      expect(method()).toBeNull();
-
-#-------------------------------
-# Matcher カスタム
-#-------------------------------
-
-- ENTRY:
-  EXPLAIN: カスタム・マッチャー
-  BODY: |
-    expect.extend({
-      toBeWithinRange(received, floor, ceiling) {
-        const pass = received >= floor && received <= ceiling;
-        if (pass) {
-          return {
-            message: () =>
-              `expected ${received} not to be within range ${floor} - ${ceiling}`,
-            pass: true,
-          };
-        } else {
-          return {
-            message: () =>
-              `expected ${received} to be within range ${floor} - ${ceiling}`,
-            pass: false,
-          };
+      class MyClass {
+        getValue() {
+          return 'original value';
         }
-      },
-    });
+      }
 
-#-------------------------------
-# Matcher Error
-#-------------------------------
+      test('spyOn class method', () => {
+        const myInstance = new MyClass();
+        const spy = jest.spyOn(myInstance, 'getValue')
+          .mockReturnValue('mocked value');     // 戻り値をモック
+
+        const result = myInstance.getValue();
+
+        expect(spy).toHaveBeenCalled();         # => ⭕ (メソッドが呼び出された)
+        expect(result).toBe('mocked value');    # => ⭕ (モックされた戻り値)
+
+        spy.mockRestore();                       // 元の実装に戻す
+      });
+
+    ■ 実装例(fetch)
+
+      test('spyOn fetch', async () => {
+        const spy = jest.spyOn(global, 'fetch')
+          .mockResolvedValue({
+            json: async () => ({ data: 'mocked fetch data' }),
+          });                                   // fetch をモック
+
+        const response = await fetch('https://api.example.com/data');
+        const data = await response.json();
+
+        expect(spy).toHaveBeenCalled();         # => ⭕ (fetch が呼び出された)
+        expect(data).toEqual({ data: 'mocked fetch data' }); # => ⭕ (モックされたデータ)
+
+        spy.mockRestore();                       // 元の実装に戻す
+      });
+
+    ■ ユースケース一覧(
+
+      jest.spyOn(global, 'fetch')                 // グローバル fetch 関数のスパイ
+      jest.spyOn(console, 'log')                  // console.log のスパイ
+      jest.spyOn(Math, 'random')                  // Math.random のスパイ
+      jest.spyOn(Date.prototype, 'getTime')       // Date インスタンスの getTime メソッドのスパイ
+      jest.spyOn(fs, 'readFile')                  // fs モジュールの readFile メソッドのスパイ
+      jest.spyOn(axios, 'get')                    // axios ライブラリの get メソッドのスパイ
+      jest.spyOn(window, 'alert')                 // ブラウザの alert 関数のスパイ
+      jest.spyOn(document, 'createElement')       // document.createElement メソッドのスパイ
+      jest.spyOn(localStorage, 'setItem')         // localStorage.setItem メソッドのスパイ
+      jest.spyOn(sessionStorage, 'getItem')       // sessionStorage.getItem メソッドのスパイ
+      jest.spyOn(process, 'exit')                 // Node.js の process.exit メソッドのスパイ
+      jest.spyOn(globalThis, 'setTimeout')        // グローバル setTimeout 関数のスパイ
+      jest.spyOn(console, 'error')                // console.error のスパイ
+      jest.spyOn(Array.prototype, 'push')         // Array インスタンスの push メソッドのスパイ
+      jest.spyOn(String.prototype, 'toUpperCase') // String インスタンスの toUpperCase メソッドのスパイ
 
 - ENTRY:
-  EXPLAIN: エラー
+  EXPLAIN: スナップショット
   BODY: |
-    const method = (title: string) => { throw Error(title) }
-    test("throws on octopus", () => {
-      expect(() => { method("Error") }).toThrow()
-    })
+    ■ 定義
+
+      expect(value).toMatchSnapshot();           // スナップショットと一致
+
+    ■ 目的
+
+    ・オブジェクトやUIコンポーネントの出力が期待通りであることを検証
+    ・初回実行時にスナップショットが保存され、以降の実行で比較される
+
+    ■ 実装例
+
+      test('snapshot example', () => {
+        const data = {
+          id: 1,
+          name: 'Test User',
+          details: {
+            age: 30,
+            email: 'test@example.com',
+          },
+        };
+        expect(data).toMatchSnapshot();         # => ⭕ (スナップショットと一致)
+      }); 
+
+    ■ スナップショットの更新
+
+    ・スナップショットが変更された場合、`-u` フラグを付けてテストを再実行することで更新可能
+
+      jest -u
+
+    ■ スナップショットの保存場所
+
+    ・デフォルトでは、`__snapshots__` フォルダに保存される
+      ├── __tests__/
+      │   ├── myTest.test.js
+      │   └── __snapshots__/
+      │       └── myTest.test.js.snap
+
+- ENTRY:
+  EXPLAIN: 例外系
+  BODY: |
+    ■ toThrow(): 例外の投げを検証
+
+      expect(() => { 
+        throw new Error('err');
+      }).toThrow();                                   # => ⭕ (例外が投げられた)
+
+      expect(() => {}).not.toThrow();                 # => ⭕ (例外は投げられなかった)
+
+      expect(() => {
+        throw new Error('specific error');
+      }).toThrow('specific error');                   # => ⭕ (特定のメッセージ)
+
+      expect(() => {
+        throw new Error('another error');
+      }).toThrow(/another/);                          # => ⭕ (正規表現マッチ)
+
+    ■ 非同期関数での例外検証
+
+      await expect(async () => {
+        throw new Error('async err');
+      }).toThrow('async err');                        # => ⭕ (非同期例外)
+
+      await expect(async () => {}).not.toThrow();     # => ⭕ (非同期で例外は投げられなかった)

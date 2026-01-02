@@ -54,6 +54,7 @@ import { keysReactLibrariesLang } from "./keys/ReactLibrariesLang"
 import { keysJSUtilities } from "./keys/JSUtilities"
 import { keysReactLibrariesGraph } from "./keys/ReactLibrariesGraph"
 import { keysReactLibrariesDnD } from "./keys/ReactLibrariesDnD"
+import { keysVitest } from "./keys/Vitest"
 
 // 以下のオブジェクトをソートしてください
 export const codeKeys = {
@@ -111,6 +112,7 @@ export const codeKeys = {
   TypeORM: "TypeORM",
   Unknown: "Unknown",
   Vite: "Vite",
+  Vitest: "Vitest",
   Vue: "Vue",
   Yup: "Yup",
   Zustand: "Zustand",
@@ -173,6 +175,7 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   TSConfig: keysTSConfig,
   TypeORM: keysTypeORM,
   Vite: keysVite,
+  Vitest: keysVitest,
   Vue: keysVue,
   Yup: keysYup,
   Zustand: keysZustand,

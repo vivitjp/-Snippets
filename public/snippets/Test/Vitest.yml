@@ -1,0 +1,302 @@
+---
+#-------------------------------
+# Vitest
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ インストール
+
+      npm install vitest @types/vitest --save-dev
+
+    ■ 概要
+
+    ・Vite ベースの高速なテストランナー
+    ・Jest ライクな API を提供し、使いやすい
+    ・TypeScript サポートが充実
+    ・モック、スナップショット、カバレッジなどの機能を備える
+    ・Vite のエコシステムと統合されており、モダンなフロントエンドプロジェクトに最適
+
+    ■ 主な特徴
+
+    ・高速なテスト実行: Vite のビルドシステムを活用し、迅速なテスト実行が可能
+    ・Jest ライクな API: 既存の Jest テストコードを簡単に移行可能
+    ・TypeScript サポート: 型定義が充実しており、型安全なテストが可能
+    ・モック機能: モジュールや関数のモックが容易に
+
+    ■ 注意点
+
+    ・Vite プロジェクトに最適化されているため、他のビルドツールとの互換性に注意
+    ・一部の Jest 機能が未対応の場合があるため、ドキュメントを確認することが重要
+
+    ■ 比較ポイント
+
+    ・パフォーマンス: Vite のビルドシステムを利用、大規模プロジェクトで高速テスト実行可能
+    ・設定の簡便さ: Vite プロジェクトにシームレスに統合され、設定が簡単
+    ・API の互換性: Jest ライクな API を提供しているが、一部の Jest 機能は未対応
+    ・エコシステムとの統合: Vite のエコシステムと密接連携、モダンなフロントエンド開発に最適
+    ・TypeScript サポート: 両者とも TypeScript をサポートしているが、Vitest は型定義が充実
+
+    ■ 選択基準
+
+    - 既存の Jest テストコードが多い場合や、Jest の特定機能が必要な場合は Jest を選択
+    - Vite ベースのプロジェクトで高速なテスト実行を求める場合は Vitest を選択
+
+    ■ Vitest ができないこと
+
+    - 一部の Jest 固有の機能やマッチャーが未対応
+    - Vite 以外のビルドツールとの統合が難しい
+
+    ■ RTL との併用
+
+    ・Vitest は React Testing Library (RTL) と組み合わせて使用可能
+    ・RTL のユーティリティ関数を使用して、React コンポーネントのテストを効率化できる
+
+- ENTRY:
+  EXPLAIN: 初期設定
+  BODY: |
+    ■ package.json
+
+    {
+      "scripts": {
+        "test": "vitest"
+      }
+    }
+
+    ■ vitest.config.ts
+
+    import { defineConfig } from 'vitest/config';
+
+    export default defineConfig({
+      test: {
+        globals: true,
+        environment: 'jsdom',   // または 'happy-dom' など
+      },
+    });
+
+- ENTRY:
+  EXPLAIN: 基本的な使い方
+  BODY: |
+    ■ sum.ts
+
+      export const sum = (a: number, b: number): number => {
+        return a + b;
+      };
+
+    ■ sum.test.ts
+
+      import { describe, it, expect } from 'vitest';
+      import { sum } from './sum';
+
+      describe('sum function', () => {
+        it('adds two numbers', () => {
+          expect(sum(1, 2)).toBe(3);
+        });
+
+        it('handles negative numbers', () => {
+          expect(sum(-1, -1)).toBe(-2);
+        });
+      });
+
+    ■ テストの実行
+
+      npm run test
+
+- ENTRY:
+  EXPLAIN: 実行コマンド
+  BODY: |
+    ■ 単一ファイルのテスト実行
+
+      npx vitest run path/to/testfile.test.ts
+
+    ■ 特定のテスト名の実行
+
+      npx vitest run --testNamePattern="adds two numbers"
+
+    ■ ウォッチモードでの実行
+
+      npx vitest watch
+
+    ■ カバレッジレポートの生成
+
+      npx vitest run --coverage
+
+    ■ 特定のテストファイルパターンの実行
+
+      npx vitest run path/to/tests/**/*.test.ts
+
+    ■ 特定のタグ付きテストの実行
+
+      npx vitest run --tags="tagName"
+
+    ■ 並列実行の制御
+
+      npx vitest run --maxWorkers=4
+
+    ■ デバッグモードでの実行
+
+      npx vitest run --inspect
+
+    ■ カスタム環境での実行
+
+      npx vitest run --environment="node"  // または "jsdom"
+
+    ■ 設定ファイルの指定
+
+      npx vitest run --config=path/to/vitest.config.ts
+
+    ■ 特定のテストスイートの実行
+
+      npx vitest run --testSuite="suiteName"
+
+    ■ タイムアウトの設定
+
+      npx vitest run --testTimeout=5000  // タイムアウトを5秒に設定
+
+    ■ バイナリオプションの確認
+
+      npx vitest --help
+
+#-------------------------------
+# encoding-japanese
+#-------------------------------
+- ENTRY:
+  CATEGORY: メソッド
+
+- ENTRY:
+  EXPLAIN: テストスィート定義
+  BODY: |
+    ■ describe(): テストスイートを定義するための関数
+
+      describe('sum function', () => {
+        // テストケースをここに記述
+      });
+
+    ■ it(): テストケースを定義するための関数
+
+      it('adds two numbers', () => {
+        expect(sum(1, 2)).toBe(3);
+      });
+
+
+    ■ beforeEach() / afterEach(): 各テストケースの前後に実行
+
+      beforeEach(() => {
+        // 各テスト前のセットアップ
+      });
+
+      afterEach(() => {
+        // 各テスト後のティアダウン
+      });
+
+    ■ beforeAll() / afterAll(): スイート全体に対して一度だけ実行
+
+      beforeAll(() => {
+        // テストスイート全体のセットアップ
+      });
+
+      afterAll(() => {
+        // テストスイート全体のティアダウン
+      });
+
+    ■ 実行順
+
+    1. beforeAll
+    2. beforeEach(各テストケース)
+    3. it (各テストケース)
+    4. afterEach(各テストケース)
+    5. afterAll
+
+- ENTRY:
+  EXPLAIN: アサーションメソッド
+  BODY: |
+    ■ expect(): アサーションを行うための関数
+
+      expect(value).toBe(expectedValue);
+
+    ■ toBe
+
+    ・厳密な等価性をチェックするマッチャー
+
+      expect(2 + 2).toBe(4);
+
+- ENTRY:
+  EXPLAIN: vi メソッド(モック・スパイ関連)
+  BODY: |
+
+    ■ vi.fn()
+
+    ・モックやスパイを作成するための関数
+
+      const mockFunction = vi.fn();
+      mockFunction();
+      expect(mockFunction).toHaveBeenCalled();
+
+    ■ vi.mock()
+
+    ・モジュールや関数をモック化するための関数
+
+      vi.mock('moduleName', () => {
+        return {
+          // モックの実装
+        };
+      });
+
+    ■ vi.spyOn()
+
+    ・既存の関数をスパイして呼び出しを監視するための関数
+
+      const spy = vi.spyOn(object, 'methodName');
+      object.methodName();
+      expect(spy).toHaveBeenCalled();
+
+    ■ vi.resetAllMocks()
+
+    ・すべてのモック関数の状態をリセットするための関数
+
+      vi.resetAllMocks();
+
+#-------------------------------
+# サンプル
+#-------------------------------
+- ENTRY:
+  CATEGORY: サンプル
+
+- ENTRY:
+  EXPLAIN: RTL との併用例
+  BODY: |
+    ■ コンポーネント (Button.tsx)
+
+      import React from 'react';
+
+      interface ButtonProps {
+        onClick: () => void;
+        label: string;
+      }
+
+      const Button: React.FC<ButtonProps> = ({ onClick, label }) => {
+        return <button onClick={onClick}>{label}</button>;
+      };
+
+      export default Button;
+
+    ■ テストファイル (Button.test.tsx)
+
+      import { render, screen, fireEvent } from '@testing-library/react';
+      import { describe, it, expect, vi } from 'vitest';
+      import Button from './Button';
+
+      describe('Button component', () => {
+        it('renders with correct label', () => {
+          render(<Button onClick={() => {}} label="OK" />);
+          expect(screen.getByText('OK')).toBeInTheDocument();
+        });
+
+        it('calls onClick when clicked', () => {
+          const handleClick = vi.fn();
+          render(<Button onClick={handleClick} label="OK" />);
+          fireEvent.click(screen.getByText('OK'));
+          expect(handleClick).toHaveBeenCalledTimes(1);
+        });
+      });

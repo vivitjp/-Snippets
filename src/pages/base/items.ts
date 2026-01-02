@@ -662,7 +662,7 @@ export const menuItems: menuByCategories[] = [
     category: "テスト",
     items: [
       {
-        name: "jest",
+        name: "Jest",
         fileName: "Test/Jest",
         codeKeyTypes: [codeKeys.Jest],
       },
@@ -670,6 +670,12 @@ export const menuItems: menuByCategories[] = [
         name: "RTL(React Testing Library)",
         fileName: "Test/RTL",
         codeKeyTypes: [codeKeys.Jest, codeKeys.RTL],
+      },
+      {
+        name: "Vitest",
+        fileName: "Test/Vitest",
+        codeKeyTypes: [codeKeys.Vitest],
+        case_sensitive: false,
       },
       {
         name: "Cypress",
