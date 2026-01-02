@@ -1,7 +1,7 @@
 import { KeyDef } from "../../../types/type"
 
-export const keysReactUtilitiesMisc: KeyDef = {
-  // ■ ReactUtilities の主要キーワード
+export const keysReactLibrariesMisc: KeyDef = {
+  // ■ ReactLibraries の主要キーワード
   Crimson: [
     "react-virtuoso",
     "ag-grid-react",

@@ -32,7 +32,7 @@ export const syntaxHighlight = ({
         if (!keys.length) return
 
         keys.forEach((key) => {
-          if (!key || ["eq", "lt", "gt"].includes(key)) {
+          if (!key || ["eq", "lt", "gt", "style", "color"].includes(key)) {
             return // skip <> 系の文字
           }
           const re = new RegExp(`\\b${key}\\b`, case_sense)

@@ -1,5 +1,190 @@
 ---
 #-------------------------------
+# react-dnd
+#-------------------------------
+- ENTRY:
+  CATEGORY: react-dnd
+
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ インストール
+
+      npm install react-dnd react-dnd-html5-backend
+
+    ■ 概要
+
+    ・React アプリケーションでドラッグ＆ドロップ機能を実装するためのライブラリ
+    ・React のコンポーネントベースのアーキテクチャに適した柔軟で拡張性の高いドラッグ＆ドロップソリューションを提供
+    ・HTML5 のドラッグ＆ドロップ API を抽象化し、React コンポーネントとして扱いやすくする
+
+    ■ 主な特徴
+
+    ・ドラッグソースとドロップターゲットの定義: コンポーネントをドラッグ可能にしたり、ドロップ可能な領域を指定可能
+    ・状態管理: ドラッグ中のアイテム情報やドロップ先の状態を簡単に管理
+    ・カスタマイズ可能: ドラッグイメージ、ドロップ効果、イベントハンドリングなどを柔軟にカスタマイズ可能
+    ・複数バックエンドサポート: HTML5 以外にもタッチデバイス向けのバックエンドなど、様々な環境に対応可能
+    ・TypeScript サポート: 型定義が提供されており、型安全な開発が可能
+    ・コミュニティ: オープンソースで活発にメンテナンスされており、多くのプラグインや拡張機能が存在
+
+    ■ 注意点
+
+    ・ドラッグ＆ドロップの挙動はブラウザ依存の部分があるため、クロスブラウザ対応に注意
+    ・パフォーマンス: 大量のドラッグ＆ドロップ操作が発生する場合、最適化が必要になることがある
+    ・アクセシビリティ: キーボード操作やスクリーンリーダー対応など、アクセシビリティ面での考慮が必要
+    ・SSR 環境ではドラッグ＆ドロップ機能が制限される場合があるため、クライアントサイドでのみ有効にする工夫が必要
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ 実装
+
+    import { DndProvider, useDrag, useDrop } from 'react-dnd';
+    import { HTML5Backend } from 'react-dnd-html5-backend';
+
+    const ItemType = {
+      BOX: 'box',
+    };
+
+    const DraggableBox = ({ id, text }) => {
+      const [{ isDragging }, drag] = useDrag(() => ({
+        type: ItemType.BOX,
+        item: { id },
+        collect: (monitor) => ({
+          isDragging: monitor.isDragging(),
+        }),
+      }));
+
+      return (
+        <div
+          ref={drag}
+          style={{
+            opacity: isDragging ? 0.5 : 1,
+            padding: '8px',
+            margin: '4px',
+            backgroundColor: 'lightblue',
+            cursor: 'move',
+          }}
+        >
+          {text}
+        </div>
+      );
+    };
+
+    const DroppableArea = ({ onDrop }) => {
+      const [, drop] = useDrop(() => ({
+        accept: ItemType.BOX,
+        drop: (item) => onDrop(item.id),
+      }));
+
+      return (
+        <div
+          ref={drop}
+          style={{
+            height: '200px',
+            border: '2px dashed gray',
+            padding: '16px',
+            marginTop: '16px',
+          }}
+        >
+          Drop here
+        </div>
+      );
+    };
+
+    const MyDndComponent = () => {
+      const handleDrop = (id) => {
+        console.log(`Dropped item with id: ${id}`);
+      };
+
+      return (
+        <DndProvider backend={HTML5Backend}>
+          <DraggableBox id="box1" text="Drag me!" />
+          <DroppableArea onDrop={handleDrop} />
+        </DndProvider>
+      );
+    };
+
+#-------------------------------
+# react-draggable
+#-------------------------------
+- ENTRY:
+  CATEGORY: react-draggable
+
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ インストール
+
+      npm install react-draggable
+
+    ■ 概要
+
+    ・React アプリケーションでドラッグ可能な UI コンポーネントを簡単に実装するためのライブラリ
+    ・ドラッグ操作の開始、進行、終了時のイベントハンドリングが容易
+    ・ドラッグ可能な要素の位置制御や制約設定が可能
+
+    ■ 主な特徴
+
+    ・ドラッグ可能コンポーネント: `Draggable` コンポーネントを使用して、任意の要素をドラッグ可能に
+    ・イベントハンドリング: `onStart`、`onDrag`、`onStop` イベントでドラッグ操作を細かく制御
+    ・位置制御: `position`、`defaultPosition` プロパティで初期位置や現在位置を管理
+    ・制約設定: `bounds` プロパティでドラッグ範囲を制限可能（親要素内、特定の座標範囲など）
+    ・カスタマイズ可能: ドラッグ中のスタイル変更やカーソル変更など、柔軟にカスタマイズ可能
+    ・TypeScript サポート: 型定義が提供されており、型安全な開発が可能
+    ・コミュニティ: オープンソースで活発にメンテナンスされており、多くのプラグインや拡張機能が存在
+
+    ■ 注意点
+
+    ・ドラッグ操作はマウスイベントに依存するため、タッチデバイスでの挙動に注意
+    ・パフォーマンス: 大量のドラッグ操作が発生する場合、最適化が必要になることがある
+    ・アクセシビリティ: キーボード操作やスクリーンリーダー対応など、アクセシビリティ面での考慮が必要
+    ・SSR 環境ではドラッグ機能が制限される場合があるため、クライアントサイドでのみ有効にする工夫が必要
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ 実装
+
+    import Draggable from 'react-draggable';
+
+    const MyDraggableComponent = () => {
+      const handleStart = (e, data) => {
+        console.log('Drag started:', data);
+      };
+
+      const handleDrag = (e, data) => {
+        console.log('Dragging:', data);
+      };
+
+      const handleStop = (e, data) => {
+        console.log('Drag stopped:', data);
+      };
+
+      return (
+        <Draggable
+          onStart={handleStart}
+          onDrag={handleDrag}
+          onStop={handleStop}
+          bounds="parent"
+        >
+          <div
+            style={{
+              width: '100px',
+              height: '100px',
+              backgroundColor: 'lightgreen',
+              textAlign: 'center',
+              lineHeight: '100px',
+              cursor: 'move',
+            }}
+          >
+            Drag me!
+          </div>
+        </Draggable>
+      );
+    };
+
+#-------------------------------
 # react-dropzone
 #-------------------------------
 - ENTRY:

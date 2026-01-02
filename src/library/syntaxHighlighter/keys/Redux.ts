@@ -10,11 +10,15 @@ export const keysRedux: KeyDef = {
     "Flux",
     "Immer",
     "RTK Query",
+    "Persist",
+    "redux-persist",
   ],
   // ■ 青(Methods) - 関数、メソッド
   RoyalBlue: [
     "createStore",
     "createSlice",
+    "persistStore",
+    "persistReducer",
     "configureStore",
     "createAsyncThunk",
     "createEntityAdapter",
@@ -29,6 +33,17 @@ export const keysRedux: KeyDef = {
     "decrement",
     "incrementByAmount",
     "getCount",
+    "PersistGate",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
   ],
   // ■ 緑(Properties) - プロパティ、オプション
   ForestGreen: [
@@ -47,6 +62,7 @@ export const keysRedux: KeyDef = {
     "value",
     "count",
     "counter",
+    "persistor",
   ],
   // ■ オレンジ(Property Values) - 値、定数
   DarkOrange: [
@@ -55,19 +71,15 @@ export const keysRedux: KeyDef = {
     "counter/INCREMENT",
     "counter/DECREMENT",
   ],
-  // ■ 青緑(型) - TypeScript 型
-  CadetBlue: [
+  // ■ 紫(その他特別) - 特別な用語、概念
+  DarkOrchid: [
     "Action",
     "Reducer",
     "Store",
-    "Dispatch",
     "Subscribe",
     "Middleware",
     "ThunkAction",
     "AnyAction",
-  ],
-  // ■ 紫(その他特別) - 特別な用語、概念
-  DarkOrchid: [
     "rootReducer",
     "rootSaga",
     "sagaMiddleware",
@@ -78,5 +90,8 @@ export const keysRedux: KeyDef = {
     "mapStateToProps",
     "mapDispatchToProps",
     "store",
+    "localStorage",
+    "sessionStorage",
+    "storage",
   ],
 }

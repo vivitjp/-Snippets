@@ -1,0 +1,100 @@
+---
+#-------------------------------
+# xlsx
+#-------------------------------
+
+- ENTRY:
+  CATEGORY: xlsx
+
+- ENTRY:
+  EXPLAIN: インストール & 概要
+  BODY: |
+    ■ 概要
+
+    ・JavaScript で Excel ファイル（.xlsx、.xls、.csv など）を読み書きするためのライブラリ
+    ・ブラウザと Node.js の両方で動作
+    ・Excel ファイルの解析、生成、編集が可能
+
+    ■ 主な特徴
+
+    ・多様なファイル形式サポート: .xlsx、.xls、.csv、.txt など、多くの形式を読み書き可能
+    ・シート操作: 複数のシートを扱い、シートの追加、削除、名前変更が可能
+    ・セル操作: セルの読み取り、書き込み、スタイル設定、数式の使用が可能
+    ・データ変換: JSON 形式との相互変換が容易
+    ・TypeScript サポート: 型定義が提供されており、型安全な開発が可能
+    ・コミュニティ: オープンソースで活発にメンテナンスされており、多くのプラグインや拡張機能が存在
+
+    ■ 注意点
+
+    ・大規模な Excel ファイルを扱う場合、パフォーマンス最適化が必要になることがある
+    ・ブラウザ環境ではファイルサイズやメモリ制限に注意
+    ・アクセシビリティ: 生成される Excel ファイルのアクセシビリティ面での考慮が必要
+
+    ■ インストール
+
+      npm install xlsx
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ 実装
+
+    import * as XLSX from 'xlsx';
+
+    // Excel ファイルの読み込み
+    const readExcelFile = (file) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        console.log(jsonData);
+      };
+      reader.readAsArrayBuffer(file);
+    };
+
+    // Excel ファイルの生成とダウンロード
+    const generateExcelFile = (data) => {
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+      XLSX.writeFile(workbook, 'output.xlsx');
+    };
+
+- ENTRY:
+  EXPLAIN: xlsx-js-style
+  BODY: |
+    ■ インストール & 概要
+
+      npm install xlsx-js-style
+
+    ■ 概要
+
+    ・xlsx-js-style は xlsx ライブラリのフォークで、セルのスタイル設定機能を追加
+    ・セルのフォント、色、境界線、塗りつぶしなどのスタイルをカスタマイズ可能
+
+    ■ 実装  
+    import * as XLSX from 'xlsx-js-style';
+
+    // スタイル付き Excel ファイルの生成とダウンロード
+    const generateStyledExcelFile = (data) => {
+      const worksheet = XLSX.utils.json_to_sheet(data);
+
+      // セルスタイルの設定例
+      worksheet['A1'].s = {
+        font: { name: 'Arial', sz: 14, bold: true, color: { rgb: 'FF0000' } },
+        fill: { fgColor: { rgb: 'FFFF00' } },
+        border: {
+          top: { style: 'thin', color: { rgb: '000000' } },
+          bottom: { style: 'thin', color: { rgb: '000000' } },
+          left: { style: 'thin', color: { rgb: '000000' } },
+          right: { style: 'thin', color: { rgb: '000000' } },
+        },
+      };
+
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'StyledSheet');
+      XLSX.writeFile(workbook, 'styled_output.xlsx');
+    };

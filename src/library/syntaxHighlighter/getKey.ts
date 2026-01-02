@@ -17,7 +17,6 @@ import { keysExpress } from "./keys/Express"
 import { keysGit } from "./keys/Git"
 import { keysGraphQL } from "./keys/GraphQL"
 import { keysHTML } from "./keys/HTML"
-import { keysI18n } from "./keys/i18n"
 import { keysJest } from "./keys/Jest"
 import { keysJotai } from "./keys/Jotai"
 import { keysJS } from "./keys/JS"
@@ -50,7 +49,11 @@ import { keysVite } from "./keys/Vite"
 import { keysVue } from "./keys/Vue"
 import { keysYup } from "./keys/Yup"
 import { keysZustand } from "./keys/zustand"
+import { keysReactLibrariesExcel } from "./keys/ReactLibrariesExcel"
+import { keysReactLibrariesLang } from "./keys/ReactLibrariesLang"
 import { keysJSUtilities } from "./keys/JSUtilities"
+import { keysReactLibrariesGraph } from "./keys/ReactLibrariesGraph"
+import { keysReactLibrariesDnD } from "./keys/ReactLibrariesDnD"
 
 // 以下のオブジェクトをソートしてください
 export const codeKeys = {
@@ -70,7 +73,6 @@ export const codeKeys = {
   Git: "Git",
   graphQL: "graphQL",
   HTML: "HTML",
-  i18n: "i18n",
   Jest: "Jest",
   Jotai: "Jotai",
   JS: "JS",
@@ -92,6 +94,10 @@ export const codeKeys = {
   ReactDom: "ReactDom",
   ReactLibrary: "ReactLibrary",
   ReactRouter: "ReactRouter",
+  ReactLibrariesDnD: "ReactLibrariesDnD",
+  ReactLibrariesLang: "ReactLibrariesLang",
+  ReactLibrariesExcel: "ReactLibrariesExcel",
+  ReactLibrariesGraph: "ReactLibrariesGraph",
   Redux: "Redux",
   RegExp: "RegExp",
   RHF: "keysRHF",
@@ -131,7 +137,6 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   Git: keysGit,
   graphQL: keysGraphQL,
   HTML: keysHTML,
-  i18n: keysI18n,
   Jest: keysJest,
   Jotai: keysJotai,
   JS: keysJS,
@@ -153,6 +158,10 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   ReactDom: keysReactDom,
   ReactLibrary: keyReactLibrary,
   ReactRouter: keysReactRouter,
+  ReactLibrariesDnD: keysReactLibrariesDnD,
+  ReactLibrariesLang: keysReactLibrariesLang,
+  ReactLibrariesExcel: keysReactLibrariesExcel,
+  ReactLibrariesGraph: keysReactLibrariesGraph,
   Redux: keysRedux,
   RegExp: keysRegExp,
   RTL: keysRTL,

@@ -222,12 +222,12 @@ export const menuItems: menuByCategories[] = [
     category: "JavaScript",
     items: [
       {
-        name: "Objects",
+        name: "Objects List",
         fileName: "JavaScript/JSObjects",
         codeKeyTypes: [codeKeys.JS],
       },
       {
-        name: "Methods",
+        name: "Methods List",
         fileName: "JavaScript/JSMethods",
         codeKeyTypes: [codeKeys.JS],
       },
@@ -258,19 +258,19 @@ export const menuItems: menuByCategories[] = [
     items: [
       {
         name: "ライブラリ",
-        fileName: "JavaScript/Libraries",
+        fileName: "JavaScriptLib/Libraries",
         codeKeyTypes: [codeKeys.JS, codeKeys.JSUtilities],
         case_sensitive: false,
       },
       {
         name: "lodash",
-        fileName: "JavaScript/lodash",
+        fileName: "JavaScriptLib/lodash",
         codeKeyTypes: [codeKeys.lodash],
         case_sensitive: false,
       },
       {
         name: "カスタム",
-        fileName: "JavaScript/LibraryCustom",
+        fileName: "JavaScriptLib/custom",
         codeKeyTypes: [codeKeys.JS],
       },
     ],
@@ -319,17 +319,17 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.HTML, codeKeys.JS, codeKeys.React],
       },
       {
-        name: "React Dom",
+        name: "DOM",
         fileName: "React/ReactDom",
         codeKeyTypes: [codeKeys.React, codeKeys.ReactDom],
       },
       {
-        name: "React Component",
+        name: "Component",
         fileName: "React/ReactComponent",
         codeKeyTypes: [codeKeys.HTML, codeKeys.JS, codeKeys.React],
       },
       {
-        name: "React Routing",
+        name: "Routing",
         fileName: "React/ReactRouting",
         codeKeyTypes: [codeKeys.HTML, codeKeys.JS, codeKeys.ReactRouter],
       },
@@ -340,12 +340,12 @@ export const menuItems: menuByCategories[] = [
     items: [
       {
         name: "Nextjs",
-        fileName: "ReactFrameWork/front/Nextjs",
+        fileName: "React/FrameWork/Nextjs",
         codeKeyTypes: [codeKeys.Nextjs],
       },
       {
         name: "Vite",
-        fileName: "ReactFrameWork/front/Vite",
+        fileName: "React/FrameWork/Vite",
         codeKeyTypes: [codeKeys.Vite],
         case_sensitive: false,
       },
@@ -356,7 +356,7 @@ export const menuItems: menuByCategories[] = [
     items: [
       {
         name: "StyledCompo",
-        fileName: "ReactCSS/StyledCompo",
+        fileName: "React/CSS/StyledCompo",
         codeKeyTypes: [
           codeKeys.CSS,
           codeKeys.HTML,
@@ -367,7 +367,7 @@ export const menuItems: menuByCategories[] = [
       },
       {
         name: "Emotion",
-        fileName: "ReactCSS/Emotion",
+        fileName: "React/CSS/Emotion",
         codeKeyTypes: [
           codeKeys.CSS,
           codeKeys.HTML,
@@ -393,12 +393,12 @@ export const menuItems: menuByCategories[] = [
     items: [
       {
         name: "ReactHookForm",
-        fileName: "ReactForm/ReactHookForm",
+        fileName: "React/Form/ReactHookForm",
         codeKeyTypes: [codeKeys.RHF],
       },
       {
         name: "Yup",
-        fileName: "ReactForm/Yup",
+        fileName: "React/Form/Yup",
         codeKeyTypes: [codeKeys.RHF, codeKeys.Yup],
         case_sensitive: false,
       },
@@ -409,23 +409,23 @@ export const menuItems: menuByCategories[] = [
     items: [
       {
         name: "UI Package",
-        fileName: "ReactPackage/UI",
+        fileName: "React/UI/UI",
         codeKeyTypes: [],
       },
       {
         name: "Chakra",
-        fileName: "ReactPackage/Chakra",
+        fileName: "React/UI/Chakra",
         codeKeyTypes: [codeKeys.Chakra],
       },
       {
         name: "MUI",
-        fileName: "ReactCSS/MUI",
+        fileName: "React/UI/MUI",
         codeKeyTypes: [codeKeys.MUI],
         case_sensitive: false,
       },
       {
         name: "Storybook(v6)",
-        fileName: "ReactPackage/Storybook",
+        fileName: "React/UI/Storybook",
         codeKeyTypes: [
           codeKeys.HTML,
           codeKeys.JS,
@@ -440,22 +440,22 @@ export const menuItems: menuByCategories[] = [
     items: [
       {
         name: "Redux",
-        fileName: "ReactGState/redux",
-        codeKeyTypes: [codeKeys.JS, codeKeys.React, codeKeys.Redux],
+        fileName: "React/GState/redux",
+        codeKeyTypes: [codeKeys.Redux],
       },
       {
         name: "Zustand",
-        fileName: "ReactGState/zustand",
+        fileName: "React/GState/zustand",
         codeKeyTypes: [codeKeys.JS, codeKeys.React, codeKeys.Zustand],
       },
       {
         name: "Jotai",
-        fileName: "ReactGState/Jotai",
+        fileName: "React/GState/Jotai",
         codeKeyTypes: [codeKeys.JS, codeKeys.Jotai],
       },
       {
         name: "Recoil(開発中止)",
-        fileName: "ReactGState/Recoil",
+        fileName: "React/GState/Recoil",
         codeKeyTypes: [codeKeys.Package],
       },
     ],
@@ -465,13 +465,13 @@ export const menuItems: menuByCategories[] = [
     items: [
       {
         name: "TanStack",
-        fileName: "ReactQuery/TanStack",
+        fileName: "React/Query/TanStack",
         codeKeyTypes: [codeKeys.TanStack],
         case_sensitive: false,
       },
       {
         name: "Topics",
-        fileName: "ReactQuery/Topics",
+        fileName: "React/Query/Topics",
         codeKeyTypes: [codeKeys.TanStack, codeKeys.JS],
         case_sensitive: false,
       },
@@ -491,20 +491,32 @@ export const menuItems: menuByCategories[] = [
     category: "React Library",
     items: [
       {
-        name: "i18n",
-        fileName: "ReactLibrary/i18n",
-        codeKeyTypes: [codeKeys.i18n, codeKeys.React],
+        name: "言語系",
+        fileName: "React/Libraries/Lang",
+        codeKeyTypes: [codeKeys.ReactLibrariesLang, codeKeys.React],
         case_sensitive: false,
       },
       {
-        name: "reactDropzone",
-        fileName: "ReactLibrary/reactDropzone",
-        codeKeyTypes: [codeKeys.JS, codeKeys.React, codeKeys.ReactLibrary],
+        name: "Graph系",
+        fileName: "React/Libraries/Graph",
+        codeKeyTypes: [codeKeys.ReactLibrariesGraph, codeKeys.React],
         case_sensitive: false,
       },
       {
-        name: "Libraries",
-        fileName: "ReactLibrary/Libraries",
+        name: "Drag & Drop系",
+        fileName: "React/Libraries/DnD",
+        codeKeyTypes: [codeKeys.ReactLibrariesDnD, codeKeys.React],
+        case_sensitive: false,
+      },
+      {
+        name: "Excel系",
+        fileName: "React/Libraries/Excel",
+        codeKeyTypes: [codeKeys.ReactLibrariesExcel, codeKeys.React],
+        case_sensitive: false,
+      },
+      {
+        name: "他Libraries",
+        fileName: "React/Libraries/Libraries",
         codeKeyTypes: [codeKeys.ReactLibrary],
         case_sensitive: false,
       },
@@ -514,7 +526,7 @@ export const menuItems: menuByCategories[] = [
     category: "Nodejs",
     items: [
       {
-        name: "🔺Nodejs(Topics)",
+        name: "Nodejs(Topics)",
         fileName: "Node/nodejs/NodeTopics",
         codeKeyTypes: [codeKeys.Nodejs],
         case_sensitive: false,
@@ -546,7 +558,7 @@ export const menuItems: menuByCategories[] = [
     items: [
       {
         name: "Nestjs",
-        fileName: "ReactFrameWork/Nestjs/Nestjs",
+        fileName: "Nestjs/Nestjs",
         codeKeyTypes: [
           codeKeys.Nestjs,
           codeKeys.TypeORM,
@@ -556,27 +568,27 @@ export const menuItems: menuByCategories[] = [
       },
       {
         name: "TypeORM",
-        fileName: "ReactFrameWork/Nestjs/TypeORM",
+        fileName: "Nestjs/TypeORM",
         codeKeyTypes: [codeKeys.TypeORM],
       },
       {
         name: "🔺Prisma",
-        fileName: "ReactFrameWork/Nestjs/Prisma",
+        fileName: "Nestjs/Prisma",
         codeKeyTypes: [codeKeys.Prisma],
       },
       {
         name: "ClassValidator",
-        fileName: "ReactFrameWork/Nestjs/ClassValidator",
+        fileName: "Nestjs/ClassValidator",
         codeKeyTypes: [codeKeys.ClassValidator],
       },
       {
         name: "ClassTransformer",
-        fileName: "ReactFrameWork/Nestjs/ClassTransformer",
+        fileName: "Nestjs/ClassTransformer",
         codeKeyTypes: [codeKeys.ClassTransformer],
       },
       {
         name: "🔺Swagger",
-        fileName: "ReactFrameWork/Nestjs/Swagger",
+        fileName: "Nestjs/Swagger",
         codeKeyTypes: [codeKeys.Swagger],
       },
     ],
@@ -690,19 +702,19 @@ export const menuItems: menuByCategories[] = [
     category: "Python",
     items: [
       {
-        name: "Python:py",
+        name: "Python",
         fileName: "Python/Python",
         codeKeyTypes: [codeKeys.Python],
         encodeRequired: false,
       },
       {
-        name: "Lib List:py",
+        name: "Lib List",
         fileName: "Python/PythonLibs",
         codeKeyTypes: [],
         encodeRequired: false,
       },
       {
-        name: "Lib Sample:py",
+        name: "Lib Sample",
         fileName: "Python/PythonLibSamples",
         codeKeyTypes: [codeKeys.Python],
         encodeRequired: false,

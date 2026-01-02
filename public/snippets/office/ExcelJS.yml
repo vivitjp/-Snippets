@@ -2,7 +2,7 @@
 # Excel
 # ----------------------------
 - ENTRY:
-  CATEGORY: 関数比較
+  CATEGORY: ExcelからJSへの移植時に注意すること
 
 - ENTRY:
   EXPLAIN: |
@@ -14,7 +14,133 @@
     Excel: NL(X)       が自然対数を求める関数
     JS: Math.log(X)    指定数の自然対数を返す
 
-    関数: NL
+- ENTRY:
+  EXPLAIN: データ型の違い
+  BODY: |
+    ■ 数値と文字列の自動変換
+
+    ・Excel: 数値と文字列を自動変換（例: "123" + 1 = 124）
+    ・JS: 厳密な型チェック（例: "123" + 1 = "1231"）
+
+    ■ 日付処理
+
+    ・Excel: 日付はシリアル値（1900年1月1日 = 1）
+    ・JS: Date オブジェクトを使用（new Date()）
+
+    ■ ブール値
+
+    ・Excel: TRUE/FALSE
+    ・JS: true/false
+
+- ENTRY:
+  EXPLAIN: 演算子の違い
+  BODY: |
+    ■ 文字列連結
+
+    ・Excel: & 演算子（例: "Hello" & "World"）
+    ・JS: + 演算子または concat()（例: "Hello" + "World"）
+
+
+    ■ 演算子
+
+    ・Excel: +, -, *, /, ^（べき乗）
+    ・JS: +, -, *, /, **（べき乗）
+
+    ■ 論理演算
+
+    ・Excel: AND(), OR(), NOT()
+    ・JS: &&, ||, !
+
+    ■ 比較演算
+
+    ・Excel: =, <>, <=, >=
+    ・JS: ===, !==, <=, >= （厳密等価推奨）
+
+- ENTRY:
+  EXPLAIN: 関数とメソッドの違い
+  BODY: |
+    ■ 関数名の違い
+
+    ・Excel: LEN() → JS: .length
+    ・Excel: MID() → JS: .substring() または .slice()
+    ・Excel: LEFT() → JS: .substring(0, n)
+    ・Excel: RIGHT() → JS: .slice(-n)
+
+    ■ 引数の順序
+
+    ・Excel: ROUND(数値, 桁数)
+    ・JS: Math.round() は四捨五入のみ、桁数指定は toFixed()
+
+    ■ 配列操作
+
+    ・Excel: 範囲参照（A1:B10）
+    ・JS: 配列メソッド（map, filter, reduce）
+
+- ENTRY:
+  EXPLAIN: 制御構造の違い
+  BODY: |
+    ■ 条件分岐
+
+    ・Excel: IF(条件, 真, 偽)
+    ・JS: if-else, 三項演算子 (条件 ? 真 : 偽)
+
+    ■ ループ
+
+    ・Excel: 数式の自動計算（再帰的参照）
+    ・JS: for, while, forEach などの明示的ループ
+
+    ■ エラー処理
+
+    ・Excel: IFERROR(), ISERROR()
+    ・JS: try-catch, throw
+
+- ENTRY:
+  EXPLAIN: 参照と変数の違い
+  BODY: |
+    ■ セル参照
+
+    ・Excel: A1, $A$1（絶対参照）
+    ・JS: 変数宣言（let, const, var）
+
+    ■ 範囲操作
+
+    ・Excel: SUM(A1:A10)
+    ・JS: 配列.reduce((sum, val) => sum + val)
+
+- ENTRY:
+  EXPLAIN: パフォーマンスと実行モデルの違い
+  BODY: |
+    ■ 実行タイミング
+
+    ・Excel: 依存関係に基づく自動再計算
+    ・JS: 明示的な関数呼び出し
+
+    ■ メモリ管理
+
+    ・Excel: スプレッドシートベース
+    ・JS: ガベージコレクション
+
+- ENTRY:
+  EXPLAIN: 移植時の一般的な注意点
+  BODY: |
+    ■ 型変換の明示化
+
+    ・Excel の暗黙的変換を JS で明示的に行う
+    ・Number(), String(), Boolean() を使用
+
+    ■ 境界チェック
+
+    ・Excel は範囲外アクセスでエラーになりにくい
+    ・JS は配列境界や null/undefined をチェック
+
+    ■ 浮動小数点精度
+
+    ・両方で注意が必要だが、JS は IEEE 754 準拠
+
+    ■ 非同期処理
+
+    ・Excel は同期処理のみ
+    ・JS は Promise, async/await で非同期対応
 
 - ENTRY:
   CATEGORY: search 検索

@@ -122,7 +122,7 @@
       store.dispatch({ type: 'DECREMENT' });
       console.log('After DECREMENT:', store.getState());
 
-      // 状態変更の購読
+      // 状態変更の購読(購読中止用の関数を取得)
       const unsubscribe = store.subscribe(() => {
         console.log('State changed:', store.getState());
       });
@@ -529,6 +529,68 @@
       ReactDOM.render(
         <Provider store={store}>
           <Counter />
+        </Provider>,
+        document.getElementById('root')
+      );
+
+- ENTRY:
+  CATEGORY: Redux Persist
+
+- ENTRY:
+  EXPLAIN: Redux Persist
+  BODY: |
+    ■ Redux Persist とは
+
+    ・Redux ストアの状態を永続化するためのライブラリ
+    ・状態を localStorage や sessionStorage に保存
+    ・ページリロード後も状態を保持可能
+    ・簡単に導入でき、既存の Redux アプリに統合可能
+
+    ■ 主な機能
+
+    ・状態の永続化と復元
+    ・ブラックリスト/ホワイトリストによる部分的な永続化
+    ・カスタムストレージエンジンのサポート
+    ・シリアライゼーションとデシリアライゼーションのカスタマイズ
+
+    ■ インストール
+
+      npm install redux-persist
+
+    ■ 実装
+
+      import { persistStore, persistReducer } from 'redux-persist';
+      import storage from 'redux-persist/lib/storage'; // localStorage を使用
+      import { createStore } from 'redux';
+      import rootReducer from './reducers';
+
+      const persistConfig = {
+        key: 'root',
+        storage,
+        whitelist: ['auth'], // auth スライスのみ永続化
+      };
+
+      const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+      const store = createStore(persistedReducer);
+      const persistor = persistStore(store);
+
+      export { store, persistor };
+
+    ■ 通常 store と組み合わせて使用
+
+      import React from 'react';
+      import ReactDOM from 'react-dom';
+      import { Provider } from 'react-redux';
+      import { PersistGate } from 'redux-persist/integration/react';
+      import { store, persistor } from './store';
+      import App from './App';
+
+      ReactDOM.render(
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <App />
+          </PersistGate>
         </Provider>,
         document.getElementById('root')
       );
