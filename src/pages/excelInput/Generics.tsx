@@ -26,7 +26,7 @@ export const ExcelTr = <T extends GenericDataType>({
     <ExcelInput<T>
       methods={methods}
       keyName={`${String(keyName)}` as Path<T>}
-      //error={methods.formState.errors?.[keyName]?.message}
+    //error={methods.formState.errors?.[keyName]?.message}
     />
   )
 }

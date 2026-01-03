@@ -1,6 +1,6 @@
-import { Box, forwardRef, Input, InputProps, Text } from "@chakra-ui/react"
+import { Box, Input, InputProps, Text } from "@chakra-ui/react"
 import styled from "@emotion/styled"
-import { CSSProperties } from "react"
+import { CSSProperties, forwardRef } from "react"
 import { useEffect, useRef } from "react"
 import { Path, UseFormReturn, useWatch } from "react-hook-form"
 import { Formatter } from "./formatters"
@@ -157,10 +157,10 @@ type ExcelInputActualValue = InputProps & {
 /**
  * 実際の値を保存,取得する input コンポーネント
  */
-const ExcelInputActualValue = forwardRef<ExcelInputActualValue, "input">(
+const ExcelInputActualValue = forwardRef<HTMLInputElement, ExcelInputActualValue>(
   ({ error, onBlurInput, onFocusInput, backgroundColor, ...props }, ref) => {
     const readonly =
-      props.isReadOnly || props.readOnly || props.disabled || props.isDisabled
+      props.readOnly || props.readOnly || props.disabled || props.disabled
     const placeHolder =
       readonly && props.placeholder === undefined
         ? "自動計算"
@@ -212,13 +212,13 @@ type ExcelDisplayValueProps = InputProps & {
  *   *divやspanではタブ移動のfocusイベントに対応できない
  *   *useRefによる操作のため、ChakraInputではなく通常input使用
  */
-const ExcelDisplayValue = forwardRef<ExcelDisplayValueProps, "input">(
+const ExcelDisplayValue = forwardRef<HTMLInputElement, ExcelDisplayValueProps>(
   (
     { error, onFocusDisplay, textAlign, backgroundColor, borderLeft, ...props },
     ref
   ) => {
     const readonly =
-      props.isReadOnly || props.readOnly || props.disabled || props.isDisabled
+      props.readOnly || props.readOnly || props.disabled || props.disabled
     const placeHolder =
       readonly && props.placeholder === undefined
         ? "自動計算"
@@ -227,8 +227,8 @@ const ExcelDisplayValue = forwardRef<ExcelDisplayValueProps, "input">(
     const bgColorArranged = readonly
       ? COLOR.READONLY
       : error
-      ? "#FAEAEA"
-      : backgroundColor
+        ? "#FAEAEA"
+        : backgroundColor
     return (
       <ViewInput
         ref={ref}
@@ -270,3 +270,4 @@ const isElementOutOfViewport = (element: HTMLElement) => {
     rect.left <= (window.innerWidth || document.documentElement.clientWidth)
   )
 }
+

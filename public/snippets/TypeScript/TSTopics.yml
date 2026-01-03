@@ -321,7 +321,7 @@
       }
 
 - ENTRY:
-  EXPLAIN: ビルド時のオプション
+  EXPLAIN: ビルド・オプション
   BODY: |
     ■ TreeShaking
 
@@ -372,6 +372,42 @@
     ・圧縮コードと元のソースコードを対応付けるマッピングファイル
     ・デバッグ時に役立つ
     ・ビルドツールで自動生成可能
+
+- ENTRY:
+  EXPLAIN: TS-loader
+  BODY: |
+    ■ 概要
+
+    ・TypeScript ファイルを WebPack で処理するためのローダー
+    ・TypeScript コンパイラ (tsc) で TS を JS に変換、WebPack のバンドルプロセスに統合
+
+    ■ 主な機能
+    ・TypeScript ファイルのコンパイル
+    ・ソースマップの生成
+    ・WebPack のモジュールシステムとの統合
+
+    ■ インストール
+
+      npm install --save-dev ts-loader typescript
+
+    ■ 使い方(webpack.config.js)
+
+      module.exports = {
+        entry: './src/index.ts',
+        module: {
+          rules: [
+            {
+              test: /\.tsx?$/,
+              use: 'ts-loader',
+              exclude: /node_modules/,
+            },
+          ],
+        },
+        resolve: {
+          extensions: ['.tsx', '.ts', '.js'],
+        },
+        output: {
+          filename: 'bundle.js',
 
 #-------------------------------
 # Tips

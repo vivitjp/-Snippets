@@ -10,7 +10,7 @@
   BODY: |
     ■ インストール
 
-      npm install i18next react-i18next i18next-http-backend i18next-browser-languagedetector
+      npm install i18next @types/i18next react-i18next i18next-http-backend i18next-browser-languagedetector
 
     ■ resource 作成(言語別ファイル)
 

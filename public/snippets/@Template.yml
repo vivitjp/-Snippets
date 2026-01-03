@@ -2,17 +2,15 @@
 #-------------------------------
 # ZZZZZZZZZZZ
 #-------------------------------
-- KEY: qw.XXXXXX.category
+- ENTRY: XXXXXX.category
   CATEGORY: XXXXXX
 
 - ENTRY:
-  KEY: qw.XXXXXX
   EXPLAIN:
   BODY: |
     ■ ABC
 
 - ENTRY:
-  KEY: qw.XXXXXX
   EXPLAIN: |
     ■ DEF
   TABLE:
@@ -35,7 +33,6 @@
       *.prototype.delete()	〇	〇	対要素削除
 
 - ENTRY:
-  KEY: qw.XXXXXX
   EXPLAIN:
   OPTIONS:
     COLS: 2
@@ -48,7 +45,6 @@
     NAT ゲートウェイ
 
 - ENTRY:
-  KEY: qw.XXXXXX
   EXPLAIN:
   BODY: |
     ┌────┬───────────────────┐
@@ -80,16 +76,13 @@
      └── DDD
 
 - ENTRY:
-  KEY: qw.XXXXXX
   EXPLAIN:
   BODY: |
 
 - ENTRY:
-  KEY: qw.XXXXXX
   EXPLAIN:
   BODY: |
 
 - ENTRY:
-  KEY: qw.XXXXXX
   EXPLAIN:
   BODY: |

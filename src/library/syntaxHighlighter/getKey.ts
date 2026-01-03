@@ -17,10 +17,10 @@ import { keysExpress } from "./keys/Express"
 import { keysGit } from "./keys/Git"
 import { keysGraphQL } from "./keys/GraphQL"
 import { keysHTML } from "./keys/HTML"
-import { keysI18n } from "./keys/i18n"
 import { keysJest } from "./keys/Jest"
 import { keysJotai } from "./keys/Jotai"
 import { keysJS } from "./keys/JS"
+import { keysJSUtilities } from "./keys/JSUtilities"
 import { keysLint } from "./keys/Lint"
 import { keysLinux } from "./keys/Linux"
 import { keysMUI } from "./keys/MUI"
@@ -35,22 +35,28 @@ import { keysPrisma } from "./keys/Prisma"
 import { keysPython } from "./keys/Python"
 import { keysReact } from "./keys/React"
 import { keysReactDom } from "./keys/ReactDom"
+import { keysReactLibrariesExcel } from "./keys/ReactLibrariesExcel"
+import { keysReactLibrariesLang } from "./keys/ReactLibrariesLang"
 import { keysReactRouter } from "./keys/ReactRouter"
+import { keysReactLibrariesGraph } from "./keys/ReactLibrariesGraph"
+import { keysReactLibrariesDnD } from "./keys/ReactLibrariesDnD"
+import { keysRedis } from "./keys/Redis"
 import { keysRedux } from "./keys/Redux"
 import { keysRegExp } from "./keys/RegExp"
 import { keysRTL } from "./keys/RTL"
 import { keysSVG } from "./keys/SVG"
 import { keysSwagger } from "./keys/Swagger"
 import { keysSql } from "./keys/Sql"
+import { keysStorage } from "./keys/Storage"
 import { keysTanStack } from "./keys/TanStack"
 import { keysTS } from "./keys/TS"
 import { keysTSConfig } from "./keys/TSConfig"
 import { keysTypeORM } from "./keys/TypeORM"
 import { keysVite } from "./keys/Vite"
+import { keysVitest } from "./keys/Vitest"
 import { keysVue } from "./keys/Vue"
 import { keysYup } from "./keys/Yup"
 import { keysZustand } from "./keys/zustand"
-import { keysJSUtilities } from "./keys/JSUtilities"
 
 // 以下のオブジェクトをソートしてください
 export const codeKeys = {
@@ -70,7 +76,6 @@ export const codeKeys = {
   Git: "Git",
   graphQL: "graphQL",
   HTML: "HTML",
-  i18n: "i18n",
   Jest: "Jest",
   Jotai: "Jotai",
   JS: "JS",
@@ -92,11 +97,17 @@ export const codeKeys = {
   ReactDom: "ReactDom",
   ReactLibrary: "ReactLibrary",
   ReactRouter: "ReactRouter",
+  Redis: "Redis",
+  ReactLibrariesDnD: "ReactLibrariesDnD",
+  ReactLibrariesLang: "ReactLibrariesLang",
+  ReactLibrariesExcel: "ReactLibrariesExcel",
+  ReactLibrariesGraph: "ReactLibrariesGraph",
   Redux: "Redux",
   RegExp: "RegExp",
   RHF: "keysRHF",
   RTL: "RTL",
   Sql: "Sql",
+  Storage: "Storage",
   SVG: "SVG",
   Swagger: "Swagger",
   TanStack: "TanStack",
@@ -105,6 +116,7 @@ export const codeKeys = {
   TypeORM: "TypeORM",
   Unknown: "Unknown",
   Vite: "Vite",
+  Vitest: "Vitest",
   Vue: "Vue",
   Yup: "Yup",
   Zustand: "Zustand",
@@ -131,7 +143,6 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   Git: keysGit,
   graphQL: keysGraphQL,
   HTML: keysHTML,
-  i18n: keysI18n,
   Jest: keysJest,
   Jotai: keysJotai,
   JS: keysJS,
@@ -153,10 +164,16 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   ReactDom: keysReactDom,
   ReactLibrary: keyReactLibrary,
   ReactRouter: keysReactRouter,
+  Redis: keysRedis,
+  ReactLibrariesDnD: keysReactLibrariesDnD,
+  ReactLibrariesLang: keysReactLibrariesLang,
+  ReactLibrariesExcel: keysReactLibrariesExcel,
+  ReactLibrariesGraph: keysReactLibrariesGraph,
   Redux: keysRedux,
   RegExp: keysRegExp,
   RTL: keysRTL,
   Sql: keysSql,
+  Storage: keysStorage,
   SVG: keysSVG,
   Swagger: keysSwagger,
   TanStack: keysTanStack,
@@ -164,6 +181,7 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   TSConfig: keysTSConfig,
   TypeORM: keysTypeORM,
   Vite: keysVite,
+  Vitest: keysVitest,
   Vue: keysVue,
   Yup: keysYup,
   Zustand: keysZustand,

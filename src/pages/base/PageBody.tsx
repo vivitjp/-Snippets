@@ -1,10 +1,8 @@
-import styled from "styled-components"
 import { zooMenu } from "../../store/menuStore"
-import { Circles } from "react-loader-spinner"
-import { SpinnerWrapper } from "../../library/hooks/components/SpinnerWrapper"
 import { useState, useEffect, useRef } from "react"
 import { Button } from "../../common/styleInput"
 import { useOCButton } from "../../store/storeOC"
+import styled from "@emotion/styled"
 
 type Props = {
   Snippets: () => JSX.Element
@@ -68,17 +66,7 @@ export const PageBody = ({ Snippets, isPending, isInitialOpened }: Props) => {
       </BodyTitleWrapper>
       <BodySection>
         {isPending ? (
-          <SpinnerWrapper>
-            <Circles
-              height="160"
-              width="160"
-              color="Firebrick"
-              ariaLabel="circles-loading"
-              wrapperStyle={{}}
-              wrapperClass=""
-              visible={true}
-            />
-          </SpinnerWrapper>
+          <>Loading...</>
         ) : (
           <Snippets />
         )}

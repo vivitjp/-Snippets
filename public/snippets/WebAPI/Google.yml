@@ -39,3 +39,61 @@
     <div className={courierPrime.className}>
       ...
     </div>
+
+- ENTRY:
+  EXPLAIN: Google Analytics API (ページアクセス測定)
+  BODY: |
+    ■ 概要
+
+    ・Google Analytics のデータをプログラムから取得し、ページアクセスを測定
+    ・GA4 (Google Analytics 4) の Reporting API を使用
+
+    ■ インストール
+
+      npm install googleapis
+
+    ■ 認証設定
+
+    ・Google Cloud Console でプロジェクト作成
+    ・Analytics API を有効化
+    ・サービスアカウントキーを作成 (JSON ファイル)
+    ・GA4 プロパティにサービスアカウントを追加
+
+    ■ 実装例 (Node.js)
+
+      const { google } = require('googleapis');
+      const analyticsData = google.analyticsdata('v1beta');
+
+      // 認証
+      const auth = new google.auth.GoogleAuth({
+        keyFile: 'path/to/service-account-key.json',
+        scopes: ['https://www.googleapis.com/auth/analytics.readonly'],
+      });
+
+      // レポート取得
+      async function getPageViews() {
+        const response = await analyticsData.properties.runReport({
+          auth: auth,
+          property: 'properties/YOUR_GA4_PROPERTY_ID',
+          requestBody: {
+            dateRanges: [{ startDate: '30daysAgo', endDate: 'today' }],
+            dimensions: [{ name: 'pagePath' }],
+            metrics: [{ name: 'screenPageViews' }],
+            orderBys: [{ metric: { metricName: 'screenPageViews' }, desc: true }],
+            limit: 10,
+          },
+        });
+
+        console.log('ページビュー数:');
+        response.data.rows.forEach(row => {
+          console.log(`${row.dimensionValues[0].value}: ${row.metricValues[0].value}`);
+        });
+      }
+
+      getPageViews().catch(console.error);
+
+    ■ 注意点
+
+    ・GA4 プロパティ ID を確認 (例: 123456789)
+    ・日付範囲やメトリクスをカスタマイズ可能
+    ・レート制限に注意

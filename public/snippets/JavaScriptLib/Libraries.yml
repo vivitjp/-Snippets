@@ -34,6 +34,8 @@
 
       npm i @formulajs/formulajs
 
+      ※ TypeScript対応 (型定義ファイル同梱)
+
     ■ IMPORT
 
       import * as formulajs from '@formulajs/formulajs';
@@ -130,9 +132,10 @@
       URL:    https://simple-statistics.github.io/docs/
       npm:    https://www.npmjs.com/package/simple-statistics
 
-    ■ インストール
+    ■ インストール(TypeScript 用型定義も含む)
 
       npm install simple-statistics
+      ※ TypeScript: 型定義ファイル同梱
 
 - ENTRY:
   EXPLAIN: 実装
@@ -191,9 +194,9 @@
 - ENTRY:
   EXPLAIN: インストール & 概要
   BODY: |
-    ■ インストール
+    ■ インストール(TypeScript 用型定義も含む)
 
-      npm install big.js
+      npm install big.js @types/big.js
 
     ■ 概要
 
@@ -255,9 +258,9 @@
 - ENTRY:
   EXPLAIN: インストール & 概要
   BODY: |
-    ■ インストール
+    ■ インストール(TypeScript 用型定義も含む)
 
-      npm install csv-parse
+      npm install csv-parse @types/csv-parse
 
     ■ 概要
 
@@ -339,9 +342,9 @@
 - ENTRY:
   EXPLAIN: インストール & 概要
   BODY: |
-    ■ インストール
+    ■ インストール(TypeScript 用型定義も含む)
 
-      npm install dompurify 
+      npm install dompurify @types/dompurify
 
     ■ 概要
 
@@ -397,9 +400,9 @@
 - ENTRY:
   EXPLAIN: インストール & 概要
   BODY: |
-    ■ インストール
+    ■ インストール(TypeScript 用型定義も含む)
 
-      npm install async-retry
+      npm install async-retry @types/async-retry
 
     ■ 概要
 
@@ -464,9 +467,9 @@
 - ENTRY:
   EXPLAIN: インストール & 概要
   BODY: |
-    ■ インストール
+    ■ インストール(TypeScript 用型定義も含む)
 
-      npm install encoding-japanese
+      npm install encoding-japanese @types/encoding-japanese
 
     ■ 概要
 
@@ -566,9 +569,9 @@
 - ENTRY:
   EXPLAIN: インストール & 概要
   BODY: |
-    ■ インストール
+    ■ インストール(TypeScript 用型定義も含む)
 
-      npm install html-react-parser
+      npm install html-react-parser @types/html-react-parser
 
     ■ 概要
 
@@ -638,9 +641,9 @@
 - ENTRY:
   EXPLAIN: インストール & 概要
   BODY: |
-    ■ インストール
+    ■ インストール(TypeScript 用型定義も含む)
 
-      npm install iconv-lite
+      npm install iconv-lite @types/iconv-lite
 
     ■ 概要
 
@@ -706,7 +709,7 @@
 - ENTRY:
   EXPLAIN: インストール & 概要
   BODY: |
-    ■ インストール
+    ■ インストール(TypeScript 用型定義も含む)
 
       npm install immer
 
@@ -810,9 +813,9 @@
 - ENTRY:
   EXPLAIN: インストール & 概要
   BODY: |
-    ■ インストール
+    ■ インストール(TypeScript 用型定義も含む)
 
-      npm install moji
+      npm install moji @types/moji
 
     ■ 概要
 
@@ -898,9 +901,9 @@
 - ENTRY:
   EXPLAIN: インストール & 概要
   BODY: |
-    ■ インストール
+    ■ インストール(TypeScript 用型定義も含む)
 
-      npm install node-forge
+      npm install node-forge @types/node-forge
 
     ■ 概要
 
