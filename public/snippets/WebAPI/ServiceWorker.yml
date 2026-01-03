@@ -16,6 +16,13 @@
     ・非同期APIで動作し、Promiseベースのインターフェースを提供
     ・同一オリジン（プロトコル、ドメイン、ポートが同じ）内でのみアクセス可能
 
+    ■ ユースケース
+
+    ・オフライン対応のウェブアプリケーションの構築
+    ・プッシュ通知の受信と表示
+    ・バックグラウンドでのデータ同期
+    ・リソースのキャッシュと高速化
+
     ■ ブラウザサポート状況
 
     ・ほとんどのモダンブラウザでサポートされているが、古いブラウザではサポートされていない場合がある
@@ -115,3 +122,102 @@
         </div>
       );
     }
+
+- ENTRY:
+  EXPLAIN: addEventListener 例
+  BODY: |
+    ■ addEventListener 例
+
+    // service-worker.js
+
+    // インストールイベント
+    self.addEventListener('install', (event) => {
+      console.log('サービスワーカーがインストールされました');
+      // キャッシュの初期化などの処理をここに記述
+    });
+
+    // アクティベートイベント
+    self.addEventListener('activate', (event) => {
+      console.log('サービスワーカーがアクティブになりました');
+      // 古いキャッシュの削除などの処理をここに記述
+    });
+
+    // フェッチイベント
+    self.addEventListener('fetch', (event) => {
+      console.log('フェッチリクエスト:', event.request.url);
+      // リクエストの制御やキャッシュからのレスポンス提供などの処理をここに記述
+    });
+
+    // プッシュイベント
+    self.addEventListener('push', (event) => {
+      console.log('プッシュ通知を受信しました');
+      // 通知の表示などの処理をここに記述
+    });
+
+    // バックグラウンド同期イベント
+    self.addEventListener('sync', (event) => {
+      console.log('バックグラウンド同期イベント:', event.tag);
+      // 同期処理などの処理をここに記述
+    });
+
+- ENTRY:
+  EXPLAIN: service-worker.js の最も短いが完全なサンプル
+  BODY: |
+    // public/service-worker.js
+    const CACHE_NAME = 'sw-sample-v1';
+    const PRECACHE_URLS = [
+      '/',
+      '/index.html',
+      '/offline.html',
+    ];
+
+    // インストール：プリキャッシュ
+    self.addEventListener('install', (event) => {
+      self.skipWaiting();
+      event.waitUntil(
+        caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE_URLS))
+      );
+    });
+
+    // アクティベート：古いキャッシュのクリーンアップ
+    self.addEventListener('activate', (event) => {
+      event.waitUntil(
+        caches.keys().then((keys) =>
+          Promise.all(
+            keys
+              .filter((key) => key !== CACHE_NAME)
+              .map((key) => caches.delete(key))
+          )
+        )
+      );
+      self.clients.claim();
+    });
+
+    // フェッチ：キャッシュ優先、ネットワークから取得しつつランタイムキャッシュ
+    self.addEventListener('fetch', (event) => {
+      if (event.request.method !== 'GET') return;
+
+      event.respondWith(
+        caches.match(event.request).then((cachedResponse) => {
+          if (cachedResponse) return cachedResponse;
+
+          return fetch(event.request)
+            .then((networkResponse) => {
+              if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
+                return networkResponse;
+              }
+              const responseClone = networkResponse.clone();
+              caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
+              return networkResponse;
+            })
+            .catch(() => {
+              // HTML ドキュメント要求はオフラインフォールバック
+              const accept = event.request.headers.get('accept') || '';
+              if (event.request.destination === 'document' || accept.includes('text/html')) {
+                return caches.match('/offline.html');
+              }
+              return new Response('Offline', { status: 503, statusText: 'Offline' });
+            });
+        })
+      );
+    });

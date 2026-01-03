@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from "react"
 import { Button } from "../../common/styleInput"
 import { useOCButton } from "../../store/storeOC"
 import styled from "@emotion/styled"
+import { Circles } from "react-loader-spinner"
+import { SpinnerWrapper } from "../../library/hooks/components/SpinnerWrapper"
 
 type Props = {
   Snippets: () => JSX.Element
@@ -66,7 +68,9 @@ export const PageBody = ({ Snippets, isPending, isInitialOpened }: Props) => {
       </BodyTitleWrapper>
       <BodySection>
         {isPending ? (
-          <>Loading...</>
+          <SpinnerWrapper>
+            <Circles height="120" width="120" color="FireBrick" ariaLabel="loading-indicator" />
+          </SpinnerWrapper>
         ) : (
           <Snippets />
         )}

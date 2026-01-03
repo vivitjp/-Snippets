@@ -807,9 +807,14 @@ export const menuItems: menuByCategories[] = [
     category: "WebAPI",
     items: [
       {
-        name: "Google関連",
-        fileName: "WebAPI/Google",
-        codeKeyTypes: [codeKeys.CSS, codeKeys.HTML, codeKeys.React],
+        name: "Storage",
+        fileName: "WebAPI/Storage",
+        codeKeyTypes: [codeKeys.Storage],
+      },
+      {
+        name: "ServiceWorkers",
+        fileName: "WebAPI/ServiceWorker",
+        // codeKeyTypes: [codeKeys.ServiceWorker],
       },
       {
         name: "SVG",
@@ -817,13 +822,13 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.SVG],
       },
       {
-        name: "window",
-        fileName: "WebAPI/window",
+        name: "Google関連",
+        fileName: "WebAPI/Google",
+        codeKeyTypes: [codeKeys.CSS, codeKeys.HTML, codeKeys.React],
       },
       {
-        name: "Storage",
-        fileName: "WebAPI/Storage",
-        codeKeyTypes: [codeKeys.Storage],
+        name: "window",
+        fileName: "WebAPI/window",
       },
     ],
   },
