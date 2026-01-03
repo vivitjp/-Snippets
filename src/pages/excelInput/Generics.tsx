@@ -1,5 +1,5 @@
 import { UseFormReturn, Path } from "react-hook-form"
-import { ExcelInput } from "."
+import { ExcelInput } from "./ExcelInput"
 
 /**
  * 型

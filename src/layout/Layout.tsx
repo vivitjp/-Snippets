@@ -50,7 +50,7 @@ export const Layout = () => {
             Snippets
           </Link>
           <Link to="/" style={style} onClick={() => setIsSnippets(false)}>
-            Sample Codes
+            Samples
           </Link>
         </HStack>
       </HeaderWrapper>
@@ -74,7 +74,7 @@ export const Layout = () => {
             </Playground>
           </Body>
         ) : (
-          <div style={{ height: "100vh", width: "100vw" }}>
+          <div style={{ width: "100%", minHeight: "100%", height: "auto" }}>
             <Sample />
           </div>
         )}

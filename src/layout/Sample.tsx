@@ -6,8 +6,10 @@ import {
 import { Link, Route, Routes } from "react-router-dom"
 import { Heading, HStack, Stack, VStack } from "@chakra-ui/react"
 
+
 import LocalStoragePage from "../pages/localStorage"
 import RegressionPage from "../pages/regression"
+import ExcelInputPage from "../pages/excelInput"
 
 type SampleType = {
   name: string;
@@ -19,11 +21,11 @@ type GroupName = string
 
 const samples: Record<GroupName, SampleType[]> = {
   "Form": [
-    // {
-    //   name: 'Excel Input',
-    //   to: '/excel-input',
-    //   element: <ExcelInputPage />
-    // },
+    {
+      name: 'Excel Input',
+      to: '/excel-input',
+      element: <ExcelInputPage />
+    },
   ],
   "Storage": [
     {
@@ -48,8 +50,8 @@ const samples: Record<GroupName, SampleType[]> = {
 //------------------------------
 export const Sample = () => {
   return (
-    <HStack align="start" width={"100%"}>
-      <MenuNav data-testid="body" style={{ height: "100vh" }}>
+    <HStack align="stretch" width={"100%"} minHeight={"fit-content"}>
+      <MenuNav data-testid="body" style={{ minHeight: "100vh" }} >
         <HStack align="start" width={"100%"}>
           <VStack align="start" gap={4} width={"100%"}>
             <Heading>サンプルコード</Heading>
@@ -83,8 +85,11 @@ export const Sample = () => {
         </HStack>
       </MenuNav>
       <Stack
+        data-testid="sample-content"
         alignItems={"flex-start"}
         justifyContent={"flex-start"}
+        flex={1}
+        minWidth={0}
       >
         <Routes>
           {Object.entries(samples).map(([_, samples], index) => (

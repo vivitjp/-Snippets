@@ -8,7 +8,8 @@ export const Section = styled.section`
   margin: 0;
   min-width: 100%;
   width: 100%;
-  overflow: hidden;
+  /* allow page to grow when content is taller than viewport */
+  overflow: visible;
 `
 
 export const HeaderWrapper = styled.section`
@@ -43,7 +44,8 @@ export const HeaderOptions = styled.section`
 export const Body = styled.div`
   display: flex;
   flex-direction: row;
-  height: 100%;
+  /* let Body expand with children; keep a sensible minimum to fill viewport */
+  flex: 1 1 auto;
   min-height: calc(100vh - 50px);
 `
 
@@ -58,6 +60,10 @@ export const MenuNav = styled.nav`
   padding: 5px;
   padding-bottom: 50px;
   background-color: #f3eed5;
+  /* make sidebar stretch to match content height and allow internal scroll when very long */
+  align-self: stretch;
+  height: auto;
+  overflow: auto;
 `
 
 export const Group = styled.details`
@@ -167,5 +173,6 @@ export const Playground = styled.div`
   padding: 10px;
   margin-bottom: 100px;
   width: 100%;
-  overflow: hidden;
+  /* allow playground/content to grow and scroll if needed */
+  overflow: visible;
 `
