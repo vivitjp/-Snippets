@@ -1,4 +1,5 @@
-import styled, { css } from "styled-components"
+import { css } from "@emotion/react"
+import styled from "@emotion/styled"
 
 export const Section = styled.section`
   display: flex;
@@ -7,8 +8,6 @@ export const Section = styled.section`
   margin: 0;
   min-width: 100%;
   width: 100%;
-  height: 100%;
-  min-height: 100vh;
   overflow: hidden;
 `
 
@@ -54,8 +53,8 @@ export const MenuNav = styled.nav`
   justify-content: flex-start;
   align-items: flex-start;
   gap: 5px;
-  min-width: 140px; // <---- Side Menu 幅
-  max-width: 140px; // <---- Side Menu 幅
+  min-width: 140px;
+  max-width: 140px;
   padding: 5px;
   padding-bottom: 50px;
   background-color: #f3eed5;
@@ -125,15 +124,14 @@ export const MenuItem = styled.div<MenuItem>`
     padding: 5px;
     text-decoration: none;
     font-size: 0.8rem;
-    width: 100%;
+    width: 130px;
     color: #555;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
     cursor: pointer;
-    ${
-      isPending &&
-      css`
+    ${isPending &&
+    css`
       color: #BBB;
       cursor: default;
       :hover {

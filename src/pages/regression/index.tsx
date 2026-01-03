@@ -1,6 +1,6 @@
 import MLR from "ml-regression-multivariate-linear"
 
-export const Sample_MLR = () => {
+const Sample_MLR = () => {
   const x = [[0], [1], [2], [3]]
   // Y0 = X0 * 2, Y1 = X1 * 2, Y2 = X0 + X1
   const y = [
@@ -27,3 +27,5 @@ export const Sample_MLR = () => {
     </>
   )
 }
+
+export default Sample_MLR

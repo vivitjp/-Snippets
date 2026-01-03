@@ -1,5 +1,5 @@
 import { UseFormReturn, Path } from "react-hook-form"
-import { ExcelInput } from "./ExcelInput"
+import { ExcelInput } from "."
 
 /**
  * 型
@@ -26,7 +26,7 @@ export const ExcelTr = <T extends GenericDataType>({
     <ExcelInput<T>
       methods={methods}
       keyName={`${String(keyName)}` as Path<T>}
-      //error={methods.formState.errors?.[keyName]?.message}
+    //error={methods.formState.errors?.[keyName]?.message}
     />
   )
 }

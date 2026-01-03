@@ -1,4 +1,6 @@
-import styled, { css } from "styled-components"
+import { css } from "@emotion/react"
+import styled from "@emotion/styled"
+
 
 type DetailOptions = {
   noShadow?: boolean

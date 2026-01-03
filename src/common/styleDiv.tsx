@@ -1,5 +1,6 @@
+import { css } from "@emotion/react"
+import styled from "@emotion/styled"
 import { CSSProperties } from "react"
-import styled, { css } from "styled-components"
 
 type AttrPosition = "position" | "top" | "bottom" | "right" | "left" | "zIndex"
 type AttrFlex =

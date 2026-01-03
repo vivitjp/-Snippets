@@ -1,4 +1,6 @@
-import styled, { CSSProperties } from "styled-components"
+import styled from "@emotion/styled"
+import { CSSProperties } from "react"
+
 
 export type Options<T> = {
   title: string

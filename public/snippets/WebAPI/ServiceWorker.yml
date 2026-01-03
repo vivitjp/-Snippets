@@ -1,0 +1,117 @@
+---
+#-------------------------------
+# Service Workers
+#-------------------------------
+- ENTRY:
+  CATEGORY: Service Workers
+
+- ENTRY:
+  EXPLAIN: 概要 & メソッド
+  BODY: |
+    ■ 概要
+
+    ・Webブラウザでバックグラウンドで動作するスクリプト
+    ・ネットワークリクエストの制御、プッシュ通知の受信、バックグラウンド同期などが可能
+    ・オフライン対応やパフォーマンス向上に利用される
+    ・非同期APIで動作し、Promiseベースのインターフェースを提供
+    ・同一オリジン（プロトコル、ドメイン、ポートが同じ）内でのみアクセス可能
+
+    ■ ブラウザサポート状況
+
+    ・ほとんどのモダンブラウザでサポートされているが、古いブラウザではサポートされていない場合がある
+
+    ■ 主なメソッド
+
+    ・navigator.serviceWorker.register(scriptURL, options): サービスワーカーを登録
+    ・navigator.serviceWorker.ready: サービスワーカーがアクティブになるのを待つ
+    ・self.addEventListener('install', event): インストールイベントをリッスン
+    ・self.addEventListener('activate', event): アクティベートイベントをリッスン
+    ・self.addEventListener('fetch', event): フェッチイベントをリッスン
+    ・self.addEventListener('push', event): プッシュイベントをリッスン
+    ・self.addEventListener('sync', event): バックグラウンド同期イベントをリッスン
+
+    ■ npm パッケージの種類
+
+      npm install workbox-sw
+      npm install sw-precache
+      npm install sw-toolbox
+      npm install serviceworker-webpack-plugin
+      npm install next-pwa
+      npm install react-service-worker
+      npm install offline-plugin
+      npm install pwa-asset-generator
+      npm install vite-plugin-pwa
+      npm install create-react-pwa
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ 実装(全メソッドを持つカスタムフック)
+
+    import { useCallback } from 'react';
+
+    function useServiceWorker() {
+      // サービスワーカーの登録
+      const registerServiceWorker = useCallback(async (scriptURL, options = {}) => {
+        if ('serviceWorker' in navigator) {
+          try {
+            const registration = await navigator.serviceWorker.register(scriptURL, options);
+            console.log('サービスワーカーが登録されました:', registration);
+            return registration;
+          } catch (error) {
+            console.error('サービスワーカーの登録エラー:', error);
+            throw error;
+          }
+        } else {
+          throw new Error('このブラウザはサービスワーカーをサポートしていません');
+        }
+      }, []);
+
+      // サービスワーカーの準備完了を待つ
+      const waitForServiceWorkerReady = useCallback(async () => {
+        if ('serviceWorker' in navigator) {
+          try {
+            const registration = await navigator.serviceWorker.ready;
+            console.log('サービスワーカーがアクティブになりました:', registration);
+            return registration;
+          } catch (error) {
+            console.error('サービスワーカーの準備エラー:', error);
+            throw error;
+          }
+        } else {
+          throw new Error('このブラウザはサービスワーカーをサポートしていません');
+        }
+      }, []);
+
+      return {
+        registerServiceWorker,
+        waitForServiceWorkerReady,
+      };
+    }
+
+- ENTRY:
+  EXPLAIN: 運用
+  BODY: |
+    ■ 実装運用(useServiceWorker)
+
+    import useServiceWorker from './useServiceWorker';
+    import { useEffect } from 'react';
+
+    function App() {
+      const { registerServiceWorker, waitForServiceWorkerReady } = useServiceWorker();
+
+      useEffect(() => {
+        // サービスワーカーの登録
+        registerServiceWorker('/service-worker.js').catch(console.error);
+
+        // サービスワーカーの準備完了を待つ
+        waitForServiceWorkerReady().catch(console.error);
+      }, [registerServiceWorker, waitForServiceWorkerReady]);
+
+      return (
+        <div>
+          <h1>Service Worker Example</h1>
+          <p>サービスワーカーが登録され、アクティブになるのを待っています。</p>
+        </div>
+      );
+    }

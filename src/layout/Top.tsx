@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled from "@emotion/styled"
 import { Div, Row } from "../common/styleDiv"
 import { menuItems } from "../pages/base/items"
 import { zooMenu, MenuItemType } from "../store/menuStore"
@@ -24,7 +24,7 @@ export const Top = () => {
                   <Item
                     key={item.name}
                     onClick={item.fileName ? () => handleMenu(item) : undefined}
-                    isPending={!!item.fileName}
+                    isPending={!item.fileName}
                   >
                     {names.length > 1 ? names[0] : item.name}
                   </Item>
@@ -47,11 +47,6 @@ const Item = styled(MenuItem)`
   width: unset;
   font-size: 15px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  cursor: ${(props) => (props.isPending ? "pointer" : "default")};
-  color : ${(props) => (props.isPending ? "#333" : "#aaa")};
-  &:hover {
-    color: ${(props) => (props.isPending ? "var(--main-color)" : "#aaa")};
-  }
 `
 
 /* color: DodgerBlue;

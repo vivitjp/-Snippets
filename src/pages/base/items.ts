@@ -821,12 +821,9 @@ export const menuItems: menuByCategories[] = [
         fileName: "WebAPI/window",
       },
       {
-        name: "LocalStorage",
-        fileName: "",
-      },
-      {
-        name: "IndexedDB",
-        fileName: "",
+        name: "Storage",
+        fileName: "WebAPI/Storage",
+        codeKeyTypes: [codeKeys.Storage],
       },
     ],
   },

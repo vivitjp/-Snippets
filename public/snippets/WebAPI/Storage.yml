@@ -1,0 +1,1260 @@
+---
+#-------------------------------
+# storage
+#-------------------------------
+- ENTRY:
+  CATEGORY: storage
+
+- ENTRY:
+  EXPLAIN: ストレージタイプ
+  BODY: |
+    ■ localStorage
+
+      データ永続性:  永続
+      容量:         約5MB
+      動作:         同期的
+      保存方法:     キーと値のペアで保存、文字列のみ
+
+    ■ sessionStorage
+
+      データ永続性:  セッション(ブラウザやタブを閉じると削除)
+      容量:         約5MB
+      動作:         同期的
+      保存方法:     キーと値のペアで保存、文字列のみ
+
+    ■ IndexedDB
+
+      データ永続性:  永続
+      容量:         数百MB以上 (ブラウザによる)
+      動作:         非同期的
+      保存方法:      構造化データの保存に適している
+
+    ■ Cookies
+
+      データ永続性:  指定可能 (有効期限を設定できる)
+      容量:         約4KB
+      動作:         同期的
+      保存方法:     キーと値のペアで保存、文字列のみ
+      用途:         サーバーとクライアント間でデータを送受信(HTTPリクエストごとに送信)
+
+    ■ WebSQL(Deprecated)
+
+      データ永続性:  永続
+      容量:         制限なし (ブラウザによる)
+      動作:         非同期的
+      保存方法:     SQL データベースを使用
+      ステータス:   非推奨 (IndexedDB が推奨)
+
+    ■ File System Access API
+
+      データ永続性:  永続
+      容量:         ユーザーのファイルシステム
+      動作:         非同期的
+      保存方法:     ユーザーのローカルファイルにアクセス・保存
+      用途:         ファイルの読み書き、ディレクトリ操作
+
+    ■ Cache API
+
+      データ永続性:  永続 (Service Worker のライフサイクル)
+      容量:         ブラウザによる制限あり
+      動作:         非同期的
+      保存方法:     Request/Response のキャッシュ
+      用途:         オフライン対応、ネットワークリクエストのキャッシュ
+
+    ■ Service Workers
+
+      データ永続性:  永続 (登録されている間)
+      容量:         Cache API 経由
+      動作:         非同期的
+      保存方法:     Cache API を使用したキャッシュ
+      用途:         オフライン対応、バックグラウンド処理、プッシュ通知
+
+#-------------------------------
+# localStorage
+#-------------------------------
+- ENTRY:
+  CATEGORY: localStorage
+
+- ENTRY:
+  EXPLAIN: 概要 & メソッド
+  BODY: |
+    ■ 概要
+
+    ・Webブラウザにデータを保存するための仕組み
+    ・キーと値のペアでデータを保存
+    ・データはブラウザに永続的に保存され、ページのリロードやブラウザの再起動後も保持される
+    ・保存容量は約5MB程度（ブラウザによって異なる）
+    ・同一オリジン（プロトコル、ドメイン、ポートが同じ）内でのみアクセス可能
+
+    ■ ブラウザサポート状況
+
+    ・主要なモダンブラウザでサポート（Chrome、Firefox、Edge、Safariなど）
+
+    ■ 主なメソッド
+
+    ・setItem(key, value): 指定したキーで値を保存
+    ・getItem(key): 指定したキーの値を取得
+    ・removeItem(key): 指定したキーの値を削除
+    ・clear(): すべてのデータを削除
+    ・key(index): 指定したインデックスのキーを取得
+    ・length: 保存されているキーの数を取得
+
+    ■ npm パッケージの種類
+
+      npm install use-local-storage-state
+      npm install react-use-localstorage
+      npm install use-local-storage
+      npm install use-local-storage-hook
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ 実装(React Custom Hook - 全メソッド対応)
+
+    import { useState, useCallback } from 'react';
+
+    function useLocalStorage(key, initialValue) {
+
+      ■ 状態の初期化(ローカルストレージから取得、なければ初期値)
+      const [storedValue, setStoredValue] = useState(() => {
+        try {
+          const item = window.localStorage.getItem(key);
+          return item ? JSON.parse(item) : initialValue;
+        } catch (error) {
+          console.error(error);
+          return initialValue;
+        }
+      });
+
+      ※ useState 使用目的: React の状態管理のため
+      ・localStorage はブラウザのストレージで、操作しても React コンポーネントの再レンダリングは発生しない
+      ・useState を使用することで localStorage の値が変更された際に再レンダリングされ、最新の値が反映される
+
+      ■ ローカルステート と localStorage に値を保存する関数
+      const setValue = useCallback((value) => {
+        try {
+          const valueToStore = value instanceof Function ? value(storedValue) : value;
+          setStoredValue(valueToStore);
+          window.localStorage.setItem(key, JSON.stringify(valueToStore));
+        } catch (error) {
+          console.error(error);
+        }
+      }, [key, storedValue]);
+
+      ■ localStorage から値を取得する関数
+      const getItem = useCallback(() => {
+        try {
+          const item = window.localStorage.getItem(key);
+          return item ? JSON.parse(item) : null;
+        } catch (error) {
+          console.error(error);
+          return null;
+        }
+      }, [key]);
+
+      ■ localStorage から値を削除する関数
+      const removeItem = useCallback(() => {
+        try {
+          window.localStorage.removeItem(key);
+          setStoredValue(initialValue);
+        } catch (error) {
+          console.error(error);
+        }
+      }, [key, initialValue]);
+
+      ■ localStorage を全てクリアする関数
+      const clear = useCallback(() => {
+        try {
+          window.localStorage.clear();
+          setStoredValue(initialValue);
+        } catch (error) {
+          console.error(error);
+        }
+      }, [initialValue]);
+
+      ■ 指定したインデックスのキーを取得する関数
+      const getKey = useCallback((index) => {
+        try {
+          return window.localStorage.key(index);
+        } catch (error) {
+          console.error(error);
+          return null;
+        }
+      }, []);
+
+      ■ localStorage に保存されているキーの数を取得する関数
+      const getLength = useCallback(() => {
+        try {
+          return window.localStorage.length;
+        } catch (error) {
+          console.error(error);
+          return 0;
+        }
+      }, []);
+
+      return {
+        value: storedValue,
+        setValue,
+        getItem,
+        removeItem,
+        clear,
+        getKey,
+        length: getLength(),
+      };
+    }
+
+    export default useLocalStorage;
+
+- ENTRY:
+  EXPLAIN: 運用
+  BODY: |
+    ■ 実装運用(useLocalStorage)
+
+    import useLocalStorage from './useLocalStorage';
+    import { useState } from 'react';
+
+    function App() {
+      const { value, setValue, getItem, removeItem, clear, getKey, length } = useLocalStorage('myKey', 'defaultValue');
+      const [inputValue, setInputValue] = useState('');
+
+      const handleSetValue = () => {
+        setValue(inputValue);
+      };
+
+      const handleGetItem = () => {
+        const item = getItem();
+        alert(`Retrieved: ${item}`);
+      };
+
+      const handleRemoveItem = () => {
+        removeItem();
+      };
+
+      const handleClear = () => {
+        clear();
+      };
+
+      const handleGetKey = () => {
+        const key = getKey(0); // 最初のキーを取得
+        alert(`First key: ${key}`);
+      };
+
+      return (
+        <div>
+          <h1>useLocalStorage Example</h1>
+          <p>Current value: {value}</p>
+          <p>Total items: {length}</p>
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            placeholder="Enter value to set"
+          />
+          <button onClick={handleSetValue}>Set Value</button>
+          <button onClick={handleGetItem}>Get Item</button>
+          <button onClick={handleRemoveItem}>Remove Item</button>
+          <button onClick={handleClear}>Clear All</button>
+          <button onClick={handleGetKey}>Get First Key</button>
+        </div>
+      );
+    }
+
+    export default App;
+
+- ENTRY:
+  EXPLAIN: |
+    パッケージ: use-local-storage-state
+  BODY: |
+    ■ 概要
+
+    ・React 用のカスタムフックで、localStorage と状態管理を簡単に連携
+    ・状態の変更が自動的に localStorage に保存され、ページリロード後も状態が保持される
+
+    ■ インストール
+
+      npm install use-local-storage-state
+
+    ■ 主なメソッドとプロパティ
+
+      ・name: localStorage のキー
+      ・setName: localStorage のキーを変更
+      ・value: 現在の状態値
+      ・setValue(newValue): 状態値を更新し、localStorage に保存
+      ・removeItem(): localStorage から指定したキーのデータを削除
+      ・clear(): localStorage のすべてのデータを削除
+
+    ■ 基本的な使い方
+
+      import useLocalStorageState from 'use-local-storage-state';
+
+      function App() {
+        const [name, setName, { removeItem, clear }] = useLocalStorageState('name', 'Guest');
+
+        return (
+          <div>
+            <h1>Hello, {name}!</h1>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <button onClick={removeItem}>Remove Name</button>
+            <button onClick={clear}>Clear All</button>
+          </div>
+        );
+      }
+
+
+    ■ 追加オプション
+
+      const [value, setValue] = useLocalStorageState('key', {
+        defaultValue: 'default',
+        serialize: JSON.stringify,
+        deserialize: JSON.parse,
+        syncData: true,
+      });
+
+#-------------------------------
+# sessionStorage
+#-------------------------------
+- ENTRY:
+  CATEGORY: sessionStorage
+
+- ENTRY:
+  EXPLAIN: 概要 & メソッド
+  BODY: |
+    ■ 概要
+
+    ・Webブラウザにデータを保存するための仕組み
+    ・キーと値のペアでデータを保存
+    ・データはブラウザのタブやウィンドウが閉じられるまで保持される（セッション単位での保存）
+    ・保存容量は約5MB程度（ブラウザによって異なる）
+    ・同一オリジン（プロトコル、ドメイン、ポートが同じ）内でのみアクセス可能
+
+    ■ ブラウザサポート状況
+
+    ・主要なモダンブラウザでサポート（Chrome、Firefox、Edge、Safariなど）
+
+    ■ 主なメソッド
+
+    ・setItem(key, value): 指定したキーで値を保存
+    ・getItem(key): 指定したキーの値を取得
+    ・removeItem(key): 指定したキーの値を削除
+    ・clear(): すべてのデータを削除
+    ・key(index): 指定したインデックスのキーを取得
+    ・length: 保存されているキーの数を取得
+
+    ■ npm パッケージの種類
+
+      npm install use-session-storage
+      npm install react-use-sessionstorage
+      npm install use-session-storage-state
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ 実装(React Custom Hook - 全メソッド対応 + 複数キー対応)
+
+    import { useState, useCallback } from 'react';
+
+    function useSessionStorage(key, initialValue) {
+
+      ■ 状態の初期化(セッションストレージから取得、なければ初期値)
+      const [storedValue, setStoredValue] = useState(() => {
+        try {
+          const item = window.sessionStorage.getItem(key);
+          return item ? JSON.parse(item) : initialValue;
+        } catch (error) {
+          console.error(error);
+          return initialValue;
+        }
+      });
+
+      ■ ローカルステート と sessionStorage に値を保存する関数
+      const setValue = useCallback((value) => {
+        try {
+          const valueToStore = value instanceof Function ? value(storedValue) : value;
+          setStoredValue(valueToStore);
+          window.sessionStorage.setItem(key, JSON.stringify(valueToStore));
+        } catch (error) {
+          console.error(error);
+        }
+      }, [key, storedValue]);
+
+      ■ sessionStorage から値を取得する関数
+      const getItem = useCallback(() => {
+        try {
+          const item = window.sessionStorage.getItem(key);
+          return item ? JSON.parse(item) : null;
+        } catch (error) {
+          console.error(error);
+          return null;
+        }
+      }, [key]);
+
+      ■ sessionStorage から値を削除する関数
+      const removeItem = useCallback(() => {
+        try {
+          window.sessionStorage.removeItem(key);
+          setStoredValue(initialValue);
+        } catch (error) {
+          console.error(error);
+        }
+      }, [key, initialValue]);
+
+      ■ sessionStorage を全てクリアする関数
+      const clear = useCallback(() => {
+        try {
+          window.sessionStorage.clear();
+          setStoredValue(initialValue);
+        } catch (error) {
+          console.error(error);
+        }
+      }, [initialValue]);
+
+      ■ 指定したインデックスのキーを取得する関数
+      const getKey = useCallback((index) => {
+        try {
+          return window.sessionStorage.key(index);
+        } catch (error) {
+          console.error(error);
+          return null;
+        }
+      }, []);
+
+      ■ sessionStorage に保存されているキーの数を取得する関数
+      const getLength = useCallback(() => {
+        try {
+          return window.sessionStorage.length;
+        } catch (error) {
+          console.error(error);
+          return 0;
+        }
+      }, []);
+
+      ■ すべてのキーを取得する関数 (複数キー対応)
+      const getAllKeys = useCallback(() => {
+        try {
+          const keys = [];
+          for (let i = 0; i < window.sessionStorage.length; i++) {
+            const key = window.sessionStorage.key(i);
+            if (key) keys.push(key);
+          }
+          return keys;
+        } catch (error) {
+          console.error(error);
+          return [];
+        }
+      }, []);
+
+      ■ すべてのアイテムを取得する関数 (複数キー対応)
+      const getAllItems = useCallback(() => {
+        try {
+          const items = {};
+          for (let i = 0; i < window.sessionStorage.length; i++) {
+            const key = window.sessionStorage.key(i);
+            if (key) {
+              const item = window.sessionStorage.getItem(key);
+              items[key] = item ? JSON.parse(item) : null;
+            }
+          }
+          return items;
+        } catch (error) {
+          console.error(error);
+          return {};
+        }
+      }, []);
+
+      ■ 複数のアイテムを設定する関数 (複数キー対応)
+      const setMultipleItems = useCallback((items) => {
+        try {
+          Object.entries(items).forEach(([itemKey, value]) => {
+            window.sessionStorage.setItem(itemKey, JSON.stringify(value));
+          });
+          // 現在のキーの値も更新
+          if (items[key] !== undefined) {
+            setStoredValue(items[key]);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      }, [key]);
+
+      ■ 複数のアイテムを削除する関数 (複数キー対応)
+      const removeMultipleItems = useCallback((keysToRemove) => {
+        try {
+          keysToRemove.forEach(itemKey => {
+            window.sessionStorage.removeItem(itemKey);
+          });
+          // 現在のキーが削除された場合
+          if (keysToRemove.includes(key)) {
+            setStoredValue(initialValue);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      }, [key, initialValue]);
+
+      return {
+        value: storedValue,
+        setValue,
+        getItem,
+        removeItem,
+        clear,
+        getKey,
+        length: getLength(),
+        getAllKeys,
+        getAllItems,
+        setMultipleItems,
+        removeMultipleItems,
+      };
+    }
+    export default useSessionStorage;
+
+- ENTRY:
+  EXPLAIN: 運用
+  BODY: |
+    ■ 実装運用(useSessionStorage)
+
+    import useSessionStorage from './useSessionStorage';
+    import { useState } from 'react';
+
+    function App() {
+      const { value, setValue, getItem, removeItem, clear, getKey, length, getAllKeys, getAllItems, setMultipleItems, removeMultipleItems } = useSessionStorage('mySessionKey', 'defaultValue');
+      const [inputValue, setInputValue] = useState('');
+      const [multipleItems, setMultipleItemsState] = useState({});
+
+      const handleSetValue = () => {
+        setValue(inputValue);
+      };
+
+      const handleGetItem = () => {
+        const item = getItem();
+        alert(`Retrieved: ${item}`);
+      };
+
+      const handleRemoveItem = () => {
+        removeItem();
+      };
+
+      const handleClear = () => {
+        clear();
+      };
+
+      const handleGetKey = () => {
+        const key = getKey(0); // 最初のキーを取得
+        alert(`First key: ${key}`);
+      };
+
+      const handleGetAllKeys = () => {
+        const keys = getAllKeys();
+        alert(`All keys: ${keys.join(', ')}`);
+      };
+
+      const handleGetAllItems = () => {
+        const items = getAllItems();
+        setMultipleItemsState(items);
+        alert(`All items: ${JSON.stringify(items)}`);
+      };
+
+      const handleSetMultipleItems = () => {
+        const newItems = { 'key1': 'value1', 'key2': 'value2', 'key3': 'value3' };
+        setMultipleItems(newItems);
+      };
+
+      const handleRemoveMultipleItems = () => {
+        removeMultipleItems(['key1', 'key2']);
+      };
+
+      return (
+        <div>
+          <h1>useSessionStorage Example</h1>
+          <p>Current value: {value}</p>
+          <p>Total items: {length}</p>
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            placeholder="Enter value to set"
+          />
+          <button onClick={handleSetValue}>Set Value</button>
+          <button onClick={handleGetItem}>Get Item</button>
+          <button onClick={handleRemoveItem}>Remove Item</button>
+          <button onClick={handleClear}>Clear All</button>
+          <button onClick={handleGetKey}>Get First Key</button>
+          <button onClick={handleGetAllKeys}>Get All Keys</button>
+          <button onClick={handleGetAllItems}>Get All Items</button>
+          <button onClick={handleSetMultipleItems}>Set Multiple Items</button>
+          <button onClick={handleRemoveMultipleItems}>Remove Multiple Items</button>
+          <pre>{JSON.stringify(multipleItems, null, 2)}</pre>
+        </div>
+      );
+    }
+
+    export default App;
+
+#-------------------------------
+# IndexedDB
+#-------------------------------
+- ENTRY:
+  CATEGORY: IndexedDB
+
+- ENTRY:
+  EXPLAIN: 概要 & メソッド
+  BODY: |
+    ■ 概要
+
+    ・ブラウザ内で大量の構造化データを保存・管理するためのクライアントサイドデータベース
+    ・非同期APIで動作し、トランザクションをサポート
+    ・キーと値のペアでデータを保存し、オブジェクトストアを使用してデータを整理
+    ・保存容量は数百MB以上（ブラウザによって異なる）
+    ・同一オリジン（プロトコル、ドメイン、ポートが同じ）内でのみアクセス可能
+
+    ■ ブラウザサポート状況
+
+    ・主要なモダンブラウザでサポート（Chrome、Firefox、Edge、Safariなど）
+
+
+    ■ 主なメソッド
+
+    ・indexedDB.open(dbName, version): データベースを開くまたは作成
+    ・db.createObjectStore(storeName, options): オブジェクトストアを作成
+    ・transaction(storeNames, mode): トランザクションを開始
+    ・objectStore.put(value, key): データを保存または更新
+    ・objectStore.get(key): データを取得
+    ・objectStore.delete(key): データを削除
+    ・objectStore.clear(): オブジェクトストア内のすべてのデータを削除
+    ・objectStore.openCursor(): カーソルを使用してデータを反復処理
+
+    ■ npm パッケージの種類
+
+      npm install idb
+      npm install dexie
+      npm install localForage
+      npm install lovefield
+      npm install indexeddb-js
+      npm install ydn-db
+      npm install JsStore
+      npm install alasql
+      npm install PouchDB
+      npm install ForerunnerDB
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ 実装(全メソッドを持つカスタムフック)
+    import { useState, useEffect, useCallback } from 'react';
+
+    function useIndexedDB(dbName, storeName, version = 1) {
+      const [db, setDb] = useState(null);
+
+      ■ データベースの初期化
+      useEffect(() => {
+        const request = indexedDB.open(dbName, version);
+
+        request.onupgradeneeded = (event) => {
+          const database = event.target.result;
+          if (!database.objectStoreNames.contains(storeName)) {
+            database.createObjectStore(storeName, { keyPath: 'id', autoIncrement: true });
+          }
+        };
+
+        request.onsuccess = (event) => {
+          setDb(event.target.result);
+        };
+
+        request.onerror = (event) => {
+          console.error('IndexedDB エラー:', event.target.errorCode);
+        };
+      }, [dbName, storeName, version]);
+
+      ■ データの追加・更新
+      const putItem = useCallback((item) => {
+        return new Promise((resolve, reject) => {
+          if (!db) return reject('データベースが初期化されていません');
+
+          const transaction = db.transaction([storeName], 'readwrite');
+          const objectStore = transaction.objectStore(storeName);
+          const request = objectStore.put(item);
+
+          request.onsuccess = () => resolve(request.result);
+          request.onerror = () => reject(request.error);
+        });
+      }, [db, storeName]);
+
+      ■ データの取得
+      const getItem = useCallback((key) => {
+        return new Promise((resolve, reject) => {
+          if (!db) return reject('データベースが初期化されていません');
+
+          const transaction = db.transaction([storeName], 'readonly');
+          const objectStore = transaction.objectStore(storeName);
+          const request = objectStore.get(key);
+
+          request.onsuccess = () => resolve(request.result);
+          request.onerror = () => reject(request.error);
+        });
+      }, [db, storeName]);
+
+      ■ データの削除
+      const deleteItem = useCallback((key) => {
+        return new Promise((resolve, reject) => {
+          if (!db) return reject('データベースが初期化されていません');
+
+          const transaction = db.transaction([storeName], 'readwrite');
+          const objectStore = transaction.objectStore(storeName);
+          const request = objectStore.delete(key);
+
+          request.onsuccess = () => resolve();
+          request.onerror = () => reject(request.error);
+        });
+      }, [db, storeName]);
+      
+      ■ ストアのクリア 
+      const clearStore = useCallback(() => {
+        return new Promise((resolve, reject) => {
+          if (!db) return reject('データベースが初期化されていません');
+
+          const transaction = db.transaction([storeName], 'readwrite');
+          const objectStore = transaction.objectStore(storeName);
+          const request = objectStore.clear();
+
+          request.onsuccess = () => resolve();
+          request.onerror = () => reject(request.error);
+        });
+      }, [db, storeName]);
+
+      ■ カーソルを使用してデータを反復処理
+      const openCursor = useCallback((callback) => {
+        return new Promise((resolve, reject) => {
+          if (!db) return reject('データベースが初期化されていません');
+
+          const transaction = db.transaction([storeName], 'readonly');
+          const objectStore = transaction.objectStore(storeName);
+          const request = objectStore.openCursor();
+          const results = [];
+
+          request.onsuccess = (event) => {
+            const cursor = event.target.result;
+            if (cursor) {
+              results.push(cursor.value);
+              if (callback) callback(cursor.value);
+              cursor.continue();
+            } else {
+              resolve(results);
+            }
+          };
+
+          request.onerror = () => reject(request.error);
+        });
+      }, [db, storeName]);
+
+      return {
+        putItem,
+        getItem,
+        deleteItem,
+        clearStore,
+        openCursor,
+      };
+    }
+
+- ENTRY:
+  EXPLAIN: 運用
+  BODY: |
+    ■ 実装運用(useIndexedDB)
+
+    import useIndexedDB from './useIndexedDB';
+    import { useEffect, useState } from 'react';
+
+    function App() {
+      const { putItem, getItem, deleteItem, clearStore, openCursor } = useIndexedDB('MyDatabase', 'MyStore');
+
+      const [items, setItems] = useState([]);
+
+      useEffect(() => {
+        // データの反復処理と取得
+        openCursor().then((data) => setItems(data)).catch(console.error);
+      }, [openCursor]);
+
+      const addItem = () => {
+        const newItem = { name: 'Item ' + Date.now() };
+        putItem(newItem).then(() => {
+          openCursor().then((data) => setItems(data)).catch(console.error);
+        }).catch(console.error);
+      };
+
+      return (
+        <div>
+          <h1>IndexedDB Items</h1>
+          <button onClick={addItem}>Add Item</button>
+          <button onClick={() => {
+            clearStore().then(() => setItems([])).catch(console.error);
+          }}>Clear Store</button>
+          <ul>
+            {items.map(item => (
+              <li key={item.id}>
+                {item.name}
+                <button onClick={() => {
+                  deleteItem(item.id).then(() => {
+                    openCursor().then((data) => setItems(data)).catch(console.error);
+                  }).catch(console.error);
+                }}>Delete</button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      );  
+    }
+
+#-------------------------------
+# Cookies
+#-------------------------------
+- ENTRY:
+  CATEGORY: Cookies
+
+- ENTRY:
+  EXPLAIN: 概要 & メソッド
+  BODY: |
+    ■ 概要
+
+    ・Webブラウザにデータを保存するための仕組み
+    ・キーと値のペアでデータを保存
+    ・データはHTTPリクエストごとにサーバーに送信される
+    ・保存容量は約4KB程度（ブラウザによって異なる）
+    ・同一オリジン（プロトコル、ドメイン、ポートが同じ）内でのみアクセス可能
+
+    ■ ブラウザサポート状況
+
+    ・ほぼすべての主要なブラウザでサポートされている
+
+    ■ 主なメソッド
+
+    ・document.cookie: クッキーの取得・設定
+    ・setCookie(name, value, options): クッキーを設定
+    ・getCookie(name): クッキーを取得
+    ・deleteCookie(name): クッキーを削除
+
+    ■ npm パッケージの種類
+
+      npm install js-cookie
+      npm install react-cookie
+      npm install universal-cookie
+      npm install cookie
+      npm install tough-cookie
+      npm install react-use-cookie
+      npm install next-cookies
+      npm install nookies
+      npm install cookie-parser
+      npm install react-cookie-consent
+      npm install react-cookie-hook
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ 実装(全メソッドを持つカスタムフック)
+
+    import { useState, useCallback } from 'react';
+
+    function useCookies() {
+      ■ クッキーの取得
+      const getCookie = useCallback((name) => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+      }, []);
+
+      ■ クッキーの設定
+      const setCookie = useCallback((name, value, options = {}) => {
+        let cookieString = `${name}=${value}; path=/`;
+
+        if (options.expires) {
+          cookieString += `; expires=${options.expires.toUTCString()}`;
+        }
+        if (options.maxAge) {
+          cookieString += `; max-age=${options.maxAge}`;
+        }
+        if (options.domain) {
+          cookieString += `; domain=${options.domain}`;
+        }
+        if (options.secure) {
+          cookieString += '; secure';
+        }
+        if (options.sameSite) {
+          cookieString += `; samesite=${options.sameSite}`;
+        }
+
+        document.cookie = cookieString;
+      }, []);
+
+      ■ クッキーの削除
+      const deleteCookie = useCallback((name) => {
+        document.cookie = `${name}=; Max-Age=0; path=/`;
+      }, []);
+
+      return {
+        getCookie,
+        setCookie,
+        deleteCookie,
+      };
+    }
+
+- ENTRY:
+  EXPLAIN: 運用
+  BODY: |
+    ■ 実装運用(useCookies)
+
+    import useCookies from './useCookies';
+    import { useState, useEffect } from 'react';
+
+    function App() {
+      const { getCookie, setCookie, deleteCookie } = useCookies();
+      const [username, setUsername] = useState('');
+
+      // コンポーネントマウント時にクッキーからユーザー名を取得
+      useEffect(() => {
+        const savedName = getCookie('username');
+        if (savedName) {
+          setUsername(savedName);
+        }
+      }, [getCookie]);
+
+      // クッキーにユーザー名を保存
+      const handleSave = () => {
+        setCookie('username', username, { maxAge: 3600 });
+      };
+
+      // クッキーからユーザー名を削除
+      const handleDelete = () => {
+        deleteCookie('username');
+        setUsername('');
+      };
+
+      return (
+        <div>
+          <h1>Cookies Example</h1>
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <button onClick={handleSave}>Save Cookie</button>
+          <button onClick={handleDelete}>Delete Cookie</button>
+        </div>
+      );
+    }
+
+#-------------------------------
+# File System Access API
+#-------------------------------
+- ENTRY:
+  CATEGORY: File System Access API
+
+- ENTRY:
+  EXPLAIN: 概要 & メソッド
+  BODY: |
+    ■ 概要
+
+    ・WebブラウザからユーザーのローカルファイルシステムにアクセスするためのAPI
+    ・ユーザーの許可を得て、ファイルの読み書きやディレクトリ操作が可能
+    ・非同期APIで動作し、Promiseベースのインターフェースを提供
+    ・同一オリジン（プロトコル、ドメイン、ポートが同じ）内でのみアクセス可能
+
+    ■ ブラウザサポート状況
+
+    ・Chrome、Edge、OperaなどのChromiumベースのブラウザでサポートされている
+    ・FirefoxやSafariではサポートされていない場合がある
+
+    ■ 主なメソッド
+
+    ・window.showOpenFilePicker(options): ファイル選択ダイアログを表示し、ファイルハンドルを取得
+    ・window.showSaveFilePicker(options): ファイル保存ダイアログを表示し、ファイルハンドルを取得
+    ・window.showDirectoryPicker(): ディレクトリ選択ダイアログを表示し、ディレクトリハンドルを取得
+    ・fileHandle.getFile(): ファイルハンドルからFileオブジェクトを取得
+    ・fileHandle.createWritable(): 書き込み可能なストリームを作成
+    ・writable.write(data): データを書き込む
+    ・writable.close(): 書き込みストリームを閉じる
+
+    ■ npm パッケージの種類
+
+      npm install browser-fs-access
+      npm install file-system-access
+      npm install web-file-system
+      npm install fs-web
+      npm install file-system-api
+      npm install web-fs-access
+      npm install file-access-api
+      npm install fs-access
+      npm install web-file-access
+      npm install file-system-handler
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ 実装(全メソッドを持つカスタムフック)
+
+    import { useCallback } from 'react';
+
+    function useFileSystemAccess() {
+      ■ ファイルを開く
+      const openFile = useCallback(async (options = {}) => {
+        try {
+          const [fileHandle] = await window.showOpenFilePicker(options);
+          const file = await fileHandle.getFile();
+          return { fileHandle, file };
+        } catch (error) {
+          console.error('ファイルのオープンエラー:', error);
+          throw error;
+        }
+      }, []);
+
+      ■ ファイルを保存
+      const saveFile = useCallback(async (options = {}) => {
+        try {
+          const fileHandle = await window.showSaveFilePicker(options);
+          return fileHandle;
+        } catch (error) {
+          console.error('ファイルのセーブエラー:', error);
+          throw error;
+        }
+      }, []);
+
+      ■ ディレクトリを開く
+      const openDirectory = useCallback(async () => {
+        try {
+          const directoryHandle = await window.showDirectoryPicker();
+          return directoryHandle;
+        } catch (error) {
+          console.error('ディレクトリのオープンエラー:', error);
+          throw error;
+        }
+      }, []);
+
+      return {
+        openFile,
+        saveFile,
+        openDirectory,
+      };
+    }
+
+- ENTRY:
+  EXPLAIN: 運用
+  BODY: |
+    ■ 実装運用(useFileSystemAccess)
+
+    import useFileSystemAccess from './useFileSystemAccess';
+    import { useState } from 'react';
+
+    function App() {
+      const { openFile, saveFile, openDirectory } = useFileSystemAccess();
+      const [fileContent, setFileContent] = useState('');
+
+      const handleOpenFile = async () => {
+        try {
+          const { file } = await openFile();
+          const content = await file.text();
+          setFileContent(content);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+      const handleSaveFile = async () => {
+        try {
+          const fileHandle = await saveFile();
+          const writable = await fileHandle.createWritable();
+          await writable.write(fileContent);
+          await writable.close();
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+      return (
+        <div>
+          <h1>File System Access API Example</h1>
+          <button onClick={handleOpenFile}>Open File</button>
+          <button onClick={handleSaveFile}>Save File</button>
+          <textarea
+            value={fileContent}
+            onChange={(e) => setFileContent(e.target.value)}
+            rows={10}
+            cols={50}
+          />
+        </div>
+      );
+    }
+
+#-------------------------------
+# Cache API
+#-------------------------------
+- ENTRY:
+  CATEGORY: Cache API
+
+- ENTRY:
+  EXPLAIN: 概要 & メソッド
+  BODY: |
+    ■ 概要
+
+    ・WebブラウザにリソースをキャッシュするためのAPI
+    ・Service Workerと連携してオフライン対応やパフォーマンス向上に利用
+    ・非同期APIで動作し、Promiseベースのインターフェースを提供
+    ・同一オリジン（プロトコル、ドメイン、ポートが同じ）内でのみアクセス可能
+
+    ■ ブラウザサポート状況
+
+    ・ほとんどのモダンブラウザでサポートされているが、古いブラウザではサポートされていない場合がある
+
+    ■ 主なメソッド
+
+    ・caches.open(cacheName): 指定した名前のキャッシュを開くまたは作成
+    ・cache.add(request): 指定したリクエストをキャッシュに追加
+    ・cache.addAll(requests): 複数のリクエストをキャッシュに追加
+    ・cache.match(request): キャッシュから指定したリクエストに一致するレスポンスを取得
+    ・cache.delete(request): キャッシュから指定したリクエストを削除
+    ・cache.keys(): キャッシュ内のすべてのリクエストを取得
+
+    ■ npm パッケージの種類
+
+      npm install workbox-cacheable-response
+      npm install workbox-cache-expiration
+      npm install workbox-precaching
+      npm install idb-keyval
+      npm install sw-toolbox
+      npm install localforage-cache
+      npm install pwa-cache
+      npm install cache-polyfill
+      npm install serviceworker-cache-polyfill
+      npm install offline-plugin
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ 実装(全メソッドを持つカスタムフック)
+
+    import { useCallback } from 'react';
+
+    function useCacheAPI() {
+      ■ キャッシュを開く
+      const openCache = useCallback(async (cacheName) => {
+        try {
+          const cache = await caches.open(cacheName);
+          return cache;
+        } catch (error) {
+          console.error('キャッシュのオープンエラー:', error);
+          throw error;
+        }
+      }, []);
+
+      ■ リクエストをキャッシュに追加
+      const addToCache = useCallback(async (cacheName, request) => {
+        try {
+          const cache = await openCache(cacheName);
+          await cache.add(request);
+        } catch (error) {
+          console.error('キャッシュへの追加エラー:', error);
+          throw error;
+        }
+      }, [openCache]);
+
+      ■ 複数のリクエストをキャッシュに追加
+      const addAllToCache = useCallback(async (cacheName, requests) => {
+        try {
+          const cache = await openCache(cacheName);
+          await cache.addAll(requests);
+        } catch (error) {
+          console.error('キャッシュへの複数追加エラー:', error);
+          throw error;
+        }
+      }, [openCache]);
+
+      ■ キャッシュからリクエストを取得
+      const matchFromCache = useCallback(async (cacheName, request) => {
+        try {
+          const cache = await openCache(cacheName);
+          const response = await cache.match(request);
+          return response;
+        } catch (error) {
+          console.error('キャッシュからのマッチエラー:', error);
+          throw error;
+        }
+      }, [openCache]);
+
+      ■ キャッシュからリクエストを削除
+      const deleteFromCache = useCallback(async (cacheName, request) => {
+        try {
+          const cache = await openCache(cacheName);
+          const success = await cache.delete(request);
+          return success;
+        } catch (error) {
+          console.error('キャッシュからの削除エラー:', error);
+          throw error;
+        }
+      }, [openCache]);
+
+      ■ キャッシュ内のすべてのリクエストを取得
+      const getCacheKeys = useCallback(async (cacheName) => {
+        try {
+          const cache = await openCache(cacheName);
+          const keys = await cache.keys();
+          return keys;
+        } catch (error) {
+          console.error('キャッシュキーの取得エラー:', error);
+          throw error;
+        }
+      }, [openCache]);
+
+      return {
+        openCache,
+        addToCache,
+        addAllToCache,
+        matchFromCache,
+        deleteFromCache,
+        getCacheKeys,
+      };  
+    }
+
+- ENTRY:
+  EXPLAIN: 運用
+  BODY: |
+    ■ 実装運用(useCacheAPI)
+
+    import useCacheAPI from './useCacheAPI';
+    import { useEffect, useState } from 'react';
+
+    function App() {
+      const { addToCache, matchFromCache, deleteFromCache, getCacheKeys } = useCacheAPI();
+      const [cachedUrls, setCachedUrls] = useState([]);
+
+      // キャッシュ内のすべてのリクエストを取得
+      useEffect(() => {
+        getCacheKeys('my-cache').then((keys) => {
+          const urls = keys.map(request => request.url);
+          setCachedUrls(urls);
+        }).catch(console.error);
+      }, [getCacheKeys]);
+
+      // キャッシュにリソースを追加
+      const handleAddToCache = () => {
+        const url = 'https://example.com/resource';
+        addToCache('my-cache', url).then(() => {
+          getCacheKeys('my-cache').then((keys) => {
+            const urls = keys.map(request => request.url);
+            setCachedUrls(urls);
+          }).catch(console.error);
+        }).catch(console.error);
+      };
+
+      return (
+        <div>
+          <h1>Cache API Example</h1>
+          <button onClick={handleAddToCache}>Add Resource to Cache</button>
+          <h2>Cached URLs:</h2>
+          <ul>
+            {cachedUrls.map((url) => (
+              <li key={url}>{url}</li>
+            ))}
+          </ul>
+        </div>
+      );
+    }

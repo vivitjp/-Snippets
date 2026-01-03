@@ -1,5 +1,6 @@
-import styled, { css } from "styled-components"
+import styled from "@emotion/styled"
 import { getMergedKeys } from "./getKey"
+import { css } from "@emotion/react"
 
 export type SyntaxHighlight = {
   code: string

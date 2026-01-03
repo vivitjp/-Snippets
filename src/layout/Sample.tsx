@@ -1,0 +1,99 @@
+import {
+  MenuGroupTitle,
+  MenuItemGroupItems,
+  MenuNav,
+} from "./Layout.style"
+import { Link, Route, Routes } from "react-router-dom"
+import { Heading, HStack, Stack, VStack } from "@chakra-ui/react"
+
+import LocalStoragePage from "../pages/localStorage"
+import RegressionPage from "../pages/regression"
+
+type SampleType = {
+  name: string;
+  to: string;
+  element: JSX.Element;
+}
+
+type GroupName = string
+
+const samples: Record<GroupName, SampleType[]> = {
+  "Form": [
+    // {
+    //   name: 'Excel Input',
+    //   to: '/excel-input',
+    //   element: <ExcelInputPage />
+    // },
+  ],
+  "Storage": [
+    {
+      name: 'LocalStorage',
+      to: '/localStorage',
+      element: <LocalStoragePage />
+    },
+  ]
+  ,
+  "統計": [
+    {
+      name: 'Regression',
+      to: '/regression',
+      element: <RegressionPage />
+    },
+
+  ]
+}
+
+//------------------------------
+// Sample
+//------------------------------
+export const Sample = () => {
+  return (
+    <HStack align="start" width={"100%"}>
+      <MenuNav data-testid="body" style={{ height: "100vh" }}>
+        <HStack align="start" width={"100%"}>
+          <VStack align="start" gap={4} width={"100%"}>
+            <Heading>サンプルコード</Heading>
+            <VStack gap={4} align="start" width={"100%"}>
+              {Object.entries(samples).map(([groupName, samples], index) => (
+                <VStack key={index} gap={2} width={"100%"}>
+                  <MenuGroupTitle style={{ width: "100%" }}>
+                    {groupName}
+                  </MenuGroupTitle>
+                  <VStack gap={2} pl={2} align="start" width={"100%"}>
+                    {samples.map((sample, index) => (
+                      <MenuItemGroupItems key={index}>
+                        <Link
+                          to={sample.to}
+                          style={{
+                            textDecoration: "none",
+                            fontSize: "0.8rem",
+                            width: "100%",
+                            color: "#555"
+                          }}
+                        >
+                          {sample.name}
+                        </Link>
+                      </MenuItemGroupItems>
+                    ))}
+                  </VStack>
+                </VStack>
+              ))}
+            </VStack>
+          </VStack>
+        </HStack>
+      </MenuNav>
+      <Stack
+        alignItems={"flex-start"}
+        justifyContent={"flex-start"}
+      >
+        <Routes>
+          {Object.entries(samples).map(([_, samples], index) => (
+            samples.map((sample, sIndex) => (
+              <Route key={`${index}-${sIndex}`} path={sample.to} element={sample.element} />
+            ))
+          ))}
+        </Routes >
+      </Stack>
+    </HStack>
+  )
+}

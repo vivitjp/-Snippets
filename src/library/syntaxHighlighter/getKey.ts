@@ -20,6 +20,7 @@ import { keysHTML } from "./keys/HTML"
 import { keysJest } from "./keys/Jest"
 import { keysJotai } from "./keys/Jotai"
 import { keysJS } from "./keys/JS"
+import { keysJSUtilities } from "./keys/JSUtilities"
 import { keysLint } from "./keys/Lint"
 import { keysLinux } from "./keys/Linux"
 import { keysMUI } from "./keys/MUI"
@@ -34,28 +35,28 @@ import { keysPrisma } from "./keys/Prisma"
 import { keysPython } from "./keys/Python"
 import { keysReact } from "./keys/React"
 import { keysReactDom } from "./keys/ReactDom"
+import { keysReactLibrariesExcel } from "./keys/ReactLibrariesExcel"
+import { keysReactLibrariesLang } from "./keys/ReactLibrariesLang"
 import { keysReactRouter } from "./keys/ReactRouter"
+import { keysReactLibrariesGraph } from "./keys/ReactLibrariesGraph"
+import { keysReactLibrariesDnD } from "./keys/ReactLibrariesDnD"
 import { keysRedis } from "./keys/Redis"
+import { keysRedux } from "./keys/Redux"
 import { keysRegExp } from "./keys/RegExp"
 import { keysRTL } from "./keys/RTL"
 import { keysSVG } from "./keys/SVG"
 import { keysSwagger } from "./keys/Swagger"
 import { keysSql } from "./keys/Sql"
+import { keysStorage } from "./keys/Storage"
 import { keysTanStack } from "./keys/TanStack"
 import { keysTS } from "./keys/TS"
 import { keysTSConfig } from "./keys/TSConfig"
 import { keysTypeORM } from "./keys/TypeORM"
 import { keysVite } from "./keys/Vite"
+import { keysVitest } from "./keys/Vitest"
 import { keysVue } from "./keys/Vue"
 import { keysYup } from "./keys/Yup"
 import { keysZustand } from "./keys/zustand"
-import { keysReactLibrariesExcel } from "./keys/ReactLibrariesExcel"
-import { keysReactLibrariesLang } from "./keys/ReactLibrariesLang"
-import { keysJSUtilities } from "./keys/JSUtilities"
-import { keysReactLibrariesGraph } from "./keys/ReactLibrariesGraph"
-import { keysReactLibrariesDnD } from "./keys/ReactLibrariesDnD"
-import { keysVitest } from "./keys/Vitest"
-import { keysRedux } from "./keys/Redux"
 
 // 以下のオブジェクトをソートしてください
 export const codeKeys = {
@@ -106,6 +107,7 @@ export const codeKeys = {
   RHF: "keysRHF",
   RTL: "RTL",
   Sql: "Sql",
+  Storage: "Storage",
   SVG: "SVG",
   Swagger: "Swagger",
   TanStack: "TanStack",
@@ -171,6 +173,7 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   RegExp: keysRegExp,
   RTL: keysRTL,
   Sql: keysSql,
+  Storage: keysStorage,
   SVG: keysSVG,
   Swagger: keysSwagger,
   TanStack: keysTanStack,

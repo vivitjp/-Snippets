@@ -1,4 +1,6 @@
-import styled, { CSSProperties, css } from "styled-components"
+import { css } from "@emotion/react"
+import styled from "@emotion/styled"
+import { CSSProperties } from "react"
 
 export const Button = styled.button<CSSProperties>`
   ${(props) => css`
