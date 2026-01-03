@@ -44,7 +44,7 @@ export const Layout = () => {
   return (
     <Section data-testid="layout" ref={refBody}>
       <HeaderWrapper>
-        <HeaderTitle>Sunabar Snippets</HeaderTitle>
+        <HeaderTitle>Sunabar</HeaderTitle>
         <HStack>
           <Link to="/" style={style} onClick={() => setIsSnippets(true)}>
             Snippets

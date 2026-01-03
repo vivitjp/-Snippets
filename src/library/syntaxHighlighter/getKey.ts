@@ -3,6 +3,7 @@ import { keysAWSAurora } from "./keys/AWSAurora"
 import { keysAWSCloud } from "./keys/AWSCloud"
 import { keyReactLibrary } from "./keys/ReactLibrary"
 import { keysChakra } from "./keys/Chakra"
+import { keysCookie } from "./keys/Cookie"
 import { keysClassTransformer } from "./keys/ClassTransformer"
 import { keysClassValidator } from "./keys/ClassValidator"
 import { keysCSS } from "./keys/CSS"
@@ -66,6 +67,7 @@ export const codeKeys = {
   AWSAurora: "AWSAurora",
   AWSCloud: "AWSCloud",
   Chakra: "Chakra",
+  Cookie: "Cookie",
   ClassTransformer: "ClassTransformer",
   ClassValidator: "ClassValidator",
   CSS: "CSS",
@@ -136,6 +138,7 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   AWSAurora: keysAWSAurora,
   AWSCloud: keysAWSCloud,
   Chakra: keysChakra,
+  Cookie: keysCookie,
   ClassTransformer: keysClassTransformer,
   ClassValidator: keysClassValidator,
   CSS: keysCSS,

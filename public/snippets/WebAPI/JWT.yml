@@ -66,12 +66,16 @@
 
     ■ Header:
 
+    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
+
     {
       "alg": "HS256",                   // 署名アルゴリズム
       "typ": "JWT"                      // トークンタイプ
     }
 
     ■ Payload:
+
+    eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.
 
     {
       "sub": "1234567890",              // 主体 (ユーザーIDなど)
@@ -80,6 +84,8 @@
     }
 
     ■ Signature:
+
+    SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 
     HMACSHA256(
       base64UrlEncode(header) + "." +   // ヘッダーとペイロードを連結
