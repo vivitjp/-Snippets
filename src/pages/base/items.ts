@@ -807,6 +807,21 @@ export const menuItems: menuByCategories[] = [
     category: "WebAPI",
     items: [
       {
+        name: "Session",
+        fileName: "WebAPI/Session",
+        codeKeyTypes: [codeKeys.Session],
+      },
+      {
+        name: "JWT",
+        fileName: "WebAPI/JWT",
+        codeKeyTypes: [codeKeys.JWT],
+      },
+      {
+        name: "Security",
+        fileName: "WebAPI/Security",
+        codeKeyTypes: [codeKeys.Security],
+      },
+      {
         name: "Storage",
         fileName: "WebAPI/Storage",
         codeKeyTypes: [codeKeys.Storage],

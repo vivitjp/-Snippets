@@ -18,6 +18,7 @@ import { keysGit } from "./keys/Git"
 import { keysGraphQL } from "./keys/GraphQL"
 import { keysHTML } from "./keys/HTML"
 import { keysJest } from "./keys/Jest"
+import { keysJWT } from "./keys/JWT"
 import { keysJotai } from "./keys/Jotai"
 import { keysJS } from "./keys/JS"
 import { keysJSUtilities } from "./keys/JSUtilities"
@@ -47,6 +48,8 @@ import { keysRTL } from "./keys/RTL"
 import { keysSVG } from "./keys/SVG"
 import { keysSwagger } from "./keys/Swagger"
 import { keysSql } from "./keys/Sql"
+import { keysSession } from "./keys/Session"
+import { keysSecurity } from "./keys/Security"
 import { keysStorage } from "./keys/Storage"
 import { keysTanStack } from "./keys/TanStack"
 import { keysTS } from "./keys/TS"
@@ -77,6 +80,7 @@ export const codeKeys = {
   graphQL: "graphQL",
   HTML: "HTML",
   Jest: "Jest",
+  JWT: "JWT",
   Jotai: "Jotai",
   JS: "JS",
   JSUtilities: "JSUtilities",
@@ -107,6 +111,8 @@ export const codeKeys = {
   RHF: "keysRHF",
   RTL: "RTL",
   Sql: "Sql",
+  Session: "Session",
+  Security: "Security",
   Storage: "Storage",
   SVG: "SVG",
   Swagger: "Swagger",
@@ -144,6 +150,7 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   graphQL: keysGraphQL,
   HTML: keysHTML,
   Jest: keysJest,
+  JWT: keysJWT,
   Jotai: keysJotai,
   JS: keysJS,
   JSUtilities: keysJSUtilities,
@@ -173,6 +180,8 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   RegExp: keysRegExp,
   RTL: keysRTL,
   Sql: keysSql,
+  Session: keysSession,
+  Security: keysSecurity,
   Storage: keysStorage,
   SVG: keysSVG,
   Swagger: keysSwagger,
