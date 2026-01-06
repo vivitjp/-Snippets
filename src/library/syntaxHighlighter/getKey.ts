@@ -6,6 +6,7 @@ import { keysChakra } from "./keys/Chakra"
 import { keysCookie } from "./keys/Cookie"
 import { keysClassTransformer } from "./keys/ClassTransformer"
 import { keysClassValidator } from "./keys/ClassValidator"
+import { keysShell } from "./keys/Shell"
 import { keysCSS } from "./keys/CSS"
 import { keysCurl } from "./keys/curl"
 import { keysDOM } from "./keys/DOM"
@@ -59,6 +60,9 @@ import { keysTypeORM } from "./keys/TypeORM"
 import { keysVite } from "./keys/Vite"
 import { keysVitest } from "./keys/Vitest"
 import { keysVue } from "./keys/Vue"
+import { keysWebAPI } from "./keys/WebAPI"
+import { keysServiceWorker } from "./keys/ServiceWorker"
+import { keysWebSocket } from "./keys/WebSocket"
 import { keysYup } from "./keys/Yup"
 import { keysZustand } from "./keys/zustand"
 
@@ -68,6 +72,7 @@ export const codeKeys = {
   AWSCloud: "AWSCloud",
   Chakra: "Chakra",
   Cookie: "Cookie",
+  Shell: "Shell",
   ClassTransformer: "ClassTransformer",
   ClassValidator: "ClassValidator",
   CSS: "CSS",
@@ -116,6 +121,7 @@ export const codeKeys = {
   Session: "Session",
   Security: "Security",
   Storage: "Storage",
+  ServiceWorker: "ServiceWorker",
   SVG: "SVG",
   Swagger: "Swagger",
   TanStack: "TanStack",
@@ -126,6 +132,8 @@ export const codeKeys = {
   Vite: "Vite",
   Vitest: "Vitest",
   Vue: "Vue",
+  WebSocket: "WebSocket",
+  WebAPI: "WebAPI",
   Yup: "Yup",
   Zustand: "Zustand",
 } as const
@@ -135,6 +143,7 @@ export const defaultSnippetsStyle = codeKeys.Unknown
 export type CodeKeyType = (typeof codeKeys)[keyof typeof codeKeys]
 
 export const KeyAndCodes: Record<string, KeyDef> = {
+  Shell: keysShell,
   AWSAurora: keysAWSAurora,
   AWSCloud: keysAWSCloud,
   Chakra: keysChakra,
@@ -186,6 +195,7 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   Session: keysSession,
   Security: keysSecurity,
   Storage: keysStorage,
+  ServiceWorker: keysServiceWorker,
   SVG: keysSVG,
   Swagger: keysSwagger,
   TanStack: keysTanStack,
@@ -195,6 +205,8 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   Vite: keysVite,
   Vitest: keysVitest,
   Vue: keysVue,
+  WebSocket: keysWebSocket,
+  WebAPI: keysWebAPI,
   Yup: keysYup,
   Zustand: keysZustand,
 }

@@ -1,0 +1,578 @@
+---
+#-------------------------------
+# WebAPI
+#-------------------------------
+- ENTRY:
+  EXPLAIN: Web API リスト
+  BODY: |
+    ■ MDN Web API 仕様書からの主要 API リスト（インターフェイス除外）
+
+    ・Fetch API
+    ・Geolocation API
+    ・Web Storage API
+    ・WebSocket API
+    ・IndexedDB API
+    ・Canvas API
+    ・Web Audio API
+    ・WebRTC API
+    ・Service Worker API
+    ・Notification API
+    ・Web Workers API
+    ・Performance API
+    ・Intersection Observer API
+    ・Resize Observer API
+    ・Clipboard API
+    ・File API
+    ・Media Capture and Streams API
+    ・WebGL API
+    ・WebXR Device API
+    ・Payment Request API
+    ・Credential Management API
+
+    ■ URL
+
+    ・https://developer.mozilla.org/ja/docs/Web/API
+
+- ENTRY:
+  EXPLAIN: Fetch API
+  BODY: |
+    ■ 概要
+
+    ・HTTP リクエストを送信するための API
+    ・Promise ベースで非同期処理
+    ・XMLHttpRequest の現代的な代替
+
+    ■ ユースケース
+
+    ・REST API との通信
+    ・JSON データの取得
+    ・ファイルのアップロード
+    ・クロスオリジンリクエスト
+
+    ■ 実装例
+
+      fetch('https://api.example.com/data')
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error(error))
+
+- ENTRY:
+  EXPLAIN: Geolocation API
+  BODY: |
+    ■ 概要
+
+    ・ユーザーの地理的位置情報を取得
+    ・GPS や Wi-Fi, IP アドレスから位置を推定
+    ・ユーザーの許可が必要
+
+    ■ ユースケース
+
+    ・地図アプリでの現在位置表示
+    ・近くの店舗検索
+    ・位置ベースの広告
+
+    ■ 実装例
+
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          const { latitude, longitude } = position.coords
+          console.log(`Latitude: ${latitude}, Longitude: ${longitude}`)
+        },
+        error => console.error(error)
+      )
+
+- ENTRY:
+  EXPLAIN: Web Storage API
+  BODY: |
+    ■ 概要
+
+    ・ブラウザにデータを保存するための API
+    ・localStorage と sessionStorage の 2 種類
+    ・キーと値のペアでデータを保存
+
+    ■ ユースケース
+
+    ・ユーザー設定の保存
+    ・オフライン時のデータキャッシュ
+    ・フォームデータの自動保存
+
+    ■ 実装例
+
+      // localStorage
+      localStorage.setItem('theme', 'dark')
+      const theme = localStorage.getItem('theme')
+
+      // sessionStorage
+      sessionStorage.setItem('tempData', 'value')
+      const temp = sessionStorage.getItem('tempData')
+
+- ENTRY:
+  EXPLAIN: WebSocket API
+  BODY: |
+    ■ 概要
+
+    ・双方向通信を実現するプロトコル
+    ・リアルタイム通信に適する
+    ・ws または wss スキームを使用
+
+    ■ ユースケース
+
+    ・チャットアプリケーション
+    ・リアルタイムゲーム
+    ・ライブストリーミング
+    ・株価情報更新
+
+    ■ 実装例
+
+      const socket = new WebSocket('ws://example.com/socket')
+
+      socket.onopen = () => {
+        socket.send('Hello Server')
+      }
+
+      socket.onmessage = event => {
+        console.log('Received:', event.data)
+      }
+
+      socket.onclose = () => {
+        console.log('Connection closed')
+      }
+
+- ENTRY:
+  EXPLAIN: IndexedDB API
+  BODY: |
+    ■ 概要
+
+    ・ブラウザ内の NoSQL データベース
+    ・大量データの保存が可能
+    ・非同期 API
+
+    ■ ユースケース
+
+    ・オフラインアプリケーション
+    ・大量データのキャッシュ
+    ・複雑なデータ構造の保存
+
+    ■ 実装例
+
+      const request = indexedDB.open('myDatabase', 1)
+
+      request.onupgradeneeded = event => {
+        const db = event.target.result
+        const store = db.createObjectStore('items', { keyPath: 'id' })
+      }
+
+      request.onsuccess = event => {
+        const db = event.target.result
+        const transaction = db.transaction(['items'], 'readwrite')
+        const store = transaction.objectStore('items')
+        store.add({ id: 1, name: 'Item 1' })
+      }
+
+- ENTRY:
+  EXPLAIN: Canvas API
+  BODY: |
+    ■ 概要
+
+    ・2D グラフィックスを描画するための API
+    ・ピクセルベースの描画
+    ・JavaScript で動的な画像生成
+
+    ■ ユースケース
+
+    ・チャートやグラフの描画
+    ・ゲーム開発
+    ・画像編集
+    ・データ可視化
+
+    ■ 実装例
+
+      const canvas = document.getElementById('myCanvas')
+      const ctx = canvas.getContext('2d')
+
+      ctx.fillStyle = 'red'
+      ctx.fillRect(10, 10, 100, 100)
+
+      ctx.beginPath()
+      ctx.arc(150, 75, 50, 0, 2 * Math.PI)
+      ctx.stroke()
+
+- ENTRY:
+  EXPLAIN: Service Worker API
+  BODY: |
+    ■ 概要
+
+    ・バックグラウンドで動作するスクリプト
+    ・オフライン機能とプッシュ通知を実現
+    ・ネットワークリクエストを制御
+
+    ■ ユースケース
+
+    ・オフライン対応
+    ・プッシュ通知
+    ・バックグラウンド同期
+    ・キャッシュ管理
+
+    ■ 実装例
+
+      navigator.serviceWorker.register('/sw.js')
+        .then(registration => {
+          console.log('Service Worker registered')
+        })
+
+      // sw.js
+      self.addEventListener('install', event => {
+        event.waitUntil(
+          caches.open('v1').then(cache => {
+            return cache.addAll(['/', '/index.html'])
+          })
+        )
+      })
+
+      self.addEventListener('fetch', event => {
+        event.respondWith(
+          caches.match(event.request).then(response => {
+            return response || fetch(event.request)
+          })
+        )
+      })
+
+- ENTRY:
+  EXPLAIN: Notification API
+  BODY: |
+    ■ 概要
+
+    ・ブラウザから通知を表示
+    ・ユーザーの許可が必要
+    ・Service Worker と組み合わせ可能
+
+    ■ ユースケース
+
+    ・メッセージ着信通知
+    ・リマインダー
+    ・イベント通知
+    ・プッシュ通知
+
+    ■ 実装例
+
+      Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+          new Notification('Hello!', {
+            body: 'This is a notification',
+            icon: '/icon.png'
+          })
+        }
+      })
+
+- ENTRY:
+  EXPLAIN: Web Audio API
+  BODY: |
+    ■ 概要
+
+    ・ブラウザで音声処理を行う API
+    ・音声の生成、加工、分析が可能
+    ・リアルタイムオーディオ処理
+
+    ■ ユースケース
+
+    ・音楽アプリケーション
+    ・音声エフェクト
+    ・音声可視化
+    ・ゲーム音声
+
+    ■ 実装例
+
+      const audioContext = new AudioContext()
+      const oscillator = audioContext.createOscillator()
+      oscillator.frequency.setValueAtTime(440, audioContext.currentTime)
+      oscillator.connect(audioContext.destination)
+      oscillator.start()
+      oscillator.stop(audioContext.currentTime + 1)
+
+- ENTRY:
+  EXPLAIN: WebRTC API
+  BODY: |
+    ■ 概要
+
+    ・ブラウザ間でリアルタイム通信を実現
+    ・ビデオ通話やデータ共有が可能
+    ・P2P 接続
+
+    ■ ユースケース
+
+    ・ビデオチャット
+    ・ファイル共有
+    ・画面共有
+    ・オンライン会議
+
+    ■ 実装例
+
+      navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        .then(stream => {
+          const peerConnection = new RTCPeerConnection()
+          stream.getTracks().forEach(track => {
+            peerConnection.addTrack(track, stream)
+          })
+        })
+
+- ENTRY:
+  EXPLAIN: Web Workers API
+  BODY: |
+    ■ 概要
+
+    ・バックグラウンドでスクリプトを実行
+    ・メインスレッドをブロックしない
+    ・並列処理を実現
+
+    ■ ユースケース
+
+    ・重い計算処理
+    ・データ処理
+    ・バックグラウンド同期
+    ・画像処理
+
+    ■ 実装例
+      const worker = new Worker('worker.js')
+
+      worker.postMessage('start')
+
+      worker.onmessage = event => {
+        console.log('Received from worker:', event.data)
+      }
+
+      // worker.js
+      self.onmessage = event => {
+        if (event.data === 'start') {
+          const result = heavyComputation()
+          self.postMessage(result)
+        }
+      }
+
+- ENTRY:
+  EXPLAIN: Clipboard API
+  BODY: |
+    ■ 概要
+
+    ・クリップボードへのアクセスを提供
+    ・テキストや画像のコピー/ペースト
+    ・ユーザーの許可が必要
+
+    ■ ユースケース
+
+    ・コピー/ペースト機能の拡張
+    ・画像のクリップボード操作
+    ・フォーマットされたテキストの処理
+
+    ■ 実装例
+
+      navigator.clipboard.writeText('Hello World')
+        .then(() => console.log('Text copied'))
+        .catch(err => console.error('Failed to copy:', err))
+
+      navigator.clipboard.readText()
+        .then(text => console.log('Pasted text:', text))
+        .catch(err => console.error('Failed to read:', err))
+
+- ENTRY:
+  EXPLAIN: File API
+  BODY: |
+    ■ 概要
+
+    ・ローカルファイルへのアクセスを提供
+    ・ファイルの読み込みと操作
+    ・ドラッグ&ドロップ対応
+
+    ■ ユースケース
+
+    ・ファイルアップロード
+    ・画像プレビュー
+    ・テキストファイル処理
+    ・ドラッグ&ドロップ機能
+
+    ■ 実装例
+
+      const input = document.getElementById('fileInput')
+      input.addEventListener('change', event => {
+        const file = event.target.files[0]
+        const reader = new FileReader()
+        reader.onload = e => {
+          console.log('File content:', e.target.result)
+        }
+        reader.readAsText(file)
+      })
+
+- ENTRY:
+  EXPLAIN: Performance API
+  BODY: |
+    ■ 概要
+
+    ・ウェブページのパフォーマンスを測定
+    ・ロード時間や実行時間を計測
+    ・Navigation Timing, Resource Timing など
+
+    ■ ユースケース
+
+    ・パフォーマンス監視
+    ・最適化の指標取得
+    ・ユーザーエクスペリエンス分析
+
+    ■ 実装例
+
+      const perfData = performance.getEntriesByType('navigation')[0]
+      console.log('Load time:', perfData.loadEventEnd - perfData.fetchStart)
+
+      const observer = new PerformanceObserver(list => {
+        list.getEntries().forEach(entry => {
+          console.log('Resource:', entry.name, 'Duration:', entry.duration)
+        })
+      })
+      observer.observe({ entryTypes: ['resource'] })
+
+- ENTRY:
+  EXPLAIN: Intersection Observer API
+  BODY: |
+    ■ 概要
+
+    ・要素がビューポートと交差するタイミングを監視
+    ・スクロール時に要素の表示状態を検知
+    ・パフォーマンスに優れた遅延読み込みに使用
+
+    ■ ユースケース
+
+    ・画像の遅延読み込み
+    ・無限スクロール
+    ・広告の表示タイミング制御
+    ・アニメーションのトリガー
+
+    ■ 実装例
+
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible')
+          }
+        })
+      })
+
+      const elements = document.querySelectorAll('.lazy')
+      elements.forEach(el => observer.observe(el))
+
+- ENTRY:
+  EXPLAIN: Resize Observer API
+  BODY: |
+    ■ 概要
+
+    ・要素のサイズ変更を監視
+    ・CSS や JavaScript によるサイズ変更を検知
+    ・レスポンシブデザインに有用
+
+    ■ ユースケース
+
+    ・チャートのサイズ調整
+    ・テキストエリアの自動リサイズ
+    ・レイアウトの動的変更
+    ・メディアクエリの代替
+
+    ■ 実装例
+
+      const resizeObserver = new ResizeObserver(entries => {
+        entries.forEach(entry => {
+          const { width, height } = entry.contentRect
+          console.log(`Element resized to ${width}x${height}`)
+        })
+      })
+
+      const element = document.getElementById('resizable')
+      resizeObserver.observe(element)
+
+- ENTRY:
+  EXPLAIN: Media Capture and Streams API
+  BODY: |
+    ■ 概要
+
+    ・カメラやマイクなどのメディアデバイスにアクセス
+    ・リアルタイムのオーディオ/ビデオストリームを取得
+    ・WebRTC と組み合わせて使用
+
+    ■ ユースケース
+
+    ・ビデオチャット
+    ・画面録画
+    ・音声認識
+    ・AR/VR アプリケーション
+
+    ■ 実装例
+
+      navigator.mediaDevices.getUserMedia({
+        video: { width: 1280, height: 720 },
+        audio: true
+      })
+      .then(stream => {
+        const video = document.getElementById('video')
+        video.srcObject = stream
+      })
+      .catch(error => console.error('Error accessing media devices:', error))
+
+- ENTRY:
+  EXPLAIN: WebGL API
+  BODY: |
+    ■ 概要
+
+    ・ブラウザで 3D グラフィックスを描画
+    ・OpenGL ES 2.0 ベース
+    ・ハードウェアアクセラレーションを使用
+
+    ■ ユースケース
+
+    ・3D ゲーム
+    ・データ可視化
+    ・CAD アプリケーション
+    ・仮想現実
+
+    ■ 実装例
+
+      const canvas = document.getElementById('glCanvas')
+      const gl = canvas.getContext('webgl')
+
+      if (!gl) {
+        console.error('WebGL not supported')
+        return
+      }
+
+      gl.clearColor(0.0, 0.0, 0.0, 1.0)
+      gl.clear(gl.COLOR_BUFFER_BIT)
+
+- ENTRY:
+  EXPLAIN: Payment Request API
+  BODY: |
+    ■ 概要
+
+    ・ウェブでの支払いを標準化
+    ・ブラウザの支払い UI を使用
+    ・クレジットカードやデジタルウォレットに対応
+
+    ■ ユースケース
+
+    ・eコマースサイト
+    ・サブスクリプションサービス
+    ・モバイル決済
+    ・ワンクリック購入
+
+    ■ 実装例
+
+      const paymentRequest = new PaymentRequest(
+        [{
+          supportedMethods: 'basic-card',
+          data: { supportedNetworks: ['visa', 'mastercard'] }
+        }],
+        {
+          total: { label: 'Total', amount: { currency: 'USD', value: '10.00' } }
+        }
+      )
+
+      paymentRequest.show()
+        .then(paymentResponse => {
+          console.log('Payment successful:', paymentResponse)
+          paymentResponse.complete('success')
+        })
+        .catch(error => console.error('Payment failed:', error))

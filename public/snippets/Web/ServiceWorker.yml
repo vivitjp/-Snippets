@@ -3,9 +3,6 @@
 # Service Workers
 #-------------------------------
 - ENTRY:
-  CATEGORY: Service Workers
-
-- ENTRY:
   EXPLAIN: 概要 & メソッド
   BODY: |
     ■ 概要
