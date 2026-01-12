@@ -4,81 +4,92 @@
 #-------------------------------
 
 - ENTRY:
-  CATEGORY: Kick Start
-
-- ENTRY:
-  EXPLAIN: |
-    Repository
+  EXPLAIN: GitHub 概要
   BODY: |
-    ■ リポジトリ作成
-    1. GitHubにログイン
-    2. 画面右上の「+」アイコンをクリックし、「New repository」を選択
-    3. リポジトリ名、説明、公開/非公開設定を入力
-    4. 「Create repository」ボタンをクリック
+    ■ GitHubとは
 
-    ■ リポジトリのクローン
-    ローカルマシンにリポジトリをクローンするには、以下のコマンドを使用:
-    git clone <リポジトリのURL>
+      ソフトウェア開発プロジェクトのソースコード管理とバージョン管理を提供するWebベースのプラットフォーム
+      Gitをベースにしており、分散型バージョン管理システムの機能を活用
+      リポジトリ（Repository）を作成し、コードの変更履歴を追跡、共同作業が可能
+
+    ■ 主な機能
+
+      バージョン管理: Gitを使用してコードの変更履歴を管理
+      ブランチ管理: 複数のブランチを作成し、独立した開発が可能
+      プルリクエスト (Pull Request): 変更内容をレビュー・マージするための仕組み
+      イシュー (Issue) トラッキング: バグやタスクの管理
+      コードレビュー: チームメンバーがコード変更をレビュー・コメント可能
+      GitHub Actions: CI/CDパイプラインの自動化
+      Wikiとドキュメント: プロジェクトに関する情報共有
+      セキュリティ機能: Dependabotやセキュリティアラート
+
+#-------------------------------
+# 設定
+#-------------------------------
+- ENTRY:
+  CATEGORY: 連携と認証
 
 - ENTRY:
-  CATEGORY: 設定
-
-- ENTRY:
-  EXPLAIN: |
-    Developer Settings
+  EXPLAIN: Personal access tokens (PAT)
   BODY: |
-    ■ Personal access tokens (PAT)
     IDとパスワードの代わりに、GitHub APIへのアクセスや、Gitコマンド実行認証に使用するトークン管理
 
-      Classic PAT:
-      
-        従来式。リポジトリ全体やユーザーデータに対する広範なアクセス許可（スコープ）設定
+    ■ Classic PAT:
 
-      Fine-grained PATs:
-      
-        新しいきめ細かな制御が可能な方式。
-        特定のリポジトリのみにアクセスを限定したり、許可する権限を厳密に指定
-        CI/CDツール（Jenkins, CircleCIなど）からの自動アクセス
-        スクリプトやCLIツールからのAPI操作
-        GitHub Actionsで標準のGITHUB_TOKENで不足する権限が必要な場合
+    ・従来式
+    ・リポジトリ全体やユーザーデータに対する広範なアクセス許可（スコープ）設定
 
-    ■ OAuth Apps
-    外部のWebアプリケーション（例: VS Codeの拡張機能、プロジェクト管理ツール、認証サービスなど）が、あなたのGitHubアカウントのデータにアクセスするための連携管理
+    ■ Fine-grained PATs:
 
-      OAuth (Open Authorization) 認証:
+    ・新しいきめ細かな制御が可能な方式
+    ・特定のリポジトリのみにアクセスを限定したり、許可する権限を厳密に指定
+    ・CI/CDツール（Jenkins, CircleCIなど）からの自動アクセス
+    ・スクリプトやCLIツールからのAPI操作
+    ・GitHub Actionsで標準のGITHUB_TOKENで不足する権限が必要な場合
 
-        外部アプリケーションに対し「GitHubアカウントでのログイン」を許可する際に使用
-        作成・登録したアプリケーションの一覧表示
-        アプリケーションがどの権限を要求しているかを確認
-        不要になった連携（アプリケーションの認可）を取り消す
+- ENTRY:
+  EXPLAIN: OAuth (Open Authorization) 認証
+  BODY: |
+    外部WebアプリケーションがあなたのGitHubアカウントのデータにアクセスするための連携管理
+    例: VS Codeの拡張機能、プロジェクト管理ツール、認証サービスなど
 
-    ■ GitHub Apps
+    ■ OAuth (Open Authorization) 認証
+
+    ・外部アプリケーションに対し「GitHubアカウントでのログイン」を許可する際に使用
+    ・作成・登録したアプリケーションの一覧表示
+    ・アプリケーションがどの権限を要求しているかを確認
+    ・不要になった連携（アプリケーションの認可）を取り消す
+
+- ENTRY:
+  EXPLAIN: GitHub Apps
+  BODY: |
     OAuth Appsよりもさらに強力で、GitHubの機能を深く統合するための公式なアプリケーションプラットフォーム
     主に開発者が独自のGitHub連携サービスを構築・販売する際に利用
 
-      OAuth Appsとの違い:
+    ■ OAuth Appsとの違い
 
-        OAuth Apps：    「ユーザーとして」認証
-        GitHub Apps：    GitHub自体に「アプリとして」インストール
-                         より粒度の高い権限とWebhook機能（イベント通知）利用
+      OAuth Apps：    「ユーザーとして」認証
+      GitHub Apps：    GitHub自体に「アプリとして」インストール
+                       より粒度の高い権限とWebhook機能（イベント通知）利用
 
-        ※ 通常、一般ユーザーが自分でGitHub Appを作成することは稀
-           多くのSaaS製品が裏側でこの仕組みを利用してGitHubと連携
+    ※ 通常、一般ユーザーが自分でGitHub Appを作成することは稀
+        多くのSaaS製品が裏側でこの仕組みを利用してGitHubと連携
 
 - ENTRY:
-  EXPLAIN: |
-    SSH keys
+  EXPLAIN: SSH keys
   BODY: |
     SSHキーは、パスワードを使わずに安全にリモートサーバー（GitHubやVPSなど）に接続するための認証方法
     公開鍵暗号方式を利用しており、「公開鍵 (Public Key)」と「秘密鍵 (Private Key)」のペアで構成
 
     前提知識：公開鍵と秘密鍵
-        秘密鍵 (Private Key): あなたのPC上に厳重に保管。絶対に他人に公開してはいけません。
-        公開鍵 (Public Key):  接続したいサーバー（GitHubやVPS）に登録。公開されても問題なし
+
+      秘密鍵 (Private Key): あなたのPC上に厳重に保管。絶対に他人に公開してはいけません。
+      公開鍵 (Public Key):  接続したいサーバー（GitHubやVPS）に登録。公開されても問題なし
 
     認証時には、このペアが一致することで「あなたが正規のユーザーである」ことを証明
 
     ■ SSHキーペアの生成（Windows, macOS, Linux共通）
+
     ターミナルで ssh-keygen コマンド実行(セキュリティ強度が高いEd25519アルゴリズム推奨)
 
       ssh-keygen -t ed25519 -C "your_email@example.com"
@@ -88,12 +99,12 @@
 
     コマンド実行後の質問
 
-        保存場所の確認 (Enter file in which to save the key (...)):
-            デフォルトの保存場所（通常 ~/.ssh/id_ed25519）で問題なし。Enter
-            （もし既にキーがある場合は「上書きしますか？」と聞かれます。既存のキーを消したくない場合は、別のファイル名を入力してください。）
+      保存場所の確認 (Enter file in which to save the key (...)):
+          デフォルトの保存場所（通常 ~/.ssh/id_ed25519）で問題なし。Enter
+          （もし既にキーがある場合は「上書きしますか？」と聞かれます。既存のキーを消したくない場合は、別のファイル名を入力してください。）
 
-        パスフレーズの入力 (Enter passphrase (empty for no passphrase):):
-            重要: パスワード設定を強く推奨。万が一、秘密鍵ファイルが盗まれても、このパスフレーズがなければ使えません。
+      パスフレーズの入力 (Enter passphrase (empty for no passphrase):):
+          重要: パスワード設定を強く推奨。万が一、秘密鍵ファイルが盗まれても、このパスフレーズがなければ使えません。
 
     生成が完了すると、以下のようなメッセージが表示されます。
 
@@ -113,6 +124,7 @@
     表示される長い出力（ssh-ed25519 AAAA... your_email@example.com）をすべてコピー
 
     ■ 公開鍵の登録と使い方
+
     コピーした公開鍵を、接続したいサービス/サーバーに登録
 
     GitHub/GitLabへの登録
@@ -133,13 +145,14 @@
     「Hi [あなたのユーザー名]! You've successfully authenticated, but GitHub does not provide shell access.」で成功
 
 - ENTRY:
-  EXPLAIN: |
-    GitHub Secrets
+  EXPLAIN: GitHub Secrets
   BODY: |
-    シークレット
+    ■ シークレット
+
       認証情報やトークンなどの機密情報を安全に保存、GitHub Actionsなどのワークフローでのみ使用
 
-    GitHubリポジトリにシークレット (Secrets) を登録する手順
+    ■ GitHubリポジトリにシークレット (Secrets) を登録する手順
+
     以下の手順で、先ほどのChromaticの例で使用した CHROMATIC_PROJECT_TOKEN などを登録できます。
 
     1. リポジトリの Settings ページに移動する
@@ -155,7 +168,7 @@
         （組織全体で使いたい場合は [New organization secret] を選択します）
 
     4. シークレット情報を入力する
-    設定画面が表示されるので、以下の情報を入力します。
+      設定画面が表示されるので、以下の情報を入力します。
 
         Name (名前):
             GitHub ActionsのYAMLファイルで参照する変数名を指定します。
@@ -169,6 +182,71 @@
 
     これで登録は完了です。
 
+#-------------------------------
+# AI
+#-------------------------------
+- ENTRY:
+  CATEGORY: AI
+
+- ENTRY:
+  EXPLAIN: Review AI
+  BODY: |
+    ■ GitHub Review AI
+
+      プルリクエストのコード変更をAIが解析し、自動でレビューコメントを生成
+
+      コード品質向上、バグ検出、ベストプラクティス遵守支援
+
+      AIモデルにはOpenAI GPT-4を使用
+
+      GitHub Copilotとは別物
+
+      利用にはGitHub Enterprise Cloudの契約が必要
+
+    ■ 機能詳細
+
+      AIによる自動コードレビュー。プルリクエストの変更を分析し、コメント生成
+
+      検出対象:
+      ・ バグや潜在的な問題
+      ・ セキュリティ脆弱性
+      ・ パフォーマンス改善点
+      ・ コード品質向上提案
+      ・ テストカバレッジ不足
+      ・ 可読性・保守性向上
+
+      サポート言語: JavaScript, TypeScript, Python, Java, C++, Go, Ruby, PHP など主要言語
+
+    ■ 使用方法
+
+      1. プルリクエスト作成または既存PRでコメント欄にコマンド入力
+      2. AIが変更を分析し、レビューコメントを自動生成
+      3. コメントを確認・編集し、必要に応じて適用
+
+      PRコメントに "/review find bugs" と入力すると、バグ検出レビュー実行
+
+    ■ 制限事項
+
+      ・ GitHub Enterprise Cloud のみ利用可能
+      ・ 変更ファイルサイズ制限あり（通常数MBまで）
+      ・ AIの判断は完璧ではなく、人間レビュー補完として使用
+      ・ 機密コードや大規模変更では注意
+
+    ■ Review AI コマンド例
+
+      /review                           // AIがコード全体をレビュー
+      /review suggest improvements      // 改善点の提案
+      /review find bugs                 // バグの検出
+      /review check security            // セキュリティ問題のチェック
+      /review enhance readability       // 可読性の向上提案
+      /review optimize performance      // パフォーマンス最適化の提案
+      /review add tests                 // テスト追加の提案
+      /review explain code              // コードの説明
+      /review summarize changes         // 変更点の要約
+
+#-------------------------------
+# GitHub Actions
+#-------------------------------
 - ENTRY:
   CATEGORY: GitHub Actions
 

@@ -104,184 +104,18 @@
     ・basename: 
 
         サブディレクトリ配下での配備時に BrowserRouter basename="/repo/" を設定
-
-- ENTRY:
-  CATEGORY: よくある注意点 / ベストプラクティス
-
-- ENTRY:
-  EXPLAIN: 404対策
-  BODY: |
-    ■ SPA のリロードで 404 を避けるため、静的ホスティング側で index.html へフォールバック設定が必要（GitHub Pages 等）
-
-    //
-
-- ENTRY:
-  EXPLAIN: 再マウント防止策
-  BODY: |
-    ルートの key や element の再生成に注意（パフォーマンスと再レンダリング）
-
-    ■ 再レンダリング と 再マウント の違い:
-
-      ・再レンダリング: コンポーネントは再描画されるが同一インスタンスのまま（state 維持）
-      ・再マウント: コンポーネントが unmount → mount される（内部 state が初期化される）
-      
-    ■ 再マウントが起きる代表的な原因
-
-      ・key が変わる（Route や要素に key を付けていて値が変わると必ず再マウント）
-      ・要素の type が変わる（違うコンポーネント型を渡すとマウントし直す）
-      ・ルート配列を毎レンダーで再生成していて、マッピング時の key が安定していない
-       （例: key={index} や毎回新規生成するオブジェクトを element に渡す）
-
-      // NG: routes 配列をレンダーごとに新しく作る & key を index にする
-      function App({count}) {
-        const routes = [
-          { path: '/', element: <Home count={count} /> },
-          { path: '/users', element: <Users /> },
-        ];
-        return (
-          <Routes>
-            {routes.map((r, i) => (
-              <Route key={i} path={r.path} element={r.element} /> // index を key にするのは危険
-            ))}
-          </Routes>
-        );
-      }
-
-    ■ 対策1: ルート定義は安定させる（モジュール外か useMemo で固定）
-
-      // good: モジュールスコープか useMemo で固定
-      const routes = [
-        { path: '/', element: <Home /> , key: '/' },
-        { path: '/users', element: <Users />, key: '/users' },
-      ];
-
-      // or inside component:
-      const routes = useMemo(() => [...], []);
-
-    ■ 対策2: key は一意で安定な値（path や明示的な key）を使う（index は避ける）
-
-    ■ 対策3: element に渡す props/オブジェクトは可能な限り安定化（useMemo / useCallback）
-            関数や大きなオブジェクトを毎回インラインで作らない
-
-      // good: handler を useCallback で安定化して渡す
-      const onSave = useCallback((v) => api.save(v), []);
-      <Route path="/edit" element={<Edit onSave={onSave} />} />
-
-    ■ 対策4: レイアウト（共通 wrapper / Outlet）は外側で固定し、ルート切替で不要な再マウントが起きない構成にする
-
-      <BrowserRouter>
-        <Layout>            {/* Layout は頻繁に変えない */}
-          <Routes>          {/* Route 切替 */}</Routes>
-        </Layout>
-      </BrowserRouter>
-
-    ■ 対策5: 重い子コンポーネントは React.memo でラップして不必要な再描画を抑える（ただし props の安定化も必要）
-
-- ENTRY:
-  EXPLAIN: URL設計とパラメタ/クエリの使い分け
-  BODY: |
-    ■ 基本方針
-      ・リソース識別はパスで: 個々のリソースIDや階層的関係はパスに表現する
-      
-        例: GET /users/123
-
-      ・フィルタ/ページング/ソートはクエリで: 可変・オプション情報はクエリパラメタにする
-      
-        例: /products?category=books&page=2&sort=price_asc
-
-      ・人間可読なスラッグを使う: タイトルはスラッグ（英小文字・ハイフン）で表す
-      ・必要なら slug + id（/posts/2025/12/15/my-title-123）で安定性を確保
-      ・URLは短く・意味的に一貫: 深すぎる階層化は避け、意味が分かる語を使う。すべて小文字
-
-    ■ パラメタ vs クエリ の使い分け（実践）
-
-      ・パスパラメタ（/users/:id）: リソースの"一意の識別子"。必須であるべき。
-      ・クエリ（?）: 検索・フィルタ・並び替え・ページングなど副次的・可変な条件。リソースの同一性を変えないもの。
-      ・混在ルール: 
-
-        例：ユーザーのプロフィールは /users/123
-        例：プロフィール内での投稿一覧のフィルタは /users/123/posts?tag=react&page=3
-
-    ■ 後方互換性（破壊的変更を避ける手法）
-
-      ・バージョニング: API/公開ルートで破壊的変更が必要なときは base にバージョンを入れる
-      
-        例: /v1/…, /v2/…
-
-      ・リダイレクト提供: 古いパスを新パスへ 301（恒久）または 302（暫定）でリダイレクトしておく。
-        Netlify/GH Pages/サーバ・ミドルウェアで設定。
-
-      ・互換レイヤ: サーバ側で旧クエリ名を新クエリ名にマッピングする。フロントは両方受け付けログを残し徐々に廃止
-      
-        例: ?q= → ?query=
-
-      ・フォールバックレンダリング: フロントで旧URLを検出して内部遷移で新URLへ書き換える
-      
-        history.replaceState や useNavigate()
-
-      ・ドキュメントと通知: 変更はリリースノートに明記し、主要ユーザーには通知期間を設ける。
-
-    ■ SEO・UX のための注意
-
-      ・canonical タグ: 同一内容で複数URLが生成されうる場合は <link rel="canonical"> を設定。
-      ・クリーンなスラッグ: 動的IDを含む場合でも人が読めるスラッグを維持。検索エンジン向けにタイトルを反映。
-      ・不要なパラメタ排除: 無駄なトラッキングやセッション情報を URL に入れない。
-
-    ■ 技術的・運用ルール（チェックリスト）
-
-      ・一意で安定した識別子をパスに使う
-      
-        id or slug+id
-
-      ・クエリ名は意味のある短い英語に統一
-      
-        例: page, limit, sort, q, tag
-
-      ・パスの大文字小文字は正規化（通常は小文字）・末尾スラッシュの扱いを統一（リダイレクトで統一）。
-      ・機密情報は絶対に URL に含めない（トークン・パスワードなど）。
-      ・ルート変更は常に リダイレクト計画 + 移行期間 を用意する。
-      ・クライアントでルーティングを変える場合は 既存リンクを壊さない（古いURLも受け付けるか自動変換する）。
-
-    ■ 実例（設計パターン）
-
-      リソース詳細:             GET /products/123
-      検索結果:                 GET /products?category=books&price_min=1000&page=2
-      ソート & 表示形式:        GET /articles?tag=react&sort=recent&view=list
-      安定スラッグ:             GET /blog/2025/12/15/introducing-xyz-123 （123 は内部ID、スラッグは可読性重視）
-      バージョン導入(互換保持):  /v1/search → /v2/search（古いパスへ 301 リダイレクト）
-
-    ■ よくある誤り
-
-      フィルタやページングをパスパラメタに入れてしまう
-      
-        例: /products/page/2/sort/price ：URL が冗長になり再利用性が落ちる。
-
-      意味のない短縮語や社内用語を使う
-      
-        例: /prds?ct=1）→ 他者に読めない
-
-      破壊的にパスを変えて旧リンクを放置する（SEO とユーザー体験を損なう）
-
-    ■ 最後に（運用のヒント）
-
-      変更が必要ならまず redirect map を用意し、自動化（ビルド/CI）で旧URL→新URL のテストを行う
-
-      フロント実装では useSearchParams() でクエリ操作、useNavigate() でクエリ維持した遷移
-      
-        例: ページネーションで navigate({ search: params.toString() })）を使うと UX 改善
-
 - ENTRY:
   EXPLAIN: 安定スラッグ
   BODY: |
     ■ 定義：
 
-    人間可読なURL断片（例: introducing-xyz）を「スラッグ」と呼ぶ。
-    「安定スラッグ」はそれが頻繁に変わらない・一意であることを重視する運用ルール。
+    人間可読なURL断片（例: introducing-xyz）を「スラッグ」と呼ぶ
+    「安定スラッグ」はそれが頻繁に変わらない・一意であることを重視する運用ルール
 
     ■ 目的：
 
-    可読性・SEO・共有リンクの安定性を確保する。
-    古いリンクを踏んでもコンテンツに辿り着けるようにする。
+    可読性・SEO・共有リンクの安定性を確保
+    古いリンクを踏んでもコンテンツに辿り着けるように
 
     ■ 実装パターン（よく使われる）
 
@@ -297,29 +131,24 @@
 
     ■ DB / 運用
 
-    posts.slug を保存してユニーク制約を付ける。
-    タイトル変更時は基本は slug を不変にする（既存リンク保護）。
-    どうしても slug を変えるなら旧 slug を保存して 301 リダイレクトを用意する（または redirect table を持つ）
+    posts.slug を保存してユニーク制約を付与
+    タイトル変更時は基本は slug を不変にする（既存リンク保護）
+    どうしても slug を変えるなら旧 slug を保存、 301 リダイレクト用意（または redirect table を持つ）
 
     ■ ルーティング例（react-router）
 
     Route: <Route path="/blog/:slug-:id" element={<Post/>} />
     取得:  
       const { slug, id } = useParams() → id で確実に DB を参照
-      slug が一致しなければ navigate(正しいURL, { replace: true }) で canonical にリダイレクト。
+      slug が一致しなければ navigate(正しいURL, { replace: true }) で canonical にリダイレクト
 
     ■ ベストプラクティス（まとめ）
 
-    ID を併記して一意性を担保する。
-    slug は生成時に DB に固定して更新は慎重に（不可変が理想）。
-    古い slug は redirect で保持。
-    URL に機密情報を含めない。
-    canonical タグやサーバ側リダイレクトで SEO を守る。
-
-- ENTRY:
-  EXPLAIN: ルート外部定義
-  BODY: |
-    ■ 大きなアプリはルートを外部定義（配列）して map で展開すると管理しやすい
+    ID を併記して一意性を担保
+    slug は生成時に DB に固定して更新は慎重に（不可変が理想）
+    古い slug は redirect で保持
+    URL に機密情報を含めない
+    canonical タグやサーバ側リダイレクトで SEO を守る
 
 - ENTRY:
   CATEGORY: サンプル
@@ -370,14 +199,15 @@
     })
 
 - ENTRY:
-  EXPLAIN: Listルーティング
+  EXPLAIN: ルート外部定義
   BODY: |
-    import { Home } from "../pages/Home"
+    大きなアプリはルートを外部定義（配列）して map で展開すると管理しやすい
 
-    type MenuGroup = { [key: string]: Menu[] }
+    ■ ルート定義例
 
     type FCCompo = React.FunctionComponent<{}>
     type FixedElement = () => JSX.Element
+    type LazyElement = React.LazyExoticComponent<FCCompo>
 
     export type Menu = {
       name: string
@@ -388,12 +218,15 @@
     export const menuGroup: MenuGroup = {
       Home: [
         { name: "Home", path: "/", element: Home },
+        { name: "About", path: "/about", element: About },
+      ],
+      Users: [
+        { name: "User List", path: "/users", element: UserList },
+        { name: "User Detail", path: "/users/:id", element: UserDetail },
       ],
     }
+    ■ ルート展開例
 
-- ENTRY:
-  EXPLAIN: Listルーティング展開
-  BODY: |
     <BrowserRouter>
       <Routes>
         {menuGroup &&
@@ -421,74 +254,76 @@
     </BrowserRouter>
 
 - ENTRY:
-  CATEGORY: 主なコンポーネント / フック
+  CATEGORY: 主なコンポーネント / Hooks
 
 - ENTRY:
   EXPLAIN: BrowserRouter / HashRouter 比較
   BODY: |
     ■ 概要
 
-    BrowserRouter: 
+      BrowserRouter: 
 
-    ・History API（pushState/replaceState）を使ってクリーンなパス（/users/123）のまま遷移するルーター
-    ・URLにハッシュ（#）が入らない
-      
-    HashRouter: 
+      ・History API（pushState/replaceState）を使ってクリーンなパス（/users/123）のまま遷移するルーター
+      ・URLにハッシュ（#）が入らない
+        
+      HashRouter: 
 
-    ・URL のハッシュ部分（#/path）を使ってクライアント側ルーティングを行うルーター
-    ・サーバ設定不要でそのまま動く
+      ・URL のハッシュ部分（#/path）を使ってクライアント側ルーティングを行うルーター
+      ・サーバ設定不要でそのまま動く
 
     ■ 動作の違い（技術面）
 
-    BrowserRouter
+      BrowserRouter
 
-    ・クリーンなURL、SEOフレンドリー（サーバが適切に応答すれば）、ブラウザ履歴が自然に扱える
-    ・サーバ側で「任意パスでも index.html を返す」フォールバック設定が必要（SPA のリロード対策）
-    ・basename オプションでサブパス配備に対応
+      ・クリーンなURL、SEOフレンドリー（サーバが適切に応答すれば）、ブラウザ履歴が自然に扱える
+      ・サーバ側で「任意パスでも index.html を返す」フォールバック設定が必要（SPA のリロード対策）
+      ・basename オプションでサブパス配備に対応
 
-    HashRouter
+      HashRouter
 
-    ・サーバ側設定不要（静的ホスティングやファイル://、GitHub Pages の簡易運用に便利）。導入が簡単。
-    ・URL に # が含まれる（見た目・SEOで劣る）
-    ・一部の解析や外部ツールで取り扱いづらい（例: サーバ側ログはハッシュを渡さない）
+      ・サーバ側設定不要（静的ホスティングやファイル://、GitHub Pages の簡易運用に便利）。導入が簡単。
+      ・URL に # が含まれる（見た目・SEOで劣る）
+      ・一部の解析や外部ツールで取り扱いづらい（例: サーバ側ログはハッシュを渡さない）
 
     ■ 使い分け（実務判断）
 
-    BrowserRouter を選ぶべきケース
+      BrowserRouter を選ぶべきケース
 
-    ・自前サーバ（Netlify, Vercel, Express など）または GitHub Pages で 404 → index.html フォールバックが設定できる場合
-    ・SEO が重要・クリーンな URL を保ちたい場合
+      ・自前サーバ（Netlify, Vercel, Express など）または GitHub Pages で 404
+        → index.html フォールバックが設定できる場合
+      ・SEO が重要・クリーンな URL を保ちたい場合
 
-    HashRouter を選ぶべきケース
+      HashRouter を選ぶべきケース
 
-    ・静的ホスティングでサーバ側のフォールバック設定ができない／面倒な場合（簡易公開や社内ドキュメント）
-    ・Electron や Cordova のような環境、もしくはファイル直接配布で確実に動かしたい場合
-    ・早く動作確認だけしたいローカルでのデモやプロトタイプ
+      ・静的ホスティングでサーバ側のフォールバック設定不可／面倒な場合（簡易公開や社内ドキュメント）
+      ・Electron や Cordova のような環境、もしくはファイル直接配布で確実に動かしたい場合
+      ・早く動作確認だけしたいローカルでのデモやプロトタイプ
 
     ■ 実装例（簡潔）
 
-    BrowserRouter（basename 付）
+      BrowserRouter（basename 付）
 
-      import { BrowserRouter } from 'react-router-dom'
+        import { BrowserRouter } from 'react-router-dom'
 
-      <BrowserRouter basename="/repo-name">
-        <Routes>...</Routes>
-      </BrowserRouter>
+        <BrowserRouter basename="/repo-name">
+          <Routes>...</Routes>
+        </BrowserRouter>
 
-    HashRouter
+      HashRouter
 
-      import { HashRouter } from 'react-router-dom'
-      
-      <HashRouter>
-        <Routes>...</Routes>
-      </HashRouter>
+        import { HashRouter } from 'react-router-dom'
+        
+        <HashRouter>
+          <Routes>...</Routes>
+        </HashRouter>
 
     ■ デプロイ時のヒント
 
-    GitHub Pages（プロジェクトページ）で簡単に公開したい
+      GitHub Pages（プロジェクトページ）で簡単に公開したい
 
-      → HashRouter を使うか、BrowserRouter + basename にしてビルド後に 404.html を index.html にフォールバックさせる
-        あるいは GitHub Actions や gh-pages で 404 対策を取る
+      → HashRouter を使うか、BrowserRouter + basename 
+        ビルド後に 404.html を index.html にフォールバックさせる
+      → あるいは GitHub Actions や gh-pages で 404 対策を取る
 
       サーバ設定可能なら BrowserRouter を推奨
       サーバ（Nginx/Apache/Netlify）で SPA フォールバックを設定する
@@ -635,15 +470,17 @@
     ・<Route> は子 <Route> を内包でき、親 element の中で Outlet を使って子ルートを描画する
     ・これによりレイアウトの分離ができる
 
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout/>}>
-        <Route index element={<Home/>} />      // index ルート（は親パスそのものに対応するデフォルト子ルート）
-          <Route path="posts" element={<Posts/>} />
-          <Route path="posts/:id" element={<Post/>} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    ・index ルート：親パスそのものに対応するデフォルト子ルート
+
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Layout/>}>             // PATH: /  ※Layout に Outlet 必須
+          <Route index element={<Home/>} />                // PATH: /  ※Outlet 内に描画
+            <Route path="posts" element={<Posts/>} />      // PATH: /posts
+            <Route path="posts/:id" element={<Post/>} />   // PATH: /posts/123
+          </Route>
+        </Routes>
+      </BrowserRouter>
 
     ■ pathless ルート、レイアウトだけのルート
 
@@ -676,26 +513,26 @@
 
     ■ 実用的なパターン: レイアウト + index + ネスト:
 
-    <Routes>
-      <Route path="/" element={<MainLayout/>}>
-        <Route index element={<Dashboard/>} />
-        <Route path="users" element={<UsersLayout/>}>
-          <Route index element={<UsersList/>} />
-          <Route path=":id" element={<UserDetail/>} />
+      <Routes>
+        <Route path="/" element={<MainLayout/>}>
+          <Route index element={<Dashboard/>} />
+          <Route path="users" element={<UsersLayout/>}>
+            <Route index element={<UsersList/>} />
+            <Route path=":id" element={<UserDetail/>} />
+          </Route>
+          <Route path="*" element={<NotFound/>} />
         </Route>
-        <Route path="*" element={<NotFound/>} />
-      </Route>
-    </Routes>
+      </Routes>
 
     ■ 実用的なパターン: createBrowserRouter 形式（Data Router）:
 
-    const router = createBrowserRouter([
-      { path: "/", element: <Root/>, children: [
-        { index: true, element: <Home/>, loader: homeLoader },
-        { path: "posts/:id", element: <Post/>, loader: postLoader, errorElement: <PostError/> },
-      ]}
-    ]);
-    <RouterProvider router={router} />
+      const router = createBrowserRouter([
+        { path: "/", element: <Root/>, children: [
+          { index: true, element: <Home/>, loader: homeLoader },
+          { path: "posts/:id", element: <Post/>, loader: postLoader, errorElement: <PostError/> },
+        ]}
+      ]);
+      <RouterProvider router={router} />
 
     ■ ベストプラクティス（要点）
 
@@ -721,29 +558,44 @@
     ・外部サイトやファイルダウンロード → 通常の <a href="..."> を使うか Link に target を渡して HTML 属性利用
     ・外部の場合は SEO/解析上も <a> が自然
 
-      例: <Link to="/about">社内ページ</Link>
-      例: <a href="https://example.com">外部サイト</a>
+      <Link to="/about">社内ページ</Link>
+      <a href="https://example.com">外部サイト</a>
+
+    ■ Link のフルオプション
+
+      import { Link } from 'react-router-dom'
+
+      <Link
+        to="/path"                      // 遷移先（必須）
+        replace={true|false}            // true なら履歴を置換（デフォルト false）
+        state={{ key: 'value' }}        // 遷移時に渡す任意の状態オブジェクト
+        target="_blank"                 // 外部リンク用に target 属性も渡せる
+        rel="noopener noreferrer"       // target="_blank" の場合は推奨
+        download                        // ファイルダウンロード用に download 属性も渡せる
+        className="link-class"          // className も渡せる
+        style={{ color: 'red' }}        // style も渡せる
+      >リンク本文</Link>
 
     ■ to
 
     ・遷移先（文字列 or { pathname, search, hash }）
     ・絶対 /path か相対 ../next を指定可能
 
-      例: <Link to="/posts/123">記事を見る</Link>
-      例: <Link to={{ pathname: '/posts/123', search: '?ref=home' }}>記事を見る</Link>
-      例: <Link to="../edit">編集へ</Link>  // 相対遷移
+      <Link to="/posts/123">記事を見る</Link>
+      <Link to={{ pathname: '/posts/123', search: '?ref=home' }}>記事を見る</Link>
+      <Link to="../edit">編集へ</Link>  // 相対遷移
 
     ・to に相対パス（例: to="edit"）を指定すると、現在のルートを基準に解決される（ネスト内で便利）
 
-      例: <Link to="edit">編集へ</Link>
-      例: <Link to="settings">設定へ</Link>  // -> /dashboard/settings
+      <Link to="edit">編集へ</Link>
+      <Link to="settings">設定へ</Link>      // -> /dashboard/settings
 
     ・useResolvedPath() と useMatch() を使うと現在の解決済パスやマッチ判定を確認できる
 
-      例: const resolved = useResolvedPath('edit')
+      const resolved = useResolvedPath('edit')
         resolvedの値: { pathname: '/current-path/edit', search: '', hash: '' }
 
-      例: const match = useMatch('/posts/:id')
+      const match = useMatch('/posts/:id')
         match の値: { params: { id: '123' }, pathname: '/posts/123', ... }
 
     ■ state と replace
@@ -751,21 +603,20 @@
     ・replace (boolean): true なら history.push の代わりに history.replace を使う（履歴残さない）
     ・state: 遷移時に渡す任意のオブジェクト
 
-      例: <Link to="/profile" replace>プロフィール</Link>
-      例: <Link to="/checkout" state={{ fromCart: true }} replace>購入</Link>
+      <Link to="/profile" replace>プロフィール</Link>
+      <Link to="/checkout" state={{ fromCart: true }} replace>購入</Link>
 
     ・useLocation().state で受け取れる（ブックマーク不可）
 
-      例: const loc = useLocation()
-          loc.state  // { fromCart: true } が入る
+      const loc = useLocation()         // loc.state -> { fromCart: true } が入る
 
     ・検索結果画面から詳細へ「戻る」で状態を保持したい場合
       詳細側で `const loc = useLocation()` → `loc.state` を参照
 
-      例: <Link to={`/item/${id}`} state={{ fromSearch: true, q }} /> 
+      <Link to={`/item/${id}`} state={{ fromSearch: true, q }} /> 
 
-      例: const loc = useLocation()
-          if(loc.state?.fromSearch){ /* 戻るボタン表示など */ } 
+      const loc = useLocation()
+      if(loc.state?.fromSearch){ /* 戻るボタン表示など */ } 
 
     ・モーダル遷移や一時的ルートは replace を使って履歴を増やさない
 
@@ -773,9 +624,8 @@
 
     ・target, rel, download: 外部リンクやファイルダウンロードで <a> と同様に渡せる
     ・target="_blank" の場合は rel="noopener noreferrer" 推奨
-
-      例: 
-      例: <a href="https://example.com" target="_blank" rel="noopener noreferrer">外部</a>
+      
+      <a href="https://example.com" target="_blank" rel="noopener noreferrer">外部</a>
 
     ■ アクセシビリティと SEO
 
@@ -795,7 +645,7 @@
     ・to をオブジェクトで渡していて期待通りにマッチしない → pathname の先頭スラッシュの有無を確認
 
 - ENTRY:
-  EXPLAIN: NavLink NavLink(アクティブ状態管理)
+  EXPLAIN: NavLink(アクティブ状態管理)
   BODY: |
     ■ NavLink の active class
 
@@ -803,35 +653,100 @@
     ・className と style に関数を渡せる
     ・end prop を付けると厳密一致（子パスをアクティブにしない）にできる
 
-      例: <NavLink to="/users" className={({isActive}) => isActive ? 'is-active' : undefined} end>ユーザー</NavLink>
-      例: <NavLink to="/dashboard" style={({isActive}) => ({ fontWeight: isActive ? 'bold' : 'normal' })}>ダッシュボード</NavLink>
+      <NavLink
+        to="/users"
+        className={({isActive}) => isActive ? 'is-active' : undefined}
+        end                             // 厳密一致にする場合
+      >ユーザー</NavLink>
 
-        import { NavLink } from 'react-router-dom'
+      <NavLink
+        to="/dashboard"
+        style={({isActive}) => ({ fontWeight: isActive ? 'bold' : 'normal' })}
+      >ダッシュボード</NavLink>
 
-        const crumbs = [
-          { name: 'Home', to: '/' },
-          { name: 'Users', to: '/users' },
-          { name: 'Profile', to: '/users/123' }
-        ]
+    ■ Link との違い
 
-        export const Breadcrumbs = () => (
-          <nav aria-label="breadcrumb">
-            <ol>
-              {crumbs.map((c, i) => (
-                <li key={c.to}>
-                  {/* 親は部分一致でアクティブ、最後は厳密一致にするなら end を付ける */}
-                  <NavLink
-                    to={c.to}
-                    end={i === crumbs.length - 1}
-                    className={({ isActive }) => (isActive ? 'crumb-active' : undefined)}
-                  >
-                    {c.name}
-                  </NavLink>
-                </li>
-              ))}
-            </ol>
-          </nav>
-        )
+    ・NavLink は Link を拡張したもので、アクティブ状態の管理が追加されている
+    ・Link は単純に遷移するだけでアクティブ状態の管理はしない
+
+    ■ NavLinkのフルオプション
+
+      <NavLink
+        to="/settings"
+        className={({ isActive, isPending }) =>
+          isActive ? 'active-link' : isPending ? 'pending-link' : undefined
+        }
+        style={({ isActive }) => ({ color: isActive ? 'red' : 'blue' })}
+        end
+        state={{ fromMenu: true }}
+        replace
+      >
+        設定
+      </NavLink>
+
+    ■ isActive と isPending
+
+    ・className/style 関数の引数に isActive（現在のパスがマッチしているか）と isPending（遷移中か）が渡される
+    ・isPending は Data Router の遷移中に true になる（v6.4+）
+
+    ■ 複数クラスの付与
+
+    ・className 関数で複数クラスを条件付きで付与できる
+
+      <NavLink
+        to="/reports"
+        className={({ isActive, isPending }) =>
+          isActive ? 'active-link report-link' : isPending ? 'pending-link' : 'report-link'
+        }
+      >
+        レポート
+      </NavLink>
+
+    ■ NavLink のマッチングルール
+
+    ・部分一致マッチがデフォルト（例: /users が /users/123 にもマッチ）
+    ・end prop を付けると厳密一致になる（例: /users は /users/123 にはマッチしない）
+    ・動的セグメントやクエリパラメタはマッチングに影響しない（/posts/:id は /posts/123 にマッチ）
+    ・useMatch() フックで同じマッチングロジックを利用できる
+
+    ■ NavLink の state
+
+    ・Link と同様に state prop で遷移時に状態を渡せる
+    ・useLocation().state で受け取れる
+
+      <NavLink to="/profile" state={{ fromNav: true }}>プロフィール</NavLink>
+
+      const loc = useLocation()
+      if(loc.state?.fromNav){ /* ナビゲーションから来た場合の処理 */ }
+
+    ■ パンくずリスト
+
+      import { NavLink } from 'react-router-dom'
+
+      const crumbs = [
+        { name: 'Home', to: '/' },
+        { name: 'Users', to: '/users' },
+        { name: 'Profile', to: '/users/123' }
+      ]
+
+      export const Breadcrumbs = () => (
+        <nav aria-label="breadcrumb">
+          <ol>
+            {crumbs.map((c, i) => (
+              <li key={c.to}>
+                {/* 親は部分一致でアクティブ、最後は厳密一致にするなら end を付ける */}
+                <NavLink
+                  to={c.to}
+                  end={i === crumbs.length - 1}         // 最後のクラムだけ厳密一致
+                  className={({ isActive }) => (isActive ? 'crumb-active' : undefined)}
+                >
+                  {c.name}
+                </NavLink>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )
 
     ■ パフォーマンス・注意点
 
@@ -842,9 +757,188 @@
     ・NavLink が常にアクティブになる → end や to の整合性をチェック
 
 - ENTRY:
-  EXPLAIN: preventScrollReset(スクロール制御)
+  EXPLAIN: |
+    Routes: Outlet(ネストされた親ルートの描画位置)
   BODY: |
     ■ 定義
+
+    ・Outlet は親ルート（レイアウト）の中で「子ルートを描画するためのプレースホルダ」
+    ・ネストされたルートがマッチすると、その子の element が Outlet の位置に挿入
+    ・共通レイアウト（ヘッダ/サイドバー/フッタ）を作り、ルートごとの本文だけ差し替えるために使用
+    ・子ルートが無ければ null をレンダー
+    ・ネスト深度に応じて入れ子で描画
+
+      <Route path="/users" element={<UsersLayout/>}>
+        <Route index element={<UsersList/>} />
+        <Route path=":id" element={<UserDetail/>} />
+      </Route>
+
+      function UsersLayout(){
+        return (
+          <div>
+            <header>ユーザー管理</header>
+            <Outlet/>          // ここに UsersList または UserDetail が入る
+            <footer>フッタ情報</footer>
+          </div>
+        )
+      }
+
+    ■ 関連フック/API
+
+    useOutletContext<T>()
+
+    ・親が <Outlet context={value}> で渡した値を子で受け取る
+
+      例: const context = useOutletContext<{ userId: string }>()
+
+    useOutlet()
+
+    ・珍しいケースで子要素（resolved element）を取得してカスタム描画するために使える（ほとんどの場合不要）
+
+      例: const outlet = useOutlet()
+          return <div className="wrapper">{outlet}</div>
+
+    ■ パターン
+
+    ・index ルートと組合せて「/users → /users/:id」などを実装
+    ・path-less ルート（<Route element={<Layout/>}>）で複数レイアウト層を作る
+    ・Outlet に context を渡し、子コンポーネントへデータを供給
+
+- ENTRY:
+  EXPLAIN: Navigate(リダイレクト用コンポーネント)
+  BODY: |
+    ■ 概要
+
+    ・`<Navigate />` はレンダー時にリダイレクトを行うためのコンポーネント、`to` と `replace` を指定して即時遷移を行う
+
+    ■ 基本例
+
+    import { Navigate, useLocation } from 'react-router-dom'
+
+    // 認証ガードの例（ログインしていなければ /login へリダイレクト）
+    const RequireAuth: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+      const isAuth = useAuth() // 仮のフック
+      const location = useLocation()
+      if (!isAuth) {
+        // state に戻り先情報を入れておくパターン
+        return <Navigate to="/login" replace state={{ from: location }} />
+      }
+      return <>{children}</>
+    }
+
+    ■ Navigate のフルオプション
+
+      <Navigate
+        to="/path"                      // 遷移先（必須）
+        replace={true|false}            // true なら履歴を置換（デフォルト false）
+        state={{ key: 'value' }}        // 遷移時に渡す任意の状態オブジェクト
+      />
+
+    ■ to
+
+    ・遷移先（文字列 or { pathname, search, hash }）
+    ・絶対 /path か相対 ../next を指定可能
+
+      <Navigate to="/dashboard" />
+      <Navigate to={{ pathname: '/dashboard', search: '?tab=stats' }} />
+      <Navigate to="../home" />  // 相対遷移
+    ・to に相対パス（例: to="edit"）を指定すると、現在のルートを基準に解決される（ネスト内で便利）
+      <Navigate to="edit" />
+      <Navigate to="settings" />      // -> /dashboard/settings
+
+    ■ state と replace
+
+    ・replace (boolean): true なら history.push の代わりに history.replace を使う（履歴残さない）
+    ・state: 遷移時に渡す任意のオブジェクト
+
+      <Navigate to="/profile" replace />
+      <Navigate to="/checkout" state={{ fromCart: true }} replace />
+
+    ■ 注意点
+
+    ・`<Navigate replace />` を使うと履歴に戻らない（replace）挙動になる
+    ・プログラム的遷移は `useNavigate()` を使う（`navigate('/path', { replace: true })`）
+    ・ルート定義内で条件に応じて `<Navigate />` を返すパターンは簡潔で分かりやすい
+
+- ENTRY:
+  EXPLAIN: useNavigate(プログラム遷移:履歴操作)
+  BODY: |
+    ■ 概要と仕組み
+
+    ・`useNavigate()` は関数を返すフックで、プログラム的にルート遷移を行うために使用
+    ・返される `navigate` 関数は、URL 文字列または相対パス、履歴操作のための整数を受け取る
+    ・`navigate(to, options?)` で遷移を実行
+
+    ■ Navigate との使い分け
+
+    ・`<Navigate />` コンポーネントはレンダー時に即時リダイレクトを行う場合に使用
+    ・`useNavigate()` はイベントハンドラや副作用内でプログラム的に遷移を行う場合に使用
+
+    ■ 基本的な使用例
+
+    import { useNavigate } from 'react-router-dom'
+
+    export const MyComponent: React.FC = () => {
+      const navigate = useNavigate()
+
+      const goToAbout = () => {
+        navigate('/about')              // /about へ遷移
+      }
+
+      const goBack = () => {
+        navigate(-1)                    // ひとつ前の履歴へ戻る
+      }
+
+      const goToProfileReplace = () => {
+        navigate('/profile', { replace: true })   // /profile へ遷移、履歴を残さない
+      }
+
+      return (
+        <div>
+          <button onClick={goToAbout}>About へ</button>
+          <button onClick={goBack}>戻る</button>
+          <button onClick={goToProfileReplace}>プロフィール (replace)</button>
+        </div>
+      )
+    }
+
+    ■ navigate
+
+    navigate(to: string | number, options?: {
+      replace?: boolean             // true なら履歴を置き換える（push ではなく replace）
+      state?: any                   // 遷移時に location.state に渡す任意のオブジェクト
+      preventScrollReset?: boolean  // v6.4+ で利用可能。遷移時の自動スクロールリセットを防止
+    })
+
+    ■ to の指定方法
+
+      ・文字列: 絶対パス（例: '/about'）または相対パス（例: 'edit'）
+      ・数値: 履歴スタック内の相対移動（例: -1 は「ひとつ前に戻る」）
+
+    ■ 絶対パスと相対パス
+
+    ・絶対パス: 先頭にスラッシュ（/）を付ける。ルートからの完全なパスを指定
+    ・相対パス: 現在のルートを基準に解決される。ネストされたルート内で便利
+
+    ■ state と replace オプション
+
+    ・state: 遷移時に location.state に渡す任意のオブジェクト。戻る際に状態を保持したい場合に便利
+    ・replace: true を指定すると、履歴スタックの現在のエントリを置き換える。戻る操作で前のページに戻れなくなる  
+
+    例: navigate('/profile', { replace: true, state: { fromDashboard: true } })
+
+    ■ スクロール制御（preventScrollReset）
+
+    ・v6.4 以降で利用可能なオプション
+    ・preventScrollReset: true を指定すると、ルーターの自動スクロール位置リセットを防止
+    ・マスタ／詳細ビューで詳細に移るときにリストのスクロール位置を保持したい場合などに有用
+
+- ENTRY:
+  EXPLAIN: |
+    useNavigate: preventScrollReset(スクロール制御)
+  BODY: |
+    ■ 定義
+
     ・preventScrollReset （v6.4+ Data Router 等のオプション利用時）など特定の環境での挙動制御
     ・preventScrollReset は React Router の遷移オプション
     ・ルーターが遷移時に行う「自動スクロール位置リセット（通常はページ上部へスクロールする）」を抑止
@@ -885,16 +979,22 @@
       const navigate = useNavigate()
       const listRef = useRef<HTMLDivElement | null>(null)
 
+      // 戻ってきた場合、state に保存されたスクロール位置に復帰する例
+      // useLocation で state を取り出す方法もある（簡略のため省略）
+
       const openDetail = (id: string) => {
-        // preventScrollReset: true によってルーターの自動スクロールを抑止
-        navigate(`/items/${id}`, { state: { fromListScroll: window.scrollY }, preventScrollReset: true })
+        navigate(
+          `/items/${id}`,
+          { state:
+            { fromListScroll: window.scrollY },     // スクロール位置を state に保存
+            preventScrollReset: true                // ルーターの自動スクロールを抑止
+          }
+        )
       }
 
       useEffect(() => {
-        // 戻ってきた場合、state に保存されたスクロール位置に復帰する例
-        // useLocation で state を取り出す方法もある（簡略のため省略）
-        const saved = history.state?.usr?.fromListScroll
-        if (typeof saved === 'number') window.scrollTo(0, saved)
+        const saved = history.state?.usr?.fromListScroll          // state から取得
+        if (typeof saved === 'number') window.scrollTo(0, saved)  // 復帰
       }, [])
 
       return (
@@ -920,56 +1020,8 @@
     )
 
 - ENTRY:
-  EXPLAIN: Outlet(ネストされた親ルートの描画位置)
-  BODY: |
-    ■ 定義
-
-    ・Outlet は親ルート（レイアウト）の中で「子ルートを描画するためのプレースホルダ」
-    ・ネストされたルートがマッチすると、その子の element が Outlet の位置に挿入
-    ・共通レイアウト（ヘッダ/サイドバー/フッタ）を作り、ルートごとの本文だけ差し替えるために使用
-    ・子ルートが無ければ null をレンダー
-    ・ネスト深度に応じて入れ子で描画
-
-    例:
-      <Route path="/users" element={<UsersLayout/>}>
-        <Route index element={<UsersList/>} />
-        <Route path=":id" element={<UserDetail/>} />
-      </Route>
-
-      function UsersLayout(){
-        return (
-          <div>
-            <header>ユーザー管理</header>
-            <Outlet/>          // ここに UsersList または UserDetail が入る
-            <footer>フッタ情報</footer>
-          </div>
-        )
-      }
-
-    ■ 関連フック/API
-
-    useOutletContext<T>()
-
-    ・親が <Outlet context={value}> で渡した値を子で受け取る
-
-      例: const context = useOutletContext<{ userId: string }>()
-
-    useOutlet()
-
-    ・珍しいケースで子要素（resolved element）を取得してカスタム描画するために使える（ほとんどの場合不要）
-
-      例: const outlet = useOutlet()
-          return <div className="wrapper">{outlet}</div>
-
-    ■ パターン
-
-    ・index ルートと組合せて「/users → /users/:id」などを実装
-    ・path-less ルート（<Route element={<Layout/>}>）で複数レイアウト層を作る
-    ・Outlet に context を渡し、子コンポーネントへデータを供給
-
-- ENTRY:
   EXPLAIN: |
-    BrowserRouter(プログラム遷移:履歴操作)
+    useNavigate: BrowserRouter(プログラム遷移:履歴操作)
   BODY: |
     ■ 基本：ページ遷移・履歴操作
 
@@ -1079,14 +1131,14 @@
     ・返り値: オブジェクト（すべて `string` または `undefined`）。例: `{ id?: string }`
     ・範囲: パスパラメタのみ。クエリは `useSearchParams()`、ロケーション情報は `useLocation()` を使用
 
-    ■ 簡単な使用例
+    ■ 例: ルート定義
 
-    // ルート定義
     <Routes>
       <Route path="/users/:id" element={<UserDetail />} />
     </Routes>
 
-    // コンポーネント
+    ■ 例: コンポーネント
+
     import { useParams } from 'react-router-dom'
 
     export const UserDetail: React.FC = () => {
@@ -1095,15 +1147,39 @@
       return <div>User ID: {id}</div>
     }
 
-    ■ TypeScript で型を付ける例
+    ■ 型指定
+
+    ・ジェネリクスで型を指定できる（任意）
+    ・指定しない場合は `{ [key: string]: string | undefined }` 型
+    ・型指定は必須ではないが、TypeScript での型安全性向上に役立つ
 
     import { useParams } from 'react-router-dom'
 
     type Params = { id?: string }
+
     const Comp: React.FC = () => {
       const { id } = useParams<Params>()
       const numericId = id ? Number(id) : undefined    // numericId を使う前に NaN チェックを行う
       return <div>{numericId}</div>
+    }
+
+    ■ ジェネリクス例
+
+    import { useParams } from 'react-router-dom';
+
+    // generics を使用したカスタムフック
+    function useTypedParams<T extends Record<string, string | undefined>>() {
+      return useParams() as T;
+    }
+
+    // 例 ルート: /user/:id/:name
+    function UserComponent() {
+      const params = useTypedParams<{ id: string; name: string }>();
+      
+      // params.id と params.name は string 型として扱える
+      console.log(params.id, params.name);
+      
+      return <div>User ID: {params.id}, Name: {params.name}</div>;
     }
 
     ■ 実務メモ / 注意点
@@ -1122,7 +1198,22 @@
     ・目的: `useLocation()` は現在のロケーション情報（`pathname`, `search`, `hash`, `state`, `key`）を返すフック
     ・使いどころ: クエリやロケーションの状態（`location.state`）を参照したり、現在のパスに応じた UI を切り替える際に使用
 
-    ■ 使い方（例）
+    ■ 基本的な使い方
+
+    import { useLocation } from 'react-router-dom'
+    const location = useLocation()      // 引数なし
+
+    location の型
+
+    {
+      pathname: string                  // 現在のパス（例: /posts/123）
+      search: string                    // クエリ文字列（例: ?tab=overview）
+      hash: string                      // ハッシュ部分（例: #section2）
+      state: any                        // 遷移時に渡された状態オブジェクト
+      key: string                       // 履歴エントリの一意キー
+    }
+
+    ■ 例: クエリと state の利用
 
     import { useLocation, useNavigate } from 'react-router-dom'
 
@@ -1130,11 +1221,10 @@
       const location = useLocation()
       const navigate = useNavigate()
 
-      // クエリは location.search を URLSearchParams で解釈
-      const params = new URLSearchParams(location.search)
+      const params = new URLSearchParams(location.search)  // location.search の解析
       const tab = params.get('tab') || 'overview'
 
-      // location.state は任意のクライアント状態（サーバ保存されない）
+      // location.state は任意のクライアントstate（サーバ保存されない）
       const from = location.state?.from
 
       return (
@@ -1152,18 +1242,113 @@
     ・`location.search` を直接操作するより `useSearchParams()` を使うと扱いやすい場面が多い
 
 - ENTRY:
+  EXPLAIN: URLSearchParams(クエリ文字列操作)
+  BODY: |
+    ■ 概要
+
+    ・`URLSearchParams` はブラウザ組込標準API
+    ・URL のクエリ文字列（`?a=1&b=2`）を解析・生成
+    ・React Router の `useSearchParams()` はこの API と互換のインターフェースを提供
+
+    ■ コンストラクタ
+
+    const params = new URLSearchParams(init?: string | string[][] | Record<string, string>)
+
+    ■ 引数 init の例
+
+    // 文字列から解析
+    new URLSearchParams('?page=2&filter=active')
+
+    // 配列の配列から生成
+    new URLSearchParams([['page', '2'], ['filter', 'active']])
+
+    // オブジェクトから生成
+    new URLSearchParams({ page: '2', filter: 'active' })
+
+    ■ メソッド一覧
+
+    ・get(key: string): string | null               // 指定キーの★最初の値★を取得
+    ・getAll(key: string): string[]                 // 指定キーのすべての値を配列で取得
+    ・set(key: string, value: string): void         // 指定キーの値を設定（上書き）
+    ・append(key: string, value: string): void      // 指定キーに値を追加（複数値対応）
+    ・delete(key: string): void                     // 指定キーの値を削除
+    ・has(key: string): boolean                     // 指定キーが存在するか確認
+    ・toString(): string                            // クエリ文字列を生成
+    ・forEach(callback: (value: string, key: string, parent: URLSearchParams) => void): void  // ループ処理
+
+    ■ 基本的な使い方
+
+    // クエリ文字列の解析
+    const params = new URLSearchParams('?page=2&filter=active')
+
+    // 値の取得
+    const page = params.get('page')            // '2'
+    const filter = params.get('filter')        // 'active'
+
+    // 値の設定
+    params.set('page', '3')                    // page を '3' に更新
+    params.append('tag', 'new')                // tag パラメタを追加
+
+    // 値の削除
+    params.delete('filter')                    // filter パラメタを削除
+
+    // クエリ文字列の生成
+    const queryString = params.toString()      // 'page=3&tag=new'
+
+    ■ ループ処理
+
+    for (const [key, value] of params) {
+      console.log(`${key}: ${value}`)
+    }
+
+    ■ 注意点
+
+    ・`URLSearchParams` はモダンブラウザでサポート(古ブラウザではポリフィルが必要)
+    ・値は常に文字列
+    ・数値や真偽値が必要な場合は適切に変換
+    ・同じキーに複数の値がある場合、`getAll(key)` を使用してすべての値を配列で取得
+
+      const tags = params.getAll('tag')  // ['new', 'sale']
+
+- ENTRY:
   EXPLAIN: useSearchParams(クエリパラメタ操作)
   BODY: |
     ■ 概要
 
-    ・目的: `useSearchParams()` は URL のクエリパラメタ（`?a=1&b=2`）を読み書きするためのフック、内部で `URLSearchParams` と互換の API を提供
+    ・目的: `useSearchParams()` は URL のクエリパラメタ（`?a=1&b=2`）を読み書きするためのフック
+    ・内部で `URLSearchParams` と互換の API を提供
+
+    ■ URLSearchParamsとの使い分け
+
+    ・URLSearchParams クエリ文字列の解析や生成だけが必要
+    ・useSearchParams React コンポーネント内でクエリパラメタの読み書きや更新を行う
+
+    ■ 引数
+
+    ・`initialParams?`: 初期値として使用する `URLSearchParams` またはオブジェクト（省略可）
+    ・初回レンダー時にのみ使用され、その後の更新には影響しない
+
+    useSearchParams({ page: '1', filter: 'active' })
+    useSearchParams(new URLSearchParams('page=1&filter=active'))
+
+    ■ 全戻り値
+
+    const [searchParams, setSearchParams] = useSearchParams(initialParams?)
+
+    ・`searchParams`: 現在のクエリパラメタを表す `URLSearchParams` インスタンス
+    ・`setSearchParams`: クエリパラメタを更新する関数。
+      引数に `URLSearchParams` またはオブジェクトを受け取る
+
+    const [searchParams, setSearchParams] = useSearchParams()
+    setSearchParams({ page: '2', filter: 'completed' })
+    setSearchParams(new URLSearchParams('page=2&filter=completed'))
 
     ■ 基本的な使い方
 
-    import { useSearchParams, useNavigate } from 'react-router-dom'
+    import { useSearchParams } from 'react-router-dom'
 
     const List: React.FC = () => {
-      const [searchParams, setSearchParams] = useSearchParams()
+      const [searchParams, setSearchParams] = useSearchParams()  // 引数なし
       const page = Number(searchParams.get('page') ?? '1')
 
       const goPage = (p: number) => {
@@ -1180,7 +1365,9 @@
     }
 
     ■ 備考 / ベストプラクティス
-    ・`setSearchParams` は履歴に push される（既定）、replace 相当を行いたい場合は `navigate()` を使って `replace: true` を指定
+
+    ・`setSearchParams` は履歴に push される（既定）
+    ・replace 相当を行いたい場合は `navigate()` を使って `replace: true` を指定
     ・複数パラメタを維持しつつ一部だけ更新するには既存の `searchParams` をコピーして変更
     ・値の型は文字列なので数値や真偽値はパースして扱う
 
@@ -1194,38 +1381,12 @@
       }
 
 - ENTRY:
-  EXPLAIN: Navigate(リダイレクト用コンポーネント)
-  BODY: |
-    ■ 概要
-
-    ・`<Navigate />` はレンダー時にリダイレクトを行うためのコンポーネント、`to` と `replace` を指定して即時遷移を行う
-
-    ■ 基本例
-
-    import { Navigate, useLocation } from 'react-router-dom'
-
-    // 認証ガードの例（ログインしていなければ /login へリダイレクト）
-    const RequireAuth: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-      const isAuth = useAuth() // 仮のフック
-      const location = useLocation()
-      if (!isAuth) {
-        // state に戻り先情報を入れておくパターン
-        return <Navigate to="/login" replace state={{ from: location }} />
-      }
-      return <>{children}</>
-    }
-
-    ■ 注意点
-    ・`<Navigate replace />` を使うと履歴に戻らない（replace）挙動になる
-    ・プログラム的遷移は `useNavigate()` を使う（`navigate('/path', { replace: true })`）
-    ・ルート定義内で条件に応じて `<Navigate />` を返すパターンは簡潔で分かりやすい
-
-- ENTRY:
   EXPLAIN: Suspense と lazy(遅延ロード)
   BODY: |
     ■ 概要
 
-    ・`React.Suspense` は遅延ロード（`React.lazy`）やデータの待機中にフォールバック UI を表示するためのコンポーネント
+    ・遅延ロード（`React.lazy`）
+    ・データの待機中にフォールバック UI を表示するためのコンポーネント
     ・ルート単位でのコード分割と組み合わせることで初期バンドルを小さくする
 
     ■ 使い方（コード分割の例）
@@ -1247,6 +1408,192 @@
     }
 
     ■ 注意点
+
     ・`fallback` は軽量にする、ユーザーが操作を待てるようにする
-    ・Data Router（v6.4+）ではルートごとの `loader` と `defer` / `Await` を組み合わせる方法もある（より細かい待機管理が可能）
-    ・Suspense はサーバー側レンダリング（SSR）との相性に注意、React のバージョンとサーバレンダリングの設定を確認
+    ・Data Router（v6.4+）ではルートごとの `loader` と `defer` / `Await` を組合せ方法もある
+      ※ より細かい待機管理が可能
+    ・Suspense はサーバー側レンダリング（SSR）との相性に注意
+      ※ React のバージョンとサーバレンダリングの設定を確認
+
+- ENTRY:
+  CATEGORY: よくある注意点 / ベストプラクティス
+
+- ENTRY:
+  EXPLAIN: 404
+  BODY: |
+    ■ SPA のリロードで 404 を避けるため、静的ホスティング側で index.html へフォールバック設定が必要（GitHub Pages 等）
+
+    ■ React Router 側で 404 ページを表示するには、最後にキャッチオールルートを追加
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="*" element={<NotFound />} />   // 404 用キャッチオール
+      </Routes>
+
+    ■ NotFound コンポーネント例
+
+    export const NotFound: React.FC = () => {
+      return (
+        <div>
+          <h1>404 - ページが見つかりません</h1>
+          <p>お探しのページは存在しないか、移動した可能性があります。</p>
+          <a href="/">ホームへ戻る</a>
+        </div>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: 再マウント防止策
+  BODY: |
+    ルートの key や element の再生成に注意（パフォーマンスと再レンダリング）
+
+    ■ 再レンダリング と 再マウント の違い:
+
+      ・再レンダリング: コンポーネントは再描画されるが同一インスタンスのまま（state 維持）
+      ・再マウント: コンポーネントが unmount → mount される（内部 state が初期化される）
+      
+    ■ 再マウントが起きる代表的な原因
+
+      ・key が変わる（Route や要素に key を付けていて値が変わると必ず再マウント）
+      ・要素の type が変わる（違うコンポーネント型を渡すとマウントし直す）
+      ・ルート配列を毎レンダーで再生成していて、マッピング時の key が安定していない
+       （例: key={index} や毎回新規生成するオブジェクトを element に渡す）
+
+      ※ NG: routes 配列をレンダーごとに新しく作る & key を index にする
+      function App({count}) {
+        const routes = [
+          { path: '/', element: <Home count={count} /> },
+          { path: '/users', element: <Users /> },
+        ];
+        return (
+          <Routes>
+            {routes.map((r, i) => (
+              <Route key={i} path={r.path} element={r.element} /> // index を key にするのは危険
+            ))}
+          </Routes>
+        );
+      }
+
+    ■ 対策1: ルート定義は安定させる（モジュール外か useMemo で固定）
+
+      ※ good: モジュールスコープか useMemo で固定
+      const routes = [
+        { path: '/', element: <Home /> , key: '/' },
+        { path: '/users', element: <Users />, key: '/users' },
+      ];
+
+      ※ or inside component:
+      const routes = useMemo(() => [...], []);
+
+    ■ 対策2: key は一意で安定な値（path や明示的な key）を使う（index は避ける）
+
+    ■ 対策3: element に渡す props/オブジェクトは可能な限り安定化（useMemo / useCallback）
+            関数や大きなオブジェクトを毎回インラインで作らない
+
+      ※ good: handler を useCallback で安定化して渡す
+      const onSave = useCallback((v) => api.save(v), []);
+      <Route path="/edit" element={<Edit onSave={onSave} />} />
+
+    ■ 対策4: レイアウト（共通 wrapper / Outlet）は外側で固定し、ルート切替で不要な再マウントが起きない構成にする
+
+      <BrowserRouter>
+        <Layout>            {/* Layout は頻繁に変えない */}
+          <Routes>          {/* Route 切替 */}</Routes>
+        </Layout>
+      </BrowserRouter>
+
+    ■ 対策5: 重い子コンポーネントは React.memo でラップして不必要な再描画を抑える（ただし props の安定化も必要）
+
+- ENTRY:
+  EXPLAIN: URL設計とパラメタ/クエリの使い分け
+  BODY: |
+    ■ 基本方針
+      ・リソース識別はパスで: 個々のリソースIDや階層的関係はパスに表現する
+      
+        例: GET /users/123
+
+      ・フィルタ/ページング/ソートはクエリで: 可変・オプション情報はクエリパラメタにする
+      
+        例: /products?category=books&page=2&sort=price_asc
+
+      ・人間可読なスラッグを使う: タイトルはスラッグ（英小文字・ハイフン）で表す
+      ・必要なら slug + id（/posts/2025/12/15/my-title-123）で安定性を確保
+      ・URLは短く・意味的に一貫: 深すぎる階層化は避け、意味が分かる語を使う。すべて小文字
+
+    ■ パラメタ vs クエリ の使い分け（実践）
+
+      ・パスパラメタ（/users/:id）: リソースの"一意の識別子"。必須であるべき。
+      ・クエリ（?）: 検索・フィルタ・並び替え・ページングなど副次的・可変な条件。リソースの同一性を変えないもの。
+      ・混在ルール: 
+
+        例：ユーザーのプロフィールは /users/123
+        例：プロフィール内での投稿一覧のフィルタは /users/123/posts?tag=react&page=3
+
+    ■ 後方互換性（破壊的変更を避ける手法）
+
+      ・バージョニング: API/公開ルートで破壊的変更が必要なときは base にバージョンを入れる
+      
+        例: /v1/…, /v2/…
+
+      ・リダイレクト提供: 古いパスを新パスへ 301（恒久）または 302（暫定）でリダイレクトしておく。
+        Netlify/GH Pages/サーバ・ミドルウェアで設定。
+
+      ・互換レイヤ: サーバ側で旧クエリ名を新クエリ名にマッピングする。フロントは両方受け付けログを残し徐々に廃止
+      
+        例: ?q= → ?query=
+
+      ・フォールバックレンダリング: フロントで旧URLを検出して内部遷移で新URLへ書き換える
+      
+        history.replaceState や useNavigate()
+
+      ・ドキュメントと通知: 変更はリリースノートに明記し、主要ユーザーには通知期間を設ける。
+
+    ■ SEO・UX のための注意
+
+      ・canonical タグ: 同一内容で複数URLが生成されうる場合は <link rel="canonical"> を設定。
+      ・クリーンなスラッグ: 動的IDを含む場合でも人が読めるスラッグを維持。検索エンジン向けにタイトルを反映。
+      ・不要なパラメタ排除: 無駄なトラッキングやセッション情報を URL に入れない。
+
+    ■ 技術的・運用ルール（チェックリスト）
+
+      ・一意で安定した識別子をパスに使う
+      
+        id or slug+id
+
+      ・クエリ名は意味のある短い英語に統一
+      
+        例: page, limit, sort, q, tag
+
+      ・パスの大文字小文字は正規化（通常は小文字）・末尾スラッシュの扱いを統一（リダイレクトで統一）。
+      ・機密情報は絶対に URL に含めない（トークン・パスワードなど）。
+      ・ルート変更は常に リダイレクト計画 + 移行期間 を用意する。
+      ・クライアントでルーティングを変える場合は 既存リンクを壊さない（古いURLも受け付けるか自動変換する）。
+
+    ■ 実例（設計パターン）
+
+      リソース詳細:             GET /products/123
+      検索結果:                 GET /products?category=books&price_min=1000&page=2
+      ソート & 表示形式:        GET /articles?tag=react&sort=recent&view=list
+      安定スラッグ:             GET /blog/2025/12/15/introducing-xyz-123 （123 は内部ID、スラッグは可読性重視）
+      バージョン導入(互換保持):  /v1/search → /v2/search（古いパスへ 301 リダイレクト）
+
+    ■ よくある誤り
+
+      フィルタやページングをパスパラメタに入れてしまう
+      
+        例: /products/page/2/sort/price ：URL が冗長になり再利用性が落ちる。
+
+      意味のない短縮語や社内用語を使う
+      
+        例: /prds?ct=1）→ 他者に読めない
+
+      破壊的にパスを変えて旧リンクを放置する（SEO とユーザー体験を損なう）
+
+    ■ 最後に（運用のヒント）
+
+      変更が必要ならまず redirect map を用意し、自動化（ビルド/CI）で旧URL→新URL のテストを行う
+
+      フロント実装では useSearchParams() でクエリ操作、useNavigate() でクエリ維持した遷移
+      
+        例: ページネーションで navigate({ search: params.toString() })）を使うと UX 改善

@@ -1,381 +1,62 @@
 ---
 #-------------------------------
-# Git
+# 基本概念
 #-------------------------------
+- ENTRY:
+  CATEGORY: 基本概念
 
 - ENTRY:
-  EXPLAIN: config(設定)
+  EXPLAIN: 概説
   BODY: |
-    git config --list/-l                # 表示
-                                        # 優先順位は、system < global < local
-    git config -l | grep "KEYWORD"      # 特定キーワード行のみ表示(bash)
+    ■ 基本概念
 
-    ■ system(全ユーザの全リポジトリ: /etc/gitconfig)
+      Git は分散型バージョン管理システム。ソースコードの変更履歴を追跡・管理
 
-    git config --system user.name <value>
-    git config --system user.email <email>
+    ■ 主要概念
 
-    ■ global(現ユーザ: ~/.gitconfig, ~/.config/git/config) <-- MAIN
+    ・リポジトリ: プロジェクトのファイルと履歴を格納する場所
+    ・コミット: 変更を記録したスナップショット
+    ・ブランチ: 並行開発のための分岐
+    ・マージ: ブランチの統合
+    ・プッシュ/プル: リモートリポジトリとの同期
 
-    git config --global user.name <value>
-    git config --global user.email <email>
+    ■ 特徴
 
-    ■ local(現リポジトリ: .git/config)
-
-    git config --local user.name <value>
-    git config --local user.email <email>
-
-    ■ git -c <KEY>=<VALUE> commit ...
-
-    git -c user.name=<value> -c user.email=<email> commit -m "test"
+    ・分散型: 各開発者が完全な履歴を持つ
+    ・高速: ローカル操作が迅速
+    ・柔軟: ブランチングとマージが容易
 
 - ENTRY:
-  EXPLAIN: |
-    最初の一歩: Repository
+  EXPLAIN: PAT(Personal Access Token)
   BODY: |
-    1) ローカルにレポジトリ作成
+    ■ 概説
 
-      git init
+    ・GitHub等のサービスで使用される認証トークン
+    ・パスワードの代替として利用
+    ・APIアクセスやGit操作に使用
 
-    2) 現在、local git から gitHub へ publish する
+    ■ 特徴
 
-      A) VSCode の publish ボタンを押す
+    ・細かい権限設定が可能
+    ・有効期限を設定できる
+    ・セキュリティ向上に寄与
+    ・GitHub CLI やGit操作で使用
+     
+     ghp_ddgh5545e...                   // 文字長さ:40
 
-      B) gitHub CLI を使用して publish する
+    ■ 作成
+    1. GitHubの設定画面にアクセス
+    2. 「Developer settings」→「Personal access tokens」へ移動
+    3. 「Generate new token」をクリック
+    4. 必要な権限を選択し、トークンを生成
+    5. 生成されたトークンを安全に保管
 
-        gh repo create --source=. --public
+    ■ 使用例
 
-      C) 先に gitHub にブランチを作成して origin をセットする
+    git clone https://<username>:<PAT>@github.com/<user>/<repo>.git
 
-        git remote add origin https://vivitjp:ghp_xxxxxxx@github.com/vivitjp/git_test1.git
-        git push -u origin
-
-- ENTRY:
-  EXPLAIN: remote(リモートリポジトリ)=origin
-  BODY: |
-    git remote                          # リモートリポジトリ名
-    git remote show                     # remote 表示
-
-        origin
-
-    git remote -v                       # リモートリポジトリ名(URL)
-
-        origin  https://vivitjp:ghp_tjjDq...@github.com/vivitjp/-Snippets.git (fetch)
-        origin  https://vivitjp:ghp_tjjDq...@github.com/vivitjp/-Snippets.git (push)
-
-          * origin: リモートリポジトリのURLの別名
-
-    git remote show origin              # origin 情報
-
-          * remote origin
-            Fetch URL: https://vivitjp:ghp_tjjDq...@github.com/vivitjp/-Snippets.git
-            Push  URL: https://vivitjp:ghp_tjjDq...@github.com/vivitjp/-Snippets.git
-            HEAD branch: main
-            Remote branches:
-              main            tracked
-              vivitjp-patch-1 tracked
-            Local branch configured for 'git pull':
-              main merges with remote main
-            Local ref configured for 'git push':
-              main pushes to main (up to date)
-
-    ■ リモートリポジトリ追加
-    git remote add <repository> <URL>    # リモートリポジトリ追加
-    git remote add origin <URL>/<R>.git  # origin 追加(すでにある場合はError)
-
-    git remote add origin https://<user>:<git_TOKEN>@github.com/<user>/<repository>.git
-    git remote add origin https://<user>@github.com/<user>/<repository>.git
-
-    ■ リモートリポジトリ削除
-    git remote rm <repository>          # リモートリポジトリ削除
-    git remote rm origin                # origin 削除(すでにある場合は一度削除)
-
-    ■ origin 取得
-    git remote get-url origin           # origin 取得
-
-        https://vivitjp:ghp_tjjDq...@github.com/vivitjp/-Snippets.git
-        https://github.com/<user>/<repository>.git
-
-    ■ origin 設定
-    git remote set-url origin git@github.com:<user>/<repository>.git # origin 設定
-
-- ENTRY:
-  EXPLAIN: upstream(上流ブランチ)
-  BODY: |
-    ■ upstream
-
-      あるローカルブランチが、履歴を追跡するように設定したリモートブランチの事
-
-    git branch -vv
-
-        feature/01 d44fc9a udpate
-        * main       428d5c4 [origin/main] more
-
-    git fetch upstream
-
-        設定されていない場合
-          fatal: 'upstream' does not appear to be a git repository
-          fatal: Could not read from remote repository.
-          Please make sure you have the correct access rights and the repository exists.
-        この場合でも git fetch origin は動作する
-        * Originとの違いが明瞭でない
-
-    ■ 設定: branch(originへの連携)       # [<branch>]省略すると現ブランチが対象
-    git branch -u(--set-upstream-to)=origin/<branch> [<branch>]
-
-    ■ 削除: branch(originへの連携解除)
-    git branch --unset-upstream [<branch>]
-
-    ■ 設定: remote
-    git remote add upstream git://github.com/<user>/<repository>.git
-
-    ■ 削除: remote
-    git remote rm upstream
-
-- ENTRY:
-  EXPLAIN: HEAD(現ブランチの先頭)
-  BODY: |
-    HEAD^    # 1つ前の HEAD
-    HEAD~    # 1つ前の HEAD
-    HEAD^^   # 2つ前の HEAD
-    HEAD~~   # 2つ前の HEAD
-    HEAD~2   # 2つ前の HEAD
-
-- ENTRY:
-  EXPLAIN: clone(クローン)
-  BODY: |
-    git clone <URL>                     # カレントディレクトリにclone作成
-    git clone <URL> <directory>         # 指定ディレクトリにclone作成
-
-    ■ PAT を使用して clone
-    自分の gitHub アカウントでPAT(Personal access tokens classic)作成
-    token: ghp_ddgh5545e...のような形式
-
-    git clone https://<user_name>:<PAT>@github.com/<account>/<repositry>.git .
-
-- ENTRY:
-  EXPLAIN: fetch(情報取得), diff(差分)
-  BODY: |
-    ■ 1) fetchで情報取得
-    git fetch                           # リモートレポジトリの情報更新
-    * git reset --hard HEAD             # fetch 取消
-
-    ■ 2) ローカルとの差分表示
-    git diff origin/<branch>
-
-    ■ 3) 現コードとの比較
-    git diff COMMIT_NUMBER
-
-- ENTRY:
-  EXPLAIN: branch(ブランチ)
-  BODY: |
-    ■ 情報取得
-    git branch -v                       # branch名 最新コミット
-    git branch --all                    # ローカル・リモート含め、全ブランチ
-
-    git branch --contains               # 現ブランチの名前表示
-    git branch --merged                 # マージ済みのブランチ表示
-    git branch --no-merged              # マージされていないブランチ表示
-    git branch -vv                      # 現ブランチの情報表示
-    git branch -vvv                     # 現ブランチの情報表示(詳細)
-
-    ■ 名称変更
-    git branch -m <new_name>            # 現ブランチの名前変更
-    git branch -m <branch> <new_name>   # 指定ブランチの名前変更
-
-    ■ 削除(ローカル)
-    git branch -d/-D <branch>           # -D:強制
-
-    ■ 削除(リモート) * branch 不使用
-    git push -d/-D --remote origin/<branch>
-
-- ENTRY:
-  EXPLAIN: switch/checkout(ブランチ変更・作成)
-  BODY: |
-    git checkout <branch>               # ブランチ変更(OLD)
-    git checkout -b <branch>            # ブランチ作成と変更
-    git checkout -                      # 直前のブランチに変更
-
-    git switch <branch>                 # ブランチ変更(推奨)
-    git switch -                        # 直前のブランチに変更
-    git switch -b <new_branch>          # 新しいブランチ作成して変更
-    git switch -c <new_branch>          # 新しいブランチ作成して変更
-    git switch -C <new_branch>          # 新しいブランチ強制作成して変更
-    git switch --detach <commit>        # コミットを指定して変更
-    git switch --detach <branch>        # ブランチを指定して変更
-
-- ENTRY:
-  EXPLAIN: add(indexing)
-  BODY: |
-    git add .                           # カレントDIRの全ファイル追加
-    git add -A                          # カレントDIRの全ファイル追加(削除も含む)
-    git add -u                          # カレントDIRの変更ファイル追加(削除も含む)
-
-    ■ Indexing 取り消し
-    git reset                           # 全ステージング取消
-
-- ENTRY:
-  EXPLAIN: commit(コミット)
-  BODY: |
-    git commit -m "message"             # コミット
-    git commit --amend -m "message"     # 直前のコミット修正
-
-    ■ 参考) コミット履歴残さずに取消
-    git reset --soft HEAD^              # コミット取消
-    git reset --mixed HEAD^             # コミット, Index取消
-    git reset --hard HEAD^              # コミット, Index, 変更取消
-
-    ■ 参考) コミット履歴残しつつ取消
-    git revert HEAD^                    # コミット履歴を残して取消
-    git revert HEAD^ -n                 # コミット履歴を残して,Indexまで取消
-
-- ENTRY:
-  EXPLAIN: cherrypick(特定コミットを適用)
-  BODY: |
-    git cherry-pick <commit>                    # 特定コミットを適用
-    git cherry-pick <commit> <commit> ...       # 複数特定コミットを適用
-
-    ■ (使用注意) 複数コミットを一斉に適用
-      コミットが本来の順番やコンテキストを無視して適用される
-    git cherry-pick <commit>..<commit>          # 複数コミットを一斉に適用(最初と最後のコミット)
-
-    ■ merge コミットには使用しないこと
-      merge コミットは通常、複数の親を持ち、コンテキストが異なるため
-
-      $ git cherry-pick <merge-commit-hash>
-
-      # エラーメッセージ例:
-      error: commit is a merge but no -m option was given.
-      fatal: cherry-pick failed
-
-    ■ 取り消し
-    git cherry-pick --abort             # コンフリクト編集前
-    git reset --hard HEAD               # コンフリクト編集後
-    git reset --hard ORIG_HEAD          # マージ前の段階に戻る
-    git reset --hard <commit>           # 特定コミットに戻る
-
-- ENTRY:
-  EXPLAIN: pull origin(リモートからマージ)
-  BODY: |
-    ■ origin差分をローカルにマージ
-    git pull origin <branch>            # 正式
-    git pull                            # 通常簡易で
-
-    ■ 取り消し
-    git merge --abort                   # マージ取消
-    git reset --hard HEAD               # マージ直前のHEADに戻る(ログ削除)
-    git reset --soft HEAD~              # リセット
-    git revert HEAD                     # 取消用のコミットを別途作成(記録)
-
-    ■ originへ書き込み
-    git push origin HEAD                # リモートにローカルのレポジトリを書き込む
-    git push origin <branch>            # リモートに変更を書き込む(f:強制)
-    git push [-f]                       # リモートに変更を書き込む(f:強制)
-
-    ■ push と set-upstreamを同時に実行
-    git push -u(--set-upstream) origin <branch>
-
-- ENTRY:
-  EXPLAIN: status(前コミットとの比較)
-  BODY: |
-    git status -s                       # -s:簡易表示
-
-      On branch main
-      Your branch is up to date with 'origin/main'.
-
-      Changes not staged for commit:
-        (use "git add/rm <file>..." to update what will be committed)        
-        (use "git restore <file>..." to discard changes in working directory)
-              modified:   package.json
-              deleted:    public/snippets/Node/nodejs/Node.yml
-              modified:   public/snippets/React/React.yml
-              modified:   public/snippets/React/ReactComponent.yml
-              deleted:    public/snippets/React/ReactTypeScript.yml
-
-- ENTRY:
-  EXPLAIN: merge(ブランチ間マージ)
-  BODY: |
-    git merge <B>                       # 指定ブランチを現ブランチにマージ
-    git merge --no-ff <B>               # マージコミットを作成する(マージコミットを残す)
-    git merge --squash <B>              # マージコミットを作成しない(マージコミットを残さない)
-
-    ■ 取り消し
-    git merge --abort                   # コンフリクト編集前
-    git reset --hard HEAD               # コンフリクト編集後
-    git reset --hard ORIG_HEAD          # マージ前の段階に戻る
-    git reset --hard <commit>           # 特定コミットに戻る
-
-- ENTRY:
-  EXPLAIN: ベース変更
-  BODY: |
-    git rebase <B>                      # 最新コミットをbaseにする
-
-- ENTRY:
-  EXPLAIN: log/reflog(ログ)
-  BODY: |
-    ■ git log                           # ログ表示(一行で)
-      commit 428d5c461c3eb0d7488e038e58a3eff7705c55f4 (HEAD -> main, origin/main)
-      Author: vivitjp <vivitkawamura@gmail.com>
-      Date:   Wed Jul 3 06:24:17 2024 +0900
-      ...
-
-    ■ git log --oneline                 # ログ表示(一行で)
-      428d5c4 (HEAD -> main, origin/main) more
-      f16c9c6 updated
-      f826570 update
-      6db4722 正規表現修正
-      328ed61 fix bugs
-
-    ■ git log -n 1                          # ログ表示(最新1件)
-      git log --oneline -n 1                # 6e4e267 (HEAD -> main, origin/main) update
-      git log -n 1 --pretty=format:"%H %s"  # 6e4e267e55d7a4b86477dc6430ef71796be897a0 update
-
-      ※ Alias作成
-        > git config --global alias.last 'log -n 3 --pretty=format:"%H %s"'
-        > git last                          # 実行
-
-    ■ git log --oneline --grep "key"    # ログ表示(一行で)
-      f16c9c6 key
-      75a366f key
-      bd08b3f key
-      2c13082 key
-
-    ■ git reflog                        # ログ表示
-      428d5c4 (HEAD -> main, origin/main) HEAD@{0}: commit: more
-      f16c9c6 HEAD@{1}: reset: moving to HEAD~
-      494e72b HEAD@{2}: commit: more
-      f16c9c6 HEAD@{3}: commit: updated
-      75a366f HEAD@{4}: reset: moving to HEAD
-      75a366f HEAD@{5}: reset: moving to HEAD
-      75a366f HEAD@{6}: reset: moving to HEAD
-      75a366f HEAD@{7}: reset: moving to HEAD
-
-- ENTRY:
-  EXPLAIN: rm(ファイル削除)
-  BODY: |
-    git rm <FILE>                       # ファイル削除
-    git rm --cached <FILE>              # コミット済みファイルをリポジトリから削除
-
-- ENTRY:
-  EXPLAIN: tag(タグ)
-  BODY: |
-    git tag                             # 表示
-    git tag -l                          # 表示
-    git tag -l "v1.*"                   # v1.0, v1.1
-      v1.0
-      v1.1
-
-    git tag v1.0                        # タグ追加
-    git tag -a v1.0 -m "message"        # タグ追加(メッセージ)
-    git tag -a v1.0 -m "message" <commit> # タグ追加(メッセージ, コミット指定)
-    git tag -d v1.0                     # タグ削除
-    git tag -d v1.0 <commit>            # タグ削除(コミット指定)
-
-- ENTRY:
-  EXPLAIN: |
-    エラー: push
-  BODY: |
     ■ push エラー
+
     > git push
     remote: Permission to <user>/<repository>.git denied to <git user name>.
     fatal: unable to access 'https://github.com/<user>/<repository>.git/': The requested URL returned error: 403
@@ -385,5 +66,1112 @@
     3) Origin 追加: git remote add origin https://<user>:<ghp_TOKEN>@github.com/<user>/<repository>.git
     4) git branch --set-upstream-to=origin/main main
 
-    ■ push と set-upstreamを同時に実行
-    git push -u(--set-upstream) origin <branch_name>
+- ENTRY:
+  EXPLAIN: config
+  BODY: |
+    ■ リスト
+
+    git config --list/-l                // 優先順位は、system < global < local
+    git config -l | grep "KEYWORD"      // 特定キーワード行のみ表示(bash)
+
+    ■ system (全ユーザの全リポジトリ: /etc/gitconfig)
+
+    git config --system user.name <value>
+    git config --system user.email <email>
+
+    ■ global (現ユーザ: ~/.gitconfig, ~/.config/git/config) <-- MAIN
+
+    git config --global user.name <value>
+    git config --global user.email <email>
+
+    ■ local (現リポジトリ: .git/config)
+
+    git config --local user.name <value>
+    git config --local user.email <email>
+
+    ■ git -c <KEY>=<VALUE> commit ...
+
+    git -c user.name=<value> -c user.email=<email> commit -m "test"
+
+- ENTRY:
+  EXPLAIN: Repository作成
+  BODY: |
+    ■ GitHubで作成してローカルにクローン
+
+    1. GitHubで新規リポジトリ作成
+    2. ローカルで git clone <repo-url>
+    3. 作業・コミット・プッシュ
+
+    例:
+      git clone <repo-url>
+      cd <repo-name>
+      // 作業・コミット
+      git push origin main          // main にプッシュ   
+
+    ■ ローカルで作成してGitHubにプッシュ
+
+    1. ローカルでGitリポジトリを作成・初期化
+       git init <project-name>
+       cd <project-name>
+
+    2. 作業・コミット
+       // ファイル作成・編集
+       git add .
+       git commit -m "Initial commit"
+
+    3. GitHubで新規リポジトリを作成
+       - GitHubにアクセスして「New repository」をクリック
+       - リポジトリ名を入力（ローカルのプロジェクト名と一致させる）
+       - 公開/非公開を選択
+       - README, .gitignore, ライセンスは「作成しない」（後でプッシュするため）
+       - 「Create repository」をクリック
+
+    4. リモートリポジトリを追加
+       git remote add origin <github-repo-url>
+       // URLはGitHubのリポジトリページからコピー（HTTPS推奨）
+
+    5. プッシュ
+       git push -u origin main
+
+       ※ ブランチ名の注意点:
+       ・ Git 2.28以降のデフォルトブランチ名は「main」
+       ・ 古いGitや設定によっては「master」になる場合あり
+       ・ GitHubのデフォルトも「main」
+
+       ブランチ名が不一致の場合の対処:
+       ・ ローカルブランチ名を確認: git branch
+       ・ ローカルが「master」でリモートが「main」の場合:
+         git branch -M main  // ローカルブランチ名をmainに変更
+         git push -u origin main
+
+       ・ または、リモートブランチ名に合わせてプッシュ:
+         git push -u origin master  // リモートにmasterブランチを作成
+
+    ■ GitHub CLI (gh) を利用した場合
+
+    GitHub CLI を使用すると、ブラウザを開かずにコマンドラインでリポジトリ作成・プッシュが可能
+
+    前提条件:
+    ・ GitHub CLI のインストール: https://cli.github.com/
+    ・ GitHub アカウント認証: gh auth login
+
+    手順:
+    1. ローカルでGitリポジトリを作成・初期化
+       git init <project-name>
+       cd <project-name>
+
+    2. 作業・コミット
+       // ファイル作成・編集
+       git add .
+       git commit -m "Initial commit"
+
+    3. GitHub CLI でリポジトリ作成・プッシュ
+       gh repo create <repo-name> --public --source=. --remote=origin --push
+
+       オプション説明:
+       ・ --public: 公開リポジトリ（--private で非公開）
+       ・ --source=.: カレントディレクトリをソースとして使用
+       ・ --remote=origin: リモート名を origin に設定
+       ・ --push: 作成後にプッシュを実行
+
+    4. 確認
+       git remote -v  // リモート設定確認
+       git branch -a  // ブランチ確認
+
+    ブランチ名の扱い (GitHub CLIの場合):
+    ・ GitHub CLI は自動的に適切なブランチ名を設定
+    ・ ローカルのブランチ名が「master」の場合、GitHub側で「main」に設定される
+    ・ プッシュ時に自動的に upstream が設定される
+
+    例:
+      git init my-awesome-project
+      cd my-awesome-project
+      echo "# My Project" > README.md
+      git add README.md
+      git commit -m "Initial commit"
+
+      # GitHub CLI で作成・プッシュ
+      gh repo create my-awesome-project --public --source=. --remote=origin --push
+
+      # 結果: GitHubにリポジトリが作成され、自動的にプッシュされる
+
+    追加オプション:
+    ・ --description "Project description": リポジトリ説明追加
+    ・ --homepage https://example.com: ホームページURL設定
+    ・ --disable-issues: Issue無効化
+    ・ --disable-wiki: Wiki無効化
+
+    例 (詳細設定):
+      gh repo create my-project --public --source=. --remote=origin --push \
+        --description "My awesome project" \
+        --homepage "https://myproject.com"
+
+- ENTRY:
+  EXPLAIN: 用語リスト
+  BODY: |
+    ■ 基本操作
+
+    ・ init: Git リポジトリの初期化
+    ・ add: ファイルをステージングエリアに追加
+    ・ commit: 変更をリポジトリに記録
+    ・ status: 作業ディレクトリの状態確認
+    ・ log: コミット履歴表示
+    ・ diff: 変更差分表示
+
+    ■ ブランチ関連
+
+    ・ branch: ブランチの作成・一覧表示
+    ・ checkout: ブランチの切り替え
+    ・ merge: ブランチの統合
+    ・ rebase: コミット履歴の再配置
+    ・ switch: ブランチ切り替え（checkout の代替）
+
+     ■ リモート関連
+
+    ・ origin: デフォルトのリモートリポジトリ名
+    ・ remote: リモートリポジトリの管理
+    ・ clone: リモートリポジトリのコピー
+    ・ upstream: ローカルとリモートの対応関係設定
+    ・ push: ローカル変更をリモートに送信
+    ・ pull: リモート変更をローカルに取得
+    ・ fetch: リモート変更を取得（マージせず）
+    ・ tag: 特定コミットにラベル付け
+
+     ■ 高度操作
+
+    ・ reset: コミット履歴のリセット
+    ・ revert: 変更の取り消し（新規コミット）
+    ・ stash: 作業中の変更の一時保存
+    ・ cherry-pick: 特定コミットの適用
+    ・ bisect: バグ導入コミットの二分探索
+
+#-------------------------------
+# 基本設定
+#-------------------------------
+
+- ENTRY:
+  CATEGORY: 基本
+
+- ENTRY:
+  EXPLAIN: init (初期化)
+  BODY: |
+    新しいGitリポジトリを初期化するコマンド
+
+    ■ 機能
+
+    ・ .gitディレクトリを作成
+    ・ ワーキングディレクトリをGit管理下に置く
+
+    ■ 使用場面
+
+    ・ 新規プロジェクト開始時
+    ・ 既存プロジェクトをGit管理化
+
+    ■ コマンド
+
+    git init                            // カレントディレクトリをGitリポジトリ化
+    git init my-project                 // 新規ディレクトリ作成・初期化
+    git init --bare                     // ベアリポジトリ作成
+    git init --template=template_dir    // テンプレートディレクトリ使用
+
+- ENTRY:
+  EXPLAIN: レポジトリ(基本)
+  BODY: |
+    Git のプロジェクト管理単位
+    ファイルと変更履歴を格納
+
+    ■ 種類
+
+    ・ ローカルリポジトリ: 自分のPC上のリポジトリ
+    ・ リモートリポジトリ: GitHub 等サーバー上のリポジトリ
+
+    ■ 構造
+
+    ・ .git ディレクトリ: Git のメタデータ格納
+    ・ ワーキングディレクトリ: 実際のファイル
+    ・ ステージングエリア: コミット前の変更
+
+    ■ コマンド(新規リポジトリ作成)
+
+    git init my-project
+    cd my-project
+
+    ■ コマンド(既存リポジトリクローン)
+
+    git clone https://github.com/user/repo.git     // https リポジトリ
+
+- ENTRY:
+  EXPLAIN: コミット(基本)
+  BODY: |
+    変更をリポジトリに記録する操作
+
+    ■ コミット作成
+
+    ・ ステージングされた変更を確定
+    ・ コミットメッセージで変更内容記述
+
+    ■ コミット履歴
+
+    ・ 各コミットにユニークなハッシュ
+    ・ 親コミットとの差分を記録
+
+    ■ コマンド
+
+    git add .                           // 変更をステージング
+    git commit -m "Add new feature"     // 変更をコミット
+    git log --oneline                   // コミット履歴確認
+
+- ENTRY:
+  EXPLAIN: ブランチ(基本)
+  BODY: |
+    開発の並行作業を可能にする分岐
+
+    ■ ブランチ作成
+
+    ・ 新しい作業ラインを作成
+    ・ 現在のコミットを基点に分岐
+
+    ■ ブランチ管理
+
+    ・ 切り替え: checkout/switch コマンド
+    ・ 一覧表示: branch コマンド
+    ・ 削除: branch -d コマンド
+
+    ■ コマンド
+
+    git checkout -b feature/new-feature    // 新ブランチ作成・切り替え
+    git branch                             // ブランチ一覧
+    git branch -d feature/old-feature      // ブランチ削除
+
+- ENTRY:
+  EXPLAIN: マージ(基本)
+  BODY: |
+    ブランチの変更を統合。履歴を一本化
+
+    ■ 種類
+
+    ・ Fast-forward: 直線的統合
+    ・ 3-way merge: 分岐統合、自動マージ or コンフリクト
+
+    ■ コンフリクト解決
+
+    ・ 競合ファイル編集
+    ・ git add で解決マーク
+    ・ git commit で完了
+
+    ■ コマンド
+
+    git checkout main                   // main ブランチに切り替え
+    git merge feature/new-feature       // feature ブランチを統合
+
+    git merge --no-ff feature/new-feature  // マージコミット作成
+
+    git add conflicted-file.txt          // コンフリクト解決マーク
+    git commit                           // 解決コミット
+
+- ENTRY:
+  EXPLAIN: プッシュ/プル(基本)
+  BODY: |
+    リモートリポジトリとの同期操作
+
+    ■ プッシュ (push)
+
+    ・ ローカル変更をリモート送信
+    ・ 初回は upstream 設定必要
+
+    ■ プル (pull)
+
+    ・ リモート変更を取得・統合
+    ・ fetch + merge の組み合わせ
+
+    ■ コマンド
+
+    git push -u origin main             // 初回プッシュ (upstream 設定)
+    git push                            // 通常プッシュ
+    git pull                            // プル
+    git fetch origin                    // フェッチのみ（統合せず）
+
+#-------------------------------
+# コミット関連
+#-------------------------------
+- ENTRY:
+  CATEGORY: コミット関連
+
+- ENTRY:
+  EXPLAIN: add (ステージング)
+  BODY: |
+    ファイルをステージングエリアに追加するコマンド
+
+    ■ 機能
+
+    ・ 変更されたファイルをコミット準備状態にする
+    ・ ワーキングディレクトリからステージングエリアへ移動
+
+    ■ 使用場面
+
+    ・ 変更をコミット前に準備
+    ・ 特定のファイルのみをコミット対象に選択
+
+    ■ コマンド
+
+    git add .                           // 全ての変更をステージング
+    git add <file.txt>                  // 特定のファイルをステージング
+    git add -A                          // 全ての変更をステージング（新規/削除/変更）
+    git add --interactive               // インタラクティブモードで選択
+    git add --patch                     // パッチモードで部分追加
+
+    ■ 取消コマンド
+
+    git reset <file.txt>                // ステージングから除外
+    git reset                           // 全てのステージングを除外
+
+- ENTRY:
+  EXPLAIN: commit (コミット)
+  BODY: |
+    変更をリポジトリに記録するコマンド
+
+    ■ 機能
+
+    ・ ステージングされた変更を確定
+    ・ コミットメッセージで変更内容を記録
+
+    ■ 使用場面
+
+    ・ 変更を永続的に保存
+    ・ プロジェクトのマイルストーンを作成
+
+    ■ コマンド
+
+    git commit -m "message"             // メッセージ付きコミット
+    git commit                          // エディタでメッセージ入力
+    git commit --amend                  // 最新コミットを修正
+    git commit --amend -m "message"     // 直前のコミット修正
+    git commit --no-edit --amend        // メッセージ変更なしで修正
+    git commit --all                    // 全ての変更を自動ステージングしてコミット
+
+    ■ 取消コマンド
+
+    git reset --soft HEAD~1             // 最新コミットを取り消し（変更はそのまま）
+    git reset --mixed HEAD~             // 最新コミットを取り消し（変更はそのまま）
+    git reset --hard HEAD~              // 最新コミットを取り消し（変更も破棄）
+    git reset HEAD~                     // 最新コミットを取り消し（変更も破棄）
+
+    git revert <commit_hash>            // 特定コミットを打ち消す新規コミット作成
+    git revert HEAD^                    // コミット履歴を残して取消
+    git revert HEAD^ -n                 // コミット履歴を残して,Indexまで取消
+
+    ■ HEAD
+    ・ 1つ前(最新)コミットを指すポインタ
+      HEAD~
+      HEAD~1
+      HEAD^
+    ・ 2つ前のコミット
+      HEAD~2
+      HEAD~~
+      HEAD^2
+      HEAD^^
+
+- ENTRY:
+  EXPLAIN: status (状態確認)
+  BODY: |
+    作業ディレクトリの状態を確認するコマンド
+
+    ■ 機能
+
+    ・ 変更されたファイルの状態を表示
+    ・ ステージング状態と未ステージング状態を区別
+
+    ■ 使用場面
+
+    ・ 現在の作業状況を確認
+    ・ コミット前に変更を確認
+
+    ■ コマンド
+
+    git status                          // 現在の状態を表示
+    git status --short                  // 簡潔な形式で表示
+    git status --porcelain              // スクリプト用形式
+    git status --ignored                // 無視ファイルも表示
+
+- ENTRY:
+  EXPLAIN: log (履歴表示)
+  BODY: |
+    コミット履歴を表示するコマンド
+
+    ■ 機能
+
+    ・ コミットの履歴を時系列で表示
+    ・ コミットハッシュ、作者、日時、メッセージを表示
+
+    ■ 使用場面
+
+    ・ プロジェクトの変更履歴を確認
+    ・ 特定のコミットを特定
+
+    ■ コマンド
+
+    git log                             // 詳細なコミット履歴
+    git log --oneline                   // 簡潔な1行形式
+    git log --oneline --graph           // グラフ付き簡潔表示
+    git log --author="<John>"           // 特定の作者のコミット
+    git log --since="1 week ago"        // 1週間以内のコミット
+
+- ENTRY:
+  EXPLAIN: diff (差分表示)
+  BODY: |
+    変更差分を表示するコマンド
+
+    ■ 機能
+
+    ・ ファイル間の差分を表示
+    ・ 変更された行を色付きで表示
+
+    ■ 使用場面
+
+    ・ 変更内容を確認
+    ・ コミット前のレビュー
+
+    ■ コマンド
+
+    git diff                            // ワーキングディレクトリとステージングの差分
+    git diff --staged                   // ステージングと最新コミットの差分
+    git diff HEAD~1                     // 最新コミットとその前の差分
+    git diff --word-diff                // 単語単位の差分
+
+    ■ コマンド(2ファイルの差分)
+
+    git diff <file1.txt> <file2.txt>         // 2つのファイル間の差分表示
+    git diff <commit1> <commit2>             // 2つのコミット間の差分表示
+    git diff <branch1> <branch2>             // 2つのブランチ間の差分表示
+    git diff --stat                          // 差分の統計情報表示
+    git diff --color-words                   // 単語単位で色付き差分表示
+    git diff --name-only                     // 変更されたファイル名のみ表示
+    git diff --cached                        // ステージングエリアと最新コミットの差分表示
+    git diff --relative=path/to/dir          // 指定ディレクトリ内の差分表示
+    git diff --ignore-space-at-eol           // 行末の空白を無視して差分表示
+    git diff --unified=5                     // 差分の前後5行を表示
+    git diff --exit-code                     // 差分がある場合に終了コード1を返す
+    git diff --no-prefix                     // ファイルパスのプレフィックスを表示しない
+    git diff --src-prefix=a/ --dst-prefix=b/ // 差分のソース・デスティネーションプレフィックスを指定
+    git diff --stat=80,20                    // 差分統計の幅を指定
+    git diff --function-context              // 関数コンテキスト付きで差分表示
+
+- ENTRY:
+  EXPLAIN: cherry-pick (特定コミット適用)
+  BODY: |
+    特定コミットを現在のブランチに適用するコマンド
+
+    ■ 機能
+
+    ・ 他のブランチのコミットをコピー
+    ・ 選択的なコミット統合
+    ・ コミット履歴の再利用
+
+    ■ 使用場面
+
+    ・ 特定修正の適用
+    ・ コミットの選択的統合
+    ・ ホットフィックスの適用
+
+    ■ コマンド
+
+    git cherry-pick <commit-hash>                    // 特定コミットを適用
+    git cherry-pick <commit-hash> <commit-hash> ...  // 複数特定コミットを適用
+    git cherry-pick <commit1>..<commit2>             // コミット範囲を適用 ※使用注意！
+    git cherry-pick --no-commit <commit-hash>        // コミットせずステージングのみ
+    git cherry-pick --continue                       // コンフリクト解決後続行
+    git cherry-pick --abort                          // cherry-pick中断
+    git cherry-pick --skip                           // 現在のコミットをスキップ
+
+    ■ 取消コマンド
+
+    git cherry-pick --abort                          // コンフリクト編集前
+    git reset --hard HEAD                            // コンフリクト編集後
+    git reset --hard ORIG_HEAD                       // マージ前の段階に戻る
+    git reset --hard <commit>                        // 特定コミットに戻る
+
+    ■ merge コミットには使用しないこと
+
+      merge コミットは通常、複数の親を持ち、コンテキストが異なるため
+
+      $ git cherry-pick <merge-commit-hash>
+
+      # エラーメッセージ例:
+      error: commit is a merge but no -m option was given.
+      fatal: cherry-pick failed
+
+#-------------------------------
+# ブランチ関連
+#-------------------------------
+- ENTRY:
+  CATEGORY: ブランチ関連
+
+- ENTRY:
+  EXPLAIN: branch (ブランチ管理)
+  BODY: |
+    ブランチの作成・一覧表示・管理を行うコマンド
+
+    ■ 機能
+
+    ・ ブランチの作成、削除、名前変更
+    ・ ローカル/リモートブランチの一覧表示
+    ・ 現在のブランチ確認
+
+    ■ 使用場面
+
+    ・ 新機能開発用のブランチ作成
+    ・ 既存ブランチの確認
+    ・ 不要ブランチの削除
+
+    ■ コマンド: 情報取得
+
+    git branch                                  // 全ブランチ一覧表示
+    git branch -v                               // ブランチ一覧と最新コミット表示
+    git branch -vv                              // ブランチ一覧と最新2コミット表示
+    git branch -vvv                             // ブランチ一覧と最新3コミット表示
+
+    ■ コマンド: 現在のブランチ確認
+
+    git branch --show-current                   // 現在のブランチ名表示
+    git branch --contains                       // 現在のブランチ名表示
+    git branch --contains <commit-hash>         // 指定コミットを含むブランチ一覧
+
+    ■ コマンド: リスト
+
+    git branch -a/--all                         // 全ブランチ（リモート含む）一覧表示
+    git branch -r/--remotes                     // リモートブランチのみ一覧表示
+    git branch --merged                         // マージ済みブランチ一覧
+    git branch --no-merged                      // 未マージブランチ一覧
+
+    ■ コマンド: ブランチ操作
+
+    git branch <feature/new-feature>            // 新ブランチ作成
+    git branch -d/--delete <feature/old>        // ブランチ削除（マージ済み）
+    git branch -D <feature/old>                 // ブランチ強制削除（未マージ）
+    git branch -m/--move <old-name> <new-name>  // ブランチ名変更
+
+    ■ 参考) リモートブランチ操作
+
+    git push origin --delete <feature/old>      // リモートブランチ削除
+
+- ENTRY:
+  EXPLAIN: checkout (ブランチ切替・復元)
+  BODY: |
+    ブランチの切り替えやファイルの復元を行うコマンド
+
+    ■ 機能
+
+    ・ ブランチの切り替え
+    ・ 特定コミットへの移動
+    ・ ファイルの変更取り消し
+
+    ■ 使用場面
+
+    ・ 作業ブランチの切り替え
+    ・ 過去のコミット状態確認
+    ・ 誤った変更の取り消し
+
+    ■ コマンド: 切り替え
+
+    git checkout <branch-name>               // ブランチ切り替え
+    git checkout -b <new-branch>             // 新ブランチ作成・切り替え
+
+    ■ コマンド: 移動
+
+    git checkout <commit-hash>               // 特定コミットへ移動（detached HEAD）
+    git checkout HEAD~1                      // 1つ前のコミットへ移動
+    git checkout -                           // 直前のブランチに戻る
+
+    ■ コマンド: 変更取消
+
+    git checkout -- <file.txt>               // ファイル変更を取り消し
+    git checkout .                           // 全ファイル変更を取り消し
+    git checkout <commit-hash> -- <file.txt> // 特定コミットのファイル復元
+
+    ■ コマンド: リモートブランチ追跡
+
+    git checkout --track origin/<feature>    // リモートブランチ追跡
+
+- ENTRY:
+  EXPLAIN: switch (ブランチ切替)
+  BODY: |
+    ブランチ切り替えに特化したコマンド（Git 2.23以降）
+
+    ■ 機能
+
+    ・ ブランチの切り替えのみ
+    ・ checkout のブランチ切り替え部分を分離
+
+    ■ 使用場面
+
+    ・ ブランチ切り替えのみ行う場合
+    ・ checkout の複雑さを避ける
+
+    ■ コマンド
+
+    git switch <branch-name>            // ブランチ切り替え
+    git switch -c/-b <new-branch>       // 新ブランチ作成・切り替え
+    git switch -                        // 直前のブランチに戻る
+    git switch --detach <commit-hash>   // detached HEAD状態に切り替え
+
+- ENTRY:
+  EXPLAIN: merge (ブランチ統合)
+  BODY: |
+    ブランチの変更を統合するコマンド
+
+    ■ 機能
+
+    ・ ブランチの統合(現在チェックアウトしているブランチに対して別のブランチをマージ)
+    ・ コンフリクトの検出・解決
+    ・ マージコミットの作成
+
+    ■ 使用場面
+
+    ・ 機能ブランチをメインに統合
+    ・ 複数開発者の変更統合
+
+    ■ コマンド
+
+    git merge <feature-branch>                 // ブランチ統合
+    git merge --no-ff <feature-branch>         // マージコミット強制作成
+    git merge --squash <feature-branch>        // 変更をステージングのみ（コミットせず）
+    git merge --abort                          // マージ中断
+    git merge --continue                       // コンフリクト解決後マージ続行
+    git merge -m "<Merge message>" <branch>    // マージメッセージ指定
+    git merge --strategy=ours <branch>         // 自ブランチ優先マージ
+    git merge --strategy=theirs <branch>       // 他ブランチ優先マージ
+
+    ■ 取消コマンド
+
+    git reset --hard HEAD~1                    // 最新マージコミットを取り消し
+    git reset --hard ORIG_HEAD                 // マージ前の状態に戻る
+    git revert HEAD                            // 取消用のコミットを別途作成(記録)
+
+- ENTRY:
+  EXPLAIN: rebase (履歴再配置)
+  BODY: |
+    コミット履歴を再配置するコマンド
+
+    ■ 機能
+
+    ・ コミット履歴の線形化
+    ・ ブランチの基点を変更
+    ・ コミットの順序変更
+
+    ■ 使用場面
+
+    ・ ブランチの履歴をきれいに保つ
+    ・ 最新のメインに追従
+    ・ コミット履歴の整理
+
+    ■ コマンド
+
+    git rebase <main>                   // 現在のブランチをmainにrebase
+    git rebase -i HEAD~3                // 最新3コミットをインタラクティブrebase
+    git rebase --onto <new-base> <old-base> // 特定の範囲を新しい基点にrebase
+    git rebase --continue               // コンフリクト解決後続行
+    git rebase --abort                  // rebase中断
+    git rebase --skip                   // 現在のコミットをスキップ
+    git rebase --autosquash             // squashコミットを自動処理
+
+#-------------------------------
+# リモート関連
+#-------------------------------
+- ENTRY:
+  CATEGORY: リモート関連
+
+- ENTRY:
+  EXPLAIN: origin (デフォルトリモート)
+  BODY: |
+    デフォルトのリモートリポジトリ名
+
+    ■ 機能
+
+    ・ リモートリポジトリの参照
+    ・ プッシュ/プルのデフォルト先
+
+    ■ 使用場面
+
+    ・ リモート操作の省略形
+    ・ 複数リモート管理時の基準
+
+    ■ コマンド
+
+    git remote -v                       // origin のURL確認
+    git push origin <branch>            // origin にプッシュ
+    git pull origin <branch>            // origin からプル
+    git fetch origin                    // origin からフェッチ
+    git remote show origin              // origin の詳細情報表示
+
+- ENTRY:
+  EXPLAIN: remote (リモート管理)
+  BODY: |
+    リモートリポジトリの管理を行うコマンド
+
+    ■ 機能
+
+    ・ リモートリポジトリの追加、削除、名前変更
+    ・ リモートリポジトリの一覧表示
+    ・ リモートURLの変更
+
+    ■ 使用場面
+
+    ・ リモートリポジトリの設定
+    ・ 複数リモート管理
+    ・ リモートURL変更
+
+    ■ コマンド
+
+    git remote                          // リモート一覧表示
+    git remote -v                       // リモート詳細表示（URL含む）
+
+      origin  https://vivitjp:ghp_tjjDq...@github.com/vivitjp/-Snippets.git (fetch)
+      origin  https://vivitjp:ghp_tjjDq...@github.com/vivitjp/-Snippets.git (push)
+
+    git remote add origin <url>         // リモート追加
+
+      git remote add <repository> <URL>    # リモートリポジトリ追加
+      git remote add origin <URL>/<R>.git  # origin 追加(すでにある場合はError)
+
+      git remote add origin https://<user>:<git_TOKEN>@github.com/<user>/<repository>.git
+      git remote add origin https://<user>@github.com/<user>/<repository>.git
+
+    git remote remove origin            // リモート削除
+    git remote rename <old> <new>       // リモート名変更
+    git remote get-url origin           // リモートURL取得
+
+      https://vivitjp:ghp_tjjDq...@github.com/vivitjp/-Snippets.git
+      https://github.com/<user>/<repository>.git
+
+    git remote set-url origin <new-url> // リモートURL変更(origin 設定)
+
+      git remote set-url origin git@github.com:<user>/<repository>.git
+
+    git remote show origin              // リモート詳細情報表示
+
+      * remote origin
+        Fetch URL: https://vivitjp:ghp_tjjDq...@github.com/vivitjp/-Snippets.git
+        Push  URL: https://vivitjp:ghp_tjjDq...@github.com/vivitjp/-Snippets.git
+        HEAD branch: main
+        Remote branches:
+          main            tracked
+          vivitjp-patch-1 tracked
+        Local branch configured for 'git pull':
+          main merges with remote main
+        Local ref configured for 'git push':
+          main pushes to main (up to date)
+
+    git remote prune origin             // 存在しないリモートブランチ削除
+
+- ENTRY:
+  EXPLAIN: upstream (追跡設定)
+  BODY: |
+    ローカルブランチとリモートブランチの対応関係設定
+
+    ■ 機能
+
+    ・ プッシュ時のデフォルトリモート設定
+    ・ ブランチの追跡関係確立
+
+    ■ 使用場面
+
+    ・ 初回プッシュ時
+    ・ ブランチ追跡設定
+
+    ■ コマンド
+
+    git push -u origin <branch>                  // upstream設定付きプッシュ
+    git branch --set-upstream-to origin/<branch> // 既存ブランチにupstream設定
+    git branch -u origin/<branch>                // 上記の短縮形
+    git branch --unset-upstream                  // upstream設定解除
+
+- ENTRY:
+  EXPLAIN: clone (リポジトリ複製)
+  BODY: |
+    リモートリポジトリをローカルにコピーするコマンド
+
+    ■ 機能
+
+    ・ リモートリポジトリの完全コピー
+    ・ 全てのブランチと履歴を取得
+    ・ リモート追跡設定
+
+    ■ 使用場面
+
+    ・ プロジェクト開始時
+    ・ 既存プロジェクト参加時
+
+    ■ 事前準備
+
+    ・ リポジトリURLの取得（HTTPSまたはSSH）
+    ・ 認証情報(PAT)の準備（必要に応じて）
+
+    ■ コマンド
+
+    git clone <url>                     // リポジトリクローン
+    git clone <url> <dir-name>          // 指定ディレクトリにクローン
+    git clone --depth 1 <url>           // 最新コミットのみクローン（浅いクローン）
+    git clone --branch <branch> <url>   // 特定ブランチのみクローン
+    git clone --mirror <url>            // ベアリポジトリとしてクローン
+    git clone --recursive <url>         // サブモジュールも同時にクローン
+    git clone --single-branch <url>     // デフォルトブランチのみクローン
+
+    ■ PAT で clone
+
+    git clone https://<user_name>:<PAT>@github.com/<account>/<repositry>.git .
+
+- ENTRY:
+  EXPLAIN: push (コミット送信)
+  BODY: |
+    ローカル変更をリモートリポジトリに送信するコマンド
+
+    ■ 機能
+
+    ・ ローカルコミットをリモートに送信
+    ・ ブランチの作成・更新
+    ・ タグのプッシュ
+
+    ■ 使用場面
+
+    ・ 変更を共有
+    ・ リモートブランチ更新
+
+    ■ コマンド
+
+    git push                            // 現在のブランチをプッシュ
+    git push origin <branch>            // 特定ブランチをプッシュ
+    git push -u origin <branch>         // upstream設定付きプッシュ
+    git push --all                      // 全ブランチをプッシュ
+    git push --tags                     // タグもプッシュ
+    git push --force                    // 強制プッシュ（注意）
+    git push --force-with-lease         // 安全な強制プッシュ
+    git push --delete origin <branch>   // リモートブランチ削除
+
+    ■ 取消コマンド
+
+    git reset --hard origin/<branch>    // リモート状態にリセット
+
+    ■ プッシュしたコミットを取り消す方法
+
+    // 方法1: 安全な方法（履歴を残す）
+    git revert HEAD                     // 新しいコミットを作成して変更を打ち消す
+    git push                            // 打ち消しコミットをプッシュ
+
+    // 方法2: 破壊的な方法（履歴を書き換える）※注意: チーム開発では避ける
+    git reset --hard HEAD~1             // ローカルを1つ前のコミットに戻す
+    git push --force                    // 強制プッシュでリモートも書き換え
+
+    // 方法3: 安全な強制プッシュ
+    git reset --hard HEAD~1             // ローカルを1つ前のコミットに戻す
+    git push --force-with-lease         // 安全な強制プッシュ（競合チェック）
+
+- ENTRY:
+  EXPLAIN: pull (コミット取得)
+  BODY: |
+    リモート変更をローカルに取得・統合するコマンド
+
+    ■ 機能
+
+    ・ リモート変更の取得とマージ
+    ・ fetch + merge の組み合わせ
+
+    ■ 使用場面
+
+    ・ リモート変更の取り込み
+    ・ チーム開発での同期
+
+    ■ コマンド
+
+    git pull                            // 現在のブランチをプル
+    git pull origin <branch>            // 特定ブランチをプル
+    git pull --rebase                   // rebase方式でプル
+    git pull --no-rebase                // merge方式でプル
+    git pull --ff-only                  // fast-forwardのみ許可
+    git pull --all                      // 全ブランチをプル
+    git pull --prune                    // 削除されたリモートブランチも削除
+
+- ENTRY:
+  EXPLAIN: fetch (マージなしでコミット取得)
+  BODY: |
+    リモート変更を取得するコマンド（マージせず）
+
+    ■ 機能
+
+    ・ リモート変更のダウンロード
+    ・ ローカル統合せず確認のみ
+
+    ■ 使用場面
+
+    ・ リモート変更の確認
+    ・ マージ前に変更確認
+
+    ■ コマンド
+
+    git fetch                           // 全リモートからフェッチ
+    git fetch origin                    // origin からフェッチ
+    git fetch --all                     // 全リモートからフェッチ
+    git fetch --prune                   // 削除されたブランチも削除
+    git fetch --tags                    // タグもフェッチ
+    git fetch origin <branch>           // origin 特定ブランチのみフェッチ
+    git fetch --depth 1                 // 浅いフェッチ
+
+- ENTRY:
+  EXPLAIN: tag (ラベル付け)
+  BODY: |
+    特定コミットにラベルを付けるコマンド
+
+    ■ 機能
+
+    ・ コミットに名前付きラベルを付与
+    ・ バージョン管理やマイルストーン設定
+
+    ■ 使用場面
+
+    ・ リリースバージョンの管理
+    ・ 重要コミットの識別
+
+    ■ コマンド: 検索、表示
+
+    git tag                             // 全タグ一覧表示
+    git tag -l                          // 全タグ一覧表示（別形式）
+    git tag -l "v1.*"                   # v1.0, v1.1
+    git show <v1.0>                     // タグ詳細表示
+
+    ■ コマンド: 作成、削除
+
+    git tag <v1.0>                      // タグ作成
+    git tag -a <v1.0> -m "Version 1.0"  // 注釈付きタグ作成
+    git tag -d <v1.0>                   // タグ削除
+
+    ■ コマンド: プッシュ(リモート反映)
+
+    git push origin <v1.0>              // タグをリモートにプッシュ
+    git push origin --tags              // 全タグをリモートにプッシュ
+
+    ■ タグ付けの種類
+
+    ・ 軽量タグ:        git tag <tagname>
+    ・ 注釈付きタグ:    git tag -a <tagname> -m "message"
+    ・ GPG署名付きタグ: git tag -s <tagname> -m "message"
+
+    ■ タグ使用で特定バージョンへ移動・変更打ち消し
+
+      git checkout <tagname>            // タグ付けされたコミットに移動
+      git revert <tagname>              // タグ付けされたコミットを打ち消す新規コミット作成
+
+#-------------------------------
+# 高度操作
+#-------------------------------
+- ENTRY:
+  CATEGORY: 高度操作
+
+- ENTRY:
+  EXPLAIN: reset (コミット履歴リセット)
+  BODY: |
+    コミット履歴をリセットするコマンド
+
+    ■ 機能
+
+    ・ HEADの位置を変更
+    ・ ステージングエリアやワーキングディレクトリの変更
+    ・ コミット履歴の巻き戻し
+
+    ■ 使用場面
+
+    ・ 誤ったコミットを修正
+    ・ コミットを取り消す
+    ・ ステージングをクリア
+
+    ■ コマンド
+
+    git reset --soft HEAD~1             // コミットを取り消し（変更はステージングに残す）
+    git reset --mixed HEAD~1            // コミットを取り消し（変更はワーキングに残す）
+    git reset --hard HEAD~1             // コミットを取り消し（変更も破棄）
+    git reset HEAD~3                    // 複数コミットを巻き戻し
+    git reset <commit-hash>             // 特定コミットまで巻き戻し
+    git reset --soft <commit-hash>      // コミット位置のみ変更
+    git reset --hard origin/main        // リモート追従
+
+- ENTRY:
+  EXPLAIN: revert (変更取り消し)
+  BODY: |
+    変更を取り消す新規コミットを作成するコマンド
+
+    ■ 機能
+
+    ・ 指定コミットの変更を打ち消す
+    ・ 新しいコミットとして記録
+    ・ 履歴を残したまま修正
+
+    ■ 使用場面
+
+    ・ 公開コミットの取り消し
+    ・ 安全な変更取り消し
+    ・ 履歴の完全性を保つ
+
+    ■ コマンド
+
+    git revert <commit-hash>            // 特定コミットを打ち消す
+    git revert HEAD~1                   // 最新コミットを打ち消す
+    git revert --no-edit <commit-hash>  // メッセージ編集なし
+    git revert -m 1 <merge-commit>      // マージコミットの親を指定
+    git revert --continue               // コンフリクト解決後続行
+    git revert --abort                  // revert中断
+
+- ENTRY:
+  EXPLAIN: stash (変更一時保存)
+  BODY: |
+    作業中の変更を一時保存するコマンド
+
+    ■ 機能
+
+    ・ 追跡ファイルの変更を退避
+    ・ クリーンな状態で作業切り替え
+    ・ 保存した変更の復元
+
+    ■ 使用場面
+
+    ・ 緊急の作業切り替え
+    ・ 未コミットの変更の一時保存
+    ・ ブランチ切り替え前の保存
+
+    ■ コマンド
+
+    git stash                           // 変更を退避
+    git stash save "work in progress"   // メッセージ付き退避
+    git stash -u                        // 未追跡ファイルも退避
+    git stash -a                        // 全ファイル（無視含む）退避
+    git stash list                      // 退避一覧表示
+    git stash show                      // 最新stashの内容表示
+    git stash pop                       // 最新stashを復元・削除
+    git stash apply                     // 最新stashを復元（削除せず）
+    git stash drop                      // 最新stashを削除
+    git stash clear                     // 全stashを削除
+
+- ENTRY:
+  EXPLAIN: bisect (二分探索)
+  BODY: |
+    バグ導入コミットを二分探索で特定するコマンド
+
+    ■ 機能
+
+    ・ 自動二分探索でバグ特定
+    ・ コミット履歴の効率的調査
+    ・ バグ導入ポイントの特定
+
+    ■ 使用場面
+
+    ・ バグの発生時期特定
+    ・ 大規模コミット履歴の調査
+    ・ 回帰バグの原因特定
+
+    ■ コマンド
+
+    git bisect start                    // 二分探索開始
+    git bisect bad                      // 現在のコミットをbadとマーク
+    git bisect good <commit-hash>       // 正常なコミットをgoodとマーク
+    git bisect good HEAD~10             // 10コミット前をgoodとマーク
+    git bisect run <script>             // 自動テスト実行
+    git bisect reset                    // 二分探索終了・元の状態に戻る
+    git bisect log                      // 探索履歴表示
+    git bisect visualize                // 現在の状態をグラフ表示

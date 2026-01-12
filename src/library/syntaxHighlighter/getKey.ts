@@ -17,6 +17,8 @@ import { keysExcel } from "./keys/Excel"
 import { keysExcelVBS } from "./keys/ExcelVBS"
 import { keysExpress } from "./keys/Express"
 import { keysGit } from "./keys/Git"
+import { keysGitHubCLI } from "./keys/GitHubCLI"
+import { keysGitHub } from "./keys/GitHub"
 import { keysGraphQL } from "./keys/GraphQL"
 import { keysHTML } from "./keys/HTML"
 import { keysJest } from "./keys/Jest"
@@ -84,6 +86,8 @@ export const codeKeys = {
   ExcelVBS: "ExcelVBS",
   Express: "Express",
   Git: "Git",
+  GitCLI: "GitCLI",
+  GitHub: "GitHub",
   graphQL: "graphQL",
   HTML: "HTML",
   Jest: "Jest",
@@ -159,6 +163,8 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   ExcelVBS: keysExcelVBS,
   Express: keysExpress,
   Git: keysGit,
+  GitCLI: keysGitHubCLI,
+  GitHub: keysGitHub,
   graphQL: keysGraphQL,
   HTML: keysHTML,
   Jest: keysJest,

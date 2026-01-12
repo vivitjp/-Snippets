@@ -31,11 +31,19 @@ export const menuItems: menuByCategories[] = [
         name: "Git",
         fileName: "git/Git",
         codeKeyTypes: [codeKeys.Git],
+        case_sensitive: false,
       },
       {
         name: "GitHub",
-        fileName: "",
-        codeKeyTypes: [codeKeys.Git],
+        fileName: "git/GitHub",
+        codeKeyTypes: [codeKeys.GitHub],
+        case_sensitive: false,
+      },
+      {
+        name: "GitHub CLI",
+        fileName: "git/GitHubCLI",
+        codeKeyTypes: [codeKeys.GitCLI],
+        case_sensitive: false,
       },
       {
         name: "Husky",
