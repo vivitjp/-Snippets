@@ -6,46 +6,46 @@
 - ENTRY:
   EXPLAIN: 5分類
   BODY: |
-    情報レスポンス               (100-199)
-    成功レスポンス               (200-299)
-    リダイレクトメッセージ        (300-399)
-    クライアントエラーレスポンス  (400-499)
-    サーバーエラーレスポンス      (500-599)
+    100-199  情報レスポンス
+    200-299  成功レスポンス
+    300-399  リダイレクトメッセージ
+    400-499  クライアントエラーレスポンス
+    500-599  サーバーエラーレスポンス
 
 - ENTRY:
   EXPLAIN: 情報レスポンス
   BODY: |
-    100 Continue                暫定レスポンス(問題なく、継続可、無視OK)
-    101 Switching Protocols     Clientからの Upgrade へのレス。Serverはプロトコルを切り替え中
-    102 Processing (WebDAV)     サーバーはリクエスト受領、レス提供前
-    103 Early Hints             Link と併用、サーバーが準備中にリソースの先読み開始を可能に
+    100 Continue                        暫定レスポンス(問題なく、継続可、無視OK)
+    101 Switching Protocols             Clientからの Upgrade へのレス。Serverはプロトコルを切替中
+    102 Processing (WebDAV)             サーバーはリクエスト受領、レス提供前
+    103 Early Hints                     Link と併用、サーバーが準備中にリソースの先読み開始を可能に
 
 - ENTRY:
   EXPLAIN: 成功レスポンス
   BODY: |
-    200 OK                      成功
-    201 Created                 成功(リソース作成) POST,PUT 後のレス
-    202 Accepted                受理(実行前) リクエスト処理結果を非同期レスを後から送信する方法がない
-    203 Non-Authoritative Info  返却メタ情報がミラーやバックアップから収集
-    204 No Content              送信コンテンツなし
-    205 Reset Content           リクエスト文書のリセット伝達
-    206 Partial Content         Range を送信、リソースの一部をリクエスト時に使用
-    207 Multi-Status (WebDAV)      
-    208 Already Reported (WebDAV)  
-    226 IM Used (HTTP Delta encoding)
+    200 OK                              成功
+    201 Created                         成功(リソース作成) POST,PUT 後のレス
+    202 Accepted                        受理(実行前) リクエスト処理結果を非同期レスを後から送信する方法がない
+    203 Non-Authoritative Info          返却メタ情報がミラーやバックアップから収集
+    204 No Content                      送信コンテンツなし
+    205 Reset Content                   リクエスト文書のリセット伝達
+    206 Partial Content                 Range を送信、リソースの一部をリクエスト時に使用
+    207 Multi-Status (WebDAV)           複数のステータスコードを返す
+    208 Already Reported (WebDAV)       既に報告済み、循環参照防止
+    226 IM Used (HTTP Delta encoding)   リクエストが IM ヘッダで示された変更済みリソースを適用
 
 - ENTRY:
   EXPLAIN: リダイレクトメッセージ
   BODY: |
-    300 Multiple Choice         複数レスポンスからひとつ選択。
-    301 Moved Permanently       URLが永遠に変更。レスポンスで新URL通知
-    302 Found                   URIが一時的に変更。 
-    303 See Other               別のURIでGETで取得するよう誘導
-    304 Not Modified            キャッシュ用。レスポンスはNo変更
-    305 Use Proxy               非推奨
-    306 unused                  非推奨
-    307 Temporary Redirect      =302 別URIに「元」メソッドで取得するよう誘導
-    308 Permanent Redirect      =301 別URIに「元」メソッドで取得するよう誘導
+    300 Multiple Choice                 複数レスポンスからひとつ選択
+    301 Moved Permanently               URLが永遠に変更。レスポンスで新URL通知
+    302 Found                           URIが一時的に変更。 
+    303 See Other                       別のURIでGETで取得するよう誘導
+    304 Not Modified                    キャッシュ用。レスポンスはNo変更
+    305 Use Proxy                       非推奨
+    306 unused                          非推奨
+    307 Temporary Redirect              =302 別URIに「元」メソッドで取得するよう誘導
+    308 Permanent Redirect              =301 別URIに「元」メソッドで取得するよう誘導
 
 - ENTRY:
   EXPLAIN: クライアントエラーレスポンス
@@ -53,8 +53,8 @@
     400 Bad Request                     構文無効
     401 Unauthorized                    "unauthenticated" (未認証)
     402 Payment Required Experimental   (未使用)
-    403 Forbidden                       アクセス権なし(id受付)
-    404 Not Found                       ページなし(403の代わりも)
+    403 Forbidden                       🔴アクセス権なし(id受付)
+    404 Not Found                       🔴ページなし(403の代わりも)
     405 Method Not Allowed              メソッド無効(DELETEなど)
     406 Not Acceptable                  サーバー駆動型コンテンツネゴシエーションの結果、コンテンツがない
     407 Proxy Authentication Required   =401 プロキシーサーバーが認証要求
@@ -68,12 +68,12 @@
     415 Unsupported Media Type          メディア形式未対応
     416 Range Not Satisfiable           Range 指定範囲がURIのデータサイズ超え
     417 Expectation Failed              Expect 内容がサーバー側と不適合
-    418 I'm a teapot
+    418 I'm a teapot                    (エイプリルフールジョーク)  
     421 Misdirected Request             URIのスキームや権限に対してレスポンスを生成できない
-    422 Unprocessable Entity (WebDAV)
-    423 Locked (WebDAV)
-    424 Failed Dependency (WebDAV)
-    425 Too Early Experimental
+    422 Unprocessable Entity (WebDAV)   処理できないエンティティ
+    423 Locked (WebDAV)                 リソースがロックされている
+    424 Failed Dependency (WebDAV)      依存関係の失敗
+    425 Too Early Experimental          リクエストが早すぎる可能性
     426 Upgrade Required                別プロトコルへのアップグレード推奨
     428 Precondition Required          「ロストアップデート問題」予防
     429 Too Many Requests               リクエストレート制限
@@ -90,7 +90,7 @@
     504 Gateway Timeout                 ゲートウェイサーバーが時間内にレスポンスを得られなかった
     505 HTTP Version Not Supported      HTTP バージョンにサーバーが未対応
     506 Variant Also Negotiates         サーバーに内部構成エラー
-    507 Insufficient Storage (WebDAV)
-    508 Loop Detected (WebDAV)
+    507 Insufficient Storage (WebDAV)   ストレージ不足で処理不可
+    508 Loop Detected (WebDAV)          処理中に無限ループ検出
     510 Not Extended                    リクエスト処理に拡張が必要
     511 Network Authentication Required アクセス認証が必要

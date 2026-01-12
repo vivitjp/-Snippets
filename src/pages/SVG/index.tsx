@@ -58,7 +58,7 @@ const sampleData = {
 
 const SvgGraphSample: React.FC = () => {
   return (
-    <div style={{ width: 1000, margin: "2em auto" }}>
+    <div style={{ margin: "2em 1rem" }}>
       <SvgGraph data={sampleData} />
     </div>
   )

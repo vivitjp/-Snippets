@@ -6,10 +6,10 @@ import {
 import { Link, Route, Routes } from "react-router-dom"
 import { Heading, HStack, Stack, VStack } from "@chakra-ui/react"
 
-
 import LocalStoragePage from "../pages/localStorage"
 import RegressionPage from "../pages/regression"
 import ExcelInputPage from "../pages/excelInput"
+import SvgGraphSample from "../pages/SVG"
 
 type SampleType = {
   name: string;
@@ -33,8 +33,15 @@ const samples: Record<GroupName, SampleType[]> = {
       to: '/localStorage',
       element: <LocalStoragePage />
     },
-  ]
-  ,
+  ],
+  "SVG": [
+    {
+      name: 'SVG',
+      to: '/SVG',
+      element: <SvgGraphSample />
+    },
+
+  ],
   "統計": [
     {
       name: 'Regression',

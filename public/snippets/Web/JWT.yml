@@ -1,0 +1,323 @@
+---
+#-------------------------------
+# JWT
+#-------------------------------
+- ENTRY: JWT.category
+  CATEGORY: 概要
+
+- ENTRY:
+  EXPLAIN: 概要
+  BODY: |
+    ■ 概要
+
+    ・JWT (JSON Web Token) は、JSON 形式のトークンで、認証や情報交換に使用
+    ・RFC 7519 で定義された標準
+    ・主にウェブアプリケーションのセッション管理や API 認証で利用
+
+    ■ 認証 (Authentication)
+
+    ・ユーザーがログイン後、サーバーが JWT を発行
+    ・クライアントは以降のリクエストで JWT を Authorization ヘッダーに含めて送信
+    ・サーバーは JWT を検証してユーザーを識別
+
+    ■ 認可 (Authorization)
+
+    ・JWT にユーザーの権限情報を含めて、アクセス制御に使用
+
+    ■ 情報交換 (Information Exchange)
+
+    ・信頼できる方法で情報を安全に送信
+    ・署名により改ざんを検知可能
+
+    ■ セッション管理
+
+    ・サーバー側で状態を持たない (stateless) セッションの実現
+    ・Cookie ベースのセッションと比較して、スケーラビリティが高い
+
+    ■ 利点
+
+    ・stateless: サーバー側でセッションを保存する必要がない
+    ・自己完結型: トークン自体に必要な情報が含まれる
+    ・クロスドメイン対応: Cookie の SameSite 制限を回避可能
+    ・標準化: 多くのライブラリとフレームワークでサポート
+
+    ■ 注意点
+
+    ・トークンの盗難リスク: XSS 攻撃などでトークンが盗まれると悪用される
+    ・有効期限の管理: トークンの失効が難しい (失効リストが必要な場合あり)
+    ・サイズ: ペイロードが大きいとリクエストサイズが増大
+    ・秘密鍵の管理: 署名鍵の漏洩が致命的
+
+    ■ JWT のセキュリティベストプラクティス
+
+    ・HTTPS の使用: トークンが平文で送信されないようにする
+    ・短い有効期限: access token を短命にし、refresh token で更新
+    ・HttpOnly Cookie の使用: 可能であればトークンを Cookie に保存
+    ・署名アルゴリズムの選択: HS256 (共有鍵) より RS256 (公開鍵) を推奨
+    ・トークンの検証: すべてのリクエストで署名と有効期限をチェック
+    ・ログアウトの実装: サーバー側で失効リストを管理
+
+- ENTRY:
+  EXPLAIN: 実際のJWT例
+  BODY: |
+    ■ JWT
+
+    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+
+    ■ Header:
+
+    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
+
+    {
+      "alg": "HS256",                   // 署名アルゴリズム
+      "typ": "JWT"                      // トークンタイプ
+    }
+
+    ■ Payload:
+
+    eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.
+
+    {
+      "sub": "1234567890",              // 主体 (ユーザーIDなど)
+      "name": "John Doe",               // ユーザー名
+      "iat": 1516239022                 // 発行時刻 (Unixタイムスタンプ)
+    }
+
+    ■ Signature:
+
+    SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+
+    HMACSHA256(
+      base64UrlEncode(header) + "." +   // ヘッダーとペイロードを連結
+      base64UrlEncode(payload),
+      'your-256-bit-secret'             // 秘密鍵
+    )
+
+- ENTRY:
+  EXPLAIN: JWT の形式
+  BODY: |
+    ・JWT は 3 つの部分から構成: Header.Payload.Signature
+    ・各部分は Base64URL エンコードされ、ドット (.) で連結
+
+    ■ Header (ヘッダー)
+
+    ・トークンのタイプ (typ: "JWT") と署名アルゴリズム (alg: "HS256", "RS256" など) を含む JSON
+
+    例: {"alg": "HS256", "typ": "JWT"}
+
+    ■ Payload (ペイロード)
+
+    ・クレーム (claims) と呼ばれるデータを格納した JSON
+    ・標準クレーム:
+        iss (発行者)
+        sub (主体)
+        aud (対象者)
+        exp (有効期限)
+        iat (発行時刻)
+        など
+    ・カスタムクレームも追加可能
+
+    例: {"sub": "1234567890", "name": "John Doe", "iat": 1516239022}
+
+    ■ Signature (署名)
+
+    ・Header と Payload をエンコードしたものを秘密鍵で署名
+    ・改ざん検知に使用
+    ・HMAC や RSA/ECDSA などのアルゴリズムを使用
+
+    ■ JWT 解析 URL
+
+    ・https://jwt.io/
+    ・Header、Payload、Signature の内容を確認可能
+
+- ENTRY: JWT.category
+  CATEGORY: 実装
+
+- ENTRY:
+  EXPLAIN: 基本実装
+  BODY: |
+    Node.js (jsonwebtoken ライブラリ使用)
+
+    ■ トークン発行
+
+      const jwt = require('jsonwebtoken')
+      const token = jwt.sign({ userId: 123 }, 'secretKey', { expiresIn: '1h' })
+
+    ■ トークン検証
+
+      try {
+        const decoded = jwt.verify(token, 'secretKey')
+        console.log(decoded.userId) // 123
+      } catch (err) {
+        // 無効なトークン
+      }
+
+    ■ クライアント側 (Authorization ヘッダー)
+
+      fetch('/api/data', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+- ENTRY:
+  EXPLAIN: サーバー側での運用例
+  BODY: |
+    ■ Redis を使用した JWT 運用例
+
+    ・Redis を活用して、JWT の失効管理や refresh token の保存を行う
+    ・主にブラックリスト (失効リスト) と refresh token ストアとして使用
+
+    ■ ブラックリストの実装 (トークン失効)
+
+    ・ログアウト時やセキュリティ上の理由でトークンを無効化する場合に使用
+    ・Redis のセットにトークンの jti (JWT ID) を保存し、検証時にチェック
+
+    ■ サーバー側 (Node.js + Redis)
+
+      const redis = require('redis')
+      const client = redis.createClient()
+
+      // トークン発行時に jti を追加
+      const token = jwt.sign(
+        { userId: 123, jti: uuidv4() }, // jti: 一意のトークンID
+        'secretKey',
+        { expiresIn: '1h' }
+      )
+
+      // ログアウト時にブラックリストに追加
+      app.post('/logout', (req, res) => {
+        const token = req.headers.authorization?.split(' ')[1]
+        if (token) {
+          const decoded = jwt.decode(token) // verify せずにデコード
+          if (decoded?.jti) {
+            client.sadd('blacklist', decoded.jti) // Redis セットに追加
+            client.expire('blacklist', 3600) // トークンの有効期限と同じ時間で expire
+          }
+        }
+        res.send({ ok: true })
+      })
+
+      // ミドルウェアでブラックリストチェック
+      const checkBlacklist = (req, res, next) => {
+        const token = req.headers.authorization?.split(' ')[1]
+        if (token) {
+          try {
+            const decoded = jwt.verify(token, 'secretKey')
+            client.sismember('blacklist', decoded.jti, (err, isMember) => {
+              if (isMember) {
+                return res.status(401).send('Token revoked')
+              }
+              req.user = decoded
+              next()
+            })
+          } catch (err) {
+            return res.status(401).send('Invalid token')
+          }
+        } else {
+          next()
+        }
+      }
+
+    ■ ブラックリストの運用理由
+
+    ・JWT は stateless であるため、通常はサーバー側でトークンを無効化できない
+    ・ブラックリストを使用することで、特定のトークンを無効化可能
+
+    ■ Refresh Token の管理
+
+    ・Refresh token を Redis に保存し、有効期限を設定
+    ・Access token が期限切れ時に新しいペアを発行
+
+    ■ サーバー側 (Refresh Token 発行)
+
+      app.post('/login', (req, res) => {
+        // 認証成功後
+        const accessToken = jwt.sign({ userId: 123 }, ACCESS_SECRET, { expiresIn: '15m' })
+        const refreshToken = uuidv4() // ランダムな文字列
+
+        // Refresh token を Redis に保存 (ユーザーIDをキー)
+        client.setex(`refresh:${123}`, 30 * 24 * 3600, refreshToken) // 30日
+
+        res.json({ accessToken, refreshToken })
+      })
+
+      app.post('/refresh', (req, res) => {
+        const { refreshToken } = req.body
+
+        // Refresh token を検証
+        client.get(`refresh:${userId}`, (err, storedToken) => {
+          if (storedToken !== refreshToken) {
+            return res.status(401).send('Invalid refresh token')
+          }
+
+          // 新しいトークンペアを発行
+          const newAccessToken = jwt.sign({ userId }, ACCESS_SECRET, { expiresIn: '15m' })
+          const newRefreshToken = uuidv4()
+
+          // 古い refresh token を削除し、新しいものを保存
+          client.del(`refresh:${userId}`)
+          client.setex(`refresh:${userId}`, 30 * 24 * 3600, newRefreshToken)
+
+          res.json({ accessToken: newAccessToken, refreshToken: newRefreshToken })
+        })
+      })
+
+    ■ Redis の設定と運用
+
+    ・Redis の永続化設定: RDB または AOF を有効化してデータ損失を防ぐ
+    ・キーの命名規則: refresh:{userId}, blacklist など
+    ・TTL の設定: トークンの有効期限に合わせて expire を設定
+    ・スケーリング: Redis Cluster や Sentinel を使用して高可用性を実現
+    ・監視: Redis のメモリ使用量と接続数を監視
+
+    ■ 注意点
+
+    ・Redis のダウンタイム対策: フェイルオーバーやレプリケーションを設定
+    ・セキュリティ: Redis へのアクセスを制限 (ファイアウォール、認証)
+    ・パフォーマンス: 大量のトークン失効時は Redis のスループットを考慮
+
+- ENTRY:
+  EXPLAIN: クライアント側
+  BODY: |
+    ■ クライアント側 (JavaScript)
+
+      // トークン保存 (localStorage または secure storage)
+      localStorage.setItem('accessToken', accessToken)
+      localStorage.setItem('refreshToken', refreshToken)
+
+      // API リクエスト関数
+      async function apiRequest(url, options = {}) {
+        const accessToken = localStorage.getItem('accessToken')
+        options.headers = {
+          ...options.headers,
+          'Authorization': `Bearer ${accessToken}`
+        }
+
+        let response = await fetch(url, options)
+
+        if (response.status === 401) {
+          // Access token が無効、refresh を試行
+          const refreshToken = localStorage.getItem('refreshToken')
+          const refreshResponse = await fetch('/refresh', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ refreshToken })
+          })
+
+          if (refreshResponse.ok) {
+            const { accessToken: newAccess, refreshToken: newRefresh } = await refreshResponse.json()
+            localStorage.setItem('accessToken', newAccess)
+            localStorage.setItem('refreshToken', newRefresh)
+
+            // リトライ
+            options.headers['Authorization'] = `Bearer ${newAccess}`
+            response = await fetch(url, options)
+          } else {
+            // Refresh 失敗、ログイン画面へ
+            window.location.href = '/login'
+          }
+        }
+
+        return response
+      }

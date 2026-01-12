@@ -21,7 +21,7 @@
     curl -XPOST -H "Content-Type:application/json" -d '{"age":18}' URL
 
 - ENTRY:
-  EXPLAIN:
+  EXPLAIN: 認証
   BODY: |
     Token認証
     curl -H "Authorization: Bearer xxxx....xxxx" URL

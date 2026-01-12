@@ -3,8 +3,10 @@ import { keysAWSAurora } from "./keys/AWSAurora"
 import { keysAWSCloud } from "./keys/AWSCloud"
 import { keyReactLibrary } from "./keys/ReactLibrary"
 import { keysChakra } from "./keys/Chakra"
+import { keysCookie } from "./keys/Cookie"
 import { keysClassTransformer } from "./keys/ClassTransformer"
 import { keysClassValidator } from "./keys/ClassValidator"
+import { keysShell } from "./keys/Shell"
 import { keysCSS } from "./keys/CSS"
 import { keysCurl } from "./keys/curl"
 import { keysDOM } from "./keys/DOM"
@@ -15,9 +17,12 @@ import { keysExcel } from "./keys/Excel"
 import { keysExcelVBS } from "./keys/ExcelVBS"
 import { keysExpress } from "./keys/Express"
 import { keysGit } from "./keys/Git"
+import { keysGitHubCLI } from "./keys/GitHubCLI"
+import { keysGitHub } from "./keys/GitHub"
 import { keysGraphQL } from "./keys/GraphQL"
 import { keysHTML } from "./keys/HTML"
 import { keysJest } from "./keys/Jest"
+import { keysJWT } from "./keys/JWT"
 import { keysJotai } from "./keys/Jotai"
 import { keysJS } from "./keys/JS"
 import { keysJSUtilities } from "./keys/JSUtilities"
@@ -47,6 +52,8 @@ import { keysRTL } from "./keys/RTL"
 import { keysSVG } from "./keys/SVG"
 import { keysSwagger } from "./keys/Swagger"
 import { keysSql } from "./keys/Sql"
+import { keysSession } from "./keys/Session"
+import { keysSecurity } from "./keys/Security"
 import { keysStorage } from "./keys/Storage"
 import { keysTanStack } from "./keys/TanStack"
 import { keysTS } from "./keys/TS"
@@ -55,6 +62,9 @@ import { keysTypeORM } from "./keys/TypeORM"
 import { keysVite } from "./keys/Vite"
 import { keysVitest } from "./keys/Vitest"
 import { keysVue } from "./keys/Vue"
+import { keysWebAPI } from "./keys/WebAPI"
+import { keysServiceWorker } from "./keys/ServiceWorker"
+import { keysWebSocket } from "./keys/WebSocket"
 import { keysYup } from "./keys/Yup"
 import { keysZustand } from "./keys/zustand"
 
@@ -63,6 +73,8 @@ export const codeKeys = {
   AWSAurora: "AWSAurora",
   AWSCloud: "AWSCloud",
   Chakra: "Chakra",
+  Cookie: "Cookie",
+  Shell: "Shell",
   ClassTransformer: "ClassTransformer",
   ClassValidator: "ClassValidator",
   CSS: "CSS",
@@ -74,9 +86,12 @@ export const codeKeys = {
   ExcelVBS: "ExcelVBS",
   Express: "Express",
   Git: "Git",
+  GitCLI: "GitCLI",
+  GitHub: "GitHub",
   graphQL: "graphQL",
   HTML: "HTML",
   Jest: "Jest",
+  JWT: "JWT",
   Jotai: "Jotai",
   JS: "JS",
   JSUtilities: "JSUtilities",
@@ -107,7 +122,10 @@ export const codeKeys = {
   RHF: "keysRHF",
   RTL: "RTL",
   Sql: "Sql",
+  Session: "Session",
+  Security: "Security",
   Storage: "Storage",
+  ServiceWorker: "ServiceWorker",
   SVG: "SVG",
   Swagger: "Swagger",
   TanStack: "TanStack",
@@ -118,6 +136,8 @@ export const codeKeys = {
   Vite: "Vite",
   Vitest: "Vitest",
   Vue: "Vue",
+  WebSocket: "WebSocket",
+  WebAPI: "WebAPI",
   Yup: "Yup",
   Zustand: "Zustand",
 } as const
@@ -127,9 +147,11 @@ export const defaultSnippetsStyle = codeKeys.Unknown
 export type CodeKeyType = (typeof codeKeys)[keyof typeof codeKeys]
 
 export const KeyAndCodes: Record<string, KeyDef> = {
+  Shell: keysShell,
   AWSAurora: keysAWSAurora,
   AWSCloud: keysAWSCloud,
   Chakra: keysChakra,
+  Cookie: keysCookie,
   ClassTransformer: keysClassTransformer,
   ClassValidator: keysClassValidator,
   CSS: keysCSS,
@@ -141,9 +163,12 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   ExcelVBS: keysExcelVBS,
   Express: keysExpress,
   Git: keysGit,
+  GitCLI: keysGitHubCLI,
+  GitHub: keysGitHub,
   graphQL: keysGraphQL,
   HTML: keysHTML,
   Jest: keysJest,
+  JWT: keysJWT,
   Jotai: keysJotai,
   JS: keysJS,
   JSUtilities: keysJSUtilities,
@@ -173,7 +198,10 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   RegExp: keysRegExp,
   RTL: keysRTL,
   Sql: keysSql,
+  Session: keysSession,
+  Security: keysSecurity,
   Storage: keysStorage,
+  ServiceWorker: keysServiceWorker,
   SVG: keysSVG,
   Swagger: keysSwagger,
   TanStack: keysTanStack,
@@ -183,6 +211,8 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   Vite: keysVite,
   Vitest: keysVitest,
   Vue: keysVue,
+  WebSocket: keysWebSocket,
+  WebAPI: keysWebAPI,
   Yup: keysYup,
   Zustand: keysZustand,
 }

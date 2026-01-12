@@ -136,12 +136,15 @@ export const MenuItem = styled.div<MenuItem>`
     overflow: hidden;
     white-space: nowrap;
     cursor: pointer;
+    :hover {
+      color: var(--main-color);
+    };
     ${isPending &&
     css`
       color: #BBB;
       cursor: default;
       :hover {
-        color: var(--main-color);
+        color: #BBB;
       }
     `
     }

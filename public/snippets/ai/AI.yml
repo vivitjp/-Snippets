@@ -2,19 +2,19 @@
 #-------------------------------
 # AI
 #-------------------------------
-- ENTRY:
-  CATEGORY: AI
 
 - ENTRY:
   EXPLAIN: 生成AIの種類
   BODY: |
     ■ 会話タイプ
+
     chatGPT                   OpenAI。自然な会話を実現することを目的とした対話型AI
     Google Gemini             Google。2023年12月発表。文章、画像、動画、音声も理解できる「マルチモーダル機能」
     Microsoft Copilot         Microsoft。ブラウザやWindows向けAIチャットアシスタント。OpenAIの「GPT-4」「DALL-E 3」搭載
     Claude                    Anthropic。自然な会話を実現することを目的とした対話型AI
 
     ■ 要約タイプ
+
     ELYZA LLM                 ELYZA。日本語の大規模言語モデル
     QuillBot                  スタイル・トーン指定。添削、要約、文法チェック、優れた表現の提案機能
                               ChromeやWordとも連携、既存のライティングツールに統合
@@ -22,12 +22,14 @@
     Samaru                    ハルプログラム。最大5,000字の日本語文章を瞬時に要約(文字数指定)、語尾調変更
 
     ■ 記事作成タイプ
+
     SAKUBUN                   ブログ記事やSNSの投稿文、広告文などの作成。AIエディターで編集。トーンやペルソナ設定
     ブログアイデア生成ツール    HubSpot、記事作成、記事のアウトラインからテキストまでを生成、CMS「Content Hub」と連携、生成コンテンツ公開
     Transcope                 GPT-4搭載で記事生成、SEOライティングに優れる、自社資料学習で、特化記事生成可能
     Claude                    高処理能力で大量文章を読み込み、迅速分析、複雑な情報もエラー率を低減して処理。自然な文章生成能力。文脈を理解する能力高
 
     ■ 画像生成タイプ
+
     Image Creator(Copilot)    Microsoft、漫画、アニメ、水彩画、サイバーパンク、超現実
     Stable Diffusion          StabilityAI 2022年8月、オープンソースの「潜在拡散モデル」AI、指示文から画像生成、基本的に商用利用可能
     Adobe Photoshop           Adobe、AI技術の早期導入。生成AI機能も搭載、画像から不要部分を削除、指示文から独自画像生成
@@ -39,11 +41,13 @@
     Sora                      OpenAI、指示文から動画生成、キャラクター、背景、カメラワーク再現、最長1分動画作成。精度高い動画。
 
     ■ 音楽生成タイプ
+
     Soundraw                  ムード、ジャンル、テーマ指定で10秒～5分までのオリジナル曲を自動生成
     MusicFX(旧MusicLM)        Google、指示文から音楽生成
     Suno AI                   指示文からボーカル付き音楽生成。歌詞入力でメロディを自動生成。高品質版 V3 開放、最大20曲/日(2分/曲)が生成可能
 
     ■ コード生成タイプ
+
     GitHub Copilot            コメントやコードから自動でプログラムを提案・生成
                               AgentModeへの指示文で既存コード解析しつつ提案
     Amazon CodeWhisperer      AWS対応。コード補完やセキュリティ提案も可能
@@ -153,3 +157,137 @@
     既存のAI活用は、プロンプトの工夫よりも「モデルの性能」や「データ量」に依存しがち。
     今後は、より高度なプロンプト設計や、専門的なノウハウの蓄積が重要になる。
     プロンプト設計の標準化や、ベストプラクティスの共有が進むことで、AI活用の精度・効率が向上する可能性がある。
+
+- ENTRY:
+  CATEGORY: MCP
+
+- ENTRY:
+  EXPLAIN: 概要
+  BODY: |
+    ■ MCP (Model-Context Protocol) 概要
+
+    ・モデルとコンテキストをやり取りするための軽量プロトコル
+    ・セッション管理、コンテキスト注入、ツール呼び出し、ストリーミング応答を整理して扱うための設計方針
+    ・目的: 再現性のある対話、外部知識の組み込み、マルチモデル連携、監査ログ確保
+
+    ■ ユースケース
+
+    ・RAG（Retrieval-Augmented Generation）で検索結果を安全にプロンプトに注入してモデルに渡す
+    ・モデルによる外部ツール呼び出し（データベースクエリ、コード実行、WebAPI 呼び出し）の仲介
+    ・マルチモデルルーティングとフェイルオーバー（用途に応じて最適モデルへ仲介）
+    ・セッション履歴の管理と会話コンテキストの差分同期
+    ・モデル応答のストリーミング（部分応答をクライアントへ逐次送信）と中断制御
+
+    ■ 設計パターン
+
+    ・HTTP REST 型: 単純なリクエスト/レスポンス、導入が容易
+    ・WebSocket ストリーミング型: 応答を逐次送信するシナリオに適合
+    ・gRPC 型: 高スループット・双方向ストリーミングが必要な場合に有効
+    ・イベント駆動（Pub/Sub）型: 大規模分散環境での非同期ワークフロー向け
+    ・エージェント指向型: ツール呼び出しや複数モデルの協調を扱う上位プロトコル
+
+    ■ 実装上の注意点
+
+    ・入力は常に正規化/サニタイズする（外部ツール呼び出し時の安全対策）
+    ・セッションとトレーサビリティを保持する（監査ログ、再現性）
+    ・トークン制限を実装してコスト制御する
+    ・エラーやタイムアウトの扱いを明確化する（中断、再試行ポリシー）
+
+    ■ まとめ
+
+    ・MCP はモデル統合の共通インターフェースとなり得る設計思想
+    ・シンプルな REST から双方向ストリーミングまでニーズに合わせて選択
+    ・セキュリティ、コスト、再現性を考慮して実装を決める
+
+- ENTRY:
+  EXPLAIN: メッセージ設計
+  BODY: |
+    ■ MCP のメッセージ設計（例）
+
+    ・Request:
+      {
+        "sessionId": "string",
+        "type": "prompt", // prompt | tool | control
+        "payload": { "messages": [{"role":"user","text":"..."}], "context": {...} }
+      }
+    ・Response:
+      {
+        "sessionId": "string",
+        "type": "response", // response | tool-result | error
+        "payload": { "output": "...", "meta": {...} }
+      }
+
+- ENTRY:
+  EXPLAIN: 実装サンプル 1 — HTTP REST 型
+  BODY: |
+    ■ 実装サンプル 1 — HTTP REST 型（簡易 TypeScript/Express）
+
+      import express from 'express'
+      import bodyParser from 'body-parser'
+
+      const app = express()
+      app.use(bodyParser.json())
+
+      app.post('/mcp', async (req, res) => {
+        const { sessionId, type, payload } = req.body
+        // 1. コンテキストを取得/正規化
+        const context = payload.context || {}
+        // 2. (省略) 検索やサニタイズ、トークン制限を実施
+        // 3. モデル呼び出し（ここは実装依存、プレースホルダ）
+        const modelReply = await callModel({ messages: payload.messages, context })
+        res.json({ sessionId, type: 'response', payload: { output: modelReply } })
+      })
+
+      async function callModel(args: any) { return 'モデルの応答（ダミー）' }
+      app.listen(3000)
+
+    ■ callModel の実装例(OpenAI GPT-4o)
+
+      import { OpenAIApi, Configuration } from 'openai'
+      const openai = new OpenAIApi(new Configuration({ apiKey: process.env.OPENAI_API_KEY }))
+
+      async function callModel(args: any) {
+        const response = await openai.chat.completions.create({
+          model: 'gpt-4o',
+          messages: args.messages,
+          max_tokens: 1000,
+        })
+        return response.choices[0].message.content
+      }
+
+- ENTRY:
+  EXPLAIN: 実装サンプル 2 — WebSocket ストリーミング型
+  BODY: |
+    ■ 実装サンプル 2 — WebSocket ストリーミング型（簡易 TypeScript）
+
+      import http from 'http'
+      import WebSocket from 'ws'
+
+      const server = http.createServer()
+      const wss = new WebSocket.Server({ server })
+
+      wss.on('connection', (ws) => {
+        ws.on('message', async (raw) => {
+          const req = JSON.parse(raw.toString())
+          // 逐次トークナイズしてモデルからストリーミングで受け取りながら client に送る例
+          const stream = simpleModelStream(req.payload)
+          for await (const chunk of stream) {
+            ws.send(JSON.stringify({ sessionId: req.sessionId, type: 'response-chunk', payload: { chunk } }))
+          }
+          ws.send(JSON.stringify({ sessionId: req.sessionId, type: 'response-end' }))
+        })
+      })
+
+    ■ simpleModelStream の実装例(OpenAI GPT-4o)
+
+      async function* simpleModelStream(payload: any) {
+        // OpenAI のストリーミング API 呼び出し例
+        const response = await openai.chat.completions.create({
+          model: 'gpt-4o',
+          messages: payload.messages,
+          stream: true,
+        })
+        for await (const chunk of response) {
+          yield chunk.choices[0].delta.content
+        }
+      }

@@ -1,0 +1,409 @@
+---
+#-------------------------------
+# WebSocket
+#-------------------------------
+- ENTRY:
+  EXPLAIN: 概要
+  BODY: |
+    ■ 概要
+
+    ・WebSocket は、双方向通信を可能にするプロトコル
+    ・HTTP ハンドシェイク後に接続が確立され、持続的な通信が可能
+    ・リアルタイムアプリケーション（チャット、ゲーム、ライブ更新など）で広く使用
+
+    ■ 特徴
+
+    ・双方向通信: クライアントとサーバーが自由にメッセージを送受信可能
+    ・低レイテンシ: 持続的な接続により、オーバーヘッドが少なく高速
+    ・軽量フレーム: メッセージは小さなフレームで送信され、効率的
+
+    ■ 接続の流れ
+
+    1. クライアントが HTTP リクエストで WebSocket 接続を要求
+    2. サーバーが接続を承認し、HTTP 接続を WebSocket にアップグレード
+    3. 双方がメッセージの送受信を開始
+    4. 通信終了時に接続を閉じる
+
+    ■ セキュリティ
+
+    ・WSS (WebSocket Secure) を使用して通信を暗号化
+    ・CORS ポリシーに注意し、適切なオリジン制御を実施
+
+    ■ ユースケース
+
+    ・チャットアプリケーション
+    ・オンラインゲーム
+    ・リアルタイムデータフィード（株価、スポーツスコアなど）
+    ・コラボレーションツール（ドキュメント編集など）
+
+    ■ NPMパッケージ
+
+    ・ws: シンプルで高速な WebSocket クライアント/サーバー実装
+    ・socket.io: 高レベルなリアルタイム通信ライブラリ（フォールバック、ルーム管理などをサポート）
+
+- ENTRY:
+  CATEGORY: チャット実装
+
+- ENTRY:
+  EXPLAIN: サーバー(Node.js + ws)
+  BODY: |
+    ■ 機能
+
+    ・メッセージを JSON でやり取り
+    ・簡易的なサニタイズ
+    ・ルーム機能
+    ・ハートビートを含めた接続維持
+
+    ■ サーバー (Node.ts + ws)
+
+    import http from 'http'
+    import WebSocket, { Server as WebSocketServer } from 'ws'
+
+    interface ClientMeta { id: string; name: string; room: string }
+    interface ExtWebSocket extends WebSocket { isAlive?: boolean }
+
+    const server = http.createServer()
+    const wss = new WebSocketServer({ server })
+
+    // クライアントメタ情報管理
+    const clients = new Map<ExtWebSocket, ClientMeta>() // ws -> { id, name, room }
+
+    function broadcast(room: string, data: unknown, except?: ExtWebSocket) {
+      const raw = JSON.stringify(data)
+      for (const [ws, meta] of clients) {
+        if (ws.readyState === WebSocket.OPEN && meta.room === room && ws !== except) {
+          ws.send(raw)
+        }
+      }
+    }
+
+    // 接続処理
+    wss.on('connection', (socket: ExtWebSocket) => {
+      clients.set(socket, {
+        id: Date.now().toString(),
+        name: '匿名',
+        room: 'lobby'
+      })
+      socket.isAlive = true
+
+      // pong ハンドラ
+      socket.on('pong', () => { socket.isAlive = true })
+
+      // メッセージ処理
+      socket.on('message', (raw) => {
+        let msg: any
+        try { msg = JSON.parse(raw.toString()) } catch (e) { return }
+        const meta = clients.get(socket)
+        if (!meta) return
+
+        // 参加処理
+        if (msg.type === 'join') {
+          meta.name = String(msg.name || meta.name).slice(0, 32)
+          meta.room = String(msg.room || 'lobby')
+          socket.send(JSON.stringify({
+            type: 'joined',
+            room: meta.room,
+            name: meta.name
+          }))
+          broadcast(meta.room, {
+            type: 'notice',
+            text: `${meta.name} が参加しました`
+          }, socket)
+        }
+
+        // チャットメッセージ処理
+        else if (msg.type === 'message') {
+          const text = String(msg.text || '').slice(0, 1000)
+          broadcast(meta.room, {
+            type: 'message',
+            from: meta.name,
+            text,
+            ts: Date.now()
+          })
+        }
+        // クライアントからの ping への応答
+        else if (msg.type === 'ping') {
+          socket.send(JSON.stringify({ type: 'pong' }))
+        }
+      })
+
+      // 切断処理
+      socket.on('close', () => {
+        const meta = clients.get(socket)
+        if (meta) broadcast(meta.room, {
+          type: 'notice',
+          text: `${meta.name} が退出しました`
+        }, socket)
+        clients.delete(socket)
+      })
+    })
+
+    // heartbeat
+    setInterval(() => {
+      wss.clients.forEach((client) => {
+        const ws = client as ExtWebSocket
+        if (ws.isAlive === false) return ws.terminate()
+        ws.isAlive = false
+        ws.ping()
+      })
+    }, 30000)
+
+    server.listen(8080, () => console.log('WebSocket server listening on :8080'))
+
+    ■ 備考
+
+    ・本番では `wss://` を利用し、リバースプロキシ（nginx）で TLS 終端するのが一般的
+    ・メッセージサイズ上限、レート制限、認証（JWT など）、入力サニタイズを必ず実装
+
+- ENTRY:
+  EXPLAIN: クライアント(ブラウザ, React)
+  BODY: |
+    ■ React（Hooks を使ったクライアント例）
+
+    ・以下は React コンポーネントとして動作するシンプルなチャットクライアント例
+    ・再接続、メッセージ表示、送信を含み、実運用での拡張（認証トークン付与等）を想定
+
+    ■ ChatApp.tsx
+
+    import React, { useEffect, useRef, useState } from 'react'
+
+    type Msg = { type: string; [key: string]: any }
+
+    type Props = {
+      name?: string
+      room?: string
+    }
+
+    export default function ChatApp({ name = 'Alice', room = 'lobby' }: Props) {
+      const [log, setLog] = useState<string[]>([])
+      const [input, setInput] = useState('')
+      const wsRef = useRef<WebSocket | null>(null)
+      const reconnectRef = useRef(0)
+
+      useEffect(() => {
+        const url = (location.protocol === 'https:') ? `wss://${location.host}` : 'ws://localhost:8080'
+        let mounted = true
+
+        function connect() {
+          const ws = new WebSocket(url)
+          wsRef.current = ws
+
+          ws.onopen = () => {
+            reconnectRef.current = 0
+            setLog(l => [...l, '接続しました'])
+            ws.send(JSON.stringify({ type: 'join', name, room }))
+          }
+
+          ws.onmessage = (ev: MessageEvent) => {
+            try {
+              const msg: Msg = JSON.parse(ev.data)
+              if (msg.type === 'message')
+                setLog(l => [...l, `${msg.from}: ${msg.text}`])
+              else if (msg.type === 'notice')
+                setLog(l => [...l, `* ${msg.text}`])
+            } catch (e) { /* ignore malformed */ }
+          }
+
+          ws.onclose = () => {
+            if (!mounted) return
+            setLog(l => [...l, '切断されました。再接続を試みます...'])
+            const timeout = Math.min(10000, 1000 * Math.pow(2, reconnectRef.current))
+            reconnectRef.current += 1
+            setTimeout(connect, timeout)
+          }
+
+          ws.onerror = () => ws.close()
+        }
+
+        connect()
+
+        return () => { mounted = false; if (wsRef.current) wsRef.current.close() }
+      }, [name, room])
+
+      const send = () => {
+        const ws = wsRef.current
+        if (!ws || ws.readyState !== WebSocket.OPEN) {
+          setLog(l => [...l, '未接続です']);
+          return
+        }
+        const text = input.trim()
+        if (!text) return
+
+        ws.send(JSON.stringify({ type: 'message', text }))
+        setInput('')
+      }
+
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+          <div id="log" style={{ flex: 1, overflow: 'auto', border: '1px solid #ddd', padding: 8 }}>
+            {log.map((line, i) => <div key={i}>{line}</div>)}
+          </div>
+          <div style={{ display: 'flex', marginTop: 8 }}>
+            <input
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') send() }}
+              style={{ flex: 1 }}
+            />
+            <button onClick={send}>送信</button>
+          </div>
+        </div>
+      )
+    }
+
+    ■ 説明
+
+    ・コンポーネントは自動で接続し、切断時は指数バックオフで再接続
+    ・実運用では接続時に認証トークンを送る
+     （例: `new WebSocket(url + '?token=...')` または最初の `join` メッセージに含める）ことを推奨
+    ・サーバー側で `ping`/`pong` を使ったハートビートを実装すると接続切れ検出が安定
+
+    ■ 運用上の注意
+
+    ・認証: 接続時にトークンを検証し、許可されたユーザーのみ参加させる
+    ・スケーリング: 単一サーバーだと接続数に限界があるため、水平スケール時は Redis やメッセージブローカーで pub/sub を導入する（例: socket.io + adapter, ws + Redis pub/sub）
+    ・セキュリティ: WSS を利用、Origin チェック、入力の長さ/内容チェック、レート制限
+    ・可観測性: 接続数・メッセージ数・遅延等を監視し、ログやメトリクスを収集する
+    ・実運用ではさらに堅牢なエラーハンドリング、認証、監査ログ、負荷対策を追加
+
+- ENTRY:
+  CATEGORY: リアルタイムデータフィード実装
+
+- ENTRY:
+  EXPLAIN: サーバー(Express + ws)
+  BODY: |
+    ■ 機能
+
+    ・HTTP サーバーと WebSocket サーバーを統合
+    ・簡易的なサニタイズ
+    ・リアルタイムデータ配信
+
+    ■ サーバー (Express + ws)
+
+    import express from 'express'
+    import http from 'http'
+    import WebSocket, { Server as WebSocketServer } from 'ws'
+
+    interface ExtWebSocket extends WebSocket { isAlive?: boolean }
+
+    const app = express()
+    const server = http.createServer(app)
+    const wss = new WebSocketServer({ server })
+
+    // クライアント管理
+    const clients = new Set<ExtWebSocket>()
+
+    // 接続処理
+    wss.on('connection', (socket: ExtWebSocket) => {
+      clients.add(socket)
+
+      socket.on('close', () => {
+        clients.delete(socket)
+      })
+    })
+
+    // ダミーデータ送信 (例: 5秒ごとにランダムデータを送信)
+    setInterval(() => {
+      const data = {
+        value: Math.random(),
+        ts: Date.now()
+      }
+      const raw = JSON.stringify({ type: 'data', data })
+      for (const client of clients) {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(raw)
+        }
+      }
+    }, 5000)
+
+    server.listen(8080, () => console.log('Server listening on :8080'));
+
+    ■ 備考
+
+    ・本番では `wss://` を利用し、リバースプロキシ（nginx）で TLS 終端するのが一般的
+    ・認証（JWT など）、入力サニタイズ、レート制限を必ず実装
+    ・クライアント側も再接続ロジック、データ処理ロジックを実装する必要あり
+
+- ENTRY:
+  EXPLAIN: クライアント(ブラウザ, React)
+  BODY: |
+    ■ React（Hooks を使ったクライアント例）
+
+    ・以下は React コンポーネントとして動作するシンプルなリアルタイムデータフィードクライアント例
+    ・再接続、データ表示を含み、実運用での拡張（認証トークン付与等）を想定
+
+    ■ DataFeed.tsx
+
+    import React, { useEffect, useRef, useState } from 'react'
+
+    type Msg = { type: string; [key: string]: any }
+
+    export default function DataFeed() {
+      const [data, setData] = useState<{ value: number; ts: number } | null>(null)
+      const wsRef = useRef<WebSocket | null>(null)
+      const reconnectRef = useRef(0)
+
+      useEffect(() => {
+        const url = (location.protocol === 'https:') ? `wss://${location.host}` : 'ws://localhost:8080'
+        let mounted = true
+
+        function connect() {
+          const ws = new WebSocket(url)
+          wsRef.current = ws
+
+          ws.onopen = () => {
+            reconnectRef.current = 0
+            console.log('WebSocket connected')
+          }
+
+          ws.onmessage = (ev: MessageEvent) => {
+            try {
+              const msg: Msg = JSON.parse(ev.data)
+              if (msg.type === 'data') setData(msg.data)
+            } catch (e) { /* ignore malformed */ }
+          }
+
+          ws.onclose = () => {
+            if (!mounted) return
+            console.log('WebSocket disconnected, retrying...')
+            const timeout = Math.min(10000, 1000 * Math.pow(2, reconnectRef.current))
+            reconnectRef.current += 1
+            setTimeout(connect, timeout)
+          }
+
+          ws.onerror = () => ws.close()
+        }
+
+        connect()
+
+        return () => { mounted = false; if (wsRef.current) wsRef.current.close() }
+      }, [])
+
+      return (
+        <div>
+          <h3>リアルタイムデータフィード</h3>
+          {data ? (
+            <div>
+              <p>値: {data.value.toFixed(4)}</p>
+              <p>更新時刻: {new Date(data.ts).toLocaleTimeString()}</p>
+            </div>
+          ) : (
+            <p>データを待っています...</p>
+          )}
+        </div>
+      ) 
+    }
+
+    ■ 備考
+
+    ・コンポーネントは自動で接続し、切断時は指数バックオフで再接続
+    ・実運用では接続時に認証トークンを送る
+     （例: `new WebSocket(url + '?token=...')` または最初のメッセージに含める）ことを推奨
+    ・サーバー側で `ping`/`pong` を使ったハートビートを実装すると接続切れ検出が安定
+
+    ■ 運用上の注意
+
+    ・認証: 接続時にトークンを検証し、許可されたユーザーのみデータを受信させる
+    ・セキュリティ: WSS を利用、Origin チェック、レート制限
+    ・可観測性: 接続数・メッセージ数・遅延等を監視し、ログやメトリクスを収集する  
+    ・実運用ではさらに堅牢なエラーハンドリング、認証、監査ログ、負荷対策を追加

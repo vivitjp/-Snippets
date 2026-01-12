@@ -15,8 +15,8 @@ export const menuItems: menuByCategories[] = [
         fileName: "ai/AI",
       },
       {
-        name: "ChatGPT",
-        fileName: "ai/ChatGPT",
+        name: "OpenAI",
+        fileName: "ai/OpenAI",
       },
       {
         name: "ClaudeCode",
@@ -31,11 +31,19 @@ export const menuItems: menuByCategories[] = [
         name: "Git",
         fileName: "git/Git",
         codeKeyTypes: [codeKeys.Git],
+        case_sensitive: false,
       },
       {
         name: "GitHub",
-        fileName: "",
-        codeKeyTypes: [codeKeys.Git],
+        fileName: "git/GitHub",
+        codeKeyTypes: [codeKeys.GitHub],
+        case_sensitive: false,
+      },
+      {
+        name: "GitHub CLI",
+        fileName: "git/GitHubCLI",
+        codeKeyTypes: [codeKeys.GitCLI],
+        case_sensitive: false,
       },
       {
         name: "Husky",
@@ -213,8 +221,9 @@ export const menuItems: menuByCategories[] = [
       },
       {
         name: "Shell",
-        fileName: "",
-        codeKeyTypes: [],
+        fileName: "OS/Shell",
+        codeKeyTypes: [codeKeys.Shell],
+        case_sensitive: false,
       },
     ],
   },
@@ -753,6 +762,89 @@ export const menuItems: menuByCategories[] = [
     ],
   },
   {
+    category: "Web",
+    items: [
+      {
+        name: "WebAPI",
+        fileName: "Web/WebAPI",
+        codeKeyTypes: [codeKeys.WebAPI],
+        case_sensitive: false,
+      },
+      {
+        name: "Session",
+        fileName: "Web/Session",
+        codeKeyTypes: [codeKeys.Session],
+        case_sensitive: false,
+      },
+      {
+        name: "JWT",
+        fileName: "Web/JWT",
+        codeKeyTypes: [codeKeys.JWT],
+        case_sensitive: false,
+      },
+      {
+        name: "Cookie",
+        fileName: "Web/Cookie",
+        codeKeyTypes: [codeKeys.Cookie],
+        case_sensitive: false,
+      },
+      {
+        name: "Security",
+        fileName: "Web/Security",
+        codeKeyTypes: [codeKeys.Security],
+        case_sensitive: false,
+      },
+      {
+        name: "Storage",
+        fileName: "Web/Storage",
+        codeKeyTypes: [codeKeys.Storage],
+        case_sensitive: false,
+      },
+      {
+        name: "ServiceWorkers",
+        fileName: "Web/ServiceWorker",
+        codeKeyTypes: [codeKeys.ServiceWorker],
+        case_sensitive: false,
+      },
+      {
+        name: "SVG",
+        fileName: "Web/SVG",
+        codeKeyTypes: [codeKeys.SVG],
+      },
+      {
+        name: "Google関連",
+        fileName: "Web/Google",
+        codeKeyTypes: [codeKeys.CSS, codeKeys.HTML, codeKeys.React],
+        case_sensitive: false,
+      },
+      {
+        name: "window",
+        fileName: "Web/window",
+        case_sensitive: false,
+      },
+    ],
+  },
+  {
+    category: "Network",
+    items: [
+      {
+        name: "HTTPレスポンス",
+        fileName: "network/http_response",
+      },
+      {
+        name: "Curl",
+        fileName: "network/curl",
+        codeKeyTypes: [codeKeys.Curl],
+      },
+      {
+        name: "WebSocket",
+        fileName: "network/WebSocket",
+        codeKeyTypes: [codeKeys.WebSocket],
+        case_sensitive: false,
+      },
+    ],
+  },
+  {
     category: "Html",
     items: [
       {
@@ -803,30 +895,15 @@ export const menuItems: menuByCategories[] = [
       },
     ],
   },
-  {
-    category: "WebAPI",
-    items: [
-      {
-        name: "Google関連",
-        fileName: "WebAPI/Google",
-        codeKeyTypes: [codeKeys.CSS, codeKeys.HTML, codeKeys.React],
-      },
-      {
-        name: "SVG",
-        fileName: "WebAPI/SVG",
-        codeKeyTypes: [codeKeys.SVG],
-      },
-      {
-        name: "window",
-        fileName: "WebAPI/window",
-      },
-      {
-        name: "Storage",
-        fileName: "WebAPI/Storage",
-        codeKeyTypes: [codeKeys.Storage],
-      },
-    ],
-  },
+  // {
+  //   category: "Computer Science",
+  //   items: [
+  //     {
+  //       name: "デザインパターン",
+  //       fileName: "",
+  //     },
+  //   ],
+  // },
   {
     category: "Document",
     items: [
@@ -840,33 +917,6 @@ export const menuItems: menuByCategories[] = [
       },
     ],
   },
-  {
-    category: "Network",
-    items: [
-      {
-        name: "HTTPレスポンス",
-        fileName: "network/http_response",
-      },
-      {
-        name: "Curl",
-        fileName: "network/curl",
-        codeKeyTypes: [codeKeys.Curl],
-      },
-      {
-        name: "Cookie",
-        fileName: "",
-      },
-    ],
-  },
-  // {
-  //   category: "Computer Science",
-  //   items: [
-  //     {
-  //       name: "デザインパターン",
-  //       fileName: "",
-  //     },
-  //   ],
-  // },
   {
     category: "Office",
     items: [
