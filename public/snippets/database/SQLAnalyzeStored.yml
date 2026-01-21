@@ -1,0 +1,1596 @@
+---
+#-------------------------------
+# 解析
+#-------------------------------
+- ENTRY:
+  CATEGORY: クエリ解析
+
+- ENTRY:
+  EXPLAIN: EXPLAIN と INDEX
+  BODY: |
+    ■ MySQL / PostgreSQL 共通構文
+
+    EXPLAIN <query>;                    # 実行計画を表示 (コスト見積もり)
+    EXPLAIN ANALYZE <query>;            # 実行計画 + 実際の実行結果
+
+    ■ INDEXの作用がわかりやすいサンプルテーブル
+
+    CREATE TABLE users (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        email VARCHAR(255) UNIQUE,
+        name VARCHAR(100),
+        age INT,
+        city VARCHAR(50),
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    ・インデックスなしの場合
+      EXPLAIN SELECT * FROM users WHERE age = 25;
+      【my】type=ALL (フルテーブルスキャン)
+      【pg】Seq Scan (シーケンシャルスキャン)
+
+    ・インデックス作成後
+      CREATE INDEX idx_users_age ON users (age);
+      EXPLAIN SELECT * FROM users WHERE age = 25;
+      【my】type=ref, key=idx_users_age
+      【pg】Index Scan using idx_users_age
+
+- ENTRY:
+  EXPLAIN: SELECT と WHERE句
+  BODY: |
+    ■ インデックスを使用する条件
+
+    SELECT * FROM users WHERE id = 12345;                   # ⭕ PRIMARY KEY使用
+    SELECT * FROM users WHERE email = 'test@example.com';   # ⭕ UNIQUEインデックス使用
+    SELECT * FROM users WHERE age BETWEEN 20 AND 30;        # ⭕ 範囲検索
+
+    ■ 複合インデックスの効果的な使用
+
+    CREATE INDEX idx_users_city_age ON users (city, age);
+
+    SELECT * FROM users WHERE city = 'Tokyo';               # ⭕ cityのみ (インデックス使用)
+    SELECT * FROM users WHERE city = 'Tokyo' AND age = 25;  # ⭕ 両方 (インデックス使用)
+    SELECT * FROM users WHERE age = 25;                     # ❌ ageのみ (インデックス未使用)
+
+    ■ インデックスを使用しない条件 (注意)
+
+    SELECT * FROM users WHERE age + 10 = 35;                # ❌ 計算式 (インデックス未使用)
+    SELECT * FROM users WHERE UPPER(name) = 'JOHN';         # ❌ 関数使用 (インデックス未使用)
+    SELECT * FROM users WHERE age IN (20, 25, 30);          # ❌ IN句 (インデックス使用可能)
+
+    ■ LIKE句の効果的な使用
+
+    SELECT * FROM users WHERE name LIKE 'John%';            # ⭕ 前方一致 (インデックス使用可能)
+    SELECT * FROM users WHERE name LIKE '%John%';           # ❌ 中間一致 (インデックス未使用)
+
+- ENTRY:
+  EXPLAIN: EXPLAIN出力の違い
+  BODY: |
+    ■ mySQL
+
+    id:                      クエリ内の各SELECT文の識別子
+    select_type:             SELECTの種類 (SIMPLE, PRIMARY, SUBQUERY, DERIVED等)
+    table:                   対象テーブル名
+    type:                    ジョインタイプ (ALL, index, range, ref, eq_ref, const, system, NULL)
+    possible_keys:           使用可能なインデックス
+    key:                     実際に使用されたインデックス
+    key_len:                 使用されたインデックスの長さ (バイト数)
+    ref:                     インデックスと比較されるカラムまたは定数
+    rows:                    スキャンされた行数の推定値
+    Extra:                   追加情報 (Using where, Using index, Using temporary, Using filesort等)
+
+    ■ PostgreSQL
+
+    QUERY PLAN with cost estimates: 
+      startup_cost..total_cost rows width
+      actual time=xxx..yyy rows=zzz loops=n
+      startup_cost:          クエリ開始までの推定コスト
+      total_cost:            クエリ完了までの推定コスト
+      time:                  実行時間 (開始時間..終了時間)
+      width:                 1行あたりの平均バイト数
+    rows:                    推定行数
+    loops:                   実行回数
+
+- ENTRY:
+  EXPLAIN: インデックススキャン
+  BODY: |
+    ■ 概要
+
+    ・インデックススキャンは、インデックスを使用してテーブルからデータを効率的に取得する方法
+    ・インデックスが適切に設計されている場合、クエリのパフォーマンスが大幅に向上
+    ・種類はデータベースシステムによって異なるが、基本的な概念は共通
+    ・ユーザが指定したクエリに基づいて、最適なインデックススキャン方法が選択される
+
+    ■ mySQL
+
+    const:                  PRIMARY KEY等価検索
+    ref:                    非ユニークインデックス等価検索
+    range:                  範囲検索
+    index:                  インデックスフルスキャン
+
+    ■ PostgreSQL
+
+    Seq Scan:                シーケンシャルスキャン (フルテーブルスキャン)
+    Index Scan:              インデックスを使用したスキャン
+    Index Only Scan:         カバリングインデックス (インデックスのみでクエリ完結)
+    Bitmap Index Scan:       ビットマップインデックススキャン (OR条件に有効)
+    Bitmap Heap Scan:        ビットマップヒープスキャン (Index Scanの結果をテーブルから取得)
+    Tid Scan:                CTIDによる直接アクセス (カーソル使用時など)
+
+- ENTRY:
+  EXPLAIN: 実行計画の解釈(MySQL)
+  BODY: |
+    ■ EXPLAINの主な項目
+
+    id:                    SELECT識別子 (サブクエリなどの連番)
+    select_type:           SELECTの種類
+      - SIMPLE:            単純SELECT
+      - PRIMARY:           外側クエリ
+      - SUBQUERY:          サブクエリ
+      - DERIVED:           派生テーブル
+      - UNION:             UNIONの2番目以降
+    table:                 アクセスするテーブル名
+    type:                  アクセス方法 (重要度順)
+      - const:             PRIMARY KEY等価検索 (最高速)
+      - eq_ref:            JOIN時のユニークインデックス等価検索
+      - ref:               非ユニークインデックス等価検索
+      - range:             範囲検索 (BETWEEN, IN, LIKE 'prefix%')
+      - index_merge:       複数インデックスのマージ
+      - index:             インデックスフルスキャン
+      - ALL:               フルテーブルスキャン (最低速)
+    possible_keys:         使用可能なインデックスのリスト
+    key:                   実際に選択されたインデックス
+    key_len:               使用インデックスのバイト長
+    ref:                   インデックス比較対象の値/カラム
+    rows:                  調査推定行数 (少ないほど良い)
+    Extra:                 追加情報
+      - Using index:       カバリングインデックス
+      - Using where:       WHERE条件適用
+      - Using temporary:   一時テーブル使用
+      - Using filesort:    ファイルソート (ORDER BY)
+      - Using index condition: ICP (Index Condition Pushdown)
+
+    ■ 実行計画の読み方
+
+    ・悪い例
+    type: ALL, rows: 1000000, Extra: Using filesort  → フルスキャン + ソート = 非常に遅い
+
+    ・良い例
+    type: const, rows: 1, Extra: Using index → インデックス使用 + カバリング = 最高速
+
+    ■ 最適化のポイント
+
+    ・インデックスが使用されているか確認
+    ・rows数が現実的か検証
+    ・結合順序が適切かチェック
+    ・一時テーブル/ファイルソートが発生していないか
+    ・コスト見積もりと実際の実行時間が乖離していないか
+
+- ENTRY:
+  EXPLAIN: 実行計画の解釈(PostgreSQL)
+  BODY: |
+    ■ EXPLAINの主な項目
+
+    コスト見積もり:
+      - startup cost:      最初の行取得コスト
+      - total cost:        全行取得完了コスト
+      - cost:              相対的な処理コスト (低いほど良い)
+
+    実行統計 (EXPLAIN ANALYZE時):
+      - actual time:       実際の実行時間 (startup, total)
+      - rows:              処理行数
+      - loops:             実行ループ回数
+
+    スキャンタイプ:
+      - Seq Scan:          シーケンシャルスキャン
+      - Index Scan:        インデックススキャン
+      - Index Only Scan:   カバリングインデックス
+      - Bitmap Index/Heap Scan: ビットマップスキャン
+      - Nested Loop:       ネストループ結合
+      - Hash Join:         ハッシュ結合
+      - Merge Join:        マージ結合
+
+    フィルタリング:
+      - Filter:            WHERE条件によるフィルタ
+      - Rows Removed by Filter: フィルタで除外された行数
+
+    ■ 実行計画の読み方
+
+    ・悪い例
+    Seq Scan on large_table (cost=0.00..100000.00 rows=500000) → シーケンシャルスキャン = 遅い
+
+    ・良い例
+    Index Only Scan using idx_name on users (cost=0.42..1.00 rows=1) → カバリングインデックス = 高速
+
+    ■ 最適化のポイント
+
+    ・インデックスが使用されているか確認
+    ・rows数が現実的か検証
+    ・結合順序が適切かチェック
+    ・一時テーブル/ファイルソートが発生していないか
+    ・コスト見積もりと実際の実行時間が乖離していないか
+
+- ENTRY:
+  EXPLAIN: 最適化のポイント
+  BODY: |
+    ■ 最適化のポイント
+
+    【my】FORCE INDEX句でインデックスを強制指定可能
+    【pg】統計情報が重要、ANALYZEコマンドで更新
+
+    ※ FORCE INDEX句でインデックスを強制指定 (mySQLのみ)
+      SELECT * FROM users FORCE INDEX (idx_users_age) WHERE age = 25;
+      ただし、通常はオプティマイザに任せるのがベスト
+
+    ■ 実践的なクエリ解析例
+
+    EXPLAIN ANALYZE SELECT u.name, COUNT(o.id)
+    FROM users u
+    LEFT JOIN orders o ON u.id = o.user_id
+    WHERE u.created_at >= '2024-01-01'
+    GROUP BY u.id, u.name;
+
+    インデックスの効果確認
+    1. インデックスなし
+    2. users.created_atにインデックス追加
+    3. orders.user_idにインデックス追加
+    4. 実行計画の比較
+
+#-------------------------------
+# ストアド
+#-------------------------------
+- ENTRY:
+  CATEGORY: ストアド
+
+- ENTRY:
+  EXPLAIN: PROCEDURE (MySQL)
+  BODY: |
+    ■ 概要
+
+    ・ストアドプロシージャ(PROCEDURE)とストアド関数(FUNCTION)はDB内で保存されるSQLコードブロック
+    ・DELIMITER コマンドを使用して複数行の定義を区切る
+
+    ■ 作成
+
+    DELIMITER //
+    CREATE PROCEDURE <PROC_NAME>(
+      [IN | OUT | INOUT] <param_name> <data_type> [, ...]
+    )
+    [COMMENT 'プロシージャの説明']
+    [DETERMINISTIC | NOT DETERMINISTIC]
+    [CONTAINS SQL | NO SQL | READS SQL DATA | MODIFIES SQL DATA]
+    [SQL SECURITY { DEFINER | INVOKER }]
+    BEGIN
+      -- プロシージャ本体
+      ...
+    END //
+    DELIMITER ;
+
+      ※ パラメータオプション:
+        IN     - 入力パラメータ (デフォルト) 
+        OUT    - 出力パラメータ (プロシージャ内で値を設定) 
+        INOUT  - 入出力パラメータ (入出力両用) 
+
+      ※ DETERMINISTIC/NOT DETERMINISTIC:
+        DETERMINISTIC    - 同じ入力で常に同じ結果
+        NOT DETERMINISTIC - 結果が変動する可能性あり (デフォルト) 
+
+      ※ SQLセキュリティオプション:
+        CONTAINS SQL     - SQL文を含む (デフォルト) 
+        NO SQL           - SQL文を含まない
+        READS SQL DATA   - SELECTのみ使用
+        MODIFIES SQL DATA - INSERT/UPDATE/DELETE使用
+
+      ※ SQL SECURITY:
+        DEFINER - 定義者の権限で実行 (デフォルト) 
+        INVOKER - 呼び出し元の権限で実行
+
+      ※ COMMENT:
+        プロシージャの説明文 (オプション) 
+
+      ※ パラメータ:
+        IN    - 呼び出し元から値を受け取る
+        OUT   - 呼び出し元に値を返す
+        INOUT - 呼び出し元から値を受け取り、変更後の値を返す
+
+      ※ プロシージャ呼び出し:
+        CALL <PROC_NAME>(PARAM,...);
+
+    ■ 削除
+
+    DROP PROCEDURE IF EXISTS <PROC_NAME>;
+
+    ■ サンプル(ユーザー名をログテーブルに記録)
+
+    DELIMITER //
+    CREATE PROCEDURE log_user_action(IN user_name VARCHAR(50))
+    BEGIN
+      INSERT INTO user_log (user, action_time)
+      VALUES (user_name, NOW());
+    END //
+    DELIMITER ;
+
+    ■ サンプル(ユーザー名をログテーブルに記録+エラーハンドリング)
+
+    DELIMITER //
+    CREATE PROCEDURE log_user_action(IN user_name VARCHAR(50))
+    BEGIN
+      -- エラーハンドリング
+      DECLARE EXIT HANDLER FOR SQLEXCEPTION
+      BEGIN
+        ROLLBACK;
+      END;
+      -- トランザクション開始
+      START TRANSACTION;
+      INSERT INTO user_log (user, action_time) VALUES (user_name, NOW());
+      COMMIT;
+    END //
+    DELIMITER ;
+
+    ■ usersテーブルへのINSERT時に自動でプロシージャを呼び出すトリガー
+
+    DELIMITER //
+    CREATE TRIGGER trg_after_user_insert
+    AFTER INSERT ON users
+    FOR EACH ROW
+    BEGIN
+      CALL log_user_action(NEW.name);
+    END //
+    DELIMITER ;
+
+    ■ エラー処理の注意点
+
+    ・MySQLのトリガー内ではROLLBACKやCOMMITは使用できない (エラーになる) 
+    ・トリガーでエラーが発生すると、そのトリガーを呼び出したSQL全体がロールバックされる
+    ・ストアドプロシージャ内ではエラーハンドラ (DECLARE ... HANDLER) を使ってROLLBACK可能
+    ・トリガー内で例外処理や部分的なロールバックはできないため、設計時に注意が必要
+    ・トリガーやプロシージャでのエラーは、アプリケーション側での例外処理も考慮すること
+
+- ENTRY:
+  EXPLAIN: PROCEDURE (PostgreSQL)
+  BODY: |
+    ■ 概要
+
+    ・PostgreSQLではストアドプロシージャ(PROCEDURE)とストアド関数(FUNCTION)が利用可能
+    ・PROCEDUREは値を返さない処理向け、FUNCTIONは値を返す処理向け
+    ・PL/pgSQL言語を使用して複雑なロジックを実装可能
+
+    ■ 作成
+
+    CREATE [OR REPLACE] PROCEDURE <PROC_NAME>(
+      [IN | OUT | INOUT] <param_name> <data_type> [, ...]
+    )
+    [LANGUAGE lang_name]
+    [TRANSFORM { FOR TYPE type_name } [, ...]]
+    [[EXTERNAL] SECURITY DEFINER | [EXTERNAL] SECURITY INVOKER]
+    [SET configuration_parameter { TO value | = value | FROM CURRENT }]
+    [RESET configuration_parameter | RESET ALL]
+    [COST execution_cost]
+    [ROWS result_rows]
+    [SUPPORT support_function]
+    [PARALLEL { SAFE | UNSAFE | RESTRICTED }]
+    [LEAKPROOF]
+    AS $$
+    BEGIN
+      -- プロシージャ本体
+      ...
+    END;
+    $$ [LANGUAGE plpgsql];
+
+      ※ OR REPLACE: 既存プロシージャを置き換え
+
+      ※ パラメータモードの詳細:
+        IN     - 入力パラメータ (デフォルト)。呼び出し元から値を受け取り、読み取り専用
+        OUT    - 出力パラメータ。プロシージャ内で値を設定し、呼び出し元に返す
+        INOUT  - 入出力パラメータ。呼び出し元から値を受け取り、変更して返す
+
+      ※ LANGUAGE: 使用言語 (plpgsql, sql, cなど) 
+        plpgsql - PostgreSQLの手続き型言語 (デフォルト)
+        sql     - 単純なSQL文のみ
+        c       - C言語で実装された外部関数
+
+      ※ TRANSFORM: 変換関数指定
+        使用目的: 特定データ型に対する変換関数を指定
+        例: TRANSFORM FOR TYPE my_type USING my_transform_function
+
+      ※ SECURITY DEFINER/INVOKER:
+        DEFINER - 定義者の権限で実行 (デフォルト) 
+        INVOKER - 呼び出し元の権限で実行
+
+      ※ SET/RESET: 実行時の設定パラメータ
+        SET - 指定パラメータを特定値に設定
+        RESET - 指定パラメータをデフォルトにリセット
+        RESET ALL - すべてのパラメータをデフォルトにリセット
+
+      ※ COST: 実行コストの見積もり (オプティマイザ用) 
+        デフォルト値: 1000 (単位は任意)1000 より小さい値は軽量、より大きい値は重い処理
+
+      ※ ROWS: 返却行数の見積もり
+        オプティマイザがクエリプランを生成する際の参考情報として使用
+        例: ROWS 1000 (このプロシージャが平均して1000行を返すことを示す)
+
+      ※ SUPPORT: サポート関数
+        C言語で実装された関数の名前を指定
+        目的: 内部的な最適化や特定のデータ型操作に使用されることがある
+
+      ※ PARALLEL: 並列実行の安全性
+        SAFE     - 並列実行可能
+        UNSAFE   - 並列実行不可 (デフォルト) 
+        RESTRICTED - 制限付き並列実行
+
+      ※ LEAKPROOF: 情報漏洩防止
+        TRUE  - 情報漏洩の可能性がないことを示す
+        FALSE - 情報漏洩の可能性がある (デフォルト)
+
+      ※ プロシージャ呼び出し:
+        CALL <PROC_NAME>(PARAM,...);
+
+    ■ 削除
+
+    DROP PROCEDURE IF EXISTS <PROC_NAME>;
+
+    ■ サンプル(ユーザー名をログテーブルに記録)
+
+    CREATE PROCEDURE log_user_action(IN user_name VARCHAR(50))
+    AS $$
+    BEGIN
+      INSERT INTO user_log (user_name, action_time) VALUES (user_name, NOW());
+    END;
+    $$ LANGUAGE plpgsql;
+
+    ■ サンプル(OUTパラメータを使用した例)
+
+    CREATE PROCEDURE get_user_count(OUT total_count INTEGER)
+    AS $$
+    BEGIN
+      SELECT COUNT(*) INTO total_count FROM users;
+    END;
+    $$ LANGUAGE plpgsql;
+
+    ※ 呼び出し例
+    CALL get_user_count(NULL);  -- OUTパラメータはNULLで呼び出し、結果は取得しない場合
+
+    ※ または、DOブロックで取得
+    DO $$
+    DECLARE user_count INTEGER;
+    BEGIN
+      CALL get_user_count(user_count);
+      RAISE NOTICE 'Total users: %', user_count;
+    END;
+    $$;
+
+    ■ サンプル(ユーザー名をログテーブルに記録+エラーハンドリング)
+
+    CREATE PROCEDURE log_user_action(IN user_name VARCHAR(50))
+    AS $$
+    BEGIN
+      -- トランザクション開始
+      BEGIN
+        INSERT INTO user_log (user_name, action_time) VALUES (user_name, NOW());
+        COMMIT;
+      -- エラーハンドリング
+      EXCEPTION
+        WHEN OTHERS THEN
+          ROLLBACK;
+          RAISE EXCEPTION 'ログ記録に失敗しました: %', SQLERRM;
+      END;
+    END;
+    $$ LANGUAGE plpgsql;
+
+    ■ usersテーブルへのINSERT時に自動でプロシージャを呼び出すトリガー
+
+    CREATE TRIGGER trg_after_user_insert
+    AFTER INSERT ON users
+    FOR EACH ROW
+    EXECUTE PROCEDURE log_user_action(NEW.name);
+
+    ■ エラー処理の注意点
+
+    ・PostgreSQLのトリガー内では直接ROLLBACK可能だが、トリガー全体のトランザクションに影響
+    ・トリガーでエラーが発生すると、そのトリガーを呼び出したSQL全体がロールバックされる
+    ・ストアドプロシージャ内ではBEGIN ... EXCEPTION ... ENDブロックでエラーハンドリング可能
+    ・トリガー内で例外処理や部分的なロールバックはできないため、設計時に注意が必要
+    ・トリガーやプロシージャでのエラーは、アプリケーション側での例外処理も考慮すること
+
+- ENTRY:
+  EXPLAIN: FUNCTION (MySQL)
+  BODY: |
+    ■ 概要
+
+    ・ストアドファンクション(FUNCTION)は値を返すストアドプログラム
+    ・PROCEDUREと異なり、必ず戻り値を返す
+    ・SQL文内で呼び出し可能 (SELECT文など) 
+
+    ■ 作成
+
+    DELIMITER //
+    CREATE FUNCTION <FUNC_NAME>(
+      <param_name> <data_type> [, ...]
+    )
+    RETURNS <return_type>
+    [COMMENT 'ファンクションの説明']
+    [DETERMINISTIC | NOT DETERMINISTIC]
+    [CONTAINS SQL | NO SQL | READS SQL DATA | MODIFIES SQL DATA]
+    [SQL SECURITY { DEFINER | INVOKER }]
+    BEGIN
+      -- ファンクション本体
+      RETURN <戻り値>;
+    END //
+    DELIMITER ;
+
+      ※ COMMENT: ファンクションの説明文(オプション)
+
+      ※ DETERMINISTIC/NOT DETERMINISTIC:
+        DETERMINISTIC        # 同じ入力で常に同じ結果を返す
+        NOT DETERMINISTIC    # 結果が変動する可能性あり(デフォルト)
+
+      ※ SQLセキュリティオプション:
+        CONTAINS SQL         # SQL文を含むがデータ変更しない(デフォルト)
+        NO SQL               # SQL文を含まない
+        READS SQL DATA       # SELECTのみ使用可能
+        MODIFIES SQL DATA    # INSERT/UPDATE/DELETE使用可能
+
+      ※ SQL SECURITY:
+        DEFINER              # 定義者の権限で実行(デフォルト)
+        INVOKER              # 呼び出し元の権限で実行
+
+    ■ 削除
+
+    DROP FUNCTION IF EXISTS <FUNC_NAME>;
+
+    ■ サンプル(ユーザーIDからユーザー名を取得)
+
+    DELIMITER //
+    CREATE FUNCTION get_user_name(user_id INT)
+    RETURNS VARCHAR(100)
+    DETERMINISTIC
+    READS SQL DATA
+    BEGIN
+      DECLARE user_name VARCHAR(100);
+      SELECT name INTO user_name FROM users WHERE id = user_id;
+      RETURN user_name;
+    END //
+    DELIMITER ;
+
+    ■ サンプル(数値計算+エラーハンドリング)
+
+    DELIMITER //
+    CREATE FUNCTION calculate_tax(amount DECIMAL(10,2), tax_rate DECIMAL(4,2))
+    RETURNS DECIMAL(10,2)
+    DETERMINISTIC
+    BEGIN
+      DECLARE tax DECIMAL(10,2);
+      DECLARE EXIT HANDLER FOR SQLEXCEPTION
+      BEGIN
+        -- エラーが発生した場合の処理
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '税金計算エラー: 無効な入力値';
+        RETURN 0.00;  -- エラー時は0を返す
+      END;
+
+      -- 入力値の検証
+      IF amount < 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '金額は0以上である必要があります';
+      END IF;
+
+      IF tax_rate < 0 OR tax_rate > 1 THEN
+        SET tax_rate = 0.1;  -- デフォルト税率10%
+      END IF;
+
+      -- 計算実行
+      SET tax = amount * tax_rate;
+
+      -- 結果の検証
+      IF tax > 999999.99 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '計算結果が上限を超えました';
+      END IF;
+
+      RETURN tax;
+    END //
+    DELIMITER ;
+
+    ■ 呼び出し
+
+    SELECT get_user_name(1) AS user_name;
+    SELECT id, name, calculate_tax(price, 0.08) AS tax FROM products;
+    SELECT * FROM orders WHERE calculate_tax(total_amount, 0.1) > 1000;
+
+- ENTRY:
+  EXPLAIN: FUNCTION (PostgreSQL)
+  BODY: |
+    ■ 概要
+
+    ・PostgreSQLのストアドファンクション(FUNCTION)は値を返すストアドプログラム
+    ・PL/pgSQL言語を使用して複雑なロジックを実装可能
+    ・単一値返却、テーブル返却、セット返却など柔軟な戻り値形式
+
+    ■ 作成
+
+    CREATE [OR REPLACE] FUNCTION <FUNC_NAME>(
+      [IN | OUT | INOUT] <param_name> <data_type> [, ...]
+    )
+    RETURNS <return_type>
+    [LANGUAGE lang_name]
+    [TRANSFORM { FOR TYPE type_name } [, ...]]
+    [[EXTERNAL] SECURITY DEFINER | [EXTERNAL] SECURITY INVOKER]
+    [SET configuration_parameter { TO value | = value | FROM CURRENT }]
+    [RESET configuration_parameter | RESET ALL]
+    [COST execution_cost]
+    [ROWS result_rows]
+    [SUPPORT support_function]
+    [PARALLEL { SAFE | UNSAFE | RESTRICTED }]
+    [LEAKPROOF]
+    [WINDOW]
+    AS $$
+    BEGIN
+      -- ファンクション本体
+      RETURN <戻り値>;
+    END;
+    $$ [LANGUAGE plpgsql];
+
+      ※ OR REPLACE: 既存ファンクションを置き換え
+
+      ※ パラメータモード:
+        IN     - 入力パラメータ(デフォルト)
+        OUT    - 出力パラメータ
+        INOUT  - 入出力パラメータ
+
+      ※ LANGUAGE: 使用言語(plpgsql, sql, cなど)
+
+      ※ TRANSFORM: 変換関数指定
+
+      ※ SECURITY DEFINER/INVOKER:
+        DEFINER - 定義者の権限で実行(デフォルト)
+        INVOKER - 呼び出し元の権限で実行
+
+      ※ SET/RESET: 実行時の設定パラメータ
+
+      ※ COST: 実行コストの見積もり(オプティマイザ用)
+
+      ※ ROWS: 返却行数の見積もり
+
+      ※ SUPPORT: サポート関数
+
+      ※ PARALLEL: 並列実行の安全性
+        SAFE     - 並列実行可能
+        UNSAFE   - 並列実行不可(デフォルト)
+        RESTRICTED - 制限付き並列実行
+
+      ※ LEAKPROOF: 情報漏洩防止
+
+      ※ WINDOW: ウィンドウ関数として使用可能
+
+      ※ 戻り値形式:
+        RETURNS <型>           # 単一値
+        RETURNS TABLE(...)     # テーブル形式
+        RETURNS SETOF <型>     # セット形式
+
+    ■ 削除
+
+    DROP FUNCTION IF EXISTS <FUNC_NAME>(<パラメータ型>, ...);
+
+    ■ サンプル(ユーザーIDからユーザー名を取得)
+
+    CREATE FUNCTION get_user_name(user_id INTEGER)
+    RETURNS VARCHAR(100)
+    LANGUAGE plpgsql
+    STABLE
+    AS $$
+    DECLARE
+      user_name VARCHAR(100);
+    BEGIN
+      SELECT name INTO user_name FROM users WHERE id = user_id;
+      RETURN user_name;
+    END;
+    $$;
+
+    ■ サンプル(テーブル返却関数+エラーハンドリング)
+
+    CREATE FUNCTION get_active_users()
+    RETURNS TABLE(id INTEGER, name VARCHAR(100), email VARCHAR(200))
+    LANGUAGE plpgsql
+    STABLE
+    AS $$
+    BEGIN
+      -- テーブル存在チェック
+      IF NOT EXISTS (SELECT 1 FROM information_schema.tables
+                     WHERE table_name = 'users') THEN
+        RAISE EXCEPTION 'テーブル users が存在しません';
+      END IF;
+
+      -- クエリ実行とエラーハンドリング
+      BEGIN
+        RETURN QUERY
+        SELECT u.id, u.name, u.email
+        FROM users u
+        WHERE u.active = true;
+      EXCEPTION
+        WHEN undefined_column THEN
+          RAISE EXCEPTION 'カラム active がテーブル users に存在しません';
+        WHEN insufficient_privilege THEN
+          RAISE EXCEPTION 'テーブル users へのアクセス権限がありません';
+        WHEN OTHERS THEN
+          RAISE EXCEPTION 'アクティブユーザー取得エラー: %', SQLERRM;
+      END;
+
+      -- 正常終了時のログ (オプション) 
+      RAISE NOTICE 'アクティブユーザーの取得が完了しました';
+
+    EXCEPTION
+      WHEN OTHERS THEN
+        -- 全体の例外ハンドリング
+        RAISE EXCEPTION 'get_active_users 関数エラー: %', SQLERRM;
+    END;
+    $$;
+
+    ■ 呼び出し方法
+
+    -- 単一値返却関数の呼び出し
+    SELECT get_user_name(1) AS user_name;
+
+    -- 計算での使用
+    SELECT id, name, calculate_tax(price) AS tax
+    FROM products;
+
+    -- WHERE句での使用
+    SELECT * FROM orders
+    WHERE calculate_tax(total_amount) > 1000;
+
+    -- テーブル返却関数の呼び出し
+    SELECT * FROM get_active_users();
+
+- ENTRY:
+  EXPLAIN: トリガー (MySQL)
+  BODY: |
+    ■ 概要
+
+    ・トリガー(TRIGGER)はテーブルに対するINSERT/UPDATE/DELETE操作時に自動実行されるストアドプログラム
+    ・データの整合性確保、監査ログ記録、自動計算などに使用
+    ・BEFORE/AFTERのタイミングと、FOR EACH ROWで各行ごとに実行
+
+    ■ 構文
+
+    DELIMITER //
+    CREATE TRIGGER <trigger_name>
+    {BEFORE | AFTER} {INSERT | UPDATE | DELETE}
+    ON <table_name>
+    FOR EACH ROW
+    BEGIN
+      -- トリガー処理
+    END //
+    DELIMITER ;
+
+    ■ タイミングと使用可能なデータ
+
+    ・BEFOREトリガー: 操作実行前に実行 (データの検証・修正) 
+    ・AFTERトリガー: 操作実行後に実行 (ログ記録・関連テーブル更新) 
+
+    ・INSERT操作: NEW.<column>  (挿入される新しいデータ) 
+    ・UPDATE操作: NEW.<column> (更新後のデータ) 、OLD.<column> (更新前のデータ) 
+    ・DELETE操作: OLD.<column>  (削除されるデータ) 
+
+    ■ INSERTトリガーの運用例
+
+    -- 新規ユーザー登録時の自動処理
+    DELIMITER //
+    CREATE TRIGGER trg_users_insert
+    AFTER INSERT ON users
+    FOR EACH ROW
+    BEGIN
+      -- ウェルカムメッセージログ記録
+      INSERT INTO user_logs (user_id, action, message, created_at)
+      VALUES (NEW.id, 'INSERT', CONCAT('新規ユーザー登録: ', NEW.name), NOW());
+
+      -- 初期スコア設定
+      INSERT INTO user_scores (user_id, score, created_at)
+      VALUES (NEW.id, 100, NOW());
+    END //
+    DELIMITER ;
+
+    ■ UPDATEトリガーの運用例
+
+    -- ユーザー情報更新時の変更履歴記録
+    DELIMITER //
+    CREATE TRIGGER trg_users_update
+    AFTER UPDATE ON users
+    FOR EACH ROW
+    BEGIN
+      -- 変更があった場合のみログ記録
+      IF OLD.name != NEW.name OR OLD.email != NEW.email THEN
+        INSERT INTO user_change_logs (user_id, old_name, new_name, old_email, new_email, changed_at)
+        VALUES (NEW.id, OLD.name, NEW.name, OLD.email, NEW.email, NOW());
+      END IF;
+
+      -- パスワード変更時のセキュリティログ
+      IF OLD.password != NEW.password THEN
+        INSERT INTO security_logs (user_id, action, details, logged_at)
+        VALUES (NEW.id, 'PASSWORD_CHANGE', 'パスワードが変更されました', NOW());
+      END IF;
+    END //
+    DELIMITER ;
+
+    ■ DELETEトリガーの運用例
+
+    -- ユーザー削除時の関連データ処理
+    DELIMITER //
+    CREATE TRIGGER trg_users_delete
+    BEFORE DELETE ON users
+    FOR EACH ROW
+    BEGIN
+      -- 削除前にバックアップ
+      INSERT INTO deleted_users (id, name, email, deleted_at)
+      VALUES (OLD.id, OLD.name, OLD.email, NOW());
+
+      -- 関連データの削除 (カスケード削除の代わり) 
+      DELETE FROM user_scores WHERE user_id = OLD.id;
+      DELETE FROM user_logs WHERE user_id = OLD.id;
+    END //
+    DELIMITER ;
+
+    ■ BEFOREトリガーのデータ修正例
+
+    -- 挿入データの自動修正
+    DELIMITER //
+    CREATE TRIGGER trg_orders_before_insert
+    BEFORE INSERT ON orders
+    FOR EACH ROW
+    BEGIN
+      -- 注文金額の自動計算
+      SET NEW.total_amount = NEW.quantity * NEW.unit_price;
+
+      -- 注文日の自動設定
+      IF NEW.order_date IS NULL THEN
+        SET NEW.order_date = CURDATE();
+      END IF;
+
+      -- 在庫チェック
+      SELECT quantity INTO @stock FROM products WHERE id = NEW.product_id;
+      IF @stock < NEW.quantity THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '在庫不足です';
+      END IF;
+    END //
+    DELIMITER ;
+
+    ■ トリガーの管理
+
+    -- トリガー一覧表示
+    SHOW TRIGGERS;
+
+    -- 特定のトリガー情報
+    SHOW CREATE TRIGGER trigger_name;
+
+    -- トリガー削除
+    DROP TRIGGER IF EXISTS trigger_name;
+
+    -- トリガー無効化/有効化
+    ALTER TABLE table_name DISABLE TRIGGER trigger_name;
+    ALTER TABLE table_name ENABLE TRIGGER trigger_name;
+
+- ENTRY:
+  EXPLAIN: トリガー (PostgreSQL)
+  BODY: |
+    ■ 概要
+
+    ・トリガー(TRIGGER)はテーブルに対するINSERT/UPDATE/DELETE操作時に自動実行されるストアドプログラム
+    ・データの整合性確保、監査ログ記録、自動計算などに使用
+    ・BEFORE/AFTER/INSTEAD OFのタイミングと、FOR EACH ROWで各行ごとに実行
+
+    ■ 構文
+
+    CREATE TRIGGER <trigger_name>
+    {BEFORE | AFTER | INSTEAD OF} {INSERT | UPDATE | DELETE}
+    ON <table_name>
+    [FOR EACH ROW]
+    [WHEN (<condition>)]
+    EXECUTE {PROCEDURE | FUNCTION} <function_name>(<args>);
+
+    ■ タイミングと使用可能なデータ
+
+    ・BEFOREトリガー: 操作実行前に実行(データの検証・修正)
+    ・AFTERトリガー: 操作実行後に実行(ログ記録・関連テーブル更新)
+    ・INSTEAD OFトリガー: ビューに対する操作を置き換え
+
+    ・INSERT操作: NEW.<column> (挿入される新しいデータ)
+    ・UPDATE操作: NEW.<column>(更新後のデータ)、OLD.<column>(更新前のデータ)
+    ・DELETE操作: OLD.<column> (削除されるデータ)
+
+    ■ INSERTトリガーの運用例
+
+    -- 新規ユーザー登録時の自動処理
+    CREATE FUNCTION log_user_insert() RETURNS TRIGGER AS $$
+    BEGIN
+      -- ウェルカムメッセージログ記録
+      INSERT INTO user_logs (user_id, action, message, created_at)
+      VALUES (NEW.id, 'INSERT', CONCAT('新規ユーザー登録: ', NEW.name), NOW());
+
+      -- 初期スコア設定
+      INSERT INTO user_scores (user_id, score, created_at)
+      VALUES (NEW.id, 100, NOW());
+
+      RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+
+    CREATE TRIGGER trg_users_insert
+    AFTER INSERT ON users
+    FOR EACH ROW
+    EXECUTE FUNCTION log_user_insert();
+
+    ■ UPDATEトリガーの運用例
+
+    -- ユーザー情報更新時の変更履歴記録
+    CREATE FUNCTION log_user_update() RETURNS TRIGGER AS $$
+    BEGIN
+      -- 変更があった場合のみログ記録
+      IF OLD.name != NEW.name OR OLD.email != NEW.email THEN
+        INSERT INTO user_change_logs (user_id, old_name, new_name, old_email, new_email, changed_at)
+        VALUES (NEW.id, OLD.name, NEW.name, OLD.email, NEW.email, NOW());
+      END IF;
+
+      -- パスワード変更時のセキュリティログ
+      IF OLD.password != NEW.password THEN
+        INSERT INTO security_logs (user_id, action, details, logged_at)
+        VALUES (NEW.id, 'PASSWORD_CHANGE', 'パスワードが変更されました', NOW());
+      END IF;
+
+      RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+
+    CREATE TRIGGER trg_users_update
+    AFTER UPDATE ON users
+    FOR EACH ROW
+    EXECUTE FUNCTION log_user_update();
+
+    ■ DELETEトリガーの運用例
+
+    -- ユーザー削除時の関連データ処理
+    CREATE FUNCTION process_user_delete() RETURNS TRIGGER AS $$
+    BEGIN
+      -- 削除前にバックアップ
+      INSERT INTO deleted_users (id, name, email, deleted_at)
+      VALUES (OLD.id, OLD.name, OLD.email, NOW());
+
+      -- 関連データの削除(カスケード削除の代わり)
+      DELETE FROM user_scores WHERE user_id = OLD.id;
+      DELETE FROM user_logs WHERE user_id = OLD.id;
+
+      RETURN OLD;
+    END;
+    $$ LANGUAGE plpgsql;
+
+    CREATE TRIGGER trg_users_delete
+    BEFORE DELETE ON users
+    FOR EACH ROW
+    EXECUTE FUNCTION process_user_delete();
+
+    ■ BEFOREトリガーのデータ修正例
+
+    -- 挿入データの自動修正
+    CREATE FUNCTION validate_order_insert() RETURNS TRIGGER AS $$
+    BEGIN
+      -- 注文金額の自動計算
+      NEW.total_amount := NEW.quantity * NEW.unit_price;
+
+      -- 注文日の自動設定
+      IF NEW.order_date IS NULL THEN
+        NEW.order_date := CURRENT_DATE;
+      END IF;
+
+      -- 在庫チェック
+      SELECT quantity INTO STRICT stock FROM products WHERE id = NEW.product_id;
+      IF stock < NEW.quantity THEN
+        RAISE EXCEPTION '在庫不足です';
+      END IF;
+
+      RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+
+    CREATE TRIGGER trg_orders_before_insert
+    BEFORE INSERT ON orders
+    FOR EACH ROW
+    EXECUTE FUNCTION validate_order_insert();
+
+    ■ トリガーの管理
+
+    -- トリガー一覧表示
+    SELECT * FROM information_schema.triggers;
+
+    -- 特定のトリガー情報
+    SELECT * FROM information_schema.triggers WHERE trigger_name = 'trigger_name';
+
+    -- トリガー削除
+    DROP TRIGGER IF EXISTS trigger_name ON table_name;
+
+    -- トリガー無効化/有効化
+    ALTER TABLE table_name DISABLE TRIGGER trigger_name;
+    ALTER TABLE table_name ENABLE TRIGGER trigger_name;
+
+- ENTRY:
+  EXPLAIN: |
+    BEGIN～END (繰り返し: MySQL)
+  BODY: |
+    ■ REPEAT(繰り返し)
+
+    BEGIN
+      SET @x = 0;
+      REPEAT
+        SET @x = @x + 1;
+      UNTIL @x > p1 END REPEAT;
+    END;
+
+    ■ LOOP(繰り返し)
+
+    BEGIN
+      label1: LOOP
+        SET p1 = p1 + 1;
+        IF p1 < 10 THEN ITERATE label1; END IF;
+        LEAVE label1;
+      END LOOP label1;
+    END;
+
+    ■ WHILE(繰り返し)
+
+    BEGIN
+      DECLARE v1 INT DEFAULT 5;
+      WHILE v1 > 0 DO
+        ...
+        SET v1 = v1 - 1;
+      END WHILE;
+    END;
+
+- ENTRY:
+  EXPLAIN: |
+    BEGIN～END (繰り返し: PostgreSQL)
+  BODY: |
+    ■ LOOP文(無限ループ、EXITで抜ける)
+
+    LOOP
+      x := x + 1;
+      IF x > 10 THEN
+        EXIT;
+      END IF;
+    END LOOP;
+
+    ■ WHILE文
+
+    WHILE x > 0 LOOP
+      x := x - 1;
+      -- 処理
+    END LOOP;
+
+    ■ FOR文(数値範囲)
+
+    FOR i IN 1..10 LOOP
+      -- 処理
+    END LOOP;
+
+    ■ FOR文(カーソル)
+
+    FOR record_var IN SELECT * FROM table_name LOOP
+      -- 各行の処理
+    END LOOP;
+
+- ENTRY:
+  EXPLAIN: |
+    BEGIN～END (CURSOR: MySQL)
+  BODY: |
+    ■ 概要
+
+      ・SELECT結果セットを1行ずつ処理する
+      ・ストアドプロシージャ内で使用可能
+      ・DECLARE CURSORでカーソルを定義、OPENで開き、FETCHで行を取得、CLOSEで閉じる
+
+    ■ 定義
+
+    ・宣言          DECLARE cursor_name CURSOR FOR select_statement;
+    ・ハンドラ宣言   DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+    ・オープン      OPEN cursor_name;
+    ・取得          FETCH cursor_name INTO var1, var2, ...;
+    ・クローズ      CLOSE cursor_name;
+
+    ■ サンプル
+
+    CREATE PROCEDURE sp2 (x VARCHAR(5))
+    BEGIN
+      DECLARE xname VARCHAR(5) DEFAULT 'bob';
+      DECLARE newname VARCHAR(5);
+      DECLARE xid INT;
+      DECLARE done TINYINT DEFAULT 0;
+      DECLARE cursor1 CURSOR FOR SELECT xname, id FROM table1;
+      DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+      OPEN cursor1;
+      read_loop: LOOP
+        FETCH FROM cursor1 INTO newname, xid;
+        IF done THEN LEAVE read_loop; END IF;
+        SELECT newname;
+      END LOOP;
+      CLOSE cursor1;
+    END;
+
+- ENTRY:
+  EXPLAIN: |
+    BEGIN～END (CURSOR: PostgreSQL)
+  BODY: |
+    ■ 概要
+
+      ・SELECT結果セットを1行ずつ処理する
+      ・ストアド関数やプロシージャ内で使用可能
+      ・DECLARE CURSORでカーソルを定義、OPENで開き、FETCHで行を取得、CLOSEで閉じる
+
+    ■ 定義
+
+    ・宣言        DECLARE cursor_name CURSOR FOR select_statement;
+    ・オープン    OPEN cursor_name;
+    ・取得        FETCH cursor_name INTO var1, var2, ...;
+    ・クローズ    CLOSE cursor_name;
+
+    ■ サンプル
+
+    CREATE FUNCTION process_data() RETURNS VOID AS $$
+    DECLARE
+      cur CURSOR FOR SELECT name, id FROM users;
+      user_name VARCHAR(50);
+      user_id INT;
+    BEGIN
+      OPEN cur;
+      LOOP
+        FETCH cur INTO user_name, user_id;
+        EXIT WHEN NOT FOUND;
+
+        -- 各行の処理
+        RAISE NOTICE 'User: % (ID: %)', user_name, user_id;
+      END LOOP;
+      CLOSE cur;
+    END;
+    $$ LANGUAGE plpgsql;
+
+- ENTRY:
+  EXPLAIN: |
+    BEGIN～END (分岐: MySQL)
+  BODY: |
+    ■ IF(分岐)
+
+    BEGIN
+      DECLARE s VARCHAR(20);
+      IF p1 > p2 THEN
+        SET s = 'p1はp2より大きい';
+      ELSEIF p1 = p2 THEN
+        SET s = 'p1はp2と等しい';
+      ELSE
+        SET s = 'p1はp2より小さい';
+      END IF;
+    END;
+
+    ■ CASE(分岐)
+
+    BEGIN
+      DECLARE s VARCHAR(20);
+      CASE p1
+        WHEN 1 THEN SET s = 'p1は1です';
+        WHEN 2 THEN SET s = 'p1は2です';
+        ELSE SET s = 'p1は1でも2でもありません';
+      END CASE;
+    END;
+
+- ENTRY:
+  EXPLAIN: |
+    BEGIN～END (分岐: PostgreSQL)
+  BODY: |
+    ■ IF(分岐)
+
+    IF p1 > p2 THEN
+      result := 'p1はp2より大きい';
+    ELSIF p1 = p2 THEN
+      result := 'p1はp2と等しい';
+    ELSE
+      result := 'p1はp2より小さい';
+    END IF;
+
+    ■ CASE(分岐)
+
+    CASE p1
+      WHEN 1 THEN result := 'p1は1です';
+      WHEN 2 THEN result := 'p1は2です';
+      ELSE result := 'p1は1でも2でもありません';
+    END CASE;
+
+    ■ CASE文(検索CASE)
+
+    CASE
+      WHEN p1 > 10 THEN result := '大きい';
+      WHEN p1 BETWEEN 5 AND 10 THEN result := '中間';
+      ELSE result := '小さい';
+    END CASE;
+
+- ENTRY:
+  EXPLAIN: PREPARE (mySQL)
+  BODY: |
+    プリペアドステートメント: 動的に生成されたSQL文を実行する
+
+    ■ 定義
+
+    ・作成    PREPARE <statement_name> FROM '<SQL文(?をプレースホルダーに使用)>';
+    ・実行    EXECUTE <statement_name> USING @var1, @var2, ...;
+    ・解放    DEALLOCATE PREPARE <statement_name>;
+
+    ■ ユースケース
+
+    ・動的に生成されたSQL文の実行
+    ・同じSQL文を複数回実行する場合のパフォーマンス向上
+    ・SQLインジェクション対策
+
+    ■ サンプル(パラメータなし)
+
+    PREPARE simple_select AS 'SELECT COUNT(*) FROM users';
+    EXECUTE simple_select;
+    DEALLOCATE PREPARE simple_select;
+
+    ■ サンプル(ユーザーIDによる検索: パラメータあり)
+
+    PREPARE get_user AS 'SELECT name, email FROM users WHERE id = ?';
+    SET @user_id = 123;
+    EXECUTE get_user USING @user_id;
+    DEALLOCATE PREPARE get_user;
+
+    ■ サンプル(商品の価格範囲検索: 複数パラメータあり)
+
+    PREPARE search_products AS 'SELECT * FROM products WHERE price BETWEEN ? AND ? AND category = ?';
+    SET @min_price = 100;
+    SET @max_price = 500;
+    SET @category = 'electronics';
+    EXECUTE search_products USING @min_price, @max_price, @category;
+    DEALLOCATE PREPARE search_products;
+
+    ■ 動的SQLの実行(テーブル名を動的に指定)
+
+    SET @table_name = 'users';
+    SET @sql = CONCAT('SELECT COUNT(*) FROM ', @table_name);
+    PREPARE dynamic_count FROM @sql;
+    EXECUTE dynamic_count;
+    DEALLOCATE PREPARE dynamic_count;
+
+    ■ 注意点
+
+    - プレースホルダー(?)はUSING句で指定した変数の順序に対応
+    - 変数は@で始まるユーザー定義変数を使用
+    - 同じ名前のプリペアドステートメントは上書きされる
+    - セッション終了時に自動的に解放される
+    - 大量のデータを扱う場合はLIMIT句の使用を推奨
+    - エラーハンドリングを適切に行う
+
+- ENTRY:
+  EXPLAIN: PREPARE (PostgreSQL)
+  BODY: |
+    プリペアドステートメント: 動的に生成されたSQL文を実行する
+
+    ■ 定義
+
+    ・作成    PREPARE <statement_name> [ (<data_type> [, ...]) ] AS <SQL文($1, $2などのプレースホルダー使用)>;
+    ・実行    EXECUTE <statement_name> [ (<parameter_value> [, ...]) ];
+    ・解放    DEALLOCATE [ PREPARE ] <statement_name>;
+    ・全解放  DEALLOCATE ALL;
+
+    ■ ユースケース
+
+    ・動的に生成されたSQL文の実行
+    ・同じSQL文を複数回実行する場合のパフォーマンス向上
+    ・SQLインジェクション対策
+
+    ■ サンプル(パラメータなし)
+
+    PREPARE get_users AS SELECT * FROM users;
+    EXECUTE get_users;
+    DEALLOCATE get_users;
+
+    ■ サンプル(パラメータあり)
+
+    PREPARE get_user_by_id (int) AS SELECT * FROM users WHERE id = $1;
+    EXECUTE get_user_by_id(123);
+    DEALLOCATE get_user_by_id;
+
+    ■ サンプル(複数パラメータあり)
+
+    PREPARE get_users_by_status (int, text) AS
+      SELECT * FROM users WHERE status = $1 AND role = $2;
+    EXECUTE get_users_by_status(1, 'admin');
+    DEALLOCATE get_users_by_status;
+
+    ■ 動的SQLの実行(テーブル名を動的に指定)
+
+    CREATE FUNCTION execute_dynamic_query(table_name text, limit_count int DEFAULT 10)
+    RETURNS void AS $$
+    DECLARE
+      stmt_name text;
+      sql_query text;
+    BEGIN
+      -- 一意なステートメント名を生成
+      stmt_name := 'dynamic_' || table_name || '_' || extract(epoch from now())::text;
+
+      -- 動的SQLの構築
+      sql_query := format('SELECT * FROM %I LIMIT $1', table_name);
+
+      -- プリペアドステートメントの作成
+      EXECUTE format('PREPARE %I (int) AS %s', stmt_name, sql_query);
+
+      -- 実行
+      EXECUTE format('EXECUTE %I (%s)', stmt_name, limit_count);
+
+      -- 解放
+      EXECUTE format('DEALLOCATE %I', stmt_name);
+    END;
+    $$ LANGUAGE plpgsql;
+
+    ■ 注意点
+
+    ・プレースホルダーは$1, $2, $3...を使用
+    ・パラメータのデータ型を明示的に指定
+    ・セッション内で有効（接続終了時に自動解放）
+    ・同じ名前のステートメントは上書き可能
+
+#-------------------------------
+# トランザクション
+#-------------------------------
+- ENTRY:
+  CATEGORY: トランザクション
+
+- ENTRY:
+  EXPLAIN: トランザクション (MySQL)
+  BODY: |
+    ■ 概要
+
+    ・トランザクションは複数のSQL文を1つの作業単位として扱い、すべて成功するかすべて失敗するかを保証する仕組み
+    ・InnoDBストレージエンジンでサポート
+    ・ACID特性を満たす
+        Atomicity     # 原子性: 全ての操作が成功するか、全て失敗するか
+        Consistency   # 一貫性: トランザクション前後でデータの整合性を保つ
+        Isolation     # 独立性: 同時実行トランザクションが互いに影響を与えない
+        Durability    # 永続性: コミットされた変更は永続的に保存される   
+
+    ■ 基本構文
+
+    -- トランザクション開始
+    START TRANSACTION;
+    -- または
+    BEGIN;
+
+    -- コミット（変更を確定）
+    COMMIT;
+
+    -- ロールバック（変更を取消）
+    ROLLBACK;
+
+    -- セーブポイント設定
+    SAVEPOINT savepoint_name;
+
+    -- セーブポイントまでロールバック
+    ROLLBACK TO SAVEPOINT savepoint_name;
+
+    ■ 自動コミットモード
+
+    -- 自動コミット確認
+    SELECT @@autocommit;
+
+    -- 自動コミット有効（デフォルト）
+    SET autocommit = 1;
+
+    -- 自動コミット無効
+    SET autocommit = 0;
+
+    ■ サンプル(基本)
+
+    START TRANSACTION;
+    UPDATE accounts SET balance = balance - 1000 WHERE id = 1;
+    UPDATE accounts SET balance = balance + 1000 WHERE id = 2;
+    COMMIT;
+
+    ■ サンプル(+エラーハンドリング)
+
+    START TRANSACTION;
+    BEGIN
+      DECLARE EXIT HANDLER FOR SQLEXCEPTION
+      BEGIN
+        ROLLBACK;
+        SELECT 'Transaction failed' AS message;
+      END;
+
+      UPDATE accounts SET balance = balance - 1000 WHERE id = 1;
+      UPDATE accounts SET balance = balance + 1000 WHERE id = 2;
+
+      COMMIT;
+    END;
+
+    ■ セーブポイントの使用(+エラーハンドリング)
+
+    START TRANSACTION;
+      UPDATE users SET status = 'active' WHERE id = 1;
+      SAVEPOINT sp1;
+
+      UPDATE users SET email = 'new@example.com' WHERE id = 1;
+      SAVEPOINT sp2;
+
+      BEGIN
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+          ROLLBACK TO SAVEPOINT sp2;                  # エラーが発生したらsp2までロールバック
+        END;
+
+        UPDATE users SET invalid_column = 'value' WHERE id = 1;  # この操作が失敗する場合
+      END;
+    COMMIT;
+
+    ■ セーブポイントの使用(条件付きロールバック)
+
+    START TRANSACTION;
+      UPDATE users SET status = 'active' WHERE id = 1;
+      SAVEPOINT sp1;
+
+      UPDATE users SET email = 'new@example.com' WHERE id = 1;
+      SAVEPOINT sp2;
+
+      SET @error_occurred = 0;  -- エラーフラグ
+
+      IF @error_occurred = 1 THEN      # 条件によってロールバック
+        ROLLBACK TO SAVEPOINT sp2;     # エラーが発生した場合のみロールバック
+      END IF;
+    COMMIT;
+
+    ■ トランザクション分離レベル
+
+    SELECT @@transaction_isolation;
+
+    ・分離レベル設定
+    SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+    SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
+    SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;  -- MySQLデフォルト
+    SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+
+    ■ 注意点
+
+    - InnoDBストレージエンジンでのみ完全なトランザクションサポート
+    - MyISAMはトランザクションをサポートしない
+    - デッドロックが発生する可能性がある
+    - 長時間のトランザクションはパフォーマンスに影響
+    - 適切なエラーハンドリングを推奨
+
+- ENTRY:
+  EXPLAIN: トランザクション (PostgreSQL)
+  BODY: |
+    ■ 概要
+
+    ・PostgreSQLのトランザクションはACID特性を満たし、複数のSQL文を原子性のある作業単位として扱う
+    ・デフォルトで自動コミットモードが有効
+    ・トランザクション分離レベルを設定可能
+
+    ■ 基本構文
+
+    -- トランザクション開始
+    BEGIN;
+    -- または
+    START TRANSACTION;
+
+    -- コミット（変更を確定）
+    COMMIT;
+
+    -- ロールバック（変更を取消）
+    ROLLBACK;
+
+    -- セーブポイント設定
+    SAVEPOINT savepoint_name;
+
+    -- セーブポイントまでロールバック
+    ROLLBACK TO SAVEPOINT savepoint_name;
+
+    -- セーブポイント解放
+    RELEASE SAVEPOINT savepoint_name;
+
+    ■ トランザクション分離レベル
+
+    ・現在の分離レベル確認
+    SHOW transaction_isolation;
+
+    ・分離レベル設定
+    SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+    SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL READ COMMITTED; -- PostgreSQLデフォルト
+    SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+    SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+
+    ・単一トランザクションでの分離レベル設定
+    BEGIN ISOLATION LEVEL SERIALIZABLE;
+
+    ■ サンプル(基本)
+
+    BEGIN;
+    UPDATE accounts SET balance = balance - 1000 WHERE id = 1;
+    UPDATE accounts SET balance = balance + 1000 WHERE id = 2;
+    COMMIT;
+
+    ■ サンプル(エラーハンドリン: PL/pgSQL内)
+
+    CREATE FUNCTION transfer_funds(from_account int, to_account int, amount numeric)
+    RETURNS void AS $$
+    BEGIN
+      BEGIN;
+      UPDATE accounts SET balance = balance - amount WHERE id = from_account;
+
+      IF (SELECT balance FROM accounts WHERE id = from_account) < 0 THEN
+        RAISE EXCEPTION 'Insufficient funds';
+      END IF;
+
+      UPDATE accounts SET balance = balance + amount WHERE id = to_account;
+      COMMIT;
+
+    EXCEPTION
+      WHEN OTHERS THEN
+        ROLLBACK;
+        RAISE;
+    END;
+    $$ LANGUAGE plpgsql;
+
+    ■ サンプル(セーブポイントの使用)
+
+    -- 注文処理でのセーブポイント使用例
+    CREATE FUNCTION process_order(customer_id int, product_id int, quantity int, unit_price numeric)
+    RETURNS void AS $$
+    DECLARE
+      order_id int;
+      current_stock int;
+    BEGIN
+      BEGIN;
+
+      INSERT INTO orders (customer_id, total, order_date)
+      VALUES (customer_id, quantity * unit_price, CURRENT_DATE)
+      RETURNING id INTO order_id;
+
+      SAVEPOINT order_created;
+
+      SELECT stock INTO current_stock FROM products WHERE id = product_id;
+      IF current_stock < quantity THEN
+        RAISE EXCEPTION 'Insufficient stock. Available: %, Requested: %', current_stock, quantity;
+      END IF;
+
+      INSERT INTO order_items (order_id, product_id, quantity, price)
+      VALUES (order_id, product_id, quantity, unit_price);
+
+      SAVEPOINT items_added;
+
+      UPDATE products SET stock = stock - quantity WHERE id = product_id;
+
+      SAVEPOINT stock_updated;
+
+      -- 支払い処理（ここでエラーが発生する可能性）
+      -- PERFORM process_payment(order_id, quantity * unit_price);
+
+      COMMIT;
+
+    EXCEPTION
+      WHEN OTHERS THEN
+        ROLLBACK TO SAVEPOINT order_created;
+        RAISE NOTICE 'Order processing failed: %', SQLERRM;
+    END;
+    $$ LANGUAGE plpgsql;
+
+    -- 使用例
+    SELECT process_order(1, 1, 2, 50.00);
+
+    ■ 自動コミットモード
+
+    ・PostgreSQLはデフォルトで自動コミット
+    ・明示的なトランザクションが必要な場合はBEGINを使用
+
+    ・複数文のバッチ実行
+    BEGIN;
+    INSERT INTO users (name) VALUES ('Alice');
+    INSERT INTO users (name) VALUES ('Bob');
+    INSERT INTO users (name) VALUES ('Charlie');
+    COMMIT;
+
+    ■ 注意点
+
+    ・デフォルトで自動コミットモード
+    ・トランザクション内でDDL文も使用可能
+    ・セーブポイントはネスト可能
+    ・長時間実行されるトランザクションは注意
+    ・適切なエラーハンドリングが重要
+    ・MVCC（Multi-Version Concurrency Control）を使用

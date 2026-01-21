@@ -1,0 +1,1846 @@
+---
+#-------------------------------
+# データベース
+#-------------------------------
+- ENTRY:
+  CATEGORY: データベース
+
+- ENTRY:
+  EXPLAIN: 作成、変更、削除、選択、リスト表示
+  BODY: |
+    ■ MOD(dividend, divisor) 【共通】
+      # 剰余計算 (dividend % divisor)
+      SELECT MOD(10, 3);            # 1
+
+    ■ ROUND(value[, decimals]) 【共通】
+      # 四捨五入
+      SELECT ROUND(123.456, 2);     # 123.46
+      SELECT ROUND(123.456, 0);     # 123
+      SELECT ROUND(123.456);        # 123
+
+    ■ ABS(value) 【共通】
+      # 絶対値
+      SELECT ABS(-123.45);          # 123.45
+
+    ■ SQRT(value) 【共通】
+      # 平方根
+      SELECT SQRT(16);              # 4.0
+
+    ■ EXP(value) 【共通】
+      # eのvalue乗 (指数関数)
+      SELECT EXP(1);                # 2.718281828459045
+
+    ■ CEIL(value) 【共通】
+      # 小数点以下切り上げ
+      SELECT CEIL(123.001);         # 124
+
+    ■ FLOOR(value) 【共通】
+      # 小数点以下切り捨て
+      SELECT FLOOR(123.999);        # 123
+
+    ■ TRUNCATE(value, decimals) 【共通】
+      # 指定桁で切り捨て
+      SELECT TRUNCATE(123.456, 2);  # 123.45
+      SELECT TRUNCATE(123.456, 0);  # 123
+
+    ■ FORMAT(value, decimals[, locale]) 【my】
+      # 数値のフォーマット (3桁区切り)
+      SELECT FORMAT(1234567.89, 2);              # "1,234,567.89"
+      SELECT FORMAT(1234567.89, 2, 'de_DE');     # "1.234.567,89"
+
+    ■ DIV(y, x) 【pg】
+      # 整数除算 (切り捨て)
+      SELECT DIV(10, 3);             # 3
+
+    ■ LN(value) 【pg】
+      # 自然対数
+      SELECT LN(2.718281828459045);  # 1.0
+
+    ■ LOG(base, value) 【pg】
+      # 対数 (任意の底)
+      SELECT LOG(10, 100);           # 2.0
+
+    ■ POWER(base, exponent) 【pg】
+      # 累乗
+      SELECT POWER(2, 3);            # 8
+
+    ■ SIGN(value) 【pg】
+      # 符号 (-1, 0, 1)
+      SELECT SIGN(-123);             # -1
+      SELECT SIGN(0);                # 0
+      SELECT SIGN(123);              # 1
+
+    CREATE TABLE <schema>.<table>(...)
+
+    ■ PK(primary key: プライマリーキー)
+
+    ・シリアル
+    【My】  <col> INT PRIMARY KEY AUTO_INCREMENT,
+    【Pg】  <col> SERIAL PRIMARY KEY,
+
+    ・UUID
+    【My】  <col> CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    【Pg】  <col> UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    ・ULID
+    【My】  <col> CHAR(26) PRIMARY KEY DEFAULT (UUID_TO_ULID(UUID())),
+    【Pg】  <col> CHAR(26) PRIMARY KEY DEFAULT ulid_generate(),
+
+    ■ FK(foreign Key: 外部キー)
+
+    <col> 型 REFERENCES <ref_table>(<ref_col>)    # FK(外部キー)定義
+      ON UPDATE/DELETE [                          # FK動作指定
+          RESTRICT                                # 制約違反防止
+          |CASCADE                                # 親子同時更新削除
+          |SET NULL                               # 子側NULL設定
+          |NO ACTION                              # 何もしない
+          |SET DEFAULT                            # デフォルト値設定
+      ][
+        MATCH FULL                                # 【Pg】一致条件指定(完全一致)
+        |PARTIAL                                  # 【Pg】一致条件指定(部分一致)
+        |SIMPLE                                   # 【Pg】一致条件指定(単純一致)
+      ][
+        DEFERRABLE                                # 【Pg】遅延可能指定(トランザクション終了時まで制約チェックを遅延可能)
+        |NOT DEFERRABLE                           # 【Pg】遅延可能指定(制約チェックを即時実行)
+      ][
+        INITIALLY DEFERRED                        # 【Pg】初期遅延状態指定(トランザクション開始時に制約チェックを遅延状態に設定)
+        |INITIALLY IMMEDIATE                      # 【Pg】初期遅延状態指定(トランザクション開始時に制約チェックを即時状態に設定)
+      ]
+
+    ■ 通常カラム(MySQL)
+
+    <col> 型
+      [NOT NULL]                                         # NULL禁止
+      [DEFAULT value]                                    # デフォルト値設定
+      [UNIQUE]                                           # 一意制約
+      [AUTO_INCREMENT]                                   # 自動採番 (Pg: SERIAL)
+      [INDEX (<col>, ...)]                               # Index作成
+      [CHECK(<col> comparison value)]                    # 制約設定
+      [AS (some_method(<col>,...)) STORED|VIRTUAL]       # COLUMN VIEW定義 (Pg: GENERATED ALWAYS AS)
+      [DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP] # 型:日付の自動更新 (Pg: DEFAULT CURRENT_TIMESTAMP)
+      [CHARACTER SET <charset>]                          # 文字セット指定 (Pg: ENCODING)
+      [COLLATE <collation>]                              # 照合順序指定 (Pg: LC_COLLATE)
+      [COMMENT 'comment']                                # コメント設定 (Pg: COMMENT ON COLUMN)
+
+    [CONSTRAINT] <name> PRIMARY KEY(<col>),              # PK
+    [CONSTRAINT] FOREIGN KEY(<name>) REFERENCES (...),   # FK
+    [CONSTRAINT] <name> CHECK (...),                     # 制約
+    [CONSTRAINT] CHECK (<col> comparison <col>),         # 複数カラムの関係
+    [CONSTRAINT] <name> UNIQUE(<col>, ...),              # 一意制約
+    [CONSTRAINT] UNIQUE(<col>, ...),                     # 複数カラム一意制約
+
+    ■ 通常カラム(PostgreSQL)
+
+    <col> 型
+      [NOT NULL]                                         # NULL禁止
+      [DEFAULT value]                                    # デフォルト値設定
+      [UNIQUE]                                           # 一意制約
+      [SERIAL|BIGSERIAL]                                 # 自動採番 (My: AUTO_INCREMENT)
+      [CHECK(<col> comparison value)]                    # 制約設定
+      [GENERATED ALWAYS AS (some_method(<col>,...)) STORED|VIRTUAL] # COLUMN VIEW定義 (My: AS ... STORED|VIRTUAL)
+      [TIMESTAMP DEFAULT CURRENT_TIMESTAMP]              # 型:日付の自動更新 (My: DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+      [ENCODING '<encoding>']                            # 文字セット指定 (My: CHARACTER SET)
+      [LC_COLLATE '<collation>']                         # 照合順序指定 (My: COLLATE)
+      ・コメントは別途 COMMENT ON COLUMN 文で設定
+
+    [CONSTRAINT <name>] PRIMARY KEY(<col>),              # PK
+    [CONSTRAINT <name>] FOREIGN KEY(<col>) REFERENCES <ref_table>(<ref_col>) [...], # FK
+    [CONSTRAINT <name>] CHECK (<condition>),             # 制約
+    [CONSTRAINT <name>] UNIQUE(<col>, ...),              # 一意制約
+
+- ENTRY:
+  EXPLAIN: 定義(CHARACTER SET)
+  BODY: |
+    ■ 概要
+
+      CHARACTER SET: 文字セット (データのエンコード方法を定義)
+      未指定のデフォルトは、DB作成時またはサーバ設定による
+
+    ■ MySQL
+
+      CREATE TABLE <table> (
+        <col> VARCHAR(100) CHARACTER SET utf8mb4,        # テーブル作成時にカラム単位で指定
+        ...
+      ) CHARACTER SET=utf8mb4;                           # テーブル全体のデフォルト文字セット指定
+
+      utf8mb4 : UTF-8 エンコード (4バイト文字対応)
+      latin1  : ISO-8859-1 エンコード (西ヨーロッパ言語向け)
+
+    ■ PostgreSQL
+
+      CREATE TABLE <table> (
+        <col> VARCHAR(100) ENCODING 'UTF8',              # テーブル作成時にカラム単位で指定
+        ...
+      );                                                 # テーブル全体のデフォルト文字セットはDB作成時に指定
+
+      UTF8    : UTF-8 エンコード
+
+- ENTRY:
+  EXPLAIN: 定義(COLLATE)
+  BODY: |
+    ■ 概要
+
+      COLLATE: 照合順序 (文字列の比較・ソート方法を定義)
+
+    ■ MySQL
+
+      CREATE TABLE <table> (
+        <col> VARCHAR(100) COLLATE utf8mb4_general_ci,  # テーブル作成時にカラム単位で指定
+        ...
+      ) COLLATE=utf8mb4_general_ci;                     # テーブル全体のデフォルト照合順序指定
+
+      utf8mb4_general_ci : 大文字小文字区別なし、アクセント区別なし
+      utf8mb4_bin        : バイナリ比較 (大文字小文字区別、アクセント区別)
+      utf8mb4_0900_as_cs : 大文字小文字区別あり、アクセント区別あり (MySQL 8.0.1以降)
+
+      ※ 「アクセント区別なし」は日本語では以下を同一視:
+
+        "あ" = "ア" = "ｱ" = "ぁ" = "ァ"
+        "か" = "カ" = "ｶ" = "が" = "ガ"
+        ...
+
+    ■ PostgreSQL
+
+      CREATE TABLE <table> (
+        <col> VARCHAR(100) COLLATE "ja_JP.UTF-8",       # テーブル作成時にカラム単位で指定
+        ...
+      );                                                # テーブル全体のデフォルト照合順序はDB作成時に指定
+
+      "ja_JP.UTF-8" : 日本語UTF-8、大文字小文字区別あり、アクセント区別あり
+      "C"           : バイナリ比較 (大文字小文字区別、アクセント区別)
+      "en_US.UTF-8" : 英語UTF-8、大文字小文字区別なし、アクセント区別あり
+
+- ENTRY:
+  EXPLAIN: サンプル(Person)
+  BODY: |
+    ■ MySQL
+
+    create table person (
+      id          int primary key AUTO_INCREMENT,
+      name        varchar(50) not null default '' comment '名前',
+      email       varchar(100) unique not null,
+      city_id     int references city(id) on update CASCADE on delete set null,
+      age         smallint not null default 0 comment "年齢" check(age < 120),
+      score       decimal(5,2) default 0.00,
+      status      enum('active','inactive','pending') default 'active',
+      tags        set('tag1','tag2','tag3'),
+      data        json,
+      birth_date  date,
+      profile     text,
+      act         boolean not null default true,
+      index (age),
+      index idx_name_email (name, email),
+      unique key uk_email (email),
+      constraint ck_age_positive check(age > 0),
+      created     timestamp default CURRENT_TIMESTAMP,
+      updated     timestamp default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP
+    );
+
+    ■ PostgreSQL
+
+    create type status_enum as enum ('active','inactive','pending');
+
+    create table person (
+      id          SERIAL PRIMARY KEY,
+      name        VARCHAR(50) NOT NULL DEFAULT '',
+      email       VARCHAR(100) UNIQUE NOT NULL,
+      city_id     INT REFERENCES city(id) ON UPDATE CASCADE ON DELETE SET NULL,
+      age         SMALLINT NOT NULL DEFAULT 0 CHECK(age < 120),
+      score       NUMERIC(5,2) DEFAULT 0.00,
+      status      status_enum DEFAULT 'active',
+      tags        TEXT[],                                 # SET型なし、ARRAYやJSON使用
+      data        JSONB,
+      birth_date  DATE,
+      profile     TEXT,
+      act         BOOLEAN NOT NULL DEFAULT TRUE,
+      created     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+- ENTRY:
+  EXPLAIN: サンプル(City, Person)
+  BODY: |
+    ■ MySQL / PostgreSQL 共通
+
+      create table city (
+        id int primary key,
+        name varchar(50)
+      );
+      ----------------
+      | id | name    |
+      ----------------
+      |  1 | '北海道' |
+      |  2 | '青森'   |
+      |  3 | '岩手'   |
+      ----------------
+
+      create table person (
+        【my】id int primary key AUTO_INCREMENT,
+        【pg】id SERIAL PRIMARY KEY,
+        name varchar(50)',
+        city_id int references city(id)
+      );
+      ------------------------
+      | id | name  | city_id |
+      ------------------------
+      |  1 | John  |      1  | 
+      |  2 | Smith |      2  | 
+      |  3 | Lilly |      0  | 
+      |  4 | Bill  |   NULL  | 
+      ------------------------
+
+- ENTRY:
+  EXPLAIN: テーブル変更・削除
+  BODY: |
+    ■ MySQL
+
+      ALTER TABLE <tableA> RENAME <tableB>;                    # テーブル名変更
+      ALTER TABLE <table> ADD COLUMN <colB> 型 [AFTER <colA>]; # カラム追加(場所指定)
+      ALTER TABLE <table> RENAME COLUMN <colA> TO <colB>;      # カラム名変更
+      ALTER TABLE <table> MODIFY COLUMN <col> 型;              # (部分的自動型変換)カラム型変更
+      ALTER TABLE <table> CHANGE <colA> <colB> 型;             # カラム型＆名同時変更
+      ALTER TABLE <table> DROP COLUMN <col>;                   # カラム削除
+      DROP TABLE <table>;                                      # テーブル削除
+
+    ■ PostgreSQL
+
+      ALTER TABLE <table> RENAME TO <new_table>;               # テーブル名変更
+      ALTER TABLE <table> ADD COLUMN <col> 型;                 # カラム追加 (場所指定なし)
+      ALTER TABLE <table> RENAME COLUMN <colA> TO <colB>;      # カラム名変更
+      ALTER TABLE <table> ALTER COLUMN <col> TYPE 型;          # カラム型変更
+      ALTER TABLE <table> DROP COLUMN <col>;                   # カラム削除
+      DROP TABLE <table>;                                      # テーブル削除
+
+- ENTRY:
+  EXPLAIN: 他テーブルからテーブル作成
+  BODY: |
+    ■ MySQL/PostgreSQL
+
+    CREATE TABLE <new_table> AS SELECT <col>,... FROM <existing_table> WHERE <condition>;
+
+    ■ 例
+
+    CREATE TABLE active_person AS SELECT id, name, city_id FROM person WHERE status = 'active';
+
+    ■ MySQL/PostgreSQLの違い
+
+    MySQL
+
+    ・AUTO_INCREMENT カラムはコピーされるが、AUTO_INCREMENT 値は1からリセットされる。
+    ・インデックス、制約 (PRIMARY KEY, UNIQUE, FOREIGN KEY) はコピーされない。
+    ・カラムのデフォルト値、NOT NULL などはコピーされる。
+
+    PostgreSQL
+
+    ・SERIAL カラムはコピーされるが、関連するシーケンスは新しいものになり、値は1から始まる。
+    ・インデックス、制約 (PRIMARY KEY, UNIQUE, FOREIGN KEY) はコピーされない。
+    ・カラムのデフォルト値、NOT NULL などはコピーされる。
+    ・WITH OIDS などのオプションを指定可能 (デフォルトはなし)。
+
+- ENTRY:
+  EXPLAIN: 他テーブルから一時テーブル作成
+  BODY: |
+    ■ 概要(MySQL/PostgreSQLの差異なし)
+
+    ・一時テーブルはセッション終了時に自動的に削除
+    ・同じ名前の一時テーブルを複数作成することはできない
+    ・一時テーブルは他のセッションからは見えない
+
+    ■ MySQL/PostgreSQL
+
+    CREATE TEMPORARY TABLE <temp_table> AS SELECT <col>,... FROM <existing_table> WHERE <condition>;
+
+    ■ 例
+
+    CREATE TEMPORARY TABLE temp_active_person AS SELECT id, name, city_id FROM person WHERE status = 'active';
+
+- ENTRY:
+  EXPLAIN: AS 属性
+  BODY: |
+    ■ 概要
+
+      列の値が他の列の値に基づいて計算される計算列を作成するために使用
+
+      ※ STORED vs VIRTUAL
+
+      STORED: 計算結果が物理的に保存、読み取り高速、書き込み時に計算が必要
+      VIRTUAL: 計算結果が非保存、読み取り時に計算(遅い)、書き込みは高速
+
+    ■ MySQL
+
+    CREATE TABLE <table> (
+      <col> 型 AS (some_method(<col>,...)) STORED|VIRTUAL,
+      ...
+    );
+
+    create table sample (
+      id int primary key,
+      value1 int,
+      value2 int,
+      sum_value int as (value1 + value2) stored
+    );  
+
+    ■ PostgreSQL
+
+    CREATE TABLE <table> (
+      <col> 型 GENERATED ALWAYS AS (some_method(<col>,...)) STORED,
+      ...
+    );
+    create table sample (
+      id SERIAL PRIMARY KEY,
+      value1 int,
+      value2 int,
+      sum_value int GENERATED ALWAYS AS (value1 + value2) STORED
+    );
+
+#-------------------------------
+# ビュー
+#-------------------------------
+- ENTRY:
+  CATEGORY: ビュー
+
+- ENTRY:
+  EXPLAIN: 作成、変更、削除
+  BODY: |
+    ■ 概要
+
+    ・基礎となるテーブルからデータを取得する仮想テーブル
+    ・SELECTクエリの結果セットを表し、実際のデータを格納しない
+    ・ビューを使用すると、データの抽象化、セキュリティの向上、クエリの簡素化が可能
+    ・参照テーブルにカラムが追加・削除・変更されたら、ビューを再作成する必要あり
+
+    ■ MySQL
+
+    CREATE [OR REPLACE] VIEW <view> AS SELECT ... ORDER BY <col>;   # ビュー作成・変更
+    DROP VIEW <view>;                                               # ビュー削除 
+
+    ■ PostgreSQL
+
+    CREATE [OR REPLACE] VIEW <view> AS SELECT ... ORDER BY <col>;   # ビュー作成・変更 
+    DROP VIEW <view>;                                               # ビュー削除
+
+    ■ MySQL: ビュー更新可能条件
+
+    ・単一テーブル
+    ・集約関数、DISTINCT、GROUP BY、HAVING、UNION、サブクエリ、JOINを含まない
+    ・計算カラム、定数カラムを含まない
+    ・SELECT内でNULLを返す可能性のある関数を使用しない
+    ・ビュー内のすべてのNOT NULLカラムに値を提供する
+    ・ビュー内のすべてのPRIMARY KEYカラムに値を提供する
+    ・ビュー内のすべてのUNIQUEカラムに値を提供する
+    ・ビュー内のすべてのFOREIGN KEYカラムに値を提供する
+    ・ビュー内のすべてのCHECK制約を満たす値を提供する
+    ・WITH CHECK OPTIONを使用してビューを作成する
+
+    ■ PostgreSQL: ビュー更新可能条件
+
+    ・単一テーブルを参照する
+    ・集約関数、DISTINCT、GROUP BY、HAVING、UNION、LIMIT、OFFSET、WINDOW関数、サブクエリを含まない
+    ・計算カラム、定数カラムを含まない
+    ・ビュー内のすべてのNOT NULLカラムに値を提供する
+    ・ビュー内のすべてのPRIMARY KEYカラムに値を提供する
+    ・ビュー内のすべてのUNIQUEカラムに値を提供する
+    ・ビュー内のすべてのFOREIGN KEYカラムに値を提供する
+    ・ビュー内のすべてのCHECK制約を満たす値を提供する
+    ・WITH CHECK OPTIONを使用してビューを作成する
+
+    ■ サンプル
+
+    create table city (
+      id int primary key,
+      name varchar(50)
+    );
+
+    create table person (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(50),
+      city_id INT REFERENCES city(id)
+    );
+
+    CREATE OR REPLACE VIEW CITY_PERSON_VIEW AS 
+    SELECT C.name, P.id, P.name
+    FROM CITY C, PERSON P
+    WHERE C.id = P.city_id
+    HAVING P.id IS NOT NULL
+    ORDER BY C.id, P.id;
+
+#-------------------------------
+# クエリ
+#-------------------------------
+- ENTRY:
+  CATEGORY: クエリ
+
+- ENTRY:
+  EXPLAIN: SELECT(選択)
+  BODY: |
+    ■ MySQL
+
+    SELECT [DISTINCT] <alias>.<col> as <alias>, ...
+    FROM <schema>.<table> <alias>, ...
+    WHERE <condition> AND/OR ...
+    GROUP BY <aliasA>.<col> [WITH ROLLUP]   # ROLLUP:総計(要集約関数)
+    ORDER BY <aliasA>.<col> ASC/DESC
+    HAVING <condition>
+    LIMIT {<number> OFFSET <number>};       # LIMITがないと、OFFSETは使用できない
+
+    ■ PostgreSQL
+
+    SELECT [DISTINCT] <alias>.<col> as <alias>, ...
+    FROM <schema>.<table> <alias>, ...
+    WHERE <condition> AND/OR ...
+    GROUP BY <aliasA>.<col>
+    ORDER BY <aliasA>.<col> ASC/DESC
+    HAVING <condition>
+    LIMIT <number> OFFSET <number>;         # LIMITとOFFSETはそれぞれ単独でもOK(標準SQL)
+
+    ■ サンプル
+
+    select id, name
+    from person
+    where age >= 20 and status = 'active'
+    order by name desc
+    limit 10 offset 5;
+
+- ENTRY:
+  EXPLAIN: JOIN(結合)
+  BODY: |
+    ■ MySQL
+
+    SELECT <tableA>.<col>, <tableB>.<col>
+    FROM <tableA>
+    [NATURAL]                                         # 自然結合
+    [ INNER | LEFT | RIGHT | CROSS ] JOIN <tableB>    # 内部結合| 左外部結合| 右外部結合| 完全外部結合
+    ON <tableA>.<col> = <tableB>.<col>
+    or 
+    USING (<col>,... *カラム名が一致)
+
+    ■ PostgreSQL
+
+    SELECT <tableA>.<col>, <tableB>.<col>
+    FROM <tableA>
+    [NATURAL] [ INNER | LEFT | RIGHT | FULL | CROSS ] JOIN <tableB>
+    ON <tableA>.<col> = <tableB>.<col>
+    or USING (<col>,... *カラム名が一致)
+
+    ■ 注意
+
+    ・FULL JOIN はPostgreSQLのみ対応
+    ・CROSS JOIN はON/USING句不要
+    ・NATURAL JOIN はON/USING句不要、同名カラムで自動結合
+    ・INNER JOIN はJOINと同義
+    ・OUTER はLEFT/RIGHT/FULLと組み合わせて使用, OUTER は省略可能
+
+- ENTRY:
+  EXPLAIN: JOIN(結合) サンプル
+  BODY: |
+    ■ テーブル定義
+
+      create table city (
+        city_id int primary key,
+        name varchar(50)
+      );
+
+      -------------------
+      | city_id | name  |
+      -------------------
+      |       1 | 北海道 |
+      |       1 | 北海道 |
+      |       2 | 青森   |
+      -------------------
+
+      create table person (
+        id int primary key AUTO_INCREMENT,
+        name varchar(50)',
+        city_id int references city(city_id)
+      );
+
+      ------------------------
+      | id | name  | city_id |
+      ------------------------
+      |  1 | John  |      1  |
+      |  2 | Smith |      2  |
+      |  3 | Lilly |      1  |
+      |  4 | Bill  |   NULL  |
+      ------------------------
+
+    ■ INNER JOIN, CROSS JOIN(ONあり), NATURAL JOIN
+
+    select * from city, person where city.city_id=person.city_id;           // INNER JOIN (古い書き方)
+    = select * from city inner join person on city.city_id=person.city_id;  // INNER JOIN
+    = select * from city cross join person on city.city_id=person.city_id;  // CROSS JOIN (ONあり)
+    = select * from city natural join person;                               // NATURAL JOIN
+
+      ----------------------------------
+      | city_id | name  |  id  | name  |
+      ----------------------------------
+      |       1 | 北海道 |    3 | Lilly |
+      |       1 | 北海道 |    1 | John  |
+      |       2 | 青森   |    2 | Smith |
+      ----------------------------------
+
+    ■ CROSS JOIN(ONなし)
+
+    select * from city cross join person;   // CROSS JOIN (ONなし)
+
+      ----------------------------------
+      | city_id | name  |  id  | name  |
+      ----------------------------------
+      |       1 | 北海道 |    3 | Lilly |
+      |       1 | 北海道 |    1 | John  |
+      |       1 | 北海道 |    2 | Smith |
+      |       1 | 北海道 |    4 | Bill  |
+      |       2 | 青森   |    3 | Lilly |
+      |       2 | 青森   |    1 | John  |
+      |       2 | 青森   |    2 | Smith |
+      |       2 | 青森   |    4 | Bill  |
+      ----------------------------------
+
+    ■ LEFT OUTER JOIN
+
+    select * from city left outer join person on city.city_id=person.city_id;
+
+      ----------------------------------
+      | city_id | name  |  id  | name  |
+      ----------------------------------
+      |       1 | 北海道 |    3 | Lilly |
+      |       1 | 北海道 |    1 | John  |
+      |       2 | 青森   |    2 | Smith |
+      |       3 | 岩手   | NULL | NULL  |
+      ----------------------------------
+
+    ■ RIGHT OUTER JOIN
+
+    select * from city right outer join person on city.city_id=person.city_id;
+
+      ----------------------------------
+      | city_id | name  |  id  | name  |  
+      ----------------------------------
+      |       1 | 北海道 |    3 | Lilly |
+      |       1 | 北海道 |    1 | John  |
+      |       2 | 青森   |    2 | Smith |
+      |    NULL | NULL   |    4 | Bill  |
+      ----------------------------------
+
+    ■ FULL JOIN (PostgreSQLのみ)
+
+    select * from city full join person on city.city_id=person.city_id;
+
+      ----------------------------------
+      | city_id | name  |  id  | name  |
+      ----------------------------------
+      |       1 | 北海道 |    3 | Lilly |
+      |       1 | 北海道 |    1 | John  |
+      |       2 | 青森   |    2 | Smith |
+      |       3 | 岩手   | NULL | NULL  |
+      |    NULL | NULL   |    4 | Bill  |
+      ----------------------------------
+
+- ENTRY:
+  EXPLAIN: UNION(集合)
+  BODY: |
+    ■ MySQL/PostgreSQL
+
+    (select <2 columns> from <table>)
+    union [all]                         # all: 重複保持
+    (<2 columns> from <table>)
+    order by <column>;
+
+    select * 
+    from (
+      (select <2 columns> from <table> limit 1)
+      union [all]                       # all: 重複保持
+      (<2 columns> from <table> limit 1)
+    ) as temp
+    order by <column>;
+
+    ■ ERROR 例
+
+    原因: ()が必要
+    select <2 columns> from <table> limit 1 union <2 columns> from <table> limit 1 order by <column>;
+
+    原因: カラム数不一致
+    (select <2 columns> from <table>) union (<3 columns> from <table>) order by <column>;
+
+- ENTRY:
+  EXPLAIN: EXCEPT(差集合)【pgのみ】
+  BODY: |
+    ■ PostgreSQL
+
+    (select <2 columns> from <table>)
+    except [all]                        # all: 重複保持
+    (<2 columns> from <table>)
+    order by <column>;
+
+    select *
+    from (
+      (select <2 columns> from <table> limit 1)
+      except [all]                      # all: 重複保持
+      (<2 columns> from <table> limit 1)
+    ) as temp
+    order by <column>;
+
+    ■ mysql: EXCEPT 非対応(代替案)
+
+    SELECT a.<cols>
+    FROM tableA a
+    LEFT JOIN tableB b ON a.<col>=b.<col>
+    WHERE b.<col> IS NULL;
+
+- ENTRY:
+  EXPLAIN: INTERSECT(積集合)【pgのみ】
+  BODY: |
+    ■ MySQL/PostgreSQL
+
+    (select <2 columns> from <table>)
+    intersect [all]                    # all: 重複保持
+    (<2 columns> from <table>)
+    order by <column>;
+
+    select *
+    from (
+      (select <2 columns> from <table> limit 1)
+      intersect [all]                  # all: 重複保持
+      (<2 columns> from <table> limit 1)
+    ) as temp
+    order by <column>;
+
+    ■ mysql: INTERSECT 非対応(代替案)
+
+    SELECT a.<cols>
+    FROM tableA a
+    INNER JOIN tableB b ON a.<col>=b.<col>;
+
+- ENTRY:
+  EXPLAIN: UNION,EXCEPT,INTERSECT 比較サンプル
+  BODY: |
+    create table city (
+      city_id int primary key,
+      name varchar(50)
+    );
+    ---------------------
+    | city_id | name    |
+    ---------------------
+    |       1 | '北海道' |
+    |       2 | '秋田'   |
+    |       3 | '岩手'   |
+    ---------------------
+    create table selectedCity (
+      city_id int primary key,
+      name varchar(50)
+    );
+    ---------------------
+    | city_id | name    |
+    ---------------------
+    |       1 | '北海道' |
+    |       2 | '青森'   |
+    |       3 | null    |
+    ---------------------
+
+    ■ UNION
+
+    (select city_id,name from city) union (select city_id,name from selectedCity);
+
+    ---------------------
+    | city_id | name    |
+    ---------------------
+    |       1 | '北海道' |
+    |       2 | '秋田'   |
+    |       2 | '青森'   |
+    |       3 | '岩手'   |
+    |       3 | null    |
+    ---------------------
+
+    ■ UNION ALL
+
+    (select city_id,name from city) union all (select city_id,name from selectedCity);
+
+    ---------------------
+    | city_id | name    |
+    ---------------------
+    |       1 | '北海道' |
+    |       2 | '秋田'   |
+    |       3 | '岩手'   |
+    |       1 | '北海道' |
+    |       2 | '青森'   |
+    |       3 | null    |
+    ---------------------
+
+    ■ EXCEPT【pgのみ】
+
+    (select city_id,name from city) except (select city_id,name from selectedCity);
+
+    ---------------------
+    | city_id | name    |
+    ---------------------
+    |       2 | '秋田'   |
+    |       3 | '岩手'   |
+    ---------------------
+
+    ■ INTERSECT【pgのみ】
+
+    (select city_id,name from city) intersect (select city_id,name from selectedCity);
+
+    ---------------------
+    | city_id | name    |
+    ---------------------
+    |       1 | '北海道' |
+    ---------------------
+
+- ENTRY:
+  EXPLAIN: VALUES句, EXISTS句
+  BODY: |
+    ■ 概要
+
+    VALUES: 複数行を一度に挿入、クエリ内で一時テーブル作成に使用、SELECT不要
+    ROW: 行データをまとめる(【pg】はオプション)
+
+    ■ MySQL
+
+    VALUES ROW(value1,value2,value3), ROW(value1,value2,value3), ...;
+
+    SELECT * FROM (VALUES ROW(1,-2,3), ROW(5,7,9)) [as] tmp(col1,col2,col3);
+
+    ■ PostgreSQL
+
+    VALUES (value1,value2,value3), (value1,value2,value3), ...;    # ROWはオプション
+
+    SELECT * FROM (VALUES (1,-2,3), (5,7,9)) [as] tmp(col1,col2,col3); 
+
+    ■ EXISTS句(存在有無チェック)
+
+    EXISTS (<values|subquery>)
+
+    CREATE TABLE tableA select * from (VALUES ROW(1,2,3), ROW(4,5,6)) as tmp(col1,col2,col3);
+    SELECT * FROM tableA WHERE EXISTS (VALUES ROW(1,2,3), ROW(3,4,5));
+
+    ----------------------
+    | col1 | col2 | col3 |
+    ----------------------
+    |    1 |    2 |    3 |
+    ----------------------
+
+    ■ ERROR 例
+
+    原因: カラム数不一致   VALUES ROW(value1,value2,value3), ROW(value1);
+
+- ENTRY:
+  EXPLAIN: |
+    WITH句: Common Table Expression(CTE)
+  BODY: |
+    ■ 概要
+
+    ・共通テーブル式(CTE: Common Table Expression)を定義
+    ・クエリ内で再利用可能な一時的な結果セット作成
+    ・再帰的なクエリを作成するためにも使用可能
+
+    ・RECURSIVE
+      ・再帰的CTEを定義するために使用
+      ・CTEが自己参照を含む場合に必要 
+      ・再帰的CTEは、階層データの操作やツリー構造のクエリに便利
+
+    ■ MySQL/PostgreSQL の違い
+
+    ・MySQL
+
+      ・CTEは読み取り専用 (SELECTのみ) 
+      ・書き込み操作 (INSERT/UPDATE/DELETE) は不可
+      ・MySQL 8.0.1以降でサポート
+      ・キャッシュ: CTE結果をキャッシュしない
+
+    ・PostgreSQL
+
+      ・CTE内で書き込み操作が可能 (書き込み可能なCTE) 
+      ・古くからサポートされ、より柔軟な再帰クエリが可能
+      ・パフォーマンス: PostgreSQLの方がCTEの最適化が優秀
+      ・キャッシュ:
+          CTE結果をキャッシュ可能
+          キャッシュ保持時間はクエリ実行中のみ
+          オプション (PostgreSQL 12以降)
+            MATERIALIZED: CTE結果をキャッシュ
+            NOT MATERIALIZED: CTE結果をキャッシュしない
+
+    ■ MySQL/PostgreSQL 共通
+
+    WITH [RECURSIVE] <cte_name> [(<column_list>))] AS (
+      <cte_query>
+    ), <with2>
+    SELECT ... FROM <cte_name>;
+
+    WITH RECURSIVE cte AS (
+      SELECT 1 AS n
+      UNION ALL
+      SELECT n + 1 FROM cte WHERE n < 5  # 自己参照 cte 再帰的CTE例
+    )
+    SELECT * FROM cte;
+
+    ■ PostgreSQL 書き込み可能なCTE 例
+
+    WITH updated_rows AS (
+      UPDATE person
+      SET status = 'inactive'
+      WHERE last_login < NOW() - INTERVAL '1 year'
+      RETURNING *
+    )
+    SELECT * FROM updated_rows;         # 更新された行を取得
+
+    ■ PostgreSQL MATERIALIZED 例
+
+    WITH MATERIALIZED recent_orders AS (
+      SELECT * FROM orders WHERE order_date >= NOW() - INTERVAL '7 days'
+    )
+    SELECT customer_id, COUNT(*) AS order_count
+    FROM recent_orders
+    GROUP BY customer_id;
+
+- ENTRY:
+  EXPLAIN: サブクエリ
+  BODY: |
+    ■ 概要
+
+    ・クエリ内に含まれる別のクエリ、ネストされたクエリとも呼ばれる
+    ・主にSELECT文のWHERE句、FROM句、SELECT句で使用される
+
+    ■ MySQL/PostgreSQL の違い
+
+    ・MySQL
+
+      ・サブクエリの最適化が限定的で、パフォーマンスに影響を与える場合がある
+      ・一部のサブクエリはインデックスを効果的に利用できない場合がある
+
+    ・PostgreSQL
+
+      ・サブクエリの最適化が優れており、パフォーマンスが高い
+      ・多くのサブクエリがインデックスを効果的に利用できる
+
+    ■ サブクエリ例
+
+    # SELECT句内サブクエリ
+
+    例: SELECT ..., (SELECT COUNT(*) FROM t2 WHERE t2.c1 = t1.c1) AS sub_count FROM t1;
+
+    # WHERE句内サブクエリ
+
+    例: SELECT ... FROM t1 WHERE c1 IN (SELECT c1 FROM t2 WHERE condition);
+
+    # FROM句内サブクエリ
+
+    例: SELECT ... FROM (SELECT c1, c2 FROM t2 WHERE condition) AS subquery WHERE sub.c1 = value;
+
+- ENTRY:
+  EXPLAIN: IN, ANY, SOME, ALL, EXISTS
+  BODY: |
+    ■ IN
+
+    目的: 指定した値の集合に対する存在有無チェック
+    速度: 速い
+    速度理由: 内部的にハッシュ検索など効率的な方法でチェック可能
+
+    <col> IN (value1, value2, value3, ... )
+    <col> IN (<subquery>)
+
+    例: SELECT * FROM t1 WHERE c1 IN (1,2,3);
+    例: SELECT * FROM t1 WHERE c1 IN (SELECT c1 FROM t2 WHERE condition);
+
+    ■ ANY, SOME, ALL
+
+    目的: サブクエリの結果セットに対する部分/全件一致チェック
+    速度: 遅い
+    速度理由: サブクエリの各行と比較するため、パフォーマンスが低下する可能性あり
+
+    <col> = ANY/SOME/ALL (<subquery>)
+    <col> =< ANY/SOME/ALL (<subquery>)
+    <col> => ANY/SOME/ALL (<subquery>)
+
+    例: SELECT * FROM t1 WHERE c1 = ANY(SELECT c1 FROM t2 WHERE condition);  # 部分一致 = SOME
+    例: SELECT * FROM t1 WHERE c1 = ALL(SELECT c1 FROM t2 WHERE condition);  # 全件一致
+
+    ■ EXISTS
+
+    目的: サブクエリの結果セットが空でないかチェック
+    速度: 速い
+    速度理由: サブクエリが最初の一致を見つけた時点で評価を終了可能
+
+    EXISTS (<subquery>)
+
+    例: SELECT * FROM t1 WHERE EXISTS (SELECT 1 FROM t2 WHERE t2.c1 = t1.c1);
+
+    ■ LITERAL
+
+    目的: サブクエリ内で外部クエリのカラムを参照する
+    速度: 速い
+    速度理由: サブクエリが外部クエリのコンテキストで評価されるため、効率的に実行可能
+    サポート: MySQLでのサポートはv8.0.14以降
+
+    例: SELECT ...,p FROM t1, LATERAL (SELECT p FROM t2 WHERE t1.id=t2.t1id) t2;
+
+    例: SELECT t1.*, t2.p
+    FROM t1
+    JOIN LATERAL (
+      SELECT p
+      FROM t2
+      WHERE t2.t1id = t1.id
+      ORDER BY t2.created_at DESC       # 最新のp値を取得(通常のJOINでは困難)
+      LIMIT 1
+    ) AS t2 ON true;
+
+    ・通常のJOINと異なり、LATERALはt1の各行に対してt2のサブクエリを評価
+    ・t1の各行に基づいてt2のサブクエリが異なる結果を返すなど、通常のJOINでは実現困難な動的な結合が可能
+
+#-------------------------------
+# 操作(更新,更新,削除)
+#-------------------------------
+- ENTRY:
+  CATEGORY: 挿入, 更新, 削除
+
+- ENTRY:
+  EXPLAIN: INSERT(挿入)
+  BODY: |
+    ■ INSERT(挿入)
+
+      ・mySQL/PostgreSQL 共通
+
+      INSERT INTO <table>(<cols>) VALUES (values), (values), ...;
+      INSERT INTO <table>(<cols>) SELECT <cols> FROM <table> WHERE condition;
+
+      例: INSERT INTO users (name, email) VALUES ('John', 'john@example.com');
+      例: INSERT INTO users (name, email) SELECT name, email FROM temp_users WHERE active = 1;
+
+    ■ *UPSERT(挿入 => KEY重複時:更新) *UPSERT は ORM などでの呼称
+
+      ・MySQL
+
+      INSERT INTO <table>(<cols>) VALUES (values) ON DUPLICATE KEY UPDATE <col>=value, ...;
+
+      例: INSERT INTO users (id, name, email) VALUES (1, 'John', 'john@example.com')
+           ON DUPLICATE KEY UPDATE name=VALUES(name), email=VALUES(email);
+
+      ・PostgreSQL
+
+      INSERT INTO <table>(<cols>) VALUES (values) ON CONFLICT (<unique_col>) DO UPDATE SET <col>=value, ...;
+
+      例: INSERT INTO users (id, name, email) VALUES (1, 'John', 'john@example.com')
+          ON CONFLICT (id) DO UPDATE SET name=EXCLUDED.name, email=EXCLUDED.email;
+
+    ■ REPLACE(挿入 => KEY重複時:削除 => 新規挿入)
+
+      ・mySQLのみ
+
+      REPLACE INTO <table>(<cols>) VALUES (values), (values), ...;
+
+      例: REPLACE INTO users (id, name, email) VALUES (1, 'John', 'john@example.com');
+
+    ■ RETURNING (挿入/更新後の値取得)
+
+      ・PostgreSQLのみ
+
+      INSERT INTO <table>(<cols>) VALUES (values) RETURNING <col>, ...;
+
+      例: INSERT INTO users (name, email) VALUES ('John', 'john@example.com') RETURNING id;
+
+    ■ 注意点
+
+    ・MySQLのREPLACE文は、行が存在する場合に削除してから新しい行を挿入するため、トリガーが発生し、AUTO_INCREMENT値が変わる可能性がある
+    ・PostgreSQLのON CONFLICT句は、指定された一意制約に基づいて動作し、行が存在する場合に更新を行うため、REPLACE文とは異なる動作をする
+    ・UPSERT という単語は ORM(TypeORM, Prisma など)でよく使われるが、MySQL/PostgreSQLの標準SQLではない
+    ・ORMでは挿入/更新操作はORM自身のメソッドを通じて実行されるため、ORMのドキュメントを参照して適切な方法を確認することが重要
+
+- ENTRY:
+  EXPLAIN: UPDATE(更新)
+  BODY: |
+    ■ mySQL/PostgreSQL 共通
+
+    UPDATE <schema>.<table> AS <alias> SET <col>=value, ... WHERE condition;
+
+    例: UPDATE mydb.users AS u SET u.name='Jane' WHERE u.id=1;
+
+    ■ 注意点
+
+    ・WHERE句を省略すると、テーブル内のすべての行が更新されるため注意が必要
+    ・mySQLでは、複数テーブルを同時に更新することも可能
+    ・PostgreSQLでは、サブクエリを使用して他のテーブルのデータを参照しながら更新することが可能
+    ・更新操作はトランザクション内で実行することが推奨される。特に複数の関連する更新を行う場合、データの整合性を保つために重要
+
+    ■ 例: 複数テーブル更新 (mySQLのみ)
+
+    UPDATE tableA AS a
+    JOIN tableB AS b ON a.id = b.a_id
+    SET a.col1 = b.col2
+    WHERE b.condition = 'value';
+
+    ■ 例: サブクエリを使用した更新 (PostgreSQLのみ)
+
+    UPDATE users AS u
+    SET name = (SELECT temp.name FROM temp_users AS temp WHERE temp.id = u.id)
+    WHERE EXISTS (SELECT 1 FROM temp_users AS temp WHERE temp.id = u.id);
+
+- ENTRY:
+  EXPLAIN: DELETE(削除), TRUNCATE(全削除)
+  BODY: |
+    ■ DELETE 
+
+    ・mySQL/PostgreSQL 共通
+
+    DELETE FROM <schema>.<table> WHERE condition;
+
+    例: DELETE FROM mydb.users WHERE id=1;
+    例: DELETE FROM mydb.users;                    // (テーブル内全データ)削除
+
+    TRUNCATE TABLE <schema>.<table>;               // (テーブル内全データ)削除
+
+    例: TRUNCATE TABLE mydb.users;                 // (テーブル内全データ)削除
+
+    ■ 注意点
+
+    ・DELETE文はWHERE句を省略すると、テーブル内のすべての行が削除されるため注意が必要
+    ・TRUNCATE文はテーブル内のすべての行を高速に削除するが、トリガーは発生しない
+    ・TRUNCATE文は一部のデータベースシステムではROLLBACKできない場合があるため、使用時には注意が必要
+
+#-------------------------------
+# 比較
+#-------------------------------
+- ENTRY:
+  CATEGORY: 比較
+
+- ENTRY:
+  EXPLAIN: 比較記号
+  BODY: |
+    ■ =, <>
+
+    <col> = value                       # 等価比較 (文字列、数値、日付、真偽値)
+    <col> <> value                      # 不等価比較 (文字列、数値、日付、真偽値)
+
+    ■ <, <=, >, =>
+
+    <col> < value                       # 前後比較 (数値、日付など、文字列は文字コード順)
+    <col> > value                       # 前後比較 (数値、日付など、文字列は文字コード順)
+    <col> <= value                      # 前後比較 (数値、日付など、文字列は文字コード順)
+    <col> >= value                      # 前後比較 (数値、日付など、文字列は文字コード順)
+
+    ■ BETWEEN A AND B
+
+    <col> BETWEEN value1 AND value2     # 範囲比較 (数値、日付など、文字列は文字コード順)
+    <col> NOT BETWEEN value1 AND value2 # 範囲外比較 (数値、日付など、文字列は文字コード順)
+
+    ■ IS
+
+    IS [NOT] NULL(=UNKNOWN)             # カラム値のNULL判定(UNKNOWN含む)
+    IS [NOT] TRUE/FALSE                 # 真偽値判定
+
+    ※ NULL と UNKNOWN の違い
+      ・NULL:       データベース内の値が存在しないことを示す特別なマーカー
+      ・UNKNOWN:    論理演算において、真でも偽でもない状態を示す。NULL値が関与する場合に発生
+      ・mySQL:      NULL=UNKNOWN
+      ・PostgreSQL: NULLとUNKNOWNは区別
+
+    ■ GREATEST, LEAST
+
+    <col> = GREATEST(values)            # 最大値比較
+    <col> = LEAST(values)               # 最小値比較
+
+    ■ INTERVAL
+
+    modified < now() - interval 60 second    # 現在時刻から60秒前以降の値のものを抽出
+    select now() + interval 7 day            # 7日後を表示
+    `date` > (NOW() - INTERVAL 30 MINUTE)    # 30分以内のdate # MySQL: バッククォート使用可能
+    "date" > (NOW() - INTERVAL 30 MINUTE)    # 30分以内のdate # PostgreSQL: ダブルクォート推奨
+
+- ENTRY:
+  EXPLAIN: NULL と UNKNOWN (PostgreSQL)
+  BODY: |
+    ■ 三値論理 (Three-Valued Logic)
+
+    PostgreSQLでは、SQL標準に従い、三値論理を採用
+    論理値は TRUE, FALSE, UNKNOWN の3つ
+
+    ■ NULL
+
+      データベース内の値が存在しないことを示す特別なマーカー
+      カラムの値が未設定、または不明
+
+    ■ UNKNOWN
+
+      論理演算の結果が不明である状態
+      NULL値が関与する比較や論理演算で発生
+
+    ■ 区別の重要性
+
+      PostgreSQLでは NULL ≠ UNKNOWN
+      MySQLでは NULL = UNKNOWN
+
+    ■ IS vs = 演算子
+
+    CREATE TABLE test_null (
+        id SERIAL PRIMARY KEY,
+        value INTEGER
+    );
+
+    INSERT INTO test_null (value) VALUES (1), (NULL), (3);   # NULLを含む
+
+    SELECT * FROM test_null WHERE value IS NULL;        # NULL値の行を取得
+    SELECT * FROM test_null WHERE value IS NOT NULL;    # NULLでない行を取得
+
+    SELECT * FROM test_null WHERE value = NULL;         # = での比較 -> UNKNOWN (常にFALSE)
+    SELECT * FROM test_null WHERE value <> NULL;        # <> での比較 -> UNKNOWN (常にFALSE)
+
+    ■ 論理演算 AND演算
+
+    TRUE  AND TRUE   = TRUE
+    TRUE  AND FALSE  = FALSE
+    TRUE  AND UNKNOWN = UNKNOWN
+    FALSE AND UNKNOWN = FALSE
+    UNKNOWN AND UNKNOWN = UNKNOWN
+
+    ■ 論理演算 OR演算
+
+    TRUE  OR TRUE   = TRUE
+    TRUE  OR FALSE  = TRUE
+    TRUE  OR UNKNOWN = TRUE
+    FALSE OR UNKNOWN = UNKNOWN
+    UNKNOWN OR UNKNOWN = UNKNOWN
+
+    ■ 論理演算 NOT演算
+
+    NOT TRUE   = FALSE
+    NOT FALSE  = TRUE
+    NOT UNKNOWN = UNKNOWN
+
+    ■ WHERE句での影響
+
+    SELECT * FROM test_null WHERE value > 0;                   # 除外: NULL行は結果に含まれない
+    SELECT * FROM test_null WHERE value > 0 OR value IS NULL;  # NULLを明示的に扱う場合
+
+    ■ NULLIF関数でのUNKNOWN
+
+    SELECT NULLIF(1, 1);                                       # NULL
+    SELECT NULLIF(1, 2);                                       # 1
+    SELECT * FROM test_null WHERE NULLIF(value, 1) IS NULL;    # value = 1 の行
+
+      ※ NULLIF(a, b): aとbが等しい場合にNULLを返し、そうでない場合にaを返す
+
+    ■ COALESCE関数での扱い
+
+    SELECT COALESCE(value, 0) FROM test_null;                  # NULLを0に置換
+
+      ※ COALESCE(value1, value2, ...): 最初の非NULL値を返す
+
+    ■ 注意点
+
+    ・WHERE句, HAVING句では UNKNOWN は FALSE として扱われる
+    ・CHECK制約では UNKNOWN は制約違反とはならない
+    ・三値論理は直感的でないため、NULLの扱いを明確にするのが重要
+
+#-------------------------------
+# 比較
+#-------------------------------
+- ENTRY:
+  CATEGORY: 正規表現
+
+- ENTRY:
+  EXPLAIN: LIKE, REGEXP, 演算子
+  BODY: |
+    ■ mySQL / PostgreSQL 共通
+
+    WHERE <col> LIKE '%文字列%' (%:0以上)                     # 部分一致
+    WHERE <col> LIKE '_文字列_' (_:1文字)                     # 1文字
+
+      ※ ESCAPE句省略:
+        mySQL: 省略不可
+        Pg:    省略可 (デフォルトでバックスラッシュ[\])
+
+    WHERE <col> LIKE 'data\_entry' ESCAPE '\';               # data_entry に一致
+    WHERE <col> LIKE 'C:\\\\path\\\\to\\\\file' ESCAPE '\';  # C:\path\to\file に一致
+    WHERE <col> LIKE '50\% off' ESCAPE '\';                  # 50% off に一致
+    WHERE <col> LIKE 'user\_name' ESCAPE '\';                # user_name に一致
+
+    WHERE <col> LIKE '%test%';                               # 部分一致
+    WHERE <col> LIKE 'test\_%' ESCAPE '\';                   # test_ で始まる
+    WHERE <col> LIKE '100\%%' ESCAPE '\';                    # 100% で始まる
+    WHERE <col> LIKE 'C\:\\\\Program Files\\\\%' ESCAPE '\'; # C:\Program Files\ で始まる
+    WHERE <col> LIKE 'data\_2024\_%' ESCAPE '\';             # data_2024_ で始まる
+
+    WHERE <col> LIKE '_test_';                               # 1文字 + test + 1文字
+    WHERE <col> LIKE 'file\_?.txt' ESCAPE '\';               # file_1.txt, file_a.txt などに一致
+    WHERE <col> LIKE 'C\:\\\\path\\\\file\_.txt' ESCAPE '\'; # C:\path\file1.txt などに一致
+
+    ■ mySQL 
+
+    WHERE <col> REGEXP [BINARY] '正規表現'                    # BINARY:CASE区別
+    WHERE <col> NOT REGEXP [BINARY] '正規表現'                # BINARY:CASE区別,否定
+
+    WHERE <col> REGEXP '^[A-Za-z0-9]+$';                     # 英数字のみ
+    WHERE <col> REGEXP BINARY '^[A-Z]+$';                    # 大文字のみ
+    WHERE <col> NOT REGEXP '^[0-9]+$';                       # 数字以外
+
+    ■ PostgreSQL
+
+    WHERE <col> ILIKE '%文字列%'                             # %:0以上,CASE無視(SQL標準外)
+    WHERE <col> NOT ILIKE '%文字列%'                         # %:0以上,CASE無視,否定(SQL標準外)
+    WHERE <col> ILIKE '_文字列_'                             # _:1文字,CASE無視(SQL標準外)
+
+    WHERE <col> ILIKE '%test%';                              # 部分一致,CASE無視(SQL標準外)
+    WHERE <col> NOT ILIKE 'test%';                           # testで始まる,CASE無視,否定(SQL標準外)
+    WHERE <col> ILIKE '_test_';                              # 1文字 + test + 1文字,CASE無視(SQL標準外)
+
+    WHERE <col> ~ '正規表現'                                 # CASE区別
+    WHERE <col> ~* '正規表現'                                # CASE無視
+    WHERE <col> !~ '正規表現'                                # CASE区別,否定
+    WHERE <col> !~* '正規表現'                               # CASE無視,否定
+
+    WHERE <col> ~ '^[A-Z]+$';                                # 大文字のみ
+    WHERE <col> ~* '^[a-z]+$';                               # 小文字のみ,CASE無視
+    WHERE <col> !~ '^[0-9]+$';                               # 数字以外
+    WHERE <col> !~* '^[A-F]+$';                              # A-F以外,CASE無視
+
+    ■ CASE に関する注意
+
+    MySQL       REGEXP はデフォルトでCASE無視 (utf8_general_ciなどの照合順序に依存)
+    PostgreSQL  ~ 演算子はデフォルトでCASE区別
+
+    テーブルの COLLATE 設定やクエリ内での COLLATE 指定により、CASEの挙動が変わる場合があるため注意
+    例: WHERE <col> COLLATE utf8mb4_0900_as_cs REGEXP '正規表現';  // CASE区別(MySQL)
+    例: WHERE <col> COLLATE "C" ~ '正規表現';                      // CASE区別(PostgreSQL)
+
+- ENTRY:
+  EXPLAIN: 正規表現関数比較
+  BODY: |
+    ■ mySQL
+
+    REGEXP_INSTR(expr, pat, pos, occurrence, return_option, type) => INDEX
+    REGEXP_LIKE(expr, pat, type)                                  => BOOLEAN
+    REGEXP_REPLACE(source, pat, repl, [pos, occurrence, type])    => STRING
+    REGEXP_SUBSTR(expr, pat, pos, occurrence, type)               => STRING
+
+    ■ PostgreSQL
+
+    regexp_match(string, pattern)                                 => TEXT[]
+    regexp_matches(string, pattern)                               => SETOF TEXT[]  # 複数マッチ
+    regexp_replace(string, pattern, replacement, [flags])         => STRING
+    position(substring(string, pattern))                          => INDEX
+    regexp_split_array(string, pattern)                           => TEXT[] # 分割
+    regexp_split_to_array(string, pattern)                        => TEXT[]
+    regexp_split_to_table(string, pattern)                        => SETOF TEXT  # テーブルに分割
+
+- ENTRY:
+  EXPLAIN: |
+    【my】REGEXP_INSTR vs 【pg】position(substring())
+  BODY: |
+    ■ REGEXP_INSTR: mySQL専用拡張
+
+    REGEXP_INSTR(expr, pat, pos, occurrence, return_option, type) => INDEX
+
+      expr (検索対象文字列: expression)
+      pat (正規表現パターン: pattern)
+      pos (検索開始位置、オプション: 1始まり)
+      occurrence (出現回数、オプション: 1=最初の1つ、0=最後の1つ)
+      return_option (返却オプション、オプション: 0=開始位置、1=終了位置+1)
+      type:
+        'c': CASE区別
+        'i': CASE無視
+        'm': 複数行モード
+        'n': ドット(.)が改行にマッチ
+
+    REGEXP_INSTR('dog cat dog', 'dog')            # => 1
+    REGEXP_INSTR('dog cat dog', 'dog', 2)         # => 9
+    REGEXP_INSTR('aa aaa aaaa', 'a{2}')           # => 1
+    REGEXP_INSTR('aa aaa aaaa', 'a{4}')           # => 8
+
+    ■ position(substring()): PostgreSQL類似機能
+
+    ・マッチした位置を取得 (regexp_match + substring)
+    SELECT position(substring('dog cat dog', 'dog'), 'dog cat dog');           # => 1
+
+    ・regexp_matchでマッチ部分を取得後、positionで位置を求める
+    SELECT position((regexp_match('dog cat dog', 'dog'))[1], 'dog cat dog');   # => 1
+
+    ・複雑な場合はカスタム関数作成
+    CREATE OR REPLACE FUNCTION regexp_instr(text, text, int DEFAULT 1, int DEFAULT 1)
+    RETURNS int AS $$
+    BEGIN
+      RETURN position(substring($1, $2), $1);         # 簡易版
+    END;
+    $$ LANGUAGE plpgsql;
+
+- ENTRY:
+  EXPLAIN: |
+    【my】REGEXP_LIKE vs 【pg】regexp_match
+  BODY: |
+    ■ REGEXP_LIKE: mySQL専用拡張
+
+    REGEXP_LIKE(expr, pat, type('c':case,'i':ins,'m':mult,...))
+      type:
+        'c': CASE区別
+        'i': CASE無視
+        'm': 複数行モード
+        'n': ドット(.)が改行にマッチ
+
+    REGEXP_LIKE('CamelCase', 'CAMELCASE')                            # => 1 (true)
+    REGEXP_LIKE('CamelCase', 'CAMELCASE' COLLATE utf8mb4_0900_as_cs) # => 0 (false)(CASE区別)
+    REGEXP_LIKE('Michael!', '.*')                                    # => 1 (true)
+    REGEXP_LIKE('new*\n*line', 'new\\*.\\*line')                     # => 0 (false)
+    REGEXP_LIKE('a', '^[a-d]')                                       # => 1 (true)
+    REGEXP_LIKE('a', 'A')                                            # => 1 (true)
+    REGEXP_LIKE('a', BINARY 'A')                                     # => 0 (false)(CASE区別)
+    REGEXP_LIKE('abc', 'ABC')                                        # => 1 (true)
+    REGEXP_LIKE('abc', 'ABC', 'c')                                   # => 0 (false)(CASE区別)
+
+    ■ regexp_match: PostgreSQL類似機能
+
+    regexp_match('CamelCase', 'CAMELCASE') IS NOT NULL;              # false (CASE区別)
+    regexp_match('Michael!', '.*') IS NOT NULL;                      # true
+    regexp_match('new*\n*line', 'new\\*.\\*line') IS NOT NULL;       # false
+    regexp_match('a', '^[a-d]') IS NOT NULL;                         # true
+    regexp_match('a', 'A') IS NOT NULL;                              # false (CASE区別)
+    regexp_match('abc', 'ABC') IS NOT NULL;                          # false (CASE区別)
+    regexp_match('abc', 'ABC' COLLATE "C") IS NOT NULL;              # false (CASE区別)
+    regexp_match('abc', 'ABC' COLLATE "C" ) IS NOT NULL;             # false (CASE区別)
+
+- ENTRY:
+  EXPLAIN: |
+    【my】REGEXP_REPLACE vs 【pg】regexp_replace
+  BODY: |
+    ■ REGEXP_REPLACE: mySQL専用拡張
+
+    REGEXP_REPLACE(source, pat, repl, [pos, occurrence, type])
+
+      source (検索対象文字列: source)
+      pat (正規表現パターン: pattern)
+      repl (置換文字列: replacement)
+      pos (検索開始位置、オプション: 1始まり)
+      occurrence (置換回数、オプション: 1=最初の1つ、0=全て)
+      type:
+        'c': CASE区別
+        'i': CASE無視
+        'm': 複数行モード
+        'n': ドット(.)が改行にマッチ
+
+    REGEXP_REPLACE('a b c', 'b', 'X')                                # => a X c
+    REGEXP_REPLACE('abc def ghi', '[a-z]+', 'X', 1, 3)               # => abc def X
+    REGEXP_REPLACE('abc def ghi', '[a-z]+', 'X', 1, 2)               # => X def ghi
+    REGEXP_REPLACE('Hello World', 'world', 'Universe', 1, 1, 'i')    # => Hello Universe
+
+    ■ regexp_replace: PostgreSQL類似機能
+
+    regexp_replace(source, pattern, replacement [, flags])
+
+      source      検索対象文字列
+      pattern     正規表現パターン
+      replacement 置換文字列
+      flags       オプション:
+        'g': グローバル置換 (全てのマッチを置換)
+        'i': CASE無視
+        'm': 複数行モード
+        'n': ドット(.)が改行にマッチ
+
+    # 基本的な置換
+    SELECT regexp_replace('a b c', 'b', 'X');                          # => a X c
+
+    # CASE無視
+    SELECT regexp_replace('Hello World', 'world', 'Universe', 'i');    # => Hello Universe
+
+    # グローバル置換 (全て置換)
+    SELECT regexp_replace('abc def ghi', '[a-z]+', 'X', 'g');          # => X X X
+
+    # 最初の3つだけ置換 (MySQLのoccurrenceに相当): substring + regexp_replace
+    SELECT regexp_replace(
+      substring('abc def ghi jkl', '(.{0,20})'),                       # 最初の部分
+      '([a-z]+ )([a-z]+ )([a-z]+ )', '\1\2X ', 'i'
+    );                                                                 # => abc def X
+
+    # 位置指定置換 (MySQLのposに相当): substring + regexp_replace
+    SELECT regexp_replace(
+      substring('abc def ghi', 5), 'def', 'XYZ'
+    );                                                                 # => ghi (位置5以降を置換)
+
+- ENTRY:
+  EXPLAIN: |
+    【my】REGEXP_SUBSTR vs 【pg】regexp_matches
+  BODY: |
+    ■ REGEXP_SUBSTR: mySQL専用拡張
+
+    REGEXP_SUBSTR(source, pat, pos, occurrence, type)
+
+      source (検索対象文字列: source)
+      pat (正規表現パターン: pattern)
+      pos (検索開始位置、オプション: 1始まり)
+      occurrence (出現回数、オプション: 1=最初の1つ、0=最後の1つ)
+      type:
+        'c': CASE区別
+        'i': CASE無視
+        'm': 複数行モード
+        'n': ドット(.)が改行にマッチ
+
+    REGEXP_SUBSTR('abc def ghi', '[a-z]+')             # => abc
+    REGEXP_SUBSTR('abc def ghi', '[a-z]+', 1, 3)       # => ghi
+    REGEXP_SUBSTR('abc def ghi', '[A-Z]+', 1, 1, 'i')  # => abc
+
+    ■ regexp_matches: PostgreSQL類似機能
+
+    regexp_matches(string, pattern [, flags]) => TEXT[]
+
+    # マッチした部分を配列で返す (複数マッチ可能)
+      string (検索対象文字列)
+      pattern (正規表現パターン)
+      flags (オプション):
+        'g': グローバルマッチ (全てのマッチを取得)
+        'i': CASE無視
+        'm': 複数行モード
+        'n': ドット(.)が改行にマッチ
+
+    SELECT regexp_matches('abc def ghi', '[a-z]+');              # => {abc}
+    SELECT regexp_matches('abc def ghi', '[a-z]+', 'g');          # => {abc,def,ghi} (全てマッチ)
+    SELECT regexp_matches('ABC def ghi', '[a-z]+', 'gi');         # => {ABC,def,ghi} (case-insensitive + グローバル)
+
+    # キャプチャグループを使用
+    SELECT regexp_matches('2023-12-25', '(\d{4})-(\d{2})-(\d{2})');  # => {2023,12,25}
+
+    # マッチしない場合はNULL
+    SELECT regexp_matches('abc', '[0-9]+');                       # => NULL
+
+    # REGEXP_SUBSTRに相当する単一マッチ
+    SELECT (regexp_matches('abc def ghi', '[a-z]+'))[1];          # => abc (最初のマッチ)
+
+    # 3番目のマッチを取得 (occurrence = 3 に相当)
+    SELECT (regexp_matches('abc def ghi jkl', '[a-z]+', 'g'))[3]; # => ghi
+
+#-------------------------------
+# 集約,結合,集計
+#-------------------------------
+- ENTRY:
+  CATEGORY: 集約, 結合, 集計
+
+- ENTRY:
+  EXPLAIN: 集約(COUNT, AVG, MAX, MIN, SUM, GROUP BY, HAVING)
+  BODY: |
+    ■ mySQL / PostgreSQL 共通
+
+    COUNT([DISTINCT]<col>)              # 総数
+    AVG(<col>)                          # 平均値
+    MAX(<col>)                          # 最大値
+    MIN(<col>)                          # 最小値
+    SUM(<col>)                          # 合計値
+
+    GROUP BY <col1>, <col2>, ...        # 集約条件指定
+    HAVING <条件節>                     # 集約後の条件指定
+
+    SELECT department, COUNT(*) AS employee_count
+      FROM employees
+      GROUP BY department
+      HAVING COUNT(*) > 10;
+
+    SELECT category, AVG(price) AS average_price
+      FROM products
+      GROUP BY category
+      HAVING AVG(price) > 100;
+
+    SELECT country, MAX(salary) AS highest_salary
+      FROM employees
+      GROUP BY country;
+
+    ■ 注意点
+
+    ・SELECT句に含まれる非集約カラムは、GROUP BY句にも含める必要がある
+    ・HAVING句はGROUP BY句の後に評価されるため、集約結果に基づく条件指定が可能
+
+- ENTRY:
+  EXPLAIN: 結合 【my】GROUP_CONCAT vs 【pg】string_agg
+  BODY: |
+    ■ MySQL: GROUP_CONCAT
+
+    GROUP_CONCAT([DISTINCT] <col> [ORDER BY <col>] [SEPARATOR ' '])
+
+    SELECT name, GROUP_CONCAT(score) FROM student GROUP BY name;
+    SELECT name, GROUP_CONCAT(DISTINCT score ORDER BY score DESC SEPARATOR ',')
+      FROM student GROUP BY name;
+
+    元データ
+    +-------+-------+
+    | name  | score |
+    +-------+-------+
+    | Alice | 95    |
+    | Alice | 90    |
+    | Alice | 85    |
+    | Bob   | 88    |
+    | Bob   | 82    |
+    +-------+-------+
+
+    結果
+    +-------+----------------------+
+    | name  | GROUP_CONCAT(score)  |
+    +-------+----------------------+
+    | Alice | 95,90,85             |
+    | Bob   | 88,82                |
+    +-------+----------------------+
+
+    ■ PostgreSQL: string_agg (類似機能)
+
+    string_agg(expression, delimiter)
+
+    SELECT name, string_agg(score::text, ',') FROM student GROUP BY name;
+    SELECT name, string_agg(DISTINCT score::text, ',' ORDER BY score DESC)
+      FROM student GROUP BY name;
+
+    # デフォルト区切り文字 (空文字)
+    SELECT name, string_agg(score::text, '') FROM student GROUP BY name;
+
+    # NULL値の扱い (string_aggはNULLを無視)
+    SELECT name, string_agg(coalesce(score::text, 'N/A'), ',') FROM student GROUP BY name;
+
+- ENTRY:
+  EXPLAIN: |
+    JSON 出力: 【my】JSON_ARRAYAGG, JSON_OBJECTAGG vs 【pg】json_agg, json_object_agg
+  BODY: |
+    ■ MySQL: JSON_ARRAYAGG, JSON_OBJECTAGG
+
+    JSON_ARRAYAGG(<col>)                      # 配列形式
+    JSON_OBJECTAGG(<key_col>, <value_col>)    # オブジェクト形式
+
+    元データ
+    +----+-----------+-------+
+    | id | attribute | value |
+    +----+-----------+-------+
+    |  2 | color     | red   |
+    |  2 | fabric    | silk  |
+    |  3 | color     | green |
+    |  3 | shape     | square|
+    +----+-----------+-------+
+
+    SELECT id, JSON_ARRAYAGG(attribute) AS attributes FROM <table> GROUP BY id;
+    +----+---------------------+
+    |  2 | ["color", "fabric"] |
+    |  3 | ["color", "shape"]  |
+    +----+---------------------+
+
+    SELECT id, JSON_OBJECTAGG(attribute, value) FROM <table> GROUP BY id;
+    +----+---------------------------------------+
+    |  2 | {"color": "red", "fabric": "silk"}    |
+    |  3 | {"color": "green", "shape": "square"} |
+    +----+---------------------------------------+
+
+    ■ PostgreSQL: json_agg, json_object_agg
+
+    json_agg(<col>)                          # 配列形式
+    json_object_agg(<key_col>, <value_col>)  # オブジェクト形式
+
+    SELECT id, json_agg(attribute) AS attributes FROM <table> GROUP BY id;
+    SELECT id, json_object_agg(attribute, value) FROM <table> GROUP BY id;
+
+- ENTRY:
+  EXPLAIN: |
+    集計: ウィンドウ関数(OVER)
+  BODY: |
+    ■ 概要
+
+    ・OVER句でウィンドウ関数を使用可能 (MySQL 8.0以降, PostgreSQL 8.4以降)
+    ・ウィンドウ関数は、集計関数を使用して、クエリの結果セット内の各行に対して計算を実行するための標準SQL機能
+    ・各行に対して、指定された「ウィンドウ」内のデータに基づいて集計を計算可能
+    ・ウィンドウ関数は、GROUP BY句を使用せずに集計を行うため、元の行データを保持しつつ、集計結果を取得できる
+
+    ■ mySQL / PostgreSQL 共通
+
+    OVER( PARTITION BY <col> [ORDER BY <col>] )
+
+    ・全レコードから集計
+    SUM(profit) OVER() AS <alias>
+
+    ・指定Colごとに集計
+    SUM(profit) OVER(PARTITION BY <col> [ORDER BY <col>]) AS <alias>
+
+    +-------+---------+--------+
+    | region| product | profit |
+    +-------+---------+--------+
+    | East  | A       | 100    |
+    | East  | B       | 150    |
+    | West  | A       | 200    |
+    | West  | B       | 250    |
+    +-------+---------+--------+
+
+    SELECT region, product, profit,
+      SUM(profit) OVER() AS total_profit,
+      SUM(profit) OVER(PARTITION BY region) AS region_profit
+    FROM sales;
+
+    +-------+---------+--------+---------------+----------------+
+    | region| product | profit | total_profit  | region_profit  |
+    +-------+---------+--------+---------------+----------------+
+    | East  | A       | 100    | 700           | 250            |
+    | East  | B       | 150    | 700           | 250            |
+    | West  | A       | 200    | 700           | 450            |
+    | West  | B       | 250    | 700           | 450            |
+    +-------+---------+--------+---------------+----------------+
+
+#-------------------------------
+# INDEX
+#-------------------------------
+- ENTRY:
+  CATEGORY: INDEX
+
+- ENTRY:
+  EXPLAIN: 作成
+  BODY: |
+    ■ MySQL/PostgreSQL 共通構文
+
+    CREATE INDEX <index_name> ON <table_name> (<column1>, <column2>, ...);
+
+    CREATE INDEX idx_user_email ON users (email);
+    CREATE INDEX idx_orders_user_date ON orders (user_id, order_date);
+
+    ■ MySQL拡張
+
+    CREATE INDEX <index_name> ON <table_name> (<column>) USING BTREE;  # タイプ指定: B-Tree (デフォルト)
+    CREATE INDEX <index_name> ON <table_name> (<column>) USING HASH;   # タイプ指定: Hash
+
+    CREATE FULLTEXT INDEX <index_name> ON <table_name> (<column>);     # 全文検索インデックス
+    CREATE SPATIAL INDEX <index_name> ON <table_name> (<column>);      # 空間インデックス
+    CREATE UNIQUE INDEX <index_name> ON <table_name> (<column>);       # ユニーク制約付き
+
+      ※ 注意点
+      ・InnoDBではFULLTEXTインデックスがサポートされているが、HASHインデックスはInnoDBでは使用されない
+      ・インデックスの選択は、クエリのパフォーマンスに大きな影響を与えるため、適切なインデックス設計が重要
+      ・インデックスは読み取り操作を高速化
+      ・書き込み操作のパフォーマンスに影響を与える可能性があるため、必要なインデックスのみを作成することが推奨
+
+      ・BTREE:    一般的なインデックス
+      ・HASH:     等価比較に最適化されたインデックス
+
+      ・FULLTEXT: テキストデータの全文検索に最適化されたインデックス
+      ・SPATIAL:  地理空間データの効率的なクエリに使用されるインデックス
+      ・UNIQUE:   カラムの値が一意であることを保証するインデックス
+
+    ■ PostgreSQL拡張
+
+    CREATE INDEX <index_name> ON <table_name> USING btree (<column>);    # B-Tree (デフォルト)
+    CREATE INDEX <index_name> ON <table_name> USING hash (<column>);     # Hash
+    CREATE INDEX <index_name> ON <table_name> USING gist (<column>);     # GiST
+    CREATE INDEX <index_name> ON <table_name> USING gin (<column>);      # GIN
+    CREATE INDEX <index_name> ON <table_name> USING spgist (<column>);   # SP-GiST
+    CREATE INDEX <index_name> ON <table_name> USING brin (<column>);     # BRIN
+
+    CREATE INDEX <index_name> ON <table_name> (<column>) WHERE <condition>;  # 部分インデックス
+    CREATE INDEX <index_name> ON <table_name> (lower(<column>));             # 式インデックス
+    CREATE UNIQUE INDEX <index_name> ON <table_name> (<column>);             # ユニーク制約付き
+
+      ※ 注意点
+      ・インデックスの種類に応じて異なるデータ構造とアルゴリズム使用
+
+      ・btree:    一般的なインデックス
+      ・hash:     等価比較に最適化
+      ・gist/gin: 複雑なデータ型や全文検索に使用
+      ・spgist:   空間データや階層データに適している
+      ・brin:     大規模テーブルでの範囲クエリに効果的
+
+- ENTRY:
+  EXPLAIN: 効果的な貼り方
+  BODY: |
+    ■ INDEX の基本原則
+
+    ・高カーディナリティ(多様な値)のカラムにインデックスを貼る
+    ・頻繁に検索や結合で使用されるカラムにインデックスを貼る
+    ・更新頻度の低いテーブルにインデックスを貼る
+    ・部分インデックスや式インデックスを活用する (PostgreSQL)
+    ・複合インデックスは、クエリのWHERE句やJOIN句の使用パターンに基づいて設計する
+    ・過剰なインデックスは避ける (書き込み性能への影響)
+    ・全文検索には専用の全文検索インデックスを使用する (mySQLのFULLTEXT, PostgreSQLのGIN)
+
+    ■ usersテーブル (ユーザー情報)
+
+    CREATE TABLE users (
+        id SERIAL PRIMARY KEY,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        gender CHAR(1) CHECK (gender IN ('M', 'F')),
+        active BOOLEAN DEFAULT true,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    idx_users_email ON users (email);                       # ⭕ ログイン時のemail検索(WHERE句で頻繁に使用)
+    idx_users_gender ON users (gender);                     # ❌ ほとんど役に立たない(低カーディナリティ)
+    idx_active_users ON users (email) WHERE active = true;  # ⭕ 【pg】アクティブユーザーのみ(部分インデックス) mySQL非対応
+
+    ■ ordersテーブル (注文情報)
+
+    CREATE TABLE orders (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id),
+        order_date DATE DEFAULT CURRENT_DATE,
+        amount DECIMAL(10,2)
+    );
+
+    idx_orders_user_id ON orders (user_id);                 # ⭕ JOINで使用されるカラム
+    idx_orders_user_date ON orders (user_id, order_date);   # ⭕ ユーザーごとの注文履歴(日付順)
+    idx_orders_amount ON orders (amount);                   # ❌ 金額での検索は稀 (低カーディナリティ)
+
+    ■ postsテーブル (投稿情報)
+
+    CREATE TABLE posts (
+        id SERIAL PRIMARY KEY,
+        title VARCHAR(255),
+        content TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    idx_posts_created_at ON posts (created_at);             # ⭕ 新着順の表示で使用
+    idx_posts_title ON posts (title);                       # ❓ タイトル検索で使用(効果低い)
+
+      ※ タイトルでの部分一致検索 (LIKE '%keyword%') ではインデックス効果が低い
+
+    ■ logsテーブル (ログ情報)
+
+    CREATE TABLE logs (
+        id SERIAL PRIMARY KEY,
+        message TEXT,
+        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        level VARCHAR(10)
+    );
+
+    idx_logs_timestamp ON logs (timestamp);                 # ❌ 検索で使われない場合
+
+    ■ articlesテーブル (記事情報)
+
+    CREATE TABLE articles (
+        id SERIAL PRIMARY KEY,
+        title VARCHAR(255),
+        content TEXT,
+        published BOOLEAN DEFAULT true
+    );
+
+    ※ 全文検索インデックス
+
+    ・MySQL
+
+    CREATE FULLTEXT INDEX idx_content ON articles (content);          # ⭕ FULLTEXT 検索用
+
+    SELECT * FROM articles WHERE MATCH(content) AGAINST('database');  # ⭕ FULLTEXTインデックスを使用
+    SELECT * FROM articles WHERE content LIKE '%database%';           # ❌ FULLTEXTインデックスはLIKE検索に使用されない
+
+    ・PostgreSQL
+
+    CREATE INDEX idx_content ON articles
+    USING GIN (to_tsvector('english', content));                      # ⭕ GINインデックス
+
+    SELECT * FROM articles
+    WHERE to_tsvector('english', content) @@ to_tsquery('database');  # ⭕ GINインデックスを使用
+
+    SELECT * FROM articles
+    WHERE content LIKE '%database%';                                  # ❌ GINインデックスはLIKE検索に使用されない
+
+    ■ productsテーブル (商品情報)
+
+    CREATE TABLE products (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255),
+        category_id INTEGER,
+        price DECIMAL(10,2)
+    );
+
+    ※ 複合INDEX
+
+    ・カーディナリティの高いカラムを先頭に(WHERE句の使用順序に合わせる)
+
+    idx_products_category_price ON products (category_id, price);     # ⭕ カテゴリ別価格順
+    idx_products_price_category ON products (price, category_id);     # ❌ priceの値が多すぎる
+
+    ■ 注意点
+
+    ・インデックスは検索速度を向上させるが、INSERT/UPDATE/DELETEを遅くする
+    ・カーディナリティ (値の種類の多さ) が高いカラムほどインデックス効果が高い
+    ・複合インデックスの場合、WHERE条件の順序が重要
+    ・定期的にインデックスの使用状況を分析し、不要なものは削除する

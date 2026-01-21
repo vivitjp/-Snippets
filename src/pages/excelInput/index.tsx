@@ -33,28 +33,58 @@ const ExcelInputPage: React.FC = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <VStack align="start" gap={3}>
           <Box>
-            <Text fontSize="md" mb={1}>Name</Text>
-            <ExcelInput methods={methods} keyName={"name" as Path<FormValues>} width="360px" />
+            <Text fontSize="md" mb={1}>
+              Name
+            </Text>
+            <ExcelInput
+              methods={methods}
+              keyName={"name" as Path<FormValues>}
+              width="360px"
+            />
           </Box>
 
           <Box>
-            <Text fontSize="md" mb={1}>Address</Text>
-            <ExcelInput methods={methods} keyName={"address" as Path<FormValues>} width="480px" />
+            <Text fontSize="md" mb={1}>
+              Address
+            </Text>
+            <ExcelInput
+              methods={methods}
+              keyName={"address" as Path<FormValues>}
+              width="480px"
+            />
           </Box>
 
           <Box>
-            <Text fontSize="md" mb={1}>Phone</Text>
-            <ExcelInput methods={methods} keyName={"phone" as Path<FormValues>} width="240px" />
+            <Text fontSize="md" mb={1}>
+              Phone
+            </Text>
+            <ExcelInput
+              methods={methods}
+              keyName={"phone" as Path<FormValues>}
+              width="240px"
+            />
           </Box>
 
           <Box>
-            <Text fontSize="md" mb={1}>Age</Text>
-            <ExcelInput methods={methods} keyName={"age" as Path<FormValues>} width="120px" />
+            <Text fontSize="md" mb={1}>
+              Age
+            </Text>
+            <ExcelInput
+              methods={methods}
+              keyName={"age" as Path<FormValues>}
+              width="120px"
+            />
           </Box>
 
           <Box>
-            <Text fontSize="md" mb={1}>Gender</Text>
-            <ExcelInput methods={methods} keyName={"gender" as Path<FormValues>} width="120px" />
+            <Text fontSize="md" mb={1}>
+              Gender
+            </Text>
+            <ExcelInput
+              methods={methods}
+              keyName={"gender" as Path<FormValues>}
+              width="120px"
+            />
           </Box>
 
           <Button mt={2} type="submit" style={style}>
@@ -68,12 +98,11 @@ const ExcelInputPage: React.FC = () => {
 
 export default ExcelInputPage
 
-
 const style = {
-  backgroundColor: '#3182CE',
-  padding: '10px',
-  borderRadius: '8px',
-  color: 'white',
-  border: 'none',
-  cursor: 'pointer',
+  backgroundColor: "#3182CE",
+  padding: "10px",
+  borderRadius: "8px",
+  color: "white",
+  border: "none",
+  cursor: "pointer",
 }

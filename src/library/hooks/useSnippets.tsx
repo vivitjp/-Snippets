@@ -68,7 +68,6 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
 
       let debugIndex = 0
       try {
-
         const formatted = array.map((snippetsObject, index) => {
           if (snippetsObject.category) {
             return (
@@ -187,7 +186,7 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
                         <TBody>
                           {snippetsObject?.table.body
                             ?.splice(
-                              snippetsObject?.table.options?.hasTitle ? 1 : 0
+                              snippetsObject?.table.options?.hasTitle ? 1 : 0,
                             )
                             .map((line, i) => {
                               return (
@@ -206,7 +205,7 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
                                           </span>
                                         )
                                       })}
-                                    </TD>
+                                    </TD>,
                                   )}
                                 </TR>
                               )

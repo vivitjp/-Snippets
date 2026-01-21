@@ -41,7 +41,7 @@ export const makeSnippets = async ({ file, scope }: Props) => {
     jsonData.forEach(
       (
         { BODY, EXPLAIN, CATEGORY, OPTIONS, SAMPLE, STYLE, FOLD, TABLE },
-        index
+        index,
       ) => {
         returnData[index] = {
           body: BODY?.trim().split("\n"),
@@ -87,7 +87,7 @@ export const makeSnippets = async ({ file, scope }: Props) => {
               : undefined,
           }
         }
-      }
+      },
     )
   } catch (error) {
     console.log("error")

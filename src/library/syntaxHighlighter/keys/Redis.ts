@@ -47,6 +47,5 @@ export const keysRedis: KeyDef = {
     "constructor",
     "async",
     "await",
-    "console.log",
   ],
 }

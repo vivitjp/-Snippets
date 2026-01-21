@@ -117,7 +117,7 @@
     【型方針をドキュメント化】 tsconfig.json のコメントやリポジトリ README に推奨ルール（noImplicitAny など）を書いて統一
 
 - ENTRY:
-  EXPLAIN: Suggestions
+  EXPLAIN: 設定 typescript.suggestions
   BODY: |
     ■ typescript.Suggest
 
@@ -437,7 +437,7 @@
 # ENUM
 #-------------------------------
 - ENTRY:
-  EXPLAIN: makeEnum:const配列からenum(Object)作成
+  EXPLAIN: makeEnum: const配列からenum(Object)作成
   BODY: |
     function makeEnum<T extends readonly string[]>(配列: T) {
         return 配列.filter(Boolean).reduce(
@@ -492,6 +492,34 @@
         }
       }
     }
+
+#-------------------------------
+# コンテキストメニューの不要な選択肢を除去
+#-------------------------------
+- ENTRY:
+  EXPLAIN: コンテキストメニューの不要な選択肢を除去
+  BODY: |
+    type ModelNames1 = 
+        | "model-A"
+        | "model-B"
+        | "model-C"
+
+    const model1_1: ModelNames1 =           // この状態では多くの選択肢が表示される
+    const model1_2: ModelNames1 = ""        // ❌
+
+    // ※ コンテキストメニューに不要な選択肢が多数存在
+
+    type ModelNames2 = 
+        | "model-A"
+        | "model-B"
+        | "model-C"
+        | (string & {})                     // ← これを追加🛑
+
+    const model2_1: ModelNames2 = "model-A"
+    const model2_2: ModelNames2 = ""        // ✅
+    const model2_2: ModelNames2 = "A"       // ✅ 望ましくない副作用
+
+    // ※ コンテキストメニューに不要な選択肢がない
 
 #-------------------------------
 # 判別可能なUnion型
@@ -581,7 +609,7 @@
 # 型ガード
 #-------------------------------
 - ENTRY:
-  EXPLAIN: 型ガード
+  EXPLAIN: 型ガード(is)
   BODY: |
     ■ ユーザ定義型
 
@@ -664,28 +692,38 @@
     func(objD.D)                        //OK
 
 #-------------------------------
-# ReadOnly
-#-------------------------------
-- ENTRY:
-  EXPLAIN: ReadonlyArray<> 読み取り専用型
-  BODY: |
-    const foo: number[] = [1, 2, 3]
-    foo.push(4) // OK
-
-    const fooRO: ReadonlyArray<number> = [1, 2, 3]
-    fooRO.push(4) // NG
-
-#-------------------------------
 # Utility Partial
 #-------------------------------
 - ENTRY:
   EXPLAIN: Record, Partial を用いたObject型生成の比較
   BODY: |
+    ■ 型定義
+
     const obj = {"A": 1, "B": 2, "C": 3};
+
+    type ObjRecords = Record<keyof typeof obj, number>
+    {
+        A: number;
+        B: number;
+        C: number;
+    }
+
+    type ObjPartial = keyof typeof obj
+      = "A" | "B" | "C"
+
+    type ObjPartial = Partial<keyof typeof obj>  // 効果なし!
+      = "A" | "B" | "C"
 
     ■ 意図する挙動：Partial<T>
 
-    const objA: Partial<Record<keyof typeof obj, number>> = {
+    type PartialRecord =  Partial<Record<keyof typeof obj, number>>
+    {
+        A?: number | undefined;
+        B?: number | undefined;
+        C?: number | undefined;
+    }  
+
+    const objA: PartialRecord = {
         A: 1,
         B: 2,
         //C: 3,
@@ -693,7 +731,15 @@
 
     ■ 意図とは異なる挙動：Record<K, T>
 
-    const objB: Record<Partial<keyof typeof obj>, number> = {
+    type RecordPartial = Record<Partial<keyof typeof obj>, number>
+    {
+        A: number;
+        B: number;
+        C: number;
+    }
+    ※ Record と Partial の順序に注意
+
+    const objB: RecordPartial = {
         A: 1,
         B: 2,
         //C: 3,  <-- NG

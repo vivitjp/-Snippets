@@ -1,0 +1,639 @@
+---
+#-------------------------------
+# 構文
+#-------------------------------
+- ENTRY:
+  CATEGORY: SQL構文
+
+- ENTRY:
+  EXPLAIN: CASE...WHEN
+  BODY: |
+    ■ mySQL / PostgreSQL 共通
+
+    CASE
+      WHEN <条件節1> THEN <値1>
+      WHEN <条件節2> THEN <値2>
+      ELSE <値3>
+    END
+
+    SELECT
+      CASE
+        WHEN score >= 90 THEN 'A'
+        WHEN score >= 80 THEN 'B'
+        WHEN score >= 70 THEN 'C'
+        ELSE 'F'
+      END AS grade
+
+- ENTRY:
+  EXPLAIN: ISNULL, COALESCE, NULLIF, IFNULL
+  BODY: |
+    ■ COALESCE(expr1, expr2, ..., exprN): 共通        # 最初の非NULL値を返す
+
+    SELECT COALESCE(NULL, 'default', 'value');        # 'default'
+    SELECT COALESCE(column, 0) FROM table_name;       # NULLなら0を返す
+
+    ■ NULLIF(expr1, expr2): 共通                      # expr1 = expr2 なら NULL, 以外は expr1
+
+    SELECT NULLIF(10, 10);                            # NULL
+    SELECT NULLIF(10, 5);                             # 10
+
+    SELECT 100 / NULLIF(column, 0) FROM table_name;   # ゼロ除算回避
+
+    ■ ISNULL(expr): 【my】                            # expr が NULL なら 1(true), それ以外は 0(false)
+
+    SELECT ISNULL(NULL);                              # 1
+    SELECT ISNULL('value');                           # 0
+
+      ※ PostgreSQLでは IS NULL 演算子を使用
+      SELECT CASE WHEN column IS NULL THEN 1 ELSE 0 END FROM table_name;
+
+    ■ IFNULL(expr1, expr2): 【my】                    # expr1 が NULL なら expr2, それ以外は expr1
+
+    SELECT IFNULL(NULL, 'default');                   # 'default'
+    SELECT IFNULL('value', 'default');                # 'value'
+
+      ※ PostgreSQLでは COALESCE を使用
+      SELECT COALESCE(column, 'default') FROM table_name;
+
+    ■ NULL値のデフォルト設定
+
+    【my】 SELECT IFNULL(name, 'Unknown') FROM users;
+    【pg】 SELECT COALESCE(name, 'Unknown') FROM users;
+
+    ■ NULLチェック
+
+    【my】 SELECT ISNULL(email) FROM users;
+    【pg】 SELECT email IS NULL FROM users;
+
+    ■ ゼロ除算回避(共通)
+
+    SELECT 100 / NULLIF(denominator, 0) FROM calculations;
+
+    ■ 複数候補のデフォルト
+
+    SELECT COALESCE(name, nickname, 'Anonymous') FROM users;
+
+    ■ 注意点
+
+    ・COALESCE と NULLIF はSQL標準関数なので両方で使用可能
+    ・MySQLの IFNULL は COALESCE のエイリアス
+    ・PostgreSQLでは CASE 式で複雑な NULL 処理が可能
+    ・パフォーマンスは同等だが、コード移植性を考慮して COALESCE を優先
+
+#-------------------------------
+# 型
+#-------------------------------
+- ENTRY:
+  CATEGORY: 型
+
+- ENTRY:
+  EXPLAIN: 数値型
+  BODY: |
+    ■ MySQL / PostgreSQL 共通型
+
+    BIT[(桁)]                           # ビット列 (桁数指定可能)
+    SMALLINT                            # 2バイト整数(範囲: -32,768 to 32,767)
+    INT=INTEGER                         # 4バイト整数(範囲: -21億 to 21億)
+    BIGINT                              # 8バイト整数(範囲: -92京 to 92京)
+    FLOAT[(桁[,小数点桁])]               # 単精度浮動小数点 (精度指定可能, 範囲: 約±1.5e−45 to ±3.4e38)
+    DOUBLE [PRECISION]                  # 倍精度浮動小数点 (範囲: 約±2.2e−308 to ±1.8e308)
+    REAL                                # = DOUBLE
+    DECIMAL(桁[,小数点桁])               # 固定小数点 (精度,スケール必須)
+    DEC(桁[,小数点桁])                   # = DECIMAL
+
+    CREATE TABLE t1 (
+        col1 INT,
+        col2 DECIMAL(10,2),
+        col3 FLOAT(7,4),
+        col4 DOUBLE(16,8),
+        col5 BIGINT,
+        col6 SMALLINT,
+        col7 REAL,
+        col8 BIT(8),
+        col9 DEC(5),
+        col10 INTEGER,
+    );
+
+    ■ MySQL 固有型
+
+    TINYINT                             # 1バイト整数 (範囲: -128 to 127)
+    MEDIUMINT                           # 3バイト整数 (範囲: -8,388,608 to 8,388,607)
+    BOOL = BOOLEAN = TINYINT            # TINYINTとして扱う(0=false, 非0=true)
+
+    CREATE TABLE t2 (
+        col1 TINYINT,
+        col2 MEDIUMINT,
+        col3 BOOL,
+    );
+
+    ■ PostgreSQL 固有型
+
+    BOOLEAN                             # 真の論理型 (true/false)
+    SERIAL                              # 自動インクリメント整数(範囲: 1 to 21億)
+    BIGSERIAL                           # 自動インクリメント大整数(範囲: 1 to 92京)
+
+    CREATE TABLE t3 (
+        col1 BOOLEAN,
+        col2 SERIAL,
+        col3 BIGSERIAL,
+    );
+
+- ENTRY:
+  EXPLAIN: 型(文字)
+  BODY: |
+    ■ MySQL / PostgreSQL 共通型
+
+    CHAR[(長さ)]                        # 固定長文字列 (最大255文字, デフォルト1)
+    VARCHAR(長さ)                       # 可変長文字列 (最大65,535文字)
+    TEXT                                # 長文テキスト (最大65,535文字)
+
+    CREATE TABLE t1 (
+        col1 CHAR(10),                  # 固定10文字
+        col2 VARCHAR(255),              # 可変255文字
+        col3 TEXT,                      # 長文
+    );
+
+    ■ MySQL 固有型
+
+    BINARY(長さ)                        # 固定長バイナリ (最大255バイト)
+    VARBINARY(長さ)                     # 可変長バイナリ (最大65,535バイト)
+    TINYTEXT                            # 小さなテキスト (最大255文字)
+    MEDIUMTEXT                          # 中サイズテキスト (最大16,777,215文字)
+    LONGTEXT                            # 大きなテキスト (最大4,294,967,295文字)
+    ENUM('value1','value2',...)         # 列挙型 (最大65,535個)
+    SET('value1','value2',...)          # 集合型 (最大64個)
+
+    CREATE TABLE t2 (
+        col1 BINARY(16),                # 固定16バイトバイナリ
+        col2 VARBINARY(255),            # 可変255バイトバイナリ
+        col3 TINYTEXT,                  # 小さなテキスト
+        col4 MEDIUMTEXT,                # 中サイズテキスト
+        col5 LONGTEXT,                  # 大きなテキスト
+        col6 ENUM('active','inactive'), # 列挙型
+        col7 SET('red','blue','cyan'),  # 集合型
+    );
+
+    ■ PostgreSQL 固有型
+
+    CITEXT                              # case-insensitive text (pg_citext拡張)
+    VARCHAR                             # 制限なし可変長 (デフォルト制限なし)
+    TEXT                                # 制限なしテキスト
+
+    CREATE TABLE t3 (
+        col1 CITEXT,                    # case-insensitiveテキスト
+        col2 VARCHAR,                   # 制限なし可変長
+        col3 TEXT,                      # 制限なしテキスト
+    );
+
+    ■ 注意点
+
+    ・【my】VARCHAR最大長はテーブル定義による
+    ・【pg】VARCHARはデフォルトで制限なし
+    ・TEXT型は両方で使用可能だが、性能特性が異なる
+        【my】TEXTは大きなデータに最適化
+        【pg】TEXTは可変長文字列と同等に扱う
+
+- ENTRY:
+  EXPLAIN: 型(日付)
+  BODY: |
+    ■ MySQL / PostgreSQL 共通型
+
+    DATE                                # 日付のみ (YYYY-MM-DD, 範囲: 1000-01-01 to 9999-12-31)
+    TIME                                # 時間のみ (HH:MM:SS, 範囲: -838:59:59 to 838:59:59)
+    TIMESTAMP                           # 日時 (YYYY-MM-DD HH:MM:SS, 自動更新可能)
+
+    CREATE TABLE t1 (
+        col1 DATE,                      # 日付
+        col2 TIME,                      # 時間
+        col3 TIMESTAMP,                 # 日時
+    );
+
+    ■ MySQL 固有型
+
+    DATETIME                            # 日時 (YYYY-MM-DD HH:MM:SS, 範囲: 1000-01-01 to 9999-12-31)
+    YEAR                                # 年 (YYYY, 範囲: 1901 to 2155)
+
+    CREATE TABLE t2 (
+        col1 DATETIME,                  # 日時 (タイムゾーン考慮なし)
+        col2 YEAR,                      # 年
+    );
+
+    ■ PostgreSQL 固有型
+
+    TIMESTAMPTZ                         # タイムゾーン付き日時
+    INTERVAL                            # 時間間隔
+
+    CREATE TABLE t3 (
+        col1 TIMESTAMPTZ,               # タイムゾーン付き日時
+        col2 INTERVAL,                  # 時間間隔 (例: '1 day', '2 hours')
+    );
+
+    ■ 注意点
+
+    ・TIMESTAMP: MySQLでは自動更新可能, PostgreSQLではタイムゾーン考慮
+    ・DATETIME: MySQLのみ, PostgreSQLではTIMESTAMPを使用
+    ・TIMESTAMPTZ: PostgreSQLでタイムゾーンを扱う場合に使用
+    ・INTERVAL: PostgreSQLで日時計算に便利
+
+- ENTRY:
+  EXPLAIN: 型変換
+  BODY: |
+    ■ 概要
+
+    ・型変換は異なるデータ型間でのデータの相互変換を行う
+    ・SQL標準のCAST関数とCONVERT関数を使用して型変換が可能
+    ・データベースシステムによってサポートされる型や構文が異なる場合がある
+
+    ■ 数値型変換 (共通)
+
+    CAST('123' AS INT)                    # 文字列 → 整数
+    CAST('123.45' AS DECIMAL(10,2))       # 文字列 → 固定小数点
+    CAST(123 AS VARCHAR(10))              # 整数 → 文字列
+
+    【共通】SELECT COALESCE(CAST(column AS INT), 0) FROM table_name;  # 安全な型変換: NULL時は0
+    【共通】SELECT SUM(CAST(price_string AS DECIMAL(10,2))) FROM products;
+
+    ■ 日付/時間型変換 (共通)
+
+    CAST('2024-01-15' AS DATE)            # 文字列 → 日付
+    CAST('14:30:00' AS TIME)              # 文字列 → 時間
+    CAST('2024-01-15 14:30:00' AS TIMESTAMP) # 文字列 → 日時
+
+    【my】SELECT DATE(CONVERT('2024-01-15', DATE));
+    【pg】SELECT '2024-01-15'::DATE;
+
+    ■ 高度な日時変換【pg】
+
+    '2024-01-15 14:30:00+09'::TIMESTAMPTZ # タイムゾーン付き変換
+    INTERVAL '1 day'                      # 間隔型
+
+    ■ 論理型変換 (共通)
+
+    CAST('true' AS BOOLEAN)               # PostgreSQL: 文字列 → 論理値
+    CAST(1 AS BOOLEAN)                    # PostgreSQL: 数値 → 論理値
+
+    ■ CONVERT関数【my】
+
+    CONVERT('123', SIGNED)                # 文字列 → 符号付き整数
+    CONVERT('123', UNSIGNED)              # 文字列 → 符号なし整数
+    CONVERT('2024-01-15', DATE)           # 文字列 → 日付
+    CONVERT('abc', BINARY)                # 文字列 → バイナリ
+
+    ■ 文字コード変換【my】
+
+    CONVERT('text' USING utf8mb4)         # 文字コード変換
+
+    ■ 暗黙的変換の注意【my】
+
+    SELECT '123' + 456;                   # '579' (文字列が数値に変換される)
+
+    ■ :: 演算子【pg】
+
+    '123'::INT                            # 文字列 → 整数
+    123::VARCHAR                          # 整数 → 文字列
+    '2024-01-15'::DATE                    # 文字列 → 日付
+
+    ■ 配列変換【pg】
+
+    '{1,2,3}'::INT[]                      # 文字列 → 整数配列
+    ARRAY[1,2,3]::VARCHAR[]               # 配列型変換
+
+    ■ エラー処理の違い
+
+    【my】NULLや0を返す場合あり
+    【pg】無効な変換でエラー
+
+- ENTRY:
+  EXPLAIN: 変数(MySQL)
+  BODY: |
+    ■ 概要
+
+    ・スコープ: MySQLの@varはセッション全体, PostgreSQLの変数はブロック内
+               ストアドプロシージャ/関数内の変数 (DECLARE) はローカルスコープ
+    ・宣言: MySQLはSET/DECLARE, PostgreSQLはDECLAREブロック
+    ・代入: MySQLは := または = , PostgreSQLは := または INTO
+    ・永続性: MySQLの @var はセッション終了まで保持, PostgreSQLはブロック終了で破棄
+    ・型指定: MySQLはオプション, PostgreSQLは必須
+    ・SELECTで使用する変数は事前にSETで宣言する必要はない
+
+    ■ SET & ユーザー定義変数 (@var) 
+
+    SET @var1[=value], @var2[=value], ...;                     # 宣言と初期化
+    SET @total = 0;
+
+    SET @var = (SELECT <col> FROM <table> WHERE condition);    # SELECT結果の代入
+    SET @total = @total + salary FROM employees;
+
+    ■ SELECT & ユーザー定義変数 (@var) 
+
+    SELECT <col(s)> INTO @var(s) FROM <table> WHERE condition; # 複数変数への代入
+    SELECT name, age INTO @name, @age FROM users WHERE id = 1;
+
+    SELECT @var := <expression>, ... FROM <table>;             # 代入演算子使用
+    SELECT @total := @total + salary FROM employees;
+    SELECT @total AS total_salary;                             # 直前に宣言された変数が使用可能
+
+    ■ ストアドプロシージャ/関数内の変数 (DECLARE)
+
+    DECLARE var_name datatype [DEFAULT value];
+    DECLARE xname VARCHAR(5) DEFAULT 'bob';
+    DECLARE newname VARCHAR(5);
+    DECLARE xid INT;
+
+    SET var_name = value;
+    SELECT col INTO var_name FROM table WHERE condition;
+
+- ENTRY:
+  EXPLAIN: 変数(PostgreSQL)
+  BODY: |
+    ■ 概要
+
+    ・スコープ: MySQLの@varはセッション全体, PostgreSQLの変数はブロック内
+    ・宣言: MySQLはSET/DECLARE, PostgreSQLはDECLAREブロック
+    ・代入: MySQLは := または = , PostgreSQLは := または INTO
+    ・永続性: MySQLの @var はセッション終了まで保持, PostgreSQLはブロック終了で破棄
+    ・型指定: MySQLはオプション, PostgreSQLは必須
+    ・SELECTで使用する変数は事前にSETで宣言する必要はない
+
+    ■ DOブロック内での変数使用
+
+    DO $$
+    DECLARE
+        var_name datatype [:= value];
+        counter INTEGER := 0;
+        result TEXT;
+    BEGIN
+        SELECT col INTO result FROM table WHERE id = counter;
+    END $$;
+
+    ■ PL/pgSQL関数/プロシージャ内
+
+    CREATE FUNCTION func_name() RETURNS datatype AS $$
+    DECLARE
+        var_name datatype;
+    BEGIN
+        var_name := 'value';
+        RETURN var_name;
+    END;
+    $$ LANGUAGE plpgsql;
+
+    SELECT col INTO var_name FROM table;  # PL/pgSQL内でのみ有効
+
+#-------------------------------
+# 関数
+#-------------------------------
+- ENTRY:
+  CATEGORY: 関数
+
+- ENTRY:
+  EXPLAIN: 数値
+  BODY: |
+    ■ MOD(dividend, divisor) 【共通】           # 剰余計算 (dividend % divisor)
+
+    SELECT MOD(10, 3);                         # 1
+
+    ■ ROUND(value[, decimals]) 【共通】         # 四捨五入
+
+    SELECT ROUND(123.456, 2);                  # 123.46
+    SELECT ROUND(123.456, 0);                  # 123
+    SELECT ROUND(123.456);                     # 123
+
+    ■ ABS(value) 【共通】                       # 絶対値
+
+    SELECT ABS(-123.45);                       # 123.45
+
+    ■ SQRT(value) 【共通】                      # 平方根
+
+    SELECT SQRT(16);                           # 4.0
+
+    ■ EXP(value) 【共通】                       # eのvalue乗 (指数関数)
+
+    SELECT EXP(1);                             # 2.718281828459045
+
+    ■ CEIL(value) / CEILING(value) 【共通】     # 小数点以下切り上げ (PostgreSQLではCEILのみ)
+
+    SELECT CEIL(123.001);                      # 124
+
+    ■ FLOOR(value)【共通】                      # 小数点以下切り捨て
+
+    SELECT FLOOR(123.999);                     # 123
+
+    ■ TRUNCATE(value, decimals) 【共通】        # 指定桁で切り捨て
+
+    SELECT TRUNCATE(123.456, 2);               # 123.45
+    SELECT TRUNCATE(123.456, 0);               # 123
+
+    ■ FORMAT(value, decimals[, locale])【my】  # 数値のフォーマット (3桁区切り)
+
+    SELECT FORMAT(1234567.89, 2);              # "1,234,567.89"
+    SELECT FORMAT(1234567.89, 2, 'de_DE');     # "1.234.567,89" (ドイツ形式)
+
+    ■ DIV(y, x) 【pg】                          # 整数除算 (切り捨て)
+
+    SELECT DIV(10, 3);                         # 3
+
+    ■ LN(value) 【pg】                         # 自然対数
+
+    SELECT LN(2.718281828459045);              # 1.0
+
+    ■ LOG(base, value) 【pg】                  # 対数 (任意の底)
+
+    SELECT LOG(10, 100);                       # 2.0
+
+    ■ POWER(base, exponent) 【pg】             # 累乗
+
+    SELECT POWER(2, 3);                        # 8
+
+    ■ SIGN(value) 【pg】                       # 符号 (-1, 0, 1)
+
+    SELECT SIGN(-123);                         # -1
+    SELECT SIGN(0);                            # 0
+    SELECT SIGN(123);                          # 1
+
+- ENTRY:
+  EXPLAIN: 文字列
+  BODY: |
+    ■ CONCAT(str1, str2, ...) 【共通】            # 文字列連結
+
+      SELECT CONCAT('Hello', ' ', 'World');      # 'Hello World'
+
+    ■ CONCAT_WS(separator, str1, str2, ...) 【my】# セパレータ付き連結
+
+      SELECT CONCAT_WS(',', 'A', 'B', 'C');      # 'A,B,C'
+
+    ■ LOWER(str) / LCASE(str) 【共通】            # 小文字変換
+
+      SELECT LOWER('HELLO WORLD');               # 'hello world'
+
+    ■ UPPER(str) / UCASE(str) 【共通】           # 大文字変換
+
+      SELECT UPPER('hello world');               # 'HELLO WORLD'
+
+    ■ ASCII(str) 【共通】                         # 先頭文字のASCIIコード
+
+      SELECT ASCII('A');                         # 65
+
+    ■ LENGTH(str) 【共通】                        # 文字列長 (バイト数)
+
+      SELECT LENGTH('Hello');                    # 5
+
+    ■ SUBSTRING(str, start[, length]) 【共通】    # 部分文字列抽出
+
+      SELECT SUBSTRING('Hello World', 7, 5);     # 'World'
+      SELECT SUBSTRING('Hello World', 7);        # 'World'
+
+    ■ REPLACE(str, from_str, to_str) 【共通】     # 文字列置換
+
+      SELECT REPLACE('Hello World', 'World', 'Universe'); # 'Hello Universe'
+
+    ■ LOCATE(substr, str[, pos]) 【my】           # 部分文字列の位置
+
+      SELECT LOCATE('World', 'Hello World');     # 7
+
+      ※ 【pg】 SELECT POSITION('World' IN 'Hello World');
+
+    ■ POSITION(substr IN str) 【共通】            # 部分文字列の位置 (SQL標準)
+
+      SELECT POSITION('World' IN 'Hello World'); # 7
+
+    ■ LPAD(str, len, padstr) 【共通】            # 左側パディング
+
+      SELECT LPAD('123', 5, '0');               # '00123'
+
+    ■ RPAD(str, len, padstr) 【共通】            # 右側パディング
+
+      SELECT RPAD('123', 5, '0');               # '12300'
+
+    ■ LEFT(str, len) 【my】                     # 左側から指定文字数取得
+
+      SELECT LEFT('Hello World', 5);            # 'Hello'
+
+    ■ RIGHT(str, len) 【my】                    # 右側から指定文字数取得
+
+      SELECT RIGHT('Hello World', 5);           # 'World'
+
+    ■ LTRIM(str) 【共通】                        # 左側空白除去
+
+      SELECT LTRIM('  Hello  ');                # 'Hello  '
+
+    ■ RTRIM(str) 【共通】                        # 右側空白除去
+
+      SELECT RTRIM('  Hello  ');                # '  Hello'
+
+    ■ TRIM([LEADING|TRAILING|BOTH] [chars FROM] str) 【共通】 # 空白/指定文字除去
+
+      SELECT TRIM('  Hello  ');                 # 'Hello'
+      SELECT TRIM(LEADING 'x' FROM 'xxxHello'); # 'Hello'
+
+    ■ INSERT(str, pos, len, newstr) 【my】      # 文字列挿入/置換
+
+      SELECT INSERT('Hello World', 7, 5, 'Universe'); # 'Hello Universe'
+
+    ■ SPACE(n) 【my】                           # 空白文字生成
+
+      SELECT CONCAT('Hello', SPACE(3), 'World'); # 'Hello   World'
+
+    ■ REPEAT(str, count) 【共通】                # 文字列繰り返し
+
+      SELECT REPEAT('Ha', 3);                   # 'HaHaHa'
+
+    ■ REVERSE(str) 【共通】                      # 文字列反転
+
+      SELECT REVERSE('Hello');                  # 'olleH'
+
+    ■ SUBSTR(str, start[, length]) 【共通】      # SUBSTRINGの別名
+
+      SELECT SUBSTR('Hello World', 7, 5);       # 'World'
+
+    ■ CHAR_LENGTH(str) 【共通】                  # 文字数 (LENGTHと同義)
+
+      SELECT CHAR_LENGTH('Hello');              # 5
+
+    ■ BIT_LENGTH(str) 【共通】                   # ビット数
+
+      SELECT BIT_LENGTH('A');                   # 8
+
+    ■ OCTET_LENGTH(str) 【共通】                 # バイト数
+
+      SELECT OCTET_LENGTH('Hello');             # 5
+
+    ■ LOAD_FILE(file_path) 【my】                # ファイル内容読み込み
+
+      SELECT LOAD_FILE('/path/to/file.txt');    # ファイルの内容
+
+- ENTRY:
+  EXPLAIN: 日付
+  BODY: |
+    ■ INTERVAL '値' 単位 【共通】                            # 期間指定 (日時/時間)
+
+      SELECT INTERVAL '1-2' YEAR_MONTH;                     # 1年2ヶ月 (MySQL/PG)
+      SELECT INTERVAL '2:30' HOUR_MINUTE;                   # 2時間30分 (MySQL/PG)
+
+    ■ CURRENT_TIME, CURRENT_DATE, CURRENT_TIMESTAMP 【共通】 # 現在時刻・日付・タイムスタンプ
+
+      SELECT CURRENT_TIME;                                  # 例: '14:30:00'
+      SELECT CURRENT_DATE;                                  # 例: '2026-01-18'
+      SELECT CURRENT_TIMESTAMP;                             # 例: '2026-01-18 14:30:00'
+
+      SELECT CURTIME();                                     # 例: '14:30:00' 【my】
+      SELECT CURDATE();                                     # 例: '2026-01-18' 【my】
+      SELECT NOW();                                         # 例: '2026-01-18 14:30:00' 【my】
+
+    ■ DATE(日付値) 【共通】                                  # 日付のみを抽出
+
+      SELECT DATE('2026-01-18 14:30:00');                   # '2026-01-18'
+
+    ■ YEAR, MONTH, DAY 【共通】                              # 年・月・日の抽出
+
+      SELECT YEAR('2026-01-18');                            # 2026
+      SELECT MONTH('2026-01-18');                           # 1
+      SELECT DAY('2026-01-18');                             # 18
+
+    ■ UNIX_TIMESTAMP(日付値) 【my】                          # 日付からUNIXタイムスタンプ(秒)
+
+      SELECT UNIX_TIMESTAMP('2026-01-18 14:30:00');         # 1768717800
+
+    ■ FROM_UNIXTIME(UNIXタイムスタンプ) 【my】                # UNIXタイムスタンプ(秒)から日付
+
+      SELECT FROM_UNIXTIME(1768717800);                     # '2026-01-18 14:30:00'
+
+    ■ ADDDATE, DATE_ADD(日付, INTERVAL) 【my】               # 日付加算
+
+      SELECT ADDDATE('2026-01-18', INTERVAL 1 MONTH);       # '2026-02-18'
+      SELECT DATE_ADD('2026-01-18', INTERVAL 7 DAY);        # '2026-01-25'
+
+    ■ TIMESTAMPADD(単位, 数値, 日時) 【my】                   # タイムスタンプ加算
+
+      SELECT TIMESTAMPADD(DAY, 10, '2026-01-18');           # '2026-01-28'
+
+    ■ ADDTIME(日時, 時刻) 【my】                             # 時刻加算
+
+      SELECT ADDTIME('2026-01-18 14:00:00', '01:30:00');    # '2026-01-18 15:30:00'
+
+    ■ DATEDIFF(日付1, 日付2) 【共通】                         # 日付差分 (日数)
+
+      SELECT DATEDIFF('2026-01-18', '2026-01-10');          # 8
+
+    ■ TIMEDIFF(時刻1, 時刻2) 【my】                          # 時刻差分 ('HH:MM:SS')
+
+      SELECT TIMEDIFF('14:30:00', '12:00:00');              # '02:30:00'
+
+    ■ TIMESTAMPDIFF(単位, 日付1, 日付2) 【my】                # タイムスタンプ差分 (整数)
+
+      SELECT TIMESTAMPDIFF(MONTH, '2026-01-01', '2026-03-01');  # 2
+
+    ■ AGE(日付1, 日付2) 【pg】                                # 日付差分 (年・月・日)
+
+      SELECT AGE('2026-01-18', '2020-01-01');                # '6 years 17 days'
+
+    ■ EXTRACT(単位 FROM 日付) 【pg】                          # 日付から特定単位抽出
+
+      SELECT EXTRACT(YEAR FROM DATE '2026-01-18');           # 2026
+
+    ■ TO_CHAR(日付, 書式) 【pg】                              # 日付書式変換
+
+      SELECT TO_CHAR(DATE '2026-01-18', 'YYYY/MM/DD');       # '2026/01/18'
+
+    ■ TO_DATE(文字列, 書式) 【pg】                            # 文字列→日付変換
+
+      SELECT TO_DATE('2026-01-18', 'YYYY-MM-DD');            # '2026-01-18'

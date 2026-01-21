@@ -37,12 +37,14 @@
     const i:number = a;                      // (安全)Error
     const s:string = a;                      // (安全)Error
     const o:object = a;                      // (安全)Error
+
     if(typeof(a)==="string")                 // 型Check:v5.3
       const s:string = a;                    // (安全)代入可
 
     ■ never型                                // Genericで多用される 
     type A={ a:"A" }
     type B={ a:"B" }
+
     const f=(props:A|B)=>{
       switch (props.a) {
         case "A": return ...
@@ -62,12 +64,14 @@
     type A = { city:string, zip: string }
 
     ■ AND[ & ] 🛑両方を満たす
+
     const NG: P & A = { name: "Eve", age: 18 }                          // ❌ 不足
     const NG: P & A = { city: "Paris", zip:"03" }                       // ❌ 不足
     const NG: P & A = { name: "Eve", age: 18, city: "Paris" }           // ❌ 不足
     const OK: P & A = { name: "Eve", age: 18, city: "Paris", zip:"03" } // ⭕両方を満たす
 
     ■ OR[ | ] 🛑どちらか一方を満たす(排他的ORではないので両方でもOK)
+
     const OK: P | A = { name: "Eve", age: 18 }                          // ⭕ P を満たす
     const OK: P | A = { city: "Paris", zip:"03" }                       // ⭕ A を満たす
     const OK: P | A = { name: "Eve", age: 18, city: "Paris" }           // ⭕ 少なくとも P を満たす
@@ -76,7 +80,9 @@
     const NG: P | A = { city: "Paris", age: 18 }                        // ❌ 混用
 
     ■ XOR 🛑排他的OR(Utility活用)
+
     type XOR<T> = { [X in keyof T]?: never | undefined; }
+
     type XP = P & XOR<A>
     type XA = A & XOR<P>
 
@@ -88,8 +94,20 @@
     const NG: XP | XA = { city: "Paris", age: 18 }                        // ❌ 混用
 
 - ENTRY:
-  EXPLAIN: 定数&推論型
+  EXPLAIN: 定数 & widening & narrowing
   BODY: |
+    ■ 定数化 (const)
+
+    ・const 宣言はリテラル型として推論される
+    ・let 宣言は一般的な型として推論される
+
+    ■ widening & narrowing
+
+    ・Widening: 型が一般化される (let 宣言やオブジェクトのプロパティ)
+    ・Narrowing: 型が特定化される (const 宣言や as const アサーション)
+
+    ■ サンプル
+
     let a = 1                                // a:number型
     const a = 1                              // a:1型
     const a = {a:1}                          // widening: {a:number}型
@@ -126,6 +144,7 @@
     const b = { a: 1 } as unknown as B       // 強制(強制型アサーション) 🔴エラーにならない
 
     ■ satisfies(型指定:v4.9)                  // Widening(string化)を防ぐなど
+
     const a6 = {
       a: 1, b: 2
     } satisfies A                            //{ a: number; b: number; }
@@ -180,10 +199,12 @@
   EXPLAIN: 型取得とKV(MappedType & Record<> 比較)
   BODY: |
     ■ Object型宣言
+
     type Section = { tech: string, sales: string }
     type Person = { name:string, age: number }
 
     ■ MappedType + Record<>
+
     type SecPersonA = {[P in keyof Section]?: Partial<Record<keyof Person, Function>> }
 
       ※ Record<Partial<keyof Person>, Function> は Record<keyof Person, Function> と同じ
@@ -200,6 +221,7 @@
     }
 
     ■ Record<> + Record<>
+
     type SecPersonB = Partial<Record<keyof Section, Partial<Record<keyof Person, Function>>>>
 
     const secPersonB1:SecPersonB  = {

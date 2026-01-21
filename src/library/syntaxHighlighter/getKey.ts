@@ -52,6 +52,8 @@ import { keysRTL } from "./keys/RTL"
 import { keysSVG } from "./keys/SVG"
 import { keysSwagger } from "./keys/Swagger"
 import { keysSql } from "./keys/Sql"
+import { keysSqlAnalyzeStored } from "./keys/SqlAnalyzeStored"
+import { keysSqlVarFunc } from "./keys/SqlVarFunc"
 import { keysSession } from "./keys/Session"
 import { keysSecurity } from "./keys/Security"
 import { keysStorage } from "./keys/Storage"
@@ -122,6 +124,8 @@ export const codeKeys = {
   RHF: "keysRHF",
   RTL: "RTL",
   Sql: "Sql",
+  SqlVarFunc: "SqlVarFunc",
+  SqlAnalyzeStored: "SqlAnalyzeStored",
   Session: "Session",
   Security: "Security",
   Storage: "Storage",
@@ -200,8 +204,10 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   Sql: keysSql,
   Session: keysSession,
   Security: keysSecurity,
-  Storage: keysStorage,
   ServiceWorker: keysServiceWorker,
+  SqlVarFunc: keysSqlVarFunc,
+  SqlAnalyzeStored: keysSqlAnalyzeStored,
+  Storage: keysStorage,
   SVG: keysSVG,
   Swagger: keysSwagger,
   TanStack: keysTanStack,

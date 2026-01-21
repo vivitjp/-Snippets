@@ -255,11 +255,6 @@ export const menuItems: menuByCategories[] = [
         fileName: "JavaScript/RegularExpression",
         codeKeyTypes: [codeKeys.RegExp],
       },
-      {
-        name: "JQuery to JS",
-        fileName: "",
-        codeKeyTypes: [],
-      },
     ],
   },
   {
@@ -293,17 +288,17 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.JS, codeKeys.TS],
       },
       {
-        name: "TS Topics",
+        name: "Topics",
         fileName: "TypeScript/TSTopics",
         codeKeyTypes: [codeKeys.JS, codeKeys.TS],
       },
       {
-        name: "TS Utilities",
+        name: "Utilities",
         fileName: "TypeScript/Utilities",
         codeKeyTypes: [codeKeys.JS, codeKeys.TS],
       },
       {
-        name: "TS 非同期",
+        name: "非同期",
         fileName: "TypeScript/Async",
         codeKeyTypes: [codeKeys.JS, codeKeys.TS],
       },
@@ -313,7 +308,7 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.TSConfig, codeKeys.JS, codeKeys.TS],
       },
       {
-        name: "TS Challenge",
+        name: "TypeScript Challenge",
         fileName: "TypeScript/TSChallenge",
         codeKeyTypes: [codeKeys.JS, codeKeys.TS],
       },
@@ -725,28 +720,40 @@ export const menuItems: menuByCategories[] = [
     category: "Database",
     items: [
       {
-        name: "MySQL",
+        name: "SQL",
+        fileName: "database/SQL",
+        codeKeyTypes: [codeKeys.Sql],
+        case_sensitive: false,
+      },
+      {
+        name: "SQL(型、変数、関数)",
+        fileName: "database/SQLVarFunc",
+        codeKeyTypes: [codeKeys.Sql, codeKeys.SqlVarFunc],
+        case_sensitive: false,
+      },
+      {
+        name: "SQL(分析、ストアド、トランザクション)",
+        fileName: "database/SQLAnalyzeStored",
+        codeKeyTypes: [codeKeys.Sql, codeKeys.SqlAnalyzeStored],
+        case_sensitive: false,
+      },
+      {
+        name: "MySQL Topics",
         fileName: "database/mySql",
         codeKeyTypes: [codeKeys.Sql],
         case_sensitive: false,
       },
-      // {
-      //   name: "MySQL Topics",
-      //   fileName: "database/mySqlTopics",
-      //   codeKeyTypes: [codeKeys.MySql],
-      //   case_sensitive: false,
-      // },
+      {
+        name: "🔺PostgreSQL Topics",
+        fileName: "database/PostgreSQL",
+        codeKeyTypes: [codeKeys.Sql],
+      },
       {
         name: "MongoDB",
         fileName: "database/mongo",
         codeKeyTypes: [codeKeys.Mongo, codeKeys.Python],
         case_sensitive: false,
         encodeRequired: false,
-      },
-      {
-        name: "🔺PostgreSQL",
-        fileName: "database/PostgreSQL",
-        codeKeyTypes: [codeKeys.Sql],
       },
       {
         name: "GraphQL",
