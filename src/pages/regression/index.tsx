@@ -10,9 +10,6 @@ const Sample_MLR = () => {
     [6, 8, 7],
   ]
   const mlr = new MLR(x, y)
-  console.log("mlr")
-  console.log(mlr.predict([3, 3]))
-
   const resPredict = mlr.predict([3, 3])
   const resWeights = mlr.weights
 

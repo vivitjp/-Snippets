@@ -26,6 +26,14 @@ export const keysReact: KeyDef = {
     "useImperativeHandle",
     "useMemo",
     "StrictMode",
+    "useActionState",
+    "useFormStatus",
+    "useOptimistic",
+    "useEvent",
+    "Server",
+    "Actions",
+    "Concurrent",
+    "Features",
   ],
   // ■ ReactのSubメソッド
   DodgerBlue: [
@@ -59,6 +67,10 @@ export const keysReact: KeyDef = {
     "ReactPortal",
     "Key",
     "RefCallback",
+    "Hydration",
+    "Error",
+    "Boundaries",
+    "Portals",
   ],
   // ■ Reactの型
   Goldenrod: [

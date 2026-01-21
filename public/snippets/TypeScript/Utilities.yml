@@ -1,216 +1,843 @@
 ---
 #-------------------------------
-# TypeScript
+# TypeScript Utilities
 #-------------------------------
 
-#-------------------------------
-# Utilities
-#-------------------------------
 - ENTRY:
   CATEGORY: Utilities
 
 - ENTRY:
-  EXPLAIN: |
-    Partial<T>: オプショナルに変換
+  EXPLAIN: Partial<T>
   BODY: |
-    interface Person {
+    ■ 目的
+
+    ・オブジェクト型の全プロパティをオプショナルに変換
+
+    ■ 注意点
+
+    ・Partial<T> は プロパティ型 に undefined を含む
+    ・undefined を含まないオプショナル型にしたい場合は カスタムUtilityの StrictPartial<T> を使用
+    ・再帰的にオプショナル化したい場合は カスタムUtilityの DeepPartial<T> を使用
+
+    ■ Partial<Person>
+
+    type Person = {
       name: string
       age: number
     }
-    const person: Partial<Person> = { name: "John" }
+
+    type PartialPerson = Partial<Person>
+    {
+      name?: string | undefined
+      age?: number | undefined
+    }
+
+    ・使用例
+
+    const person: Partial<Person> = { name: "John" }    // ⭕
+    const person: Partial<Person> = { age: undefined }  // ⭕
+
+    ※ maybe<T> は自身をoptional にせず、+ undefined | null
+
+    ■ StrictPartial<T>
+
+    type StrictPartialPerson = StrictPartial<Person>
+    {
+      name?: string
+      age?: number
+    } 
+
+    ・使用例
+
+    const person: StrictPartial<Person> = { name: "John" }    // ⭕
+    const person: StrictPartial<Person> = { age: undefined }  // ❌
+
+    ■ DeepPartial<T> (再帰的にオプショナル化)
+
+    type PersonDetail = {
+      name: string
+      address: {
+        city: string
+        zip: number
+      }
+    }
+
+    type DeepPartialPerson = DeepPartial<PersonDetail>
+    {
+      name?: string | undefined
+      address?: {
+        city?: string | undefined
+        zip?: number | undefined
+      } | undefined
+    }
+
+    ・使用例
+    const person: DeepPartial<PersonDetail> = { // ⭕
+      address: {
+        city: "Tokyo"
+      }
+    }
   FOLD: |
+    ■ TS組み込み
+
     type Partial<T> = { [P in keyof T]?: T[P] | undefined; }
 
+    ■ カスタム
+
+    type StrictPartial<T> = { [P in keyof T]?: T[P]; }
+
+    type DeepPartial<T> = {
+      [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P]
+    }
+
 - ENTRY:
-  EXPLAIN: |
-    Required<T>: 必須に変換
+  EXPLAIN: Required<T>
   BODY: |
-    interface Person {
+    ■ 目的
+
+    ・オブジェクト型の全プロパティを必須に変換
+
+    ■ 注意点
+
+    ・Required<T> は プロパティ型 に undefined を含まない
+    ・undefined を含む必須型: カスタムUtilityの StrictRequired<T>
+
+    ■ Required<Person>
+
+    type Person = {
       name?: string
       age?: number
     }
+
+    type RequiredPerson = Required<Person>
+    {
+      name: string
+      age: number
+    }
+
+    ・使用例
+
     const person: Required<Person> = {
-      name: 'John', //NG age is missing
+      name: 'John',                     // ❌ age is missing
+      age: undefined,                   // ❌ undefinedは非許容
+    }
+
+    ■ StrictRequired<T>
+
+    type StrictRequiredPerson = StrictRequired<Person>
+    {
+      name: string | undefined
+      age: number | undefined
+    }
+
+    ・使用例
+
+    const person: StrictRequired<Person> = {
+      name: 'John',                     // ⭕
+      age: undefined,                   // ⭕
+    }
+
+    ■ DeepRequired<T>
+
+    type PersonDetail = {
+      name?: string
+      address?: {
+        city?: string
+        zip?: number
+      }
+    }
+
+    type DeepRequiredPerson = DeepRequired<PersonDetail>
+    {
+      name: string
+      address: {
+        city: string
+        zip: number
+      }
+    }
+
+    ・使用例
+
+    const person: DeepRequired<PersonDetail> = {
+      name: "John",
+      address: {
+        city: "Tokyo",                  // ❌ zip is missing
+      }
     }
   FOLD: |
+    ■ TS組み込み
+
     type Required<T> = { [P in keyof T]-?: T[P]; }
 
+    ■ カスタム
+
+    type StrictRequired<T> = { [P in keyof T]-?: T[P] | undefined; }
+
+    type DeepRequired<T> = {
+      [P in keyof T]-?: T[P] extends object ? DeepRequired<T[P]> : T[P]
+    }
+
 - ENTRY:
-  EXPLAIN: |
-    Readonly<T>: readonlyに変換
+  EXPLAIN: Readonly<T>
   BODY: |
-    interface Person {
+    ■ 目的
+
+    ・オブジェクト型の全プロパティをreadonlyに変換
+
+    ■ 注意点
+
+    ・Readonly<T> は プロパティ型 に readonly を付与
+    ・readonly は プロパティの再代入禁止を意味し、値の変更を禁止するものではない
+    ・深い階層のプロパティまでreadonlyにしたい場合は カスタムUtilityの DeepReadonly<T> を使用
+
+    ■ Readonly<Person>
+
+    type Person = {
       name: string
     }
+
+    type ReadonlyPerson = Readonly<Person>
+    {
+      readonly name: string
+    }
+
+    ・使用例
     const person: Readonly<Person> = {
       name: "John",
     }
-    person.name = "Smith" //NG
+
+    person.name = "Smith"               // ❌ 上書き禁止
+    person.age = 10                     // ❌ プロパティ追加禁止
+    delete person.name                  // ❌ プロパティ削除禁止
+
+    ■ DeepReadonly<T>
+
+    type PersonDetail = {
+      name: string
+      address: {
+        city: string
+        zip: number
+      }
+    }
+
+    type DeepReadonlyPerson = DeepReadonly<PersonDetail>
+    {
+      readonly name: string
+      readonly address: {
+        readonly city: string
+        readonly zip: number
+      }
+    }
+
+    ・使用例
+    const person: DeepReadonly<PersonDetail> = {
+      name: "John",
+      address: {
+        city: "Tokyo",
+        zip: 12345,
+      }
+    }
+
+    ■ ReadonlyArray<T>
+
+    type ReadOnlyNumbers = ReadonlyArray<number>
+
+    const numbers: ReadOnlyNumbers = [1, 2, 3]
+
+    numbers.push(4)                     // ❌ 配列の変更禁止
+    numbers[0] = 0                      // ❌ 配列の変更禁止
+    numbers.length = 0                  // ❌ 配列の変更禁止
+
   FOLD: |
+    ■ TS組み込み
+
     type Readonly<T> = { readonly [P in keyof T]: T[P]; }
+    type ReadonlyArray<T> = readonly T[]
+
+    ■ カスタム
+
+    type DeepReadonly<T> = {
+      readonly [P in keyof T]: T[P] extends object ? DeepReadonly<T[P]> : T[P]
+    }
 
 - ENTRY:
-  EXPLAIN: |
-    Record<K,T>: { K名: T型 }のレコード型作成
+  EXPLAIN: Record<K, T>
   BODY: |
-    type Attribute = Record<string, number>
-    const attr: Attribute = {"A": 1}
+    ■ 目的
 
+    ・Key名 K と 値の型 T から オブジェクト型 作成
+
+    ■ 注意点
+
+    ・K は string | number | symbol のみ指定可能
+    ・K に object 型を指定することはできない
+    ・K に union 型を指定すると、全ての Key名を持つ型になる
+
+    ■ Record<K, T>
+
+    type RecordTypeA = Record<string, number>
+    {
+      [key: string]: number
+    }
+
+    type RecordTypeU = Record<string|number, number|string>
+    {
+      [key: string]: number|string;
+      [key: number]: number|string;
+    }
+
+    type RecordTypeR = Record<Record<string, number>, number>  //❌ Key名に object 型は指定不可
+
+    ・使用例
+    const recordTypeA: RecordTypeA = { "A": 1 }
+    const recordTypeU: RecordTypeU = { "A": 1, 2: "A" }
+
+    ・運用例
     const person = ["name", "age"] as const
-
     type People = Record<typeof person[number], string>
     const people: People = { name: "John", age: "18" }
 
-    ■ 同義の型宣言
-    type PeopleMap = {[K in typeof person[number]]: string}
-    const peopleMap: PeopleMap = { name: "John", age: "18" }
+    ■ Mapped Types との違い
 
+    ・Mapped Types は 既存の型 から 新しい型 を作成
+    ・Record は Key名 と 値の型 から 新しい型 を作成
+
+    type Person = {
+      name: string
+      age: number
+    }
+
+    type MappedPerson = { [P in keyof Person]: Person[P] }
+    {
+      name: string;
+      age: number;
+    }
+
+    type RecordPerson = Record<"name" | "age", string | number>
+    {
+      name: string | number;
+      age: string | number;
+    }
   FOLD: |
+    ■ TS組み込み
+
     type Record<K extends keyof any, T> = { [P in K]: T; }
 
 - ENTRY:
-  EXPLAIN: |
-    Pick<T,K>: T型 から T[K] 選択
+  EXPLAIN: Pick<T, K>
   BODY: |
-    interface Person {
+    ■ 目的
+
+    ・オブジェクト型から 指定した Key名 のプロパティ群を抽出して 新しいオブジェクト型 を作成
+
+    ■ 注意点
+
+    ・指定した Key名 は T の Key名 のみ指定可能
+    ・K に object 型を指定することはできない
+    ・K に union 型を指定すると、指定した全ての Key名 を持つ型になる
+
+    ■ 元型
+
+    type Person {
       name: string
       address: string
       age: number
     }
+
+    ■ Pick<T, K>
+
     type PersonAge = Pick<Person, "name" | "age">
+    {
+      name: string
+      age: number
+    }
+
+    ・使用例
+
     const people: PersonAge[] = [
       { name: "John", age: 32 },
       { name: "Steve", age: 45 },
     ]
+
+    ■ DeepPick<T,K> (再帰的にPick)
+
+    type PersonDetail {
+      name: string
+      address: {
+        city: string
+        zip: number
+      }
+      age: number
+    }
+
+    type PersonDetailPicked = DeepPick<PersonDetail, {
+      address: "city"
+    }>
+    {
+      address: {
+        city: string
+      }
+    }
   FOLD: |
+    ■ TS組み込み
+
     type Pick<T, K extends keyof T> = { [P in K]: T[P]; }
 
+    ■ カスタム
+
+    type DeepPick<T, K> = {
+      [P in keyof K]: P extends keyof T
+        ? K[P] extends object
+          ? DeepPick<T[P], K[P]>
+          : T[P]
+        : never
+    }
+
 - ENTRY:
-  EXPLAIN: |
-    Omit<T,K>: T型 から T[K] 排除
+  EXPLAIN: Omit<T, K>
   BODY: |
-    interface Person {
+    ■ 目的
+
+    ・オブジェクト型から 指定した Key名 のプロパティ群を除外して 新しいオブジェクト型 を作成
+
+    ■ 注意点
+
+    ・指定した Key名 は T の Key名 のみ指定可能
+    ・K に object 型を指定することはできない
+    ・K に union 型を指定すると、指定した全ての Key名 を持た型になる
+
+    ■ Omit<T, K>
+
+    type Person = {
       name: string
       address: string
       age: number
     }
+
     type PersonName = Omit<Person, "address" | "age">
+    {
+      name: string
+    }
+
+    ・使用例    
     const people: PersonName[] = [{ name: "John" }, { name: "Steve" }]
+
+    ■ DeepOmit<T,K>
+
+    type PersonDetail = {
+      name: string
+      address: {
+        city: string
+        zip: number
+      }
+      age: number
+    }
+
+    type PersonDetailOmitted = DeepOmit<PersonDetail, {
+      address: "zip"
+    }>
+    {
+      name: string
+      address: {
+        city: string
+      }
+      age: number
+    }
   FOLD: |
+    ■ TS組み込み
+
     type Omit<T, K extends keyof any> = { [P in Exclude<keyof T, K>]: T[P]; }
 
+    ■ カスタム
+
+    type DeepOmit<T, K> = {
+      [P in Exclude<keyof T, keyof K>]: T[P] extends object
+        ? P extends keyof K
+          ? DeepOmit<T[P], K[P]>
+          : T[P]
+        : T[P]
+    }
+
 - ENTRY:
-  EXPLAIN: |
-    Exclude<Keys,K>: Keys から K 除外 (Key操作のみ)
+  EXPLAIN: Exclude<Keys, K>
   BODY: |
-    interface TypeA {
+    ■ 目的
+
+    ・Keys から特定の型(K)除外
+    ・オブジェクトの Union 型から特定の型(K)を持つ型を除外
+
+    ■ 注意点
+
+    ・Keys と K は union 型 である必要がある
+
+    ■ Exclude<Keys, K> キーUnion
+
+    type Keys = "A" | "B" | 1 | 2 | true
+
+    type ExcludedKeys = Exclude<Keys, "B" | 2>
+    = "A" | 1 | true
+
+    type ExcludedKeys = Exclude<Keys, number | boolean>
+    = "A" | "B"
+
+    ■ Exclude<Keys, K> オブジェクトUnion
+
+    type A = {
       id: number
       name: string
     }
-    interface TypeB {
+    type B = {
       id: number
       address: string
     }
 
-    type Excluded1 = Exclude<keyof TypeA, keyof TypeB> // 重複する "id" を削除
-    type Excluded2 = Exclude<string | number | boolean, string | boolean> // 残り: number
+    type Union1 = TypeA | TypeB
+
+    type Excluded = Exclude<Union1, {address: string}>  // {address: string} 属性を持つ型を除外
+    = { id: number; name: string; }
+    = TypeA
+
+    ■ DeepExclude<T, K>
+
+    type DeepExcludeObject = {
+      id: number
+      info: {
+        name: string
+        address: string
+      }
+    } | {
+      id: number
+      info: {
+        name: string
+        phone: string
+      }
+    }
+
+    type DeepExcluded = DeepExclude<DeepExcludeObject, { address: string }>
+    = {
+      id: number
+      info: {
+        name: string
+        phone: string
+      }
+    }
   FOLD: |
+    ■ TS組み込み
+
     type Exclude<Keys,K> = Keys extends K ? never : Keys
 
+    ■ カスタム
+
+    type DeepExclude<T, K> = T extends K
+      ? never
+      : T extends object
+        ? { [P in keyof T]: DeepExclude<T[P], K> }
+        : T
+
 - ENTRY:
-  EXPLAIN: |
-    Extract<Keys,K>: Keys から K 抽出 (Key操作のみ)
+  EXPLAIN: Extract<Keys, K>
   BODY: |
-    interface A {
+    ■ 目的
+
+    ・Keys から特定の型(K)抽出
+    ・オブジェクトの Union 型から特定の型(K)を持つ型を抽出
+
+    ■ 注意点
+
+    ・Keys と K は union 型 である必要がある
+
+    ■ Extract<Keys, K> キーUnion
+
+    type Keys = "A" | "B" | 1 | 2 | true
+
+    type ExtractedKeys1 = Extract<Keys, "B" | 2>
+     = "B" | 2
+
+    type ExtractedKeys2 = Extract<Keys, number | boolean>
+     = 1 | 2 | true
+
+    ■ Extract<Keys, K> オブジェクトUnion
+
+    type A = {
       id: number
       name: string
     }
-    interface B {
+    type B = {
       id: number
       address: string
     }
 
-    type Extracted1 = Extract<keyof A, keyof B> // 重複する "id" を抽出
-    type Extracted2 = Extract<string | number | boolean, string | Function> // 抽出: string
+    type Union1 = TypeA | TypeB
+
+    type Extracted = Extract<Union1, {address: string}>  // {address: string}を持つ型を抽出
+    {
+      id: number;
+      address: string;
+    }
+    = type B
+
+    ■ DeepExtract<T, K> (再帰的にExtract)
+
+    type DeepExtractObject = {
+      id: number
+      info: {
+        name: string
+        address: string
+      }
+    } | {
+      id: number
+      info: {
+        name: string
+        phone: string
+      }
+    }
+
+    type DeepExtracted = DeepExtract<DeepExtractObject, { address: string }>
+    {
+      id: number
+      info: {
+        name: string
+        address: string
+      }
+    }
   FOLD: |
+    ■ TS組み込み
+
     type Extract<Keys,K> = Keys extends K ? Keys : never
 
+    ■ カスタム
+
+    type DeepExtract<T, K> = T extends K
+      ? T
+      : T extends object
+        ? { [P in keyof T]: DeepExtract<T[P], K> }
+        : never
+
 - ENTRY:
-  EXPLAIN: |
-    NonNullable<T>: null/undefined 除外
+  EXPLAIN: NonNullable<T>
   BODY: |
-    interface A {
+    ■ 目的
+
+    ・型 T から null と undefined を除外
+
+    ■ 注意点
+
+    ・T が null または undefined の場合、結果は never になる
+    ・T が union 型の場合、null と undefined のみが除外される
+
+    ■ NonNullable<T>
+
+    type Person = {
       id?: number | null
       name: string | undefined
     }
-    type ANonNU = NonNullable<A["id"]> // number
+
+    type NonNullabled = NonNullable<Person>
+    {
+      id: number
+      name: string
+    }
+
+    ・使用例
+    const person: NonNullable<Person> = {
+      id: null,               // ❌ nullは非許容
+      name: undefined,        // ❌ undefinedは非許容
+    }
+
+    ■ DeepNonNullable<T>
+
+    type PersonDetail = {
+      id?: number | null
+      name: string | undefined
+      address: {
+        city: string | null
+        zip: number | undefined
+      } | undefined
+    }
+
+    type DeepNonNullabled = DeepNonNullable<PersonDetail>
+    {
+      id: number
+      name: string
+      address: {
+        city: string
+        zip: number
+      }
+    }
   FOLD: |
+    ■ TS組み込み
+
     type NonNullable<T> = T & {}
+
+    ■ カスタム
+
+    type Primitive = number|string|boolean|bigint|symbol|undefined|null
+    type Builtin = Primitive | Function | Date | Error | RegExp
+    type DeepNonNullable<T> = T extends Builtin
+      ? NonNullable<T>
+      : { [key in keyof T]-?: DeepNonNullable<T[key]> }
 
 #-------------------------------
 # 関数 Utilities
 #-------------------------------
 - ENTRY:
-  CATEGORY: 関数 Utilities
+  CATEGORY: 関数系
 
 - ENTRY:
-  EXPLAIN: |
-    Parameters<T>: メソッドの引数型取得
+  EXPLAIN: Parameters<T>
   BODY: |
-    const funcA = (text: string, num: number) => { }
-    type A1 = Parameters<typeof funcA> // [string, number]
-    type A2 = Parameters<typeof funcA>[number] // string | number
+    ■ 目的
+
+    ・メソッドの引数型群取得
+    ・Component Props 型取得(React)が便利
+
+    ■ 注意点
+
+    ・T は 関数型 である必要がある
+    ・引数がない場合は 空の配列型 になる
+
+    ■ Parameters<T>
+
+    const funcA = (text: string, num: number): void => { }
+
+    type A1 = Parameters<typeof funcA>
+     = [string, number]                 // 引数型群のタプル型
+
+    type A2 = Parameters<typeof funcA>[number] // Union型へ変換
+     = string | number
   FOLD: |
+    ■ TS組み込み
+
     type Parameters<T extends (...args: any) => any>
       = T extends (...args: infer P) => any ? P : never
 
 - ENTRY:
-  EXPLAIN: |
-    ReturnType<T>: メソッドの戻り型取得
+  EXPLAIN: ReturnType<T>
   BODY: |
-    const func2 = (): number => 1
-    type A = ReturnType<typeof func2> // number
+    ■ 目的
+
+    ・メソッドの戻り型取得 
+
+    ■ 注意点
+
+    ・T は 関数型 である必要がある
+    ・戻り型がない場合は void 型 になる
+    ・ジェネリクス関数の場合、戻り型は ジェネリクス型 のまま取得される
+    ・Component の場合、戻り型は JSX.Element 型 になる(React)
+
+    ■ ReturnType<T>
+
+    const funcA = (): number => 1
+
+    type ReturnFuncA = ReturnType<typeof funcA>
+     = number
+
+    ■ ReturnType<T>: ジェネリクス関数
+
+    const funcB = <T>(value: T): T => value
+
+    type ReturnFuncB = ReturnType<typeof funcB>
+     = T
+
+    ■ ReturnType<T>: React Component 
+
+    const MyComponent = (props: { name: string }) => {
+      return <div>{props.name}</div>
+    }
+
+    type ReturnMyComponent = ReturnType<typeof MyComponent>
+     = JSX.Element
   FOLD: |
+    ■ TS組み込み
+
     type ReturnType<T extends (...args: any) => any> 
       = T extends (...args: any) => infer R ? R : any
 
 - ENTRY:
-  EXPLAIN: |
-    Awaited<T>: 非同期awaitの戻り型取得
+  EXPLAIN: Awaited<T>
   BODY: |
-    ■ 非同期関数の戻り型Promise<string> から Promise を除去
+    ■ 目的
 
-    type A = Awaited<Promise<string>> //string
-    type B = Awaited<Promise<Promise<number>>> //number
+    ・非同期関数の戻り型から Promise を除去
+
+    ■ 注意点
+
+    ・T が null または undefined の場合、結果は T になる
+    ・T が Promise の場合、Promise の中身の型を再帰的に取得
+
+    ■ Awaited<T>
+
+    const fetchData = async (): Promise<string> => {
+      return "data"
+    }
+
+    type FetchDataReturnType = Awaited<ReturnType<typeof fetchData>>
+      = string
+
+    ■ Awaited<Promise<T>>
+
+    const fetchNestedData = async (): Promise<Promise<number>> => {
+      return Promise.resolve(42)
+    }
+
+    type FetchNestedDataReturnType = Awaited<ReturnType<typeof fetchNestedData>>
+      = number
   FOLD: |
+    ■ TS組み込み
+
     type Awaited<T> = T extends null | undefined ? T : T extends object & {
         then(onfulfilled: infer F, ...args: infer _): any;
     } ? F extends (value: infer V, ...args: infer _) => any ? Awaited<...> : never : T
 
 - ENTRY:
-  EXPLAIN: |
-    NoInfer<T>: 型推論ブロック
+  EXPLAIN: NoInfer<T>
   BODY: |
-    function getColor<C extends string>(
-      colors: C[],
-      defaultColor?: NoInfer<C>,
-    ) { }
+    ■ 目的
 
-    getColor(["red", "yellow", "green"], "red");   // OK
-    getColor(["red", "yellow", "green"], "blue");  // Error
+    ・ジェネリクス型の型推論を防止(const -> string など)
+    ・関数引数での型制約を強化
+    ・ジェネリクス型の型推論を防止することで、関数引数での型制約を強化できる
+
+    ■ 注意点
+
+    ・T は ジェネリクス型 である必要がある
+
+    ■ NoInfer<T>
+
+    function getColor<C extends string>(
+      colors: readonly C[],
+      defaultColor?: NoInfer<C>,
+    ) { ... }
+
+    const colors = ["red", "yellow", "green"] as const
+    getColor(colors);          // ⭕
+    getColor(colors, "red");   // ⭕
+    getColor(colors, "blue");  // ❌
   FOLD: |
+    ■ TS組み込み
+
     type NoInfer<T> = intrinsic
 
 #-------------------------------
 # Class Utilities
 #-------------------------------
 - ENTRY:
-  CATEGORY: Class Utilities
+  CATEGORY: Class系
 
 - ENTRY:
-  EXPLAIN: |
-    ConstructorParameters<T>: コンストラクタの属性型群取得
+  EXPLAIN: ConstructorParameters<T>
   BODY: |
+    ■ 目的
+
+    ・クラスのコンストラクタ引数型群取得
+
+    ■ 注意点
+
+    ・T は クラス型 である必要がある
+    ・引数がない場合は 空の配列型 になる
+
+    ■ ConstructorParameters<T>
+
     class Person {
       name: string
       age: number
@@ -219,109 +846,204 @@
         this.age = age
       }
     }
-    type A = ConstructorParameters<typeof Person> // [string, number]
+    type A = ConstructorParameters<typeof Person>
+      = [string, number]
   FOLD: |
+    ■ TS組み込み
+
     type ConstructorParameters<T extends abstract new (...args: any) => any>
       = T extends abstract new (...args: infer P) => any ? P : never
 
 - ENTRY:
-  EXPLAIN: |
-    InstanceType<T>: インスタンス型
+  EXPLAIN: InstanceType<T>
   BODY: |
+    ■ 目的
+
+    ・クラスのインスタンス型取得
+
+    ■ 注意点
+
+    ・T は クラス型 である必要がある
+    ・T が クラス型 でない場合、結果は any になる
+
+    ■ InstanceType<T>
+
     class C {
       x = 0;
       y = 0;
     }
-    type T0 = InstanceType<typeof C>;             = C
-    type T1 = InstanceType<any>;                  = any
-    type T2 = InstanceType<never>;                = never
-    type T3 = InstanceType<string>;               = any
-         * 'string' does not satisfy the constraint 'abstract new (...args: any) => any'
-    type T4 = InstanceType<Function>;             = any
-         * 'Function' does not satisfy the constraint 'abstract new (...args: any) => any'
-         * 'Function' provides no match for the signature 'new (...args: any): any'
+
+    type T = InstanceType<typeof C>;             = C
+    type T = InstanceType<any>;                  = any
+    type T = InstanceType<never>;                = never
+    type T = InstanceType<string>;               = ❌
+    type T = InstanceType<Function>;             = ❌
   FOLD: |
+    ■ TS組み込み
+
     type InstanceType<T extends abstract new (...args: any) => any> 
       = T extends abstract new (...args: any) => infer R ? R : any
 
 #-------------------------------
-# カスタム Utilities
+# キーリテラル
 #-------------------------------
 - ENTRY:
-  CATEGORY: カスタム Utilities
+  CATEGORY: キーリテラル系
 
 - ENTRY:
-  EXPLAIN: |
-    DeepNonNullable<T>: 再帰的に null/undefined 除外(カスタムUtility)
+  EXPLAIN: キーリテラルの連結
   BODY: |
-    type Primitive = number|string|boolean|bigint|symbol|undefined|null
-    type Builtin = Primitive | Function | Date | Error | RegExp
-    type DeepNonNullable<T> = T extends Builtin
-      ? NonNullable<T>
-      : { [key in keyof T]-?: DeepNonNullable<T[key]> }
+    ■ Union
 
-    interface A {
-      id?: number | null
-      name: string | undefined
-      address:{ 
-        zip: string | undefined
-        city: string | null
-      }|undefined
-    }
-    type ANonNU = DeepNonNullable<A>
-  FOLD: |
-
-- ENTRY:
-  EXPLAIN: |
-    Maybe<T>: undefined/null追加(ApolloGraphQLカスタムUtility)
-  BODY: |
-    type Maybe<T> = { [P in keyof T]: P | undefined | null }
-  FOLD: |
-
-#-------------------------------
-# object Literal
-#-------------------------------
-- ENTRY:
-  CATEGORY: Key名(オブジェクトリテラル)
-
-- ENTRY:
-  EXPLAIN: |
-    Key名(オブジェクトリテラル)の連結
-  BODY: |
     type Id = "A" | "B"
     type Kind = "X" | "Y"
     type NewId = `${Id | Kind}_id`
-    const newId: NewId = "A_id" // 'B_id', 'X_id', 'Y_id'
+
+    const newId: NewId = "A_id"         // 'B_id', 'X_id', 'Y_id'
+
+    ■ Intersection
+
+    type Id = "A" & "B" // never        // never
 
 - ENTRY:
-  EXPLAIN: |
-    Uppercase<T>: Key名(オブジェクトリテラル)の大文字化
+  EXPLAIN: Uppercase<T>
   BODY: |
+    ■ 目的
+
+    ・Key名(オブジェクトリテラル)の大文字化
+
+    ■ 注意点
+
+    ・T は string リテラル型 である必要がある
+
+    ■ Uppercase<T>
+
     type A = "name"
-    type C = Uppercase<A> //"NAME"
+    type C = Uppercase<A>               // "NAME"
 
 - ENTRY:
-  EXPLAIN: |
-    Lowercase<T>: Key名(オブジェクトリテラル)の小文字化
+  EXPLAIN: Lowercase<T>
   BODY: |
+    ■ 目的
+
+    ・Key名(オブジェクトリテラル)の小文字化
+
+    ■ 注意点
+
+    ・T は string リテラル型 である必要がある
+
+    ■ Lowercase<T>
+
     type A = "NAME"
-    type S = Lowercase<A> //"name"
+    type S = Lowercase<A>               // "name"
 
 - ENTRY:
-  EXPLAIN: |
-    Capitalize<T>: Key名(オブジェクトリテラル)の先頭文字の大文字化
+  EXPLAIN: Capitalize<T>
   BODY: |
+    ■ 目的
+
+    ・Key名(オブジェクトリテラル)の先頭文字の大文字化
+
+    ■ 注意点
+
+    ・T は string リテラル型 である必要がある
+
+    ■ Capitalize<T>
+
     type A1 = "name"
-    type S1 = Capitalize<A1> //"Name"
+    type S1 = Capitalize<A1>            // "Name"
+
     type A2 = "NAME"
-    type S2 = Capitalize<A2> //注意:"NAME"
-    type S3 = Capitalize<Lowercase<A2>> //"Name"
+    type S2 = Capitalize<Lowercase<A2>> // "Name"
 
 - ENTRY:
-  EXPLAIN: |
-    Uncapitalize<T>: Key名(オブジェクトリテラル)の先頭文字の小文字化
+  EXPLAIN: Uncapitalize<T>
   BODY: |
+    ■ 目的
+
+    ・Key名(オブジェクトリテラル)の先頭文字の小文字化
+
+    ■ 注意点
+
+    ・T は string リテラル型 である必要がある
+
+    ■ Uncapitalize<T>
+
     type A1 = "Name"
-    type S1 = Uncapitalize<A1> //"name"
+    type S1 = Uncapitalize<A1>          // "name"
+
     type A2 = "NAME"
-    type S2 = Uncapitalize<A2> //注意:"NAME"
+    type S2 = Uncapitalize<A2>          // "nAME"
+
+#-------------------------------
+# カスタム
+#-------------------------------
+- ENTRY:
+  CATEGORY: カスタム
+
+- ENTRY:
+  EXPLAIN: Prettify<T>
+  BODY: |
+    ■ 目的
+
+    ・型表示を見やすくする
+
+    ■ 注意点
+
+    ・型の内容は変わらない
+
+    ■ Prettify<T>
+
+    type Person = {
+      name: string
+      age: number
+    } & {
+      address: string
+    }
+
+    type PrettifiedPerson = Prettify<Person>
+    {
+      name: string
+      age: number
+      address: string
+    }
+  FOLD: |
+    ■ カスタム
+    type Prettify<T> = {
+      [K in keyof T]: T[K]
+    } & {}
+
+- ENTRY:
+  EXPLAIN: Maybe<T>
+  BODY: |
+    ■ 目的
+
+    ・オブジェクト型の全プロパティ型に undefined と null を追加
+    ・undefined/null追加 (ApolloGraphQLカスタムUtility)
+
+    ■ 注意点
+
+    ・プロパティ自体はオプショナルにはならない
+
+    ■ Maybe<T>
+
+    type Person = {
+      name: string
+      age: number
+    }
+
+    type MaybePerson = Maybe<Person>
+    {
+      name: string | undefined | null
+      age: number | undefined | null
+    }
+
+    ・使用例
+
+    const person: Maybe<Person> = {
+      name: null,        // ⭕
+      age: undefined,    // ⭕
+    }
+  FOLD: |
+    ■ カスタム
+    type Maybe<T> = { [P in keyof T]: P | undefined | null }

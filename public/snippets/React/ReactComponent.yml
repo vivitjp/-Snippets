@@ -57,10 +57,10 @@
     }
 
 #-------------------------------
-# React Component Samples
+# Component + Handler サンプル
 #-------------------------------
 - ENTRY:
-  CATEGORY: React Component Samples
+  CATEGORY: Component + Handler サンプル
 
 - ENTRY:
   EXPLAIN: Button
