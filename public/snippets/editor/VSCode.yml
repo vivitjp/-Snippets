@@ -6,32 +6,71 @@
 - ENTRY:
   EXPLAIN: 拡張機能
   BODY: |
-    Git Graph
-    Git History
-    Code Spell Checker
-    Debugger for Firefox
-    ESLint
-    Import Cost
-    IntelliCode
-    IntelliCode API Usage Examples
-    Japanese Language Pack for Visual Studio
-    JavaScript (ES6) code snippets
-    JavaScript and TypeScript Nightly
-    Multiple cursor case preserve
-    Prettier - Code formatter
-    Pretty TypeScript Errors
-    Python Debugger
-    Python Environment Manager
-    Python Extension Pack
-    Python Indent
-    Remote - SSH
-    SQL Formatter
-    Stylelint
-    Tailwind CSS IntelliSense
-    Twoslash Query Comments
-    vscode-styled-components
-    WSL
-    zenkaku
+    ■ Git / リポジトリ管理
+
+    Git Graph                           リポジトリの可視化（グラフ表示）
+    Git History                         コミット履歴の詳細表示と追跡に便利
+
+    ■ Lint / Formatter
+
+    ESLint                              JS/TS の静的解析とルール適用
+    Prettier - Code formatter           コード整形を自動化
+    Stylelint                           CSS/SCSS の静的解析
+
+    ■ コード品質・コスト可視化
+
+    Import Cost                         バンドルサイズの依存ごとの概算表示
+    Pretty TypeScript Errors            TS エラーを見やすく表示
+
+    ■ コードインテリジェンス
+
+    IntelliCode                         AI 補完で生産性向上
+    IntelliCode API Usage Examples      API 使用例の補完支援
+    JavaScript and TypeScript Nightly   最新 TS/JS 機能の補完・検証向け
+
+    ■ スニペット / 開発補助
+
+    JavaScript (ES6) code snippets      ES6 用コードスニペット集
+    Multiple cursor case preserve       複数カーソル時のケース保持
+
+    ■ Python 関連
+
+    Python Debugger                     デバッグ機能（Python 用）
+    Python Environment Manager          仮想環境管理を支援
+    Python Extension Pack               Python 開発に必要な拡張集
+    Python Indent                       Python 向けインデント補助
+
+    ■ リモート / 環境
+
+    Remote - SSH                        リモート開発（SSH 接続）をサポート
+    WSL                                 Windows 上での WSL 開発を支援
+    REST Client                         REST API のテストとデバッグ
+    Docker                              Docker コンテナ管理と開発支援
+
+    ■ CSS / UI ライブラリ
+
+    Tailwind CSS IntelliSense           Tailwind クラス補完と説明
+    vscode-styled-components            styled-components のシンタックスハイライト
+
+    ■ SQL / DB
+
+    SQL Formatter                       SQL の整形・フォーマット
+
+    ■ ローカライズ / 文字
+
+    Japanese Language Pack for Visual Studio  日本語 UI 翻訳パック
+    zenkaku                             全角・半角変換など日本語補助
+
+    ■ デバッグ（ブラウザ/ランタイム）
+
+    Debugger for Chrome                 Chrome ブラウザのデバッグをサポート
+    Debugger for Edge                   Edge ブラウザのデバッグをサポート
+
+    ■ その他便利ツール
+
+    Code Spell Checker                  スペルチェックでドキュメント品質向上
+
+    ■ 補足: 各拡張の用途を用途別にまとめました。コメントは行の40文字目から開始しています。
 
 - ENTRY:
   EXPLAIN: Linux開発環境
@@ -70,3 +109,83 @@
       code-insiders .
 
       VScodeが開くと左下にWSL: <ディストリ名> 表示を確認
+
+- ENTRY:
+  EXPLAIN: ショートカットキー
+  BODY: |
+    VSCode ショートカットキー一覧
+    https://qiita.com/uhyo/items/7f4f0d5f1bba3f6f4f03
+
+    ■ 基本操作
+
+    ・コマンドパレットを開く              Ctrl + Shift + P
+    ・ファイルを開く                      Ctrl + P
+    ・サイドバーの表示切替                Ctrl + B
+    ・ターミナルの表示/非表示             Ctrl + `
+
+    ■ 編集 (Editing)
+
+    ・行をコピー（複製）                  Shift + Alt + ↓ / ↑
+    ・行を削除                           Ctrl + Shift + K
+    ・行を上下に移動                      Alt + ↑ / Alt + ↓
+    ・インデント・アウトデント            Ctrl + ] / Ctrl + [
+    ・ドキュメント整形（フォーマット）     Shift + Alt + F
+
+    ■ 選択・カーソル (Selection & Multi-cursor)
+
+    ・選択を拡張                         Ctrl + Shift + → / ←
+    ・単語選択(個別)                     Ctrl + D
+    ・単語選択(個別戻る)                  Ctrl + U
+    ・単語選択(全単語)                    Ctrl + Shift + L / Ctrl + F2
+    ・カーソルを上/下に追加               Ctrl + Alt + ↑ / Ctrl + Alt + ↓
+    ・選択行でマルチカーソル              Shift + Alt + I
+    ・すべての出現箇所にカーソル追加       Ctrl + Shift + L
+
+    ■ ナビゲーション (Navigation)
+
+    ・シンボルへ移動                      Ctrl + T / Ctrl + P → @
+    ・定義へ移動                         F12
+    ・定義をピーク表示 (参照を開く)        Alt + F12
+    ・参照を検索                         Shift + F12
+    ・行へ移動                           Ctrl + G
+
+    ■ 検索・置換 (Search & Replace)
+
+    ・検索                               Ctrl + F
+    ・ファイル内置換                      Ctrl + H
+    ・ワークスペース内検索                Ctrl + Shift + F
+    ・ワークスペース置換                  Ctrl + Shift + H
+
+    ■ デバッグ (Debug)
+
+    ・デバッグ開始 / 続行                 F5
+    ・次の行へステップオーバー             F10
+    ・ステップイン                        F11
+    ・ステップアウト                      Shift + F11
+    ・ブレークポイント切替                F9
+    ・デバッグビュー表示/非表示            Ctrl + Shift + D
+
+    ■ ターミナル (Integrated Terminal)
+
+    ・ターミナルの表示/非表示              Ctrl + `
+    ・新しいターミナルを作成               Ctrl + Shift + `
+    ・タスクの実行                        Ctrl + Shift + B
+    ・選択範囲をターミナルで実行           Ctrl + Enter
+
+    ■ Git / ソース管理
+
+    ・ソース管理ビューを開く              Ctrl + Shift + G
+    ・変更のステージ                      Ctrl + Enter (コミットメッセージ入力時)
+    ・差分を表示                         Ctrl + K D
+
+    ■ ウィンドウ / レイアウト
+
+    ・エディタを分割                      Ctrl + \
+    ・エディタ間を移動                    Ctrl + 1 / 2 / 3
+    ・サイドバー表示切替                  Ctrl + B
+    ・エディタを閉じる                    Ctrl + W
+
+    ■ 保存
+
+    ・ファイル保存                       Ctrl + S
+    ・全て保存                           Ctrl + K S

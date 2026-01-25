@@ -4,217 +4,185 @@
 #-------------------------------
 
 - ENTRY:
-  EXPLAIN: Windows Search
+  EXPLAIN: 英語略語
   BODY: |
-    サイズ:   >100KB
-    名前:     ~=234
+    API:                                Application Programming Interface
+    SDK:                                Software Development Kit
+    IDE:                                Integrated Development Environment
+    GUI:                                Graphical User Interface
+    CLI:                                Command Line Interface
+    OS:                                 Operating System
+    HTTP:                               HyperText Transfer Protocol
+    HTTPS:                              HyperText Transfer Protocol Secure
+    URL:                                Uniform Resource Locator
+    URI:                                Uniform Resource Identifier
+    IP:                                 Internet Protocol
+    DNS:                                Domain Name System
+    FTP:                                File Transfer Protocol
+    SSH:                                Secure Shell
+    SSL:                                Secure Sockets Layer
+    TLS:                                Transport Layer Security
+    JSON:                               JavaScript Object Notation
+    XML:                                eXtensible Markup Language
+    CSV:                                Comma-Separated Values
+    CRUD:                               Create, Read, Update, Delete
 
 - ENTRY:
-  EXPLAIN: VSCode(設定)
+  EXPLAIN: 英語単語
   BODY: |
-    command:     ctrl+shift+[p]
-    file Open:	 ctrl+[p]
-    TypeScript:  Restart TS Server
-    折りたたみ:   ctrl+[k], ctrl+[1]~
-    設定:         wordWrap
-    同一選択:     ctrl+shift+[L] / [D]
-    Ruler(縦線):  setting.jsonで編集
-
-- ENTRY:
-  EXPLAIN: デザイン
-  BODY: |
-    Figma
-    Miro
-    Storybook
+    invoke                              関数や処理を呼び出す（実行要求）
+    emit                                イベントを発火する／送出する動作
+    emitter                             イベントを発火するオブジェクト
+    threshold                           しきい値（閾値）を示す値
+    payload                             送信・転送されるデータ本体
+    bootstrap                           起動処理／初期化の開始手続き
+    deprecate                           非推奨に指定（将来削除の可能性）
+    refactor                            振る舞いを変えず内部を整理する改修
+    instantiate                         クラスなどをインスタンス化すること
+    serialize                           オブジェクトを直列化（文字列化）する
+    deserialize                         直列化データをオブジェクトに復元する
+    concurrency                         同時実行性（複数処理の並行実行）
+    latency                             レイテンシ／応答遅延の時間
+    throughput                          単位時間当たりの処理量（スループット）
+    idempotent                          冪等性（複数回実行しても同結果）
+    atomic                              原子的な操作（途中不可分）
+    immutable                           不変（変更不可）の性質
+    mutable                             可変（変更可能）の性質
+    transient                           一時的・揮発的な状態やデータ
+    persistent                          永続的に保持される性質
+    synchronous                         同期処理（順次実行）
+    asynchronous                        非同期処理（並列やコールバック）
+    callback                            呼び出し後に実行される関数／処理
+    promise                             非同期結果を表すオブジェクト
+    await                               Promise の完了を待つ構文
+    middleware                          処理を仲介する層（挟み込みロジック）
+    framework                           開発のための枠組み・土台
 
 - ENTRY:
   EXPLAIN: 開発手法
   BODY: |
-    ウォーターフォール
-    アジャイル
-    フェイズ
-    スクラム
-    スプリント
-    ベロシティ
-    ストーリーポイント(SP)
-    フィボナッチ
-    レトスペ
-    KPT(Keep,Problem,Try)
-    Draft
-    リファクタ
-    オプティマ
-    デグレ
-    MVC(Model,View,Controller)
-    DDD(ドメイン駆動設計)
+    Waterfall                           ウォーターフォール：フェーズが明確な逐次的な開発モデル
+    Agile                               アジャイル：反復的かつ漸進的に開発を進める手法
+    Phase                               フェーズ：プロジェクトの段階・ライフサイクルのフェーズ
+    Scrum                               スクラム：スプリントと役割で運営するアジャイル手法
+    Sprint                              スプリント：期間を区切った反復作業（通常1〜4週間）
+    Velocity                            ベロシティ：スプリントごとのチーム完了ストーリーポイント
+    Story Points (SP)                   ストーリーポイント（SP）：工数・複雑さを相対評価する見積り単位
+    Fibonacci                           フィボナッチ：ストーリーポイント推定で使われる数列
+    Retrospective                       レトロスペクティブ：振り返りと改善を行うレビュー会議
+    KPT (Keep, Problem, Try)            KPT：実行改善のための簡易振り返り手法
+    Draft                               ドラフト：レビュー用の暫定版
+    Refactor                            リファクタ：振る舞いを変えず内部構造を整理する改修
+    Optimization                        オプティマイゼーション：性能や設計を改善・最適化する作業
+    Regression                          リグレッション：変更で生じる既存機能の不具合（回帰）
+    MVC (Model-View-Controller)         MVC（モデル・ビュー・コントローラ）：関心事を分離するアーキテクチャパターン
+    DDD (Domain-Driven Design)          DDD（ドメインドリブンデザイン）：ドメインモデルに着目した設計手法
 
 - ENTRY:
   EXPLAIN: ライブラリ/フレームワーク
   BODY: |
-    JS: Vue
-    JS: React
-    JS: Angular
-    JS: Nest
-    JS: Remix
-    JS: Vite
-    PHP: Laravel
-    PHP: Blade(view)
-    トランスパイル
-    バンドル
+    JS: React                           リアクト：コンポーネントベースのUIライブラリ
+    JS: Angular                         アングラー：包括的なフロントエンドフレームワーク
+    JS: Vue                             ヴュー：柔軟なコンポーネント指向フレームワーク
+    JS: Nextjs                          ネクスト.js：SSR/SSG対応のReactフレームワーク
+    JS: Svelte                          スヴェルト：コンパイル時に効率化するUIフレームワーク
+    JS: Nestjs                          ネストJS：構造化されたサーバサイドフレームワーク
+    JS: Remix                           リミックス：フルスタック向けのReactベースフレームワーク
+    JS: Vite                            ヴァイト：超高速なビルド/開発サーバーツール
+    PHP: Laravel                        ララベル：PHPのフルスタックフレームワーク
+    PHP: Blade(view)                    ブレード：Laravelのテンプレートエンジン
+    トランスパイル                       ソースを別形式へ変換する処理（例: TS→JS）
+    バンドル                             複数モジュールを1ファイルへ結合する処理
 
 - ENTRY:
   EXPLAIN: レンダリング
   BODY: |
-    SSR: ServerSide Rendering
-    SSG: Static Site Generation
-    ISR: Incremental Static Regeneration
-    SP: Single Page Application
+    SSR: Server-Side Rendering          サーバ側でHTMLを生成して返す方式
+    SSG: Static Site Generation         ビルド時に静的HTMLを生成する方式
+    ISR: Incremental Static Regeneration 段階的に静的ページを再生成する仕組み
+    SP: Single Page Application         単一ページでルーティングを行うアプリ構成
 
 - ENTRY:
   EXPLAIN: Atomicデザイン
   BODY: |
-    Atom
-    Molecules
-    Organism
+    Atom                                アトム：最小のUI部品
+    Molecules                           モレキュール：アトムを組み合わせた小コンポーネント
+    Organism                            オーガニズム：複数のモレキュールで構成される大きな部品
+
+- ENTRY:
+  EXPLAIN: デザインTool
+  BODY: |
+    Figma                               フィグマ：デザイン制作とプロトタイピングツール
+    Miro                                ミロ：ホワイトボード形式の共同作業ツール
+    Storybook                           ストーリーブック：UIコンポーネントの開発・ドキュメント
 
 - ENTRY:
   EXPLAIN: DB
   BODY: |
-    Relational Database System(RDS/RDBS)
-    Entity Relation(ER)図
-    SQL
-    RDS: Oracle
-    RDS: Postgres
-    RDS: MySQL
-    NoSQL: Mongo
-    NoSQL: Redis
-    GraphQL
-    Query
-    Mutation
+    Relational Database System(RDS)     リレーショナルDB：表形式で関係を管理するDB
+    Entity Relation(ER)図               ER図：データのエンティティと関係を図示
+    SQL                                 構造化照会言語：RDB操作の標準言語
+    RDS: Oracle                         Oracle DB（商用のリレーショナルDB）
+    RDS: Postgres                       PostgreSQL（高機能なオープンソースDB）
+    RDS: MySQL                          MySQL（広く使われるリレーショナルDB）
+    NoSQL: Mongo                        MongoDB：ドキュメント指向のNoSQL
+    NoSQL: Redis                        Redis：インメモリ型のデータストア
+    GraphQL                             グラフQL：型付きクエリ言語（APIの問い合わせ仕様）
+    Query                               クエリ：データ取得操作
+    Mutation                            ミューテーション：データ変更操作
 
 - ENTRY:
   EXPLAIN: デザインパターン
   BODY: |
-    Closure
-    Factory
+    Closure                             クロージャ：関数とそのスコープを保持する構造
+    Factory                             ファクトリ：オブジェクト生成を抽象化するパターン
 
 - ENTRY:
   EXPLAIN: FE & BE
   BODY: |
-    サーバ
-    クライアント
-    FE: Frontend
-    BFF: Backend for Frontend
-    BE: Backend
-    Apache
-    Nginx
-    Node(Express)
-    Deno
+    server                              サーバ：アプリ/APIを提供する側（バックエンド）
+    client                              クライアント：利用者側のアプリ/ブラウザ
+    FE: Frontend                        フロントエンド：UI/UXを提供する層
+    BFF: Backend for Frontend           BFF：フロント向けに最適化したAPIレイヤー
+    BE: Backend                         バックエンド：ロジック／データ処理を行う層
+
+    Apache                              アパッチ：伝統的なWebサーバ
+    Nginx                               エンジンX：高性能なリバースプロキシ／Webサーバ
+    Node                                ノード：JavaScriptランタイム（サーバ側）
+    Express                             エクスプレス：Node向け軽量Webフレームワーク
+    Deno                                デノ：セキュリティ重視の次世代ランタイム
 
 - ENTRY:
   EXPLAIN: セキュリティ
   BODY: |
-    Authorization
-    Authentication
-    OAuth
-    Auth0
-    Token
-    JWT(Jason Web Token, ジョット)
+    Authorization                       認可：操作の許可・権限管理
+    Authentication                      認証：本人確認（ログイン等）の仕組み
+    OAuth                               オーオース：外部認可フレームワーク
+    Auth0                               Auth0：IDaaS（認証基盤サービス）
+    Token                               トークン：認証・認可情報を表す短期情報
+    JWT                                 JWT（JSON Web Token）：署名付きのトークン形式
 
 - ENTRY:
   EXPLAIN: 変数名
   BODY: |
-    camelCase
-    PascalCase
-    snake_case
-    kebab-case
+    camelCase                           キャメルケース：先頭小文字の複合語（例: myVar）
+    PascalCase                          パスカルケース：先頭大文字の複合語（例: MyClass）
+    snake_case                          スネークケース：アンダースコア区切り（例: my_var）
+    kebab-case                          ケバブケース：ハイフン区切り（例: my-var）
 
 - ENTRY:
   EXPLAIN: クライアントサイドストレージ
   BODY: |
-    ストレージ
-    Cookie クッキー
-    Session セッション
-    IndexedDB
-    LocalStorage
+    ストレージ                           クライアント側の保存領域の総称
+    Cookie クッキー                      小容量のキー/値をブラウザに保存
+    Session セッション                   セッション情報（短期的なブラウザ保存）
+    IndexedDB                           インデックス付きのブラウザ内データベース
+    LocalStorage                        キー/値の永続的な文字列ストレージ
 
 - ENTRY:
   EXPLAIN: JavaScript/TypeScript
   BODY: |
-    オブジェクトリテラル
-    分割代入(Spread構文)
-    残余引数(Rest構文)
-
-- ENTRY:
-  EXPLAIN: React
-  BODY: |
-    v18
-    Suspense
-    Fallback
-    Spinner
-
-- ENTRY:
-  EXPLAIN: ステート管理
-  BODY: |
-    ReduxToolkit
-    Dispatch
-    Recoil
-    zuStand
-    Jotai
-
-- ENTRY:
-  EXPLAIN: CSS
-  BODY: |
-    CSS
-    SASS
-    レスポンシブ
-    StyledCompo
-    Emotion
-    Tailwind
-
-- ENTRY:
-  EXPLAIN: コンポーネント
-  BODY: |
-    モダル
-    Overlay
-
-- ENTRY:
-  EXPLAIN: Form & UI
-  BODY: |
-    MUI
-    ReactHookForm
-    Chakra
-    HeadlessUI
-
-- ENTRY:
-  EXPLAIN: Fetch & Caching
-  BODY: |
-    fetch
-    Apollo
-    React Query
-    SWR
-
-- ENTRY:
-  EXPLAIN: テスト
-  BODY: |
-    Mock
-    Stub
-    Spy
-    Jest
-    Vitest
-    RTL
-    PlayWright
-    Cypress
-
-- ENTRY:
-  EXPLAIN: Lint
-  BODY: |
-    Lint
-    esLint
-
-- ENTRY:
-  EXPLAIN: Cloud
-  BODY: |
-    クラウド
-    AWS
-    GCP
-    Azure
+    Object Literal                      オブジェクトリテラル：オブジェクトを直接表す記法
+    Spread構文                          スプレッド：配列やオブジェクトを展開する構文
+    Rest構文                            レスト：関数の可変長引数や分割時の残余を受け取る構文
+    IIFE                                即時実行関数式：定義と同時に実行される関数式

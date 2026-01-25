@@ -69,6 +69,7 @@ import { keysServiceWorker } from "./keys/ServiceWorker"
 import { keysWebSocket } from "./keys/WebSocket"
 import { keysYup } from "./keys/Yup"
 import { keysZustand } from "./keys/zustand"
+import { keystRPC } from "./keys/tRPC"
 
 // 以下のオブジェクトをソートしてください
 export const codeKeys = {
@@ -136,6 +137,7 @@ export const codeKeys = {
   TS: "TS",
   TSConfig: "TSConfig",
   TypeORM: "TypeORM",
+  tRPC: "tRPC",
   Unknown: "Unknown",
   Vite: "Vite",
   Vitest: "Vitest",
@@ -219,6 +221,7 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   Vue: keysVue,
   WebSocket: keysWebSocket,
   WebAPI: keysWebAPI,
+  tRPC: keystRPC,
   Yup: keysYup,
   Zustand: keysZustand,
 }

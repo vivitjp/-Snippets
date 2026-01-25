@@ -283,13 +283,18 @@ export const menuItems: menuByCategories[] = [
     category: "TypeScript",
     items: [
       {
-        name: "TypeScript",
-        fileName: "TypeScript/TypeScript",
+        name: "実行環境",
+        fileName: "TypeScript/Transpiler",
         codeKeyTypes: [codeKeys.JS, codeKeys.TS],
       },
       {
         name: "Topics",
-        fileName: "TypeScript/TSTopics",
+        fileName: "TypeScript/Topics",
+        codeKeyTypes: [codeKeys.JS, codeKeys.TS],
+      },
+      {
+        name: "TypeScript",
+        fileName: "TypeScript/TypeScript",
         codeKeyTypes: [codeKeys.JS, codeKeys.TS],
       },
       {
@@ -303,14 +308,25 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.JS, codeKeys.TS],
       },
       {
+        name: "Version 履歴",
+        fileName: "TypeScript/Version",
+        codeKeyTypes: [codeKeys.JS, codeKeys.TS],
+      },
+      {
         name: "TSConfig",
         fileName: "TypeScript/TSConfig",
         codeKeyTypes: [codeKeys.TSConfig, codeKeys.JS, codeKeys.TS],
       },
       {
-        name: "TypeScript Challenge",
+        name: "Challenge",
         fileName: "TypeScript/TSChallenge",
         codeKeyTypes: [codeKeys.JS, codeKeys.TS],
+      },
+      {
+        name: "tRPC",
+        fileName: "TypeScript/tRPC",
+        codeKeyTypes: [codeKeys.tRPC],
+        case_sensitive: false,
       },
     ],
   },

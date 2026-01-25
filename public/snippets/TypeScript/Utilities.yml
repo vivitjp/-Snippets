@@ -39,6 +39,22 @@
 
     ※ maybe<T> は自身をoptional にせず、+ undefined | null
 
+    ■ 注意: Partial<Record<K,T>> vs Record<Partial<K>,T> 
+
+    type Property = "name" | "address"
+
+    type Person1 = Partial<Record<Property, string>>
+    {
+        name?: string | undefined;
+        address?: string | undefined;
+    }
+
+    type Person2 = Record<Partial<Property>, string>
+    {
+        name: string;                   // ❌ Property自体はoptionalにならない
+        address: string;
+    }
+
     ■ StrictPartial<T>
 
     type StrictPartialPerson = StrictPartial<Person>

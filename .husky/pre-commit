@@ -1,4 +1,7 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/husky.sh"
 
+# Run YAML lint before other lint-staged hooks
+npm run lint:yaml || exit 1
+
 npx lint-staged
