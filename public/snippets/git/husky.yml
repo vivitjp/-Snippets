@@ -9,6 +9,13 @@
 - ENTRY:
   EXPLAIN: インストール
   BODY: |
+    ■ 概要
+
+    ・変更を git にコミットする前に、自動でコードチェックやフォーマットを実行するためのツール
+
+      husky: Git フックを簡単に管理・設定できるツール
+      lint-staged: ステージされたファイルに対してのみリントやフォーマットを実行するツール
+
     ■ husky & lint-staged
 
       npm install -D husky lint-staged
@@ -57,7 +64,7 @@
     .husky/pre-commit
 
 - ENTRY:
-  EXPLAIN: 設定(pre-commit)
+  EXPLAIN: 設定
   BODY: |
     ■ [pre-commit]
 
@@ -66,27 +73,21 @@
 
       npx lint-staged
 
-- ENTRY:
-  EXPLAIN: 設定(package.json) 必須
-  BODY: |
-    ■ [package.json](必須)
+    ■ 必須 [package.json]
       "lint-staged": {
         "*.{js,jsx,ts,tsx}": "npm run lint"
       },
 
-- ENTRY:
-  EXPLAIN: 設定(lintstagedrc) 必須
-  BODY: |
-    ■ [.lintstagedrc.js](必須)
+    ■ 必須 [.lintstagedrc.js] Sample
 
-    ■ Sample 1
     export default {
       '**/*.{ts,tsx}': [
         () => 'tsc --incremental false --noEmit', // 型チェック
       ],
     };
 
-    ■ Sample 2 (Callback Samples)
+    ■ 必須 [.lintstagedrc.js] Callback Samples
+
     export default {
       '**/*.ts?(x)': () => 'tsc -p tsconfig.json --noEmit',
       'src/**/*.{js,jsx,ts,tsx}': 'eslint --fix --no-ignore --max-warnings=0',
@@ -94,7 +95,8 @@
       'src/**/*': 'prettier --write --ignore-unknown'
     }
 
-    ■ Sample 3 (Next Sample)
+    ■ 必須 [.lintstagedrc.js] Next Sample
+
       const path = require('path');
 
       const buildEslintCommand = (filenames) =>
@@ -133,3 +135,65 @@
         echo "${BRANCH}へのコミットは禁止です"
         exit 1
     fi
+
+- ENTRY:
+  EXPLAIN: commit 時に YAML lint を実行
+  BODY: |
+    ■ [.husky/pre-commit]
+
+      #!/usr/bin/env sh
+      . "$(dirname -- "$0")/husky.sh"
+
+      # Run YAML lint before other lint-staged hooks
+      npm run lint:yaml || exit 1
+
+      npx lint-staged
+
+    ■ [package.json]
+
+      "scripts": {
+        "lint:yaml": "node scripts/lint-yaml.js",
+      }
+
+    ■ [scripts/lint-yaml.js]
+
+      #!/usr/bin/env node
+      import fs from "fs"
+      import path from "path"
+      import YAML from "yaml"
+
+      const root = process.cwd()
+      const target = path.join(root, "public", "snippets")
+
+      function walk(dir) {
+        const entries = fs.readdirSync(dir, { withFileTypes: true })
+        for (const ent of entries) {
+          const p = path.join(dir, ent.name)
+          if (ent.isDirectory()) {
+            walk(p)
+          } else if (ent.isFile() && (p.endsWith(".yml") || p.endsWith(".yaml"))) {
+            try {
+              const src = fs.readFileSync(p, "utf8")
+              YAML.parse(src)
+              console.log("OK", p)
+            } catch (e) {
+              console.error("ERROR", p)
+              console.error(e && e.message ? e.message : String(e))
+              process.exitCode = 2
+            }
+          }
+        }
+      }
+
+      try {
+        if (!fs.existsSync(target)) {
+          console.error("TARGET_NOT_FOUND", target)
+          process.exit(2)
+        }
+        walk(target)
+        if (process.exitCode && process.exitCode !== 0) process.exit(process.exitCode)
+        process.exit(0)
+      } catch (err) {
+        console.error("WALK_ERROR", err && err.message ? err.message : String(err))
+        process.exit(2)
+      }

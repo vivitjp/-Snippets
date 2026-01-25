@@ -4,17 +4,10 @@
 #-------------------------------
 
 - ENTRY:
-  EXPLAIN: 各種PATH表示
-  BODY: |
-    npm root               //<DRIVE>:\<WORKING_DIR>\<PACKAGE名>\node_modules
-    npm root -g            //C:\Users\<ユーザ名>\AppData\Roaming\npm\node_modules
-    npm bin                //<DRIVE>:\<WORKING_DIR>\<PACKAGE名>\node_modules\.bin
-    npm bin -g             //C:\Users\<ユーザ名>\AppData\Roaming\npm
-
-- ENTRY:
   EXPLAIN: 初期化
   BODY: |
     ■ package.json 作成
+
     npm init                                      // 初期化
     npm init -y                                   // [-y] 全質問にYES
 
@@ -34,200 +27,386 @@
       }
     }
 
+#-------------------------------
+# package.json
+#-------------------------------
 - ENTRY:
-  EXPLAIN: package.json
-  BODY: |
-    ■ name (package名)
-    "name": "mypack",
-
-      1-214字、英小文字、数字、記号(-._)、先頭(._以外)
-      スコープ付の場合、@スコープ名/ というプレフィックス付
-      コアモジュールの名前と重複不可
-
-    ■ version
-    "version": "0.1.0",                           // セマンティック バージョニング
-
-    npm version 1.1.0                             // v1.1.0
-    npm version patch                             // v1.1.1(patchをカウントアップ)
-    npm version minor -m "%sにバージョンアップ"     // [-m] gitへの明示的なメッセージ(%sはバージョン)
-
-    ■ [description]                               // (Optional) 説明文
-
-    ■ [keyword]                                   // (Optional) キーワード
-    "keyword": ["some","design","theme"],         // 文字列の配列
-
-      CLI, webからの検索に使用
-      CLIでは、npm search <キー> で検索可能
-
-    ■ main                                        // エントリポイント
-    "main": "index.js",                           default
-
-    [sample/index.js]
-    module.export = 'Hello World'
-
-    > require('./sample')
-    Hello World
-
-    ■ author/contributors                         // 開発者
-    "author":{
-      "name": "John Wick",
-      "email": "john@wick.com",
-      "url": "http://www.johnwick.com"
-    },
-    "author": "name sirname <email> (url)"
-
-      一人で開発: author
-      複数で開発: contributors
-
-    ■ [license/private]                           // (Optional) ライセンス
-    "license": "ISC,MIT,Apache-2.0,...",
-    "license": "UNLICENSED", //第三者の仕様不許可
-    "private": true, //非公開
-
-      プロジェクトルート直下に LICENSE というファイルを作成。
-      詳細を記述してレジストリに公開。定型文を利用すること。
-
-      非公開なら npm publish という公開コマンドでエラーとなり、思わぬ公開を防止
-
-    ■ dependencies                                // 依存package
-    "dependencies": {
-      "<package名>": "^1.2.3"
-    },
-
-    npm install <package名>
-    require('<command>')で使用可能                 // nodeの場合
-
-      依存パッケージを管理する項目で、手動では変更しない方がよい。
-      1) ファイル package.json に情報追記
-      2) ディレクトリ node_modules に依存パッケージの実態配置
-      3) ファイル package-lock.json に情報追記
-
-    ■ [devDependencies]                           //(Optional) 開発用依存package
-    "devDependencies": {
-      "<package名>": "^1.2.3"
-    },
-
-    npm i -D(--save-dev) <package名>
-
-      テストやビルドに使用するパッケージ
-      開発用フラグ(-D)を付けてインストールした依存パッケージがここに追記
-
-    ■ [peerDependencies]                          //(Optional) 間接依存package
-
-      何かのライブラリのプラグイン開発によく使用される。
-      同一パッケージの別バージョン向けなどを管理することができる。
-
-    ■ [optionalDependencies]                      //(Optional) 非必須依存package
-    npm i -O(--save-optional) <package名>
-
-      package.json を使用した一括インストールでインストールに失敗してもエラーにならない
-      非必須のパッケージを指定
-
-    ■ [bundledDependencies]                       //(Optional) 公開バンドルpackage指定
-    "bundledDependencies": ["<package名>"],
-
-      npm レジストリに公開する時に、バンドルしたいパッケージを指定
-      他とは異なり、パッケージ名の配列
-
-    ■ bin                                         // 実行可能ファイル指定
-    "bin": {
-      "rimraf": "./bin.js"
-    },
-
-      script で指定実行するために登録するコマンド
-      node_modules/.bin の中に、rimraf というシンボリックリンク作成
-      リンク先は /projdir/node_modules/rimraf/bin.js
-      node_modules/.bin内にリンクを集約するのは、PATH を通して実行が可能になるため
-
-      サンプル
-      [/projdir/sayhi.js]
-      #!/usr/bin/env node                         // 必須
-      'use strict'
-      // console.log(process.args)                // 実行ファイル名, PATH, 引数の順番
-      process.args.slice(2).forEach(name=>console.log(`Hi ${name}`))
-
-      "bin": {
-        "sayhi": "./sayhi.js"
-      },
-      "scripts": {
-        "sayhi": "sayhi"
-      },
-
-      $npm run sayhi john smith
-      > Hi john
-      > Hi smith
-
-    ■ repository                                  // リポジトリ
-    "repository": {
-      "type": "git",
-      "url": "https://github.com/bpm/cli.git",
-    }
-
-      パッケージコード管理のリポジトリ
-
-    ■ engines                                     // npmバージョン
-    "engines": {
-      "node": ">=10",
-      "npm": "^6.0.0"
-    }
-
-      パッケージ動作に必要な npm のバージョンを記載。以下オプション必須
-      npm config set engine-strict true
-
-    ■ acceptDependencies                          // 新(v7):環境対応バージョン
-
-    dependentiesで指定したver以外に、環境次第で利用可能なパッケージVerを指定可能
-    dedupedの個数が増えると予想
-
-    ■ exports                                     // 読み込まれるファイルのパス
-    "exports": "./dist/index.js"
-
-      記述がある場合 "main" よりも優先して読み込まれる
-      Pure ESM の場合 Conditional Exports もされていない模様
-
-    ■ type                                        // モジュールタイプ
-    "type": "module",                             // .js ファイルを ESM として解釈する
-
-    ■ カスタムフィールド                            
-    "jest": {
-      "testMatch": ["**/test/jest/**/*.js"],
-      "clearMocks": true,
-      "restoreMocks": true
-    }
-
-      外部に設定ファイルを置かず、ここに既述するパッケージも多い
+  CATEGORY: package.json
 
 - ENTRY:
-  EXPLAIN: package.json Script
+  EXPLAIN: フルオプション例
   BODY: |
+    {
+      "name": "sample-project",                          // パッケージ名
+      "version": "0.1.0",                                // セマンティックバージョン
+      "description": "Example showing many package.json options",
+      "private": true,                                   // 公開禁止フラグ（trueでnpm publish不可）
+      "main": "dist/index.js",                           // CommonJS エントリ
+      "module": "dist/index.esm.js",                     // ESM エントリ
+      "types": "types/index.d.ts",                       // 型定義のパス
+      "type": "module",                                  // .js を ESM として扱う
+      "bin": {                                           // CLI を公開する例
+        "sample-cli": "bin/cli.js"
+      },
+      "scripts": {                                       // よく使うスクリプト例（コメント付き）
+        "build": "tsc -p tsconfig.json && rollup -c",    // ビルド（型生成＋バンドル）
+        "dev": "vite",                                   // 開発サーバ
+        "start": "node ./dist/index.js",                 // 本番起動コマンド
+        "lint": "eslint 'src/**/*.{js,ts,tsx}'",         // Lint 実行
+        "test": "jest --coverage",                       // テスト（カバレッジ付き）
+        "prepublishOnly": "npm run build"                // 公開前にビルドを強制
+      },
+      "files": ["dist","types"],                         // パッケージに含めるファイル/ディレクトリ
+      "exports": {                                       // 条件付きエクスポート（パス解決）
+        ".": {
+          "import": "./dist/index.esm.js",
+          "require": "./dist/index.cjs.js"
+        },
+        "./feature": "./dist/feature.js"
+      },
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/yourorg/sample-project.git"
+      },
+      "keywords": ["sample","example","package.json"],
+      "author": "Your Name <you@example.com>",
+      "license": "MIT",
+      "engines": {                                         // Node / npm のバージョン制約
+        "node": ">=16",
+        "npm": ">=7"
+      },
+      "os": ["darwin","linux","win32"],                    // 動作可能なOS限定
+      "cpu": ["x64","arm64"],                              // 対応アーキテクチャ
+      "sideEffects": false,                                // ツリーシェイク可能か
+      "dependencies": {                                    // 依存は少なめに例示
+        "axios": "^1.5.0"
+      },
+      "devDependencies": {
+        "typescript": "^5.0.0",
+        "eslint": "^8.0.0",
+        "jest": "^29.0.0",
+        "vite": "^5.0.0"
+      },
+      "peerDependencies": {                                // プラグイン等で利用
+        "react": "^18.0.0"
+      },
+      "optionalDependencies": {                            // インストール失敗しても継続
+        "fsevents": "^2.0.0"
+      },
+      "bundledDependencies": [],                           // npm publish 時にバンドルしたいパッケージ
+      "publishConfig": {                                   // npm publish の設定
+        "access": "restricted",
+        "registry": "https://registry.npmjs.org/"
+      },
+      "workspaces": ["packages/*"],                        // Monorepo 構成（任意）
+      "config": {                                          // npm run から参照可能な設定
+        "port": 8080
+      },
+      "funding": {
+        "type": "github",
+        "url": "https://github.com/sponsors/yourorg"
+      }
+    }
+
+- ENTRY:
+  EXPLAIN: name
+  BODY: |
+    ■ 概要
+
+    ・パッケージ名を指定
+
+    ■ 例
+
+    "name": "sample-project",
+
+    ■ ルール
+
+    ・1-214字、英小文字、数字、記号(-._)、先頭(._以外)
+    ・スコープ付の場合、@スコープ名/ というプレフィックス付
+    ・コアモジュールの名前と重複不可
+
+    ※ スコープ付: 組織やユーザ単位でパッケージを管理するための名前空間
+    例: "@myorg/mypackage"
+
+    ※ コアモジュール: Node.js の組み込みモジュール（例: fs, http, path など）
+
+- ENTRY:
+  EXPLAIN: version
+  BODY: |
+    ■ 概要
+
+      パッケージのバージョンをセマンティックバージョニングで指定します。
+
+    ■ 例
+
+      "version": "0.1.0"
+
+    ■ ルール
+
+      ・major.minor.patch の形式
+      ・npm の `npm version` コマンドで更新可能
+
+      ※ セマンティックバージョニング: 互換性に基づくバージョン付与ルール
+
+- ENTRY:
+  EXPLAIN: description
+  BODY: |
+    ■ 概要
+
+      ・パッケージの短い説明文。npm レジストリや検索結果に表示
+
+    ■ 例
+
+      "description": "Example showing many package.json options"
+
+    ■ ルール
+
+      ・任意項目。短く要点を記載
+      ・Markdown は非サポート
+
+- ENTRY:
+  EXPLAIN: private
+  BODY: |
+    ■ 概要
+
+      ・パッケージを公開したくない場合に true を指定
+
+    ■ 例
+
+      "private": true
+
+    ■ ルール
+
+      ・true の場合 `npm publish` はエラーになります（誤公開防止）
+
+- ENTRY:
+  EXPLAIN: main, module, types, type
+  BODY: |
+    ■ 概要
+
+      ・main: CommonJS エントリ
+      ・module: ESM エントリ
+      ・types: 型定義
+      ・type: .js の解釈方式
+
+    ■ 例
+
+      "main": "dist/index.js"
+      "module": "dist/index.esm.js"
+      "types": "types/index.d.ts"
+      "type": "module"
+
+    ■ ルール
+
+      ・ESM/CJS 両対応するライブラリでは exports 併用を検討
+      ・type はプロジェクト単位で設定可能（module/commonjs）
+
+- ENTRY:
+  EXPLAIN: bin
+  BODY: |
+    ■ 概要
+
+      ・CLI コマンド名と実行ファイルを紐づける設定
+      ・install 時に node_modules/.bin にリンクされる
+
+    ■ 例
+
+      "bin": { "sample-cli": "bin/cli.js" }
+
+    ■ ルール
+
+      ・実行ファイルはシェバン（#!/usr/bin/env node）を含める
+      ・複数登録可能
+
+- ENTRY:
+  EXPLAIN: scripts
+  BODY: |
+    ■ 概要
+
+      ・npm run で実行可能なタスクを定義
+      ・pre/post プレフィックスでフックも指定可能
+
+    ■ 例
+
+      "scripts": { "build": "tsc -p tsconfig.json && rollup -c" }
+
+    ■ ルール
+
+      ・クロスプラットフォームに注意（シェル構文）
+      ・npm-run-all や cross-env の利用を推奨
+
+- ENTRY:
+  EXPLAIN: files, exports
+  BODY: |
+    ■ 概要
+
+      ・files: パッケージ化に含めるファイル
+      ・exports: 条件付きエントリポイント公開設定
+
+    ■ 例
+
+      "files": ["dist","types"]
+      "exports": { ".": {"import":"./dist/index.esm.js","require":"./dist/index.cjs.js"} }
+
+    ■ ルール
+
+      ・exports を使うと main より優先
+      ・条件分岐で import/require を切り分け可能
+
+- ENTRY:
+  EXPLAIN: repository, keywords, author, license
+  BODY: |
+    ■ 概要
+
+      ・repository: ソース管理の場所
+      ・keywords: 検索用キーワード
+      ・author/license は著作者とライセンス
+
+    ■ 例
+
+      "repository": {"type":"git","url":"https://..."}
+      "keywords": ["sample","example"]
+      "author": "You <you@example.com>"
+      "license": "MIT"
+
+    ■ ルール
+
+      ・license は SPDX 形式で記載
+      ・private:true の場合もライセンス記載推奨
+
+- ENTRY:
+  EXPLAIN: engines, os, cpu
+  BODY: |
+    ■ 概要
+
+      ・engines: 対応 Node/npm
+      ・os/cpu で動作対象を限定可能
+
+    ■ 例
+
+      "engines": {"node": ">=16","npm": ">=7"}
+      "os": ["darwin","linux"]
+      "cpu": ["x64","arm64"]
+
+    ■ ルール
+
+      ・engines で厳密チェックしたい場合は `engine-strict` を設定
+      ・OS/CPU はパッケージ配布を制限
+
+- ENTRY:
+  EXPLAIN: sideEffects
+  BODY: |
+    ■ 概要
+
+      ・モジュールが副作用を持つか否かを指定
+      ・ツリーシェイキング最適化を支援
+
+    ■ 例
+
+      "sideEffects": false
+
+    ■ ルール
+
+      ・false にすると未参照のモジュールはビルド時に除去されやすくなる
+      ・サイドエフェクトファイルは列挙が必要
+
+- ENTRY:
+  EXPLAIN: dependencies系
+  BODY: |
+    ■ 概要
+
+      ・dependencies: 実行時依存
+      ・devDependencies: 開発時依存
+      ・peer: ホスト環境の依存
+      ・optional: 非必須
+
+    ■ 例
+
+      "dependencies": {"axios":"^1.5.0"}
+      "devDependencies": {"typescript":"^5.0.0"}
+      "peerDependencies": {"react":"^18.0.0"}
+      "optionalDependencies": {"fsevents":"^2.0.0"}
+
+    ■ ルール
+
+      ・依存は npm install で自動管理
+      ・peerDependencies はライブラリ互換性のために宣言
+
+- ENTRY:
+  EXPLAIN: bundledDependencies, publishConfig
+  BODY: |
+    ■ 概要
+
+      ・bundledDependencies: 公開時に同梱する依存
+      ・publishConfig: publish の挙動設定
+
+    ■ 例
+
+      "bundledDependencies": ["lib"]
+      "publishConfig": {"access":"restricted"}
+
+    ■ ルール
+
+      ・bundled を使うとレジストリに同梱されるためパッケージサイズに注意
+
+- ENTRY:
+  EXPLAIN: workspaces, config, funding
+  BODY: |
+    ■ 概要
+
+      ・workspaces: Monorepo 管理
+      ・config: npm run から参照する簡易設定
+      ・funding: スポンサー情報
+
+    ■ 例
+
+      "workspaces": ["packages/*"]
+      "config": {"port":8080}
+      "funding": {"type":"github","url":"https://github.com/sponsors/..."}
+
+    ■ ルール
+
+      ・workspaces はルートで管理
+      ・config は npm_package_config_* でスクリプトから参照可能
+
+- ENTRY:
+  EXPLAIN: Script 詳細
+  BODY: |
+    ■ 概要
+
     "scripts": {
       "test": "<script>"
     },
+
     npm run test
 
-      コマンド run で実行するプロジェクト内のタスク(ビルド、テスト、ローカル実行など)を記述
-      スクリプト自体、UNIX系では /bin/sh、Windows系では cmd.exeが実行
-      どちらの環境でも動くようにスクリプトを記述しなければならない
+    ・コマンド run で実行するプロジェクト内のタスク(ビルド、テスト、ローカル実行など)を記述
+    ・スクリプト自体、UNIX系では /bin/sh、Windows系では cmd.exeが実行
+    ・どちらの環境でも動くようにスクリプトを記述しなければならない
 
     ■ scripts(シェルコマンド)
+
     例えば、rimraf(dir削除), mkdirp(dir生成) は script 内で利用可能
 
     "scripts": {
       "creat-dir": "mkdirp foo/bar",
       "remove-dir": "rimraf foo"
     },
+
     npm run create-dir
     npm run remove-dir
 
-
     ■ 引数 -- オプション
+
     npm run create-dir -- bar
+
     > mkdirp foo/bar "bar"  と解釈され、2つのディレクトリ作成
 
     /projdir/foo/bar
     /projdir/bar
 
     ■ pre, post プレフィックス付
+
     "scripts": {
       "precreat-dir": "echo \"ディレクトリ作成開始\"",
       "creat-dir": "mkdirp foo/bar",
@@ -235,6 +414,7 @@
     },
 
     ■ イベントフック
+
     //パッケージング
     prepare
     prepublishOnly
@@ -244,7 +424,7 @@
 
     //インストール・アンインストール
     preinstall
-    intall, postinstall
+    install, postinstall
     preuninstall, uninstall
     postuninstall
 
@@ -253,18 +433,11 @@
     version
     postversion
 
+#-------------------------------
+# バージョンコントロール
+#-------------------------------
 - ENTRY:
-  EXPLAIN: クローン
-  BODY: |
-    package-lock.json
-    直接編集禁止。削除禁止。
-    npm install されたパッケージの実際にインストールされたver番号情報を持つファイル
-
-    npm ci
-
-      ci フラグによって、package-lock.json のバージョン記述を忠実に再現したインストールを行う
-      新規プロジェクト参加者が git clone 後の動作確認に使用
-      npm install と同じように全依存パッケージをインストールするが、一度 node_modules を全削除
+  CATEGORY: バージョンコントロール
 
 - ENTRY:
   EXPLAIN: バージョン管理
@@ -305,26 +478,34 @@
 
       "<package名>": "1.1.1"                      // 厳密なバージョン指定。非推薦。
 
+#-------------------------------
+# インストール
+#-------------------------------
+- ENTRY:
+  CATEGORY: コマンド
+
 - ENTRY:
   EXPLAIN: インストール
   BODY: |
-    npm i(install)
+    ■ npm i
+
+    npm i
 
       package.json に記載された依存パッケージモジュールの一括インストール
 
     npm i <package名>                             // ローカル
 
-      $ npm i ejs                                 //ローカルインストール
-      $ npm list                                  //インストール確認
+      $ npm i ejs                                 // ローカルインストール
+      $ npm list                                  // インストール確認
 
-    npm i <package名>@1.1.0                           ver指定
+    npm i <package名>@1.1.0                       // ver指定
 
-    npm i -g(--global) <package名>                    グローバル(要注意)
+    npm i -g(--global) <package名>                // グローバル(要注意)
 
-      $ npm i -g ejs   //グローバルインストール
-      $ npm list -g    //インストール確認
-      //実行例:コマンドがパスなしで打てる
-      ejs-cli "*.ejs" --out dest/ --options data.json
+      $ npm i -g ejs                              // グローバルインストール
+      $ npm list -g                               // インストール確認
+      
+      ejs-cli "*.ejs" --out dest/ --options data.json  //実行例:コマンドがパスなしで打てる
 
     npm i -S(--save) <package名>                  // デフォルト:依存関係記録
 
@@ -337,21 +518,23 @@
     npm i -O(--save-optional) <package名>         // optionalDependencies
 
 - ENTRY:
-  EXPLAIN: リスト
+  EXPLAIN: インストール(バージョン指定)
   BODY: |
-    npm list(ls/la/ll)[ --all][ --depth=0]        // インストールされたパッケージリスト
-    npm list <KEY>                                // KEYを含むパッケージ表示
-    npm ls                                        // 依存関係をTREEで表示
-    npm la                                        // パッケージ説明付き
-    npm ll                                        // = la
-    npm dedupe                                    // 構造を単純化して表示
+    ■ 概要
 
-      --all            デフォルトで全表示
-      --depth=0        オプションで依存関係の深さを表示
-          0: パッケージ依存ツリーのトップのみ
-          1: 1段目のパッケージまで,...
+    ・package-lock.json 運用
+    ・直接編集禁止、削除禁止
+    ・npm install 時に自動生成・更新
+    ・実際にインストールされたver番号情報を持つ
 
-    npm list -g                                   // PATHとグローバル パッケージ
+    ■ npm ci
+
+    ・ci フラグによって、package-lock.json のバージョン記述を忠実に再現したインストール
+    ・新規プロジェクト参加者が git clone 後の動作確認に使用
+
+      npm cache clean --force           // キャッシュ削除(必要に応じて)
+      rm -rf node_modules               // node_modules 削除
+      npm ci                            // package-lock.json に忠実にインストール
 
 - ENTRY:
   EXPLAIN: アップデート
@@ -407,6 +590,31 @@
       npx <コマンド名>
       npx -p <パッケージ名> <コマンド名>            // パッケージ名とコマンド名が異なる場合
       npx --yes <コマンド名>                       // 実行可否を問わない
+
+- ENTRY:
+  EXPLAIN: PATH 表示
+  BODY: |
+    npm root                            // <DRIVE>:\<WORKING_DIR>\<PACKAGE名>\node_modules
+    npm root -g                         // C:\Users\<ユーザ名>\AppData\Roaming\npm\node_modules
+    npm bin                             // <DRIVE>:\<WORKING_DIR>\<PACKAGE名>\node_modules\.bin
+    npm bin -g                          // C:\Users\<ユーザ名>\AppData\Roaming\npm
+
+- ENTRY:
+  EXPLAIN: リスト表示
+  BODY: |
+    npm list(ls/la/ll)[ --all][ --depth=0]        // インストールされたパッケージリスト
+    npm list <KEY>                                // KEYを含むパッケージ表示
+    npm ls                                        // 依存関係をTREEで表示
+    npm la                                        // パッケージ説明付き
+    npm ll                                        // = la
+    npm dedupe                                    // 構造を単純化して表示
+
+      --all            デフォルトで全表示
+      --depth=0        オプションで依存関係の深さを表示
+          0: パッケージ依存ツリーのトップのみ
+          1: 1段目のパッケージまで,...
+
+    npm list -g                                   // PATHとグローバル パッケージ
 
 - ENTRY:
   EXPLAIN: 他コマンドリスト

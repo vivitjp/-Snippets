@@ -1,0 +1,442 @@
+---
+#-------------------------------
+# TypeScript
+#-------------------------------
+
+- ENTRY:
+  CATEGORY: Tips
+
+#-------------------------------
+# ENUM
+#-------------------------------
+- ENTRY:
+  EXPLAIN: 型チェック/lint 無視 @ts-ignore など
+  BODY: |
+    // @ts-ignore
+    const foo = 1
+
+    // prettier-ignore
+    const foo = {a: 1, b: { c: 2 }, d: 3, e: 4, f: 5, g: 6}  // 1行にまとめる
+
+    // eslint-disable-next-line
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const foo = 1
+
+#-------------------------------
+# ENUM
+#-------------------------------
+- ENTRY:
+  EXPLAIN: |
+    makeEnum: const配列からenum(Object)作成
+  BODY: |
+    function makeEnum<T extends readonly string[]>(配列: T) {
+        return 配列.filter(Boolean).reduce(
+        (acc, cur) => ({ ...acc, [cur]: cur }),
+        //{} as { [key in typeof 配列[number]]: string;}
+        {} as Record<typeof 配列[number],string>
+        );
+    }
+
+    const Enum型式 = makeEnum(["A", "B", "C", "D"] as const);
+    => Enum型式: { A: string; B: string; C: string; D: string; }
+
+#-------------------------------
+# union
+#-------------------------------
+- ENTRY:
+  EXPLAIN: Object/Array -> Union型
+  BODY: |
+
+    ■ Array -> Union型
+
+    const person = [ "Name", "Address" ] as const
+    type Person = (typeof person)[number]
+
+    結果: "Name" | "Address"
+
+    ■ Object -> Union型
+
+    const person = {
+      a: "Name",
+      b: "Address",
+    } as const
+
+    type Person = typeof person[keyof typeof person]  
+
+    結果: "Name" | "Address"
+
+#-------------------------------
+# Switch
+#-------------------------------
+- ENTRY:
+  EXPLAIN: switchでneverチェック
+  BODY: |
+    export const func = (name: Person) => {
+      switch (name) {
+        case "Name":
+          break
+        case "Address":
+          break
+        default: {
+          const _exhaustiveCheck: never = name
+          throw new Error(`Switch Error: ${name}`)
+        }
+      }
+    }
+
+#-------------------------------
+# コンテキストメニューの不要な選択肢を除去
+#-------------------------------
+- ENTRY:
+  EXPLAIN: コンテキストメニューの不要な選択肢を除去
+  BODY: |
+    type ModelNames1 = 
+        | "model-A"
+        | "model-B"
+        | "model-C"
+
+    const model1_1: ModelNames1 =           // この状態では多くの選択肢が表示される
+    const model1_2: ModelNames1 = ""        // ❌
+
+    // ※ コンテキストメニューに不要な選択肢が多数存在
+
+    type ModelNames2 = 
+        | "model-A"
+        | "model-B"
+        | "model-C"
+        | (string & {})                     // ← これを追加🛑
+
+    const model2_1: ModelNames2 = "model-A"
+    const model2_2: ModelNames2 = ""        // ✅
+    const model2_2: ModelNames2 = "A"       // ✅ 望ましくない副作用
+
+    // ※ コンテキストメニューに不要な選択肢がない
+
+#-------------------------------
+# 判別可能なUnion型
+#-------------------------------
+- ENTRY:
+  EXPLAIN: 判別可能なUnion型
+  BODY: |
+    interface Square {
+      kind: "square"  <-- 判別子
+      size: number
+    }
+
+    interface Rectangle {
+      kind: "rectangle"  <-- 判別子
+      width: number
+      height: number
+    }
+
+    type Shape = Square | Rectangle
+
+    const area = (s: Shape) => {
+      switch (s.kind) {  <-- 判別子
+        case "square":    return s.size * s.size
+        case "rectangle": return s.width * s.height
+        default:          return null
+      }
+    }
+
+#-------------------------------
+# 関数のオーバーロード
+#-------------------------------
+- ENTRY:
+  EXPLAIN: 関数のオーバーロード
+  BODY: |
+    interface Overloaded {
+      (foo: string): string
+      (foo: number): number
+    }
+
+    function stringOrNumber(foo: number): number
+    function stringOrNumber(foo: string): string
+    function stringOrNumber(foo: any): any {
+      if (typeof foo === "number") {
+        return foo * foo
+      } else if (typeof foo === "string") {
+        return `Hello ${foo}`
+      }
+    }
+
+    // 注意 Arrow 関数はオーバーロードできない
+
+#-------------------------------
+# 構造的部分型とその例外: Freshness
+#-------------------------------
+- ENTRY:
+  EXPLAIN: 構造的部分型の例外
+  BODY: |
+    const foo = { x: 1, y: 2, z: 3 }
+    const onlyX: { x: number } = foo //OK
+
+    const func1 = ({ name }: { name: string }) => {
+      console.log(name)
+    }
+    const func2 = ({ name, ...args }: { name: string; [key: string]: unknown }) => {
+      console.log(name)
+    }
+
+    var person = { name: "matt", job: "officer" }
+    func1(person) //構造的部分型 OK
+    func1({ name: "matt", job: "officer" }) //構造的部分型の例外 Object Literal: NG
+    func2({ name: "matt", job: "officer" }) //OK
+
+#-------------------------------
+# 型ガード(in)
+#-------------------------------
+- ENTRY:
+  EXPLAIN: 型ガード(in)
+  BODY: |
+    interface A { x: number }
+    interface B { y: string }
+    function typeGuardIn(q: A | B) {
+      if ("x" in q) console.log(q.x)
+      else console.log(q.y)
+    }
+
+#-------------------------------
+# 型ガード
+#-------------------------------
+- ENTRY:
+  EXPLAIN: 型ガード(is)
+  BODY: |
+    ■ ユーザ定義型
+
+    "is A" は「戻り値側の型述語（type predicate）」
+
+    ・関数が true を返したときに呼び出し元で arg が A と見なされる
+    ・関数が false を返したときに呼び出し元で arg が A ではないと見なされる
+
+      interface A { a: number; common: string }
+      interface B { b: number; common: string }
+
+      function isFoo(arg: any): arg is A {  // 関数名 isXxxx で定義
+        return arg.a !== undefined
+      }
+
+      if (isFoo(x)) {
+        // ここでは x は A として扱える（型狭窄）
+        console.log(x.a)
+      } else {
+        // ここでは x は A ではない
+      }
+
+    ■ 型ガード(文字列)
+
+    const isString = (value: unknown): value is string => {
+      return typeof value === "string" && value !== null
+    }
+
+    ■ 型ガード(文字列配列)
+
+    const isStringArray = (value: unknown): value is string[] => {
+      return (
+        typeof value === "object" &&
+        value !== null &&
+        Array.isArray(value) &&
+        !value.some((v) => !isString(v))
+      )
+    }
+
+    ■ 型ガード(object)
+
+    type WouldBe<T> = { [P in keyof T]?: unknown }  // 全属性 "Optional"、全値 unknown型
+
+    const isTypeObject = <T extends Record<string, unknown>>(
+      value: unknown
+    ): value is WouldBe<T> => typeof value === "object" && value !== null
+
+    ■ 型ガード(任意の型)
+
+    type Foo = {
+      a: string
+      b: number
+    }
+
+    const isFoo = (value: unknown): value is Foo =>
+      isTypeObject<Foo>(value) &&
+      typeof value.a === "string" &&
+      typeof value.b === "number"
+
+#-------------------------------
+# Literal 型 推論
+#-------------------------------
+- ENTRY:
+  EXPLAIN: Literal型推論
+  BODY: |
+    function func(A: "foo") { ... }
+
+    const objA = { A: "foo" }
+    func(objA.A)                        //NG: objA.A = string
+
+    const objB = { B: "foo" as const }
+    func(objB.B)                        //OK
+
+    const objC = { C: "foo" } as const
+    func(objC.C)                        //OK
+
+    const objD: { [key: string]: "foo" } = {
+      D: "foo",
+    }
+    func(objD.D)                        //OK
+
+#-------------------------------
+# Utility Partial
+#-------------------------------
+- ENTRY:
+  EXPLAIN: Record, Partial を用いたObject型生成の比較
+  BODY: |
+    ■ 型定義
+
+    const obj = {"A": 1, "B": 2, "C": 3};
+
+    type ObjRecords = Record<keyof typeof obj, number>
+    {
+        A: number;
+        B: number;
+        C: number;
+    }
+
+    type ObjPartial = keyof typeof obj
+      = "A" | "B" | "C"
+
+    type ObjPartial = Partial<keyof typeof obj>  // 効果なし!
+      = "A" | "B" | "C"
+
+    ■ 意図する挙動：Partial<T>
+
+    type PartialRecord =  Partial<Record<keyof typeof obj, number>>
+    {
+        A?: number | undefined;
+        B?: number | undefined;
+        C?: number | undefined;
+    }  
+
+    const objA: PartialRecord = {
+        A: 1,
+        B: 2,
+        //C: 3,
+    }
+
+    ■ 意図とは異なる挙動：Record<K, T>
+
+    type RecordPartial = Record<Partial<keyof typeof obj>, number>
+    {
+        A: number;
+        B: number;
+        C: number;
+    }
+    ※ Record と Partial の順序に注意
+
+    const objB: RecordPartial = {
+        A: 1,
+        B: 2,
+        //C: 3,  <-- NG
+    }
+
+#-------------------------------
+# 排他的 OR
+#-------------------------------
+- ENTRY:
+  EXPLAIN: OR と XOR
+  BODY: |
+    type P = { name:string, age: number }
+    type A = { city:string, zip: string }
+
+    ■ OR[ | ] 🛑どちらか一方を満たす(排他的ORではないので両方でもOK)
+
+    const OK: P | A = { name: "Eve", age: 18 }                          // ⭕ P を満たす
+    const OK: P | A = { city: "Paris", zip:"03" }                       // ⭕ A を満たす
+    const OK: P | A = { name: "Eve", age: 18, city: "Paris" }           // ⭕ 少なくとも P を満たす
+    const OK: P | A = { name: "Eve", age: 18, city: "Paris", zip:"03" } // ⭕ 両方を満たす
+    const NG: P | A = { name: "Eve", city:"Eve" }                       // ❌ 混用
+    const NG: P | A = { city: "Paris", age: 18 }                        // ❌ 混用
+
+    ■ XOR 🛑排他的OR(Utility活用)
+
+    type XOR<T> = { [X in keyof T]?: never; }
+    type XP = P & XOR<A>
+    type XA = A & XOR<P>
+
+    const OK: XP | XA = { name: "Eve", age: 18 }                          // ⭕ P を満たす
+    const OK: XP | XA = { city: "Paris", zip:"03" }                       // ⭕ A を満たす
+    const NG: XP | XA = { name: "Eve", age: 18, city: "Paris" }           // ❌ 排他的 OR
+    const NG: XP | XA = { name: "Eve", age: 18, city: "Paris", zip:"03" } // ❌ 排他的 OR
+    const NG: XP | XA = { name: "Eve", city:"Eve" }                       // ❌ 混用
+    const NG: XP | XA = { city: "Paris", age: 18 }                        // ❌ 混用
+
+#-------------------------------
+# Literal Join
+#-------------------------------
+- ENTRY:
+  EXPLAIN: ReactHookForm での複層オブジェクト対応
+  BODY: |
+    ■ ReactHookFormでのKeyが複数Keyの合成になった場合の対処
+
+    type Phases = "groupA" | "groupB";
+    type Attrs = "name" | "age";
+
+    const defaultData = {
+      name: "Smith",
+      age: 1,
+    };
+    type DefaultDataHidden = typeof defaultData;
+
+    type Data = Partial<Record<`${Phases}.${Attrs}`, string>>;
+    const data: Data = {
+      "groupA.name": "John",
+      "groupA.age": "Tokyo",
+      "groupB.name": "Jim",
+      "groupB.age": "LA",
+    };
+
+    type ErrorDataHidden = Record<
+      Phases,
+      Record<keyof DefaultDataHidden, { message: string }>
+    >;
+
+    const errorData: ErrorDataHidden = {
+      groupA: {
+        name: { message: "Must be String" },
+        age: { message: "Must be Number" },
+      },
+      groupB: {
+        name: { message: "Must be String" },
+        age: { message: "Must be Number" },
+      },
+    };
+
+    //-----------------------------------------------
+    // Data
+    //-----------------------------------------------
+    {
+      type DefaultData = typeof defaultData;
+      type DefaultDataKeys = keyof DefaultData;
+
+      type DataKeys = keyof typeof data;
+      const phases = ["groupA", "groupB"];
+
+      phases.forEach((phase) => {
+        const keyName = "name" as DefaultDataKeys;
+        const res1 = data?.[`${phase}.${keyName}` as DataKeys] || "Unknown";
+        console.log(keyName, res1);
+      });
+    }
+
+    //-----------------------------------------------
+    // Error
+    //-----------------------------------------------
+    {
+      type DefaultData = typeof defaultData;
+      const dataKeys = Object.keys(data);
+
+      dataKeys.forEach((key) => {
+        const [phase, attr] = key.split(".");
+        const res1 =
+          errorData?.[phase as Phases]?.[attr as keyof DefaultData]?.message ||
+          "Unknown";
+        console.log(phase, attr, res1);
+      });
+    }

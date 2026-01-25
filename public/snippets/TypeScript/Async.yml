@@ -1,9 +1,5 @@
 ---
 #-------------------------------
-# JavaScript
-#-------------------------------
-
-#-------------------------------
 # Async
 #-------------------------------
 
@@ -35,8 +31,7 @@
     };
 
 - ENTRY:
-  EXPLAIN: |
-    Promise.all【ES2015】
+  EXPLAIN: Promise.all【ES2015】
   BODY: |
     全非同期の結果を待ち、どれかが Rejected なら error、全てが fullfilled なら Resolved を返す
 
@@ -80,8 +75,7 @@
     }
 
 - ENTRY:
-  EXPLAIN: |
-    Promise.any【ES2021】
+  EXPLAIN: Promise.any【ES2021】
   BODY: |
     全非同期の結果を待ち、どれかが fullfilled なら Resolved、全てが Rejected なら error を返す
 
@@ -115,8 +109,7 @@
     }
 
 - ENTRY:
-  EXPLAIN: |
-    Promise.race【ES2015】
+  EXPLAIN: Promise.race【ES2015】
   BODY: |
     全非同期の結果を待ち、最初の結果が fullfilled なら Resolved、Rejected なら error を返す
     残りの結果は無視される
@@ -161,8 +154,7 @@
     }
 
 - ENTRY:
-  EXPLAIN: |
-    Promise.allSettled【ES2020】
+  EXPLAIN: Promise.allSettled【ES2020】
   BODY: |
     全非同期の結果を待ち、全ての結果を返す
     どれか/すべてが Rejected でも Resolved を返す
