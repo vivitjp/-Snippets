@@ -1,0 +1,129 @@
+---
+#-------------------------------
+# WAF
+#-------------------------------
+- ENTRY:
+  EXPLAIN: 概要
+  BODY: |
+    ■ 概要
+
+    ・ウェブアプリケーションを攻撃から保護するためのファイアウォールサービス
+    ・OWASP Top 10の脆弱性（SQLインジェクション、クロスサイトスクリプティングなど）に対する防御ルールを提供
+    ・CloudFront や Application Load Balancer(ALB) と連携
+
+      ※ OWASP
+      ・Open Web Application Security Project
+      ・ウェブアプリケーションセキュリティに関する非営利団体
+      ・セキュリティのベストプラクティス、ツール、ドキュメントを提供
+
+      ※ OWASP Top 10の脆弱性
+      ・SQLインジェクション
+      ・クロスサイトスクリプティング(XSS)
+      ・セキュリティミスコンフィギュレーション
+      ・認証とセッション管理の不備
+      ・機密データの露出
+      ・不適切なアクセス制御
+      ・クロスサイトリクエストフォージェリ(CSRF)
+      ・既知の脆弱性の使用
+      ・不十分なロギングとモニタリング
+      ・コンポーネントの脆弱性
+
+    ■ 主な機能
+
+    ・ルールセット: 事前定義されたルールセットやカスタムルールを使用してトラフィックをフィルタリング
+    ・IPマッチ条件: 特定のIPアドレスやCIDRブロックからのアクセスを許可または拒否
+    ・レートベースルール: 一定時間内のリクエスト数に基づいてトラフィックを制限
+    ・ログ記録とモニタリング: リクエストの詳細なログを取得し、CloudWatchでモニタリング可能
+
+    ■ 利用シナリオ
+
+    ・ウェブアプリケーションへの攻撃防止
+    ・DDoS攻撃の軽減
+    ・コンプライアンス要件の遵守
+
+- ENTRY:
+  EXPLAIN: 設定と実装
+  BODY: |
+    ■ WAFの性質: 設定中心 vs コード実装
+
+    ・主に設定ベースのサービス: AWSコンソール/CLIでルールを設定。プログラマーはコードを書かなくても利用可能。
+    ・コード実装の機会: AWS SDKを使ってプログラムでWAFを管理（IaC, 自動化）。
+
+    ■ 設定方法（コンソール中心）
+
+    ・Web ACLの作成
+      ・AWS WAFコンソールから[Web ACLの作成]を選択
+      ・名前、リージョン、関連リソース（CloudFront, ALBなど）を指定
+      ・デフォルトアクション（許可/ブロック）を設定
+
+    ・ルールの追加
+      ・マネージドルールグループ: AWS提供の事前定義ルール（Core Rule Set, SQL Databaseなど）
+      ・カスタムルール: 独自の条件（IP制限, レート制限, 文字列マッチなど）
+      ・レートベースルール: リクエストレートに基づくブロック
+
+    ・条件の設定
+      ・IPセット: 許可/ブロックするIPアドレス
+      ・文字列マッチ: リクエスト内の特定文字列を検知
+      ・サイズ制約: リクエストサイズの制限
+      ・SQLインジェクション/XSS検知: 悪意あるパターンをブロック
+
+    ■ 実装方法（SDK使用）
+
+    ・AWS SDK for JavaScript/TypeScriptを使用
+    ・主な操作: Web ACL作成, ルール追加, 関連付け
+
+    ■ サンプルコード (Node.js)
+
+    import { WAFV2Client, CreateWebACLCommand } from "@aws-sdk/client-wafv2";
+
+    const client = new WAFV2Client({ region: "us-east-1" });
+
+    // Web ACL作成
+    const createWebACL = async () => {
+      const command = new CreateWebACLCommand({
+        Name: "MyWebACL",
+        Scope: "CLOUDFRONT", // or "REGIONAL"
+        DefaultAction: { Allow: {} },
+        Rules: [
+          {
+            Name: "BlockSQLInjection",
+            Priority: 1,
+            Statement: {
+              ManagedRuleGroupStatement: {
+                VendorName: "AWS",
+                Name: "AWSManagedRulesSQLiRuleSet"
+              }
+            },
+            Action: { Block: {} },
+            VisibilityConfig: {
+              SampledRequestsEnabled: true,
+              CloudWatchMetricsEnabled: true,
+              MetricName: "BlockSQLInjection"
+            }
+          }
+        ],
+        VisibilityConfig: {
+          SampledRequestsEnabled: true,
+          CloudWatchMetricsEnabled: true,
+          MetricName: "MyWebACL"
+        }
+      });
+
+      try {
+        const response = await client.send(command);
+        console.log("Web ACL created:", response);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    ■ IaCでの管理
+
+    ・CloudFormation, CDKでWAF設定をコード化
+    ・バージョン管理, 自動デプロイが可能
+
+    ■ ログとモニタリング
+
+    ・AWS WAFログをCloudWatch Logs, S3, Kinesis Data Firehoseに送信
+    ・CloudWatch Metricsでブロック数などを監視
+    ・AWS Configで設定変更を追跡

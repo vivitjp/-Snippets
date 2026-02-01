@@ -1,6 +1,8 @@
 import { KeyDef } from "../../types/type"
+import { keysAWSCognito } from "./keys/AWSCognito"
 import { keysAWSAurora } from "./keys/AWSAurora"
 import { keysAWSCloud } from "./keys/AWSCloud"
+import { keysAWSSTS } from "./keys/AWSSTS"
 import { keyReactLibrary } from "./keys/ReactLibrary"
 import { keysChakra } from "./keys/Chakra"
 import { keysCookie } from "./keys/Cookie"
@@ -73,8 +75,10 @@ import { keystRPC } from "./keys/tRPC"
 
 // 以下のオブジェクトをソートしてください
 export const codeKeys = {
+  AWSCognito: "AWSCognito",
   AWSAurora: "AWSAurora",
   AWSCloud: "AWSCloud",
+  AWSSTS: "AWSSTS",
   Chakra: "Chakra",
   Cookie: "Cookie",
   Shell: "Shell",
@@ -154,8 +158,10 @@ export type CodeKeyType = (typeof codeKeys)[keyof typeof codeKeys]
 
 export const KeyAndCodes: Record<string, KeyDef> = {
   Shell: keysShell,
+  AWSCognito: keysAWSCognito,
   AWSAurora: keysAWSAurora,
   AWSCloud: keysAWSCloud,
+  AWSSTS: keysAWSSTS,
   Chakra: keysChakra,
   Cookie: keysCookie,
   ClassTransformer: keysClassTransformer,

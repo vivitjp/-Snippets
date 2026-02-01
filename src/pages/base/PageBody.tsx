@@ -16,7 +16,7 @@ export const PageBody = ({ Snippets, isPending, isInitialOpened }: Props) => {
   const [initState, setInitState] = useState(isInitialOpened)
   const refButton = useRef<HTMLButtonElement>(null)
   const selectedMenu = zooMenu((state) => state.selectedMenu)
-  const titles = selectedMenu?.name.split(":") ?? []
+  const titles = selectedMenu?.name
 
   const [elements, setElements] = useState<NodeListOf<Element> | undefined>()
 
@@ -61,7 +61,7 @@ export const PageBody = ({ Snippets, isPending, isInitialOpened }: Props) => {
   return (
     <BodySection data-testid="layout-section">
       <BodyTitleWrapper>
-        <BodyTitle data-testid="layout-title">{titles[0]}</BodyTitle>
+        <BodyTitle data-testid="layout-title">{titles}</BodyTitle>
         <Button onClick={handleOpenClose} width="100px" ref={refButton}>
           {isOpened ? "Close All" : "Open All"}
         </Button>

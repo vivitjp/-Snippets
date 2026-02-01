@@ -24,6 +24,246 @@ export const menuItems: menuByCategories[] = [
       },
     ],
   },
+
+  {
+    category: "クラウド",
+    items: [
+      {
+        name: "🔺Cloud",
+        fileName: "cloud/Cloud",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+    ],
+  },
+  {
+    category: "AWS",
+    items: [
+      {
+        name: "AWS 概要",
+        fileName: "aws/_AWS",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "🔺SystemManager",
+        fileName: "aws/SystemManagers",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "IAM: Identity and Access Management",
+        fileName: "aws/IAM",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "STS: Security Token Service",
+        fileName: "aws/STS",
+        codeKeyTypes: [codeKeys.AWSSTS],
+        case_sensitive: false,
+      },
+      {
+        name: "Cognito: Amazon Cognito",
+        fileName: "aws/Cognito",
+        codeKeyTypes: [codeKeys.AWSCognito],
+        case_sensitive: false,
+      },
+      {
+        name: "CloudWatch",
+        fileName: "",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "Secrets Manager",
+        fileName: "",
+        codeKeyTypes: [],
+        case_sensitive: false,
+      },
+      {
+        name: "WAF: Web Application Firewall",
+        fileName: "aws/WAF",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+    ],
+  },
+  {
+    category: "AWS 開発ツール",
+    items: [
+      {
+        name: "🔺SDK: AWS Software Development Kit",
+        fileName: "aws/SDK",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "CLI: AWS Command Line Interface",
+        fileName: "",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "CDK: Cloud Development Kit",
+        fileName: "aws/CDK",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+    ],
+  },
+  {
+    category: "AWS インフラ",
+    items: [
+      {
+        name: "VPC: Virtual Private Cloud",
+        fileName: "aws/VPC",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "CloudFront",
+        fileName: "aws/CloudFront",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "🔺EC2: Elastic Compute Cloud",
+        fileName: "aws/EC2",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "🔺ECS: Elastic Container Service",
+        fileName: "aws/ECS",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "API Gateway",
+        fileName: "",
+        codeKeyTypes: [],
+        case_sensitive: false,
+      },
+      {
+        name: "Route 53",
+        fileName: "",
+        codeKeyTypes: [],
+        case_sensitive: false,
+      },
+    ],
+  },
+  {
+    category: "AWS 開発",
+    items: [
+      {
+        name: "🔺Amplify(BE): AWS Amplify Backend",
+        fileName: "aws/AmplifyBE",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "🔺Amplify(FE): AWS Amplify Frontend",
+        fileName: "aws/AmplifyFE",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "CloudFormation",
+        fileName: "",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "Lambda: AWS Lambda",
+        fileName: "aws/Lambda",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "🔺AppSync",
+        fileName: "aws/AppSync",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "🔺Aurora",
+        fileName: "aws/Aurora",
+        codeKeyTypes: [codeKeys.AWSAurora, codeKeys.Sql],
+        case_sensitive: false,
+      },
+      {
+        name: "GraphQL(Amplify)",
+        fileName: "aws/GraphQL",
+        codeKeyTypes: [],
+        case_sensitive: false,
+      },
+      {
+        name: "DynamoDB",
+        fileName: "",
+        codeKeyTypes: [],
+        case_sensitive: false,
+      },
+      {
+        name: "MemoryDB",
+        fileName: "",
+        codeKeyTypes: [],
+        case_sensitive: false,
+      },
+    ],
+  },
+  {
+    category: "AWS インテグレーション",
+    items: [
+      {
+        name: "Step Functions",
+        fileName: "",
+        codeKeyTypes: [],
+        case_sensitive: false,
+      },
+      {
+        name: "🔺EventBridge",
+        fileName: "aws/EventBridge",
+        codeKeyTypes: [],
+        case_sensitive: false,
+      },
+      {
+        name: "SNS: Simple Notification Service",
+        fileName: "",
+        codeKeyTypes: [],
+        case_sensitive: false,
+      },
+      {
+        name: "SQS: Simple Queue Service",
+        fileName: "",
+        codeKeyTypes: [],
+        case_sensitive: false,
+      },
+    ],
+  },
+  {
+    category: "AWS Storage",
+    items: [
+      {
+        name: "S3: Simple Storage Service",
+        fileName: "aws/S3",
+        codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "EBS: Elastic Block Store",
+        fileName: "",
+        codeKeyTypes: [],
+        case_sensitive: false,
+      },
+      {
+        name: "EFS: Elastic File System",
+        fileName: "",
+        codeKeyTypes: [],
+        case_sensitive: false,
+      },
+    ],
+  },
   {
     category: "Git",
     items: [
@@ -49,148 +289,6 @@ export const menuItems: menuByCategories[] = [
         name: "Husky",
         fileName: "git/husky",
         codeKeyTypes: [codeKeys.Git],
-      },
-    ],
-  },
-  {
-    category: "クラウド",
-    items: [
-      {
-        name: "🔺Cloud",
-        fileName: "cloud/Cloud",
-        codeKeyTypes: [codeKeys.AWSCloud],
-        case_sensitive: false,
-      },
-    ],
-  },
-  {
-    category: "AWS",
-    items: [
-      {
-        name: "AWS",
-        fileName: "aws/AWS",
-        codeKeyTypes: [codeKeys.AWSCloud],
-        case_sensitive: false,
-      },
-      {
-        name: "🔺SDK",
-        fileName: "aws/SDK",
-        codeKeyTypes: [codeKeys.AWSCloud],
-        case_sensitive: false,
-      },
-      {
-        name: "CLI",
-        fileName: "",
-        codeKeyTypes: [codeKeys.AWSCloud],
-        case_sensitive: false,
-      },
-      {
-        name: "CDK",
-        fileName: "aws/CDK",
-        codeKeyTypes: [codeKeys.AWSCloud],
-        case_sensitive: false,
-      },
-      {
-        name: "🔺SystemManager",
-        fileName: "aws/SystemManagers",
-        codeKeyTypes: [codeKeys.AWSCloud],
-        case_sensitive: false,
-      },
-      {
-        name: "IAM",
-        fileName: "aws/IAM",
-        codeKeyTypes: [codeKeys.AWSCloud],
-        case_sensitive: false,
-      },
-      {
-        name: "VPC",
-        fileName: "aws/VPC",
-        codeKeyTypes: [codeKeys.AWSCloud],
-        case_sensitive: false,
-      },
-      {
-        name: "Lambda",
-        fileName: "aws/Lambda",
-        codeKeyTypes: [codeKeys.AWSCloud],
-        case_sensitive: false,
-      },
-      {
-        name: "🔺Amplify(BE)",
-        fileName: "aws/AmplifyBE",
-        codeKeyTypes: [codeKeys.AWSCloud],
-        case_sensitive: false,
-      },
-      {
-        name: "🔺Amplify(FE)",
-        fileName: "aws/AmplifyFE",
-        codeKeyTypes: [codeKeys.AWSCloud],
-        case_sensitive: false,
-      },
-      {
-        name: "🔺AppSync",
-        fileName: "aws/AppSync",
-        codeKeyTypes: [codeKeys.AWSCloud],
-        case_sensitive: false,
-      },
-      {
-        name: "🔺Aurora",
-        fileName: "aws/Aurora",
-        codeKeyTypes: [codeKeys.AWSAurora, codeKeys.Sql],
-        case_sensitive: false,
-      },
-      {
-        name: "CloudFormation",
-        fileName: "",
-        codeKeyTypes: [codeKeys.AWSCloud],
-        case_sensitive: false,
-      },
-      {
-        name: "CloudWatch",
-        fileName: "",
-        codeKeyTypes: [codeKeys.AWSCloud],
-        case_sensitive: false,
-      },
-      {
-        name: "🔺CloudFront",
-        fileName: "aws/CloudFront",
-        codeKeyTypes: [codeKeys.AWSCloud],
-        case_sensitive: false,
-      },
-      {
-        name: "Cognito",
-        fileName: "",
-        codeKeyTypes: [codeKeys.AWSCloud],
-        case_sensitive: false,
-      },
-      {
-        name: "🔺EC2",
-        fileName: "aws/EC2",
-        codeKeyTypes: [codeKeys.AWSCloud],
-        case_sensitive: false,
-      },
-      {
-        name: "🔺ECS",
-        fileName: "aws/ECS",
-        codeKeyTypes: [codeKeys.AWSCloud],
-        case_sensitive: false,
-      },
-      {
-        name: "🔺EventBridge",
-        fileName: "aws/EventBridge",
-        codeKeyTypes: [codeKeys.AWSCloud],
-        case_sensitive: false,
-      },
-      {
-        name: "S3",
-        fileName: "aws/S3",
-        codeKeyTypes: [codeKeys.AWSCloud],
-        case_sensitive: false,
-      },
-      {
-        name: "Step Functions",
-        fileName: "",
-        codeKeyTypes: [codeKeys.AWSCloud],
-        case_sensitive: false,
       },
     ],
   },
@@ -490,8 +588,8 @@ export const menuItems: menuByCategories[] = [
         case_sensitive: false,
       },
       {
-        name: "Topics",
-        fileName: "React/Query/Topics",
+        name: "Library",
+        fileName: "React/Query/Library",
         codeKeyTypes: [codeKeys.TanStack, codeKeys.JS],
         case_sensitive: false,
       },
@@ -868,7 +966,7 @@ export const menuItems: menuByCategories[] = [
     ],
   },
   {
-    category: "Html",
+    category: "HTML",
     items: [
       {
         name: "🔺HTML",

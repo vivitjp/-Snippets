@@ -213,6 +213,47 @@
     }
 
 - ENTRY:
+  EXPLAIN: useQuery (queryKey 設計と運用)
+  BODY: |
+    ■ 概要
+
+    ・queryKey はクエリを一意に識別するためのキー
+    ・配列形式で設計し、ネストされたデータ構造を表現できる
+    ・@lukemorales/query-key-factory ライブラリを使うと、型安全で構造化されたキー設計が可能
+
+    ■ queryKey 設計例(マニュアル文字配列)
+
+    import { useQuery, useQueryClient } from '@tanstack/react-query';
+
+    const queryClient = useQueryClient();
+
+    const { data: user } = useQuery({            // ユーザー詳細取得
+      queryKey: ['app', 'user', 'detail', 'user-123'],  // ネストされたキー設計（マニュアルで指定）
+      queryFn: () => fetchUser('user-123'),
+    });
+
+    ※ キー設計がマニュアルで指定なので、可読性・保守性が低い
+
+    ■ queryKey 設計例(@lukemorales/query-key-factoryで運用)
+
+    import { useQuery, useQueryClient } from '@tanstack/react-query';
+    import { createQueryKeys } from '@lukemorales/query-key-factory';
+
+    const queries = createQueryKeys('app', {    // キー定義
+      user: {
+        detail: (userId: string) => [userId],
+        posts: (userId: string) => [userId, 'posts'],
+      },
+    });
+
+    const queryClient = useQueryClient();
+
+    const { data: user } = useQuery({            // ユーザー詳細取得
+      queryKey: queries.user.detail('user-123'),
+      queryFn: () => fetchUser('user-123'),
+    });
+
+- ENTRY:
   EXPLAIN: useMutation (データ作成・更新・削除)
   BODY: |
     ■ メソッド & プロパティ

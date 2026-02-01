@@ -3,145 +3,162 @@
 # Lambda関数の基本
 #-------------------------------
 - ENTRY:
-  CATEGORY: Lambda関数の基本
+  CATEGORY: Lambda
 
 - ENTRY:
-  EXPLAIN: |
-    Lambda関数
+  EXPLAIN: 概要
   BODY: |
     ■ サポート言語
-      • Python, Node.js, .NET, Go, Java, Ruby, Custom Runtime
+      ・Python, Node.js, .NET, Go, Java, Ruby, Custom Runtime
 
-    ■ Lambda関数は
-      • コード実行のサーバー管理の必要がなく、イベントに応じて自動的にスケール
-      • AWS Lambdaは、サーバーレスアーキテクチャを実現するためのサービス
-      • AWS Lambdaで実行されるコードの単位で、イベントソースからのイベントをトリガーにして実行
-      • AWS Management Console、AWS CLI、AWS SDKで作成
-      • AWS Lambdaの管理コンソールからも作成可能
-      • それぞれ隔離されたコンテナで実行され、1コンテナで1つのLambda関数が実行される
-      • 関数メソッドをハンドラーとして指定、ハンドラ内ではパラメタとしてイベントデータ(JSON)を受け取る
-      • コードは依存関係も含めてビルド、パッケージングしてZIPファイルに圧縮してアップロード
-      • ULしたコードはS3に暗号化して保存され、Lambda関数の実行時にS3から取得
-      • ユーザがS3にアップロードしてARNで指定することも可能
-      • Lambda関数の実行時間はデフォルト3秒から最大900秒(15分)まで、実行時間を超えるとタイムアウト
+    ■ 概要
 
-- ENTRY:
-  EXPLAIN: |
-    アプリケーションの管理
-  BODY: |
+      ・コード実行のサーバー管理の必要がなく、イベントに応じて自動的にスケール
+      ・AWS Lambdaは、サーバーレスアーキテクチャを実現するためのサービス
+      ・AWS Lambdaで実行されるコードの単位で、イベントソースからのイベントをトリガーにして実行
+      ・AWS Management Console、AWS CLI、AWS SDKで作成
+      ・AWS Lambdaの管理コンソールからも作成可能
+      ・それぞれ隔離されたコンテナで実行され、1コンテナで1つのLambda関数が実行される
+      ・関数メソッドをハンドラーとして指定、ハンドラ内ではパラメタとしてイベントデータ(JSON)を受け取る
+      ・コードは依存関係も含めてビルド、パッケージングしてZIPファイルに圧縮してアップロード
+      ・ULしたコードはS3に暗号化して保存され、Lambda関数の実行時にS3から取得
+      ・ユーザがS3にアップロードしてARNで指定することも可能
+      ・Lambda関数の実行時間はデフォルト3秒から最大900秒(15分)まで、実行時間を超えるとタイムアウト
+
     ■ AWS Serverless Application Repository
-      • AWS Serverless Application Repositoryは、AWS Lambdaのアプリケーションを管理するためのサービス
+
+      ・AWS Lambdaのアプリケーションを管理するためのサービス
 
     ■ AWS CloudFormation
-      • リソース定義とプロビジョニング自動化
 
-    ■ AWS SAM(Serverless Application Model)
-      • サーバーレスアプリケーション定義とデプロイのためのフレームワーク
-      • AWS CloudFormationの拡張(従来のCloudFormationテンプレートをSAMテンプレートに変換可能)
+      ・リソース定義とプロビジョニング自動化
+
+    ■ AWS SAM (Serverless Application Model)
+
+      ・サーバーレスアプリケーション定義とデプロイのためのフレームワーク
+      ・AWS CloudFormationの拡張(従来のCloudFormationテンプレートをSAMテンプレートに変換可能)
 
     ■ AWS CLI & AWS SAM CLI
-      • コマンドラインツール
-      • デプロイパッケージのアップロードやテンプレート更新
-      • AWS SAM CLIはテンプレート検証、ローカル開発、テスト、デバッグが可能
 
-- ENTRY:
-  EXPLAIN: |
-    同時実行数制限と自動スケーリング
-  BODY: |
+      ・コマンドラインツール
+      ・デプロイパッケージのアップロードやテンプレート更新
+      ・AWS SAM CLIはテンプレート検証、ローカル開発、テスト、デバッグが可能
+
     ■ 同時実行数制限
-      • Lambda関数の同時実行数はデフォルト1000、アカウント単位で制限されている
-        • エラー: スロットリングエラー(429)
-        • 非同期の場合、15~30分はバーストとして許容される
-        • 同時実行数の制限はAWS Lambdaのサービスクォータで確認可能
-      • 同時実行数の見積
-        • 同時実行数 = (1秒あたりのリクエスト数) × (Lambda関数の平均実行時間)
-        • 例: 1秒あたり100リクエスト、平均実行時間が0.5秒の場合、50同時実行数必要 
-        • ポーリングベースについては別途考慮
+
+      ・Lambda関数の同時実行数はデフォルト1000、アカウント単位で制限されている
+        ・エラー: スロットリングエラー(429)
+        ・非同期の場合、15~30分はバーストとして許容される
+        ・同時実行数の制限はAWS Lambdaのサービスクォータで確認可能
+
+      ・同時実行数の見積
+        ・同時実行数 = (1秒あたりのリクエスト数) x (Lambda関数の平均実行時間)
+        ・例: 1秒あたり100リクエスト、平均実行時間が0.5秒の場合、50同時実行数必要 
+        ・ポーリングベースについては別途考慮
 
     ■ 自動スケーリング
-      • Lambda関数は自動的にスケール
-      • 同時実行数の制限があるため、リクエスト数が多い場合はスロットリングエラー発生
-      • 初期レベルでバーストした場合、負荷が落ち着くまで、あるいは同時実行の制限に達するまで、1分ごとに500ずつ実行
-        • 初期値はリージョンによって異なる(緩和不可)
+
+      ・Lambda関数は自動的にスケール
+      ・同時実行数の制限があるため、リクエスト数が多い場合はスロットリングエラー発生
+      ・初期レベルでバーストした場合、負荷が落ち着くまで、あるいは同時実行の制限に達するまで、1分ごとに500ずつ実行
+        ・初期値はリージョンによって異なる(緩和不可)
           例: us-east-1は500、ap-northeast-1は1000
+          
+    ■ 緩和可能
+
+      ・同時実行数制限(デフォルト1000)
+      ・関数とレイヤーストレージ(75GB)
+
+    ■ 緩和不可
+
+      ・メモリ(128MB~10GB)
+      ・タイムアウト(1s~900s)
+      ・環境変数(4KB)
+      ・関数リソースポリシー(20KB?)
+      ・関数レイヤー(5レイヤー)
+      ・呼び出しペイロード(同期 6MB, 非同期 256KB)
+      ・パッケージサイズ(zipの直UL 50MB, 解凍時 250MB, コンソールからのアップロード 3MB)
+      ・テストイベント(10)
+      ・/tmp ディレクトリのストレージ(512MB)
+      ・ファイルの説明(1024)
+      ・実行プロセス/スレッド数(1024)
+      ・VPC内でのENI作成時間(10s~60s程度)
+      ・VPC内でのENI数(5~10個程度)
 
 - ENTRY:
-  EXPLAIN: |
-    サポートイベントソースと呼び出し(トリガー)
+  EXPLAIN: イベントソースとトリガー
   BODY: |
-    ■ サポートイベントソース
-      • Amazon S3                           非同期
-      • Amazon DynamoDB Streams             同期 (ポーリングベース: DynamoDB Streams)
-      • Amazon Simple Notification Service  非同期
-      • Amazon Simple Email Service         非同期
-      • Amazon Simple Queue Service         同期 (ポーリングベース: 非ストリームベース)
-      • AWS CloudFormation                  同期
-      • Amazon CloudWatch Logs              同期
-      • Amazon CloudWatch イベント           非同期
-      • Amazon API Gateway                  同期
-      • Amazon CloudFront                   同期
+    ■ イベントソース
 
-    ■ 呼び出し(トリガー)
-      • Lambda関数をトリガーするイベントソースを指定することができる
-      • トリガーはAWSサービスからのイベントをLambda関数に送信するためのもの
-      • カスタムAPPによるトリガー、AWS CLIなどによる手動実行時に呼び出しタイプを指定
-      • イベントソースがAWSサービスの場合、事前にタイプ指定して変更不可
-      • 非同期呼び出し
-        • InvocationType: Event
-        • レスポンスはリクエストが正常に受付されたかどうかのみ
-      • 同期呼び出し
-        • InvocationType: RequestResponse
-        • 実行完了後にレスポンスを返し、内容はLambda関数の戻り値
+    ・Cognito User Pools                  非同期
+    ・Amazon S3                           非同期
+    ・Amazon DynamoDB Streams             同期 (ポーリングベース: DynamoDB Streams)
+    ・Amazon Simple Notification Service  非同期
+    ・Amazon Simple Email Service         非同期
+    ・Amazon Simple Queue Service         同期 (ポーリングベース: 非ストリームベース)
+    ・AWS CloudFormation                  同期
+    ・Amazon CloudWatch Logs              同期
+    ・Amazon CloudWatch イベント           非同期
+    ・Amazon API Gateway                  同期
+    ・Amazon CloudFront                   同期
+
+    ■ トリガー
+
+    ・Lambda関数をトリガーするイベントソースを指定可能
+    ・トリガーはAWSサービスからのイベントをLambda関数に送信
+    ・カスタムAPPによるトリガー、AWS CLIなどによる手動実行時に呼び出しタイプを指定
+    ・イベントソースがAWSサービスの場合、事前にタイプ指定して変更不可
+    ・非同期呼び出し
+      ・InvocationType: Event
+      ・レスポンスはリクエストが正常に受付されたかどうかのみ
+    ・同期呼び出し
+      ・InvocationType: RequestResponse
+      ・実行完了後にレスポンスを返し、内容はLambda関数の戻り値
 
     ■ リトライ
-      • 非同期呼び出し
-        • 自動的に2回までリトライ(最大で6分間隔)され、その後イベントは破棄
-        • リトライには遅延あり(指数バックオフ・アルゴリズム)
-      • 同期呼び出し
-        • リトライなし、エラーが発生した場合はレスポンス・ヘッダにエラーコードが返される
-        • パーミッション、IAMロールの設定ミスなどによるエラー:
-          • 場合はリトライされず、特定のステータスコードが返される
 
-- ENTRY:
-  EXPLAIN: |
-    VPC内で実行する場合(トリガー)
-  BODY: |
+    ・非同期呼び出し
+      ・自動的に2回までリトライ(最大で6分間隔)され、その後イベントは破棄
+      ・リトライには遅延あり(指数バックオフ・アルゴリズム)
+    ・同期呼び出し
+      ・リトライなし、エラーが発生した場合はレスポンス・ヘッダにエラーコードが返される
+      ・パーミッション、IAMロールの設定ミスなどによるエラー:
+        ・場合はリトライされず、特定のステータスコードが返される
+
     ■ VPC内で実行する場合
-      • VPCのサブネットとセキュリティグループを指定
-      • Lambda関数はVPC内のリソースにアクセスできる反面: 
-        • インターネットアクセスは不可になる
-        • Public IPアドレスが持てない
-        • インターネットアクセスが必要な場合、VPC NAT Gateway使用
-      • ENI(Elastic Network Interface(ENI)使用
-        • Lambda関数の実行時にENIを作成、実行終後、ENIは削除される
-        • VPC内リソースへのアクセスに、IAMロール(AWSLambdaVPCAccessExecutionRole)指定
-        • 任意のアドレス指定は不可
-        • ENI作成時間により初回実行時にレイテンシー(10s~60s程度)が発生する
-        • ENIは複数のLambda関数で共有される
 
-- ENTRY:
-  EXPLAIN: |
-    アクセス許可(トリガー)
-  BODY: |
+    ・VPCのサブネットとセキュリティグループを指定
+    ・Lambda関数はVPC内のリソースにアクセスできる反面: 
+      ・インターネットアクセスは不可になる
+      ・Public IPアドレスが持てない
+      ・インターネットアクセスが必要な場合、VPC NAT Gateway使用
+    ・ENI(Elastic Network Interface)使用
+      ・Lambda関数の実行時にENIを作成、実行終後、ENIは削除される
+      ・VPC内リソースへのアクセスに、IAMロール(AWSLambdaVPCAccessExecutionRole)指定
+      ・任意のアドレス指定は不可
+      ・ENI作成時間により初回実行時にレイテンシー(10s~60s程度)が発生する
+      ・ENIは複数のLambda関数で共有される
+
     ■ アクセス許可(管理ポリシー)
-      • Lambda関数の実行に必要なIAMロール指定(AWSリソースにアクセスする許可)
-      • 管理ポリシー例:
-        • AWSLambdaBasicExecutionRole      CloudWatch Logsへの書き込み
-        • AWSLambdaVPCAccessExecutionRole  VPCアクセスのためのENI管理アクセス
-        • AWSLambdaDynamoDBExecutionRole   DynamoDBへのアクセス
-        • AWSLambdaSQSQueueExecutionRole   SQSへのアクセス
+
+    ・Lambda関数の実行に必要なIAMロール指定(AWSリソースにアクセスする許可)
+    ・管理ポリシー例:
+      ・AWSLambdaBasicExecutionRole      CloudWatch Logsへの書き込み
+      ・AWSLambdaVPCAccessExecutionRole  VPCアクセスのためのENI管理アクセス
+      ・AWSLambdaDynamoDBExecutionRole   DynamoDBへのアクセス
+      ・AWSLambdaSQSQueueExecutionRole   SQSへのアクセス
 
     ■ アクセス許可(リソースポリシー)
-      • Lambda関数のリソースポリシーを設定することで、AWSサービスやユーザにLambda関数の実行許可
-      • リソースポリシーはIAMロールではなく、Lambda関数に直接アタッチされるポリシー
-      • リソースポリシー例:
-        • S3バケットからのLambda関数の呼び出しを許可するポリシー
-        • API GatewayからのLambda関数の呼び出しを許可するポリシー
-        • SNSからのLambda関数の呼び出しを許可するポリシー
+
+    ・Lambda関数のリソースポリシーを設定することで、AWSサービスやユーザにLambda関数の実行許可
+    ・リソースポリシーはIAMロールではなく、Lambda関数に直接アタッチされるポリシー
+    ・リソースポリシー例:
+      ・S3バケットからのLambda関数の呼び出しを許可するポリシー
+      ・API GatewayからのLambda関数の呼び出しを許可するポリシー
+      ・SNSからのLambda関数の呼び出しを許可するポリシー
 
 - ENTRY:
-  EXPLAIN: |
-    Lambda関数のライフサイクル
+  EXPLAIN: ライフサイクル
   BODY: |
     1 ENI作成                     VPC使用時のみ10~30s(Durationには含まれない)
     2 コンテナ作成                 S3からのダウンロードと展開(Durationには含まれない)
@@ -152,190 +169,279 @@
     7 コンテナ破棄
 
     ■ コールドスタート & ウォームスタート
-      • 1~6 まで全実行するのがコールドスタート(毎回実行)
-      • 作成コンテナ再利用ではウォームスタート(初回実行後、一定時間内に再実行)
+
+    ・1~6 まで全実行するのがコールドスタート(毎回実行)
+    ・作成コンテナ再利用ではウォームスタート(初回実行後、一定時間内に再実行)
 
     ■ コールドスタートが起こる条件
-      • コンテナない場合
-      • Lambda関数の初回実行時
-      • Lambda関数のコード変更時(コンテナ作り直し)
-      • Lambda関数のVPC設定変更時(コンテナ作り直し)
-      • Lambda関数の同時実行数制限を超えた場合(ENI作成)
-      • Lambda関数のアイドル時間が長い場合(ENI削除)
+
+    ・コンテナない場合
+    ・Lambda関数の初回実行時
+    ・Lambda関数のコード変更時(コンテナ作り直し)
+    ・Lambda関数のVPC設定変更時(コンテナ作り直し)
+    ・Lambda関数の同時実行数制限を超えた場合(ENI作成)
+    ・Lambda関数のアイドル時間が長い場合(ENI削除)
 
     ■ 対策
-      • Lambda関数のアイドル時間を短くする(多くが無駄!)
-        • 定期的にLambda関数を実行する(CloudWatch Eventsなど)
-        • Lambda関数のアイドル時間を短くすることで、コールドスタートを減らす
+
+    ・Lambda関数のアイドル時間を短くする(多くが無駄!)
+      ・定期的にLambda関数を実行する(CloudWatch Eventsなど)
+      ・Lambda関数のアイドル時間を短くすることで、コールドスタートを減らす
 
     ■ バックグラウンドプロセスの凍結と再開
-      • Lambda関数終了時にバックグラウンドプロセスがある場合、凍結される
-      • 凍結されたバックグラウンドプロセスは、次回関数を呼び出した際に再開
-        • ただし、コンテナが再利用される場合のみで保証なし(この挙動に依存しないこと)
+
+    ・Lambda関数終了時にバックグラウンドプロセスがある場合、凍結される
+    ・凍結されたバックグラウンドプロセスは、次回関数を呼び出した際に再開
+      ・ただし、コンテナが再利用される場合のみで保証なし(この挙動に依存しないこと)
+
+#-------------------------------
+# 実装
+#-------------------------------
+- ENTRY:
+  CATEGORY: 実装
 
 - ENTRY:
-  EXPLAIN: |
-    制限事項
+  EXPLAIN: サンプル
   BODY: |
-    ■ 緩和可能
-      • 同時実行数制限(デフォルト1000)
-      • 関数とレイヤーストレージ(75GB)
+    ■ Lambda関数サンプル (Node.js)
 
-    ■ 緩和不可
-      • メモリ(128MB~10GB)
-      • タイムアウト(1s~900s)
-      • 環境変数(4KB)
-      • 関数リソースポリシー(20KB?)
-      • 関数レイヤー(5レイヤー)
-      • 呼び出しペイロード(同期 6MB, 非同期 256KB)
-      • パッケージサイズ(zipの直UL 50MB, 解凍時 250MB, コンソールからのアップロード 3MB)
-      • テストイベント(10)
-      • /tmp ディレクトリのストレージ(512MB)
-      • ファイルの説明(1024)
-      • 実行プロセス/スレッド数(1024)
-      • VPC内でのENI作成時間(10s~60s程度)
-      • VPC内でのENI数(5~10個程度)
+    exports.handler = async (event, context) => {                    // エントリーポイント
+      try {
+        console.log('event:', JSON.stringify(event, null, 2));       // ロギング
 
-#-------------------------------
-# Lambda関数の使い方
-#-------------------------------
+        const remainingTime = context.getRemainingTimeInMillis();    // コンテキスト(残り実行時間取得)
+        console.log('Remaining time:', remainingTime, 'ms');
+
+        const result = {                                             // 処理結果
+          message: 'Hello from Lambda!',
+          input: event,                                              // イベントデータ
+          timestamp: new Date().toISOString(),
+        };
+
+        console.log('result:', JSON.stringify(result, null, 2));     // ロギング: 結果の出力
+
+        return {                                                     // 正常レスポンス
+          statusCode: 200,
+          body: JSON.stringify(result),
+        };
+
+      } catch (error) {                                              // 例外処理
+        console.error('Error occurred:', error);
+
+        return {                                                     // エラーレスポンス
+          statusCode: 500,
+          body: JSON.stringify({
+            error: error.message,
+          }),
+        };
+      }
+    };
+
+    ■ コールバック使用サンプル
+
+      exports.handler = (event, context, callback) => {
+        try {
+          const result = { message: 'Hello from Lambda!' };
+          callback(null, result);  // 成功時(第2引数に結果を渡す)
+          // return result;        // ❌️ return文は使用不可
+        } catch (error) {
+          callback(error);         // エラー時(第1引数にエラーオブジェクトを渡す)
+        }
+      };
+
+      ※ 注意
+      ・コールバックへの引数は2つまで
+      ・コールバック使用時は非同期関数(async)は使用しない
+      ・return文は使用せず、コールバックで結果を返す
+      ・コールバックとreturn文を混在させないこと
+      ・コールバック使用時は context.succeed() や context.fail() は使用しないこと
+      ・コールバック使用時は例外が発生した場合、自動的にエラーレスポンスが返される
+
+      ・callback を使用するハンドラをコールするイベント
+        ・AWS Lambdaがサポートするすべてのイベントソース
+          ・API Gateway、S3、DynamoDB、SNS、SQSなどのイベントソース
+        ・カスタムアプリケーションからの呼び出しでも使用可能
+
 - ENTRY:
-  CATEGORY: Lambda関数の使い方
-
-- ENTRY:
-  EXPLAIN: |
-    基本
+  EXPLAIN: サンプル解説
   BODY: |
     ■ ハンドラー
-      • AWS Lambdaが呼び出すメソッドのエントリーポイント(実行開始点)
-      • Lambda関数のコード内で定義必要
-      • イベントデータ(パラメタ)を受け取る
-      • Lambda関数の実行結果を返す
 
-    ■ コンテキスト
-      • Lambda関数の実行環境に関する情報オブジェクト(2つ目の引数)
-      • 実行時間、メモリサイズ、リクエストIDなどの情報
-        • 実行時間を取得する場合、context.get_remaining_time_in_millis()を使用  
-      • 関数実行中に取得可能(実行完了後は取得不可)
-      • コールバックを使用する場合、コールバックの第1引数に渡される
-      • コールバックメソッドの挙動制御
-        • 第1引数にエラーオブジェクトを渡すことで、関数実行を終了させる
-        • 第2引数に結果を渡すことで、関数の実行結果を返す
-        • コールバックメソッドを使用しない場合、return文で結果を返す
-        • コールバックメソッドを使用する場合、return文は使用しない
+    ・AWS Lambdaが呼び出すメソッドのエントリーポイント(実行開始点)
+    ・Lambda関数のコード内で定義必要
+
+    ■ イベント(1つ目の引数)
+
+    ・Lambda関数がトリガーされたときに渡されるデータオブジェクト
+    ・イベントソースによって内容が異なる(JSON)
+
+      例: API Gatewayからのイベント
+      {
+        "resource": "/myresource",
+        "path": "/myresource",
+        "httpMethod": "GET",
+        "headers": { ... },
+        "queryStringParameters": { ... },
+        "pathParameters": { ... },
+        "stageVariables": { ... },
+        "requestContext": { ... },
+        "body": null,
+        "isBase64Encoded": false
+      }
+
+      例: S3からのイベント
+      {
+        "Records": [
+          {
+            "eventVersion": "2.1",
+            "eventSource": "aws:s3",
+            "awsRegion": "us-east-1",
+            "eventTime": "2020-09-30T12:34:56.000Z",
+            "eventName": "ObjectCreated:Put",
+            "s3": {
+              "bucket": { "name": "my-bucket", ... },
+              "object": { "key": "my-object-key", ... }
+
+    ■ コンテキスト(2つ目の引数)
+
+    ・Lambda関数の実行環境に関する情報オブジェクト
+    ・関数実行中に取得可能(実行完了後は取得不可)
+    ・実行時間、メモリサイズ、リクエストIDなどの情報
+      ・context.get_remaining_time_in_millis(): 実行時間取得
+      ・context.function_name: 関数名
+      ・context.memory_limit_in_mb: メモリサイズ(MB)
+      ・context.aws_request_id: リクエストID
+
+    ■ コールバック(3つ目の引数)
+
+    ・引数は2つ
+      ・第1引数にエラーオブジェクトを渡すと関数実行を終了
+      ・第2引数に結果を渡すことで、関数の実行結果を返す
+    ・コールバックなし: return文で結果を返す
+    ・コールバックあり: return文は使用不可
 
     ■ ロギング
-      • AWS LambdaはCloudWatch Logsにログを出力を出力可能
-      • ロググループ名: /aws/lambda/<関数名>
-      • ログストリーム名: <YYYY/MM/DD>/<関数名>/<リクエストID>
-      • ログストリームはLambda関数の実行ごとに作成
+
+    ・AWS LambdaはCloudWatch Logsにログを出力を出力可能
+    ・ロググループ名: /aws/lambda/<関数名>
+    ・ログストリーム名: <YYYY/MM/DD>/<関数名>/<リクエストID>
+    ・ログストリームはLambda関数の実行ごとに作成
 
     ■ 例外
-      • Lambda関数内で例外が発生した場合、AWS Lambdaは自動的にエラーをキャッチ
-      • エラーはCloudWatch Logsに出力される
-      • エラーが発生した場合、Lambda関数の実行は終了し、エラーコードが返される
-      • エラーコードはAWS Lambdaの管理コンソールから確認可能
-      • エラーコードはAWS CLIやAWS SDKを使用して取得可能
 
-- ENTRY:
-  EXPLAIN: |
-    実装の基本
-  BODY: |
+    ・Lambda関数内で例外が発生した場合、AWS Lambdaは自動的にエラーをキャッチ
+    ・エラーはCloudWatch Logsに出力される
+    ・エラーが発生した場合、Lambda関数の実行は終了し、エラーコードが返される
+    ・エラーコードはAWS Lambdaの管理コンソールから確認可能
+    ・エラーコードはAWS CLIやAWS SDKを使用して取得可能
+
     ■ ステートレス
-      • Lambda関数はステートレスである必要がある
-      • ステートレスとは、関数の実行に必要な情報を関数内に保持しないこと
-      • ステートレスでない場合、Lambda関数の実行結果が異なる可能性がある 
+
+    ・Lambda関数はステートレス
 
     ■ ローカルファイルへのアクセス
-      • Lambda関数内でローカルファイルにアクセスする場合、/tmpディレクトリを使用
-      • /tmpディレクトリは512MBまで使用可能
-      • /tmpディレクトリはLambda関数の実行ごとに初期化される
+
+    ・関数内でローカルファイルにアクセスする場合、/tmpディレクトリを使用
+    ・/tmpディレクトリは512MBまで使用可能
+    ・/tmpディレクトリはLambda関数の実行ごとに初期化される
 
     ■ 永続化
-      • Lambda関数内で永続化する場合、Amazon S3やDynamoDBを使用
-      • Amazon S3やDynamoDBはAWS Lambdaから直接アクセス可能
+
+    ・Lambda関数内で永続化する場合、Amazon S3やDynamoDBを使用
+    ・Amazon S3やDynamoDBはAWS Lambdaから直接アクセス可能
 
 - ENTRY:
-  EXPLAIN: |
-    マネジメントコンソールからのLambda関数の作成
+  EXPLAIN: マネジメントコンソールからのLambda関数の作成
   BODY: |
     ■ マネジメントコンソールからのLambda関数の作成
-      • AWS Management ConsoleからLambda関数を作成する場合、以下の手順で作成可能
-        1. AWS Management Consoleにログイン
-        2. Lambdaサービスを選択
-        3. 「関数の作成」をクリック
-        4. 「一から作成」を選択
-        5. 関数名、ランタイム、ロールを指定
-        6. 「関数の作成」をクリック
+
+    ・AWS Management ConsoleからLambda関数を作成する場合、以下の手順で作成可能
+      1. AWS Management Consoleにログイン
+      2. Lambdaサービスを選択
+      3. 「関数の作成」をクリック
+      4. 「一から作成」を選択
+      5. 関数名、ランタイム、ロールを指定
+      6. 「関数の作成」をクリック
 
     ■ 設計図の使用
-      • 設計図はAWS Lambdaのサンプルコードを元に作成されたテンプレート
-      • 設計図を使用することで、Lambda関数の作成が簡単になる
-      • 設計図はAWS Management ConsoleからLambda関数を作成する際に選択可能
+
+    ・設計図はAWS Lambdaのサンプルコードを元に作成されたテンプレート
+    ・設計図を使用することで、Lambda関数の作成が簡単になる
+    ・設計図はAWS Management ConsoleからLambda関数を作成する際に選択可能
+
+#-------------------------------
+# デプロイ
+#-------------------------------
+- ENTRY:
+  CATEGORY: デプロイ
 
 - ENTRY:
-  EXPLAIN: |
-    デプロイパッケージ
+  EXPLAIN: デプロイ
   BODY: |
     ■ デプロイパッケージ
-      • ZIPファイルに圧縮してアップロードする必要がある
-      • ZIPファイルは依存関係も含めてビルド、パッケージングしてアップロード
-      • 依存関係の含め方は言語によって異なる
-        • Node.js: 依存ライブラリはnode_modulesに格納したZIPファイルをアップロード
-        • Python: 依存ライブラリはsite-packagesに格納したZIPファイルをアップロード
-      • 依存ライブラリに対してグローバルな読み取り権限(0444)が必要
+
+    ・ZIPファイルに圧縮してアップロードする必要がある
+    ・ZIPファイルは依存関係も含めてビルド、パッケージングしてアップロード
+    ・依存関係の含め方は言語によって異なる
+      ・Node.js: 依存ライブラリはnode_modulesに格納したZIPファイルをアップロード
+      ・Python: 依存ライブラリはsite-packagesに格納したZIPファイルをアップロード
+    ・依存ライブラリに対してグローバルな読み取り権限(0444)が必要
 
     ■ 制限
-      • AWS Management Consoleからアップロードする場合、3MBまで
-      • MAXサイズは50MBまで(解凍後のサイズは250MBまで)。
-      • 50MBを超える場合、S3にアップロードしてARN指定
-      • 解凍後のサイズは250MBまで
+
+    ・AWS Management Consoleからアップロードする場合、3MBまで
+    ・MAXサイズは50MBまで(解凍後のサイズは250MBまで)。
+    ・50MBを超える場合、S3にアップロードしてARN指定
+    ・解凍後のサイズは250MBまで
+
+    ■ バージョニング
+
+    ・各バージョンには一意のARNが付与される
+    ・関数作成/更新時に自動的にバージョンが付与される
+    ・PublishVersionを使用してバージョン公開
+    ・バージョンは1から始まり、1ずつ増加、最大1000
+    ・バージョン発行までは $LATEST が使用される
+    ・特定バージョンに対してエイリアスを作成可能(番号でなく名前指定)
+    ・特定バージョンを指定して関数を呼び出すことができる
+      ・例: arn:aws:lambda:us-east-1:123456789012:function:my-function:1     <-- バージョン番号
+      ・例: arn:aws:lambda:us-east-1:123456789012:function:my-function:PROD  <-- エイリアス名
+
+    ■ タグによるグループ化とフィルタリング
+
+    ・タグは最大50個まで付与可能
+    ・タグは最大128バイトまでの文字列
+    ・請求に含まれるLambda関数のリストをグループ化
+    ・コンソールとAWS CLIからLambda関数をフィルタリング
 
 - ENTRY:
-  EXPLAIN: |
-    マネジメントコンソール
-  BODY: |
-    ■ スロットリング
-      • ネットワーク
-        • 非VPC: 実行時にENIを作成せず、スロットリング非発生
-        • VPC内: ENI作成で、スロットリング発生
-      • 同時実行数
-        • 予約されていないアカウントの同時実行の使用
-        • 同時実行の予約: 100
-      • デバッグとエラー処理
-        • DLQ(Dead Letter Queue) リソース: 関数実行に失敗した場合、SNSやSQSにメッセージを送信
-      • 監査とコンプライアンス
-        • AWS CloudTrail: Lambda関数の実行履歴を記録
-        • AWS Config: Lambda関数の設定変更を記録
-
-- ENTRY:
-  EXPLAIN: |
-    環境変数
+  EXPLAIN: 環境変数
   BODY: |
     ■ 環境変数
-      • 環境変数はLambda関数の実行時に取得可能
-      • 環境変数はLambda関数の実行ごとに初期化される
-      • バージョニング利用時は環境変数もスナップショットされる
-      • 4KBまでのサイズ制限あり
-      • 環境変数はAWS Management Consoleから設定可能
-      • 文字は[a-zA-Z]で始まり、英数字とアンダースコアのみ使用可能で、文字コードは UTF-8
+
+    ・環境変数はLambda関数の実行時に取得可能
+    ・環境変数はLambda関数の実行ごとに初期化される
+    ・バージョニング利用時は環境変数もスナップショットされる
+    ・4KBまでのサイズ制限あり
+    ・環境変数はAWS Management Consoleから設定可能
+    ・文字は[a-zA-Z]で始まり、英数字とアンダースコアのみ使用可能で、文字コードは UTF-8
 
     ■ 暗号化
-      • AWS KMS(Key Management Service)を使用して暗号化可能
-      • KMSで暗号化され、Lambda関数の実行時に復号化される
-      • KMSで暗号化されているため、IAMポリシーでアクセス制御可能
-      • 復号化はLambda関数の実行時に行われる
+
+    ・AWS KMS(Key Management Service)を使用して暗号化可能
+    ・KMSで暗号化され、Lambda関数の実行時に復号化される
+    ・KMSで暗号化されているため、IAMポリシーでアクセス制御可能
+    ・復号化はLambda関数の実行時に行われる
 
     ■ Node.js サンプル
-      • let region = process.env.AWS_REGION
-      • let bucket = process.env.BUCKET_NAME
-      • let key = process.env.KEY_NAME
-      • let value = process.env.VALUE_NAME
-      • let secret = process.env.SECRET_NAME
+
+    ・let region = process.env.AWS_REGION
+    ・let bucket = process.env.BUCKET_NAME
+    ・let key = process.env.KEY_NAME
+    ・let value = process.env.VALUE_NAME
+    ・let secret = process.env.SECRET_NAME
 
 - ENTRY:
-  EXPLAIN: |
-    予約済み環境変数
+  EXPLAIN: 予約済み環境変数
   TABLE:
     OPTION:
       ALIGN:
@@ -346,94 +452,83 @@
         - 40%
     BODY: |
       ■ 予約済み環境変数
-      _HANDLER	関数に設定されているハンドラの場所。
-      AWS_DEFAULT_REGION	Lambda 関数が実行されるデフォルトの AWS リージョン。
-      AWS_REGION	Lambda 関数が実行される AWS リージョン。定義されている場合、この値は AWS_DEFAULT_REGION を上書きします。
-      AWS_EXECUTION_ENV	AWS_Lambda_ (例: AWS_Lambda_java8) のプレフィックスが付いたランタイム識別子。この環境変数は OS 専用ランタイム (provided ランタイムファミリー) には定義されていません。
-      AWS_LAMBDA_FUNCTION_NAME	関数の名前。
-      AWS_LAMBDA_FUNCTION_MEMORY_SIZE	関数で使用できるメモリの量 (MB 単位)。
-      AWS_LAMBDA_FUNCTION_VERSION	実行される関数のバージョン。
-      AWS_LAMBDA_INITIALIZATION_TYPE	関数の初期化タイプ。
-      AWS_LAMBDA_LOG_GROUP_NAME。AWS_LAMBDA_LOG_STREAM_NAME	Amazon CloudWatch Logs グループの名前と関数のストリーム。AWS_LAMBDA_LOG_GROUP_NAME および AWS_LAMBDA_LOG_STREAM_NAME の環境変数は Lambda SnapStart 関数では使用できません。
-      AWS_ACCESS_KEY。AWS_ACCESS_KEY_ID。AWS_SECRET_ACCESS_KEY。AWS_SESSION_TOKEN	関数の実行ロールから取得したアクセスキー。
-      AWS_LAMBDA_RUNTIME_API	(カスタムランタイム) ランタイム API のホストおよびポート。
-      LAMBDA_TASK_ROOT	Lambda 関数コードへのパス。
-      LAMBDA_RUNTIME_DIR	ランタイムライブラリへのパス。
+      _HANDLER	関数に設定されているハンドラの場所
+      AWS_DEFAULT_REGION	Lambda 関数が実行されるデフォルトの AWS リージョン
+      AWS_REGION	Lambda 関数が実行される AWS リージョン定義されている場合、この値は AWS_DEFAULT_REGION を上書きします
+      AWS_EXECUTION_ENV	AWS_Lambda_ (例: AWS_Lambda_java8) のプレフィックスが付いたランタイム識別子、この環境変数は OS 専用ランタイム (provided ランタイムファミリー) には定義されていません
+      AWS_LAMBDA_FUNCTION_NAME	関数の名前
+      AWS_LAMBDA_FUNCTION_MEMORY_SIZE	関数で使用できるメモリの量 (MB 単位)
+      AWS_LAMBDA_FUNCTION_VERSION	実行される関数のバージョン
+      AWS_LAMBDA_INITIALIZATION_TYPE	関数の初期化タイプ
+      AWS_LAMBDA_LOG_GROUP_NAME、AWS_LAMBDA_LOG_STREAM_NAME	Amazon CloudWatch Logs グループの名前と関数のストリーム
+      	AWS_LAMBDA_LOG_GROUP_NAME および AWS_LAMBDA_LOG_STREAM_NAME の環境変数は Lambda SnapStart 関数では使用できません
+      AWS_ACCESS_KEY、AWS_ACCESS_KEY_IDAWS_SECRET_ACCESS_KEY、AWS_SESSION_TOKEN	関数の実行ロールから取得したアクセスキー
+      AWS_LAMBDA_RUNTIME_API	(カスタムランタイム) ランタイム API のホストおよびポート
+      LAMBDA_TASK_ROOT	Lambda 関数コードへのパス
+      LAMBDA_RUNTIME_DIR	ランタイムライブラリへのパス
+
       ■ 予約されていない環境変数
-      LANG	ランタイムのロケール (en_US.UTF-8)。
-      PATH	実行パス (/usr/local/bin:/usr/bin/:/bin:/opt/bin)。
-      LD_LIBRARY_PATH	システムライブラリのパス (/var/lang/lib:/lib64:/usr/lib64:$LAMBDA_RUNTIME_DIR:$LAMBDA_RUNTIME_DIR/lib:$LAMBDA_TASK_ROOT:$LAMBDA_TASK_ROOT/lib:/opt/lib)。
-      NODE_PATH	(Node.js) Node.js ライブラリのパス (/opt/nodejs/node12/node_modules/:/opt/nodejs/node_modules:$LAMBDA_RUNTIME_DIR/node_modules)。
-      PYTHONPATH	(Python) Python ライブラリパス ($LAMBDA_RUNTIME_DIR)。
-      TZ	環境のタイムゾーン (:UTC)。実行環境は、システムクロックを同期するために NTP を使用します。
+      LANG	ランタイムのロケール (en_US.UTF-8)
+      PATH	実行パス (/usr/local/bin:/usr/bin/:/bin:/opt/bin)
+      LD_LIBRARY_PATH	システムライブラリのパス (/var/lang/lib:/lib64:/usr/lib64:$LAMBDA_RUNTIME_DIR:$LAMBDA_RUNTIME_DIR/lib:$LAMBDA_TASK_ROOT:$LAMBDA_TASK_ROOT/lib:/opt/lib)
+      NODE_PATH	(Node.js) Node.js ライブラリのパス (/opt/nodejs/node12/node_modules/:/opt/nodejs/node_modules:$LAMBDA_RUNTIME_DIR/node_modules)
+      PYTHONPATH	(Python) Python ライブラリパス ($LAMBDA_RUNTIME_DIR)
+      TZ	環境のタイムゾーン (:UTC) 実行環境は、システムクロックを同期するために NTP を使用します。
 
 - ENTRY:
-  EXPLAIN: |
-    バージョニング
+  EXPLAIN: Layersで「分離管理」
   BODY: |
-    • 各バージョンには一意のARNが付与される
-    • 関数作成/更新時に自動的にバージョンが付与される
-    • PublishVersionを使用してバージョン公開
-    • バージョンは1から始まり、1ずつ増加、最大1000
-    • バージョン発行までは $LATEST が使用される
-    • 特定バージョンに対してエイリアスを作成可能(番号でなく名前指定)
-    • 特定バージョンを指定して関数を呼び出すことができる
-      • 例: arn:aws:lambda:us-east-1:123456789012:function:my-function:1     <-- バージョン番号
-      • 例: arn:aws:lambda:us-east-1:123456789012:function:my-function:PROD  <-- エイリアス名
+    ■ 概要
 
-- ENTRY:
-  EXPLAIN: |
-    Layers
-  BODY: |
-    • Lambda関数のコードを「分離管理」する機能
-    • Lambda関数の「コード」と「依存ライブラリ」を分離管理可能
-    • Lambda関数のコードはLambda Layersに格納され、Lambda関数から参照される
-    • Lambda Layersは最大5つ、最大75GBまで使用可能
-    • AWS Management Console、AWS CLI、AWS SDKから作成可能
-    • 共通コンポーネントをZIPファイルに圧縮して「Lambda Layers」としてアップロード
-    • Lambda LayersはLambda関数の実行時に自動的にマウントされる
-    • Layersはimmutable(不変)で、バージョン管理される
-    • 指定バージョンが削除/利用権限剥奪時、それを利用する関数は稼働するが、新規作成は不可
+    ・Lambda関数の「コード」と「依存ライブラリ」を分離管理可能
+    ・Lambda関数のコードは Lambda Layers に格納され、Lambda関数から参照される
+    ・Lambda Layersは最大5つ、最大75GBまで使用可能
+    ・AWS Management Console、AWS CLI、AWS SDKから作成可能
+    ・共通コンポーネントをZIPファイルに圧縮して「Lambda Layers」としてアップロード
+    ・Lambda LayersはLambda関数の実行時に自動的にマウントされる
+    ・Layersはimmutable(不変)で、バージョン管理される
+    ・指定バージョンが削除/利用権限剥奪時、それを利用する関数は稼働するが、新規作成は不可
 
     ■ マネジメントコンソール「レイヤーの作成」
+
     「Lambda」->「Layers」->「レイヤーの作成」
-    • 名前: 任意の名前を指定
-    • 説明: 任意の説明を指定
-    • コードエントリタイプ: ZIPファイル/S3バケット指定
-    • アップロード: ZIPファイル/S3バケット指定
-    • ランタイム: 対応するランタイムを指定(Node.js, Python, ... + バージョン)
+    ・名前: 任意の名前を指定
+    ・説明: 任意の説明を指定
+    ・コードエントリタイプ: ZIPファイル/S3バケット指定
+    ・アップロード: ZIPファイル/S3バケット指定
+    ・ランタイム: 対応するランタイムを指定(Node.js, Python, ... + バージョン)
 
     ■ マネジメントコンソール「関数にレイヤーを追加」
+
     「Lambda」->「Layers」->「関数にレイヤーを追加」
-    • レイヤー選択
-      • リストからレイヤーを選択
-      • レイヤーARNを指定
-    • 関数の「Configuration」から「Layers」を確認
+    ・レイヤー選択
+      ・リストからレイヤーを選択
+      ・レイヤーARNを指定
+    ・関数の「Configuration」から「Layers」を確認
 
     ■ 注意点
-    • /opt の下に指定した順番で展開
-    • /opt の下に各言語の依存を解決する固有のPATHが設定される
-      • node.js: /opt/nodejs/node_modules
-      • Lambda関数のコードは/var/taskに展開される
+
+    ・/opt の下に指定した順番で展開
+    ・/opt の下に各言語の依存を解決する固有のPATHが設定される
+      ・node.js: /opt/nodejs/node_modules
+      ・Lambda関数のコードは/var/taskに展開される
+
+#-------------------------------
+# エラーとロギング
+#-------------------------------
+- ENTRY:
+  CATEGORY: モニタリング、ロギング、エラー
 
 - ENTRY:
-  EXPLAIN: |
-    グループ化とフィルタリング
+  EXPLAIN: CloudWatchによるモニタリング
   BODY: |
-    • タグは最大50個まで付与可能
-    • タグは最大128バイトまでの文字列
-    • 請求に含まれるLambda関数のリストをグループ化
-    • コンソールとAWS CLIからLambda関数をフィルタリング
+    ■ 概要
 
-- ENTRY:
-  EXPLAIN: |
-    モニタリング
-  BODY: |
-    • AWS CloudWatchを使用してLambda関数のメトリクスを収集
-    • Lambda関数のメトリクスはCloudWatchに自動的に送信される
-    • CloudWatch LogsにLambda関数のログを出力可能
-    • CloudWatch LogsはAWS Management Consoleから確認可能
-    • CloudWatch LogsはAWS CLIやAWS SDKを使用して取得可能
+    ・AWS CloudWatchを使用してLambda関数のメトリクスを収集
+    ・Lambda関数のメトリクスはCloudWatchに自動的に送信される
+    ・CloudWatch LogsにLambda関数のログを出力可能
+    ・CloudWatch LogsはAWS Management Consoleから確認可能
+    ・CloudWatch LogsはAWS CLIやAWS SDKを使用して取得可能
   TABLE:
     OPTION:
       ALIGN:
@@ -456,8 +551,7 @@
       UnreservedConcurrentExecutions	count	予約されていない同時実行数
 
 - ENTRY:
-  EXPLAIN: |
-    CloudWatch の ログ出力
+  EXPLAIN: CloudWatch の ログ出力
   BODY: |
     実行ログが CloudWatch Logs に出力される
 
@@ -471,30 +565,67 @@
     };
 
 - ENTRY:
-  EXPLAIN: |
-    Schedule 実行
+  EXPLAIN: エラー発生状況
   BODY: |
-    • AWS Lambdaは定期的に実行可能
-    • AWS CloudWatch Eventsを使用して定期的にLambda関数を実行可能
-    • AWS CloudWatch EventsはAWS Management Consoleから設定可能
-    • AWS CloudWatch EventsはAWS CLIやAWS SDKを使用して設定可能
-    • AWS CloudWatch EventsはAWS Lambda関数をトリガーとして実行可能
+    ■ スロットリング
+
+      ・AWS Lambdaにおける同時実行数の制限を超えた場合に発生するエラー状態
+
+      ・ネットワークでの発生
+        ・非VPC: 実行時にENIを作成せず、スロットリング非発生
+        ・VPC内: ENI作成で、スロットリング発生
+        ・Lambda関数の同時実行数が制限を超えた場合に発生
+        ・429エラーコードが返される
+
+    ■ 同時実行数
+
+      ・予約されていないアカウントの同時実行の使用
+      ・同時実行の予約: 100
+
+    ■ デバッグとエラー処理
+
+      ・DLQ(Dead Letter Queue) リソース: 関数実行に失敗した場合、SNSやSQSにメッセージを送信
+
+    ■ 監査とコンプライアンス
+
+      ・AWS CloudTrail: Lambda関数の実行履歴を記録
+      ・AWS Config: Lambda関数の設定変更を記録
+
+#-------------------------------
+# Schedule 実行
+#-------------------------------
+- ENTRY:
+  CATEGORY: Schedule 実行
+
+- ENTRY:
+  EXPLAIN: Schedule 実行
+  BODY: |
+    ■ 概要 
+
+    ・AWS Lambdaは定期的に実行可能
+    ・AWS CloudWatch Events
+      ・定期的にLambda関数を実行可能
+      ・AWS Management Consoleから設定可能
+      ・AWS CLIやAWS SDKを使用して設定可能
+      ・AWS Lambda関数をトリガーとして実行可能
 
     ■ マネジメントコンソール「トリガーの設定」
-    • ルール: 新規ルールの作成
-    • ルール名: 任意の名前を指定
-    • ルールの説明: 任意の説明を指定
-    • ルールのタイプ: 
-      • イベントパターン
-      • スケジュール式を選択
+
+    ・ルール: 新規ルールの作成
+    ・ルール名: 任意の名前を指定
+    ・ルールの説明: 任意の説明を指定
+    ・ルールのタイプ: 
+      ・イベントパターン
+      ・スケジュール式を選択
 
     ■ スケジュール式の例
-      • rate(5 minutes)                 5分ごとに実行
-      • rate(1 hour)                    1時間ごとに実行
-      • rate(7 days)                    7日ごとに実行
-      • cron(0 12 * * ? *)              毎日12時に実行
-      • cron(0 10 * * ? *)              毎日午前10時に実行
-      • cron(0 18 ? * MON-FRI *)        月～金、毎日午後6時に実行
+
+    ・rate(5 minutes)                 5分ごとに実行
+    ・rate(1 hour)                    1時間ごとに実行
+    ・rate(7 days)                    7日ごとに実行
+    ・cron(0 12 * * ? *)              毎日12時に実行
+    ・cron(0 10 * * ? *)              毎日午前10時に実行
+    ・cron(0 18 ? * MON-FRI *)        月～金、毎日午後6時に実行
 
 #-------------------------------
 # カスタムランタイム
@@ -503,67 +634,68 @@
   CATEGORY: カスタム・ランタイム
 
 - ENTRY:
-  EXPLAIN: |
-    カスタム・ランタイム
+  EXPLAIN: カスタム・ランタイム
   BODY: |
-    • Linux 互換のランタイムを指定することで任意の言語を実行
-    • 先に公式サポートを確認
+    ■ 概要
+
+    ・Linux 互換のランタイムを指定することで任意の言語を実行
+    ・先に公式サポートを確認
       AWS LambdaはLinux互換のカスタムランタイムをサポート
       https://github.com/awslabs
 
     ■ bootstrap
-    • エントリポイントとなる実行ファイル
-    • Runtime HTTP API と 実行関数の間をつなぐインターフェース
-    • レスポンスとエラーハンドリング、コンテキスト作成と関数実行を行う
-    • 関数実行時にパッケージ内/Layer内の bootstrap を実行
-    • 存在しないとエラーになる
+
+    ・エントリポイントとなる実行ファイル
+    ・Runtime HTTP API と 実行関数の間をつなぐインターフェース
+    ・レスポンスとエラーハンドリング、コンテキスト作成と関数実行を行う
+    ・関数実行時にパッケージ内/Layer内の bootstrap を実行
+    ・存在しないとエラーになる
 
     ■ 例: コンパイル言語 fortran
-    • Lambdaはまず"bootstrap"という名前のスクリプトを探し、存在すればそれを実行
-    • Fortranのようなコンパイル言語では bootstrap スクリプトと実行バイナリをzipに入れる
-    • あるいは Layer に登録してもOK
-    • bootstrap から実行バイナリを実行
+
+    ・Lambdaはまず"bootstrap"という名前のスクリプトを探し、存在すればそれを実行
+    ・Fortranのようなコンパイル言語では bootstrap スクリプトと実行バイナリをzipに入れる
+    ・あるいは Layer に登録してもOK
+    ・bootstrap から実行バイナリを実行
 
 - ENTRY:
-  EXPLAIN: |
-    bootstrap実装
+  EXPLAIN: bootstrap実装
   BODY: |
     ■ Initialization Tasks(請求/タイムアウト対象)
 
-      • 環境変数の読み取り
-      • 関数で設定されたハンドラの取得(FILE_NAME.METHOD_NAME)
-        • LAMBDA_TASK_ROOT: Lambda関数コードへのパス
-        • AWS_LAMBDA_RUNTIME_API: Lambda Runtime APIのホスト名とポート番号
-      • 関数の初期化
-        • ハンドラ読み込み、初期化、グローバル変数の初期化
-        • SDKクラインアント、DB接続、HTTPクライアントの初期化(再利用対象)
-      • エラーハンドリング
+      ・環境変数の読み取り
+      ・関数で設定されたハンドラの取得(FILE_NAME.METHOD_NAME)
+        ・LAMBDA_TASK_ROOT: Lambda関数コードへのパス
+        ・AWS_LAMBDA_RUNTIME_API: Lambda Runtime APIのホスト名とポート番号
+      ・関数の初期化
+        ・ハンドラ読み込み、初期化、グローバル変数の初期化
+        ・SDKクラインアント、DB接続、HTTPクライアントの初期化(再利用対象)
+      ・エラーハンドリング
 
     ■ Processing Tasks(イベント待ち受けループ)
 
-      • イベントの取得
-        • next invocation APIを使用して次イベント取得
-        • イベントはJSON形式で取得
-      • コンテキストオブジェクト作成
-        • イベントデータを元にコンテキストオブジェクト作成
-        • コンテキストオブジェクトにはLambda関数の実行環境に関する情報が含まれる
-      • 関数のハンドラを呼び出し(イベント処理)
-        • イベントとコンテキスオブジェクトをハンドラに渡す
-      • レスポンスのハンドリング
-        • レスポンスはJSON形式で取得
-        • レスポンスボディには関数の実行結果が含まれる
-        • レスポンスヘッダにはリクエストIDが含まれる
-        • Invocation Response APIを使用してレスポンスをポスト
-      • エラーハンドリング
-        • エラー発生時、Invocation Error APIを使用してエラーをポスト
-      • クリーンアップ
-        • Lambda関数の実行が終了したら、クリーンアップ処理を実行
-        • DB接続のクローズ、HTTPクライアントのクローズなど
-        • 他サービスへデータ送信、次イベント処理前の追加処理など
+      ・イベントの取得
+        ・next invocation APIを使用して次イベント取得
+        ・イベントはJSON形式で取得
+      ・コンテキストオブジェクト作成
+        ・イベントデータを元にコンテキストオブジェクト作成
+        ・コンテキストオブジェクトにはLambda関数の実行環境に関する情報が含まれる
+      ・関数のハンドラを呼び出し(イベント処理)
+        ・イベントとコンテキスオブジェクトをハンドラに渡す
+      ・レスポンスのハンドリング
+        ・レスポンスはJSON形式で取得
+        ・レスポンスボディには関数の実行結果が含まれる
+        ・レスポンスヘッダにはリクエストIDが含まれる
+        ・Invocation Response APIを使用してレスポンスをポスト
+      ・エラーハンドリング
+        ・エラー発生時、Invocation Error APIを使用してエラーをポスト
+      ・クリーンアップ
+        ・Lambda関数の実行が終了したら、クリーンアップ処理を実行
+        ・DB接続のクローズ、HTTPクライアントのクローズなど
+        ・他サービスへデータ送信、次イベント処理前の追加処理など
 
 - ENTRY:
-  EXPLAIN: |
-    bootstrapサンプル(shell script)
+  EXPLAIN: bootstrapサンプル(shell script)
   BODY: |
     #!/bin/sh
     set -ueo pipefail
@@ -588,45 +720,44 @@
     done
 
 - ENTRY:
-  EXPLAIN: |
-    カスタムランタイムのための HTTP API
+  EXPLAIN: カスタムランタイムのための HTTP API
   BODY: |
     API メソッド
-    • 次の呼び出し
-    • 呼び出しレスポンス
-    • 初期化エラー
-    • 呼び出しエラー
+    ・次の呼び出し
+    ・呼び出しレスポンス
+    ・初期化エラー
+    ・呼び出しエラー
 
     ■ 次の呼び出し
-      • PATH: /runtime/invocation/next
-      • メソッド: GET
-      • ランタイムは、このメッセージを Lambda に送信、呼び出しイベントをリクエスト
-      • レスポンス本文: 
-        • 呼び出しのペイロード(関数トリガーのイベントデータを含む JSON ドキュメント)が含まれる。
-      • レスポンスヘッダー: 
-        • Lambda-Runtime-Aws-Request-Id
+      ・PATH: /runtime/invocation/next
+      ・メソッド: GET
+      ・ランタイムは、このメッセージを Lambda に送信、呼び出しイベントをリクエスト
+      ・レスポンス本文: 
+        ・呼び出しのペイロード(関数トリガーのイベントデータを含む JSON ドキュメント)が含まれる。
+      ・レスポンスヘッダー: 
+        ・Lambda-Runtime-Aws-Request-Id
             リクエスト ID
             関数の呼び出しをトリガーしたリクエストを識別
             例: 8476a536-e9f4-11e8-9739-2dfe598c3fcd
-        • Lambda-Runtime-Deadline-Ms
+        ・Lambda-Runtime-Deadline-Ms
             関数がタイムアウトした日付 (Unix 時間のミリ秒)
             例: 1542409706888
-        • Lambda-Runtime-Invoked-Function-Arn
+        ・Lambda-Runtime-Invoked-Function-Arn
             呼び出しで指定されている Lambda 関数、バージョン、またはエイリアスの ARN
             例: arn:aws:lambda:us-east-2:123456789012:function:custom-runtime
-        • Lambda-Runtime-Trace-Id - AWS X-Ray トレースヘッダー。
+        ・Lambda-Runtime-Trace-Id - AWS X-Ray トレースヘッダー。
             例: Root=1-5bef4de7-ad49b0e87f6ef6c87fc2e700;Parent=9a9197af755a6419;Sampled=1
-        • Lambda-Runtime-Client-Context
+        ・Lambda-Runtime-Client-Context
             AWS Mobile SDK の呼び出しにおいて、クライアントアプリケーションおよびデバイスに関するデータ
-        • Lambda-Runtime-Cognito-Identity
+        ・Lambda-Runtime-Cognito-Identity
             AWS Mobile SDK からの呼び出しの場合は、Amazon Cognito ID プロバイダーに関するデータ
 
-      • 応答遅延の可能性があり、GET リクエストにタイムアウトを設定しないこと
+      ・応答遅延の可能性があり、GET リクエストにタイムアウトを設定しないこと
           Lambda がランタイムをブートストラップする時と、返すイベントがランタイムにあるときとの間に、
           ランタイムプロセスが数秒間停止する可能性あり
-      • リクエスト ID は、Lambda 内の呼び出しを追跡
+      ・リクエスト ID は、Lambda 内の呼び出しを追跡
           レスポンス送信時に呼び出しを指定する場合に使用
-      • トレースヘッダーには、トレース ID、親 ID、サンプリングデシジョンが含まれます。
+      ・トレースヘッダーには、トレース ID、親 ID、サンプリングデシジョンが含まれます。
           リクエストがサンプリングされている場合、リクエストが Lambda、またはアップストリームサービスによってサンプリングされた場合、
           ランタイムは、_X_AMZN_TRACE_ID をヘッダーの値に設定します。
           X-Ray SDK はこの値を読み込んで ID を取得し、リクエストを追跡するかどうかを判断します。
@@ -636,169 +767,105 @@
     ■ 呼び出しエラー
 
 #-------------------------------
+#  CLI
+#-------------------------------
+- ENTRY:
+  CATEGORY: AWS CLI
+
+- ENTRY:
+  EXPLAIN: 概要
+  BODY: |
+    ■ 概要
+
+    ・AWS CLIを使用してLambda関数を操作可能
+    ・各種コマンドを使用してLambda関数の作成、取得、更新、削除、呼び出しが可能
+    ・最新バージョン: aws-cli/2.x
+    ・v1 と v2 の違い
+      ・v2 は新しい機能と改善が含まれている
+      ・v2 は Python 3.x を使用している
+      ・v2 は Windows でのインストールが簡単になっている
+      ・v2 は SSO (Single Sign-On) をサポートしている
+
+    ■ インストール
+
+    npm install -g aws-cli@latest
+
+    ■ メソッド一覧
+
+    ・create-function                   関数作成（ZIPまたはS3からコードをアップロード、ロール・ランタイム指定）
+    ・get-function                      関数コードとメタデータを取得
+    ・get-function-configuration        関数設定のみ取得（メモリ、タイムアウト等）
+    ・update-function-code              関数コードをZIPで更新（S3または--zip-file）
+    ・update-function-configuration     ランタイム、メモリ、タイムアウト等の設定更新
+    ・delete-function                   関数削除
+    ・list-functions                    リージョン内の関数一覧を取得
+    ・invoke-function                   関数を同期/非同期で呼び出し（--payload指定）
+    ・publish-version                   現行コードをバージョンとして発行
+    ・create-alias                      バージョンへエイリアス作成（トラフィック分割に使用）
+    ・update-alias                      エイリアスのターゲットバージョンを更新
+    ・delete-alias                      エイリアス削除
+    ・list-aliases                      関数のエイリアス一覧取得
+    ・add-permission                    関数に対する呼び出し許可を追加（Principal指定）
+    ・remove-permission                 指定した許可の削除
+    ・get-policy                        関数のリソースポリシーを取得
+    ・tag-resource                      関数にタグを付与
+    ・untag-resource                    関数からタグを削除
+    ・list-versions-by-function         関数のバージョン一覧を取得
+
+- ENTRY:
+  EXPLAIN: create-function
+  BODY: |
+    ■ 概要
+
+    ・Lambda関数を作成
+
+    ■ サンプル
+
+    aws lambda create-function \
+      --function-name my-function \
+      --runtime nodejs14.x \
+      --role arn:aws:iam::123456789012:role/lambda-execution-role \
+      --handler index.handler \
+      --zip-file fileb://function.zip
+
+#-------------------------------
 #  SDK
 #-------------------------------
 - ENTRY:
   CATEGORY: SDK
 
 - ENTRY:
-  EXPLAIN: |
-    作成(createFunction) zip UPLoad
+  EXPLAIN: 概要
   BODY: |
-    import {
-      Architecture,
-      CreateFunctionCommand,
-      LambdaClient,
-      PackageType,
-      Runtime,
-    } from "@aws-sdk/client-lambda";
-    import { readFile } from "node:fs/promises";
-    import { dirnameFromMetaUrl } from "@aws-doc-sdk-examples/lib/utils/util-fs.js";
+    ■ 概要
 
-    // __dirnameはESモジュールでは使用できないため、dirnameFromMetaUrlを使用
-    const dirname = dirnameFromMetaUrl(import.meta.url);
+    ・AWS SDK for JavaScript v3 を使用して Lambda 関数を操作可能
+    ・LambdaClient クラスを使用して Lambda クライアントを作成
+    ・各種コマンドクラスを使用して Lambda 関数の作成、取得、更新、削除、呼び出しが可能
+    ・非同期関数(async/await)を使用して非同期処理を簡単に記述可能
 
-    const createFunction = async (funcName, roleArn) => {
-      const client = new LambdaClient({});
-      const code = await readFile(`${dirname}../functions/${funcName}.zip`);
+    ■ インストール
 
-      const command = new CreateFunctionCommand({
-        Code:          { ZipFile: code },
-        FunctionName:  funcName,
-        Role:          roleArn,
-        Architectures: [Architecture.arm64],
-        Handler:       "index.handler",       // .zip 送信時に必須
-        PackageType:   PackageType.Zip,       // .zip 送信時に必須
-        Runtime:       Runtime.nodejs16x,     // .zip 送信時に必須
-      });
+    npm install @aws-sdk/client-lambda
 
-      return client.send(command);
-    };
-    export { createFunction };
+    ■ メソッド一覧
 
-- ENTRY:
-  EXPLAIN: |
-    関数取得(GetFunctionCommand)
-  BODY: |
-    import { LambdaClient, GetFunctionCommand } from "@aws-sdk/client-lambda";
-
-    const getFunction = (funcName) => {
-      const client = new LambdaClient({});
-      const command = new GetFunctionCommand({ FunctionName: funcName });
-      return client.send(command);
-    };
-
-    export { getFunction };
-
-- ENTRY:
-  EXPLAIN: |
-    一覧取得(ListFunctionsCommand)
-  BODY: |
-    import { LambdaClient, ListFunctionsCommand } from "@aws-sdk/client-lambda";
-
-    const listFunctions = () => {
-      const client = new LambdaClient({});
-      const command = new ListFunctionsCommand({});
-      return client.send(command);
-    };
-
-    export { listFunctions };
-
-- ENTRY:
-  EXPLAIN: |
-    コール(InvokeCommand)
-  BODY: |
-    import { InvokeCommand, LambdaClient, LogType } from "@aws-sdk/client-lambda";
-
-    const invoke = async (funcName, payload) => {
-      const client = new LambdaClient({});
-      const command = new InvokeCommand({
-        FunctionName:   funcName,
-        Payload:        JSON.stringify(payload),
-        LogType:        LogType.Tail,
-      });
-
-      const { Payload, LogResult } = await client.send(command);
-      const result = Buffer.from(Payload).toString();
-      const logs = Buffer.from(LogResult, "base64").toString();
-      return { logs, result };
-    };
-
-    export { invoke };
-
-- ENTRY:
-  EXPLAIN: |
-    削除(DeleteFunctionCommand)
-  BODY: |
-    import { LambdaClient, DeleteFunctionCommand } from "@aws-sdk/client-lambda";
-
-    const deleteFunction = (funcName) => {
-      const client = new LambdaClient({});
-      const command = new DeleteFunctionCommand({ FunctionName: funcName });
-      return client.send(command);
-    };
-
-    export { deleteFunction };
-
-- ENTRY:
-  EXPLAIN: |
-    更新(UpdateFunctionCodeCommand)
-  BODY: |
-    import {
-      LambdaClient,
-      UpdateFunctionCodeCommand,
-      PackageType,
-      Runtime,
-      Architecture,
-    } from "@aws-sdk/client-lambda";
-    import { readFile } from "node:fs/promises";
-    import { dirnameFromMetaUrl } from "@aws-doc-sdk-examples/lib/utils/util-fs.js";
-
-    // __dirnameはESモジュールでは使用できないため、dirnameFromMetaUrlを使用
-    const dirname = dirnameFromMetaUrl(import.meta.url);
-
-    const updateFunctionCode = async (funcName, newFunc) => {
-      const client = new LambdaClient({});
-      const code = await readFile(`${dirname}../functions/${newFunc}.zip`);
-      const command = new UpdateFunctionCodeCommand({
-        ZipFile:       code,
-        FunctionName:  funcName,
-        Architectures: [Architecture.arm64],
-        Handler:       "index.handler",      // .zip 送信時に必須
-        PackageType:   PackageType.Zip,      // .zip 送信時に必須
-        Runtime:       Runtime.nodejs16x,    // .zip 送信時に必須
-      });
-
-      return client.send(command);
-    };
-
-    export { updateFunctionCode };
-
-- ENTRY:
-  EXPLAIN: |
-    設定更新(UpdateFunctionConfigurationCommand)
-  BODY: |
-    import {
-      LambdaClient,
-      UpdateFunctionConfigurationCommand,
-      waitUntilFunctionUpdated,
-    } from "@aws-sdk/client-lambda";
-    import { readFileSync } from "node:fs";
-    import { dirnameFromMetaUrl } from "@aws-doc-sdk-examples/lib/utils/util-fs.js";
-    import { waitForFunctionUpdated } from "../waiters/index.js";
-
-    const dirname = dirnameFromMetaUrl(import.meta.url);
-
-    const updateFunctionConfiguration = (funcName) => {
-      const client = new LambdaClient({});
-      const config = readFileSync(`${dirname}../functions/config.json`).toString();
-      const command = new UpdateFunctionConfigurationCommand({
-        ...JSON.parse(config),
-        FunctionName: funcName,
-      });
-      const result = client.send(command);
-      waitForFunctionUpdated({ FunctionName: funcName });
-      return result;
-    };
-
-    export { updateFunctionConfiguration };
+    ・CreateFunction                    関数作成(ZIPまたはS3からコードをアップロードし実行ロール、ランタイム指定)
+    ・GetFunction                       関数コードとメタデータを取得
+    ・GetFunctionConfiguration          関数設定のみ取得（メモリ、タイムアウト等）
+    ・UpdateFunctionCode                関数コードをZIPで更新（S3またはZipFile）
+    ・UpdateFunctionConfiguration       ランタイム、メモリ、タイムアウト等の設定更新
+    ・DeleteFunction                    関数削除
+    ・ListFunctions                     リージョン内の関数一覧を取得
+    ・Invoke                            関数を同期/非同期で呼び出し（ペイロード送信）
+    ・PublishVersion                    現行コードをバージョンとして発行
+    ・CreateAlias                       バージョンへの別名作成（トラフィック分割に使用）
+    ・UpdateAlias                       エイリアスのターゲットバージョンを更新
+    ・DeleteAlias                       エイリアス削除
+    ・ListAliases                       関数のエイリアス一覧取得
+    ・AddPermission                     関数に対する呼び出し許可を追加（Principal指定）
+    ・RemovePermission                  指定した許可の削除
+    ・GetPolicy                         関数のリソースポリシーを取得
+    ・TagResource                       関数にタグを付与
+    ・UntagResource                     関数からタグを削除
+    ・ListVersionsByFunction            関数のバージョン一覧を取得

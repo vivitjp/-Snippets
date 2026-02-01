@@ -6,26 +6,26 @@
 - ENTRY:
   EXPLAIN: 英語略語
   BODY: |
-    API:                                Application Programming Interface
-    SDK:                                Software Development Kit
-    IDE:                                Integrated Development Environment
-    GUI:                                Graphical User Interface
-    CLI:                                Command Line Interface
-    OS:                                 Operating System
-    HTTP:                               HyperText Transfer Protocol
-    HTTPS:                              HyperText Transfer Protocol Secure
-    URL:                                Uniform Resource Locator
-    URI:                                Uniform Resource Identifier
-    IP:                                 Internet Protocol
-    DNS:                                Domain Name System
-    FTP:                                File Transfer Protocol
-    SSH:                                Secure Shell
-    SSL:                                Secure Sockets Layer
-    TLS:                                Transport Layer Security
-    JSON:                               JavaScript Object Notation
-    XML:                                eXtensible Markup Language
-    CSV:                                Comma-Separated Values
-    CRUD:                               Create, Read, Update, Delete
+    API                                 Application Programming Interface
+    SDK                                 Software Development Kit
+    IDE                                 Integrated Development Environment
+    GUI                                 Graphical User Interface
+    CLI                                 Command Line Interface
+    OS                                  Operating System
+    HTTP                                HyperText Transfer Protocol
+    HTTPS                               HyperText Transfer Protocol Secure
+    URL                                 Uniform Resource Locator
+    URI                                 Uniform Resource Identifier
+    IP                                  Internet Protocol
+    DNS                                 Domain Name System
+    FTP                                 File Transfer Protocol
+    SSH                                 Secure Shell
+    SSL                                 Secure Sockets Layer
+    TLS                                 Transport Layer Security
+    JSON                                JavaScript Object Notation
+    XML                                 eXtensible Markup Language
+    CSV                                 Comma-Separated Values
+    CRUD                                Create, Read, Update, Delete
 
 - ENTRY:
   EXPLAIN: 英語単語
@@ -95,19 +95,48 @@
     バンドル                             複数モジュールを1ファイルへ結合する処理
 
 - ENTRY:
-  EXPLAIN: レンダリング
+  EXPLAIN: レンダリング & ホスティング
   BODY: |
-    SSR: Server-Side Rendering          サーバ側でHTMLを生成して返す方式
-    SSG: Static Site Generation         ビルド時に静的HTMLを生成する方式
+    SSR: Server-Side Rendering           サーバ側でHTMLを生成して返す方式
+    SSG: Static Site Generation          ビルド時に静的HTMLを生成する方式
     ISR: Incremental Static Regeneration 段階的に静的ページを再生成する仕組み
-    SP: Single Page Application         単一ページでルーティングを行うアプリ構成
+    SPA: Single Page Application         単一ページでルーティングを行うアプリ構成
+
+    静的ホスティング
+
+      ・AWS サービス: S3 + CloudFront
+      ・レンダリング: SSG, ISR
+      ・目的: ビルド済みHTMLを配信
+      ・長短所: 高速・低コスト
+
+    動的ホスティング    
+
+      ・AWS サービス: EC2, Lambda, etc.
+      ・レンダリング: SSR, CSR
+      ・注意: サーバー処理が必要
+      ・長短所: 柔軟だがコスト高め
 
 - ENTRY:
   EXPLAIN: Atomicデザイン
   BODY: |
-    Atom                                アトム：最小のUI部品
-    Molecules                           モレキュール：アトムを組み合わせた小コンポーネント
-    Organism                            オーガニズム：複数のモレキュールで構成される大きな部品
+    ■ Atom
+
+      ・最小のUI部品
+      ・Headless UIライブラリの最小単位
+      ・例: ボタン、入力欄、ラベルなど
+      ・ステート: 無し
+
+    ■ Molecules
+
+      ・アトムを組み合わせた小コンポーネント
+      ・例: ラベル＋入力欄＋エラーメッセージのセット
+      ・ステート: なし/あり
+
+    ■ Organisms
+
+      ・モレキュールを組み合わせた大コンポーネント
+      ・例: ヘッダー、フッター、カード一覧など
+      ・ステート: あり
 
 - ENTRY:
   EXPLAIN: デザインTool

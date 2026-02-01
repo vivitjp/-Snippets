@@ -3,58 +3,1537 @@
 # Cognito
 #-------------------------------
 - ENTRY:
-  CATEGORY: サービス
+  CATEGORY: Amazon Cognito
 
 - ENTRY:
-  EXPLAIN: |
-    サービス
+  EXPLAIN: 概要
   BODY: |
-    ■ ユーザプール と ID プール
+    ■ 概要
 
-    • ユーザープール
-      • ユーザーの認証と管理を行う
-      • ユーザには JWT 形式の Cognito トークン発行、API へのアクセスに利用
-      • 外部 ID プロバイダでのログインに基づいてトークン発行も可能
-      • ユーザーのサインアップ、サインイン、パスワードのリセットなどを提供
-      • ユーザー属性の管理や多要素認証 (MFA) の設定も可能
-      • 独自のユーザディレクトリを持つ
-      • API
-        • Cognito Identity Provider API と Cognito Auth API の 2 つの API 
+    ・ウェブおよびモバイルアプリケーション向けのユーザー認証、認可、ユーザーデータ同期を提供するサービス
+    ・ユーザープールとIDプールの2つの主要コンポーネントで構成
+    ・ユーザープールはユーザーのサインアップ、サインイン、管理を担当
+    ・IDプールは認証されたユーザーに対してAWSリソースへの一時的なアクセス提供
+    ・外部IDプロバイダ（Facebook、Google、Amazon、SAML、OIDC）との連携も可能
+    ・多要素認証（MFA）やカスタム認証フローのサポート
+    ・ユーザーデータの同期機能により、複数デバイス間でのデータ共有が可能
+    ・セキュリティ強化のための組み込み機能（パスワードポリシー、アカウント回復オプションなど）
+    ・AWS Lambdaとの統合により、カスタムロジックを実行可能
+    ・スケーラブルで高可用性を備えたサービス設計
 
-    • ID プール
-      • 独自認証せず Cognito ユーザプール/外部IDプロバイダでのログインで AWS 一時認証発行
-      • ユーザは AWS の各種サービスの API にアクセス可能
-      • 外部 ID プロバイダ (Facebook, Google, Amazon, X) のユーザー ID と紐付けることも可能
-      • ユーザーのデータを保存するための Cognito Sync と連携
+      ※ SAML: Security Assertion Markup Language
 
-    Cognito Identity                     固有のIDを割り振る
-    Cognito Sync                         固有のデータストレージの提供
-    Cognito Identity Pools               ユーザープールの提供 
-    Cognito User Pools                   ユーザープールの提供
-    Cognito User Pools Identity          ユーザープールの提供
-    Cognito User Pools Identity Provider ユーザープールの提供
+        概要:
+          XMLベースのオープンスタンダードで、異なるドメイン間で認証と認可データを安全に交換するためのプロトコル
+          主にシングルサインオン（SSO）に使用
+        利用例:
+          企業内のIDプロバイダ（IdP）とサービスプロバイダ（SP）間でユーザー認証情報を交換
+      
+      ※ OIDC: OpenID Connect
+
+        概要:
+          OAuth 2.0の上に構築された認証プロトコルで、ユーザーのアイデンティティを確認し、基本的なプロファイル情報を取得するために使用
+        利用例:
+          ウェブアプリやモバイルアプリでのユーザー認証に広く使用
+
+      ※ 多要素認証（MFA: Multi-Factor Authentication）
+
+        概要:
+          ユーザーがシステムにアクセスする際に、2つ以上の異なる認証要素を提供するセキュリティ手法
+          例: パスワード（知識要素）とスマートフォンに送信されたコード（所有要素）
+        利用例:
+          銀行やオンラインサービスでのアカウント保護に広く使用
+
+    ■ 同様の外部サービス
+
+    ・Auth0: サードパーティの認証サービスで、Cognitoと同様にユーザー認証と管理を提供
+    ・Firebase Authentication: Googleの提供する認証サービスで、モバイルおよびウェブアプリ向けに設計
+    ・Okta: エンタープライズ向けのID管理サービスで、シングルサインオンや多要素認証を提供
+
+    ■ 相性の良い AWS サービス
+
+    ・AWS Lambda: Cognitoのトリガー機能を使用して、ユーザー登録や認証フローにカスタムロジックを追加
+    ・Amazon API Gateway: Cognitoと連携して、APIへの認証と認可を管理
+    ・AWS AppSync: Cognitoを使用してGraphQL APIの認証を提供
+    ・Amazon S3: Cognito IDプールを使用して、認証されたユーザーにS3バケットへのアクセスを提供
+    ・AWS IAM: Cognitoと連携して、ユーザーに対する細かいアクセス制御を実現
+    ・AWS CloudWatch: Cognitoのログとメトリクスを監視して、セキュリティとパフォーマンスを分析
+
+    ■ 相性の良い フレームワーク・ライブラリ
+
+    ・AWS Amplify: Cognitoとシームレスに統合され、認証機能を簡単に実装可能
+    ・React: Amplifyと組み合わせて、Reactアプリケーションに認証機能を追加
+    ・Vue.js: Amplifyを使用して、VueアプリケーションにCognito認証を組み込む
+    ・Angular: Amplifyと連携して、Angularアプリケーションに認証機能を提供
+    ・Serverless Framework: Cognitoを使用して、サーバーレスアプリケーションの認証を管理
 
 - ENTRY:
-  EXPLAIN: |
-    Cognito Identity
+  EXPLAIN: ユーザプール
   BODY: |
-    ■ 一意のアイデンティティを与えるサービス
-    • 匿名ユーザーとして ID を発行する
-    • パブリックなログインプロバイダのユーザー ID と紐付ける
-      • Facebook, Google, Amazon, X
-    • 独自のログインプロバイダのユーザー ID と紐付ける
+    ■ 概要
+
+    ・ユーザーの認証と管理
+    ・ユーザにはJWT形式のCognitoトークン発行、APIへのアクセスに利用
+    ・外部IDプロバイダでのログインに基づいてトークン発行も可能
+    ・ユーザーのサインアップ、サインイン、パスワードのリセットなどを提供
+    ・ユーザー属性の管理や多要素認証(MFA)の設定も可能
+    ・独自のユーザディレクトリを持つ
+
+    ■ ユースケース
+
+    ・ウェブ/モバイルアプリのユーザー認証
+    ・ソーシャルログイン(Facebook, Google, Amazon, X)
+    ・SAML/OIDCベースの企業認証連携
+
+
+    ■ API
+
+      Cognito Identity Provider API
+      Cognito Auth API
+
+    ■ 使用サービス
+
+      Cognito User Pools                     ユーザープールの提供
+      Cognito User Pools Identity            ユーザープールのID管理
+      Cognito User Pools Identity Provider   外部IDプロバイダとの連携
 
 - ENTRY:
-  EXPLAIN: |
-    Cognito Sync
+  EXPLAIN: ID プール
   BODY: |
-    ■ 固有のデータストレージ を提供するサービス
-    • ユーザーデータを保存する場所を提供
-    • データはローカルだけではなく、クラウドと同期して保存される
-    • データは、アプリケーションのユーザーごとに分離される
+    ■ 概要
+
+    ・独自認証せずCognitoユーザープール/外部IDプロバイダでのログインでAWS一時認証発行
+    ・ユーザはAWSの各種サービスのAPIにアクセス可能
+    ・外部IDプロバイダ(Facebook, Google, Amazon, X)のユーザーIDと紐付けることも可能
+    ・ユーザーのデータを保存するためのCognito Syncと連携
+
+    ■ ユースケース
+
+    ・AWSリソースへの一時アクセス提供
+    ・外部IDプロバイダ連携による認証
+    ・複数デバイス間でのユーザーデータ同期
+
+    ■ API
+
+      Cognito Identity API
+
+    ■ データ同期 API
+
+      Cognito Sync API
+
+    ■ 使用サービス
+
+      Cognito Identity                       固有のIDを割り振る
+      Cognito Sync                           固有のデータストレージの提供
 
 - ENTRY:
-  EXPLAIN: |
-    xxxxxx
+  EXPLAIN: API 一覧
   BODY: |
-    ■ xxxxx
+    ■ Cognito Identity Provider API (ユーザープール関連)
+
+      AdminCreateUser                        管理者によるユーザー作成
+      AdminSetUserPassword                   管理者によるパスワード設定
+      SignUp                                 ユーザー登録
+      ConfirmSignUp                          登録確認
+      InitiateAuth                           認証開始
+      RespondToAuthChallenge                 認証チャレンジ応答
+      AdminInitiateAuth                      管理者による認証開始
+      ForgotPassword                         パスワードリセット開始
+      ConfirmForgotPassword                  パスワードリセット確認
+      ChangePassword                         パスワード変更
+      GetUser                                現在のユーザー情報取得
+      UpdateUserAttributes                   ユーザー属性更新
+      DeleteUser                             ユーザー削除
+      ListUsers                              ユーザー一覧取得
+
+    ■ Cognito Identity API (IDプール関連)
+
+      GetId                                  アイデンティティID取得
+      GetCredentialsForIdentity              一時的なAWS認証情報取得
+      GetOpenIdToken                         OpenIDトークン取得
+      GetOpenIdTokenForDeveloperIdentity     開発者用OpenIDトークン取得
+      UnlinkIdentity                         アイデンティティのリンク解除
+      LinkIdentities                         アイデンティティのリンク
+
+    ■ Cognito Sync API (データ同期)
+
+      ListRecords                            レコード一覧取得
+      UpdateRecords                          レコード更新
+      SubscribeToDataset                     データセット購読
+      UnsubscribeFromDataset                 データセット購読解除
+
+    ■ バージョンによる違い
+
+    ・AWS SDK v2 vs v3
+      ・v2: コールバックベース、大きなバンドルサイズ
+      ・v3: Promiseベース、ツリーシェイキング可能、小さなバンドルサイズ
+      ・v3ではクライアントインスタンス化が必須、コマンドパターンを使用
+
+    ・Cognito Gen1 vs Gen2 (Amplify)
+      - Gen1: 従来のCognito User Pools + Identity Pools
+      - Gen2: Amplify Authの新しい実装、よりシンプルなAPI、自動設定
+      - Gen2ではGraphQL APIとの統合が強化
+
+- ENTRY:
+  EXPLAIN: SDK 概要
+  BODY: |
+    ■ AWS SDK for JavaScript (v3)
+
+    @aws-sdk/client-cognito-identity-provider ユーザープール操作用
+    @aws-sdk/client-cognito-identity          IDプール操作用
+    @aws-sdk/client-cognito-sync              データ同期用
+
+    ・主なクラス: CognitoIdentityProviderClient, CognitoIdentityClient, CognitoSyncClient
+
+    ■ AWS Amplify SDK
+
+    aws-amplify/auth                          認証機能を提供（Cognitoユーザープールと統合）
+
+    ・主な関数: signUp, signIn, signOut, getCurrentUser, fetchAuthSession
+    ・自動的にCognitoトークンを管理し、IDプールとの連携も可能
+
+    ■ 他の言語SDK
+
+    ・Python: boto3 (cognito-idp, cognito-identity, cognito-sync)
+    ・Java: AWS SDK for Java
+    ・.NET: AWS SDK for .NET
+    ・Go: AWS SDK for Go
+
+#-------------------------------
+# @aws-sdk/client-cognito-identity-provider (ユーザープール関連)
+#-------------------------------
+- ENTRY:
+  CATEGORY: |
+    @aws-sdk/client-cognito-identity-provider
+
+- ENTRY:
+  EXPLAIN: 概要 & メソッド一覧
+  BODY: |
+    ■ 概要
+
+    ・AWS SDK for JavaScript v3のCognito Identity Providerクライアント
+    ・Cognitoユーザープールのユーザー管理、認証、認可を行うためのAPIを提供
+    ・Promiseベースの非同期処理、TypeScriptサポート
+    ・主にサーバーサイドやNode.js環境での使用に適する
+
+    ■ メソッド一覧と簡潔な用途
+
+    SignUpCommand                       新規ユーザー登録
+    ConfirmSignUpCommand                ユーザー登録の確認
+    InitiateAuthCommand                 認証開始（サインイン）
+    RespondToAuthChallengeCommand       認証チャレンジへの応答（MFAなど）
+    ForgotPasswordCommand               パスワードリセット開始
+    ConfirmForgotPasswordCommand        パスワードリセット確認
+    ChangePasswordCommand               パスワード変更
+    GetUserCommand                      現在のユーザー情報取得
+    UpdateUserAttributesCommand         ユーザー属性更新
+    DeleteUserCommand                   ユーザー削除
+    AdminCreateUserCommand              管理者によるユーザー作成
+    AdminSetUserPasswordCommand         管理者によるパスワード設定
+    ListUsersCommand                    ユーザー一覧取得
+
+- ENTRY:
+  EXPLAIN: ユーザ登録から削除までのフロー
+  BODY: |
+    ■ 概要
+
+    ・フロントとバックエンドの責務を明確化
+    ・主要フロー: サインアップ → 確認 → サインイン（トークン取得）→ 属性更新/パスワード → 削除
+
+    ■ フローと API（役割）
+
+    ・サインアップ（フロント）: SignUpCommand
+      ・役割: ユーザー情報とパスワードを送信、確認コードを受信
+      ・備考: `ClientId` を使用（`Client secret` はフロントに置かない）
+
+    ・登録確認（フロント）: ConfirmSignUpCommand
+      ・役割: 確認コード検証によるユーザー確定
+
+    ・サインイン（フロント）: InitiateAuthCommand (USER_PASSWORD_AUTH 等)
+      ・役割: Access/ID/Refresh トークンを受領
+
+    ・MFA／カスタムチャレンジ（フロント→サーバ）: RespondToAuthChallengeCommand
+      ・役割: チャレンジ応答および追加認証処理
+
+    ・ユーザー情報取得（フロントまたはバックエンド）: GetUserCommand
+      ・役割: AccessToken を用いた属性取得
+
+    ・属性更新（フロント）: UpdateUserAttributesCommand
+      ・役割: メールや電話番号等の変更と検証トリガー
+
+    ・パスワードリセット（フロント）: ForgotPasswordCommand → ConfirmForgotPasswordCommand
+      ・役割: 確認コードによるパスワード再設定
+
+    ・認証済みのパスワード変更（フロント）: ChangePasswordCommand
+      ・役割: AccessToken による既存パスワードの置換
+
+    ・削除（本人）: DeleteUserCommand
+      ・役割: 認証済みユーザーによる自己削除（AccessToken 必須）
+
+    ・管理操作（バックエンド／管理者）: AdminCreateUserCommand / AdminSetUserPasswordCommand / AdminDeleteUserCommand / ListUsersCommand
+      ・役割: バッチ作成・管理者介入・ユーザー管理画面の裏側処理
+
+    ■ ClientId
+
+    ・ClientId とは: Cognito ユーザープールのアプリクライアントごとに発行される一意の識別子
+    ・インフラ／開発チーム（デプロイ担当）: 
+      ・App client を作成/参照 `ClientId` を確定/取得
+      ・フロント実装担当に共有
+    ・取得方法:
+      ・コンソール: Cognito → User Pools → 対象プール → App clients → App client ID をコピー
+      ・CLI: `aws cognito-idp list-user-pool-clients --user-pool-id <USER_POOL_ID>` や、
+             `aws cognito-idp describe-user-pool-client --user-pool-id <USER_POOL_ID> --client-id <CLIENT_ID>`
+      ・IaC: CloudFormation/Terraform/Amplify の出力（`Outputs` や `aws_cognito_user_pool_client.client_id`）を参照
+    ・用途先:
+      ・フロント: `SignUp` / `ConfirmSignUp` / `InitiateAuth`（ユーザー名・パスワード送信や確認コード検証）に `ClientId` を指定
+      ・サーバー: 管理API（AdminCreateUser 等）や、機密クライアントフローで `Client secret` を伴う場合
+        サーバー側で `ClientId` と `Client secret` を使用
+    ・Client secret の扱い:
+      ・`Client secret` を持つ App client は機密情報のためサーバー専用
+      ・ブラウザ・モバイルへは渡さない
+      ・フロント用途は `Client secret` 無しの App client を作成して利用
+
+    ■ 実運用ポイント
+
+    ・`ClientId` と `Client secret` の扱い: フロントでは `ClientId` のみ使用、`Client secret` はサーバー側でのみ扱う
+    ・トークン保管: セキュアストレージ or HttpOnly cookie 推奨（XSS 対策）
+    ・認可チェック: 重要操作はバックエンドでトークン検証と権限制御を実施
+    ・監査と通知: 作成・削除・パスワード変更は監査ログを残す
+    ・レート制御とエラーハンドリング: 確認コードやサインイン試行に対するレート制御を実装
+
+- ENTRY:
+  EXPLAIN: SignUpCommand (新規ユーザー登録)
+  BODY: |
+    ■ 概要
+
+    ・Cognitoユーザープールに新しいユーザーを登録するためのAPI
+    ・ユーザー名、パスワード、ユーザー属性（メールアドレス、電話番号など）を指定可能
+    ・登録後、確認コードを送信してユーザーの確認を行うことが一般的
+
+    ■ サンプル
+
+    import {
+      CognitoIdentityProviderClient,
+      SignUpCommand
+    } from '@aws-sdk/client-cognito-identity-provider';
+
+    const client = new CognitoIdentityProviderClient({ region: 'us-east-1' });
+
+    async function signUp() {
+      const command = new SignUpCommand({
+        ClientId: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',   // アプリ ID
+        Username: 'user@example.com',
+        Password: 'TempPass123!',
+        UserAttributes: [{                 // ユーザー属性
+          Name: 'email',                   // 確認コード送信先属性、選択肢: email, phone_number など
+          Value: 'user@example.com'        // 属性値
+        }],
+      });
+      const response = await client.send(command);
+      return response;
+    }
+
+    ■ 戻り値
+
+      response = {
+        UserConfirmed: false,
+        UserSub: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',  // ユーザーID
+        CodeDeliveryDetails: {
+          AttributeName: 'email',          // 確認コード送信先属性
+          DeliveryMedium: 'EMAIL',         // 送信方法
+          Destination: 'u***@e****.com'    // マスクされた送信先
+        }
+      };
+
+    ■ 注意点 / よくある例外
+
+    ・UsernameExistsException: 既に存在するユーザー名
+    ・InvalidPasswordException: パスワードポリシー違反
+    ・InvalidParameterException: 無効なパラメータ
+    ・LimitExceededException: リクエスト制限超過
+    ・ClientIdを正しく指定すること
+
+    ■ 実運用のヒント
+
+    ・確認コードの再送やレート制限のハンドリングを実装する
+    ・強力なパスワードポリシーを設定し、セキュリティを強化する
+
+- ENTRY:
+  EXPLAIN: ConfirmSignUpCommand (ユーザー登録の確認)
+  BODY: |
+    ■ 概要
+
+    ・ユーザープールでの登録確認（確認コードを検証してユーザーを確定）
+    ・典型的なフロー：SignUp → ユーザーへ確認コード送信 → ConfirmSignUp で確認
+
+    ■ サンプル (TypeScript, AWS SDK v3)
+
+    import {
+      CognitoIdentityProviderClient,
+      ConfirmSignUpCommand
+    } from '@aws-sdk/client-cognito-identity-provider';
+
+    const client = new CognitoIdentityProviderClient({ region: 'us-east-1' });
+
+    async function confirmSignUp(username: string, confirmationCode: string) {
+      const command = new ConfirmSignUpCommand({
+        ClientId: 'your-user-pool-client-id',
+        Username: username,
+        ConfirmationCode: confirmationCode,
+      });
+      const response = await client.send(command);
+      return response;
+    }
+
+    ■ 引数
+
+    ・ClientId: ユーザープールクライアントID
+    ・Username: 確認するユーザー名
+    ・ConfirmationCode: ユーザーに送信された確認コード
+
+    ■ 戻り値
+
+    ・サクセス時は空のオブジェクトまたは HTTP 200 系のレスポンス（SDK により $metadata を含む場合あり）
+
+    ■ 注意点 / よくある例外
+
+    ・CodeMismatchException: 確認コードが不一致
+    ・ExpiredCodeException: 確認コードの有効期限切れ
+    ・NotAuthorizedException: 既に確認済み、または無効な操作
+    ・UserNotFoundException: 指定したユーザーが存在しない
+
+    ・ClientId と ConfirmationCode を正しく指定すること
+    ・自動確認（管理者側での強制確認）や再送処理を考慮する
+
+    ■ 実運用のヒント
+
+    ・失敗時はエラーハンドリングで再送やユーザー向けメッセージを用意
+    ・セキュリティ観点から確認コードの誤試行回数制限を考慮
+
+- ENTRY:
+  EXPLAIN: InitiateAuthCommand (認証開始)
+  BODY: |
+    ■ 概要
+
+    ・Cognitoユーザープールでのユーザー認証（サインイン）を開始するためのAPI
+    ・ユーザー名とパスワードなどの認証パラメータを指定し、認証フローを開始
+    ・多要素認証（MFA）やカスタム認証フローにも対応
+
+    ■ サンプル
+
+    import {
+      CognitoIdentityProviderClient,
+      InitiateAuthCommand
+    } from '@aws-sdk/client-cognito-identity-provider';
+
+    const client = new CognitoIdentityProviderClient({ region: 'us-east-1' });
+
+    async function signIn() {
+      const command = new InitiateAuthCommand({
+        ClientId: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+        AuthFlow: 'USER_PASSWORD_AUTH',        // 選択肢: USER_PASSWORD_AUTH, CUSTOM_AUTH, REFRESH_TOKEN_AUTH など
+        AuthParameters: {
+          USERNAME: 'user@example.com',
+          PASSWORD: 'TempPass123!',
+        },
+      });
+      const response = await client.send(command);
+      return response;
+    }
+
+    ■ 引数
+
+    ・ClientId: ユーザープールクライアントID
+    ・AuthFlow: 認証フローの種類
+        USER_PASSWORD_AUTH: ユーザー名とパスワードによる認証
+        CUSTOM_AUTH: カスタム認証フロー（Lambdaトリガーを使用）
+        REFRESH_TOKEN_AUTH: リフレッシュトークンを使用した認証
+    ・AuthParameters: 認証に必要なパラメータ（USERNAME, PASSWORD など）
+
+    ■ 戻り値
+
+      response = {
+        AuthenticationResult: {
+          AccessToken: 'eyJraWQiOiJ...',    // アクセストークン (JWT) 🔴
+          ExpiresIn: 3600,                  // 有効期限 (秒)
+          IdToken: 'eyJraWQiOiJ...',        // IDトークン (JWT) 🔴
+          RefreshToken: 'eyJjdHkiOiJK...',  // リフレッシュトークン 🔴
+          TokenType: 'Bearer'               // トークンタイプ(標準 Bearer)
+        },
+        ChallengeParameters: {}
+      };
+
+    ■ 注意点 / よくある例外
+
+    ・NotAuthorizedException: 認証失敗、無効な資格情報
+    ・UserNotFoundException: 指定したユーザーが存在しない
+    ・UserNotConfirmedException: ユーザー未確認（ConfirmSignUp が必要）
+    ・PasswordResetRequiredException: パスワードリセットが必要
+    ・InvalidParameterException: AuthParameters 等のパラメータ不正
+    ・TooManyRequestsException: リクエスト過多による制限
+    ・Challenge required（例: SMS_MFA/SOFTWARE_TOKEN_MFA）: チャレンジ処理が必要
+
+    ■ 実運用のヒント
+
+    ・`ChallengeParameters` を確認して MFA やカスタムチャレンジの処理を実装する
+    ・`AuthFlow` を用途に応じて使い分ける（例: `USER_PASSWORD_AUTH`, `REFRESH_TOKEN_AUTH`）
+    ・認証失敗時はセキュリティに配慮したエラーメッセージを返す
+    ・リトライ制御とレート制限（CloudWatch での監視・アラート設定）を実装する
+    ・トークンは安全に保管し、`RefreshToken` の取り扱いに注意する
+    ・多要素認証(MFA)やカスタム認証フローに対応する UX/再送ポリシーを用意する
+
+- ENTRY:
+  EXPLAIN: RespondToAuthChallengeCommand (認証チャレンジへの応答)
+  BODY: |
+    ■ 概要
+
+    ・多要素認証（MFA）やカスタム認証フローで発生する認証チャレンジに応答するためのAPI
+    ・InitiateAuthCommandで開始された認証フローの続きとして使用
+    ・チャレンジ名と必要な応答パラメータを指定して認証を完了
+
+    ■ サンプル
+
+    import {
+      CognitoIdentityProviderClient,
+      RespondToAuthChallengeCommand
+    } from '@aws-sdk/client-cognito-identity-provider';
+
+    const client = new CognitoIdentityProviderClient({ region: 'us-east-1' });
+
+    async function respondToChallenge(session: string, challengeName: string, challengeResponses: Record<string, string>) {
+      const command = new RespondToAuthChallengeCommand({
+        ClientId: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+        ChallengeName: challengeName,           // 例: 'SMS_MFA', 'SOFTWARE_TOKEN_MFA'
+        Session: session,                       // InitiateAuthからのSession
+        ChallengeResponses: challengeResponses, // 例: { 'SMS_MFA_CODE': '123456' }
+      });
+      const response = await client.send(command);
+      return response;
+    }
+
+    ※ 使用側 例: MFAコード入力時
+
+    const response = await respondToChallenge('session-string', 'SMS_MFA', { 'SMS_MFA_CODE': '123456' });
+
+    ■ 引数
+
+    ・ClientId: ユーザープールクライアントID
+    ・ChallengeName: チャレンジの種類
+      例: SMS_MFA, SOFTWARE_TOKEN_MFA, NEW_PASSWORD_REQUIRED, CUSTOM_CHALLENGE など
+    ・Session: InitiateAuth で返されたセッション文字列
+    ・ChallengeResponses: チャレンジに応答するためのパラメータ（例: MFAコードなど）
+
+    ■ 戻り値
+
+      response = {
+        AuthenticationResult: {
+          AccessToken: 'eyJraWQiOiJ...',    // アクセストークン (JWT)
+          ExpiresIn: 3600,                  // 有効期限 (秒)        
+          IdToken: 'eyJraWQiOiJ...',        // IDトークン (JWT)
+          RefreshToken: 'eyJjdHkiOiJK...',  // リフレッシュトークン
+          TokenType: 'Bearer'               // トークンタイプ(標準 Bearer)
+        },
+        ChallengeParameters: {}
+      };
+
+    ■ 注意点 / よくある例外
+
+    ・NotAuthorizedException: 資格情報不正や認証失敗
+    ・CodeMismatchException: MFAコードや確認コードが不一致
+    ・ExpiredCodeException: コードの有効期限切れ
+    ・InvalidParameterException: パラメータ不正（ChallengeResponses 等）
+    ・SoftwareTokenMFANotFoundException: ソフトウェアトークンが未登録
+    ・MFAMethodNotFoundException: 要求されたMFA方法が存在しない
+    ・LimitExceededException / TooManyRequestsException: レート制限
+    ・InvalidSessionException: セッションが無効または期限切れ
+    ・UserNotFoundException: 指定ユーザーが存在しない
+
+    ■ 実運用のヒント
+
+    ・ChallengeName（SMS_MFA, SOFTWARE_TOKEN_MFA, NEW_PASSWORD_REQUIRED, CUSTOM_CHALLENGE 等）に応じて処理を分岐する
+    ・RespondToAuthChallenge には InitiateAuth で返された Session を必ず渡す
+    ・MFAコードの検証UIを用意し、コード再送や試行制限を実装する
+    ・カスタムチャレンジの場合はサーバ側の状態管理とログ記録を整備する
+    ・エラーは具体的情報を漏らさない（セキュリティに配慮したメッセージ）
+    ・CloudWatch メトリクスで失敗率やレート超過を監視しアラート化する
+    ・リトライは指数バックオフと上限を設ける
+    ・成功時はトークンの安全な保管と期限管理を行う
+
+- ENTRY:
+  EXPLAIN: ForgotPasswordCommand (パスワードリセット開始)
+  BODY: |
+    ■ 概要
+
+    ・ユーザーのパスワードリセットを開始する（確認コードをユーザーへ送信）
+    ・典型的なフロー：ForgotPassword → ユーザーへ確認コード送信 → ConfirmForgotPassword
+
+    ■ サンプル (TypeScript, AWS SDK v3)
+
+    import {
+      CognitoIdentityProviderClient,
+      ForgotPasswordCommand
+    } from '@aws-sdk/client-cognito-identity-provider';
+
+    const client = new CognitoIdentityProviderClient({ region: 'us-east-1' });
+
+    async function forgotPassword(username: string) {
+      const command = new ForgotPasswordCommand({
+        ClientId: 'your-user-pool-client-id',
+        Username: username,
+      });
+      const response = await client.send(command);
+      return response;
+    }
+
+    ■ 引数
+
+    ・ClientId: ユーザープールクライアントID
+    ・Username: パスワードリセットを開始するユーザー名
+
+    ■ 戻り値
+
+    ・CodeDeliveryDetails を返す（送信先チャネルやマスクされた送信先を含む）
+
+    ■ 注意点 / 例外
+
+    ・UserNotFoundException: 指定したユーザーが存在しない
+    ・InvalidParameterException: パラメータ不正（Username 等）
+    ・LimitExceededException / TooManyRequestsException: リクエスト過多による制限
+    ・NotAuthorizedException: 許可されていない操作（アカウントロックや既にリセットが進行中など）
+    ・CodeDeliveryFailureException: 確認コード送信失敗（SMS/Email 送信に失敗）
+    ・InternalErrorException: サービス側の一時的エラー
+
+    ■ 実運用のヒント
+
+    ・確認コード送信の再試行とレート制御を実装する（指数バックオフ推奨）
+    ・送信チャネル（SMS/EMAIL）の到達性・コスト・プロバイダ制約を考慮する
+    ・ユーザー存在を示唆しない汎化メッセージで情報漏洩を防ぐ
+    ・`CodeDeliveryDetails` を利用し、送信チャネルに応じた UI 表示を行う
+    ・CloudWatch で送信失敗率やスロットリングを監視しアラートを設定する
+    ・SMS プロバイダ障害時のフォールバック設計（メール送信など）を検討する
+    ・UI に再送ボタンと残り試行回数表示を用意する
+
+- ENTRY:
+  EXPLAIN: ConfirmForgotPasswordCommand (パスワードリセット確認)
+  BODY: |
+    ■ 概要
+
+    ・ユーザーが受け取った確認コードを検証し、新しいパスワードを設定する
+    ・典型的なフロー：ForgotPassword → ユーザー受信の確認コードで ConfirmForgotPassword を実行
+
+    ■ サンプル (TypeScript, AWS SDK v3)
+
+    import {
+      CognitoIdentityProviderClient,
+      ConfirmForgotPasswordCommand
+    } from '@aws-sdk/client-cognito-identity-provider';
+
+    const client = new CognitoIdentityProviderClient({ region: 'us-east-1' });
+
+    async function confirmForgotPassword(username: string, confirmationCode: string, newPassword: string) {
+      const command = new ConfirmForgotPasswordCommand({
+        ClientId: 'your-user-pool-client-id',
+        Username: username,
+        ConfirmationCode: confirmationCode,
+        Password: newPassword,
+      });
+      const response = await client.send(command);
+      return response;
+    }
+
+    ■ 引数
+
+    ・ClientId: ユーザープールクライアントID
+    ・Username: パスワードをリセットするユーザー名
+
+    ■ 戻り値
+
+    ・サクセス時は空のオブジェクトまたは HTTP 200 系のレスポンス
+
+    ■ 注意点 / 例外
+
+    ・CodeMismatchException: 確認コードが不一致
+    ・ExpiredCodeException: 確認コードの有効期限切れ
+    ・NotAuthorizedException: 無効な操作（例：コード未送信）
+    ・UserNotFoundException: 指定ユーザーが存在しない
+
+    ■ 実運用のヒント
+
+    ・パスワードポリシー（複雑さ、長さ）をバリデートしてユーザーにフィードバックする
+    ・確認コードの試行回数上限と再送ポリシーを用意する
+
+- ENTRY:
+  EXPLAIN: ChangePasswordCommand (パスワード変更)
+  BODY: |
+    ■ 概要
+
+    ・既に認証されたユーザーが現在のパスワードを新しいパスワードへ変更するためのAPI
+    ・AccessToken（認証済みユーザー）を使用して実行する
+
+    ■ サンプル (TypeScript, AWS SDK v3)
+
+    import {
+      CognitoIdentityProviderClient,
+      ChangePasswordCommand
+    } from '@aws-sdk/client-cognito-identity-provider';
+
+    const client = new CognitoIdentityProviderClient({ region: 'us-east-1' });
+
+    async function changePassword(accessToken: string, previousPassword: string, proposedPassword: string) {
+      const command = new ChangePasswordCommand({
+        AccessToken: accessToken,
+        PreviousPassword: previousPassword,
+        ProposedPassword: proposedPassword,
+      });
+      const response = await client.send(command);
+      return response;
+    }
+
+    ■ 引数
+
+    ・AccessToken: 認証済みユーザーのアクセストークン
+    ・PreviousPassword: 現在のパスワード
+    ・ProposedPassword: 新しいパスワード
+
+    ■ 戻り値
+
+    ・サクセス時は空のオブジェクトまたは HTTP 200 系のレスポンス
+
+    ■ 注意点 / 例外
+
+    ・NotAuthorizedException: 認証エラー（トークン無効など）
+    ・InvalidPasswordException: パスワードがポリシーに違反
+    ・LimitExceededException: リクエスト回数制限超過
+
+    ■ 実運用のヒント
+
+    ・パスワード強度ルールをクライアント側でも提示し、ユーザーが満たしやすくする
+    ・パスワード変更成功時はセッション管理（再ログインやトークン無効化）を検討する
+
+- ENTRY:
+  EXPLAIN: GetUserCommand (現在のユーザー情報取得)
+  BODY: |
+    ■ 概要
+
+    ・認証済みユーザーの属性およびメタ情報を取得するAPI
+    ・`AccessToken` を使用して呼び出す（クライアントサイド／サーバーサイド共通）
+
+    ■ サンプル (TypeScript, AWS SDK v3)
+
+    import {
+      CognitoIdentityProviderClient,
+      GetUserCommand
+    } from '@aws-sdk/client-cognito-identity-provider';
+
+    const client = new CognitoIdentityProviderClient({ region: 'us-east-1' });
+
+    async function getUser(accessToken: string) {
+      const command = new GetUserCommand({
+        AccessToken: accessToken,
+      });
+      const response = await client.send(command);
+      return response;
+    }
+
+    ■ 引数
+
+    ・AccessToken: 認証済みユーザーのアクセストークン
+
+    ■ 戻り値
+
+    ・UserAttributes: [{ Name: 'email'|'phone_number'|..., Value: '...' }, ...]
+    ・Username 等の基本情報を含む
+
+    ■ 注意点 / 例外
+
+    ・NotAuthorizedException: トークン無効または期限切れ
+    ・UserNotFoundException: 対象ユーザーが存在しない
+    ・InvalidParameterException: パラメータ不正
+
+    ■ 実運用のヒント
+
+    ・AccessToken の有効期限を確認してリフレッシュ処理を組み込む
+    ・取得する属性は最小限に限定して通信量と漏洩リスクを低減する
+    ・頻繁な呼び出しはキャッシュ（短時間）で負荷を下げる
+
+- ENTRY:
+  EXPLAIN: UpdateUserAttributesCommand (ユーザー属性更新)
+  BODY: |
+    ■ 概要
+
+    ・認証済みユーザーの属性（email, phone_number など）を更新するAPI
+    ・`AccessToken` を使用して実行する（属性変更により検証コード送信が発生する場合あり）
+
+    ■ サンプル (TypeScript, AWS SDK v3)
+
+    import {
+      CognitoIdentityProviderClient,
+      UpdateUserAttributesCommand
+    } from '@aws-sdk/client-cognito-identity-provider';
+
+    const client = new CognitoIdentityProviderClient({ region: 'us-east-1' });
+
+    async function updateUserAttributes(accessToken: string, attributes: { Name: string; Value: string }[]) {
+      const command = new UpdateUserAttributesCommand({
+        AccessToken: accessToken,
+        UserAttributes: attributes,
+      });
+      const response = await client.send(command);
+      return response;
+    }
+
+    ■ 引数
+
+    ・AccessToken: 認証済みユーザーのアクセストークン
+    ・UserAttributes: 更新する属性の配列 [{ Name: 'email'|'phone_number'|..., Value: '...' }, ...]
+      例: [{ Name: 'email', Value: 'user@example.com' }]
+
+    ■ 戻り値
+
+    ・変更成功時は空のオブジェクトまたは HTTP 200 系のレスポンス
+    ・属性変更によっては `CodeDeliveryDetails` が返り検証フロー発生
+
+    ■ 注意点 / 例外
+
+    ・NotAuthorizedException: トークン無効または権限不足
+    ・InvalidParameterException: 属性名や値が不正
+    ・CodeDeliveryFailureException: 検証コード送信失敗
+
+    ■ 実運用のヒント
+
+    ・属性変更に伴う検証フロー（メール/SMS）のUXを設計する
+    ・重要な変更は監査ログに記録し通知を検討する
+    ・クライアント側で属性検証（フォーマット等）を行いAPIエラーを減らす
+
+- ENTRY:
+  EXPLAIN: DeleteUserCommand (ユーザー削除)
+  BODY: |
+    ■ 概要
+
+    ・認証済みユーザー自身のアカウント削除
+    ・管理者によるユーザー削除は `AdminDeleteUserCommand` を使用
+
+    ■ サンプル (TypeScript, AWS SDK v3)
+
+    import {
+      CognitoIdentityProviderClient,
+      DeleteUserCommand
+    } from '@aws-sdk/client-cognito-identity-provider';
+
+    const client = new CognitoIdentityProviderClient({ region: 'us-east-1' });
+
+    async function deleteUser(accessToken: string) {
+      const command = new DeleteUserCommand({ AccessToken: accessToken });
+      return await client.send(command);
+    }
+    ■ 引数
+
+    ・AccessToken: 認証済みユーザーのアクセストークン（必須）
+
+    ■ 戻り値
+
+    ・成功時は空のオブジェクトまたは HTTP 200 系のレスポンス（SDK により `$metadata` を含む場合あり）
+    ■ 注意点 / 例外
+
+    ・NotAuthorizedException: トークン不正または権限不足
+    ・UserNotFoundException: 対象ユーザーが存在しない
+    ・InvalidParameterException: パラメータ不正
+
+    ■ 実運用のヒント
+
+    ・削除前に確認ダイアログやソフトデリート運用を検討
+    ・監査ログで削除イベントを記録
+
+- ENTRY:
+  EXPLAIN: AdminCreateUserCommand (管理者によるユーザー作成)
+  BODY: |
+    ■ 概要
+
+    ・管理者権限でユーザープールにユーザーを作成
+    ・一時パスワード発行やメール/SMS 招待の送信が可能
+
+    ■ サンプル (TypeScript, AWS SDK v3)
+
+    import {
+      CognitoIdentityProviderClient,
+      AdminCreateUserCommand
+    } from '@aws-sdk/client-cognito-identity-provider';
+
+    const client = new CognitoIdentityProviderClient({ region: 'us-east-1' });
+
+    async function adminCreateUser(userPoolId: string, username: string, email: string) {
+      const command = new AdminCreateUserCommand({
+        UserPoolId: userPoolId,
+        Username: username,
+        TemporaryPassword: 'TempPass123!',
+        UserAttributes: [{ Name: 'email', Value: email }]
+      });
+      return await client.send(command);
+    }
+
+    ■ 引数
+
+    ・UserPoolId: ユーザープールの ID（必須）
+    ・Username: 作成するユーザー名（必須）
+    ・TemporaryPassword: 一時パスワード（任意）
+    ・UserAttributes: ユーザー属性の配列（例: [{ Name: 'email', Value: '...' }]）（任意）
+
+    ■ 戻り値
+
+    ・User: 生成されたユーザー情報（`Username` 等）
+    ・UserConfirmed: 作成時に自動確認された場合は `true`
+    ・CodeDeliveryDetails: 招待/検証コード送信情報（送信された場合）
+
+    ■ 注意点 / 例外
+
+    ・UsernameExistsException: 同一ユーザー名の存在
+    ・InvalidParameterException: パラメータ不正
+    ・LimitExceededException: リクエスト制限超過
+
+    ■ 実運用のヒント
+
+    ・一時パスワードはユーザー初回ログインで変更させる
+    ・招待メールの文面と再送制御を設計
+
+- ENTRY:
+  EXPLAIN: AdminSetUserPasswordCommand (管理者によるユーザーパスワード設定)
+  BODY: |
+    ■ 概要
+
+    ・管理者がユーザーのパスワードを強制的に設定またはリセット
+    ・`Permanent` フラグで恒久的設定と一時設定を切り替え可能
+
+    ■ サンプル (TypeScript, AWS SDK v3)
+
+    import {
+      CognitoIdentityProviderClient,
+      AdminSetUserPasswordCommand
+    } from '@aws-sdk/client-cognito-identity-provider';
+
+    const client = new CognitoIdentityProviderClient({ region: 'us-east-1' });
+
+    async function adminSetUserPassword(userPoolId: string, username: string, password: string, permanent = false) {
+      const command = new AdminSetUserPasswordCommand({
+        UserPoolId: userPoolId,
+        Username: username,
+        Password: password,
+        Permanent: permanent
+      });
+      return await client.send(command);
+    }
+
+    ■ 引数
+
+    ・UserPoolId: ユーザープールの ID（必須）
+    ・Username: 対象ユーザー名（必須）
+    ・Password: 設定するパスワード（必須）
+    ・Permanent: 恒久的に設定するか（`true`/`false`、任意）
+
+    ■ 戻り値
+
+    ・成功時は空のオブジェクトまたは HTTP 200 系のレスポンス（SDK により `$metadata` を含む場合あり）
+
+    ■ 注意点 / 例外
+
+    ・UserNotFoundException: 指定ユーザーが存在しない
+    ・InvalidParameterException: パラメータ不正
+    ・NotAuthorizedException: 権限不足
+
+    ■ 実運用のヒント
+
+    ・パスワードポリシーを遵守して設定
+    ・パスワード変更通知や監査ログを実装
+
+- ENTRY:
+  EXPLAIN: ListUsersCommand (ユーザー一覧取得)
+  BODY: |
+    ■ 概要
+
+    ・ユーザープール内のユーザー一覧取得（フィルタやページネーション対応）
+
+    ■ サンプル (TypeScript, AWS SDK v3)
+
+    import {
+      CognitoIdentityProviderClient,
+      ListUsersCommand
+    } from '@aws-sdk/client-cognito-identity-provider';
+
+    const client = new CognitoIdentityProviderClient({ region: 'us-east-1' });
+
+    async function listUsers(userPoolId: string, limit = 60, paginationToken?: string, filter?: string) {
+      const command = new ListUsersCommand({
+        UserPoolId: userPoolId,
+        Limit: limit,
+        PaginationToken: paginationToken,
+        Filter: filter
+      });
+      return await client.send(command);
+    }
+
+    ■ 引数
+
+    ・UserPoolId: ユーザープールの ID（必須）
+    ・Limit: 取得件数上限（任意）
+    ・PaginationToken: 続きのページ取得用トークン（任意）
+    ・Filter: 属性フィルタ（例: "email ^= \"user@example.com\""）（任意）
+
+    ■ 戻り値
+
+    ・Users: ユーザー配列（各要素に `Username`, `Attributes`, `UserStatus`, `Enabled` 等を含む）
+    ・PaginationToken: 次ページ取得用トークン（存在する場合）
+
+    ■ 注意点 / 例外
+
+    ・InvalidParameterException: フィルタ形式やパラメータ不正
+    ・NotAuthorizedException: 権限不足
+    ・LimitExceededException: リクエスト制限超過
+
+    ■ 実運用のヒント
+
+    ・ページネーションを適切に実装して大量データ対応
+    ・必要な属性のみ取得して通信量を削減
+
+#-------------------------------
+# @aws-sdk/client-cognito-identity (IDプール関連)
+#-------------------------------
+- ENTRY:
+  CATEGORY: |
+    @aws-sdk/client-cognito-identity
+
+- ENTRY:
+  EXPLAIN: 概要とメソッド一覧
+  BODY: |
+    ■ 概要
+
+    ・Cognito Identity（IDプール）を操作するクライアント
+    ・一時的な AWS 認証情報や OpenID トークンの取得を行う
+    ・匿名ユーザーや外部プロバイダ連携時のアイデンティティ管理に利用
+
+    ■ メソッド一覧と簡潔な用途
+
+    GetId                               ログイン情報からアイデンティティIDを取得/生成
+    GetCredentialsForIdentity           指定アイデンティティの一時的な AWS 資格情報を取得
+    GetOpenIdToken                      指定アイデンティティの OpenID トークンを取得
+    GetOpenIdTokenForDeveloperIdentity  開発者提供IDを用いた OpenID トークン取得
+    MergeDeveloperIdentities            開発者IDをマージ（同一ユーザーの結合）
+    UnlinkIdentity                      アイデンティティのリンク解除
+    LinkIdentities                      異なるアイデンティティをリンク
+    DescribeIdentity                    アイデンティティ情報の参照
+    ListIdentities                      アイデンティティ一覧の取得（ページネーション対応）
+    ListIdentityPools                   IDプール一覧の取得
+
+    ■ 実運用のヒント
+
+    ・取得した一時資格情報は短時間のみ有効なため、取得/キャッシュ戦略を設計する
+    ・匿名アクセスと認証済みアクセスを明確に分離して権限管理を行う
+    ・複数プロバイダ連携時はログの相互参照と監査を整備する
+
+#-------------------------------
+# @aws-sdk/client-cognito-sync
+#-------------------------------
+- ENTRY:
+  CATEGORY: |
+    @aws-sdk/client-cognito-sync
+
+- ENTRY:
+  EXPLAIN: 概要とメソッド一覧
+  BODY: |
+    ■ 概要
+
+    ・Cognito Sync（旧来のクライアント）を操作するための API
+    ・デバイス間での軽量なデータ同期を提供（現在は非推奨・機能制限の可能性あり）
+    ・データセット（dataset）単位でレコードの取得・更新・購読を行う
+
+    ■ メソッド一覧と簡潔な用途
+
+    ListRecords                         データセット内のレコード一覧取得
+    UpdateRecords                       データセット内レコードの更新（コンフリクト解決情報含む）
+    ListDatasets                        ユーザーが持つデータセット一覧取得
+    DescribeDataset                     特定データセットのメタ情報取得
+    RegisterDevice                      デバイス登録（プッシュ通知連携など）
+    SubscribeToDataset                  データセット購読（サーバ→クライアント通知）
+    UnsubscribeFromDataset              データセット購読解除
+
+    ■ 実運用のヒント
+
+    ・同期競合（conflict）はクライアント／サーバ双方の解決戦略を設計する
+    ・大容量データ同期には向かないため差分・小さなペイロードに限定する
+    ・新規開発では AppSync 等の代替を検討する
+
+#-------------------------------
+# aws-amplify/auth
+#-------------------------------
+- ENTRY:
+  CATEGORY: aws-amplify/auth (FE向け)
+
+- ENTRY:
+  EXPLAIN: 概要とメソッド一覧
+  BODY: |
+    ■ 概要
+
+    ・AWS Amplify の `Auth` モジュールはフロントエンド向けの認証ユーティリティ
+    ・Cognito ユーザープールとシームレスに統合し、認証フローやトークン管理を簡素化する
+    ・ブラウザやモバイル環境でのトークン自動保持／セッション管理を提供
+
+    ■ メソッド一覧と簡潔な用途
+
+    signUp                              ユーザー登録
+    confirmSignUp                       登録確認コードの検証
+    signIn                              サインイン
+    signOut                             サインアウト
+    currentAuthenticatedUser            現在認証中のユーザー情報取得
+    currentSession                      現在の認証セッション（ID/Access/Refresh トークン）取得
+    forgotPassword                      パスワードリセット開始
+    forgotPasswordSubmit                パスワードリセット完了（確認コード＋新パスワード）
+    changePassword                      認証済みユーザーのパスワード変更
+    updateUserAttributes                ユーザー属性更新
+    completeNewPassword                 初回ログインでの一時パスワード置換
+
+    ■ 実運用のヒント
+
+    ・Amplify の設定でトークン自動リフレッシュやストレージ種類（localStorage/AsyncStorage/Cookie）を適切に選定する
+    ・クライアント側でのエラーメッセージは情報漏洩を避ける文言にする
+    ・詳細なカスタムフローや高度なセキュリティ要件がある場合は直接 SDK を併用
+    ・MFA やカスタムチャレンジ対応は Amplify のドキュメントを参照し、UX を整備
+    ・Amplify CLI や Admin UI を活用して Cognito 設定を簡素化
+
+- ENTRY:
+  EXPLAIN: フロー(サインアップ〜サインイン、パスワードリセット)
+  BODY: |
+    ■ 概要
+
+    ・サインアップからサインイン、パスワードリセットまでの一般的な処理手順と役割分担
+
+    ■ 標準フロー（簡潔）
+
+    1. サインアップ（フロント）
+      ・呼び出し: SignUp / Amplify Auth.signUp
+      ・役割: ユーザー名・パスワード・属性送信、確認コード受領（ClientId 使用）
+
+    2. 登録確認（フロント）
+      ・呼び出し: ConfirmSignUp / Amplify Auth.confirmSignUp
+      ・役割: 確認コード検証でユーザーを確定
+
+    3. サインイン（フロント）
+      ・呼び出し: InitiateAuth / Amplify Auth.signIn
+      ・役割: Access/ID/Refresh トークン受領、チャレンジ発生時は追加処理
+
+    4. MFA・カスタムチャレンジ（フロント→サーバ）
+      ・呼び出し: RespondToAuthChallenge / Amplify のチャレンジハンドリング
+      ・役割: 追加認証（SMS/TOTP/NEW_PASSWORD_REQUIRED 等）を完了
+
+    5. セッション管理（フロント）
+      ・呼び出し: Auth.currentSession / GetUser
+      ・役割: トークン保管・期限確認・画面表示用ユーザー情報取得
+
+    6. パスワードリセット（フロント）
+      ・呼び出し: ForgotPassword → ConfirmForgotPassword / Amplify Auth.forgotPassword → Auth.forgotPasswordSubmit
+      ・役割: 確認コード送信→コードと新パスワードで再設定
+
+    7. 削除・管理操作
+      ・呼び出し: DeleteUser（本人） / AdminDeleteUser（管理者）
+      ・役割: 自己削除または管理者による削除・運用対応
+
+- ENTRY:
+  EXPLAIN: signUp (ユーザー登録)
+  BODY: |
+    ■ 概要
+
+    ・ユーザープールに新規ユーザーを登録するAPI
+    ・メールアドレス／電話番号などの属性を指定し、確認コードを送信して検証するのが一般的
+
+    ■ サンプル
+
+    import {
+      CognitoIdentityProviderClient,
+      SignUpCommand
+    } from '@aws-sdk/client-cognito-identity-provider';
+
+    const client = new CognitoIdentityProviderClient({ region: 'us-east-1' });
+
+    async function signUp(clientId: string, username: string, password: string, email: string) {
+      const command = new SignUpCommand({
+        ClientId: clientId,
+        Username: username,
+        Password: password,
+        UserAttributes: [{ Name: 'email', Value: email }]
+      });
+      return await client.send(command);
+    }
+
+    ■ 引数
+
+    ・ClientId: ユーザープールクライアントID（必須）
+    ・Username: 登録するユーザー名（必須）
+    ・Password: パスワード（必須）
+    ・UserAttributes: ユーザー属性配列（例: [{ Name: 'email', Value: '...' }]）（任意）
+
+      ※ ClientId は Cognito ユーザープールのアプリクライアントから取得
+
+    ■ 戻り値
+
+    ・UserSub: 作成されたユーザーの一意 ID
+    ・UserConfirmed: 自動確認された場合は true`（通常は `false`）
+    ・CodeDeliveryDetails: 確認コード送信情報（送信チャネルやマスクされた送信先を含む）
+
+    ■ 注意点 / よくある例外
+
+    ・UsernameExistsException: 同一ユーザー名が既に存在
+    ・InvalidPasswordException: パスワードポリシー違反
+    ・InvalidParameterException: パラメータ不正
+    ・LimitExceededException / TooManyRequestsException: レート制限／過負荷
+    ・CodeDeliveryFailureException: 確認コード送信失敗（メール/SMS）
+
+    ■ 実運用のヒント
+
+    ・パスワードはサーバ／ログに記録しない
+    ・確認コードの再送や試行回数制限を実装し、ブルートフォース対策を行う
+    ・CAPTCHA やレート制御でボット登録を防止する
+    ・メール到達性対策と送信失敗時のフォールバック（別チャネル）を用意する
+
+- ENTRY:
+  EXPLAIN: signIn (ユーザーサインイン)
+  BODY: |
+    ■ 概要
+
+    ・ユーザープールでのユーザー認証（サインイン）を開始するためのAPI
+    ・ユーザー名とパスワードなどの認証パラメータを指定し、認証フローを開始
+    ・多要素認証（MFA）やカスタム認証フローにも対応
+
+    ■ サンプル
+
+    import {
+      CognitoIdentityProviderClient,
+      InitiateAuthCommand
+    } from '@aws-sdk/client-cognito-identity-provider';
+
+    const client = new CognitoIdentityProviderClient({ region: 'us-east-1' });
+
+    async function signIn() {
+      const command = new InitiateAuthCommand({
+        ClientId: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+        AuthFlow: 'USER_PASSWORD_AUTH',
+        AuthParameters: {
+          USERNAME: 'user@example.com',
+          PASSWORD: 'TempPass123!',
+        },
+      });
+      const response = await client.send(command);
+      return response;
+    }
+
+    ■ 引数
+
+    ・ClientId: ユーザープールクライアントID
+    ・AuthFlow: 認証フローの種類
+        USER_PASSWORD_AUTH: ユーザー名とパスワードによる認証
+        CUSTOM_AUTH: カスタム認証フロー（Lambdaトリガーを使用）
+        REFRESH_TOKEN_AUTH: リフレッシュトークンを使用した認証
+    ・AuthParameters: 認証に必要なパラメータ（USERNAME, PASSWORD など）
+
+    ■ 戻り値
+
+      response = {
+        AuthenticationResult: {
+          AccessToken: 'eyJraWQiOiJ...',    // アクセストークン (JWT)
+          ExpiresIn: 3600,                  // 有効期限 (秒)
+          IdToken: 'eyJraWQiOiJ...',        // IDトークン (JWT)
+          RefreshToken: 'eyJjdHkiOiJK...',  // リフレッシュトークン
+          TokenType: 'Bearer'               // トークンタイプ(標準 Bearer)
+        },
+        ChallengeParameters: {}
+      };
+
+    ■ 注意点 / よくある例外
+
+    ・NotAuthorizedException: 認証失敗、無効な資格情報
+    ・UserNotFoundException: 指定したユーザーが存在しない
+    ・UserNotConfirmedException: ユーザー未確認（ConfirmSignUp が必要）
+    ・PasswordResetRequiredException: パスワードリセットが必要
+    ・InvalidParameterException: AuthParameters 等のパラメータ不正
+    ・TooManyRequestsException: リクエスト過多による制限
+    ・Challenge required（例: SMS_MFA/SOFTWARE_TOKEN_MFA）: チャレンジ処理が必要
+
+    ■ 実運用のヒント
+
+    ・ChallengeParameters を確認して MFA やカスタムチャレンジの処理を実装する
+    ・AuthFlow を用途に応じて使い分ける（例: USER_PASSWORD_AUTH, REFRESH_TOKEN_AUTH）
+    ・認証失敗時はセキュリティに配慮したエラーメッセージを返す
+    ・リトライ制御とレート制限（CloudWatch での監視・アラート設定）を実装する
+    ・トークンは安全に保管し、RefreshToken の取り扱いに注意する
+    ・多要素認証(MFA)やカスタム認証フローに対応する UX/再送ポリシーを用意する
+
+- ENTRY:
+  EXPLAIN: signOut (ユーザーサインアウト)
+  BODY: |
+    ■ 概要
+
+    ・認証済みユーザーをサインアウトし、トークンを無効化するAPI
+    ・ローカルストレージからトークンを削除し、オプションでグローバルサインアウトも可能
+
+    ■ サンプル
+
+    import { Auth } from 'aws-amplify';
+
+    async function signOut(globalSignOut = false) {
+      await Auth.signOut({ global: globalSignOut });
+    }
+
+    ■ 引数
+
+    ・global: すべてのデバイスからサインアウトするか（true/false、デフォルト false）
+
+    ■ 戻り値
+
+    ・なし（Promise<void>）
+
+    ■ 注意点 / よくある例外
+
+    ・NotAuthorizedException: 認証されていない場合（通常は発生しない）
+    ・LimitExceededException: リクエスト制限超過
+
+    ■ 実運用のヒント
+
+    ・サインアウト後はトークンを完全に削除し、UIを未認証状態にリセットする
+    ・グローバルサインアウトは慎重に使用（すべてのセッションを無効化）
+    ・サインアウトイベントをログに記録し、監査に活用する
+
+- ENTRY:
+  EXPLAIN: currentAuthenticatedUser (現在の認証済みユーザー取得)
+  BODY: |
+    ■ 概要
+
+    ・現在認証されているユーザーの詳細情報を取得するAPI
+    ・ユーザー属性やメタ情報を含む
+
+    ■ サンプル
+
+    import { Auth } from 'aws-amplify';
+
+    async function getCurrentUser() {
+      const user = await Auth.currentAuthenticatedUser();
+      return user;
+    }
+
+    ■ 引数
+
+    ・なし
+
+    ■ 戻り値
+
+    ・ユーザーオブジェクト（username, attributes, signInUserSession など）
+
+    ■ 注意点 / よくある例外
+
+    ・NotAuthorizedException: 認証されていない場合
+
+    ■ 実運用のヒント
+
+    ・ユーザー情報表示や権限チェックに使用
+    ・トークンの有効性を確認してから呼び出す
+
+- ENTRY:
+  EXPLAIN: currentSession (現在の認証セッション取得)
+  BODY: |
+    ■ 概要
+
+    ・現在の認証セッション（トークン情報）を取得するAPI
+    ・AccessToken, IdToken, RefreshToken を含む
+
+    ■ サンプル
+
+    import { Auth } from 'aws-amplify';
+
+    async function getCurrentSession() {
+      const session = await Auth.currentSession();
+      return session;
+    }
+
+    ■ 引数
+
+    ・なし
+
+    ■ 戻り値
+
+    ・セッションオブジェクト（accessToken, idToken, refreshToken）
+
+    ■ 注意点 / よくある例外
+
+    ・NotAuthorizedException: 認証されていない場合
+
+    ■ 実運用のヒント
+
+    ・API呼び出し前にセッション有効性を確認
+    ・トークンの有効期限をチェックしてリフレッシュ処理を実装
+
+- ENTRY:
+  EXPLAIN: forgotPassword (パスワードリセット開始)
+  BODY: |
+    ■ 概要
+
+    ・ユーザーのパスワードリセットを開始し、確認コードを送信するAPI
+
+    ■ サンプル
+
+    import { Auth } from 'aws-amplify';
+
+    async function forgotPassword(username: string) {
+      const result = await Auth.forgotPassword(username);
+      return result;
+    }
+
+    ■ 引数
+
+    ・username: パスワードをリセットするユーザー名
+
+    ■ 戻り値
+
+    ・CodeDeliveryDetails: 確認コード送信情報
+
+    ■ 注意点 / よくある例外
+
+    ・UserNotFoundException: ユーザーが存在しない
+    ・LimitExceededException: リクエスト制限超過
+
+    ■ 実運用のヒント
+
+    ・確認コードの送信チャネルを確認し、UIに表示
+    ・レート制限を考慮した再送ポリシーを実装
+
+- ENTRY:
+  EXPLAIN: forgotPasswordSubmit
+  BODY: |
+    ■ 概要
+
+    ・確認コードと新パスワードでパスワードリセットを完了するAPI
+
+    ■ サンプル
+
+    import { Auth } from 'aws-amplify';
+
+    async function forgotPasswordSubmit(username: string, code: string, newPassword: string) {
+      await Auth.forgotPasswordSubmit(username, code, newPassword);
+    }
+
+    ■ 引数
+
+    ・username: ユーザー名
+    ・code: 確認コード
+    ・newPassword: 新しいパスワード
+
+    ■ 戻り値
+
+    ・なし
+
+    ■ 注意点 / よくある例外
+
+    ・CodeMismatchException: コード不一致
+    ・ExpiredCodeException: コード有効期限切れ
+    ・InvalidPasswordException: パスワードポリシー違反
+
+    ■ 実運用のヒント
+
+    ・パスワード強度をクライアント側で検証
+
+- ENTRY:
+  EXPLAIN: changePassword
+  BODY: |
+    ■ 概要
+
+    ・認証済みユーザーが現在のパスワードを新しいパスワードに変更するAPI
+
+    ■ サンプル
+
+    import { Auth } from 'aws-amplify';
+
+    async function changePassword(user: any, oldPassword: string, newPassword: string) {
+      await Auth.changePassword(user, oldPassword, newPassword);
+    }
+
+    ■ 引数
+
+    ・user: 現在のユーザーオブジェクト
+    ・oldPassword: 現在のパスワード
+    ・newPassword: 新しいパスワード
+
+    ■ 戻り値
+
+    ・なし
+
+    ■ 注意点 / よくある例外
+
+    ・NotAuthorizedException: 認証エラー
+    ・InvalidPasswordException: パスワードポリシー違反
+    ・LimitExceededException: リクエスト制限超過
+
+    ■ 実運用のヒント
+
+    ・パスワード変更成功時はセッション管理をリセット
+
+- ENTRY:
+  EXPLAIN: updateUserAttributes (ユーザー属性更新)
+  BODY: |
+    ■ 概要
+
+    ・認証済みユーザーの属性（email, phone_number など）を更新するAPI
+
+    ■ サンプル
+
+    import { Auth } from 'aws-amplify';
+
+    async function updateUserAttributes(user: any, attributes: Record<string, string>) {
+      await Auth.updateUserAttributes(user, attributes);
+    }
+
+    ■ 引数
+
+    ・user: 現在のユーザーオブジェクト
+    ・attributes: 更新する属性のオブジェクト（例: { email: 'new@example.com' }）
+
+    ■ 戻り値
+
+    ・なし
+
+    ■ 注意点 / よくある例外
+
+    ・NotAuthorizedException: 認証エラー
+    ・InvalidParameterException: 属性不正
+
+    ■ 実運用のヒント
+
+    ・属性変更により確認コード送信が発生する場合あり
+
+- ENTRY:
+  EXPLAIN: completeNewPassword (初回ログインでの一時パスワード置換)
+  BODY: |
+    ■ 概要
+
+    ・初回ログイン時の管理者設定一時パスワードを新しいパスワードに置き換えるAPI
+
+    ■ サンプル
+
+    import { Auth } from 'aws-amplify';
+
+    async function completeNewPassword(user: any, newPassword: string, requiredAttributes?: Record<string, string>) {
+      const result = await Auth.completeNewPassword(user, newPassword, requiredAttributes);
+      return result;
+    }
+
+    ■ 引数
+
+    ・user: ユーザーオブジェクト
+    ・newPassword: 新しいパスワード
+    ・requiredAttributes: 必須属性（オプション）
+
+    ■ 戻り値
+
+    ・更新されたユーザーオブジェクト
+
+    ■ 注意点 / よくある例外
+
+    ・NotAuthorizedException: 認証エラー
+    ・InvalidPasswordException: パスワードポリシー違反
+
+    ■ 実運用のヒント
+
+    ・初回ログイン時の必須属性入力を促す

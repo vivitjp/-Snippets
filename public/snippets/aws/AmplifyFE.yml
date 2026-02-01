@@ -17,8 +17,21 @@
       > npm install aws-amplify @react-native-async-storage/async-storage
 
 - ENTRY:
-  EXPLAIN: 開発フロー
+  EXPLAIN: 設定ファイル
   BODY: |
+    ■ aws-exports.js
+
+      ・amplify init や amplify add <category> コマンド実行時に自動生成
+      ・AWSリソースの設定情報（リージョン、ID、エンドポイントなど）を含む
+      ・プロジェクトルート直下に生成されることが多い
+      ・フロントエンドコードでインポートして使用
+
+        import Amplify from 'aws-amplify'
+        import awsconfig from './aws-exports'
+
+        Amplify.configure(awsconfig)
+
+    ■ 詳細
 
 - ENTRY:
   CATEGORY: Amplify CLI（Frontend）
@@ -26,38 +39,53 @@
 - ENTRY:
   EXPLAIN: フロントエンド基本コマンド一覧
   BODY: |
-    ■ Amplify.configure(config)
-      Amplifyの設定を初期化
+    ■ 初期化
+
+      Amplify.configure(config)         aws-exports.js を読み込み初期化
 
     ■ Auth
-      Auth.signUp, Auth.signIn, Auth.signOut, Auth.currentAuthenticatedUser など
-      ユーザー認証・管理
+
+      Auth.signUp                       ユーザー登録
+      Auth.signIn                       ログイン
+      Auth.signOut                      ログアウト
+      Auth.currentAuthenticatedUser     現在の認証ユーザー取得
 
     ■ API
-      API.get, API.post, API.put, API.del など
-      REST/GraphQL API呼び出し
+
+      API.get                           GETリクエスト
+      API.post                          POSTリクエスト
+      API.put                           PUTリクエスト
+      API.del                           DELETEリクエスト
 
     ■ Storage
-      Storage.put, Storage.get, Storage.remove, Storage.list など
-      S3ストレージ操作
+
+      Storage.put                       ファイルアップロード
+      Storage.get                       ファイルダウンロード
+      Storage.remove                    ファイル削除
+      Storage.list                      ファイル一覧取得
 
     ■ DataStore
-      DataStore.save, DataStore.query, DataStore.delete, DataStore.observe など
-      オフライン対応データ管理
+
+      DataStore.save                    データ保存
+      DataStore.query                   データクエリ
+      DataStore.delete                  データ削除
+      DataStore.observe                 データ変更監視
 
     ■ Analytics
-      Analytics.record, Analytics.updateEndpoint など
-      イベント・ユーザー行動の記録
+
+      Analytics.record                  イベント記録
+      Analytics.updateEndpoint          エンドポイント更新
 
     ■ Predictions
-      Predictions.convert, Predictions.identify, Predictions.interpret など
-      AI/ML機能（翻訳、画像認識、音声→テキスト等）
+
+      Predictions.convert               変換処理
+      Predictions.identify              識別処理
+      Predictions.interpret             解釈処理
 
     ■ PubSub
-      PubSub.publish, PubSub.subscribe など
-      MQTT等のリアルタイム通信
 
-    公式リファレンス: https://docs.amplify.aws/lib/q/platform/js/
+      PubSub.publish                    メッセージ公開
+      PubSub.subscribe                  メッセージ購読
 
 - ENTRY:
   EXPLAIN: API
@@ -65,11 +93,18 @@
     import { API } from 'aws-amplify'
 
     ■ GET
-    API.get('myApiName', '/items').then(response => {
+
+    API.get('myApiName', '/items', {
+      queryStringParameters: {
+        limit: 10,
+        sort: 'desc'
+      }
+    }).then(response => {
       console.log(response)
     })
 
     ■ POST
+
     API.post('myApiName', '/items', {
       body: { name: '新規アイテム' }
     }).then(response => {
@@ -77,6 +112,7 @@
     })
 
     ■ PUT
+
     API.put('myApiName', '/items/123', {
       body: { name: '更新アイテム' }
     }).then(response => {
@@ -84,13 +120,13 @@
     })
 
     ■ DELETE
+
     API.del('myApiName', '/items/123').then(response => {
       console.log(response)
     })
 
 - ENTRY:
-  EXPLAIN: |
-    API: React & GraphQL
+  EXPLAIN: サンプル(React & GraphQL)
   BODY: |
     import { API, graphqlOperation } from 'aws-amplify'
     import { createItem, updateItem, deleteItem } from './graphql/mutations'
@@ -183,9 +219,8 @@
         `
 
 - ENTRY:
-  EXPLAIN: DataStore
+  EXPLAIN: サンプル(DataStore)
   BODY: |
-    ■ Amplify DataStore
     import { DataStore } from 'aws-amplify'
     import { Item } from './models'
 
@@ -237,8 +272,7 @@
     subscription.unsubscribe()
 
 - ENTRY:
-  EXPLAIN: |
-    DataStore: React Subscribe使用
+  EXPLAIN: サンプル(DataStore React Subscribe使用)
   BODY: |
     ■ subscribeあり：他端末や他ユーザーによる変更もリアルタイム反映
     import React, { useEffect, useState } from 'react'
@@ -290,8 +324,7 @@
     export default ItemList
 
 - ENTRY:
-  EXPLAIN: |
-    DataStore: React Subscribe不使用
+  EXPLAIN: サンプル(DataStore React Subscribe不使用)
   BODY: |
     ■ subscribeなし：自分の操作（追加・削除）時のみ再取得・反映。外部変更は反映されない
 
