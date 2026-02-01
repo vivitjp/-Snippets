@@ -32,6 +32,32 @@
       ブランチごとにテスト環境を自動構築、GUIでモデル定義、コンテンツ、ユーザー管理UI
 
 - ENTRY:
+  EXPLAIN: Amplify G1 と G2 の違い
+  BODY: |
+    ■ AWS Amplify Generation 1 (Gen 1) - 従来のAmplify
+
+    ・バックエンド定義: CLIコマンド (amplify add api, amplify add auth) で対話的に設定
+    ・設定管理: amplify/backend/ フォルダ内のJSON/YAMLファイルとCloudFormationテンプレート
+    ・デプロイ: amplify push でCloudFormation経由でAWSリソースをデプロイ（初回デプロイに時間がかかる）
+    ・開発体験: ローカル開発が限定的、変更ごとに amplify push が必要
+    ・柔軟性: 高度なカスタマイズが可能だが、設定ファイルの管理が複雑
+    ・使用例: 既存の多くのAmplifyプロジェクトで採用
+
+    ■ AWS Amplify Generation 2 (Gen 2) - 新しいAmplify (2023年発表)
+
+    ・バックエンド定義: TypeScriptコードでバックエンドを定義 (amplify/data.ts, amplify/auth.ts など)
+    ・設定管理: プログラム的にリソースを記述、バージョン管理しやすい
+    ・デプロイ: amplify sandbox でローカル開発環境起動（ライブリロード）、amplify deploy で本番デプロイ
+    ・開発体験: ローカルで即時反映、TypeScriptの型安全性とIDEサポートが充実
+    ・柔軟性: コードベースなので条件分岐やループなどのロジックを組み込める
+    ・使用例: 新規プロジェクトで推奨、Gen 1からの移行も可能
+
+    ■ 移行について
+
+    ・Gen 1プロジェクトをGen 2に移行可能（公式ドキュメント参照）
+    ・新規プロジェクトではGen 2を推奨（開発効率向上）
+
+- ENTRY:
   EXPLAIN: Amplify CLI インストール
   BODY: |
     ■ Backend: Amplify CLI のインストール
@@ -65,6 +91,7 @@
       ※ プロジェクト内 install の場合、--save-dev オプション(実行は npx amplify ... )
 
     ■ 設定: Amplify CLI の初期セットアップ
+
       使用リージョン、クレデンシャル、プロファイル情報の設定
 
       > amplify configure
@@ -162,10 +189,10 @@
         /aws-exports.js
 
 - ENTRY:
-  CATEGORY: Amplify CLI コマンド
+  CATEGORY: 基本コマンド
 
 - ENTRY:
-  EXPLAIN: 基本コマンド一覧
+  EXPLAIN: 一覧
   BODY: |
     amplify configure                   AWSプロファイル・リージョンの設定
     amplify init                        プロジェクトの初期化
@@ -188,18 +215,18 @@
   BODY: |
     ■ amplify configure [options]
 
-      AWS Amplify CLIで利用する「AWSアカウントの認証情報（プロファイル）」や「リージョン」などの設定
-      それぞれのコマンドに--profile --region オプションで指定可能
+      ・AWS Amplify CLIで利用する「AWSアカウントの認証情報（プロファイル）」や「リージョン」などの設定
+      ・それぞれのコマンドに--profile --region オプションで指定可能
 
       amplify configure --profile XXX --region ap-northeast-1
 
     ■ amplify init [options]
 
-      プロジェクトの初期化、ルートディレクトリで実行
+      ・プロジェクトの初期化、ルートディレクトリで実行
 
         amplify init
 
-      対話形式で以下を設定
+      ・対話形式で以下を設定
         ・プロジェクト名
         ・環境名（例: dev, prod）
         ・使用するAWSプロファイル（事前にamplify configureで作成可）
@@ -207,13 +234,22 @@
         ・使用するフレームワーク（React, Vue, Angularなど）
         ・ディレクトリ構成、ビルド/スタートコマンド
 
-      オプション例:
+      ・オプション例
+
         amplify init --profile XXX --appId XXX --envName dev --region ap-northeast-1
 
-      コマンド完了後、/amplify ディレクトリや aws-exports.js などが自動生成される
+      ・コマンド完了後、/amplify ディレクトリや aws-exports.js などが自動生成される
 
-      詳細は公式ドキュメント参照:
-        https://docs.amplify.be.aws/cli/reference/init/
+      ・詳細 https://docs.amplify.be.aws/cli/reference/init/
+
+    ■ Windows Power Shell での注意点
+
+      ・対話形式のプロンプトが正しく表示されない場合、PowerShellの実行ポリシーを変更
+      ・管理者権限でPowerShellを起動し、以下コマンドを実行
+
+        Set-ExecutionPolicy RemoteSigned
+
+      ・その後、再度 amplify init を実行
 
 - ENTRY:
   EXPLAIN: amplify list,status

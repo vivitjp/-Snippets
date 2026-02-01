@@ -1,0 +1,804 @@
+---
+#-------------------------------
+# GraphQL on Amplify モデル作成フロー
+#-------------------------------
+- ENTRY:
+  CATEGORY: ワークフロー
+
+- ENTRY:
+  EXPLAIN: モデル定義からデプロイまでの流れ(Gen 1)
+  BODY: |
+    ■ 概要
+
+    ・AmplifyのGraphQLでデータモデルを定義し、DynamoDBテーブルとAppSync APIをデプロイする一般的な手順
+    ・Gen 1のGraphQLスキーマベースの方法を説明
+    ・Gen 2ではTypeScriptコードベースの方法を使用
+
+    ■ 型定義
+
+      ・GraphQLスキーマファイル（schema.graphql）に@model付きの型を定義
+      ・createdAt/updatedAtは自動追加されるため定義不要
+      ・プライマリキーは自動設定（id: ID!）だが@primaryKeyでカスタム可能
+
+      サンプル(Before):
+
+        type Post @model {
+          title: String!
+          content: String
+        }
+
+        type Comment @model @key(fields: ["postId", "createdAt"]) {   // "createdAt"は自動追加される前提
+          postId: ID!
+          content: String!
+        }
+
+    ■ 自動生成型を含む完全スキーマ作成
+
+      ・amplify api gql-compileコマンド実行
+      ・@modelに基づきQuery/Mutation/Subscription/入力型/接続型/フィルタ型等を自動生成
+      ・生成されたスキーマはbuildディレクトリに保存
+
+      サンプル(After):
+
+        type Post @model {
+          id: ID!
+          title: String!
+          content: String
+          createdAt: AWSDateTime
+          updatedAt: AWSDateTime
+        }
+
+        type Query {
+          getPost(id: ID!): Post
+          listPosts(filter: ModelPostFilterInput, limit: Int, nextToken: String): ModelPostConnection
+        }
+
+        type Mutation {
+          createPost(input: CreatePostInput!): Post
+          updatePost(input: UpdatePostInput!): Post
+          deletePost(input: DeletePostInput!): Post
+        }
+
+        type Subscription {
+          onCreatePost: Post @aws_subscribe(mutations: ["createPost"])
+          onUpdatePost: Post @aws_subscribe(mutations: ["updatePost"])
+          onDeletePost: Post @aws_subscribe(mutations: ["deletePost"])
+        }
+
+        ※ 他にも入力型(CreatePostInput)、接続型(ModelPostConnection)、フィルタ型(ModelPostFilterInput)等が自動生成
+
+    ■ DynamoDBテーブルとAPIデプロイ
+
+      ・amplify pushコマンド実行
+      ・CloudFormationでDynamoDBテーブルとAppSync APIをデプロイ
+      ・初回デプロイ時は数分かかる
+
+      作成DynamoDBテーブル群:
+        - Post-y3abcd1234-dev (Postモデル用テーブル)
+        - Comment-y3abcd1234-dev (Commentモデル用テーブル)
+
+      AppSync API エンドポイント:
+        https://abcdefghijk.appsync-api.us-east-1.amazonaws.com/graphql
+
+    ■ AppSyncクライアントからCRUD操作可能に
+
+      ・AppSyncクライアント（Amplify DataStore、AWS AppSync SDK等）からCRUD操作が可能に
+      ・リアルタイムSubscriptionも利用可能
+
+      例: Amplify DataStoreを使用したPostモデルの作成
+
+        import { DataStore } from 'aws-amplify';
+        import { Post } from './models';
+
+        async function createPost() {
+          const newPost = await DataStore.save(
+            new Post({
+              title: 'Hello World',
+              content: 'This is my first post',
+            })
+          );
+          console.log('Created Post:', newPost);
+        }
+
+      例: GraphQLクエリを使用した取得
+
+        import { API } from 'aws-amplify';
+        import { getPost } from './graphql/queries';
+
+        async function fetchPost(id) {
+          const result = await API.graphql({
+            query: getPost,
+            variables: { id }
+          });
+          console.log('Fetched Post:', result.data.getPost);
+        }
+
+#-------------------------------
+# GraphQL on Amplify
+#-------------------------------
+- ENTRY:
+  CATEGORY: 変数タイプ
+
+- ENTRY:
+  EXPLAIN: 一覧
+  BODY: |
+    ■ 概要
+
+    ・AmplifyのGraphQLで使用する変数タイプの種類
+
+    ■ 変数タイプ一覧
+
+    ・ID                                // 一意識別子
+    ・String                            // 文字列
+    ・Int                               // 整数
+    ・Float                             // 浮動小数点数
+    ・Boolean                           // 真偽値
+
+    ・AWSDate                           // 日付（YYYY-MM-DD形式）
+    ・AWSTime                           // 時刻（hh:mm:ss.ssssss形式）
+    ・AWSDateTime                       // 日付と時刻（ISO 8601形式）
+    ・AWSTimestamp                      // タイムスタンプ（Unixエポック時間、秒単位）
+    ・AWSEmail                          // 電子メールアドレス
+    ・AWSJSON                           // JSONオブジェクト
+    ・AWSURL                            // URL
+    ・AWSPhone                          // 電話番号（E.164形式）
+    ・AWSIPAddress                      // IPアドレス（IPv4またはIPv6）
+
+    ■ 修飾子一覧
+
+    ・!                                 // 非null制約
+    ・[Type]                            // 配列（リスト）型
+    ・[Type!]                           // 非null要素の配列
+    ・[Type!]!                          // 非null要素の非null配列
+
+#-------------------------------
+# デコレータ (gen1)
+#-------------------------------
+- ENTRY:
+  CATEGORY: デコレータ (gen1)
+
+- ENTRY:
+  EXPLAIN: 一覧
+  BODY: |
+    ■ 概要
+
+    ・AmplifyのGraphQLで使用するデコレータの種類（Gen 1）
+    ・Gen 2ではTypeScriptコードでバックエンドを定義するため、これらのGraphQLデコレータは直接使用しない
+
+    ■ デコレータ一覧
+
+    ・@model                            // データモデルを定義
+    ・@auth                             // 認証・アクセス制御ルールを定義
+    ・@key                              // カスタムインデックス・ソートキー定義
+    ・@connection                       // モデル間のリレーションシップ定義（古い）
+    ・@hasOne                           // 1対1リレーションシップ定義
+    ・@hasMany                          // 1対多リレーションシップ定義
+    ・@belongsTo                        // 逆リレーションシップ定義
+    ・@manyToMany                       // 多対多リレーションシップ定義
+    ・@function                         // 外部リゾルバ（Lambda等）紐付け
+    ・@searchable                       // OpenSearchによるフルテキスト検索有効化
+    ・@predictions                      // 機械学習機能（予測）連携
+    ・@version                          // 楽観的同時実行制御
+    ・@ttl                              // 生存時間設定
+    ・@primaryKey                       // プライマリキー定義(ID! 以外でカスタム設定)
+    ・@index                            // セカンダリインデックス（補助説明）
+    ・@default                          // フィールドデフォルト値設定
+
+- ENTRY:
+  EXPLAIN: サンプル(Gen1, Gen2, Nestjs, Angular)
+  BODY: |
+    ■ デコレータを用いたモデル定義例(Gen 1)
+
+      type Post @model @auth(rules: [{ allow: owner }]) {
+        id: ID!
+        title: String!
+        content: String
+        createdAt: AWSDateTime
+        updatedAt: AWSDateTime
+      }
+
+      type Comment @model
+        @key(fields: ["postId", "createdAt"])
+        @auth(rules: [{ allow: public, operations: [read] }]) {
+        postId: ID!
+        content: String!
+        createdAt: AWSDateTime
+      }
+
+    ■ Gen 2での同等コード例
+
+      import { DataModel, field, authRule, primaryKey } from '@aws-amplify/datastore';
+
+      @DataModel({
+        authRules: [authRule.owner()],
+      })
+      class Post {
+        @primaryKey()
+        id: string;
+
+        @field()
+        title: string;
+
+        @field()
+        content?: string;
+
+        @field({ isReadOnly: true })
+        createdAt?: string;
+
+        @field({ isReadOnly: true })
+        updatedAt?: string;
+      }
+
+      @DataModel({
+        primaryKey: primaryKey.composite(['postId', 'createdAt']),
+        authRules: [authRule.publicRead()],
+      })
+      class Comment {
+        @primaryKey()
+        postId: string;
+
+        @field()
+        content: string;
+
+        @field({ isReadOnly: true })
+        createdAt?: string;
+      }
+
+    ■ nestjs での同等コード例
+
+      import { ObjectType, Field, ID } from '@nestjs/graphql';
+      import { Model, authRule, primaryKey } from '@aws-amplify/datastore';
+
+      @Model({
+        authRules: [authRule.owner()],
+      })
+      @ObjectType()
+      class Post {
+        @primaryKey()
+        @Field(() => ID)
+        id: string;
+
+        @Field()
+        title: string;
+
+        @Field({ nullable: true })
+        content?: string;
+
+        @Field({ nullable: true })
+        createdAt?: string;
+
+        @Field({ nullable: true })
+        updatedAt?: string;
+      }
+
+      @Model({
+        primaryKey: primaryKey.composite(['postId', 'createdAt']),
+        authRules: [authRule.publicRead()],
+      })
+      @ObjectType()
+      class Comment {
+        @primaryKey()
+        @Field(() => ID)
+        postId: string;
+
+        @Field()
+        content: string;
+
+        @Field({ nullable: true })
+        createdAt?: string;
+      }
+
+    ■ Angular での同等コード例
+
+      import { DataModel, field, authRule, primaryKey } from '@aws-amplify/datastore';
+
+      @DataModel({
+        authRules: [authRule.owner()],
+      })
+      export class Post {
+        @primaryKey()
+        id: string;
+
+        @field()
+        title: string;
+
+        @field()
+        content?: string;
+
+        @field({ isReadOnly: true })
+        createdAt?: string;
+
+        @field({ isReadOnly: true })
+        updatedAt?: string;
+      }
+
+      @DataModel({
+        primaryKey: primaryKey.composite(['postId', 'createdAt']),
+        authRules: [authRule.publicRead()],
+      })
+      export class Comment {
+        @primaryKey()
+        postId: string;
+
+        @field()
+        content: string;
+
+        @field({ isReadOnly: true })
+        createdAt?: string;
+      }
+
+- ENTRY:
+  EXPLAIN: \@model
+  BODY: |
+    ■ 概要
+
+    ・データモデル定義用デコレータ
+    ・CRUD用のQuery/Mutation/Subscriptionスキーマ自動生成
+    ・DynamoDBテーブル自動生成
+    ・プライマリキー自動設定（idフィールド）
+    ・タイムスタンプ自動追加（createdAt/updatedAt）
+    ・フィルタ入力型自動生成（Model<ModelName>FilterInput）
+    ・接続型自動生成（ページネーション対応Model<ModelName>Connection）
+    ・入力型自動生成（Create/Update/Delete用）
+    ・Subscription自動生成（リアルタイム更新）
+    ・認証ルール継承
+    ・バージョン管理サポート（@version併用）
+    ・デフォルト値設定サポート（@default併用）
+
+    ■ 使用方法
+
+    ・GraphQLスキーマファイル（schema.graphql）に@model付きの型を定義
+    ・amplify api gql-compileで自動生成型を含む完全スキーマ作成
+    ・amplify pushでDynamoDBテーブルとAPIデプロイ
+    ・デザイン時はcreatedAt/updatedAtを定義せず、自動追加される
+    ・プライマリキー（id）は自動設定されるが、カスタム可能（@primaryKey使用）
+    ・タイムスタンプ自動追加はデフォルト有効だが、@model(timestamps: null)で無効化可能
+
+    ■ 例: 基本的なモデル定義
+
+    type Post @model {
+      title: String!
+      content: String
+    }
+
+    ■ 自動作成された Query 例
+      
+      type Query {
+        getPost(id: ID!): Post
+        listPosts(filter: ModelPostFilterInput, limit: Int, nextToken: String): ModelPostConnection
+      }
+
+      type ModelPostFilterInput {        // Postモデル用フィルタ入力型
+        id: ModelIDInput                 // 汎用型 ID型用フィルタ
+        title: ModelStringInput          // 汎用型 文字列型用フィルタ
+        content: ModelStringInput
+        createdAt: ModelAWSDateTimeInput // 汎用型 AWSDateTime型用フィルタ
+        and: [ModelPostFilterInput]      // 複数条件のAND結合(再帰型)
+        or: [ModelPostFilterInput]       // 複数条件のOR結合(再帰型)
+        not: [ModelPostFilterInput]      // 否定条件(再帰型)
+      }
+
+      type ModelPostConnection {         // Postモデル用接続型(ページネーション対応のリスト型)
+        items: [Post]
+        nextToken: String
+      }
+
+    ■ 自動作成された Mutation 例
+
+      ・作成(createXxx)・更新(updateXxx)・削除(deleteXxx) メソッドを提供
+      ・それぞれの入力型も自動生成
+
+      type Mutation {
+        createPost(input: CreatePostInput!): Post
+        updatePost(input: UpdatePostInput!): Post
+        deletePost(input: DeletePostInput!): Post
+      }
+
+      input CreatePostInput {            // Postモデル用作成入力型
+        id: ID
+        title: String!
+        content: String
+        createdAt: AWSDateTime
+      }
+
+      input UpdatePostInput {            // Postモデル用更新入力型
+        id: ID!
+        title: String
+        content: String
+        createdAt: AWSDateTime
+      }
+
+      input DeletePostInput {            // Postモデル用削除入力型
+        id: ID!
+      }
+
+- ENTRY:
+  EXPLAIN: \@auth
+  BODY: |
+    ■ 概要
+
+    ・認証・アクセス制御ルールを定義
+    ・CRUD操作（create/update/delete/read）に対するアクセス権限を制御
+    ・所有者ベース・グループベース・パブリック・プライベートアクセスをサポート
+    ・複数ルールの組み合わせ可能（AND条件）
+    ・@modelと併用してデータモデルのセキュリティを設定
+    ・AppSyncの認可モード（API_KEY/Cognito User Pools/OIDC/IAM）と連携
+    ・フィールドレベルアクセス制御も可能（@auth on field）
+
+    ■ 使用方法
+
+    ・@model付きの型に@auth(rules: [...])を追加
+    ・rules配列にアクセスルールをオブジェクトとして定義
+    ・allow: owner（所有者）/groups（グループ）/public（全員）/private（認証済みユーザ）
+    ・operations: [create, update, delete, read]（指定しない場合は全操作）
+    ・groups: グループ名の配列（allow: groupsの場合）
+    ・ownerField: 所有者を識別するフィールド名（デフォルト: owner）
+    ・identityClaim: クレームフィールド（IAM認可の場合）
+    ・groupClaim: グループクレームフィールド（IAM認可の場合）
+
+    ■ 例: 所有者ベースのアクセス制御
+
+    type Post @model @auth(rules: [{ allow: owner }]) {
+      title: String!
+      content: String
+    }
+
+    ■ 例: グループベースのアクセス制御
+
+    type Post @model @auth(rules: [{ allow: groups, groups: ["admin", "editor"] }]) {
+      title: String!
+      content: String
+    }
+
+    ■ 例: 複数ルールの組み合わせ
+
+    type Post @model @auth(rules: [
+      { allow: owner },
+      { allow: groups, groups: ["admin"], operations: [create, update, delete] }
+    ]) {
+      title: String!
+      content: String
+    }
+
+    ■ 例: パブリック読み取り、所有者書き込み
+
+    type Post @model @auth(rules: [
+      { allow: public, operations: [read] },
+      { allow: owner, operations: [create, update, delete] }
+    ]) {
+      title: String!
+      content: String
+    }
+
+    ■ 例: フィールドレベルアクセス制御
+
+    type User @model @auth(rules: [{ allow: owner }]) {
+      id: ID!
+      username: String!
+      email: String! @auth(rules: [{ allow: owner }])  // 所有者のみアクセス可能
+      profile: String  // デフォルトで全認証ユーザアクセス可能
+    }
+
+- ENTRY:
+  EXPLAIN: \@auth 認可モード
+  BODY: |
+    ■ 認可モード
+
+      ・API_KEY
+      ・AMAZON_COGNITO_USER_POOLS
+      ・AWS_IAM
+      ・OPENID_CONNECT
+      ・AWS_LAMBDA
+
+    ■ 認可モードの変更手順
+
+    1. amplify update api を実行
+    2. サービスとしてGraphQLを選択
+    3. デフォルト認可タイプを選択（API Key, Cognito, IAM等）
+    4. 必要に応じて追加認可タイプを設定
+    5. amplify push で変更をデプロイ
+
+    ■ 認可モード設定例（amplify update api）
+
+    ・以下の例は amplify update api コマンド実行時の対話型プロンプト
+    ・既存のGraphQL APIの認可設定を変更する場合に使用
+    ・デフォルト認可タイプとしてAPI Keyを選択し、追加でCognito User Poolsを有効化
+
+      ? Select from one of the below mentioned services: GraphQL
+      → 以下のサービスから選択してください: GraphQL（GraphQLを選択）
+
+        ※ サービス選択肢: GraphQL / REST / Hosting with Amplify Console / Lambda function
+
+      ? Choose the default authorization type for the public API: API Key
+      → パブリックAPIのデフォルト認可タイプを選択してください: API Key（API Keyを選択）
+
+      ? Enter a description for the API key: My API Key
+      → APIキーの説明を入力してください: My API Key（説明を入力）
+
+      ? After how many days from now the API key should expire: 365
+      → 今日から何日後にAPIキーが期限切れになるか: 365（365日後）
+
+      ? Do you want to configure advanced settings for the GraphQL API: Yes
+      → GraphQL APIの詳細設定を行いますか: Yes（はい）
+
+      ? Configure additional auth types? Yes
+      → 追加の認可タイプを設定しますか? Yes（はい）
+
+      ? Choose the additional authorization types you want to configure for the API: Amazon Cognito User Pools
+      → APIに設定する追加の認可タイプを選択してください: Amazon Cognito User Pools（Cognito User Poolsを選択）
+
+      ? Configure conflict resolution: No
+      → 競合解決を設定しますか: No（いいえ）
+
+    ■ AppSync の認可モード
+
+    ・@authデコレータはAppSyncの認可モードと連携して動作
+    ・認可モードはamplify add api時に選択、またはamplify update apiで変更可能
+
+      @auth(rules: [{ allow: owner }])                         // Cognito User Pools/IAMモード
+      @auth(rules: [{ allow: groups, groups: ["groupName"] }]) // Cognito User Pools/IAMモード
+      @auth(rules: [{ allow: public }])                        // API_KEYモード
+      @auth(rules: [{ allow: private }])                       // 認証済みユーザ（全モード）
+
+    ■ API_KEY モード
+
+    ・シンプルなAPIキー認証
+    ・開発/テスト環境やパブリックアクセスに適す
+
+      @auth(rules: [{ allow: public }])                        // 全ユーザアクセス可能
+      @auth(rules: [{ allow: private }])                       // APIキー認証済みユーザのみ
+
+    ■ AMAZON_COGNITO_USER_POOLS モード
+
+    ・Cognito User Poolsを使用した認証
+    ・@authのowner/groupsルールが有効
+
+      @auth(rules: [{ allow: owner }])                         // Cognitoユーザのsubクレームで、データ所有者のみアクセス
+      @auth(rules: [{ allow: groups, groups: ["groupName"] }]) // 指定Cognitoグループのユーザのみアクセス
+
+    ■ AWS_IAM モード
+
+    ・IAMポリシーを使用した認証
+    ・@authのowner/groupsルールがIAMクレームに基づく
+    ・identityClaim/groupClaimでカスタムクレームフィールド指定可能
+    ・AWSサービス（Lambda等）との統合に便利
+
+    ■ OPENID_CONNECT モード
+
+    ・OIDCプロバイダを使用した認証
+    ・@authのowner/groupsルールがOIDCトークンに基づく
+
+    ■ AWS_LAMBDA モード
+
+    ・カスタムLambda関数で認可ロジックを実装
+    ・複雑な認可要件に対応可能
+    ・@authデコレータのルールはLambda関数に渡される
+
+#-------------------------------
+# デコレータ (gen2)
+#-------------------------------
+- ENTRY:
+  CATEGORY: デコレータ (gen2)
+
+- ENTRY:
+  EXPLAIN: 一覧
+  BODY: |
+    ■ 概要
+
+    ・AmplifyのGraphQLで使用するデコレータの種類（Gen 2）
+    ・Gen 2ではTypeScriptコードベースでバックエンドを定義
+    ・従来のGraphQLスキーマデコレータに対応するTypeScriptデコレータを提供
+
+    ■ デコレータ一覧
+
+    ・@DataModel                        // データモデルを定義
+    ・@authRule                         // 認証・アクセス制御ルールを定義
+    ・@primaryKey                       // プライマリキー定義
+    ・@field                            // フィールド定義
+    ・@hasOne                           // 1対1リレーションシップ定義
+    ・@hasMany                          // 1対多リレーションシップ定義
+    ・@belongsTo                        // 逆リレーションシップ定義
+    ・@manyToMany                       // 多対多リレーションシップ定義
+
+- ENTRY:
+  EXPLAIN: 基本的なモデル定義
+  BODY: |
+    ■ 例
+
+      import { DataModel, field, authRule, primaryKey } from '@aws-amplify/datastore';
+
+      @DataModel({
+        authRules: [authRule.owner()],
+      })
+      class Post {
+        @primaryKey()
+        id: string;
+
+        @field()
+        title: string;
+
+        @field()
+        content?: string;
+
+        @field({ isReadOnly: true })
+        createdAt?: string;
+
+        @field({ isReadOnly: true })
+        updatedAt?: string;
+      }
+
+      @DataModel({
+        primaryKey: primaryKey.composite(['postId', 'createdAt']),
+        authRules: [authRule.publicRead()],
+      })
+      class Comment {
+        @primaryKey()
+        postId: string;
+
+        @field()
+        content: string;
+
+        @field({ isReadOnly: true })
+        createdAt?: string;
+      }
+
+    ■ SQL
+
+      CREATE TABLE Post (
+        id VARCHAR(255) PRIMARY KEY,
+        title VARCHAR(255) NOT NULL,
+        content TEXT,
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+      );
+
+      CREATE TABLE Comment (
+        postId VARCHAR(255),
+        content TEXT NOT NULL,
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (postId, createdAt)
+      );
+
+- ENTRY:
+  EXPLAIN: リレーションシップ定義(hasMany)
+  BODY: |
+    ■ 例: 1対多リレーションシップ定義
+
+      import { DataModel, field, hasMany, belongsTo, primaryKey } from '@aws-amplify/datastore';
+
+      @DataModel()
+      class Post {
+        @primaryKey()
+        id: string;
+
+        @field()
+        title: string;
+
+        @hasMany(() => Comment, (comment) => comment.post)  // 子テーブルへの参照
+        comments?: Comment[];
+      }
+
+      @DataModel()
+      class Comment {
+        @primaryKey()
+        id: string;
+
+        @field()
+        content: string;
+
+        @belongsTo(() => Post, 'postId')  // 親テーブルへの参照
+        post: Post;
+
+        @field()
+        postId: string;
+      }
+
+    ■ SQL
+
+      CREATE TABLE Post (
+        id VARCHAR(255) PRIMARY KEY,
+        title VARCHAR(255) NOT NULL
+      );
+
+      CREATE TABLE Comment (
+        id VARCHAR(255) PRIMARY KEY,
+        content TEXT NOT NULL,
+        postId VARCHAR(255),
+        FOREIGN KEY (postId) REFERENCES Post(id)
+      );
+
+- ENTRY:
+  EXPLAIN: リレーションシップ定義(hasOne)
+  BODY: |
+    ■ 例: 1対1リレーションシップ定義
+
+      import { DataModel, field, hasOne, primaryKey } from '@aws-amplify/datastore';
+
+      @DataModel()
+      class UserProfile {
+        @primaryKey()
+        id: string;
+
+        @field()
+        bio: string;
+
+        @hasOne(() => User, 'profileId')    // Userテーブルへの参照
+        user: User;
+
+        @field()
+        profileId: string;
+      }
+
+      @DataModel()
+      class User {
+        @primaryKey()
+        id: string;
+
+        @field()
+        username: string;
+      }
+
+    ■ SQL
+
+      CREATE TABLE UserProfile (
+        id VARCHAR(255) PRIMARY KEY,
+        bio TEXT NOT NULL,
+        profileId VARCHAR(255),
+        FOREIGN KEY (profileId) REFERENCES User(id)
+      );
+
+      CREATE TABLE User (
+        id VARCHAR(255) PRIMARY KEY,
+        username VARCHAR(255) NOT NULL
+      );
+
+- ENTRY:
+  EXPLAIN: リレーションシップ定義(manyToMany)
+  BODY: |
+    ■ 例: 多対多リレーションシップ定義
+
+      import { DataModel, field, manyToMany, primaryKey } from '@aws-amplify/datastore';
+
+      @DataModel()
+      class Student {
+        @primaryKey()
+        id: string;
+
+        @field()
+        name: string;
+
+        @manyToMany(() => Course, 'students')  // Courseテーブルへの参照
+        courses?: Course[];
+      }
+
+      @DataModel()
+      class Course {
+        @primaryKey()
+        id: string;
+
+        @field()
+        title: string;
+
+        @manyToMany(() => Student, 'courses')  // Studentテーブルへの参照
+        students?: Student[];
+      }
+
+    ■ SQL
+
+      CREATE TABLE Student (
+        id VARCHAR(255) PRIMARY KEY,
+        name VARCHAR(255) NOT NULL
+      );
+
+      CREATE TABLE Course (
+        id VARCHAR(255) PRIMARY KEY,
+        title VARCHAR(255) NOT NULL
+      );
+
+      CREATE TABLE StudentCourse (          // 中間テーブル
+        studentId VARCHAR(255),
+        courseId VARCHAR(255),
+        PRIMARY KEY (studentId, courseId),
+        FOREIGN KEY (studentId) REFERENCES Student(id),
+        FOREIGN KEY (courseId) REFERENCES Course(id)
+      );

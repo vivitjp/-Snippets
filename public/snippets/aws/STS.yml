@@ -1,0 +1,447 @@
+---
+- ENTRY:
+  EXPLAIN: 概要
+  BODY: |
+    ■ 概要
+
+    ・AWS Security Token Service (STS) は、一時的なセキュリティ認証情報を発行するウェブサービス
+
+    ■ 概要(機能)
+
+    1. 一時的なセキュリティ認証情報の提供: IAMユーザーやロールの一時的なアクセスキー、シークレットキー、セッショントークンを発行
+    2. クロスアカウントアクセス: 別のAWSアカウントのリソースにアクセスするための認証情報を取得
+    3. ロールの引き受け: IAMロールを一時的に引き受けて、その権限を使用
+    4. フェデレーテッドアクセス: SAMLやOIDCプロバイダーを使用した外部ユーザーへのアクセス提供
+    5. セッショントークンの取得: MFAを使用した一時的な認証情報の発行
+    6. アイデンティティの確認: 現在の認証情報が誰のものであるかを確認
+    7. ポリシーの適用: 一時的な認証情報に追加の権限ポリシーを適用
+    8. セッションの管理: セッションの有効期間を設定（最大12時間）
+    9. 監査とログ: CloudTrailでSTS操作を追跡
+    10. セキュリティ強化: 永続的なアクセスキーを使わず、一時的な認証情報を使用することでセキュリティを向上
+
+    ■ 導入
+
+    ・インストール: AWS CLIやSDK（aws-sdk, @aws-sdk/client-sts）をnpm/yarnでインストール
+    ・初期設定: AWS CLI configureでアクセスキー、シークレットキー、リージョンを設定
+    ・認証情報設定: 環境変数（AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY）またはIAMロールを使用
+    ・フレームワークとの連携: Amplifyでは自動的にSTSを使用（Cognito認証時の一時トークン取得）
+
+    ■ 基本操作
+
+    ・トークン取得: GetSessionToken APIでMFA付きの一時トークンを取得
+    ・一時的な認証情報の使用: 取得したトークンをAWS SDKで使用（有効期限内のみ）
+    ・ロールの引き受け: AssumeRole APIで指定ロールの権限を一時的に取得
+#-------------------------------
+# メソッド一覧
+#-------------------------------
+- ENTRY:
+  CATEGORY: メソッド
+
+- ENTRY:
+  EXPLAIN: 一覧
+  BODY: |
+    AssumeRole:                       指定したIAMロールを一時的に引き受ける
+    AssumeRoleWithSAML:               SAMLアサーションを使用してロールを引き受ける
+    AssumeRoleWithWebIdentity:        OIDCトークンを使用してロールを引き受ける
+    GetSessionToken:                  MFAを使用した一時的なセッショントークンを取得
+    GetCallerIdentity:                現在の認証情報のアイデンティティ情報を取得
+    GetAccessKeyInfo:                 アクセスキーの情報を取得
+    DecodeAuthorizationMessage:       エンコードされた認可メッセージをデコード
+
+- ENTRY:
+  EXPLAIN: AssumeRole
+  BODY: |
+    ■ 概要
+
+    ・指定した IAM ロールを一時的に引き受け、そのロールの権限を持つ一時的認証情報を取得する
+    ・クロスアカウントアクセスや権限分離、権限昇格（短期間）に利用
+
+    ■ サンプル (TypeScript, AWS SDK v3)
+
+    import { STSClient, AssumeRoleCommand } from '@aws-sdk/client-sts';
+
+    const client = new STSClient({ region: 'ap-northeast-1' });
+
+    async function assumeRole() {
+      const command = new AssumeRoleCommand({
+        RoleArn: 'arn:aws:iam::123456789012:role/MyRole',   // 引き受けるロールのARN
+        RoleSessionName: 'MySession',                       // セッション識別子
+        DurationSeconds: 3600,                              // 900-43200 (デフォルト 3600)
+      });
+      const response = await client.send(command);
+      return response; // Credentials と AssumedRoleUser を含む
+    }
+
+    ■ 引数
+
+    ・RoleArn (string, 必須): 引き受ける IAM ロールの ARN
+    ・RoleSessionName (string, 必須): セッションの識別子（任意の名前）
+    ・DurationSeconds (number, オプション): セッションの有効期間（秒、デフォルト3600秒、最小900秒、最大43200秒）
+    ・Policy (string, オプション): セッションに適用する追加のアクセスポリシー（JSON形式）
+
+    ■ 戻り値
+
+    ・Credentials: { AccessKeyId, SecretAccessKey, SessionToken, Expiration }
+    ・AssumedRoleUser: 引き受けたロールの短期識別情報
+
+    ■ 注意点 / 例外
+
+    ・RoleArn が存在しない、または信頼ポリシーで呼び出し元を許可していないとアクセス拒否となる
+    ・DurationSeconds はロールとアカウントの設定により最大値が制限される（最大 43200 秒 = 12 時間）
+    ・Policy に不正な JSON を渡すと失敗する（ポリシー構文の検証）
+    ・外部ID、MFA、条件付きの信頼ポリシーがある場合は追加パラメータが必要
+    ・頻度が高いとスロットリング（TooManyRequests）やレート制限に注意
+
+    ■ 実運用のヒント
+
+    ・信頼ポリシーは最小権限で設計し、どのプリンシパルが引き受け可能か明示する
+    ・取得した一時認証情報は短期間のみ有効なので安全にキャッシュ・破棄する
+    ・クロスアカウント利用時は信頼関係（Trust Relationship）のテストを行う
+    ・CloudTrail で AssumeRole の呼び出しを監査し、不審な利用を検出する
+    ・可能ならばサービス側でロール引き受けを行い、クライアント側に長期資格情報を渡さない
+
+- ENTRY:
+  EXPLAIN: AssumeRoleWithSAML
+  BODY: |
+    ■ 概要
+
+    ・SAML アサーションを使用して IAM ロールを引き受け、一時的な認証情報を取得する
+    ・企業の IdP（SAML）からフェデレートして AWS へアクセスする際に利用
+
+    ■ サンプル (TypeScript, AWS SDK v3)
+
+    import { STSClient, AssumeRoleWithSAMLCommand } from '@aws-sdk/client-sts';
+
+    const client = new STSClient({ region: 'ap-northeast-1' });
+
+    async function assumeRoleWithSAML(samlAssertion: string) {
+      const command = new AssumeRoleWithSAMLCommand({
+        RoleArn: 'arn:aws:iam::123456789012:role/SAMLRole',
+        PrincipalArn: 'arn:aws:iam::123456789012:saml-provider/MyIdP',
+        SAMLAssertion: samlAssertion,
+        DurationSeconds: 3600,
+      });
+      const response = await client.send(command);
+      return response;
+    }
+
+    ■ 引数
+
+    ・RoleArn (string, 必須): 引き受ける IAM ロールの ARN
+    ・PrincipalArn (string, 必須): SAML プリンシパルの ARN
+    ・SAMLAssertion (string, 必須): Base64 エンコードされた SAML アサーション
+    ・DurationSeconds (number, オプション): セッションの有効期間（秒、デフォルト3600秒、最小900秒、最大43200秒）
+
+    ■ 戻り値
+
+    ・Credentials: { AccessKeyId, SecretAccessKey, SessionToken, Expiration }
+    ・PackedPolicySize 等のメタ情報
+
+    ■ 注意点 / 例外
+
+    ・InvalidIdentityToken/InvalidSAMLResponse: SAML アサーションが不正
+    ・ExpiredTokenException: アサーションの期限切れ
+    ・AccessDenied: 信頼ポリシーで IdP またはロールを許可していない
+    ・TooManyRequestsException: レート制限
+
+    ■ 実運用のヒント
+
+    ・IdP の時計同期やアサーションの有効期間を確認する
+    ・SAML 属性マッピング（RoleSessionName 等）を事前に整備する
+    ・CloudTrail でフェデレーション呼び出しを監査する
+
+- ENTRY:
+  EXPLAIN: AssumeRoleWithWebIdentity
+  BODY: |
+    ■ 概要
+
+    ・OIDC や他の Web Identity（例: Cognito, Google, Amazon）トークンを使ってロールを引き受ける
+    ・モバイルやウェブクライアントからのフェデレート認証で主に利用
+
+    ■ サンプル (TypeScript, AWS SDK v3)
+
+    import { STSClient, AssumeRoleWithWebIdentityCommand } from '@aws-sdk/client-sts';
+
+    const client = new STSClient({ region: 'ap-northeast-1' });
+
+    async function assumeRoleWithWebIdentity(token: string) {
+      const command = new AssumeRoleWithWebIdentityCommand({
+        RoleArn: 'arn:aws:iam::123456789012:role/WebIdentityRole',
+        RoleSessionName: 'WebSession',
+        WebIdentityToken: token,
+        DurationSeconds: 3600,
+      });
+      const response = await client.send(command);
+      return response;
+    }
+
+    ■ 引数
+
+    ・RoleArn (string, 必須): 引き受ける IAM ロールの ARN
+    ・RoleSessionName (string, 必須): セッションの識別子（任意の名前）
+    ・WebIdentityToken (string, 必須): OIDC トークンまたは他の Web Identity トークン
+    ・DurationSeconds (number, オプション): セッションの有効期間（秒、デフォルト3600秒、最小900秒、最大43200秒）
+
+    ■ 戻り値
+
+    ・Credentials: { AccessKeyId, SecretAccessKey, SessionToken, Expiration }
+
+    ■ 注意点 / 例外
+
+    ・InvalidIdentityToken: トークンが無効または期限切れ
+    ・AccessDenied: ロールの信頼ポリシーにより拒否
+    ・IDプロバイダの制限（スコープ/クレーム）に注意
+
+    ■ 実運用のヒント
+
+    ・モバイルクライアントではトークン寿命と自動更新を設計する
+    ・トークンの検証（署名、発行者）をサービス側で確認する
+    ・WebIdentity の発行元に依存するためプロバイダ障害へのフォールバックを検討する
+
+- ENTRY:
+  EXPLAIN: GetSessionToken
+  BODY: |
+    ■ 概要
+
+    ・MFA を使用した短期的な認証情報（AccessKey, Secret, SessionToken）を取得する
+    ・IAM ユーザー向けの一時的認証情報を発行し、固定キーの使用を減らす
+
+    ■ サンプル (TypeScript, AWS SDK v3)
+
+    import { STSClient, GetSessionTokenCommand } from '@aws-sdk/client-sts';
+
+    const client = new STSClient({ region: 'ap-northeast-1' });
+
+    async function getSessionToken(serialNumber?: string, tokenCode?: string) {
+      const command = new GetSessionTokenCommand({
+        SerialNumber: serialNumber, // MFA デバイス ARN
+        TokenCode: tokenCode,       // MFA コード
+        DurationSeconds: 3600,      
+      });
+      const response = await client.send(command);
+      return response;
+    }
+
+    ■ 引数
+
+    ・SerialNumber (string, オプション): MFA デバイスのシリアル番号または ARN
+    ・TokenCode (string, オプション): MFA デバイスで生成されたコード  
+    ・DurationSeconds (number, オプション): セッションの有効期間（秒、デフォルト3600秒、最小900秒、最大129600秒）
+
+    ■ 戻り値
+
+    ・Credentials: { AccessKeyId, SecretAccessKey, SessionToken, Expiration }
+
+    ■ 注意点 / 例外
+
+    ・InvalidClientTokenId/ExpiredToken: トークンが無効または期限切れ
+    ・IncompleteSignature: MFA 情報不足
+    ・LimitExceededException: リクエスト制限
+
+    ■ 実運用のヒント
+
+    ・MFA を必須にする場合は、ユーザーの MFA 登録状態と再認証フローを設計する
+    ・一時キーは短く設定し、必要な範囲だけ権限を付与する
+    ・CloudTrail でセッション発行を監査する
+
+- ENTRY:
+  EXPLAIN: GetCallerIdentity
+  BODY: |
+    ■ 概要
+
+    ・現在の認証情報（呼び出し元）がどのアカウント・ユーザー/ロールかを確認するための API
+    ・デバッグや監査、クロスアカウント検証に有用
+
+    ■ サンプル (TypeScript, AWS SDK v3)
+
+    import { STSClient, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
+
+    const client = new STSClient({ region: 'ap-northeast-1' });
+
+    async function getCallerIdentity() {
+      const command = new GetCallerIdentityCommand({});
+      const response = await client.send(command);
+      return response; // { UserId, Account, Arn }
+    }
+
+    ■ 引数
+
+    ・なし
+
+    ■ 戻り値
+
+    ・UserId, Account, Arn を返す
+
+    ■ 注意点 / 例外
+
+    ・認証情報が無効な場合はエラー（AccessDenied 等）
+
+    ■ 実運用のヒント
+
+    ・ロギングやデバッグ時に実行ユーザーの確認を自動化する
+    ・クロスアカウント実行のトラブルシュートで常用する
+
+- ENTRY:
+  EXPLAIN: GetAccessKeyInfo
+  BODY: |
+    ■ 概要
+
+    ・指定したアクセスキー ID の所有者情報やリージョン情報等を取得する（キー検証用）
+
+    ■ サンプル (TypeScript, AWS SDK v3)
+
+    import { STSClient, GetAccessKeyInfoCommand } from '@aws-sdk/client-sts';
+
+    const client = new STSClient({ region: 'ap-northeast-1' });
+
+    async function getAccessKeyInfo(accessKeyId: string) {
+      const command = new GetAccessKeyInfoCommand({ AccessKeyId: accessKeyId });
+      const response = await client.send(command);
+      return response; // { Account: '123456789012' }
+    }
+
+    ■ 引数
+
+    ・AccessKeyId (string, 必須): 所有者情報を取得したいアクセスキー ID
+
+    ■ 戻り値
+
+    ・Account やキーに関するメタ情報を返す
+
+    ■ 注意点 / 例外
+
+    ・InvalidAccessKeyId: 指定したアクセスキーが存在しない
+
+    ■ 実運用のヒント
+
+    ・長期キーの監査や疑わしいキーの追跡に利用する
+    ・キーの所有者確認やインシデント対応時に自動化して使う
+
+- ENTRY:
+  EXPLAIN: DecodeAuthorizationMessage
+  BODY: |
+    ■ 概要
+
+    ・エンコードされた認可エラーメッセージ（例: AWS の拒否メッセージ）をデコードして詳細情報を取得する
+
+    ■ サンプル (TypeScript, AWS SDK v3)
+
+    import { STSClient, DecodeAuthorizationMessageCommand } from '@aws-sdk/client-sts';
+
+    const client = new STSClient({ region: 'ap-northeast-1' });
+
+    async function decodeAuthMessage(encodedMessage: string) {
+      const command = new DecodeAuthorizationMessageCommand({ EncodedMessage: encodedMessage });
+      const response = await client.send(command);
+      return response; // { DecodedMessage }
+    }
+
+    ■ 引数
+
+    ・EncodedMessage (string, 必須): エンコードされた認可エラーメッセージ
+
+    ■ 戻り値
+
+    ・DecodedMessage: デコードされた JSON 形式の詳細なエラー情報
+
+    ■ 注意点 / 例外
+
+    ・InvalidAuthorizationMessageException: メッセージが不正または期限切れ
+
+    ■ 実運用のヒント
+
+    ・CloudTrail と併せて使用し、拒否理由の解読やポリシー修正に役立てる
+    ・デコード結果は機密情報を含む可能性があるため、ログ出力時は取扱いに注意する
+
+#-------------------------------
+# サンプル
+#-------------------------------
+- ENTRY:
+  CATEGORY: サンプル
+
+- ENTRY:
+  EXPLAIN: AWS SDK v3を使用したSTSの基本操作例
+  BODY: |
+    import { STSClient, AssumeRoleCommand, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
+
+    const stsClient = new STSClient({ region: 'ap-northeast-1' });
+
+    ■ AssumeRoleの例
+
+    async function assumeRole() {
+      const command = new AssumeRoleCommand({
+        RoleArn: 'arn:aws:iam::123456789012:role/MyRole',
+        RoleSessionName: 'MySession',
+        DurationSeconds: 3600,
+      });
+      const response = await stsClient.send(command);
+      console.log('Assumed role credentials:', response.Credentials);
+      return response.Credentials;
+    }
+
+    ■ GetCallerIdentityの例
+
+    async function getCallerIdentity() {
+      const command = new GetCallerIdentityCommand({});
+      const response = await stsClient.send(command);
+      console.log('Caller identity:', response);
+      return response;
+    }
+
+- ENTRY:
+  EXPLAIN: Amplifyを使用したSTSの利用例
+  BODY: |
+    import { Amplify } from 'aws-amplify';
+    import { getCurrentUser, fetchAuthSession } from 'aws-amplify/auth';
+
+    ■ Amplify設定
+
+    Amplify.configure({
+      Auth: {
+        Cognito: {
+          userPoolId: 'ap-northeast-1_xxxxx',
+          userPoolClientId: 'xxxxx',
+          identityPoolId: 'ap-northeast-1:xxxxx',
+        },
+      },
+    });
+
+    ■ AmplifyでのSTS使用例（Cognito認証後のセッション取得）
+
+    async function getAmplifySession() {
+      try {
+        const user = await getCurrentUser();
+        const session = await fetchAuthSession();
+        
+        // STSで取得した一時的な認証情報
+        console.log('Access token:', session.tokens?.accessToken);
+        console.log('ID token:', session.tokens?.idToken);
+        
+        // アイデンティティID（STS関連）
+        console.log('Identity ID:', session.identityId);
+        
+        return session;
+      } catch (error) {
+        console.error('Error getting session:', error);
+      }
+    }
+
+    ■ ロール引き受けの例（Amplify + STS）
+
+    import { STSClient, AssumeRoleCommand } from '@aws-sdk/client-sts';
+
+    async function assumeRoleWithAmplify() {
+      const session = await fetchAuthSession();
+      const stsClient = new STSClient({
+        credentials: session.credentials, // Amplifyの認証情報を使用
+        region: 'ap-northeast-1',
+      });
+
+      const command = new AssumeRoleCommand({
+        RoleArn: 'arn:aws:iam::123456789012:role/MyRole',
+        RoleSessionName: 'AmplifySession',
+      });
+
+      const response = await stsClient.send(command);
+      return response.Credentials;
+    }

@@ -3,7 +3,7 @@
 # AWS
 #-------------------------------
 - ENTRY:
-  CATEGORY: SDK
+  CATEGORY: 概要
 
 - ENTRY:
   EXPLAIN: |
@@ -27,10 +27,70 @@
       V3: import {...} from '@aws-sdk/{service}'
 
 - ENTRY:
+  EXPLAIN: パッケージリスト
+  BODY: |
+    @aws-sdk/client-ec2                      # EC2: 仮想サーバー
+    @aws-sdk/client-s3                       # S3: オブジェクトストレージ
+    @aws-sdk/client-lambda                   # Lambda: サーバーレス関数
+    @aws-sdk/client-dynamodb                 # DynamoDB: NoSQLデータベース
+    @aws-sdk/client-cognito-identity         # Cognito Identity: ユーザーID管理
+    @aws-sdk/client-cognito-identity-provider # Cognito IDP: ユーザー認証管理
+    @aws-sdk/client-sts                      # STS: セキュリティトークンサービス
+    @aws-sdk/client-api-gateway              # API Gateway: API管理
+    @aws-sdk/client-cloudformation           # CloudFormation: インフラ自動化
+    @aws-sdk/client-cloudfront               # CloudFront: CDN
+    @aws-sdk/client-cloudwatch               # CloudWatch: 監視サービス
+    @aws-sdk/client-ecr                      # ECR: コンテナレジストリ
+    @aws-sdk/client-ecs                      # ECS: コンテナオーケストレーション
+    @aws-sdk/client-efs                      # EFS: ファイルストレージ
+    @aws-sdk/client-elastic-load-balancing   # ELB: ロードバランサー
+    @aws-sdk/client-eventbridge              # EventBridge: イベントバス
+    @aws-sdk/client-iam                      # IAM: アクセス管理
+    @aws-sdk/client-kms                      # KMS: キー管理
+    @aws-sdk/client-rds                      # RDS: リレーショナルデータベース
+    @aws-sdk/client-redshift                 # Redshift: データウェアハウス
+    @aws-sdk/client-route-53                 # Route 53: DNSサービス
+    @aws-sdk/client-secrets-manager          # Secrets Manager: シークレット管理
+    @aws-sdk/client-ses                      # SES: メール送信
+    @aws-sdk/client-sns                      # SNS: 通知サービス
+    @aws-sdk/client-sqs                      # SQS: メッセージキュー
+    @aws-sdk/client-ssm                      # SSM: システムマネージャー
+    @aws-sdk/client-waf                      # WAF: ウェブアプリファイアウォール
+    @aws-sdk/client-xray                     # X-Ray: アプリケーショントレーシング
+    @aws-sdk/client-athena                   # Athena: SQLクエリサービス
+    @aws-sdk/client-batch                    # Batch: バッチジョブ
+    @aws-sdk/client-codebuild                # CodeBuild: ビルドサービス
+    @aws-sdk/client-codecommit               # CodeCommit: Gitリポジトリ
+    @aws-sdk/client-codepipeline             # CodePipeline: CI/CDパイプライン
+    @aws-sdk/client-connect                  # Connect: コンタクトセンター
+    @aws-sdk/client-datasync                 # DataSync: データ転送
+    @aws-sdk/client-direct-connect           # Direct Connect: 専用ネットワーク
+    @aws-sdk/client-directory-service        # Directory Service: ディレクトリ管理
+    @aws-sdk/client-docdb                    # DocumentDB: MongoDB互換
+    @aws-sdk/client-elastic-beanstalk        # Elastic Beanstalk: アプリデプロイ
+    @aws-sdk/client-elasticache              # ElastiCache: インメモリキャッシュ
+    @aws-sdk/client-elasticsearch-service    # Elasticsearch: 検索サービス
+    @aws-sdk/client-fsx                      # FSx: ファイルサーバー
+    @aws-sdk/client-glacier                  # Glacier: アーカイブストレージ
+    @aws-sdk/client-glue                     # Glue: ETLサービス
+    @aws-sdk/client-guardduty                # GuardDuty: 脅威検知
+    @aws-sdk/client-health                   # Health: サービスヘルス
+    @aws-sdk/client-inspector                # Inspector: セキュリティ評価
+    @aws-sdk/client-lakeformation            # Lake Formation: データレイク
+    @aws-sdk/client-macie2                   # Macie: データセキュリティ
+    @aws-sdk/client-memorydb                 # MemoryDB: Redis互換
+    @aws-sdk/client-mq                       # MQ: メッセージブローカー
+    @aws-sdk/client-neptune                  # Neptune: グラフデータベース
+    @aws-sdk/client-opensearch               # OpenSearch: 検索エンジン
+    @aws-sdk/client-organizations            # Organizations: アカウント管理
+    @aws-sdk/client-outposts                 # Outposts: ハイブリッドクラウド
+
+- ENTRY:
   EXPLAIN: |
     環境変数による認証情報設定
   BODY: |
     ■ 環境変数一覧
+
       AWS_ACCESS_KEY_ID         アクセスキーID
       AWS_SECRET_ACCESS_KEY     シークレットアクセスキー
       AWS_SESSION_TOKEN         セッショントークン (一時的な認証情報を使用する場合)
@@ -38,6 +98,7 @@
       AWS_PROFILE               使用するプロファイル名 (~/.aws/credentials または ~/.aws/config から)
 
     ■ 例 (Linux/Mac)
+
       export AWS_ACCESS_KEY_ID="your_access_key_id"
       export AWS_SECRET_ACCESS_KEY="your_secret_access_key"
       export AWS_SESSION_TOKEN="your_session_token"  # 必要に応じて
@@ -45,6 +106,7 @@
       export AWS_PROFILE="default"  # 必要に応じて
 
     ■ 例 (Windows PowerShell)
+
       $env:AWS_ACCESS_KEY_ID="your_access_key_id"
       $env:AWS_SECRET_ACCESS_KEY="your_secret_access_key"
       $env:AWS_SESSION_TOKEN="your_session_token"  # 必要に応じて
@@ -52,6 +114,7 @@
       $env:AWS_PROFILE="default"  # 必要に応じて
 
     ■ Profileの設定（Project単位の設定が可能）
+
       ~/.aws/credentials (Linux/Mac)
       C:\Users\USERNAME\.aws\credentials (Windows)
 
@@ -61,6 +124,7 @@
       aws_session_token = your_session_token  # 必要に応じて
 
     ■ 設定の優先順位
+
       ※ 通常は、環境変数またはIAMロール
 
       コード内の明示的な設定:     new S3Client({ region: "..." }) コード内指定値
@@ -72,8 +136,7 @@
   CATEGORY: EC2
 
 - ENTRY:
-  EXPLAIN: |
-    メソッド(EC2)
+  EXPLAIN: メソッド
   TABLE:
     OPTION:
       ALIGN:
@@ -100,10 +163,10 @@
       ReleaseAddressCommand	ReleaseAddress	Elastic IPアドレスを解放
 
 - ENTRY:
-  EXPLAIN: |
-    サンプル実装(EC2)
+  EXPLAIN: サンプル実装
   BODY: |
     ■ インストールパッケージ
+
       yarn add @aws-sdk/client-ec2
 
     ■ sample.js(v3)
@@ -162,7 +225,7 @@
   CATEGORY: S3
 
 - ENTRY:
-  EXPLAIN: メソッド(S3)
+  EXPLAIN: メソッド
   TABLE:
     OPTION:
       ALIGN:
@@ -189,7 +252,7 @@
       DeleteBucketPolicyCommand	DeleteBucketPolicy	バケットのポリシーを削除
 
 - ENTRY:
-  EXPLAIN: サンプル実装(S3)
+  EXPLAIN: サンプル実装
   BODY: |
     ■ パッケージ
     npm install @aws-sdk/client-s3 @aws-sdk/client-lambda
@@ -217,7 +280,7 @@
   CATEGORY: Lambda
 
 - ENTRY:
-  EXPLAIN: メソッド(Lambda)
+  EXPLAIN: メソッド
   TABLE:
     OPTION:
       ALIGN:
@@ -242,7 +305,7 @@
       UpdateAliasCommand	UpdateAlias	Lambda関数のエイリアスを更新
 
 - ENTRY:
-  EXPLAIN: サンプル実装(Lambda)
+  EXPLAIN: サンプル実装
   BODY: |
     作成中
 
@@ -250,7 +313,7 @@
   CATEGORY: DynamoDB
 
 - ENTRY:
-  EXPLAIN: メソッド(DynamoDB)
+  EXPLAIN: メソッド
   TABLE:
     OPTION:
       ALIGN:
@@ -276,6 +339,6 @@
       BatchGetItemCommand	BatchGetItem	複数のアイテムを一括で取得
 
 - ENTRY:
-  EXPLAIN: サンプル実装(DynamoDB)
+  EXPLAIN: サンプル実装
   BODY: |
     作成中
