@@ -14,8 +14,8 @@
 
     ■ 目的
 
-      ・APIや非同期データの取得・キャッシュ・自動再取得・エラー管理を簡単に実装できる。
-      ・UIとデータの同期を自動化し、手動でuseEffectやuseStateを管理する手間を減らす。
+      ・APIや非同期データの取得・キャッシュ・自動再取得・エラー管理を簡単に実装可能
+      ・UIとデータの同期を自動化し、手動でuseEffectやuseStateを管理する手間を減らす
 
     ■ 実装サンプル
 
@@ -33,11 +33,11 @@
 
     ■ 他ライブラリ (SWR等)との比較・優位点
 
-      - 柔軟なキャッシュ戦略 (stale-while-revalidate, prefetch, invalidate など)
-      - 複雑な依存関係や並列・連鎖クエリも簡単に管理できる
-      - DevtoolsやMutation管理、Queryの自動再取得、エラー/ローディング状態の統合
-      - SWRよりも大規模・複雑なデータフローに強い
-      - TypeScript対応・拡張性が高い
+    ・柔軟なキャッシュ戦略 (stale-while-revalidate, prefetch, invalidate など)
+    ・複雑な依存関係や並列・連鎖クエリも簡単に管理できる
+    ・DevtoolsやMutation管理、Queryの自動再取得、エラー/ローディング状態の統合
+    ・SWRよりも大規模・複雑なデータフローに強い
+    ・TypeScript対応・拡張性が高い
 
 - ENTRY:
   EXPLAIN: GraphQL サンプル
@@ -46,25 +46,29 @@
 
     import { useQuery } from '@tanstack/react-query'
 
+    const query = {
+      query: `
+        query {
+          user {
+            id
+            name
+          }
+        }
+      `
+    }
+
+    // Query
     const fetchUser = async () => {
       const res = await fetch('/graphql', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          query: `
-            query {
-              user {
-                id
-                name
-              }
-            }
-          `
-        })
+        body: JSON.stringify(query)
       })
       const { data } = await res.json()
       return data.user
     }
 
+    // Query Hooks
     function User() {
       const { data, error, isLoading } = useQuery({
         queryKey: ['user'],
@@ -91,7 +95,7 @@
 - ENTRY:
   EXPLAIN: QueryClientProvider
   BODY: |
-    ■ QueryClientProvider とは
+    ■ 概要
 
     ・TanStack Query (React Query)の全てのクエリ・ミューテーション管理の「親」となるコンテキストプロバイダー。
     ・アプリ全体で QueryClient (キャッシュ・状態管理の本体)を共有するために使う。
