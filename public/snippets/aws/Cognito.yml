@@ -85,7 +85,6 @@
     ・ソーシャルログイン(Facebook, Google, Amazon, X)
     ・SAML/OIDCベースの企業認証連携
 
-
     ■ API
 
       Cognito Identity Provider API

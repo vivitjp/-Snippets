@@ -1,10 +1,10 @@
-import { codeKeys } from "../../library/syntaxHighlighter/getKey"
-import { MenuItemType } from "../../store/menuStore"
+import { codeKeys } from "../../library/syntaxHighlighter/getKey";
+import { MenuItemType } from "../../store/menuStore";
 
 type menuByCategories = {
-  category: string
-  items: MenuItemType[]
-}
+  category: string;
+  items: MenuItemType[];
+};
 
 export const menuItems: menuByCategories[] = [
   {
@@ -154,7 +154,7 @@ export const menuItems: menuByCategories[] = [
     ],
   },
   {
-    category: "AWS 開発",
+    category: "AWS サービス",
     items: [
       {
         name: "🔺Amplify(BE): AWS Amplify Backend",
@@ -166,6 +166,12 @@ export const menuItems: menuByCategories[] = [
         name: "🔺Amplify(FE): AWS Amplify Frontend",
         fileName: "aws/AmplifyFE",
         codeKeyTypes: [codeKeys.AWSCloud],
+        case_sensitive: false,
+      },
+      {
+        name: "Amplify(GQL)",
+        fileName: "aws/AmplifyGQL",
+        codeKeyTypes: [codeKeys.AWSAmplify_GraphQL],
         case_sensitive: false,
       },
       {
@@ -193,14 +199,8 @@ export const menuItems: menuByCategories[] = [
         case_sensitive: false,
       },
       {
-        name: "GraphQL(Amplify)",
-        fileName: "aws/GraphQL",
-        codeKeyTypes: [],
-        case_sensitive: false,
-      },
-      {
         name: "DynamoDB",
-        fileName: "",
+        fileName: "aws/DynamoDB",
         codeKeyTypes: [],
         case_sensitive: false,
       },
@@ -1088,4 +1088,4 @@ export const menuItems: menuByCategories[] = [
       },
     ],
   },
-]
+];

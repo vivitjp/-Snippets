@@ -113,6 +113,25 @@
           console.log('Fetched Post:', result.data.getPost);
         }
 
+    ■ Amplify と AppSync の役割区分
+
+    ・デコレータ(@model, @auth 等)の解釈・変換
+
+      Amplify が実施、AppSync は行わない
+      @model 等のディレクティブは AppSync には渡らない
+      Amplify がリゾルバ・データソース・認可に落とした結果がデプロイされる
+
+    ・Amplify(CLI/Gen2 ビルド)
+
+      スキーマ展開
+      DynamoDB 設計
+      リゾルバ生成
+      CloudFormation 生成をビルド/デプロイ時に実行
+
+    ・AppSync
+
+      Amplify が変換済みの「通常の GraphQL スキーマ」とリゾルバをデプロイ先として受け取り、実行時のみ担当
+
 #-------------------------------
 # GraphQL on Amplify
 #-------------------------------
@@ -354,7 +373,39 @@
     ・プライマリキー（id）は自動設定されるが、カスタム可能（@primaryKey使用）
     ・タイムスタンプ自動追加はデフォルト有効だが、@model(timestamps: null)で無効化可能
 
+    ■ 引数
+
+    ・timestamps (TimestampConfiguration | null)
+      ・nullでcreatedAt/updatedAtの自動追加を無効化
+      ・オブジェクト指定でフィールド名を変更可能(createdAt/updatedAtに文字列を指定)
+
+      例: timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" }
+
+    ・queries (ModelQueryMap | null)
+      ・get/listで生成されるQueryのフィールド名を指定
+      ・nullでget/listのQueryを生成しない
+
+      例: queries: { get: "getPost", list: "listPosts" }
+
+    ・mutations (ModelMutationMap | null)
+      ・create/update/deleteで生成されるMutationのフィールド名を指定
+      ・nullでcreate/update/deleteのMutationを生成しない
+
+      例: mutations: { create: "createPost", update: "updatePost", delete: "deletePost" }
+
+    ・subscriptions (ModelSubscriptionMap | null)
+      ・level: on | public | off でサブスクリプションの生成を制御
+      ・onCreate/onUpdate/onDeleteでフィールド名を指定可能
+      ・nullでSubscriptionを生成しない
+
+      例: subscriptions: { level: on }
+
     ■ 例: 基本的なモデル定義
+
+    type Post @model(timestamps: null) {
+      title: String!
+      content: String
+    }
 
     type Post @model {
       title: String!

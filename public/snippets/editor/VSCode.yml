@@ -4,6 +4,60 @@
 #-------------------------------
 
 - ENTRY:
+  EXPLAIN: 設定
+  BODY: |
+    ■ ファイル
+
+      ・ユーザ設定     settings.json
+      ・ワークスペース .vscode/settings.json
+
+    ■ TypeScript
+
+    ・typescript.tsdk: "node_modules/typescript/lib"        TypeScript のパス
+
+    ■ 保存・フォーマット
+
+    ・editor.formatOnSave: true                             保存時にフォーマットを実行するか
+    ・editor.defaultFormatter: "esbenp.prettier-vscode"     デフォルトで使うフォーマッタの拡張ID
+    ・files.autoSave: "afterDelay"                          自動保存 off/afterDelay/onFocusChange/onWindowChange
+    ・files.trimTrailingWhitespace: true                    保存時に行末の空白を削除するか
+
+    ■ エディタ表示
+
+    ・editor.tabSize: 2                                     タブ幅(スペース数)。2 または 4 が一般的
+    ・editor.insertSpaces: true                             タブキー入力をスペースに変換するか
+    ・editor.fontSize: 14                                   フォントサイズ(数値)
+    ・editor.fontFamily: "Consolas"                         フォント名(文字列)
+    ・editor.wordWrap: "off"                                折り返し off/on/wordWrapColumn/bounded
+    ・editor.minimap.enabled: true                          ミニマップを表示するか
+    ・editor.bracketPairColorization.enabled: true          対応する括弧を色分けするか
+
+    ■ 補完・編集
+
+    ・editor.suggestSelection: "first"                      first/recentlyUsed/recentlyUsedByPrefix
+    ・editor.tabCompletion: "on"                            Tab で補完。on/off/onlySnippets
+    ・editor.acceptSuggestionOnEnter: "on"                  Enter でサジェスト確定。on/off/smart
+    ・editor.quickSuggestions: {}                           入力時のクイックサジェスト(comments/strings/other)
+
+    ■ MD
+
+    ・markdown.preview.scrollEditorWithPreview: false       プレビューに合わせてエディタをスクロールするか
+    ・markdown.preview.scrollPreviewWithEditor: false       エディタに合わせてプレビューをスクロールするか
+
+    ■ 検索・除外
+
+    ・files.exclude: {}                                     エクスプローラーで非表示にするパターン(例: **/node_modules)
+    ・search.exclude: {}                                    検索対象から除外するパターン
+
+    ■ 言語別の例(JSON キー)
+
+    ・editor.tabSize: 2                                     タブ幅
+    ・editor.formatOnSave: true                             保存時フォーマット
+    ・editor.defaultFormatter: "esbenp.prettier-vscode"     デフォルトフォーマッタ
+    ・[typescript].editor.defaultFormatter: "esbenp.prettier-vscode"  TS 用フォーマッタ
+    ・[javascript].editor.defaultFormatter: "esbenp.prettier-vscode"  JS 用フォーマッタ
+
+- ENTRY:
   EXPLAIN: 拡張機能
   BODY: |
     ■ Git / リポジトリ管理
@@ -119,7 +173,7 @@
     ■ 基本操作
 
     ・コマンドパレットを開く              Ctrl + Shift + P
-    ・ファイルを開く                      Ctrl + P
+    ・ファイルを開く                     Ctrl + P
     ・サイドバーの表示切替                Ctrl + B
     ・ターミナルの表示/非表示             Ctrl + `
 

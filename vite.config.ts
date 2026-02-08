@@ -5,6 +5,7 @@ import react from "@vitejs/plugin-react"
 export default defineConfig({
   plugins: [react()],
   server: {
+    open: false,
     watch: {
       usePolling: true,
       // CPU負荷軽減のため監視周期を下げる

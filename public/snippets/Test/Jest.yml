@@ -440,8 +440,7 @@
   CATEGORY: expect()
 
 - ENTRY:
-  EXPLAIN: |
-    expect(): アサーション実行関数
+  EXPLAIN: expect() アサーション実行関数
   BODY: |
     ■ アサーションを行うための関数
 
@@ -451,8 +450,7 @@
       expect(object).toEqual({ a: 1, b: 2 });
 
 - ENTRY:
-  EXPLAIN: |
-    expect.extend(): カスタムマッチャー追加
+  EXPLAIN: expect.extend() カスタムマッチャー追加
   BODY: |
     ■ 定義
 
@@ -480,8 +478,7 @@
       };
 
 - ENTRY:
-  EXPLAIN: |
-    expect.setState()/getState(): カスタムステート
+  EXPLAIN: expect.setState()/getState() カスタムステート
   BODY: |
     ■ setState 定義
 
@@ -501,8 +498,7 @@
       console.log(state.customData);    // 123
 
 - ENTRY:
-  EXPLAIN: |
-    expect.hasAssertions()/assertions(): アサーション存在
+  EXPLAIN: expect.hasAssertions()/assertions() アサーション存在
   BODY: |
     ■ hasAssertions 定義
 
@@ -528,8 +524,7 @@
       });
 
 - ENTRY:
-  EXPLAIN: |
-    expect.any(): 任意の値
+  EXPLAIN: expect.any() 任意の値
   BODY: |
     ■ 定義
 
@@ -553,8 +548,7 @@
       });
 
 - ENTRY:
-  EXPLAIN: |
-    expect.anything(): null/undefined以外
+  EXPLAIN: expect.anything() null/undefined以外
   BODY: |
     ■ 定義
 
@@ -579,8 +573,7 @@
       });
 
 - ENTRY:
-  EXPLAIN: |
-    expect.objectContaining(): 部分オブジェクト一致
+  EXPLAIN: expect.objectContaining() 部分オブジェクト一致
   BODY: |
     ■ 定義
 
@@ -601,8 +594,7 @@
       }));
 
 - ENTRY:
-  EXPLAIN: |
-    expect.arrayContaining(): 部分配列一致
+  EXPLAIN: expect.arrayContaining() 部分配列一致
   BODY: |
     ■ 定義
 
@@ -619,8 +611,7 @@
       expect(stringArray).toEqual(expect.arrayContaining(['banana']));
 
 - ENTRY:
-  EXPLAIN: |
-    expect.stringContaining(): 部分文字列一致
+  EXPLAIN: expect.stringContaining() 部分文字列一致
   BODY: |
     ■ 定義
 
@@ -634,8 +625,7 @@
       expect(received).not.toEqual(expect.stringContaining('purple cat'));
 
 - ENTRY:
-  EXPLAIN: |
-    expect.stringMatching(): 正規表現一致
+  EXPLAIN: expect.stringMatching() 正規表現一致
   BODY: |
     ■ 定義
 
@@ -656,8 +646,7 @@
   CATEGORY: マッチャー
 
 - ENTRY:
-  EXPLAIN: |
-    toBe(): プリミティブな値の厳密な等価性
+  EXPLAIN: toBe() プリミティブな値の厳密な等価性
   BODY: |
     ■ プリミティブな値の厳密な等価性
 
@@ -680,8 +669,7 @@
       expect(objA).not.toBe(objB);              # => ⭕ (異なる参照)
 
 - ENTRY:
-  EXPLAIN: |
-    toContain() / toContainEqual(): 配列や文字列の部分一致
+  EXPLAIN: toContain() / toContainEqual() 配列や文字列の部分一致
   BODY: |
     ■ 配列や文字列が特定の要素を含んでいるか
 
@@ -704,8 +692,7 @@
       expect(list).toContainEqual([{ id: 1 }, { id: 2 }]); # => ❌ (異なる参照)
 
 - ENTRY:
-  EXPLAIN: |
-    toMatch() / toMatchObject(): 文字列,正規表現,オブジェクトの部分一致
+  EXPLAIN: toMatch() / toMatchObject() 文字列,正規表現,オブジェクトの部分一致
   BODY: |
     ■ 文字列や正規表現の部分一致
 
@@ -731,8 +718,7 @@
       expect(received).toMatchObject({ a: 2 });        # => ❌ (異なる値)
 
 - ENTRY:
-  EXPLAIN: |
-    toEqual(): オブジェクトや配列の深い等価性
+  EXPLAIN: toEqual() オブジェクトや配列の深い等価性
   BODY: |
     ■ オブジェクトや配列の内容が等しいか
 
@@ -764,8 +750,7 @@
     ・関数や特殊なオブジェクト（Date、Map、Set など）は正しく比較されない場合がある
 
 - ENTRY:
-  EXPLAIN: |
-    toEqual() vs toStrictEqual(): 深い等価性の違い
+  EXPLAIN: toEqual() vs toStrictEqual() 深い等価性の違い
   BODY: |
     ■ オブジェクト
 
@@ -786,8 +771,7 @@
       expect(new A()).toStrictEqual({ x: 1 });  # => ❌ (インスタンスの型も比較)
 
 - ENTRY:
-  EXPLAIN: |
-    toHaveLength(): 配列や文字列の長さ
+  EXPLAIN: toHaveLength() 配列や文字列の長さ
   BODY: |
     ■ 配列や文字列の長さ
 
@@ -798,8 +782,7 @@
       expect('abcd').toHaveLength(3);           # => ❌ (expected 3, received 4)
 
 - ENTRY:
-  EXPLAIN: |
-    toHaveProperty(): オブジェクト属性
+  EXPLAIN: toHaveProperty() オブジェクト属性
   BODY: |
     ■ toHaveProperty(): オブジェクトのプロパティ存在
 
@@ -811,8 +794,7 @@
       expect(obj).toHaveProperty('a.b', 2);    # => ❌ (値が異なる)
 
 - ENTRY:
-  EXPLAIN: |
-    toBeInstanceOf(): インスタンス判定
+  EXPLAIN: toBeInstanceOf() インスタンス判定
   BODY: |
     ■ toBeInstanceOf(): オブジェクトが特定のクラスのインスタンスか
 
@@ -828,8 +810,7 @@
       expect(instance).toBeInstanceOf(Array);   # => ❌ (異なる型)
 
 - ENTRY:
-  EXPLAIN: |
-    非同期チェーン
+  EXPLAIN: 非同期チェーン
   BODY: |
     ■ Promise の成功
 
@@ -1161,3 +1142,48 @@
       }).toThrow('async err');                        # => ⭕ (非同期例外)
 
       await expect(async () => {}).not.toThrow();     # => ⭕ (非同期で例外は投げられなかった)
+
+#-------------------------------
+# 他
+#-------------------------------
+
+- ENTRY:
+  CATEGORY: その他
+
+- ENTRY:
+  EXPLAIN: IsolatedModules
+  BODY: |
+    ■ 概要
+
+    ・モックの呼び出しをテストごとに行う考え方
+    ・前のテストのモック状態や呼び出し履歴が次のテストに残らないようにする
+    ・テスト同士の影響を排除し、結果を安定させる
+
+    ■ 主なやり方
+
+    ・各テストの前に jest.clearAllMocks() で全モックの呼び出し履歴をクリア
+    ・afterEach で mockClear() や mockRestore() して状態を戻す
+    ・beforeEach でモックを差し替え直し、毎回同じ初期状態でテストする
+
+    ■ 例 (clearAllMocks)
+
+      beforeEach(() => {
+        jest.clearAllMocks();
+      });
+
+      it('test A', () => {
+        const fn = jest.fn();
+        fn(1);
+        expect(fn).toHaveBeenCalledTimes(1);
+      });
+
+      it('test B', () => {
+        const fn = jest.fn();
+        expect(fn).not.toHaveBeenCalled();   // test A の影響を受けない
+      });
+
+    ■ 関連
+
+    ・jest.clearAllMocks(): 呼び出し履歴のみクリア、実装はそのまま
+    ・jest.resetAllMocks(): 呼び出し履歴に加え実装も初期化
+    ・mockRestore(): 元の実装に戻す (spyOn した場合)

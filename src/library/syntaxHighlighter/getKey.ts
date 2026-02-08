@@ -1,5 +1,6 @@
 import { KeyDef } from "../../types/type"
 import { keysAWSCognito } from "./keys/AWSCognito"
+import { keysAWSAmplify_GraphQL } from "./keys/AWSAmplify_GraphQL"
 import { keysAWSAurora } from "./keys/AWSAurora"
 import { keysAWSCloud } from "./keys/AWSCloud"
 import { keysAWSSTS } from "./keys/AWSSTS"
@@ -76,6 +77,7 @@ import { keystRPC } from "./keys/tRPC"
 // 以下のオブジェクトをソートしてください
 export const codeKeys = {
   AWSCognito: "AWSCognito",
+  AWSAmplify_GraphQL: "AWSAmplify_GraphQL",
   AWSAurora: "AWSAurora",
   AWSCloud: "AWSCloud",
   AWSSTS: "AWSSTS",
@@ -159,6 +161,7 @@ export type CodeKeyType = (typeof codeKeys)[keyof typeof codeKeys]
 export const KeyAndCodes: Record<string, KeyDef> = {
   Shell: keysShell,
   AWSCognito: keysAWSCognito,
+  AWSAmplify_GraphQL: keysAWSAmplify_GraphQL,
   AWSAurora: keysAWSAurora,
   AWSCloud: keysAWSCloud,
   AWSSTS: keysAWSSTS,
