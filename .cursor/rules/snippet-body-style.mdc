@@ -68,6 +68,8 @@ alwaysApply: true
 悪い例:
 「テーブル名は必須です。パーティションキーを指定してください。」
 「GetItem では Key にプライマリキーを指定します。」
+resetModules: 全モジュールのキャッシュをクリア。その後 require すると全て新しく読み込まれる
+isolateModules: コールバック内の require だけ別レジストリで実行。外側の require は従来どおり
 
 良い例:
 ・テーブル名は必須

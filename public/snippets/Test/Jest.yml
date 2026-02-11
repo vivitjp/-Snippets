@@ -1151,39 +1151,94 @@
   CATEGORY: その他
 
 - ENTRY:
-  EXPLAIN: IsolatedModules
+  EXPLAIN: jest.isolateModules / isolateModulesAsync
   BODY: |
     ■ 概要
 
-    ・モックの呼び出しをテストごとに行う考え方
-    ・前のテストのモック状態や呼び出し履歴が次のテストに残らないようにする
-    ・テスト同士の影響を排除し、結果を安定させる
+    ・コールバック内で require したモジュールだけをサンドボックス化する API
+    ・jest.resetModules() より一歩進み「コールバック内で読み込んだモジュール」だけ別レジストリに
+    ・テスト間でモジュールのローカル状態が干渉しないようにするときに使う
+    ・process.env で振る舞いが変わるモジュールをテストごとに分けたい場合に便利
 
-    ■ 主なやり方
+     ※ サンドボックス化とは？
+      ・隔離して動かすこと
+          対象（プログラム・モジュール・コード）を「囲い」の中だけで実行
+          外の環境や他の処理に影響を与えない
+      ・安全・再現性のため
+          外から見ると「砂場（sandbox）の中でだけ動いている」状態
+          本番や他テストへの影響を防ぎ、条件固定で再現度向上
 
-    ・各テストの前に jest.clearAllMocks() で全モックの呼び出し履歴をクリア
-    ・afterEach で mockClear() や mockRestore() して状態を戻す
-    ・beforeEach でモックを差し替え直し、毎回同じ初期状態でテストする
+    ■ 挙動
 
-    ■ 例 (clearAllMocks)
+    ・fn の実行時にだけ有効なモジュールレジストリ作成
+    ・fn 内で require したモジュールはそのサンドボックス内のコピーになる
+    ・fn の外で require した同名モジュールは別インスタンス(コールバック内とは別)
 
-      beforeEach(() => {
-        jest.clearAllMocks();
+    ■ 例(isolateModules不使用)
+
+    ・同一ファイル内で require すると同じインスタンスが返る
+    ・モジュールにローカル状態があるとテスト間で共有され干渉し得る
+
+      const myModule = require('./myModule');   // 1回だけ読み込み、以降はキャッシュ
+      test('A', () => {
+        myModule.setState(1);
+        expect(myModule.getState()).toBe(1);
+      });
+      test('B', () => {
+        expect(myModule.getState()).toBe(1);  // A の状態が残っている(干渉)
       });
 
-      it('test A', () => {
-        const fn = jest.fn();
-        fn(1);
-        expect(fn).toHaveBeenCalledTimes(1);
+    ■ 例(isolateModules使用)
+
+    ・テストごとにコールバック内で require すると、それぞれ別インスタンスになる
+    ・モジュールの状態がテスト間で共有されない
+
+      test('A', () => {
+        let myModule;
+        jest.isolateModules(() => {
+          myModule = require('./myModule');
+          myModule.setState(1);
+        });
+        expect(myModule.getState()).toBe(1);
+      });
+      test('B', () => {
+        let myModule;
+        jest.isolateModules(() => {
+          myModule = require('./myModule');
+        });
+        expect(myModule.getState()).toBe(undefined);  // A と別インスタンスで状態なし
       });
 
-      it('test B', () => {
-        const fn = jest.fn();
-        expect(fn).not.toHaveBeenCalled();   // test A の影響を受けない
+    ■ jest.resetModules() との違い
+
+    ・resetModules
+
+      ・全モジュールのキャッシュをクリア
+      ・その後 require すると全て新しく読み込まれる
+
+    ・isolateModules
+
+      ・コールバック内の require だけ別レジストリで実行
+      ・外側の require は従来どおり
+
+    ■ 非同期版
+
+    ・jest.isolateModulesAsync(fn) で async コールバックに対応
+    ・await import() を fn 内で使う場合に利用
+
+    ■ 例(isolateModulesAsync)
+
+    ・async コールバック内で await import() を使う場合に利用
+    ・呼び出し側で await する必要あり
+
+      test('ESM を隔離して読み込む', async () => {
+        let myModule;
+        await jest.isolateModulesAsync(async () => {
+          myModule = await import('./myModule');
+          myModule.setState(1);
+        });
+        expect(myModule.getState()).toBe(1);
+
+        const otherCopy = await import('./myModule');
+        expect(myModule).not.toBe(otherCopy);   // 別インスタンス
       });
-
-    ■ 関連
-
-    ・jest.clearAllMocks(): 呼び出し履歴のみクリア、実装はそのまま
-    ・jest.resetAllMocks(): 呼び出し履歴に加え実装も初期化
-    ・mockRestore(): 元の実装に戻す (spyOn した場合)
