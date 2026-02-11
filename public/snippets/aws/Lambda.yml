@@ -72,7 +72,7 @@
     ■ 緩和不可
 
       ・メモリ(128MB~10GB)
-      ・タイムアウト(1s~900s)
+      ・タイムアウト(1s~900s = 15分)
       ・環境変数(4KB)
       ・関数リソースポリシー(20KB?)
       ・関数レイヤー(5レイヤー)
@@ -156,6 +156,88 @@
       ・S3バケットからのLambda関数の呼び出しを許可するポリシー
       ・API GatewayからのLambda関数の呼び出しを許可するポリシー
       ・SNSからのLambda関数の呼び出しを許可するポリシー
+
+- ENTRY:
+  EXPLAIN: イベント型
+  BODY: |
+    ■ Cognito User Pools
+
+      トリガー種別 (triggerSource) により request/response の形が変わる
+      Pre sign-up, Post authentication, Pre token generation など
+
+      {
+        "version": 1,
+        "triggerSource": "PostAuthentication_Authentication",
+        "region": "ap-northeast-1",
+        "userPoolId": "ap-northeast-1_xxxxxxxxx",
+        "userName": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        "callerContext": {
+          "awsSdkVersion": "aws-sdk-unknown-version",
+          "clientId": "xxxxxxxxxxxxxxxxxxxxxxxxxx"
+        },
+        "request": {
+          "userAttributes": {
+            "sub": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+            "email_verified": "true",
+            "email": "user@example.com"
+          }
+        },
+        "response": {}
+      }
+
+    ■ S3
+
+      Records 配列にオブジェクト操作ごとのレコードが入る
+      s3.bucket.name / s3.object.key でバケットとキーを取得
+
+      {
+        "Records": [
+          {
+            "eventVersion": "2.1",
+            "eventSource": "aws:s3",
+            "awsRegion": "ap-northeast-1",
+            "eventName": "ObjectCreated:Put",
+            "s3": {
+              "bucket": {
+                "name": "my-bucket",
+                "arn": "arn:aws:s3:::my-bucket"
+              },
+              "object": {
+                "key": "path/to/object.txt",
+                "size": 1024,
+                "eTag": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+                "sequencer": "0A1B2C3D4E5F678901"
+              }
+            }
+          }
+        ]
+      }
+
+    ■ DynamoDB Streams
+
+
+    ■ Simple Notification Service
+
+
+    ■ Simple Email Service
+
+
+    ■ Simple Queue Service
+
+
+    ■ CloudFormation
+
+
+    ■ CloudWatch Logs
+
+
+    ■ CloudWatch イベント
+
+
+    ■ API Gateway
+
+
+    ■ CloudFront
 
 - ENTRY:
   EXPLAIN: ライフサイクル
@@ -850,22 +932,1072 @@
 
     ■ メソッド一覧
 
-    ・CreateFunction                    関数作成(ZIPまたはS3からコードをアップロードし実行ロール、ランタイム指定)
-    ・GetFunction                       関数コードとメタデータを取得
-    ・GetFunctionConfiguration          関数設定のみ取得（メモリ、タイムアウト等）
-    ・UpdateFunctionCode                関数コードをZIPで更新（S3またはZipFile）
-    ・UpdateFunctionConfiguration       ランタイム、メモリ、タイムアウト等の設定更新
-    ・DeleteFunction                    関数削除
-    ・ListFunctions                     リージョン内の関数一覧を取得
-    ・Invoke                            関数を同期/非同期で呼び出し（ペイロード送信）
-    ・PublishVersion                    現行コードをバージョンとして発行
-    ・CreateAlias                       バージョンへの別名作成（トラフィック分割に使用）
-    ・UpdateAlias                       エイリアスのターゲットバージョンを更新
-    ・DeleteAlias                       エイリアス削除
-    ・ListAliases                       関数のエイリアス一覧取得
-    ・AddPermission                     関数に対する呼び出し許可を追加（Principal指定）
-    ・RemovePermission                  指定した許可の削除
-    ・GetPolicy                         関数のリソースポリシーを取得
-    ・TagResource                       関数にタグを付与
-    ・UntagResource                     関数からタグを削除
-    ・ListVersionsByFunction            関数のバージョン一覧を取得
+    ・ CreateFunction                    関数作成(ZIPまたはS3からコードをアップロードし実行ロール、ランタイム指定)
+    ・ GetFunction                       関数コードとメタデータを取得
+    ・ GetFunctionConfiguration          関数設定のみ取得（メモリ、タイムアウト等）
+    ・ UpdateFunctionCode                関数コードをZIPで更新（S3またはZipFile）
+    ・ UpdateFunctionConfiguration       ランタイム、メモリ、タイムアウト等の設定更新
+    ・ DeleteFunction                    関数削除
+    ・ ListFunctions                     リージョン内の関数一覧を取得
+    ・ Invoke                            関数を同期/非同期で呼び出し（ペイロード送信）
+    ・ PublishVersion                    現行コードをバージョンとして発行
+    ・ CreateAlias                       バージョンへの別名作成（トラフィック分割に使用）
+    ・ UpdateAlias                       エイリアスのターゲットバージョンを更新
+    ・ DeleteAlias                       エイリアス削除
+    ・ ListAliases                       関数のエイリアス一覧取得
+    ・ AddPermission                     関数に対する呼び出し許可を追加（Principal指定）
+    ・ RemovePermission                  指定した許可の削除
+    ・ GetPolicy                         関数のリソースポリシーを取得
+    ・ TagResource                       関数にタグを付与
+    ・ UntagResource                     関数からタグを削除
+    ・ ListVersionsByFunction            関数のバージョン一覧を取得
+
+    ■ 関数名管理
+
+    ・命名規則 (例)
+      ・環境-サービス-処理 形式: prod-api-auth, dev-batch-daily
+      ・サービス-用途 形式: notification-send-email, order-process-payment
+      ・プロジェクト-モジュール 形式: myapp-user-handler
+
+    ・制約
+      ・最大 64 文字 (unqualified)。英数字とハイフン (-) のみ推奨
+      ・同一リージョン・同一アカウントで一意である必要あり
+      ・作成後のリネームは不可。変更時は新規作成してトリガーを付け替える
+
+    ・Tips
+      ・環境 (dev/stg/prod) をプレフィックスに入れると ListFunctions のフィルタや権限分離に便利
+      ・短すぎると衝突しやすく、長すぎると ARN やログの可読性が下がる
+      ・バージョンやエイリアスで出し分ける場合は関数名は用途で固定し、Qualifier で切り替える
+
+    ■ Handler
+
+    ・CreateFunction / UpdateFunctionConfiguration で指定するエントリポイント文字列
+    ・形式はランタイムにより異なる。Node.js は「ファイル名.エクスポート名」が一般的
+
+    ・形式の例 (ランタイム別)
+      ・Node.js: index.handler (index.js の exports.handler)
+      ・Python:  lambda_function.lambda_handler (lambda_function.py の lambda_handler)
+      ・その他:  各ランタイムのドキュメントを参照
+
+    ・Node.js ハンドラの引数
+      ・event: object。Invoke の Payload またはトリガー (API Gateway, S3 等) から渡るイベント
+      ・context: object。requestId, functionName, getRemainingTimeInMillis() 等の実行コンテキスト
+
+    ・Tips
+      ・ハンドラ名を変える場合は UpdateFunctionConfiguration の Handler で更新可能
+      ・同一 ZIP 内に複数エントリを用意し、関数ごとに別ハンドラを指定することも可能
+
+- ENTRY:
+  EXPLAIN: CreateFunction
+  BODY: |
+    ■ 概要
+
+    ・Lambda 関数を新規作成する SDK メソッド
+    ・ZIP または S3 からコードを渡し、ランタイム・ロール・ハンドラを指定する
+    ・CreateFunctionCommand を LambdaClient に渡して実行する
+
+    ■ ユースケース
+
+    ・新規 Lambda 関数をコードから自動作成する (CI/CD や IaC)
+    ・S3 に置いた ZIP を参照して関数をデプロイする
+    ・テンプレートやスクリプトから同一設定の関数を複数作成する
+    ・マネージドコンソールではなく SDK/CLI で関数を一括登録する
+
+    ■ サンプル
+
+      const { LambdaClient, CreateFunctionCommand } = require('@aws-sdk/client-lambda');
+      const fs = require('fs');
+
+      const client = new LambdaClient({ region: 'ap-northeast-1' });
+      const zip = fs.readFileSync('./function.zip');
+
+      const command = new CreateFunctionCommand({
+        FunctionName:    'my-function',
+        Runtime:         'nodejs20.x',
+        Role:            'arn:aws:iam::123456789012:role/lambda-execution-role',
+        Handler:         'index.handler',
+        Code:            { ZipFile: zip },
+        // Code:         { S3Bucket: 'my-bucket', S3Key: 'my-function.zip' }  // S3運用時
+        MemorySize:      256,
+        Timeout:         30,
+        Environment: {
+          Variables: { NODE_ENV: 'production' },
+        },
+      });
+
+      const result = await client.send(command);
+
+      // 重要な戻り値の実際の例 (抜粋)
+      const resultExample = {
+        FunctionArn:     'arn:aws:lambda:ap-northeast-1:123456789012:function:my-function',
+        CodeSize:        1024,
+        LastModified:    '2024-01-15T12:34:56.000+0000',
+        CodeSha256:      'a1b2c3d4e5f6789...',
+        Version:         '$LATEST',
+        State:           'Pending',
+        ... 残りは引数と同値
+      };
+
+    ■ 引数(必須)
+
+    ・FunctionName: string           関数名、同一リージョン・同一アカウントで一意
+    ・Runtime: string                ランタイム、例: nodejs20.x, python3.12
+    ・Role: string                   lambda.amazonaws.com の信頼ポリシーを持つ IAM ロールの ARN
+    ・Handler: string                エントリポイント、例: index.handler
+    ・Code: object                   デプロイパッケージ、ZipFile (Buffer) または S3Bucket + S3Key
+
+        ※ 注意
+        ・ZipFile は zip の直アップロード時 50MB、解凍後 250MB まで
+        ・超過時は S3 に置き S3Bucket/S3Key で指定
+        ・同一 FunctionName が既に存在する場合は ResourceConflictException
+        ・更新は UpdateFunctionCode / UpdateFunctionConfiguration を使用
+
+    ■ 引数(任意)
+
+    ・MemorySize: number             メモリ MB、128~10240、デフォルト 128
+    ・Timeout: number                最大実行秒、1~900、デフォルト 3
+    ・Environment: object            Variables にキー/値の環境変数
+    ・VpcConfig: object              SubnetIds, SecurityGroupIds で VPC 内実行
+    ・Architectures: string[]        x86_64 または arm64、省略時は x86_64
+    ・PackageType: string            Zip または Image
+    ・Tags: object                   リソースタグのキー/値
+
+        ※ 注意
+        ・VpcConfig を付けると ENI 作成のため初回実行が遅くなる場合あり
+
+    ■ 戻り値(重要)
+
+    ・FunctionArn: string            作成された関数の ARN (引数にない)
+    ・CodeSize: number               デプロイパッケージのバイト数
+    ・LastModified: string           最終更新日時 (ISO8601)
+    ・CodeSha256: string             デプロイパッケージの SHA256
+    ・Version: string                バージョン ($LATEST)
+    ・State: string                  作成直後は Pending、のち Active
+
+      ※ CodeSha256 の用途: デプロイパッケージのハッシュ値を取得し、更新前後の比較に使用
+         コードの変更を検知すると、更新前後のハッシュ値が異なるので、更新が必要か判断可能
+         更新が必要な場合は、UpdateFunctionCode を使用して更新
+
+    ■ 戻り値(引数と同値)
+
+    ・FunctionName: string           関数名
+    ・Runtime: string                ランタイム
+    ・Handler: string                ハンドラ
+    ・Role: string                   実行ロール ARN
+    ・Description: string            説明 (指定時のみ)
+    ・Timeout: number                タイムアウト秒
+    ・MemorySize: number             メモリ MB
+    ・PackageType: string            Zip または Image
+    ・Architectures: string[]        アーキテクチャの配列
+    ・Environment: object            Variables (指定時のみ)
+    ・VpcConfig: object              SubnetIds, SecurityGroupIds (指定時のみ)
+
+- ENTRY:
+  EXPLAIN: GetFunction
+  BODY: |
+    ■ 概要
+
+    ・関数のメタデータとコードの取得先を返す SDK メソッド
+    ・GetFunctionConfiguration は設定のみ、GetFunction は設定に加え Code (ダウンロード URL 等) と Tags を返す
+    ・GetFunctionCommand を LambdaClient に渡して実行する
+
+    ■ ユースケース
+
+    ・デプロイ済みの関数コードを署名付き URL でダウンロードする
+    ・Configuration とタグをまとめて取得し、一覧や監視に利用する
+    ・CodeSha256 でローカルとリモートのコード差分を判定し、更新要否を決める
+    ・特定バージョンやエイリアス (Qualifier) の設定・コードを取得する
+
+    ■ サンプル
+
+      const { LambdaClient, GetFunctionCommand } = require('@aws-sdk/client-lambda');
+
+      const client = new LambdaClient({ region: 'ap-northeast-1' });
+
+      const command = new GetFunctionCommand({
+        FunctionName: 'my-function',
+        // Qualifier: '1',  // バージョンまたはエイリアス (任意)
+      });
+
+      const result = await client.send(command);
+
+      // 重要な戻り値の実際の例 (抜粋)
+      const resultExample = {
+        Configuration: {
+          FunctionArn:  'arn:aws:lambda:ap-northeast-1:123456789012:function:my-function',
+          FunctionName: 'my-function',
+          Runtime:      'nodejs20.x',
+          Handler:      'index.handler',
+          CodeSize:     1024,
+          State:        'Active',
+          LastModified: '2024-01-15T12:34:56.000+0000',
+          ... 他は GetFunctionConfiguration と同様
+        },
+        Code: {
+          Location:       'https://... (署名付き URL、デプロイパッケージのダウンロード用)',
+          RepositoryType: 'S3',
+        },
+        Tags: { env: 'production' },
+      };
+
+    ■ 引数(必須)
+
+    ・FunctionName: string           関数名、ARN、または部分 ARN。最大 170 文字
+
+    ■ 引数(任意)
+
+    ・Qualifier: string              バージョン番号またはエイリアス。省略時は $LATEST。最大 128 文字
+
+        ※ 注意
+        ・存在しない関数名の場合は ResourceNotFoundException
+        ・Code.Location は署名付き URL のため有効期限あり (数分〜数十分)、取得後は早めにダウンロード
+
+    ■ 戻り値(重要)
+
+    ・Configuration: object          関数設定 (GetFunctionConfiguration と同じ形)
+    ・Code: object                   コードの取得先。Zip 時は Location (署名付き URL) と RepositoryType: 'S3'
+    ・Tags: object                   リソースタグのキー/値 (指定時のみ)
+
+      ※ Code.Location: デプロイパッケージをダウンロードするための署名付き URL。ブラウザや curl で取得可能
+
+    ■ 戻り値(Configuration の主な内容)
+
+    ・FunctionArn: string            関数の ARN
+    ・FunctionName: string           関数名
+    ・Runtime: string                ランタイム
+    ・Handler: string                ハンドラ
+    ・Role: string                   実行ロール ARN
+    ・CodeSize: number               デプロイパッケージのバイト数
+    ・CodeSha256: string             デプロイパッケージの SHA256
+    ・LastModified: string           最終更新日時 (ISO8601)
+    ・Version: string                バージョン
+    ・State: string                  Active など
+    ・Timeout: number                タイムアウト秒
+    ・MemorySize: number             メモリ MB
+    ・Environment: object            Variables (指定時のみ)
+    ・VpcConfig: object              SubnetIds, SecurityGroupIds (指定時のみ)
+
+- ENTRY:
+  EXPLAIN: GetFunctionConfiguration
+  BODY: |
+    ■ 概要
+
+    ・関数の設定のみを取得する SDK メソッド
+    ・GetFunction は設定に加え Code (ダウンロード URL) と Tags を返すが、本メソッドは設定のみで軽量
+    ・GetFunctionConfigurationCommand を LambdaClient に渡して実行する
+
+    ■ ユースケース
+
+    ・コードやタグが不要で、設定 (メモリ、タイムアウト、環境変数等) だけ参照する
+    ・一覧取得 (ListFunctions) 後に各関数の詳細設定を取得する
+    ・CodeSha256 や LastModified でデプロイ状態の確認や差分判定に使う
+    ・特定バージョンやエイリアス (Qualifier) の設定のみ取得する
+
+    ■ サンプル
+
+      const { LambdaClient, GetFunctionConfigurationCommand } = require('@aws-sdk/client-lambda');
+
+      const client = new LambdaClient({ region: 'ap-northeast-1' });
+
+      const command = new GetFunctionConfigurationCommand({
+        FunctionName: 'my-function',
+        // Qualifier: '1',  // バージョンまたはエイリアス (任意)
+      });
+
+      const result = await client.send(command);
+
+      // 戻り値の実際の例 (抜粋)
+      const resultExample = {
+        FunctionArn:   'arn:aws:lambda:ap-northeast-1:123456789012:function:my-function',
+        FunctionName:  'my-function',
+        Runtime:       'nodejs20.x',
+        Handler:       'index.handler',
+        Role:          'arn:aws:iam::123456789012:role/lambda-execution-role',
+        CodeSize:      1024,
+        CodeSha256:    'a1b2c3d4e5f6789...',
+        LastModified: '2024-01-15T12:34:56.000+0000',
+        Version:       '$LATEST',
+        State:         'Active',
+        Timeout:       30,
+        MemorySize:    256,
+        Environment:   { Variables: { NODE_ENV: 'production' } },
+      };
+
+    ■ 引数(必須)
+
+    ・FunctionName: string           関数名、ARN、または部分 ARN。最大 170 文字
+
+    ■ 引数(任意)
+
+    ・Qualifier: string              バージョン番号またはエイリアス。省略時は $LATEST。最大 128 文字
+
+        ※ 注意
+        ・存在しない関数名の場合は ResourceNotFoundException
+        ・コードのダウンロードは GetFunction の Code.Location を使用する
+
+    ■ 戻り値(主な内容)
+
+    ・FunctionArn: string            関数の ARN
+    ・FunctionName: string           関数名
+    ・Runtime: string                ランタイム
+    ・Handler: string                ハンドラ
+    ・Role: string                   実行ロール ARN
+    ・CodeSize: number               デプロイパッケージのバイト数
+    ・CodeSha256: string             デプロイパッケージの SHA256
+    ・LastModified: string           最終更新日時 (ISO8601)
+    ・Version: string                バージョン
+    ・State: string                  Active など
+    ・Timeout: number                タイムアウト秒
+    ・MemorySize: number             メモリ MB
+    ・Description: string            説明 (指定時のみ)
+    ・Environment: object            Variables、Error (指定時のみ)
+    ・VpcConfig: object              SubnetIds, SecurityGroupIds (指定時のみ)
+    ・PackageType: string            Zip または Image
+    ・Architectures: string[]        アーキテクチャの配列
+
+- ENTRY:
+  EXPLAIN: UpdateFunctionCode
+  BODY: |
+    ■ 概要
+
+    ・既存 Lambda 関数のデプロイパッケージ (コード) のみを更新する SDK メソッド
+    ・ZIP または S3 を指定し、ランタイム・ハンドラ等の設定は変更しない
+    ・UpdateFunctionCodeCommand を LambdaClient に渡して実行する
+
+    ■ ユースケース
+
+    ・CI/CD でビルドした ZIP をデプロイする
+    ・GetFunction の CodeSha256 と比較し、変更がある場合のみ本メソッドで更新する
+    ・S3 にアップロード済みの ZIP を参照して関数を更新する
+
+    ■ サンプル
+
+      const { LambdaClient, UpdateFunctionCodeCommand } = require('@aws-sdk/client-lambda');
+      const fs = require('fs');
+
+      const client = new LambdaClient({ region: 'ap-northeast-1' });
+      const zip = fs.readFileSync('./function.zip');
+
+      const command = new UpdateFunctionCodeCommand({
+        FunctionName: 'my-function',
+        Code:         { ZipFile: zip },
+        // Code: { S3Bucket: 'my-bucket', S3Key: 'my-function.zip' }  // S3 運用時
+        // Publish: true,  // 新バージョンとして発行する場合
+      });
+
+      const result = await client.send(command);
+      // 戻り値は FunctionConfiguration 形式 (GetFunctionConfiguration と同様)
+
+    ■ 引数(必須)
+
+    ・FunctionName: string           更新対象の関数名、ARN、または部分 ARN
+    ・Code: object                   デプロイパッケージ。ZipFile (Buffer) または S3Bucket + S3Key
+
+        ※ 注意
+        ・ZipFile は直アップロード 50MB、解凍後 250MB まで。超過時は S3 で指定
+        ・更新中は State が Pending になり、完了後に Active
+
+    ■ 引数(任意)
+
+    ・Publish: boolean                true で更新後に新バージョンとして発行
+    ・DryRun: boolean                 true で検証のみ実行し、実際には更新しない
+    ・RevisionId: string              楽観ロック。指定時は現在の RevisionId と一致する場合のみ更新
+    ・Architectures: string[]        x86_64 または arm64
+
+    ■ 戻り値
+
+    ・GetFunctionConfiguration と同じ FunctionConfiguration 形式 (FunctionArn, CodeSize, CodeSha256, LastModified, State 等)
+
+- ENTRY:
+  EXPLAIN: UpdateFunctionConfiguration
+  BODY: |
+    ■ 概要
+
+    ・既存 Lambda 関数の設定 (ランタイム、メモリ、タイムアウト、環境変数等) を更新する SDK メソッド
+    ・コードは変更せず、ハンドラ・メモリ・タイムアウト・VPC・環境変数などを更新する
+    ・UpdateFunctionConfigurationCommand を LambdaClient に渡して実行する
+
+    ■ ユースケース
+
+    ・メモリやタイムアウトを変更する
+    ・環境変数を追加・変更する
+    ・VPC 設定やランタイム・ハンドラを変更する
+    ・デプロイ後に設定だけチューニングする
+
+    ■ サンプル
+
+      const { LambdaClient, UpdateFunctionConfigurationCommand } = require('@aws-sdk/client-lambda');
+
+      const client = new LambdaClient({ region: 'ap-northeast-1' });
+
+      const command = new UpdateFunctionConfigurationCommand({
+        FunctionName: 'my-function',
+        MemorySize:   512,
+        Timeout:      60,
+        Environment: {
+          Variables: { NODE_ENV: 'production', LOG_LEVEL: 'debug' },
+        },
+      });
+
+      const result = await client.send(command);
+      // 戻り値は FunctionConfiguration 形式
+
+    ■ 引数(必須)
+
+    ・FunctionName: string           更新対象の関数名、ARN、または部分 ARN
+
+    ■ 引数(任意)
+
+    ・Runtime: string                ランタイム、例: nodejs20.x
+    ・Handler: string                エントリポイント
+    ・Role: string                   実行ロール ARN
+    ・Description: string            説明
+    ・Timeout: number                最大実行秒、1~900
+    ・MemorySize: number             メモリ MB、128~10240
+    ・Environment: object            Variables にキー/値の環境変数
+    ・VpcConfig: object              SubnetIds, SecurityGroupIds。空で VPC 解除
+    ・Layers: string[]               レイヤー ARN の配列
+    ・RevisionId: string             楽観ロック
+
+        ※ 注意
+        ・指定した項目のみ更新され、省略した項目は現状維持
+        ・VpcConfig を変更すると ENI の再作成で初回実行が遅くなる場合あり
+
+    ■ 戻り値
+
+    ・GetFunctionConfiguration と同じ FunctionConfiguration 形式
+
+- ENTRY:
+  EXPLAIN: DeleteFunction
+  BODY: |
+    ■ 概要
+
+    ・Lambda 関数を削除する SDK メソッド
+    ・削除は不可逆で復元不可。$LATEST を削除すると関数全体が削除され、Qualifier 指定でバージョンまたはエイリアスのみ削除可能
+    ・DeleteFunctionCommand を LambdaClient に渡して実行する
+
+    ■ ユースケース
+
+    ・不要になった関数を整理する
+    ・CI/CD で環境ごとの関数をテアダウンする
+    ・特定バージョンやエイリアスだけ削除する (Qualifier 指定)
+
+    ■ サンプル
+
+      const { LambdaClient, DeleteFunctionCommand } = require('@aws-sdk/client-lambda');
+
+      const client = new LambdaClient({ region: 'ap-northeast-1' });
+
+      const command = new DeleteFunctionCommand({
+        FunctionName: 'my-function',
+        // Qualifier: '1',  // 指定時はそのバージョンまたはエイリアスのみ削除
+      });
+
+      await client.send(command);
+      // 成功時は戻り値なし (204)
+
+    ■ 引数(必須)
+
+    ・FunctionName: string           削除対象の関数名、ARN、または部分 ARN
+
+    ■ 引数(任意)
+
+    ・Qualifier: string              バージョン番号またはエイリアス。省略時は $LATEST を削除し関数全体が消える
+
+        ※ 注意
+        ・削除は不可逆。API Gateway や EventBridge 等のトリガー参照は事前に外す
+        ・lambda:DeleteFunction の IAM 権限が必要
+
+    ■ 戻り値
+
+    ・成功時は body なし (HTTP 204)。失敗時は ResourceNotFoundException 等
+
+- ENTRY:
+  EXPLAIN: ListFunctions
+  BODY: |
+    ■ 概要
+
+    ・リージョン内の Lambda 関数一覧を取得する SDK メソッド
+    ・各要素は FunctionConfiguration 相当 (関数名、ARN、ランタイム、メモリ等)。コードやタグは含まない
+    ・ListFunctionsCommand を LambdaClient に渡して実行する
+
+    ■ ユースケース
+
+    ・リージョン内の全関数を一覧表示する
+    ・名前プレフィックスで絞り込み、該当関数の ARN や設定を取得する
+    ・一覧取得後に GetFunction / GetFunctionConfiguration で詳細を取得する
+
+    ■ サンプル
+
+      const { LambdaClient, ListFunctionsCommand } = require('@aws-sdk/client-lambda');
+
+      const client = new LambdaClient({ region: 'ap-northeast-1' });
+
+      const command = new ListFunctionsCommand({
+        // MaxItems: 50,
+        // Marker: '...',           // ページネーション (NextMarker を次回に渡す)
+        // FunctionVersion: 'ALL',  // 省略時は $LATEST のみ。ALL で全バージョン
+      });
+
+      const result = await client.send(command);
+      // result.Functions => FunctionConfiguration の配列
+      // result.NextMarker => 次ページがある場合に設定
+
+    ■ 引数(必須)
+
+    ・なし
+
+    ■ 引数(任意)
+
+    ・MaxItems: number               取得する最大件数。デフォルト 50、最大 10000 程度
+    ・Marker: string                 ページネーション。前回の NextMarker を渡す
+    ・FunctionVersion: string        ALL で全バージョン、省略時は $LATEST のみ
+
+        ※ 注意
+        ・リージョン単位。他リージョンは別クライアントで取得
+        ・大量の関数がある場合は NextMarker でページング処理する
+
+    ■ 戻り値
+
+    ・Functions: array               FunctionConfiguration の配列 (FunctionName, FunctionArn, Runtime, MemorySize, LastModified 等)
+    ・NextMarker: string             次ページがある場合に設定。次回の Marker に渡す
+
+- ENTRY:
+  EXPLAIN: Invoke
+  BODY: |
+    ■ 概要
+
+    ・Lambda 関数を同期または非同期で呼び出す SDK メソッド
+    ・InvocationType で RequestResponse (同期) または Event (非同期) を指定
+    ・Payload でハンドラの event に渡すデータを指定
+    ・InvokeCommand を LambdaClient に渡して実行
+
+    ■ ユースケース
+
+    ・別サービスやスクリプトから Lambda を直接呼び出す
+    ・同期で結果を待ち受け、戻り値を利用する (RequestResponse)
+    ・非同期で発火だけしてすぐ戻る (Event)
+    ・バッチや通知向け
+    ・DryRun で権限やパラメータの検証のみ行う
+
+    ■ サンプル
+
+      const { LambdaClient, InvokeCommand } = require('@aws-sdk/client-lambda');
+
+      const client = new LambdaClient({ region: 'ap-northeast-1' });
+
+      const command = new InvokeCommand({
+        FunctionName:   'my-function',
+        InvocationType: 'RequestResponse',  // RequestResponse | Event | DryRun
+        Payload:        JSON.stringify({ key: 'value' }),
+        // Qualifier: '1',  // バージョンまたはエイリアス
+        // LogType: 'Tail', // レスポンスに直近のログを含める
+      });
+
+      const result = await client.send(command);
+      const payload = JSON.parse(new TextDecoder().decode(result.Payload));
+
+    ■ 引数(必須)
+
+    ・FunctionName: string            呼び出す関数名、ARN、または部分 ARN
+
+    ■ 引数(任意)
+
+    ・InvocationType: string          RequestResponse (同期、デフォルト) / Event (非同期) / DryRun (検証のみ)
+    ・Payload: Buffer | Uint8Array    ハンドラの event に渡すデータ。JSON 文字列をエンコードして渡すことが多い
+    ・Qualifier: string               バージョン番号またはエイリアス。省略時は $LATEST
+    ・LogType: string                 None (デフォルト) / Tail (直近 4KB のログを LogResult に含める)
+    ・ClientContext: string           base64 エンコードしたクライアントコンテキスト (モバイル等)
+
+        ※ 注意
+        ・同期時は関数の完了またはタイムアウトまで待つ
+        ・ペイロード応答は同期 6MB まで
+        ・非同期 (Event) は受け付け即 202 で返り、実行結果は受け取れない
+        ・リトライは最大 2 回
+
+    ■ 戻り値
+
+    ・StatusCode: number              HTTP ステータス。同期 200、非同期 202、DryRun 204 等
+    ・Payload: Uint8Array             同期時はハンドラの戻り値。デコードして利用
+    ・ExecutedVersion: string         実行したバージョン (Qualifier 未指定時は $LATEST 等)
+    ・FunctionError: string           実行時エラー時は Unhandled / Handled
+    ・LogResult: string               LogType: Tail 指定時、base64 エンコードされたログ
+
+- ENTRY:
+  EXPLAIN: PublishVersion
+  BODY: |
+    ■ 概要
+
+    ・$LATEST の現在のコードと設定を不変のバージョンとして発行する SDK メソッド
+    ・発行されたバージョンは変更・上書き不可
+    ・エイリアスのターゲットや本番参照に使う
+    ・PublishVersionCommand を LambdaClient に渡して実行する
+
+    ■ ユースケース
+
+    ・本番用に固定バージョンを切り、エイリアス (例: prod) で参照
+    ・ロールバック時にエイリアスのターゲットを前のバージョンに切り替える
+    ・UpdateFunctionCode の Publish: true と同等の効果を後から取りたい場合
+
+    ■ サンプル
+
+      const { LambdaClient, PublishVersionCommand } = require('@aws-sdk/client-lambda');
+
+      const client = new LambdaClient({ region: 'ap-northeast-1' });
+
+      const command = new PublishVersionCommand({
+        FunctionName: 'my-function',
+        // RevisionId: '...',  // 楽観ロック。一致する場合のみ発行
+        // Description: 'Release 1.0.0',
+      });
+
+      const result = await client.send(command);
+      // result.Version => 新バージョン番号 (例: '1')
+      // result.FunctionArn => バージョン付き ARN
+
+    ■ 引数(必須)
+
+    ・FunctionName: string           バージョン発行対象の関数名、ARN、または部分 ARN
+
+    ■ 引数(任意)
+
+    ・RevisionId: string             楽観ロック。現在の RevisionId と一致する場合のみ発行
+    ・Description: string            バージョンの説明
+
+        ※ 注意
+        ・発行後のバージョンは不変
+        ・変更する場合は $LATEST を更新してから再度 PublishVersion
+        ・バージョン数に上限あり
+        ・不要なバージョンは DeleteFunction に Qualifier で削除可能
+
+    ■ 戻り値
+
+    ・GetFunctionConfiguration と同じ FunctionConfiguration 形式
+    ・Version に新バージョン番号、FunctionArn にバージョン付き ARN が入る
+
+- ENTRY:
+  EXPLAIN: CreateAlias
+  BODY: |
+    ■ 概要
+
+    ・バージョンへの別名 (エイリアス) を作成する SDK メソッド
+    ・Invoke やトリガーでは Qualifier にエイリアス名を指定でき、実体バージョンを切り替えずに参照先だけ変えられる
+    ・CreateAliasCommand を LambdaClient に渡して実行する
+
+    ■ ユースケース
+
+    ・本番用エイリアス (prod) をバージョン 1 に向け、デプロイ後に UpdateAlias でバージョン 2 に切り替える
+    ・トラフィック分割 (RoutingConfig) で複数バージョンに割合を振り、段階的ロールアウトする
+
+    ■ サンプル
+
+      const { LambdaClient, CreateAliasCommand } = require('@aws-sdk/client-lambda');
+
+      const client = new LambdaClient({ region: 'ap-northeast-1' });
+
+      const command = new CreateAliasCommand({
+        FunctionName:    'my-function',
+        Name:            'prod',
+        FunctionVersion: '1',
+        // Description: 'Production alias',
+        // RoutingConfig: { AdditionalVersionWeights: { '2': 0.1 } },  // 10% を v2 へ
+      });
+
+      const result = await client.send(command);
+      // result.AliasArn, result.Name, result.FunctionVersion 等
+
+    ■ 引数(必須)
+
+    ・FunctionName: string           対象の関数名、ARN、または部分 ARN
+    ・Name: string                   エイリアス名。同一関数内で一意、最大 128 文字
+    ・FunctionVersion: string        参照するバージョン番号 (例: 1) または $LATEST
+
+    ■ 引数(任意)
+
+    ・Description: string            エイリアスの説明
+    ・RoutingConfig: object          AdditionalVersionWeights でバージョンごとのトラフィック割合 (合計 100%)
+
+    ■ 戻り値
+
+    ・AliasArn, Name, FunctionVersion, Description, RoutingConfig, RevisionId 等のエイリアス情報
+
+- ENTRY:
+  EXPLAIN: UpdateAlias
+  BODY: |
+    ■ 概要
+
+    ・既存エイリアスが参照するバージョンや説明・トラフィック分割を更新する SDK メソッド
+    ・本番エイリアス (prod) の FunctionVersion を新バージョンに変えることで、切り替え・ロールアウトが可能
+    ・UpdateAliasCommand を LambdaClient に渡して実行する
+
+    ■ ユースケース
+
+    ・デプロイ後にエイリアスの参照先を新バージョンに切り替える
+    ・トラフィック分割の割合を変更し、段階的ロールアウトやロールバックする
+
+    ■ サンプル
+
+      const { LambdaClient, UpdateAliasCommand } = require('@aws-sdk/client-lambda');
+
+      const client = new LambdaClient({ region: 'ap-northeast-1' });
+
+      const command = new UpdateAliasCommand({
+        FunctionName:    'my-function',
+        Name:            'prod',
+        FunctionVersion: '2',
+        // Description: 'Production v2',
+        // RoutingConfig: { AdditionalVersionWeights: { '1': 0.2, '2': 0.8 } },
+      });
+
+      const result = await client.send(command);
+
+    ■ 引数(必須)
+
+    ・FunctionName: string           対象の関数名、ARN、または部分 ARN
+    ・Name: string                   更新するエイリアス名
+
+    ■ 引数(任意)
+
+    ・FunctionVersion: string        参照するバージョン番号に更新
+    ・Description: string            説明の更新
+    ・RoutingConfig: object          AdditionalVersionWeights でトラフィック割合を更新
+
+    ■ 戻り値
+
+    ・AliasArn, Name, FunctionVersion, Description, RoutingConfig, RevisionId 等のエイリアス情報
+
+- ENTRY:
+  EXPLAIN: DeleteAlias
+  BODY: |
+    ■ 概要
+
+    ・指定したエイリアスを削除する SDK メソッド
+    ・関数やバージョンは削除されず、エイリアス名だけがなくなる
+    ・DeleteAliasCommand を LambdaClient に渡して実行する
+
+    ■ ユースケース
+
+    ・不要になったエイリアス (例: 旧 staging) を整理する
+    ・トラフィック分割をやめ、単一バージョン参照に戻す前に一時エイリアスを削除する
+
+    ■ サンプル
+
+      const { LambdaClient, DeleteAliasCommand } = require('@aws-sdk/client-lambda');
+
+      const client = new LambdaClient({ region: 'ap-northeast-1' });
+
+      const command = new DeleteAliasCommand({
+        FunctionName:  'my-function',
+        Name:          'staging',
+      });
+
+      await client.send(command);
+      // 成功時は戻り値なし (204)
+
+    ■ 引数(必須)
+
+    ・FunctionName: string           対象の関数名、ARN、または部分 ARN
+    ・Name: string                   削除するエイリアス名
+
+    ■ 戻り値
+
+    ・成功時は body なし (204)
+    ・失敗時は ResourceNotFoundException 等
+
+- ENTRY:
+  EXPLAIN: ListAliases
+  BODY: |
+    ■ 概要
+
+    ・指定した関数のエイリアス一覧を取得する SDK メソッド
+    ・各エイリアスの名前、参照バージョン、説明、トラフィック分割設定等を取得できる
+    ・ListAliasesCommand を LambdaClient に渡して実行する
+
+    ■ ユースケース
+
+    ・関数に紐づくエイリアスを一覧で確認する
+    ・エイリアス名や参照バージョンを取得し、Invoke の Qualifier や設定の検証に使う
+
+    ■ サンプル
+
+      const { LambdaClient, ListAliasesCommand } = require('@aws-sdk/client-lambda');
+
+      const client = new LambdaClient({ region: 'ap-northeast-1' });
+
+      const command = new ListAliasesCommand({
+        FunctionName: 'my-function',
+        // FunctionVersion: '1',  // 指定バージョンを参照するエイリアスのみ
+        // MaxItems: 50,
+        // Marker: '...',
+      });
+
+      const result = await client.send(command);
+      // result.Aliases => エイリアス情報の配列
+      // result.NextMarker => 次ページがある場合に設定
+
+    ■ 引数(必須)
+
+    ・FunctionName: string           対象の関数名、ARN、または部分 ARN
+
+    ■ 引数(任意)
+
+    ・FunctionVersion: string        指定バージョンを参照するエイリアスのみに絞る
+    ・MaxItems: number               取得する最大件数
+    ・Marker: string                 ページネーション。前回の NextMarker を渡す
+
+    ■ 戻り値
+
+    ・Aliases: array                 エイリアス情報の配列 (AliasArn, Name, FunctionVersion, Description, RoutingConfig 等)
+    ・NextMarker: string             次ページがある場合に設定
+
+- ENTRY:
+  EXPLAIN: AddPermission
+  BODY: |
+    ■ 概要
+
+    ・関数のリソースベースポリシーに「誰が Invoke してよいか」を追加する SDK メソッド
+    ・API Gateway、S3、EventBridge、SQS、他アカウント等、Principal を指定して呼び出しを許可する
+    ・AddPermissionCommand を LambdaClient に渡して実行する
+
+    ■ ユースケース
+
+    ・API Gateway や S3 等のトリガーから関数を呼べるようにする
+    ・他アカウントや特定 IAM ロールに Invoke を許可する
+    ・SourceArn で呼び出し元を制限し、最小権限にする
+
+    ■ サンプル
+
+      const { LambdaClient, AddPermissionCommand } = require('@aws-sdk/client-lambda');
+
+      const client = new LambdaClient({ region: 'ap-northeast-1' });
+
+      const command = new AddPermissionCommand({
+        FunctionName: 'my-function',
+        StatementId:  'AllowAPIGateway',
+        Action:        'lambda:InvokeFunction',
+        Principal:     'apigateway.amazonaws.com',
+        // SourceArn: 'arn:aws:execute-api:ap-northeast-1:123456789012:xxx/*',
+        // Qualifier: 'prod',
+      });
+
+      const result = await client.send(command);
+      // result.Statement => 追加されたポリシーステートメントの JSON
+
+    ■ 引数(必須)
+
+    ・FunctionName: string           対象の関数名、ARN、または部分 ARN
+    ・StatementId: string           ポリシー内の一意 ID。削除時 (RemovePermission) に同じ ID を指定
+    ・Action: string                 許可する操作。通常 lambda:InvokeFunction
+    ・Principal: string              許可する主体。サービス (apigateway.amazonaws.com 等)、IAM ARN、アカウント ID 等
+
+    ■ 引数(任意)
+
+    ・SourceArn: string              呼び出し元の ARN に制限する場合
+    ・SourceAccount: string         呼び出し元アカウント ID に制限する場合
+    ・Qualifier: string              バージョンまたはエイリアスにのみ付与する場合
+
+    ■ 戻り値
+
+    ・Statement: string              追加されたステートメントの JSON
+
+- ENTRY:
+  EXPLAIN: RemovePermission
+  BODY: |
+    ■ 概要
+
+    ・関数のリソースベースポリシーから、指定した StatementId の許可を削除する SDK メソッド
+    ・AddPermission で付与した StatementId を指定して削除する
+    ・RemovePermissionCommand を LambdaClient に渡して実行する
+
+    ■ ユースケース
+
+    ・API Gateway や S3 等のトリガー連携をやめる
+    ・不要な呼び出し許可を削除してセキュリティを絞る
+
+    ■ サンプル
+
+      const { LambdaClient, RemovePermissionCommand } = require('@aws-sdk/client-lambda');
+
+      const client = new LambdaClient({ region: 'ap-northeast-1' });
+
+      const command = new RemovePermissionCommand({
+        FunctionName: 'my-function',
+        StatementId:  'AllowAPIGateway',
+        // Qualifier: 'prod',
+      });
+
+      await client.send(command);
+      // 成功時は戻り値なし
+
+    ■ 引数(必須)
+
+    ・FunctionName: string           対象の関数名、ARN、または部分 ARN
+    ・StatementId: string            AddPermission で付けた一意 ID
+
+    ■ 引数(任意)
+
+    ・Qualifier: string              バージョンまたはエイリアスに付与した許可を削除する場合
+
+    ■ 戻り値
+
+    ・成功時は body なし。失敗時は ResourceNotFoundException 等
+
+- ENTRY:
+  EXPLAIN: GetPolicy
+  BODY: |
+    ■ 概要
+
+    ・関数に設定されているリソースベースポリシー (JSON) を取得する SDK メソッド
+    ・IAM 実行ロールのポリシーは取得できず、呼び出し許可 (AddPermission で追加したもの) のみ
+    ・GetPolicyCommand を LambdaClient に渡して実行する
+
+    ■ ユースケース
+
+    ・誰が Invoke できるか確認する
+    ・IaC や監査でポリシー内容を検証する
+    ・トラブルシューティングで許可設定を確認する
+
+    ■ サンプル
+
+      const { LambdaClient, GetPolicyCommand } = require('@aws-sdk/client-lambda');
+
+      const client = new LambdaClient({ region: 'ap-northeast-1' });
+
+      const command = new GetPolicyCommand({
+        FunctionName: 'my-function',
+        // Qualifier: 'prod',
+      });
+
+      const result = await client.send(command);
+      const policy = JSON.parse(result.Policy);
+
+    ■ 引数(必須)
+
+    ・FunctionName: string           対象の関数名、ARN、または部分 ARN
+
+    ■ 引数(任意)
+
+    ・Qualifier: string              バージョンまたはエイリアスに紐づくポリシーを取得する場合
+
+    ■ 戻り値
+
+    ・Policy: string                 リソースベースポリシーの JSON 文字列。パースして Statement 等を参照
+    ・リソースポリシーが未設定の場合は ResourceNotFoundException
+
+- ENTRY:
+  EXPLAIN: TagResource
+  BODY: |
+    ■ 概要
+
+    ・関数またはエイリアスにタグ (キー/値) を追加する SDK メソッド
+    ・既存タグに同じキーがある場合は上書き。コスト配分、環境識別、検索に利用する
+    ・TagResourceCommand を LambdaClient に渡して実行する
+
+    ■ ユースケース
+
+    ・環境 (Environment: prod)、コスト配分 (CostCenter: xxx)、プロジェクト名等を付与する
+    ・ListTags やコンソールでタグによるフィルタ・検索に使う
+
+    ■ サンプル
+
+      const { LambdaClient, TagResourceCommand } = require('@aws-sdk/client-lambda');
+
+      const client = new LambdaClient({ region: 'ap-northeast-1' });
+
+      const command = new TagResourceCommand({
+        Resource: 'arn:aws:lambda:ap-northeast-1:123456789012:function:my-function',
+        Tags:     { Environment: 'prod', CostCenter: 'team-a' },
+      });
+
+      await client.send(command);
+      // 成功時は戻り値なし
+
+    ■ 引数(必須)
+
+    ・Resource: string               関数またはエイリアスの ARN
+    ・Tags: object                   キー/値のタグ。キーは 1〜128 文字、値は 0〜256 文字
+
+    ■ 戻り値
+
+    ・成功時は body なし
+
+- ENTRY:
+  EXPLAIN: UntagResource
+  BODY: |
+    ■ 概要
+
+    ・関数またはエイリアスから指定したタグキーを削除する SDK メソッド
+    ・TagKeys で列挙したキーだけ削除され、他タグは残る
+    ・UntagResourceCommand を LambdaClient に渡して実行する
+
+    ■ ユースケース
+
+    ・不要になったタグを外す
+    ・環境移行後に古いタグを削除する
+
+    ■ サンプル
+
+      const { LambdaClient, UntagResourceCommand } = require('@aws-sdk/client-lambda');
+
+      const client = new LambdaClient({ region: 'ap-northeast-1' });
+
+      const command = new UntagResourceCommand({
+        Resource: 'arn:aws:lambda:ap-northeast-1:123456789012:function:my-function',
+        TagKeys:  ['CostCenter', 'OldTag'],
+      });
+
+      await client.send(command);
+      // 成功時は戻り値なし
+
+    ■ 引数(必須)
+
+    ・Resource: string               関数またはエイリアスの ARN
+    ・TagKeys: string[]              削除するタグのキー配列
+
+    ■ 戻り値
+
+    ・成功時は body なし
+
+- ENTRY:
+  EXPLAIN: ListVersionsByFunction
+  BODY: |
+    ■ 概要
+
+    ・指定した関数のバージョン一覧を取得する SDK メソッド
+    ・$LATEST と発行済みバージョン (1, 2, ...) のメタデータを取得できる
+    ・ListVersionsByFunctionCommand を LambdaClient に渡して実行する
+
+    ■ ユースケース
+
+    ・関数の全バージョンを一覧し、エイリアスの参照先候補やロールバック先を確認する
+    ・最新バージョン番号を取得して PublishVersion 後の検証に使う
+
+    ■ サンプル
+
+      const { LambdaClient, ListVersionsByFunctionCommand } = require('@aws-sdk/client-lambda');
+
+      const client = new LambdaClient({ region: 'ap-northeast-1' });
+
+      const command = new ListVersionsByFunctionCommand({
+        FunctionName: 'my-function',
+        // MaxItems: 50,
+        // Marker: '...',
+      });
+
+      const result = await client.send(command);
+      // result.Versions => FunctionConfiguration の配列
+      // result.NextMarker => 次ページがある場合に設定
+
+    ■ 引数(必須)
+
+    ・FunctionName: string           対象の関数名、ARN、または部分 ARN
+
+    ■ 引数(任意)
+
+    ・MaxItems: number               取得する最大件数
+    ・Marker: string                 ページネーション。前回の NextMarker を渡す
+
+    ■ 戻り値
+
+    ・Versions: array                FunctionConfiguration の配列 ($LATEST と発行済みバージョン)
+    ・NextMarker: string             次ページがある場合に設定

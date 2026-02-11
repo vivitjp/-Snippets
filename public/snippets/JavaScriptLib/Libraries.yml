@@ -17,7 +17,7 @@
   CATEGORY: formulajs(エクセル)
 
 - ENTRY:
-  EXPLAIN: インストール & 概要
+  EXPLAIN: 概要とインストール
   BODY: |
     ■ 概要
 
@@ -111,7 +111,7 @@
   CATEGORY: simple-statistics(統計)
 
 - ENTRY:
-  EXPLAIN: インストール & 概要
+  EXPLAIN: 概要とインストール
   BODY: |
     ■ 概要
 
@@ -192,7 +192,7 @@
   CATEGORY: big.js (高精度な十進数計算)
 
 - ENTRY:
-  EXPLAIN: インストール & 概要
+  EXPLAIN: 概要とインストール
   BODY: |
     ■ インストール(TypeScript 用型定義も含む)
 
@@ -256,7 +256,7 @@
   CATEGORY: csv-parse (CSVパース)
 
 - ENTRY:
-  EXPLAIN: インストール & 概要
+  EXPLAIN: 概要とインストール
   BODY: |
     ■ インストール(TypeScript 用型定義も含む)
 
@@ -340,7 +340,7 @@
   CATEGORY: Dompurify
 
 - ENTRY:
-  EXPLAIN: インストール & 概要
+  EXPLAIN: 概要とインストール
   BODY: |
     ■ インストール(TypeScript 用型定義も含む)
 
@@ -398,7 +398,7 @@
   CATEGORY: async-retry
 
 - ENTRY:
-  EXPLAIN: インストール & 概要
+  EXPLAIN: 概要とインストール
   BODY: |
     ■ インストール(TypeScript 用型定義も含む)
 
@@ -465,7 +465,7 @@
   CATEGORY: encoding-japanese
 
 - ENTRY:
-  EXPLAIN: インストール & 概要
+  EXPLAIN: 概要とインストール
   BODY: |
     ■ インストール(TypeScript 用型定義も含む)
 
@@ -567,7 +567,7 @@
   CATEGORY: html-react-parser
 
 - ENTRY:
-  EXPLAIN: インストール & 概要
+  EXPLAIN: 概要とインストール
   BODY: |
     ■ インストール(TypeScript 用型定義も含む)
 
@@ -639,7 +639,7 @@
   CATEGORY: iconv-lite
 
 - ENTRY:
-  EXPLAIN: インストール & 概要
+  EXPLAIN: 概要とインストール
   BODY: |
     ■ インストール(TypeScript 用型定義も含む)
 
@@ -707,7 +707,7 @@
   CATEGORY: immer
 
 - ENTRY:
-  EXPLAIN: インストール & 概要
+  EXPLAIN: 概要とインストール
   BODY: |
     ■ インストール(TypeScript 用型定義も含む)
 
@@ -811,7 +811,7 @@
   CATEGORY: moji
 
 - ENTRY:
-  EXPLAIN: インストール & 概要
+  EXPLAIN: 概要とインストール
   BODY: |
     ■ インストール(TypeScript 用型定義も含む)
 
@@ -899,7 +899,7 @@
   CATEGORY: node-forge
 
 - ENTRY:
-  EXPLAIN: インストール & 概要
+  EXPLAIN: 概要とインストール
   BODY: |
     ■ インストール(TypeScript 用型定義も含む)
 
@@ -1045,3 +1045,71 @@
 
       const pem = forge.pki.certificateToPem(cert);
       console.log('Certificate:', pem);
+
+#-------------------------------
+# mecab(形態素分析)
+#-------------------------------
+- ENTRY:
+  CATEGORY: mecab
+
+- ENTRY:
+  EXPLAIN: 概要とインストール
+  BODY: |
+    ■ 概要
+
+    ・日本語の形態素解析エンジン (C++ 製)
+    ・文を単語ごとに分割し、品詞や読みなどの情報を付与する
+    ・Node から使う場合はシステムに MeCab 本体を入れた上で、ラッパーやコマンド呼び出しで利用する
+
+    ■ 前提
+
+    ・MeCab 本体と辞書を OS にインストール済みである必要がある
+    ・Windows: 公式バイナリまたは Chocolatey 等で導入
+    ・macOS: brew install mecab mecab-ipadic
+    ・Linux: apt install mecab libmecab-dev mecab-ipadic-utf8 等
+
+    ■ リンク
+
+      official: https://taku910.github.io/mecab/
+      github:   https://github.com/taku910/mecab
+
+    ■ Node から使う場合
+
+    ・mecab-async などで MeCab コマンドを子プロセスとして実行する方法が一般的
+    ・ネイティブバインディング (node-mecab 等) はコンパイル環境が必要で、Node バージョンに依存しやすい
+
+    ■ 使用例 (コマンドライン)
+
+      echo "すもももももももものうち" | mecab
+
+    ■ PostgreSQL で使う場合
+
+    ・全文検索で MeCab を使う代表的な方法は textsearch_ja または PGroonga + MeCab
+    ・textsearch_ja: PostgreSQL 標準の全文検索 (tsvector/tsquery) に MeCab を組み合わせる
+    ・PGroonga: Groonga ベースの拡張で MeCab と統合可能。RDS 等マネージドでは利用不可な場合あり
+
+    ・textsearch_ja の前提
+
+      ・MeCab と辞書をサーバにインストール済み
+      ・textsearch_ja をビルドして PostgreSQL に拡張として読み込む
+
+    ・textsearch_ja の使用例
+
+      -- パース結果の確認 (拡張による関数名は環境により異なる)
+      SELECT * FROM parse_to_words('日本語の形態素解析');
+
+      -- 全文検索用の tsvector に変換 (設定名 'japanese' 等は辞書設定による)
+      SELECT to_tsvector('japanese', 'すもももももももものうち');
+
+      -- 検索クエリ用の tsquery に変換
+      SELECT to_tsquery('japanese', 'すもも');
+
+      -- GIN インデックスで検索を高速化
+      CREATE INDEX idx_body_gin ON articles USING GIN (to_tsvector('japanese', body));
+      SELECT * FROM articles WHERE to_tsvector('japanese', body) @@ to_tsquery('japanese', '検索語');
+
+    ・PGroonga の使用例 (演算子が異なる)
+
+      CREATE EXTENSION pgroonga;
+      CREATE INDEX idx_content ON memos USING pgroonga (content);
+      SELECT * FROM memos WHERE content &@~ '全文検索';
