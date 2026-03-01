@@ -1,0 +1,76 @@
+import { KeyDef } from "../../../types/type";
+
+export const keysAWSCloudFormation: KeyDef = {
+  // ■ Main(赤: セクション・組み込み関数・主要キーワード)
+  Crimson: [
+    "CloudFormation",
+    "SAM",
+    "AWS",
+    "S3",
+    "Lambda",
+    "RDS",
+    "DynamoDB",
+    "EC2",
+    "VPC",
+    "CodeDeploy",
+  ],
+  // ■ 青(メソッド・コマンド)
+  RoyalBlue: [
+    "Fn",
+    "GetAtt",
+    "Sub",
+    "FindInMap",
+    "Join",
+    "Select",
+    "If",
+    "Equals",
+    "Not",
+    "Ref",
+    "ImportValue",
+  ],
+  // ■ 緑(属性・パラメータ)
+  ForestGreen: [
+    "Env",
+    "BucketPrefix",
+    "AWSTemplateFormatVersion",
+    "Description",
+    "Parameters",
+    "Mappings",
+    "Conditions",
+    "Resources",
+    "Outputs",
+    "Transform",
+    "DependsOn",
+    "DeletionPolicy",
+    "UpdateReplacePolicy",
+    "RegionMap",
+    "Condition",
+    "Type",
+    "Properties",
+    "Export",
+    "Name",
+    "Value",
+    "Default",
+    "AllowedValues",
+    "NoEcho",
+    "MinLength",
+    "MaxLength",
+    "BucketName",
+  ],
+  // ■ ダークオレンジ(属性値)
+  DarkOrange: [
+    "Retain",
+    "String",
+    "Bucket",
+    "dev",
+    "stg",
+    "prod",
+    "us-east-1",
+    "ap-northeast-1",
+    "MyBucket",
+  ],
+  // ■ 紫(その他)
+  DarkOrchid: [],
+  // ■ ダークグレイ(例外定数名:EXCEPTIONを部分的に含む)
+  Gray: [],
+};

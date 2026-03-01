@@ -1,95 +1,63 @@
 ---
 #-------------------------------
-# Prisma
+# Prisma サーバー
 #-------------------------------
 - ENTRY:
-  CATEGORY: Install & Setup
-
-- ENTRY:
-  EXPLAIN: インストール & セットアップ
+  EXPLAIN: 概要
   BODY: |
+    ■ 何ができるのか？
+
+     ・schema.prisma でモデルを定義し、型安全な CRUD を TypeScript/JavaScript で書ける(ORM)
+     ・prisma generate で DB スキーマから型付きクライアントを自動生成。
+     ・model 名がそのままメソッドになる
+     ・マイグレーションで schema の変更を SQL に変換し、履歴を残しながら DB を更新できる
+     ・Prisma Studio で DB の中身をブラウザから閲覧・編集可能
+     ・PostgreSQL / MySQL / SQLite / SQL Server 等に対応。同じ API で DB を切り替え可能
+     ・リレーション(1対多、多対多)を include や select で簡単に取得。
+     ・N+1 を防ぐオプションあり
+
     ■ インストール
+
     npm install prisma --save-dev
     npx prisma init
     npx prisma init --datasource-provider postgresql --create-db
 
     ■ セットアップ
+
     npx prisma db push --accept-data-loss
     npx prisma generate
     npx prisma studio
 
-    ■ 環境変数
-    DATABASE_URL="prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIU...""
-    npx prisma migrate dev --name init
-
 - ENTRY:
-  EXPLAIN: |
-    TypeORM からの移行
+  EXPLAIN: 設定
   BODY: |
-    ■ TypeORM: Find one
-    const user = await userRepository.findOne({ 
-      where: { id: 1 } 
+    ■ .env
+
+    # postgresql://ユーザー名:パスワード@localhost:5432/trpc_db の形式で指定
+    DATABASE_URL="postgresql://trpc_user:password@localhost:5432/trpc_db"
+
+    # マイグレーション用シャドウDB (trpc_db_shadow を事前に作成しておく)
+    SHADOW_DATABASE_URL="postgresql://trpc_user:password@localhost:5432/trpc_db_shadow"
+
+    ■ prisma.config.ts
+
+    import "dotenv/config";
+    import { defineConfig, env } from "prisma/config";
+
+    export default defineConfig({
+      schema: "prisma/schema.prisma",
+      migrations: {
+        path: "prisma/migrations",        // Migration SQL の記録
+        seed: "tsx prisma/seed.ts",       // データシード(サンプル/初期データ)
+      },
+      datasource: {
+        url: env("DATABASE_URL"),                       // DBサーバーURL
+        shadowDatabaseUrl: env("SHADOW_DATABASE_URL"),  // シャドウDB
+      },
     });
-
-    ■ Prisma: Find one
-    const user = await prisma.user.findUnique({ 
-      where: { id: 1 } 
-    });
-
-    ■ TypeORM: Create
-    const user = await userRepository.save({
-      email: 'alice@prisma.io',
-      name: 'Alice'
-    });
-
-    ■ Prisma: Create
-    const user = await prisma.user.create({
-      data: {
-        email: 'alice@prisma.io',
-        name: 'Alice'
-      }
-    });
-
-    ■ TypeORM: Update
-    await userRepository.update(1, { 
-      name: 'New name' 
-    });
-
-    ■ Prisma: Update
-    await prisma.user.update({
-      where: { id: 1 },
-      data: { name: 'New name' }
-    });
-
-    ■ TypeORM: Delete
-    await userRepository.delete(1);
-
-    ■ Prisma: Delete
-    await prisma.user.delete({
-      where: { id: 1 }
-    });
-
-
-    ■ Update your controllers
-    import { prisma } from '../client'
-
-    export class CreateUserAction {
-      async run(req: Request, res: Response) {
-        const { email, name } = req.body
-        
-        const result = await prisma.user.create({
-          data: {
-            email,
-            name,
-          },
-        })
-        return res.json(result)
-      }
-    }
 
 - ENTRY:
-  EXPLAIN: |
-    Model: User
+  EXPLAIN: schema.prisma
   BODY: |
     ■ prisma/schema.prisma
 
@@ -120,78 +88,1274 @@
     }
 
 - ENTRY:
-  EXPLAIN: |
-    Prisma Client
+  EXPLAIN: マイグレーション & シャドウDB
   BODY: |
-    ■ src/lib/prisma.ts
+    ■ 概要
 
-    import { PrismaClient } from '../src/app/generated/prisma'
-    import { withAccelerate } from '@prisma/extension-accelerate'
+     ・schema.prisma の変更を SQL に変換し、DB に適用する仕組みがマイグレーション
+     ・migrate dev: 開発時にマイグレーション作成・適用。シャドウDB を使って差分を検出
+     ・migrate deploy: 本番で既存のマイグレーション履歴だけを適用(新規作成はしない)
+     ・migrations フォルダにタイムスタンプ付きの SQL が並び、履歴として残る
 
-    const globalForPrisma = global as unknown as { 
-        prisma: PrismaClient
-    }
+    ■ シャドウDB
 
-    const prisma = globalForPrisma.prisma || new PrismaClient().$extends(withAccelerate())
-
-    if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
-
-    export default prisma
+     ・マイグレーション実行時に、本番 DB を触らずに「現在の schema からどう変わるか」を検証するための一時 DB
+     ・Prisma がシャドウDB に現在のスキーマを再現し、新しいマイグレーションを適用して差分を出す
+     ・SHADOW_DATABASE_URL で別 DB(例: trpc_db_shadow)を指定。本番と同じサーバでも別 DB 名で用意する
+     ・シャドウDB がないと migrate dev が失敗する場合がある(特に PostgreSQL で推奨)
+     ・本番の migrate deploy ではシャドウDB は使わない
 
 - ENTRY:
-  EXPLAIN: |
-    Client Get: findMany()
+  EXPLAIN: Seed
   BODY: |
-    import prisma from '@/lib/prisma'
+    ■ prisma db seed
 
-    export default async function Home() {
-      const users = await prisma.user.findMany();
-      return (
-        <div>
-          {users.map((user) => (
-            <div key={user.id} >
-              {user.name}
-            </div>
-          ))}
-        </div>
-      );
-    }
+    ・upsert() による初期/サンプルデータの挿入
 
-- ENTRY:
-  EXPLAIN: |
-    Client Post: create()
-  BODY: |
-    import Form from "next/form";
-    import prisma from "@/lib/prisma";
-    import { revalidatePath } from "next/cache";
-    import { redirect } from "next/navigation";
+    import "dotenv/config";
+    import { PrismaPg } from "@prisma/adapter-pg";
+    import { PrismaClient } from "../src/generated/prisma/index.js";
 
-    export default function NewPost() {
-      async function createPost(formData: FormData) { // FormData ??
-        "use server";
+    const connectionString = process.env.DATABASE_URL ?? "";
+    const adapter = new PrismaPg({ connectionString });
+    const prisma = new PrismaClient({ adapter });
 
-        const title = formData.get("title") as string;
-        const content = formData.get("content") as string;
+    async function main() {
+      const planBasic = await prisma.plan.upsert({
+        where: { planId: "01JBPREAMPLE00000000001" },
+        update: {},
+        create: {
+          planId: "01JBPREAMPLE00000000001",
+          name: "ベーシック",
+          monthlyPay: 980,
+        },
+      });
 
-        await prisma.post.create({
-          data: { title, content, authorId: 1 },
+      const planPremium = await prisma.plan.upsert({ ... });
+
+      const users = [
+        {
+          userId: "01JBPREAMPLE00000000003",
+          name: "山田太郎",
+          age: 28,
+          planId: planBasic.planId,
+        },
+        { ... },
+      ];
+
+      for (const u of users) {
+        await prisma.user.upsert({
+          where: { userId: u.userId },
+          update: {},
+          create: {
+            userId: u.userId,
+            name: u.name,
+            age: u.age,
+            active: true,
+            planId: u.planId,
+          },
         });
-
-        revalidatePath("/posts");
-        redirect("/posts");
       }
 
-      return (
-        <Form action={createPost} >
-          <div>
-            <label htmlFor="title" > Title </label>
-            <input type="text" id="title" name="title" />
-          </div>
-          <div>
-            <label htmlFor="content" > Content </label>
-            <textarea id="content" name="content" rows={6} />
-          </div>
-          <button type="submit"> Create Post </button>
-        </Form>
-      );
+      console.log("サンプルデータを5件投入しました（Plan 2件 + User 3件）");
     }
+
+    main()
+      .catch((e) => {
+        console.error(e);
+        process.exit(1);
+      })
+      .finally(async () => {
+        await prisma.$disconnect();
+      });
+
+#-------------------------------
+# Prisma Client
+#-------------------------------
+- ENTRY:
+  CATEGORY: Tag
+
+- ENTRY:
+  EXPLAIN: リスト
+  BODY: |
+    ■ schema で使うディレクティブ一覧
+
+     ・フィールド用:
+       ・@id                         // 主キー
+       ・@unique                     // 一意制約
+       ・@default(...)               // 既定値
+       ・@relation(...)              // リレーション定義
+       ・@map("column_name")         // 列名マッピング
+       ・@updatedAt                  // 更新時自動時刻
+       ・@ignore                     // Client から除外
+       ・@db.型名                    // DB 固有型
+
+     ・モデル用:
+       ・@@id([...])                 // 複合主キー
+       ・@@unique([...])             // 複合一意
+       ・@@index([...])              // インデックス
+       ・@@map("table_name")         // テーブル名マッピング
+       ・@@ignore                    // モデルを Client から除外
+
+- ENTRY:
+  EXPLAIN: id
+  BODY: |
+    ■ @id
+
+    ・そのフィールドをプライマリキーにする
+    ・1モデルに1つ必須
+    ・findUnique の where で使える
+
+      id Int @id @default(autoincrement())
+
+    ■ @@id([...])
+
+    ・1行を「複数カラムの組み合わせ」で一意にしたいときに使う複合主キー
+    ・単一の @id では表現できない場合に使う。例: ユーザーと投稿のペアが1行(いいね・ブックマーク・中間テーブル)
+    ・モデルには @id を付けず、ブロック内に @@id([フィールド1, フィールド2]) を1つ書く
+    ・配列の順序は DB の複合主キー順と一致させる
+
+    ・findUnique での指定:
+      ・複合キーは Prisma が userId_postId のような名前を自動生成する(フィールド名を _ でつなぐ)
+      ・where: { userId_postId: { userId: 1, postId: 2 } } のようにオブジェクトで渡す
+
+      // モデル定義
+      model Like {
+        userId Int
+        postId Int
+        user   User @relation(fields: [userId], references: [id])
+        post   Post @relation(fields: [postId], references: [id])
+        @@id([userId, postId])
+      }
+      // 同じ userId + postId の組み合わせは1行だけ。単一の id 列は持たない
+
+      // create
+      await prisma.like.create({
+        data: { userId: 1, postId: 2 },
+      })
+
+      // findUnique
+      const like = await prisma.like.findUnique({
+        where: { userId_postId: { userId: 1, postId: 2 } },
+      })
+
+- ENTRY:
+  EXPLAIN: index
+  BODY: |
+    ■ @@index([...])
+
+    ・指定した列(の組み合わせ)に DB インデックスを作成する。モデルブロック内に書く
+    ・WHERE / ORDER BY / リレーションの JOIN でよく使う列につけると検索が速くなる
+    ・主キーや @unique には自動でインデックスが張られるので、それ以外で「よく絞り込む列」向け
+
+    ・単一列:
+      ・1列だけなら @@index([authorId]) のように配列1要素で指定
+    ・複数列(複合インデックス):
+      ・@@index([userId, createdAt]) のように並べる。順序が効く。左の列から使う条件に向く
+
+      model Post {
+        id        Int      @id @default(autoincrement())
+        authorId  Int
+        createdAt DateTime @default(now())
+        author    User     @relation(fields: [authorId], references: [id])
+        @@index([authorId])
+        @@index([authorId, createdAt])
+      }
+      // authorId で絞る・authorId + createdAt で並べる検索が多ければ有効
+
+- ENTRY:
+  EXPLAIN: default
+  BODY: |
+    ■ @default(...)
+
+    ・値が渡されないときの既定値。create 時に未指定のフィールドに適用される
+
+    ■ サンプル(数値・ID)
+
+      id Int @id @default(autoincrement())      // シーケンスで連番
+
+    ■ サンプル(文字列 ID)
+
+      id String @id @default(uuid())            // UUID v4
+      id String @id @default(cuid())            // CUID(Prisma 組み込み)
+      
+      ※ ソート可能で衝突しにくい
+      ※ ULID は Prisma に組み込みなし(dbgenerated で DB 関数/アプリで生成)
+
+    ■ サンプル(日付・時刻・タイムスタンプ)
+
+      createdAt   DateTime  @default(now())      // レコード作成時の現在時刻(アプリ側で評価)
+      updatedAt   DateTime  @updatedAt           // 作成時と更新時で自動設定専用ディレクティブ
+      publishedAt DateTime? @default(now())      // 任意の DateTime を「今」で初期化
+
+    ■ サンプル(DB 側で生成する場合)
+
+      id String @id @default(dbgenerated("gen_random_uuid()::text"))     // PostgreSQL専用
+      createdAt DateTime @default(dbgenerated("NOW()"))                  // DB の NOW()。timezoneは DB設定依存
+      dateOnly  DateTime @default(dbgenerated("CURRENT_DATE")) @db.Date  // 日付のみ(PostgreSQL date 型)
+      timeOnly  DateTime @default(dbgenerated("CURRENT_TIME")) @db.Time  // 時間のみ(PostgreSQL time 型)
+
+    ■ サンプル(文字列・Boolean・その他リテラル)
+
+      status    String  @default("draft")
+      role      String  @default("member")
+      published Boolean @default(false)
+      count     Int     @default(0)
+
+- ENTRY:
+  EXPLAIN: unique
+  BODY: |
+    ■ @unique / @@unique([...])
+
+    ・そのフィールド(または複合)に一意制約。同じ値の行が2行以上存在できなくなる
+    ・DB に UNIQUE 制約が作成され、重複 insert はエラーになる
+    ・findUnique の where で使える。@id と同様に「1件だけ」を前提にした取得ができる
+
+    ・@unique(単一フィールド):
+
+      ・1列だけを一意にする。
+      ・メールアドレス、ログインID、スラッグなど
+
+    ・@@unique([...])(複合一意):
+
+      ・複数フィールドの組み合わせで一意にする。
+      ・例: 同じユーザー内でスラッグが重複しなければよい
+
+    ・複合の場合の findUnique:
+
+      ・Prisma が authorId_slug のようにフィールド名を _ でつないだ名前を生成する🔴
+      ・where: { authorId_slug: { authorId: 1, slug: "my-post" } } のようにオブジェクトで指定
+
+    ■ サンプル
+
+    ・単一
+
+      email String @unique
+      slug  String @unique
+
+    ・複合: 同じ authorId のなかで slug が一意。別ユーザーなら同じ slug 可
+
+      model Post {
+        id       Int    @id @default(autoincrement())
+        authorId Int
+        slug     String
+        author   User   @relation(fields: [authorId], references: [id])
+        @@unique([authorId, slug])
+      }
+
+    ・findUnique
+
+      const user = await prisma.user.findUnique({ where: { email: "a@ex.com" } })
+      const post = await prisma.post.findUnique({
+        where: { authorId_slug: { authorId: 1, slug: "my-post" } }, // 🔴カラム名自動生成
+      })
+
+- ENTRY:
+  EXPLAIN: relation
+  BODY: |
+    ■ @relation(fields, references)
+
+    ・他モデルへのリレーションを定義(DB の外部キーに対応)
+    ・fields: 自モデル側のカラム(外部キー)。配列なので複合キーも可
+    ・references: 参照先モデルのカラム(通常は id で、fields と順序・型を対応させる)
+    ・1対多なら「多」側に @relation を付け、相手モデルには逆参照のフィールド(Post[] 等)を書く
+      ※ 両方に書かないとエラー
+
+    ・同じモデルへのリレーションが複数あるとき:
+      ・@relation("リレーション名") を両側で同じ名前にする
+      ・省略するとフィールド名から推論される
+    ・任意リレーション(0 or 1):
+      ・authorId Int? と author User? にすると、紐づかない状態を許容する
+
+    ・include / select でリレーションを一緒に取得できる。N+1 を防ぐにはここで明示
+
+    ■ サンプル(1対多・両方のモデル)
+
+      model User {
+        id    Int    @id @default(autoincrement())
+        email String
+        posts Post[]
+      }
+
+      model Post {
+        id        Int  @id @default(autoincrement())
+        authorId  Int
+        author    User @relation(fields: [authorId], references: [id])
+      }
+
+    ■ サンプル(リレーション名を付ける)
+
+      model User {
+        id           Int    @id @default(autoincrement())
+        authored     Post[] @relation("Author")
+        edited       Post[] @relation("Editor")
+      }
+
+      model Post {
+        id        Int  @id @default(autoincrement())
+        authorId  Int
+        author    User @relation("Author", fields: [authorId], references: [id])
+        editorId  Int?
+        editor    User? @relation("Editor", fields: [editorId], references: [id])
+      }
+
+- ENTRY:
+  EXPLAIN: map
+  BODY: |
+    ■ @map("列名") / @@map("テーブル名")
+
+    ・Prisma のフィールド名・モデル名と、DB の実際の列名・テーブル名が違うときに対応
+    ・既存 DB を取り込むときや、DB の命名規則(スネーク等)とアプリ側(キャメル等)を分けたいときに使う
+    ・マイグレーションでは map で指定した名前で DDL が生成
+    ・既存テーブルに合わせるなら introspect 時に自動付与されることもある
+
+    ・@map("列名"):
+
+      ・1フィールドだけ、スキーマ上の名前と DB 列名を対応させる
+      ・コードでは content、DB では comment_text のように、別名で読み書きされる
+
+    ・@@map("テーブル名"):
+
+      ・モデル全体について、スキーマ上のモデル名と DB テーブル名を対応させる
+      ・モデル名は PascalCase、テーブル名はスネーク_case などにしたいときに使う
+
+    ・指定しない場合:
+
+      ・Prisma はモデル名をそのままテーブル名に、フィールド名をそのまま列名に使う(PostgreSQL はダブルクォートで区別)
+      ・既存 DB の列名がキャメルなら map なしでも一致する
+      ・スネークの DB なら map でマッピングする
+
+    ■ サンプル
+
+      model UserComment {
+        id        Int      @id @default(autoincrement())
+        content   String   @map("comment_text")
+        createdAt DateTime @map("created_at")
+        userId    Int      @map("user_id")
+        @@map("user_comments")
+      }
+
+      ※ コードでは prisma.userComment.findMany()
+         DB では SELECT * FROM user_comments
+
+- ENTRY:
+  EXPLAIN: ignore
+  BODY: |
+    ■ @ignore / @@ignore
+
+    ・Prisma Client の型と API からそのフィールドまたはモデルを除外する
+    ・コード上では参照・取得・更新できない
+    ・スキーマとマイグレーションには残る
+    ・DB には列・テーブルが存在するが、生成されるクライアントからは見えない
+
+    ・@ignore(フィールド):
+
+      ・そのフィールドは prisma generate で生成される型に含まれない
+      ・create の data、update の data、select、include に指定できない
+      ・レガシー列や内部用の列を Client に露出させたくないとき、既存 DB に存在するがアプリでは触らない列をスキーマに書くとき
+      ・マイグレーションでは列として扱われる
+      ・introspect で取り込んだ「使わない列」に付けておくと安全
+      
+    ・@@ignore(モデル):
+
+      ・そのモデルは Client に生成されない。prisma.modelName が存在しない
+      ・既存 DB にテーブルがあるが Prisma で読み書きしたくないとき
+      ・スキーマには書いてマイグレーションの整合を取りつつ、コードからは触らない
+      ・他モデルから @relation で参照されているモデルには @@ignore を付けられない
+      ・先にリレーションを外すか、そのモデルは Client に含める必要がある
+
+    ■ サンプル(@ignore)
+
+      model User {
+        id         Int    @id @default(autoincrement())
+        email      String
+        internalId String @ignore
+      }
+
+      ※ internalId は DB にはあるが、prisma.user.create({ data: { email: "a@ex.com" } }) では渡せない。
+         select にも出ない
+
+    ■ サンプル(@@ignore)
+
+      model LegacyLog {
+        id   Int    @id
+        data String
+        @@ignore
+      }
+
+      ※ このテーブルはマイグレーション対象だが、prisma.legacyLog は存在しない
+
+- ENTRY:
+  EXPLAIN: db
+  BODY: |
+    ■ @db.型名
+
+     ・Prisma のスカラー型を、DB 固有の型にマッピング
+     ・provider ごとに使える型が異なる
+     ・指定しないと Prisma がデフォルトの型を選択
+     ・長いテキスト、JSON、日付のみ・時間のみ、固定精度の数値などは明示推奨
+     ・マイグレーション時に指定型で列作成
+
+     ・PostgreSQL の主な例:
+       ・@db.Text:                    長い文字列。VARCHAR より長さ制限を気にしなくてよい
+       ・@db.VarChar(n):              長さ制限付き文字列
+       ・@db.JsonB:                   JSON。GIN インデックスや演算子が使える。Json 型と組み合わせ
+       ・@db.Date                     日付のみ。DateTime 型と組み合わせ
+       ・@db.Time:                    時間のみ。DateTime 型と組み合わせ
+       ・@db.SmallInt:                整数のサイズ。Int は 32bit
+       ・@db.BigInt:                  整数のサイズ。BigInt は 64bit
+       ・@db.Decimal(p, s):           固定精度の数値。Decimal 型と組み合わせ
+       ・@db.Bit(n):                  ビット列
+       ・@db.VarBit(n):               ビット列
+
+     ・MySQL の例:
+       ・@db.Char(n):                 固定長 n 文字
+       ・@db.VarChar(n):              可変長・最大 n 文字
+       ・@db.LongText:                長いテキスト
+       ・@db.TinyInt:                 1バイト整数
+       ・@db.MediumInt:               3バイト整数
+
+     ・SQLite は型が少ないため、@db を付けないことが多い
+
+    ■ サンプル(PostgreSQL)
+
+      body     String   @db.Text
+      meta     Json     @db.JsonB
+      dateOnly DateTime @db.Date
+      timeOnly DateTime @db.Time
+      amount   Decimal  @db.Decimal(10, 2)
+      bigCount Int      @db.BigInt
+
+#-------------------------------
+# テーブルリレーション
+#-------------------------------
+- ENTRY:
+  CATEGORY: テーブルリレーション
+
+- ENTRY:
+  EXPLAIN: One-to-One
+  BODY: |
+    ■ 概要
+
+     ・1件のレコードが、別モデルのレコードと1件だけ対応する関係
+     ・どちらか一方のモデルにだけ外部キー(FK)を置く
+     ・もう一方は FK を持たず、リレーション名で単一の相手を参照
+     ・FK を持つ側に @relation(fields, references) を付ける。
+     ・持たない側には相手の型を単数で書く(Profile など)
+
+    ■ サンプル(User と Profile: 1ユーザーに1プロフィール)
+
+      model User {
+        id      Int     @id @default(autoincrement())
+        email   String
+        profile Profile?
+      }
+
+      model Profile {
+        id        Int  @id @default(autoincrement())
+        userId    Int  @unique    // 🔴 one-to-one
+        bio       String?
+        avatarUrl String?
+        user      User @relation(fields: [userId], references: [id])  // 🔴 関係
+      }
+
+      ※ Profile 側に userId(FK)
+         @unique で「1 User に1 Profile」を保証
+         User 側は profile で取得
+
+    ■ サンプル(取得)
+
+      const user = await prisma.user.findUnique({
+        where: { id: 1 },
+        include: { profile: true },
+      })
+      
+      const profile = await prisma.profile.findUnique({
+        where: { userId: 1 },
+        include: { user: true },
+      })
+
+- ENTRY:
+  EXPLAIN: One-to-Many
+  BODY: |
+    ■ 概要
+
+     ・1件のレコードが、別モデルの複数件と対応する関係(例: 1ユーザーが複数投稿を持つ)
+     ・外部キー(FK)は必ず「多」側のモデルに置く
+     ・「1」側は FK を持たず、配列型(Post[] 等)で逆参照
+     ・「多」側に @relation(fields, references)、「1」側には相手の型を複数形で書く
+
+    ■ サンプル(User と Post: 1ユーザーが複数投稿)
+
+      model User {
+        id    Int    @id @default(autoincrement())
+        email String
+        posts Post[]      // 🔴 one-to-many
+      }
+
+      model Post {
+        id        Int  @id @default(autoincrement())
+        title     String
+        authorId  Int
+        author    User @relation(fields: [authorId], references: [id])  // 🔴 関係
+      }
+
+      ※ Post 側に authorId(FK)
+         User 側は posts で複数件取得
+
+    ■ サンプル(取得)
+
+      const user = await prisma.user.findUnique({
+        where: { id: 1 },
+        include: { posts: true },
+      })
+
+      const post = await prisma.post.findUnique({
+        where: { id: 1 },
+        include: { author: true },
+      })
+
+- ENTRY:
+  EXPLAIN: Many-to-Many
+  BODY: |
+    ■ 概要
+
+     ・ユースケース
+       ・例: 投稿とタグ。1投稿に複数タグ、1タグが複数投稿に付く
+
+     ・Prisma では2通り
+       ・暗黙の多対多:
+         ・中間テーブルを Prisma が自動作成
+         ・両モデルに配列のリレーションを書くだけ
+         ・中間テーブルに列を足したい場合は使えない
+       ・明示の多対多:
+         ・中間モデルを自分で定義
+         ・中間テーブルにカラム(createdAt 等)を追加したいときは「明示」
+
+    ■ サンプル(暗黙の多対多: Post と Tag)
+
+      model Post {
+        id   Int   @id @default(autoincrement())
+        title String
+        tags Tag[]     // 🔴 互いに one-to-many
+      }
+
+      model Tag {
+        id    Int    @id @default(autoincrement())
+        name  String
+        posts Post[]   // 🔴 互いに one-to-many
+      }
+
+      ※ 中間テーブル _PostToTag が🔴自動作成
+         FK はどちらのモデルにも書かない
+
+    ■ サンプル(明示の多対多: 中間モデル PostOnTag で作成日時を持たせる)
+
+      model Post {
+        id    Int         @id @default(autoincrement())
+        title String
+        tags  PostOnTag[]  // 🔴 互いに one-to-many
+      }
+
+      model Tag {
+        id    Int         @id @default(autoincrement())
+        name  String
+        posts PostOnTag[]  // 🔴 互いに one-to-many
+      }
+
+      model PostOnTag {    // 🔴 中間テーブル
+        postId    Int
+        tagId     Int
+        createdAt DateTime @default(now())
+        post      Post     @relation(fields: [postId], references: [id]) // 🔴 関係
+        tag       Tag      @relation(fields: [tagId], references: [id])  // 🔴 関係
+        @@id([postId, tagId])
+      }
+
+    ■ サンプル(取得・紐付け)
+
+      const post = await prisma.post.findUnique({
+        where: { id: 1 },
+        include: { tags: true },
+      })
+
+      await prisma.post.update({
+        where: { id: 1 },
+        data: { tags: { connect: [{ id: 1 }, { id: 2 }] } },
+      })
+
+#-------------------------------
+# クライアントライブラリ
+#-------------------------------
+- ENTRY:
+  CATEGORY: クライアントライブラリ
+
+- ENTRY:
+  EXPLAIN: PrismaClient
+  BODY: |
+    ■ PrismaClient
+
+    ・サーバー側(Node.js)専用(ブラウザやフロントでは不使用、DB 接続と DATABASE_URL が必要)
+    ・「Client」は「フロントのクライアント」ではなく、DB に問い合わせる「クライアントライブラリ」の意味
+    ・Prisma CLI に対する Prisma Client の区別
+    ・schema.prisma から生成される DB アクセス用のクライアントクラス
+    ・prisma generate で型付きのクライアントが生成され、model 名がメソッドとして使える(user, post 等)
+    ・new PrismaClient() でインスタンス化(接続先は DATABASE_URL から読む)
+    ・開発時はグローバルに 1 インスタンスにまとめると Hot Reload で接続が増えすぎるのを防げる
+    ・本番では 1 プロセス 1 インスタンスを推奨
+    ・Nest なら PrismaService で provide して DI するのが一般的
+
+    ■ src/db.ts
+
+    import "dotenv/config";
+    import { PrismaClient } from "./generated/prisma/index.js";
+    import { PrismaPg } from "@prisma/adapter-pg";
+
+    const connectionString = process.env.DATABASE_URL ?? "";
+    const adapter = new PrismaPg({ connectionString });
+
+    const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
+
+    export const prisma =
+      globalForPrisma.prisma ??
+      new PrismaClient({
+        adapter,
+        log: process.env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
+      });
+
+    if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+
+- ENTRY:
+  EXPLAIN: src/trpc/
+  BODY: |
+    ・型連携の trpc を用いた場合の実装例
+
+    ■ src/trpc/context.ts
+
+    import type { CreateExpressContextOptions } from "@trpc/server/adapters/express";
+    import { prisma } from "../db.js";  // PrismaClient のインスタンス
+
+    export const createContext = ({ req, res }: CreateExpressContextOptions) => ({
+      req,
+      res,
+      prisma,
+    });
+
+    export type Context = Awaited<ReturnType<typeof createContext>>;
+
+    ■ src/trpc/trpc.ts
+
+    import { initTRPC } from "@trpc/server";
+    import type { Context } from "./context.js";
+
+    const t = initTRPC.context<Context>().create();
+
+    export const router = t.router;
+    export const publicProcedure = t.procedure;
+
+    ■ src/trpc/yup.ts
+
+    import * as yup from "yup";
+
+    export function yupInput<T extends yup.Maybe<yup.AnyObject>>(schema: yup.ObjectSchema<T>) {
+      return {
+        parse: (input: unknown) => schema.validateSync(input) as T,
+      };
+    }
+
+#-------------------------------
+# Prisma Method
+#-------------------------------
+- ENTRY:
+  CATEGORY: Method
+
+- ENTRY:
+  EXPLAIN: モデルメソッド一覧
+  BODY: |
+    1モデルが持つメソッド(prisma.user.xxx 等)
+
+    ・create:            1件作成(insert に相当)
+    ・createMany:        複数件作成
+    ・findUnique:        一意キーで1件取得
+    ・findFirst:         条件に合う最初の1件取得
+    ・findMany:          複数件取得(where, orderBy, take, skip 等)
+    ・update:            1件更新
+    ・updateMany:        複数件更新
+    ・upsert:            あれば更新、なければ作成
+    ・delete:            1件削除
+    ・deleteMany:        複数件削除
+    ・count:             件数取得
+    ・aggregate:         集約(sum, avg, min, max 等)
+    ・groupBy:           グループ集約
+
+- ENTRY:
+  EXPLAIN: create()
+  BODY: |
+    ■ 概要と注意点
+
+     ・1件を新規作成
+     ・SQL の INSERT に相当
+     ・Prisma では insert ではなく create
+     ・data に必須項目を渡す
+     ・リレーションがあれば connect や create でネスト可能
+     ・返り値は作成されたレコード(型付き)
+
+    ■ サンプル
+
+    const user = await prisma.user.create({
+      data: {
+        email: 'alice@example.com',
+        name: 'Alice',
+      },
+    });
+
+    user = { id: 1, name: 'Alice', email: 'alice@example.com' }
+
+- ENTRY:
+  EXPLAIN: createMany()
+  BODY: |
+    ■ 概要と注意点
+
+     ・複数件を一括作成
+     ・トランザクション内でまとめて挿入
+     ・data は配列
+     ・skipDuplicates: true で一意制約に違反する行をスキップ可能
+     ・返り値は { count: number }
+     ・作成されたレコードは返らない
+
+    ■ サンプル
+
+    const { count } = await prisma.user.createMany({
+      data: [
+        { email: 'a@ex.com', name: 'A' },
+        { email: 'b@ex.com', name: 'B' },
+      ],
+      skipDuplicates: true,
+    });
+
+    count = 2
+
+- ENTRY:
+  EXPLAIN: findUnique()
+  BODY: |
+    ■ 概要と注意点
+
+     ・@id または @unique なフィールドで1件だけ取得
+     ・見つからなければ null
+     ・where に一意キー(id や unique なカラム)を指定
+     ・複合ユニークの場合はオブジェクトで指定
+     ・include / select でリレーションや取得カラムを制御可能
+
+    ■ サンプル
+
+    const user = await prisma.user.findUnique({
+      where: { id: 1 },
+      include: { posts: true },
+    });
+
+    user = { id: 1, name: 'Alice', email: 'alice@example.com' }
+
+- ENTRY:
+  EXPLAIN: findFirst()
+  BODY: |
+    ■ 概要と注意点
+
+     ・where 条件に合う最初の1件を取得
+     ・並び順は orderBy で指定しないと不定
+     ・見つからなければ null
+     ・findUnique と違い一意でない条件でも可
+
+    ■ サンプル
+
+    const user = await prisma.user.findFirst({
+      where: { name: { contains: 'Alice' } },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    user = { id: 1, name: 'Alice', email: 'alice@example.com' }
+
+- ENTRY:
+  EXPLAIN: findMany()
+  BODY: |
+    ■ 概要と注意点
+
+     ・条件に合う複数件を取得
+     ・where を省略すると全件
+     ・orderBy, take, skip で並び順とページネーション
+     ・include / select でリレーション・列の指定
+     ・返り値は配列(0件のときは [])
+
+    ■ サンプル
+
+    const users = await prisma.user.findMany({
+      where: { name: { not: null } },
+      orderBy: { id: 'desc' },
+      take: 10,
+      skip: 0,
+    });
+
+    users = [
+      { id: 1, name: 'Alice', email: 'alice@example.com' },
+      { id: 2, name: 'Bob', email: 'bob@example.com' },
+    ]
+
+- ENTRY:
+  EXPLAIN: update()
+  BODY: |
+    ■ 概要と注意点
+
+     ・1件を更新
+     ・where で対象を特定し、data で更新内容を指定
+     ・対象が存在しないとエラー
+     ・存在チェックしてから更新するか、upsert を検討
+     ・返り値は更新後のレコード
+
+    ■ サンプル
+
+    const user = await prisma.user.update({
+      where: { id: 1 },
+      data: { name: 'New Name', email: 'new@ex.com' },
+    });
+
+    user = { id: 1, name: 'New Name', email: 'new@ex.com' }
+
+- ENTRY:
+  EXPLAIN: updateMany()
+  BODY: |
+    ■ 概要と注意点
+
+     ・where に合う複数件を一括更新
+     ・返り値は { count: number }
+     ・更新後のレコードは返らない
+     ・更新内容を確認したい場合は findMany と併用
+
+    ■ サンプル
+
+    const { count } = await prisma.user.updateMany({
+      where: { role: 'guest' },
+      data: { role: 'member' },
+    });
+
+- ENTRY:
+  EXPLAIN: upsert()
+  BODY: |
+    ■ 概要と注意点
+
+     ・where で指定したレコードがなければ create、あれば update
+     ・create と update の両方を渡す
+     ・一意キーで検索
+     ・存在しなければ create の内容で作成、存在すれば update の内容で更新
+     ・返り値は作成または更新後のレコード
+
+    ■ サンプル
+
+    const user = await prisma.user.upsert({
+      where: { email: 'alice@ex.com' },
+      create: { email: 'alice@ex.com', name: 'Alice' },
+      update: { name: 'Alice Updated' },
+    });
+
+    user = { id: 1, name: 'Alice Updated', email: 'alice@ex.com' }
+
+- ENTRY:
+  EXPLAIN: delete()
+  BODY: |
+    ■ 概要と注意点
+
+     ・1件を削除
+     ・where で対象を指定
+     ・対象が存在しないとエラー
+     ・返り値は削除されたレコード
+     ・外部キーで参照されている場合は制約でエラーになることがある
+
+    ■ サンプル
+
+    const user = await prisma.user.delete({
+      where: { id: 1 },
+    });
+
+    user = { id: 1, name: 'Alice', email: 'alice@ex.com' }
+
+- ENTRY:
+  EXPLAIN: deleteMany()
+  BODY: |
+    ■ 概要と注意点
+
+     ・where に合う複数件を一括削除
+     ・where を省略するとテーブル全件削除(注意)
+     ・返り値は { count: number }
+     ・削除されたレコードは返らない
+
+    ■ サンプル
+
+    const { count } = await prisma.user.deleteMany({
+      where: { role: 'guest' },
+    });
+
+- ENTRY:
+  EXPLAIN: count()
+  BODY: |
+    ■ 概要と注意点
+
+     ・where に合う件数を取得
+     ・where を省略すると全件数
+     ・返り値は number
+     ・ページネーションの total や存在チェックに利用
+
+    ■ サンプル
+
+    const count = await prisma.user.count({
+      where: { published: true },
+    });
+
+    count = 2
+
+- ENTRY:
+  EXPLAIN: aggregate()
+  BODY: |
+    ■ 概要と注意点
+
+     ・where で絞ったレコードに対して sum, avg, min, max, count 等を計算
+     ・_count, _sum, _avg, _min, _max をオブジェクトで指定
+     ・返り値はその集約結果
+
+    ■ サンプル
+
+    const result = await prisma.order.aggregate({
+      where: { userId: 1 },
+      _sum: { amount: true },
+      _count: true,
+    });
+
+    ・結果
+
+    result = { _sum: { amount: 1500 }, _count: 3 }
+
+- ENTRY:
+  EXPLAIN: groupBy()
+  BODY: |
+    ■ 概要と注意点
+
+     ・指定したカラムでグループ化し、各グループで集約
+     ・SQL の GROUP BY に相当
+     ・by にグループ化するフィールドの配列
+     ・_count, _sum 等で集約項目を指定
+     ・返り値はグループごとの配列
+
+    ■ サンプル
+
+    const rows = await prisma.order.groupBy({
+      by: ['userId'],
+      _sum: { amount: true },
+      _count: true,
+    });
+
+    ・結果
+
+    rows = [
+      { userId: 1, _sum: { amount: 1500 }, _count: 3 },
+      { userId: 2, _sum: { amount: 800 }, _count: 2 },
+    ]
+
+- ENTRY:
+  EXPLAIN: TypeORM との比較サンプル
+  BODY: |
+    ■ Find one
+
+    ・TypeORM
+    const user = await userRepository.findOne({ 
+      where: { id: 1 } 
+    });
+
+    ・Prisma
+    const user = await prisma.user.findUnique({ 
+      where: { id: 1 } 
+    });
+
+    ■ Create
+
+    ・TypeORM
+    const user = await userRepository.save({
+      email: 'alice@prisma.io',
+      name: 'Alice'
+    });
+
+    ・Prisma:
+    const user = await prisma.user.create({
+      data: {
+        email: 'alice@prisma.io',
+        name: 'Alice'
+      }
+    });
+
+    ■ Update
+
+    ・TypeORM
+    await userRepository.update(1, { 
+      name: 'New name' 
+    });
+
+    ・Prisma
+    await prisma.user.update({
+      where: { id: 1 },
+      data: { name: 'New name' }
+    });
+
+    ■  Delete
+
+    ・TypeORM
+    await userRepository.delete(1);
+
+    ・Prisma
+    await prisma.user.delete({
+      where: { id: 1 }
+    });
+
+#-------------------------------
+# Query 作成
+#-------------------------------
+- ENTRY:
+  CATEGORY: SQL & 複合 Query
+
+- ENTRY:
+  EXPLAIN: SQL
+  BODY: |
+    ■ 生 SQL の実行方法
+
+    ・$queryRaw:
+      ・SELECT 等の結果を返す
+      ・タグ付きテンプレート(バッククォート)でプレースホルダを渡すとエスケープされ安全
+    ・$queryRawUnsafe:
+      ・文字列で SQL を組み立てる
+      ・プレースホルダなしだと SQL インジェクションの危険あり
+      ・必要なときだけ使う
+    ・$executeRaw / $executeRawUnsafe:
+      ・INSERT / UPDATE / DELETE 用
+      ・返り値は影響を受けた行数(number)
+    ・タグ付きの使い方:
+      ・Prisma.sql や ${variable} を埋め込む
+      ・変数は自動でパラメータ化される
+
+    ■ サンプル($queryRaw)
+
+    const rows = await prisma.$queryRaw`
+      SELECT * FROM "User" WHERE id = ${userId}
+    `;
+
+    const withSql = await prisma.$queryRaw(
+      Prisma.sql`SELECT * FROM "User" WHERE "email" = ${email}`
+    );
+
+    ■ 戻り値の型の扱い
+
+    ・$queryRaw の戻り値の型:
+      ・デフォルトで unknown に近い型になる
+      ・そのままではプロパティ参照で型エラーになりやすい
+    ・ジェネリックで型を指定: prisma.$queryRaw<{ id: number; name: string }>`...` で返り値の型を明示
+    ・型アサーション:
+      ・as MyType でキャスト
+      ・実行時は保証されないのでスキーマと一致させる責任は🔴開発者側
+    ・Prisma の生成型(例: User)と列が一致するなら $queryRaw<User[]>`...` のようにモデル型を渡せる
+
+    ■ サンプル(型付きで受け取る)
+
+    type UserRow = { id: number; email: string; name: string | null };
+    const users = await prisma.$queryRaw<UserRow[]>`
+      SELECT id, email, name FROM "User"
+    `;
+    users[0].name;
+
+    const count = await prisma.$executeRaw`UPDATE "User" SET name = ${name} WHERE id = ${id}`;
+    count;
+
+- ENTRY:
+  EXPLAIN: join
+  BODY: |
+    ■ 複数 model による join
+
+    ・Prisma に join() はない
+    ・include または select でリレーションを一緒に取得する(SQL の JOIN 相当)
+    ・include: 指定したリレーションを追加で取得
+    ・ネストで多段も可能
+    ・select: 取得するカラムを明示
+    ・リレーションもオブジェクトで指定可能
+    ・select と include は同時に使えない
+    ・N+1 を避けるため、必要なリレーションはこの指定で一括取得
+
+    ■ include(User とその posts 取得)
+
+    const user = await prisma.user.findUnique({
+      where: { id: 1 },
+      include: { posts: true },
+    });
+
+    ・結果
+
+    user = {
+      id: 1, 
+      email: "alice@ex.com",
+      name: "Alice", 
+      posts: [
+        { id: 1, title: "First", content: "...", published: true, authorId: 1 },
+        { id: 2, title: "Second", content: "...", published: false, authorId: 1 },
+      ]
+    }
+
+    ■ include(Post と author 取得)
+
+    const post = await prisma.post.findFirst({
+      include: { author: true },
+    });
+
+    ・結果
+
+    post = {
+      id: 1,
+      title: "First",
+      content: "...",
+      published: true,
+      authorId: 1,
+      author: { id: 1, email: "alice@ex.com", name: "Alice" }
+    }
+
+    ■ select で列とリレーション指定
+
+    const user = await prisma.user.findUnique({
+      where: { id: 1 },
+      select: {
+        id: true,
+        name: true,
+        posts: { select: { id: true, title: true } },
+      },
+    });
+
+    ・結果(email は select に含めていないので返らない)
+
+    user = {
+      id: 1, 
+      name: "Alice", 
+      posts: [
+        { id: 1, title: "First" },
+        { id: 2, title: "Second" }
+      ]
+    }
+
+- ENTRY:
+  EXPLAIN: union
+  BODY: |
+    ■ 概要
+
+    ・Prisma に SQL の UNION に相当する専用 API はない
+    ・複数テーブルの結果を1つにまとめたい場合は $queryRaw で生 SQL を書くか、アプリ側で複数クエリの結果を配列で結合する
+    ・同一モデルで「A または B」なら where: { OR: [ ... ] } で条件をまとめられる
+
+    ■ サンプル(生 SQL で UNION)
+
+    const rows = await prisma.$queryRaw`
+      SELECT id, name, 'user' as type FROM "User"
+      UNION ALL
+      SELECT id, title as name, 'post' as type FROM "Post"
+    `;
+
+    ■ サンプル(アプリ側で結合)
+
+    const [users, posts] = await Promise.all([
+      prisma.user.findMany({ select: { id: true, name: true } }),
+      prisma.post.findMany({ select: { id: true, title: true } }),
+    ]);
+    const combined = [
+      ...users.map((u) => ({ ...u, type: 'user' })),
+      ...posts.map((p) => ({ id: p.id, name: p.title, type: 'post' })),
+    ];
+
+#-------------------------------
+# Prisma Frontend
+#-------------------------------
+- ENTRY:
+  CATEGORY: Frontend
+
+- ENTRY:
+  EXPLAIN: 概要
+  BODY: |
+    ■ フロントからクエリするとどうなるか
+
+     ・Prisma はサーバー専用
+     ・ブラウザから直接 prisma.user.findMany() は実行できない
+     ・フロントは API(REST/tRPC/GraphQL)や Server Action を呼ぶ
+     ・そのリクエストをサーバーが受け、サーバー上で Prisma が DB に問い合わせて結果を返す
+     ・つまり「フロントが Prisma を使う」= フロントがサーバー経由で間接的に DB 結果を取得する形になる
+
+    ■ キャッシュ戦略
+
+     ・Prisma 自体はクエリ結果をキャッシュしない。毎回 DB に問い合わせる
+     ・キャッシュを考える層:
+       ・HTTP 層: Next.js の fetch の cache、Route Handler の revalidate 等
+       ・API 層: Redis 等でレスポンスをキャッシュする場合は自前実装
+       ・フロント層: 取得したデータのキャッシュ・再検証は TanStack Query 等が担当するのが一般的
+     ・Server Component で直接 prisma を叩く場合、Next の fetch cache や segment cache の影響を受ける。use cache も利用可能
+
+    ■ TanStack Query(React Query)等は必要か
+
+     ・必須ではない。REST API + fetch だけでも動作する
+     ・データのキャッシュ、再取得、ローディング状態、エラー処理をまとめて扱いたいなら入れるとよい
+     ・tRPC を使う場合、tRPC のクライアントと TanStack Query を組み合わせるパターンがよく使われる
+
+- ENTRY:
+  EXPLAIN: 様々なパターン
+  BODY: |
+    ■ 様々なパターン
+
+     ・Next App Router + Server Component:
+       ・コンポーネント内で直接 await prisma.xxx を叩く
+       ・JS バンドルに Prisma は含まれない
+       ・キャッシュは Next の segment cache / fetch cache に依存
+
+     ・Next App Router + Server Action:
+       ・フォーム送信やボタンクリックで Server Action を呼び、その中で prisma を実行
+       ・RSC と組み合わせて「表示は RSC、更新は Action」にできる
+
+     ・API Route(REST) + フロント:
+       ・GET /api/users 等で prisma を実行し JSON を返す
+       ・フロントは fetch または TanStack Query で取得
+       ・キャッシュは TanStack Query の staleTime / cacheTime や Next の fetch オプションで制御
+
+     ・tRPC + フロント:
+       ・手続きを型安全に呼び出し
+       ・クライアントは @trpc/react-query で useQuery / useMutation を使うことが多い
+
+     ・GraphQL:
+       ・Pothos 等で schema を組み、resolver 内で prisma を叩く
+       ・クライアントは Apollo / urql 等
+
+- ENTRY:
+  EXPLAIN: サンプル
+  BODY: |
+    ■ サンプル(Next Server Component で直接 prisma)
+
+    import prisma from '@/lib/prisma'
+
+    export default async function Page() {
+      const users = await prisma.user.findMany()
+      return (
+        <ul>
+          {users.map((u) => <li key={u.id}>{u.name}</li>)}
+        </ul>
+      )
+    }
+
+    ■ サンプル(API Route + TanStack Query)
+
+    // app/api/users/route.ts
+    import prisma from '@/lib/prisma'
+    import { NextResponse } from 'next/server'
+    export async function GET() {
+      const users = await prisma.user.findMany()
+      return NextResponse.json(users)
+    }
+
+    // フロント
+    import { useQuery } from '@tanstack/react-query'
+    const { data } = useQuery({
+      queryKey: ['users'],
+      queryFn: () => fetch('/api/users').then((r) => r.json()),
+    })

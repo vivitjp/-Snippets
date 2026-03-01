@@ -3,150 +3,88 @@
 # データベース
 #-------------------------------
 - ENTRY:
-  CATEGORY: データベース
+  CATEGORY: SQL
 
 - ENTRY:
   EXPLAIN: 作成、変更、削除、選択、リスト表示
   BODY: |
-    ■ MOD(dividend, divisor) 【共通】
-      # 剰余計算 (dividend % divisor)
-      SELECT MOD(10, 3);            # 1
-
-    ■ ROUND(value[, decimals]) 【共通】
-      # 四捨五入
-      SELECT ROUND(123.456, 2);     # 123.46
-      SELECT ROUND(123.456, 0);     # 123
-      SELECT ROUND(123.456);        # 123
-
-    ■ ABS(value) 【共通】
-      # 絶対値
-      SELECT ABS(-123.45);          # 123.45
-
-    ■ SQRT(value) 【共通】
-      # 平方根
-      SELECT SQRT(16);              # 4.0
-
-    ■ EXP(value) 【共通】
-      # eのvalue乗 (指数関数)
-      SELECT EXP(1);                # 2.718281828459045
-
-    ■ CEIL(value) 【共通】
-      # 小数点以下切り上げ
-      SELECT CEIL(123.001);         # 124
-
-    ■ FLOOR(value) 【共通】
-      # 小数点以下切り捨て
-      SELECT FLOOR(123.999);        # 123
-
-    ■ TRUNCATE(value, decimals) 【共通】
-      # 指定桁で切り捨て
-      SELECT TRUNCATE(123.456, 2);  # 123.45
-      SELECT TRUNCATE(123.456, 0);  # 123
-
-    ■ FORMAT(value, decimals[, locale]) 【my】
-      # 数値のフォーマット (3桁区切り)
-      SELECT FORMAT(1234567.89, 2);              # "1,234,567.89"
-      SELECT FORMAT(1234567.89, 2, 'de_DE');     # "1.234.567,89"
-
-    ■ DIV(y, x) 【pg】
-      # 整数除算 (切り捨て)
-      SELECT DIV(10, 3);             # 3
-
-    ■ LN(value) 【pg】
-      # 自然対数
-      SELECT LN(2.718281828459045);  # 1.0
-
-    ■ LOG(base, value) 【pg】
-      # 対数 (任意の底)
-      SELECT LOG(10, 100);           # 2.0
-
-    ■ POWER(base, exponent) 【pg】
-      # 累乗
-      SELECT POWER(2, 3);            # 8
-
-    ■ SIGN(value) 【pg】
-      # 符号 (-1, 0, 1)
-      SELECT SIGN(-123);             # -1
-      SELECT SIGN(0);                # 0
-      SELECT SIGN(123);              # 1
-
-    CREATE TABLE <schema>.<table>(...)
+    CREATE TABLE <SCHEMA>.<TABLE>(...)
 
     ■ PK(primary key: プライマリーキー)
 
     ・シリアル
-    【My】  <col> INT PRIMARY KEY AUTO_INCREMENT,
-    【Pg】  <col> SERIAL PRIMARY KEY,
+    【My】  <COLUMN> INT PRIMARY KEY AUTO_INCREMENT,
+    【Pg】  <COLUMN> SERIAL PRIMARY KEY,
 
     ・UUID
-    【My】  <col> CHAR(36) PRIMARY KEY DEFAULT (UUID()),
-    【Pg】  <col> UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    【My】  <COLUMN> CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    【Pg】  <COLUMN> UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
     ・ULID
-    【My】  <col> CHAR(26) PRIMARY KEY DEFAULT (UUID_TO_ULID(UUID())),
-    【Pg】  <col> CHAR(26) PRIMARY KEY DEFAULT ulid_generate(),
+    【My】  <COLUMN> CHAR(26) PRIMARY KEY DEFAULT (UUID_TO_ULID(UUID())),
+    【Pg】  <COLUMN> CHAR(26) PRIMARY KEY DEFAULT ulid_generate(),
 
     ■ FK(foreign Key: 外部キー)
 
-    <col> 型 REFERENCES <ref_table>(<ref_col>)    # FK(外部キー)定義
-      ON UPDATE/DELETE [                          # FK動作指定
-          RESTRICT                                # 制約違反防止
-          |CASCADE                                # 親子同時更新削除
-          |SET NULL                               # 子側NULL設定
-          |NO ACTION                              # 何もしない
-          |SET DEFAULT                            # デフォルト値設定
+    <COLUMN> 型 REFERENCES <ref_table>(<ref_col>)           # FK(外部キー)定義
+      ON UPDATE/DELETE [                                    # FK動作指定
+          RESTRICT                                          # 制約違反防止
+          |CASCADE                                          # 親子同時更新削除
+          |SET NULL                                         # 子側NULL設定
+          |NO ACTION                                        # 何もしない
+          |SET DEFAULT                                      # デフォルト値設定
       ][
-        MATCH FULL                                # 【Pg】一致条件指定(完全一致)
-        |PARTIAL                                  # 【Pg】一致条件指定(部分一致)
-        |SIMPLE                                   # 【Pg】一致条件指定(単純一致)
+        MATCH FULL                                          # 【Pg】一致条件指定(完全一致)
+        |PARTIAL                                            # 【Pg】一致条件指定(部分一致)
+        |SIMPLE                                             # 【Pg】一致条件指定(単純一致)
       ][
-        DEFERRABLE                                # 【Pg】遅延可能指定(トランザクション終了時まで制約チェックを遅延可能)
-        |NOT DEFERRABLE                           # 【Pg】遅延可能指定(制約チェックを即時実行)
+        DEFERRABLE                                          # 【Pg】遅延可能指定(トランザクション終了時まで制約チェックを遅延可能)
+        |NOT DEFERRABLE                                     # 【Pg】遅延可能指定(制約チェックを即時実行)
       ][
-        INITIALLY DEFERRED                        # 【Pg】初期遅延状態指定(トランザクション開始時に制約チェックを遅延状態に設定)
-        |INITIALLY IMMEDIATE                      # 【Pg】初期遅延状態指定(トランザクション開始時に制約チェックを即時状態に設定)
+        INITIALLY DEFERRED                                  # 【Pg】初期遅延状態指定(トランザクション開始時に制約チェックを遅延状態に設定)
+        |INITIALLY IMMEDIATE                                # 【Pg】初期遅延状態指定(トランザクション開始時に制約チェックを即時状態に設定)
       ]
 
     ■ 通常カラム(MySQL)
 
-    <col> 型
-      [NOT NULL]                                         # NULL禁止
-      [DEFAULT value]                                    # デフォルト値設定
-      [UNIQUE]                                           # 一意制約
-      [AUTO_INCREMENT]                                   # 自動採番 (Pg: SERIAL)
-      [INDEX (<col>, ...)]                               # Index作成
-      [CHECK(<col> comparison value)]                    # 制約設定
-      [AS (some_method(<col>,...)) STORED|VIRTUAL]       # COLUMN VIEW定義 (Pg: GENERATED ALWAYS AS)
+    <COLUMN> 型
+      [NOT NULL]                                            # NULL禁止
+      [DEFAULT value]                                       # デフォルト値設定
+      [UNIQUE]                                              # 一意制約
+      [AUTO_INCREMENT]                                      # 自動採番 (Pg: SERIAL)
+      [INDEX (<COLUMN>, ...)]                               # Index作成
+      [CHECK(<COLUMN> comparison value)]                    # 制約設定
+      [AS (some_method(<COLUMN>,...)) STORED|VIRTUAL]       # COLUMN VIEW定義 (Pg: GENERATED ALWAYS AS)
       [DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP] # 型:日付の自動更新 (Pg: DEFAULT CURRENT_TIMESTAMP)
-      [CHARACTER SET <charset>]                          # 文字セット指定 (Pg: ENCODING)
-      [COLLATE <collation>]                              # 照合順序指定 (Pg: LC_COLLATE)
-      [COMMENT 'comment']                                # コメント設定 (Pg: COMMENT ON COLUMN)
+      [CHARACTER SET <charset>]                             # 文字セット指定 (Pg: ENCODING)
+      [COLLATE <collation>]                                 # 照合順序指定 (Pg: LC_COLLATE)
+      [COMMENT 'comment']                                   # コメント設定 (Pg: COMMENT ON COLUMN)
 
-    [CONSTRAINT] <name> PRIMARY KEY(<col>),              # PK
-    [CONSTRAINT] FOREIGN KEY(<name>) REFERENCES (...),   # FK
-    [CONSTRAINT] <name> CHECK (...),                     # 制約
-    [CONSTRAINT] CHECK (<col> comparison <col>),         # 複数カラムの関係
-    [CONSTRAINT] <name> UNIQUE(<col>, ...),              # 一意制約
-    [CONSTRAINT] UNIQUE(<col>, ...),                     # 複数カラム一意制約
+    [CONSTRAINT] <name> PRIMARY KEY(<COLUMN>),              # PK
+    [CONSTRAINT] FOREIGN KEY(<name>) REFERENCES (...),      # FK
+    [CONSTRAINT] <name> CHECK (...),                        # 制約
+    [CONSTRAINT] CHECK (<COLUMN> comparison <COLUMN>),      # 複数カラムの関係
+    [CONSTRAINT] <name> UNIQUE(<COLUMN>, ...),              # 一意制約
+    [CONSTRAINT] UNIQUE(<COLUMN>, ...),                     # 複数カラム一意制約
 
     ■ 通常カラム(PostgreSQL)
 
-    <col> 型
-      [NOT NULL]                                         # NULL禁止
-      [DEFAULT value]                                    # デフォルト値設定
-      [UNIQUE]                                           # 一意制約
-      [SERIAL|BIGSERIAL]                                 # 自動採番 (My: AUTO_INCREMENT)
-      [CHECK(<col> comparison value)]                    # 制約設定
-      [GENERATED ALWAYS AS (some_method(<col>,...)) STORED|VIRTUAL] # COLUMN VIEW定義 (My: AS ... STORED|VIRTUAL)
-      [TIMESTAMP DEFAULT CURRENT_TIMESTAMP]              # 型:日付の自動更新 (My: DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
-      [ENCODING '<encoding>']                            # 文字セット指定 (My: CHARACTER SET)
-      [LC_COLLATE '<collation>']                         # 照合順序指定 (My: COLLATE)
+    <COLUMN> 型
+      [NOT NULL]                                            # NULL禁止
+      [DEFAULT value]                                       # デフォルト値設定
+      [UNIQUE]                                              # 一意制約
+      [SERIAL|BIGSERIAL]                                    # 自動採番 (My: AUTO_INCREMENT)
+      [CHECK(<COLUMN> comparison value)]                    # 制約設定
+      [GENERATED ALWAYS AS (some_method(<COLUMN>,...)) STORED|VIRTUAL]  # COLUMN VIEW定義 (My: AS ... STORED|VIRTUAL)
+      [TIMESTAMP DEFAULT CURRENT_TIMESTAMP]                 # 型:日付の自動更新 (My: DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+      [ENCODING '<encoding>']                               # 文字セット指定 (My: CHARACTER SET)
+      [LC_COLLATE '<collation>']                            # 照合順序指定 (My: COLLATE)
       ・コメントは別途 COMMENT ON COLUMN 文で設定
 
-    [CONSTRAINT <name>] PRIMARY KEY(<col>),              # PK
-    [CONSTRAINT <name>] FOREIGN KEY(<col>) REFERENCES <ref_table>(<ref_col>) [...], # FK
-    [CONSTRAINT <name>] CHECK (<condition>),             # 制約
-    [CONSTRAINT <name>] UNIQUE(<col>, ...),              # 一意制約
+    [CONSTRAINT <name>] PRIMARY KEY(<COLUMN>),              # PK
+    [CONSTRAINT <name>] FOREIGN KEY(<COLUMN>) REFERENCES <ref_table>(<ref_col>) [...], # FK
+    [CONSTRAINT <name>] CHECK (<condition>),                # 制約
+    [CONSTRAINT <name>] UNIQUE(<COLUMN>, ...),              # 一意制約
 
 - ENTRY:
   EXPLAIN: 定義(CHARACTER SET)
@@ -158,20 +96,20 @@
 
     ■ MySQL
 
-      CREATE TABLE <table> (
-        <col> VARCHAR(100) CHARACTER SET utf8mb4,        # テーブル作成時にカラム単位で指定
+      CREATE TABLE <TABLE> (
+        <COLUMN> VARCHAR(100) CHARACTER SET utf8mb4,        # テーブル作成時にカラム単位で指定
         ...
-      ) CHARACTER SET=utf8mb4;                           # テーブル全体のデフォルト文字セット指定
+      ) CHARACTER SET=utf8mb4;                              # テーブル全体のデフォルト文字セット指定
 
       utf8mb4 : UTF-8 エンコード (4バイト文字対応)
       latin1  : ISO-8859-1 エンコード (西ヨーロッパ言語向け)
 
     ■ PostgreSQL
 
-      CREATE TABLE <table> (
-        <col> VARCHAR(100) ENCODING 'UTF8',              # テーブル作成時にカラム単位で指定
+      CREATE TABLE <TABLE> (
+        <COLUMN> VARCHAR(100) ENCODING 'UTF8',              # テーブル作成時にカラム単位で指定
         ...
-      );                                                 # テーブル全体のデフォルト文字セットはDB作成時に指定
+      );                                                    # テーブル全体のデフォルト文字セットはDB作成時に指定
 
       UTF8    : UTF-8 エンコード
 
@@ -184,10 +122,10 @@
 
     ■ MySQL
 
-      CREATE TABLE <table> (
-        <col> VARCHAR(100) COLLATE utf8mb4_general_ci,  # テーブル作成時にカラム単位で指定
+      CREATE TABLE <TABLE> (
+        <COLUMN> VARCHAR(100) COLLATE utf8mb4_general_ci,   # テーブル作成時にカラム単位で指定
         ...
-      ) COLLATE=utf8mb4_general_ci;                     # テーブル全体のデフォルト照合順序指定
+      ) COLLATE=utf8mb4_general_ci;                         # テーブル全体のデフォルト照合順序指定
 
       utf8mb4_general_ci : 大文字小文字区別なし、アクセント区別なし
       utf8mb4_bin        : バイナリ比較 (大文字小文字区別、アクセント区別)
@@ -201,10 +139,10 @@
 
     ■ PostgreSQL
 
-      CREATE TABLE <table> (
-        <col> VARCHAR(100) COLLATE "ja_JP.UTF-8",       # テーブル作成時にカラム単位で指定
+      CREATE TABLE <TABLE> (
+        <COLUMN> VARCHAR(100) COLLATE "ja_JP.UTF-8",        # テーブル作成時にカラム単位で指定
         ...
-      );                                                # テーブル全体のデフォルト照合順序はDB作成時に指定
+      );                                                    # テーブル全体のデフォルト照合順序はDB作成時に指定
 
       "ja_JP.UTF-8" : 日本語UTF-8、大文字小文字区別あり、アクセント区別あり
       "C"           : バイナリ比較 (大文字小文字区別、アクセント区別)
@@ -248,7 +186,7 @@
       age         SMALLINT NOT NULL DEFAULT 0 CHECK(age < 120),
       score       NUMERIC(5,2) DEFAULT 0.00,
       status      status_enum DEFAULT 'active',
-      tags        TEXT[],                                 # SET型なし、ARRAYやJSON使用
+      tags        TEXT[],                                   # SET型なし、ARRAYやJSON使用
       data        JSONB,
       birth_date  DATE,
       profile     TEXT,
@@ -295,28 +233,28 @@
     ■ MySQL
 
       ALTER TABLE <tableA> RENAME <tableB>;                    # テーブル名変更
-      ALTER TABLE <table> ADD COLUMN <colB> 型 [AFTER <colA>]; # カラム追加(場所指定)
-      ALTER TABLE <table> RENAME COLUMN <colA> TO <colB>;      # カラム名変更
-      ALTER TABLE <table> MODIFY COLUMN <col> 型;              # (部分的自動型変換)カラム型変更
-      ALTER TABLE <table> CHANGE <colA> <colB> 型;             # カラム型＆名同時変更
-      ALTER TABLE <table> DROP COLUMN <col>;                   # カラム削除
-      DROP TABLE <table>;                                      # テーブル削除
+      ALTER TABLE <TABLE> ADD COLUMN <colB> 型 [AFTER <colA>]; # カラム追加(場所指定)
+      ALTER TABLE <TABLE> RENAME COLUMN <colA> TO <colB>;      # カラム名変更
+      ALTER TABLE <TABLE> MODIFY COLUMN <COLUMN> 型;           # (部分的自動型変換)カラム型変更
+      ALTER TABLE <TABLE> CHANGE <colA> <colB> 型;             # カラム型＆名同時変更
+      ALTER TABLE <TABLE> DROP COLUMN <COLUMN>;                # カラム削除
+      DROP TABLE <TABLE>;                                      # テーブル削除
 
     ■ PostgreSQL
 
-      ALTER TABLE <table> RENAME TO <new_table>;               # テーブル名変更
-      ALTER TABLE <table> ADD COLUMN <col> 型;                 # カラム追加 (場所指定なし)
-      ALTER TABLE <table> RENAME COLUMN <colA> TO <colB>;      # カラム名変更
-      ALTER TABLE <table> ALTER COLUMN <col> TYPE 型;          # カラム型変更
-      ALTER TABLE <table> DROP COLUMN <col>;                   # カラム削除
-      DROP TABLE <table>;                                      # テーブル削除
+      ALTER TABLE <TABLE> RENAME TO <new_table>;               # テーブル名変更
+      ALTER TABLE <TABLE> ADD COLUMN <COLUMN> 型;              # カラム追加 (場所指定なし)
+      ALTER TABLE <TABLE> RENAME COLUMN <colA> TO <colB>;      # カラム名変更
+      ALTER TABLE <TABLE> ALTER COLUMN <COLUMN> TYPE 型;       # カラム型変更
+      ALTER TABLE <TABLE> DROP COLUMN <COLUMN>;                # カラム削除
+      DROP TABLE <TABLE>;                                      # テーブル削除
 
 - ENTRY:
   EXPLAIN: 他テーブルからテーブル作成
   BODY: |
     ■ MySQL/PostgreSQL
 
-    CREATE TABLE <new_table> AS SELECT <col>,... FROM <existing_table> WHERE <condition>;
+    CREATE TABLE <new_table> AS SELECT <COLUMN>,... FROM <existing_table> WHERE <condition>;
 
     ■ 例
 
@@ -348,7 +286,7 @@
 
     ■ MySQL/PostgreSQL
 
-    CREATE TEMPORARY TABLE <temp_table> AS SELECT <col>,... FROM <existing_table> WHERE <condition>;
+    CREATE TEMPORARY TABLE <temp_table> AS SELECT <COLUMN>,... FROM <existing_table> WHERE <condition>;
 
     ■ 例
 
@@ -368,8 +306,8 @@
 
     ■ MySQL
 
-    CREATE TABLE <table> (
-      <col> 型 AS (some_method(<col>,...)) STORED|VIRTUAL,
+    CREATE TABLE <TABLE> (
+      <COLUMN> 型 AS (some_method(<COLUMN>,...)) STORED|VIRTUAL,
       ...
     );
 
@@ -382,8 +320,8 @@
 
     ■ PostgreSQL
 
-    CREATE TABLE <table> (
-      <col> 型 GENERATED ALWAYS AS (some_method(<col>,...)) STORED,
+    CREATE TABLE <TABLE> (
+      <COLUMN> 型 GENERATED ALWAYS AS (some_method(<COLUMN>,...)) STORED,
       ...
     );
     create table sample (
@@ -411,13 +349,13 @@
 
     ■ MySQL
 
-    CREATE [OR REPLACE] VIEW <view> AS SELECT ... ORDER BY <col>;   # ビュー作成・変更
-    DROP VIEW <view>;                                               # ビュー削除 
+    CREATE [OR REPLACE] VIEW <view> AS SELECT ... ORDER BY <COLUMN>;   # ビュー作成・変更
+    DROP VIEW <view>;                                                  # ビュー削除 
 
     ■ PostgreSQL
 
-    CREATE [OR REPLACE] VIEW <view> AS SELECT ... ORDER BY <col>;   # ビュー作成・変更 
-    DROP VIEW <view>;                                               # ビュー削除
+    CREATE [OR REPLACE] VIEW <view> AS SELECT ... ORDER BY <COLUMN>;   # ビュー作成・変更 
+    DROP VIEW <view>;                                                  # ビュー削除
 
     ■ MySQL: ビュー更新可能条件
 
@@ -475,21 +413,21 @@
   BODY: |
     ■ MySQL
 
-    SELECT [DISTINCT] <alias>.<col> as <alias>, ...
-    FROM <schema>.<table> <alias>, ...
+    SELECT [DISTINCT] <ALIAS>.<COLUMN> as <ALIAS>, ...
+    FROM <SCHEMA>.<TABLE> <ALIAS>, ...
     WHERE <condition> AND/OR ...
-    GROUP BY <aliasA>.<col> [WITH ROLLUP]   # ROLLUP:総計(要集約関数)
-    ORDER BY <aliasA>.<col> ASC/DESC
+    GROUP BY <aliasA>.<COLUMN> [WITH ROLLUP]   # ROLLUP:総計(要集約関数)
+    ORDER BY <aliasA>.<COLUMN> ASC/DESC
     HAVING <condition>
-    LIMIT {<number> OFFSET <number>};       # LIMITがないと、OFFSETは使用できない
+    LIMIT {<number> OFFSET <number>};          # LIMITがないと、OFFSETは使用できない
 
     ■ PostgreSQL
 
-    SELECT [DISTINCT] <alias>.<col> as <alias>, ...
-    FROM <schema>.<table> <alias>, ...
+    SELECT [DISTINCT] <ALIAS>.<COLUMN> as <ALIAS>, ...
+    FROM <SCHEMA>.<TABLE> <ALIAS>, ...
     WHERE <condition> AND/OR ...
-    GROUP BY <aliasA>.<col>
-    ORDER BY <aliasA>.<col> ASC/DESC
+    GROUP BY <aliasA>.<COLUMN>
+    ORDER BY <aliasA>.<COLUMN> ASC/DESC
     HAVING <condition>
     LIMIT <number> OFFSET <number>;         # LIMITとOFFSETはそれぞれ単独でもOK(標準SQL)
 
@@ -506,21 +444,21 @@
   BODY: |
     ■ MySQL
 
-    SELECT <tableA>.<col>, <tableB>.<col>
+    SELECT <tableA>.<COLUMN>, <tableB>.<COLUMN>
     FROM <tableA>
     [NATURAL]                                         # 自然結合
     [ INNER | LEFT | RIGHT | CROSS ] JOIN <tableB>    # 内部結合| 左外部結合| 右外部結合| 完全外部結合
-    ON <tableA>.<col> = <tableB>.<col>
+    ON <tableA>.<COLUMN> = <tableB>.<COLUMN>
     or 
-    USING (<col>,... *カラム名が一致)
+    USING (<COLUMN>,... *カラム名が一致)
 
     ■ PostgreSQL
 
-    SELECT <tableA>.<col>, <tableB>.<col>
+    SELECT <tableA>.<COLUMN>, <tableB>.<COLUMN>
     FROM <tableA>
     [NATURAL] [ INNER | LEFT | RIGHT | FULL | CROSS ] JOIN <tableB>
-    ON <tableA>.<col> = <tableB>.<col>
-    or USING (<col>,... *カラム名が一致)
+    ON <tableA>.<COLUMN> = <tableB>.<COLUMN>
+    or USING (<COLUMN>,... *カラム名が一致)
 
     ■ 注意
 
@@ -565,10 +503,10 @@
 
     ■ INNER JOIN, CROSS JOIN(ONあり), NATURAL JOIN
 
-    select * from city, person where city.city_id=person.city_id;           // INNER JOIN (古い書き方)
-    = select * from city inner join person on city.city_id=person.city_id;  // INNER JOIN
-    = select * from city cross join person on city.city_id=person.city_id;  // CROSS JOIN (ONあり)
-    = select * from city natural join person;                               // NATURAL JOIN
+    select * from city, person where city.city_id=person.city_id;           # INNER JOIN (古い書き方)
+    = select * from city inner join person on city.city_id=person.city_id;  # INNER JOIN
+    = select * from city cross join person on city.city_id=person.city_id;  # CROSS JOIN (ONあり)
+    = select * from city natural join person;                               # NATURAL JOIN
 
       ----------------------------------
       | city_id | name  |  id  | name  |
@@ -580,7 +518,7 @@
 
     ■ CROSS JOIN(ONなし)
 
-    select * from city cross join person;   // CROSS JOIN (ONなし)
+    select * from city cross join person;                   # CROSS JOIN (ONなし)
 
       ----------------------------------
       | city_id | name  |  id  | name  |
@@ -640,75 +578,75 @@
   BODY: |
     ■ MySQL/PostgreSQL
 
-    (select <2 columns> from <table>)
-    union [all]                         # all: 重複保持
-    (<2 columns> from <table>)
+    (select <2 columns> from <TABLE>)
+    union [all]                                             # all: 重複保持
+    (<2 columns> from <TABLE>)
     order by <column>;
 
     select * 
     from (
-      (select <2 columns> from <table> limit 1)
-      union [all]                       # all: 重複保持
-      (<2 columns> from <table> limit 1)
+      (select <2 columns> from <TABLE> limit 1)
+      union [all]                                           # all: 重複保持
+      (<2 columns> from <TABLE> limit 1)
     ) as temp
     order by <column>;
 
     ■ ERROR 例
 
     原因: ()が必要
-    select <2 columns> from <table> limit 1 union <2 columns> from <table> limit 1 order by <column>;
+    select <2 columns> from <TABLE> limit 1 union <2 columns> from <TABLE> limit 1 order by <column>;
 
     原因: カラム数不一致
-    (select <2 columns> from <table>) union (<3 columns> from <table>) order by <column>;
+    (select <2 columns> from <TABLE>) union (<3 columns> from <TABLE>) order by <column>;
 
 - ENTRY:
   EXPLAIN: EXCEPT(差集合)【pgのみ】
   BODY: |
     ■ PostgreSQL
 
-    (select <2 columns> from <table>)
-    except [all]                        # all: 重複保持
-    (<2 columns> from <table>)
+    (select <2 columns> from <TABLE>)
+    except [all]                                            # all: 重複保持
+    (<2 columns> from <TABLE>)
     order by <column>;
 
     select *
     from (
-      (select <2 columns> from <table> limit 1)
-      except [all]                      # all: 重複保持
-      (<2 columns> from <table> limit 1)
+      (select <2 columns> from <TABLE> limit 1)
+      except [all]                                          # all: 重複保持
+      (<2 columns> from <TABLE> limit 1)
     ) as temp
     order by <column>;
 
     ■ mysql: EXCEPT 非対応(代替案)
 
-    SELECT a.<cols>
+    SELECT a.<COLUMNS>
     FROM tableA a
-    LEFT JOIN tableB b ON a.<col>=b.<col>
-    WHERE b.<col> IS NULL;
+    LEFT JOIN tableB b ON a.<COLUMN>=b.<COLUMN>
+    WHERE b.<COLUMN> IS NULL;
 
 - ENTRY:
   EXPLAIN: INTERSECT(積集合)【pgのみ】
   BODY: |
     ■ MySQL/PostgreSQL
 
-    (select <2 columns> from <table>)
-    intersect [all]                    # all: 重複保持
-    (<2 columns> from <table>)
+    (select <2 columns> from <TABLE>)
+    intersect [all]                                         # all: 重複保持
+    (<2 columns> from <TABLE>)
     order by <column>;
 
     select *
     from (
-      (select <2 columns> from <table> limit 1)
-      intersect [all]                  # all: 重複保持
-      (<2 columns> from <table> limit 1)
+      (select <2 columns> from <TABLE> limit 1)
+      intersect [all]                                       # all: 重複保持
+      (<2 columns> from <TABLE> limit 1)
     ) as temp
     order by <column>;
 
     ■ mysql: INTERSECT 非対応(代替案)
 
-    SELECT a.<cols>
+    SELECT a.<COLUMNS>
     FROM tableA a
-    INNER JOIN tableB b ON a.<col>=b.<col>;
+    INNER JOIN tableB b ON a.<COLUMN>=b.<COLUMN>;
 
 - ENTRY:
   EXPLAIN: UNION,EXCEPT,INTERSECT 比較サンプル
@@ -881,7 +819,7 @@
       WHERE last_login < NOW() - INTERVAL '1 year'
       RETURNING *
     )
-    SELECT * FROM updated_rows;         # 更新された行を取得
+    SELECT * FROM updated_rows;                             # 更新された行を取得
 
     ■ PostgreSQL MATERIALIZED 例
 
@@ -935,8 +873,8 @@
     速度: 速い
     速度理由: 内部的にハッシュ検索など効率的な方法でチェック可能
 
-    <col> IN (value1, value2, value3, ... )
-    <col> IN (<subquery>)
+    <COLUMN> IN (value1, value2, value3, ... )
+    <COLUMN> IN (<subquery>)
 
     例: SELECT * FROM t1 WHERE c1 IN (1,2,3);
     例: SELECT * FROM t1 WHERE c1 IN (SELECT c1 FROM t2 WHERE condition);
@@ -947,9 +885,9 @@
     速度: 遅い
     速度理由: サブクエリの各行と比較するため、パフォーマンスが低下する可能性あり
 
-    <col> = ANY/SOME/ALL (<subquery>)
-    <col> =< ANY/SOME/ALL (<subquery>)
-    <col> => ANY/SOME/ALL (<subquery>)
+    <COLUMN> = ANY/SOME/ALL (<subquery>)
+    <COLUMN> =< ANY/SOME/ALL (<subquery>)
+    <COLUMN> => ANY/SOME/ALL (<subquery>)
 
     例: SELECT * FROM t1 WHERE c1 = ANY(SELECT c1 FROM t2 WHERE condition);  # 部分一致 = SOME
     例: SELECT * FROM t1 WHERE c1 = ALL(SELECT c1 FROM t2 WHERE condition);  # 全件一致
@@ -987,6 +925,64 @@
     ・t1の各行に基づいてt2のサブクエリが異なる結果を返すなど、通常のJOINでは実現困難な動的な結合が可能
 
 #-------------------------------
+# メソッド
+#-------------------------------
+- ENTRY:
+  CATEGORY: メソッド
+
+- ENTRY:
+  EXPLAIN: 数値メソッド
+  BODY: |
+    ■ MOD(dividend, divisor) 【共通】                        # 剰余計算 (dividend % divisor)
+
+      SELECT MOD(10, 3);                                    # 1
+
+    ■ ROUND(value[, decimals]) 【共通】                      # 四捨五入
+      SELECT ROUND(123.456, 2);                             # 123.46
+      SELECT ROUND(123.456, 0);                             # 123
+      SELECT ROUND(123.456);                                # 123
+
+    ■ ABS(value) 【共通】                                    # 絶対値
+      SELECT ABS(-123.45);                                  # 123.45
+
+    ■ SQRT(value) 【共通】                                   # 平方根
+      SELECT SQRT(16);                                      # 4.0
+
+    ■ EXP(value) 【共通】                                    # eのvalue乗 (指数関数)
+      SELECT EXP(1);                                        # 2.718281828459045
+
+    ■ CEIL(value) 【共通】                                   # 小数点以下切り上げ
+      SELECT CEIL(123.001);                                 # 124
+
+    ■ FLOOR(value) 【共通】                                  # 小数点以下切り捨て
+      SELECT FLOOR(123.999);                                # 123
+
+    ■ TRUNCATE(value, decimals) 【共通】                     # 指定桁で切り捨て
+      SELECT TRUNCATE(123.456, 2);                          # 123.45
+      SELECT TRUNCATE(123.456, 0);                          # 123
+
+    ■ FORMAT(value, decimals[, locale]) 【my】               # 数値のフォーマット (3桁区切り)
+      SELECT FORMAT(1234567.89, 2);                         # "1,234,567.89"
+      SELECT FORMAT(1234567.89, 2, 'de_DE');                # "1.234.567,89"
+
+    ■ DIV(y, x) 【pg】                                       # 整数除算 (切り捨て)
+      SELECT DIV(10, 3);                                    # 3
+
+    ■ LN(value) 【pg】                                       # 自然対数
+      SELECT LN(2.718281828459045);                         # 1.0
+
+    ■ LOG(base, value) 【pg】                                # 対数 (任意の底)
+      SELECT LOG(10, 100);                                  # 2.0
+
+    ■ POWER(base, exponent) 【pg】                           # 累乗
+      SELECT POWER(2, 3);                                   # 8
+
+    ■ SIGN(value) 【pg】                                     # 符号 (-1, 0, 1)
+      SELECT SIGN(-123);                                    # -1
+      SELECT SIGN(0);                                       # 0
+      SELECT SIGN(123);                                     # 1
+
+#-------------------------------
 # 操作(更新,更新,削除)
 #-------------------------------
 - ENTRY:
@@ -999,8 +995,8 @@
 
       ・mySQL/PostgreSQL 共通
 
-      INSERT INTO <table>(<cols>) VALUES (values), (values), ...;
-      INSERT INTO <table>(<cols>) SELECT <cols> FROM <table> WHERE condition;
+      INSERT INTO <TABLE>(<COLUMNS>) VALUES (values), (values), ...;
+      INSERT INTO <TABLE>(<COLUMNS>) SELECT <COLUMNS> FROM <TABLE> WHERE condition;
 
       例: INSERT INTO users (name, email) VALUES ('John', 'john@example.com');
       例: INSERT INTO users (name, email) SELECT name, email FROM temp_users WHERE active = 1;
@@ -1009,14 +1005,14 @@
 
       ・MySQL
 
-      INSERT INTO <table>(<cols>) VALUES (values) ON DUPLICATE KEY UPDATE <col>=value, ...;
+      INSERT INTO <TABLE>(<COLUMNS>) VALUES (values) ON DUPLICATE KEY UPDATE <COLUMN>=value, ...;
 
       例: INSERT INTO users (id, name, email) VALUES (1, 'John', 'john@example.com')
            ON DUPLICATE KEY UPDATE name=VALUES(name), email=VALUES(email);
 
       ・PostgreSQL
 
-      INSERT INTO <table>(<cols>) VALUES (values) ON CONFLICT (<unique_col>) DO UPDATE SET <col>=value, ...;
+      INSERT INTO <TABLE>(<COLUMNS>) VALUES (values) ON CONFLICT (<unique_col>) DO UPDATE SET <COLUMN>=value, ...;
 
       例: INSERT INTO users (id, name, email) VALUES (1, 'John', 'john@example.com')
           ON CONFLICT (id) DO UPDATE SET name=EXCLUDED.name, email=EXCLUDED.email;
@@ -1025,7 +1021,7 @@
 
       ・mySQLのみ
 
-      REPLACE INTO <table>(<cols>) VALUES (values), (values), ...;
+      REPLACE INTO <TABLE>(<COLUMNS>) VALUES (values), (values), ...;
 
       例: REPLACE INTO users (id, name, email) VALUES (1, 'John', 'john@example.com');
 
@@ -1033,7 +1029,7 @@
 
       ・PostgreSQLのみ
 
-      INSERT INTO <table>(<cols>) VALUES (values) RETURNING <col>, ...;
+      INSERT INTO <TABLE>(<COLUMNS>) VALUES (values) RETURNING <COLUMN>, ...;
 
       例: INSERT INTO users (name, email) VALUES ('John', 'john@example.com') RETURNING id;
 
@@ -1049,7 +1045,7 @@
   BODY: |
     ■ mySQL/PostgreSQL 共通
 
-    UPDATE <schema>.<table> AS <alias> SET <col>=value, ... WHERE condition;
+    UPDATE <SCHEMA>.<TABLE> AS <ALIAS> SET <COLUMN>=value, ... WHERE condition;
 
     例: UPDATE mydb.users AS u SET u.name='Jane' WHERE u.id=1;
 
@@ -1080,14 +1076,14 @@
 
     ・mySQL/PostgreSQL 共通
 
-    DELETE FROM <schema>.<table> WHERE condition;
+    DELETE FROM <SCHEMA>.<TABLE> WHERE condition;
 
     例: DELETE FROM mydb.users WHERE id=1;
-    例: DELETE FROM mydb.users;                    // (テーブル内全データ)削除
+    例: DELETE FROM mydb.users;                             # (テーブル内全データ)削除
 
-    TRUNCATE TABLE <schema>.<table>;               // (テーブル内全データ)削除
+    TRUNCATE TABLE <SCHEMA>.<TABLE>;                        # (テーブル内全データ)削除
 
-    例: TRUNCATE TABLE mydb.users;                 // (テーブル内全データ)削除
+    例: TRUNCATE TABLE mydb.users;                          # (テーブル内全データ)削除
 
     ■ 注意点
 
@@ -1106,25 +1102,25 @@
   BODY: |
     ■ =, <>
 
-    <col> = value                       # 等価比較 (文字列、数値、日付、真偽値)
-    <col> <> value                      # 不等価比較 (文字列、数値、日付、真偽値)
+    <COLUMN> = value                       # 等価比較 (文字列、数値、日付、真偽値)
+    <COLUMN> <> value                      # 不等価比較 (文字列、数値、日付、真偽値)
 
     ■ <, <=, >, =>
 
-    <col> < value                       # 前後比較 (数値、日付など、文字列は文字コード順)
-    <col> > value                       # 前後比較 (数値、日付など、文字列は文字コード順)
-    <col> <= value                      # 前後比較 (数値、日付など、文字列は文字コード順)
-    <col> >= value                      # 前後比較 (数値、日付など、文字列は文字コード順)
+    <COLUMN> < value                       # 前後比較 (数値、日付など、文字列は文字コード順)
+    <COLUMN> > value                       # 前後比較 (数値、日付など、文字列は文字コード順)
+    <COLUMN> <= value                      # 前後比較 (数値、日付など、文字列は文字コード順)
+    <COLUMN> >= value                      # 前後比較 (数値、日付など、文字列は文字コード順)
 
     ■ BETWEEN A AND B
 
-    <col> BETWEEN value1 AND value2     # 範囲比較 (数値、日付など、文字列は文字コード順)
-    <col> NOT BETWEEN value1 AND value2 # 範囲外比較 (数値、日付など、文字列は文字コード順)
+    <COLUMN> BETWEEN value1 AND value2     # 範囲比較 (数値、日付など、文字列は文字コード順)
+    <COLUMN> NOT BETWEEN value1 AND value2 # 範囲外比較 (数値、日付など、文字列は文字コード順)
 
     ■ IS
 
-    IS [NOT] NULL(=UNKNOWN)             # カラム値のNULL判定(UNKNOWN含む)
-    IS [NOT] TRUE/FALSE                 # 真偽値判定
+    IS [NOT] NULL(=UNKNOWN)                # カラム値のNULL判定(UNKNOWN含む)
+    IS [NOT] TRUE/FALSE                    # 真偽値判定
 
     ※ NULL と UNKNOWN の違い
       ・NULL:       データベース内の値が存在しないことを示す特別なマーカー
@@ -1134,8 +1130,8 @@
 
     ■ GREATEST, LEAST
 
-    <col> = GREATEST(values)            # 最大値比較
-    <col> = LEAST(values)               # 最小値比較
+    <COLUMN> = GREATEST(values)            # 最大値比較
+    <COLUMN> = LEAST(values)               # 最小値比較
 
     ■ INTERVAL
 
@@ -1240,56 +1236,56 @@
   BODY: |
     ■ mySQL / PostgreSQL 共通
 
-    WHERE <col> LIKE '%文字列%' (%:0以上)                     # 部分一致
-    WHERE <col> LIKE '_文字列_' (_:1文字)                     # 1文字
+    WHERE <COLUMN> LIKE '%文字列%' (%:0以上)                     # 部分一致
+    WHERE <COLUMN> LIKE '_文字列_' (_:1文字)                     # 1文字
 
       ※ ESCAPE句省略:
         mySQL: 省略不可
         Pg:    省略可 (デフォルトでバックスラッシュ[\])
 
-    WHERE <col> LIKE 'data\_entry' ESCAPE '\';               # data_entry に一致
-    WHERE <col> LIKE 'C:\\\\path\\\\to\\\\file' ESCAPE '\';  # C:\path\to\file に一致
-    WHERE <col> LIKE '50\% off' ESCAPE '\';                  # 50% off に一致
-    WHERE <col> LIKE 'user\_name' ESCAPE '\';                # user_name に一致
+    WHERE <COLUMN> LIKE 'data\_entry' ESCAPE '\';               # data_entry に一致
+    WHERE <COLUMN> LIKE 'C:\\\\path\\\\to\\\\file' ESCAPE '\';  # C:\path\to\file に一致
+    WHERE <COLUMN> LIKE '50\% off' ESCAPE '\';                  # 50% off に一致
+    WHERE <COLUMN> LIKE 'user\_name' ESCAPE '\';                # user_name に一致
 
-    WHERE <col> LIKE '%test%';                               # 部分一致
-    WHERE <col> LIKE 'test\_%' ESCAPE '\';                   # test_ で始まる
-    WHERE <col> LIKE '100\%%' ESCAPE '\';                    # 100% で始まる
-    WHERE <col> LIKE 'C\:\\\\Program Files\\\\%' ESCAPE '\'; # C:\Program Files\ で始まる
-    WHERE <col> LIKE 'data\_2024\_%' ESCAPE '\';             # data_2024_ で始まる
+    WHERE <COLUMN> LIKE '%test%';                               # 部分一致
+    WHERE <COLUMN> LIKE 'test\_%' ESCAPE '\';                   # test_ で始まる
+    WHERE <COLUMN> LIKE '100\%%' ESCAPE '\';                    # 100% で始まる
+    WHERE <COLUMN> LIKE 'C\:\\\\Program Files\\\\%' ESCAPE '\'; # C:\Program Files\ で始まる
+    WHERE <COLUMN> LIKE 'data\_2024\_%' ESCAPE '\';             # data_2024_ で始まる
 
-    WHERE <col> LIKE '_test_';                               # 1文字 + test + 1文字
-    WHERE <col> LIKE 'file\_?.txt' ESCAPE '\';               # file_1.txt, file_a.txt などに一致
-    WHERE <col> LIKE 'C\:\\\\path\\\\file\_.txt' ESCAPE '\'; # C:\path\file1.txt などに一致
+    WHERE <COLUMN> LIKE '_test_';                               # 1文字 + test + 1文字
+    WHERE <COLUMN> LIKE 'file\_?.txt' ESCAPE '\';               # file_1.txt, file_a.txt などに一致
+    WHERE <COLUMN> LIKE 'C\:\\\\path\\\\file\_.txt' ESCAPE '\'; # C:\path\file1.txt などに一致
 
     ■ mySQL 
 
-    WHERE <col> REGEXP [BINARY] '正規表現'                    # BINARY:CASE区別
-    WHERE <col> NOT REGEXP [BINARY] '正規表現'                # BINARY:CASE区別,否定
+    WHERE <COLUMN> REGEXP [BINARY] '正規表現'                    # BINARY:CASE区別
+    WHERE <COLUMN> NOT REGEXP [BINARY] '正規表現'                # BINARY:CASE区別,否定
 
-    WHERE <col> REGEXP '^[A-Za-z0-9]+$';                     # 英数字のみ
-    WHERE <col> REGEXP BINARY '^[A-Z]+$';                    # 大文字のみ
-    WHERE <col> NOT REGEXP '^[0-9]+$';                       # 数字以外
+    WHERE <COLUMN> REGEXP '^[A-Za-z0-9]+$';                     # 英数字のみ
+    WHERE <COLUMN> REGEXP BINARY '^[A-Z]+$';                    # 大文字のみ
+    WHERE <COLUMN> NOT REGEXP '^[0-9]+$';                       # 数字以外
 
     ■ PostgreSQL
 
-    WHERE <col> ILIKE '%文字列%'                             # %:0以上,CASE無視(SQL標準外)
-    WHERE <col> NOT ILIKE '%文字列%'                         # %:0以上,CASE無視,否定(SQL標準外)
-    WHERE <col> ILIKE '_文字列_'                             # _:1文字,CASE無視(SQL標準外)
+    WHERE <COLUMN> ILIKE '%文字列%'                             # %:0以上,CASE無視(SQL標準外)
+    WHERE <COLUMN> NOT ILIKE '%文字列%'                         # %:0以上,CASE無視,否定(SQL標準外)
+    WHERE <COLUMN> ILIKE '_文字列_'                             # _:1文字,CASE無視(SQL標準外)
 
-    WHERE <col> ILIKE '%test%';                              # 部分一致,CASE無視(SQL標準外)
-    WHERE <col> NOT ILIKE 'test%';                           # testで始まる,CASE無視,否定(SQL標準外)
-    WHERE <col> ILIKE '_test_';                              # 1文字 + test + 1文字,CASE無視(SQL標準外)
+    WHERE <COLUMN> ILIKE '%test%';                              # 部分一致,CASE無視(SQL標準外)
+    WHERE <COLUMN> NOT ILIKE 'test%';                           # testで始まる,CASE無視,否定(SQL標準外)
+    WHERE <COLUMN> ILIKE '_test_';                              # 1文字 + test + 1文字,CASE無視(SQL標準外)
 
-    WHERE <col> ~ '正規表現'                                 # CASE区別
-    WHERE <col> ~* '正規表現'                                # CASE無視
-    WHERE <col> !~ '正規表現'                                # CASE区別,否定
-    WHERE <col> !~* '正規表現'                               # CASE無視,否定
+    WHERE <COLUMN> ~ '正規表現'                                 # CASE区別
+    WHERE <COLUMN> ~* '正規表現'                                # CASE無視
+    WHERE <COLUMN> !~ '正規表現'                                # CASE区別,否定
+    WHERE <COLUMN> !~* '正規表現'                               # CASE無視,否定
 
-    WHERE <col> ~ '^[A-Z]+$';                                # 大文字のみ
-    WHERE <col> ~* '^[a-z]+$';                               # 小文字のみ,CASE無視
-    WHERE <col> !~ '^[0-9]+$';                               # 数字以外
-    WHERE <col> !~* '^[A-F]+$';                              # A-F以外,CASE無視
+    WHERE <COLUMN> ~ '^[A-Z]+$';                                # 大文字のみ
+    WHERE <COLUMN> ~* '^[a-z]+$';                               # 小文字のみ,CASE無視
+    WHERE <COLUMN> !~ '^[0-9]+$';                               # 数字以外
+    WHERE <COLUMN> !~* '^[A-F]+$';                              # A-F以外,CASE無視
 
     ■ CASE に関する注意
 
@@ -1297,8 +1293,8 @@
     PostgreSQL  ~ 演算子はデフォルトでCASE区別
 
     テーブルの COLLATE 設定やクエリ内での COLLATE 指定により、CASEの挙動が変わる場合があるため注意
-    例: WHERE <col> COLLATE utf8mb4_0900_as_cs REGEXP '正規表現';  // CASE区別(MySQL)
-    例: WHERE <col> COLLATE "C" ~ '正規表現';                      // CASE区別(PostgreSQL)
+    例: WHERE <COLUMN> COLLATE utf8mb4_0900_as_cs REGEXP '正規表現';  // CASE区別(MySQL)
+    例: WHERE <COLUMN> COLLATE "C" ~ '正規表現';                      // CASE区別(PostgreSQL)
 
 - ENTRY:
   EXPLAIN: 正規表現関数比較
@@ -1339,24 +1335,24 @@
         'm': 複数行モード
         'n': ドット(.)が改行にマッチ
 
-    REGEXP_INSTR('dog cat dog', 'dog')            # => 1
-    REGEXP_INSTR('dog cat dog', 'dog', 2)         # => 9
-    REGEXP_INSTR('aa aaa aaaa', 'a{2}')           # => 1
-    REGEXP_INSTR('aa aaa aaaa', 'a{4}')           # => 8
+    REGEXP_INSTR('dog cat dog', 'dog')                      # 1
+    REGEXP_INSTR('dog cat dog', 'dog', 2)                   # 9
+    REGEXP_INSTR('aa aaa aaaa', 'a{2}')                     # 1
+    REGEXP_INSTR('aa aaa aaaa', 'a{4}')                     # 8
 
     ■ position(substring()): PostgreSQL類似機能
 
     ・マッチした位置を取得 (regexp_match + substring)
-    SELECT position(substring('dog cat dog', 'dog'), 'dog cat dog');           # => 1
+    SELECT position(substring('dog cat dog', 'dog'), 'dog cat dog');           # 1
 
     ・regexp_matchでマッチ部分を取得後、positionで位置を求める
-    SELECT position((regexp_match('dog cat dog', 'dog'))[1], 'dog cat dog');   # => 1
+    SELECT position((regexp_match('dog cat dog', 'dog'))[1], 'dog cat dog');   # 1
 
     ・複雑な場合はカスタム関数作成
     CREATE OR REPLACE FUNCTION regexp_instr(text, text, int DEFAULT 1, int DEFAULT 1)
     RETURNS int AS $$
     BEGIN
-      RETURN position(substring($1, $2), $1);         # 簡易版
+      RETURN position(substring($1, $2), $1);               # 簡易版
     END;
     $$ LANGUAGE plpgsql;
 
@@ -1373,15 +1369,15 @@
         'm': 複数行モード
         'n': ドット(.)が改行にマッチ
 
-    REGEXP_LIKE('CamelCase', 'CAMELCASE')                            # => 1 (true)
-    REGEXP_LIKE('CamelCase', 'CAMELCASE' COLLATE utf8mb4_0900_as_cs) # => 0 (false)(CASE区別)
-    REGEXP_LIKE('Michael!', '.*')                                    # => 1 (true)
-    REGEXP_LIKE('new*\n*line', 'new\\*.\\*line')                     # => 0 (false)
-    REGEXP_LIKE('a', '^[a-d]')                                       # => 1 (true)
-    REGEXP_LIKE('a', 'A')                                            # => 1 (true)
-    REGEXP_LIKE('a', BINARY 'A')                                     # => 0 (false)(CASE区別)
-    REGEXP_LIKE('abc', 'ABC')                                        # => 1 (true)
-    REGEXP_LIKE('abc', 'ABC', 'c')                                   # => 0 (false)(CASE区別)
+    REGEXP_LIKE('CamelCase', 'CAMELCASE')                            # 1 (true)
+    REGEXP_LIKE('CamelCase', 'CAMELCASE' COLLATE utf8mb4_0900_as_cs) # 0 (false)(CASE区別)
+    REGEXP_LIKE('Michael!', '.*')                                    # 1 (true)
+    REGEXP_LIKE('new*\n*line', 'new\\*.\\*line')                     # 0 (false)
+    REGEXP_LIKE('a', '^[a-d]')                                       # 1 (true)
+    REGEXP_LIKE('a', 'A')                                            # 1 (true)
+    REGEXP_LIKE('a', BINARY 'A')                                     # 0 (false)(CASE区別)
+    REGEXP_LIKE('abc', 'ABC')                                        # 1 (true)
+    REGEXP_LIKE('abc', 'ABC', 'c')                                   # 0 (false)(CASE区別)
 
     ■ regexp_match: PostgreSQL類似機能
 
@@ -1413,10 +1409,10 @@
         'm': 複数行モード
         'n': ドット(.)が改行にマッチ
 
-    REGEXP_REPLACE('a b c', 'b', 'X')                                # => a X c
-    REGEXP_REPLACE('abc def ghi', '[a-z]+', 'X', 1, 3)               # => abc def X
-    REGEXP_REPLACE('abc def ghi', '[a-z]+', 'X', 1, 2)               # => X def ghi
-    REGEXP_REPLACE('Hello World', 'world', 'Universe', 1, 1, 'i')    # => Hello Universe
+    REGEXP_REPLACE('a b c', 'b', 'X')                                # a X c
+    REGEXP_REPLACE('abc def ghi', '[a-z]+', 'X', 1, 3)               # abc def X
+    REGEXP_REPLACE('abc def ghi', '[a-z]+', 'X', 1, 2)               # X def ghi
+    REGEXP_REPLACE('Hello World', 'world', 'Universe', 1, 1, 'i')    # Hello Universe
 
     ■ regexp_replace: PostgreSQL類似機能
 
@@ -1432,24 +1428,24 @@
         'n': ドット(.)が改行にマッチ
 
     # 基本的な置換
-    SELECT regexp_replace('a b c', 'b', 'X');                          # => a X c
+    SELECT regexp_replace('a b c', 'b', 'X');                          # a X c
 
     # CASE無視
-    SELECT regexp_replace('Hello World', 'world', 'Universe', 'i');    # => Hello Universe
+    SELECT regexp_replace('Hello World', 'world', 'Universe', 'i');    # Hello Universe
 
     # グローバル置換 (全て置換)
-    SELECT regexp_replace('abc def ghi', '[a-z]+', 'X', 'g');          # => X X X
+    SELECT regexp_replace('abc def ghi', '[a-z]+', 'X', 'g');          # X X X
 
     # 最初の3つだけ置換 (MySQLのoccurrenceに相当): substring + regexp_replace
     SELECT regexp_replace(
       substring('abc def ghi jkl', '(.{0,20})'),                       # 最初の部分
       '([a-z]+ )([a-z]+ )([a-z]+ )', '\1\2X ', 'i'
-    );                                                                 # => abc def X
+    );                                                                 # abc def X
 
     # 位置指定置換 (MySQLのposに相当): substring + regexp_replace
     SELECT regexp_replace(
       substring('abc def ghi', 5), 'def', 'XYZ'
-    );                                                                 # => ghi (位置5以降を置換)
+    );                                                                 # ghi (位置5以降を置換)
 
 - ENTRY:
   EXPLAIN: |
@@ -1469,9 +1465,9 @@
         'm': 複数行モード
         'n': ドット(.)が改行にマッチ
 
-    REGEXP_SUBSTR('abc def ghi', '[a-z]+')             # => abc
-    REGEXP_SUBSTR('abc def ghi', '[a-z]+', 1, 3)       # => ghi
-    REGEXP_SUBSTR('abc def ghi', '[A-Z]+', 1, 1, 'i')  # => abc
+    REGEXP_SUBSTR('abc def ghi', '[a-z]+')                  # abc
+    REGEXP_SUBSTR('abc def ghi', '[a-z]+', 1, 3)            # ghi
+    REGEXP_SUBSTR('abc def ghi', '[A-Z]+', 1, 1, 'i')       # abc
 
     ■ regexp_matches: PostgreSQL類似機能
 
@@ -1486,21 +1482,21 @@
         'm': 複数行モード
         'n': ドット(.)が改行にマッチ
 
-    SELECT regexp_matches('abc def ghi', '[a-z]+');              # => {abc}
-    SELECT regexp_matches('abc def ghi', '[a-z]+', 'g');          # => {abc,def,ghi} (全てマッチ)
-    SELECT regexp_matches('ABC def ghi', '[a-z]+', 'gi');         # => {ABC,def,ghi} (case-insensitive + グローバル)
+    SELECT regexp_matches('abc def ghi', '[a-z]+');         # {abc}
+    SELECT regexp_matches('abc def ghi', '[a-z]+', 'g');    # {abc,def,ghi} (全てマッチ)
+    SELECT regexp_matches('ABC def ghi', '[a-z]+', 'gi');   # {ABC,def,ghi} (case-insensitive + グローバル)
 
     # キャプチャグループを使用
-    SELECT regexp_matches('2023-12-25', '(\d{4})-(\d{2})-(\d{2})');  # => {2023,12,25}
+    SELECT regexp_matches('2023-12-25', '(\d{4})-(\d{2})-(\d{2})');  # {2023,12,25}
 
     # マッチしない場合はNULL
-    SELECT regexp_matches('abc', '[0-9]+');                       # => NULL
+    SELECT regexp_matches('abc', '[0-9]+');                       # NULL
 
     # REGEXP_SUBSTRに相当する単一マッチ
-    SELECT (regexp_matches('abc def ghi', '[a-z]+'))[1];          # => abc (最初のマッチ)
+    SELECT (regexp_matches('abc def ghi', '[a-z]+'))[1];          # abc (最初のマッチ)
 
     # 3番目のマッチを取得 (occurrence = 3 に相当)
-    SELECT (regexp_matches('abc def ghi jkl', '[a-z]+', 'g'))[3]; # => ghi
+    SELECT (regexp_matches('abc def ghi jkl', '[a-z]+', 'g'))[3]; # ghi
 
 #-------------------------------
 # 集約,結合,集計
@@ -1513,14 +1509,14 @@
   BODY: |
     ■ mySQL / PostgreSQL 共通
 
-    COUNT([DISTINCT]<col>)              # 総数
-    AVG(<col>)                          # 平均値
-    MAX(<col>)                          # 最大値
-    MIN(<col>)                          # 最小値
-    SUM(<col>)                          # 合計値
+    COUNT([DISTINCT]<COLUMN>)                               # 総数
+    AVG(<COLUMN>)                                           # 平均値
+    MAX(<COLUMN>)                                           # 最大値
+    MIN(<COLUMN>)                                           # 最小値
+    SUM(<COLUMN>)                                           # 合計値
 
-    GROUP BY <col1>, <col2>, ...        # 集約条件指定
-    HAVING <条件節>                     # 集約後の条件指定
+    GROUP BY <col1>, <col2>, ...                            # 集約条件指定
+    HAVING <条件節>                                          # 集約後の条件指定
 
     SELECT department, COUNT(*) AS employee_count
       FROM employees
@@ -1546,7 +1542,7 @@
   BODY: |
     ■ MySQL: GROUP_CONCAT
 
-    GROUP_CONCAT([DISTINCT] <col> [ORDER BY <col>] [SEPARATOR ' '])
+    GROUP_CONCAT([DISTINCT] <COLUMN> [ORDER BY <COLUMN>] [SEPARATOR ' '])
 
     SELECT name, GROUP_CONCAT(score) FROM student GROUP BY name;
     SELECT name, GROUP_CONCAT(DISTINCT score ORDER BY score DESC SEPARATOR ',')
@@ -1591,8 +1587,8 @@
   BODY: |
     ■ MySQL: JSON_ARRAYAGG, JSON_OBJECTAGG
 
-    JSON_ARRAYAGG(<col>)                      # 配列形式
-    JSON_OBJECTAGG(<key_col>, <value_col>)    # オブジェクト形式
+    JSON_ARRAYAGG(<COLUMN>)                      # 配列形式
+    JSON_OBJECTAGG(<key_col>, <value_col>)       # オブジェクト形式
 
     元データ
     +----+-----------+-------+
@@ -1604,13 +1600,13 @@
     |  3 | shape     | square|
     +----+-----------+-------+
 
-    SELECT id, JSON_ARRAYAGG(attribute) AS attributes FROM <table> GROUP BY id;
+    SELECT id, JSON_ARRAYAGG(attribute) AS attributes FROM <TABLE> GROUP BY id;
     +----+---------------------+
     |  2 | ["color", "fabric"] |
     |  3 | ["color", "shape"]  |
     +----+---------------------+
 
-    SELECT id, JSON_OBJECTAGG(attribute, value) FROM <table> GROUP BY id;
+    SELECT id, JSON_OBJECTAGG(attribute, value) FROM <TABLE> GROUP BY id;
     +----+---------------------------------------+
     |  2 | {"color": "red", "fabric": "silk"}    |
     |  3 | {"color": "green", "shape": "square"} |
@@ -1618,11 +1614,11 @@
 
     ■ PostgreSQL: json_agg, json_object_agg
 
-    json_agg(<col>)                          # 配列形式
+    json_agg(<COLUMN>)                          # 配列形式
     json_object_agg(<key_col>, <value_col>)  # オブジェクト形式
 
-    SELECT id, json_agg(attribute) AS attributes FROM <table> GROUP BY id;
-    SELECT id, json_object_agg(attribute, value) FROM <table> GROUP BY id;
+    SELECT id, json_agg(attribute) AS attributes FROM <TABLE> GROUP BY id;
+    SELECT id, json_object_agg(attribute, value) FROM <TABLE> GROUP BY id;
 
 - ENTRY:
   EXPLAIN: |
@@ -1637,13 +1633,13 @@
 
     ■ mySQL / PostgreSQL 共通
 
-    OVER( PARTITION BY <col> [ORDER BY <col>] )
+    OVER( PARTITION BY <COLUMN> [ORDER BY <COLUMN>] )
 
     ・全レコードから集計
-    SUM(profit) OVER() AS <alias>
+    SUM(profit) OVER() AS <ALIAS>
 
     ・指定Colごとに集計
-    SUM(profit) OVER(PARTITION BY <col> [ORDER BY <col>]) AS <alias>
+    SUM(profit) OVER(PARTITION BY <COLUMN> [ORDER BY <COLUMN>]) AS <ALIAS>
 
     +-------+---------+--------+
     | region| product | profit |
@@ -1679,19 +1675,19 @@
   BODY: |
     ■ MySQL/PostgreSQL 共通構文
 
-    CREATE INDEX <index_name> ON <table_name> (<column1>, <column2>, ...);
+    CREATE INDEX <INDEX> ON <TABLE> (<COLUMN1>, <COLUMN2>, ...);
 
     CREATE INDEX idx_user_email ON users (email);
     CREATE INDEX idx_orders_user_date ON orders (user_id, order_date);
 
     ■ MySQL拡張
 
-    CREATE INDEX <index_name> ON <table_name> (<column>) USING BTREE;  # タイプ指定: B-Tree (デフォルト)
-    CREATE INDEX <index_name> ON <table_name> (<column>) USING HASH;   # タイプ指定: Hash
+    CREATE INDEX <INDEX> ON <TABLE> (<COLUMN>) USING BTREE;  # タイプ指定: B-Tree (デフォルト)
+    CREATE INDEX <INDEX> ON <TABLE> (<COLUMN>) USING HASH;   # タイプ指定: Hash
 
-    CREATE FULLTEXT INDEX <index_name> ON <table_name> (<column>);     # 全文検索インデックス
-    CREATE SPATIAL INDEX <index_name> ON <table_name> (<column>);      # 空間インデックス
-    CREATE UNIQUE INDEX <index_name> ON <table_name> (<column>);       # ユニーク制約付き
+    CREATE FULLTEXT INDEX <INDEX> ON <TABLE> (<COLUMN>);     # 全文検索インデックス
+    CREATE SPATIAL INDEX <INDEX> ON <TABLE> (<COLUMN>);      # 空間インデックス
+    CREATE UNIQUE INDEX <INDEX> ON <TABLE> (<COLUMN>);       # ユニーク制約付き
 
       ※ 注意点
       ・InnoDBではFULLTEXTインデックスがサポートされているが、HASHインデックスはInnoDBでは使用されない
@@ -1708,16 +1704,16 @@
 
     ■ PostgreSQL拡張
 
-    CREATE INDEX <index_name> ON <table_name> USING btree (<column>);    # B-Tree (デフォルト)
-    CREATE INDEX <index_name> ON <table_name> USING hash (<column>);     # Hash
-    CREATE INDEX <index_name> ON <table_name> USING gist (<column>);     # GiST
-    CREATE INDEX <index_name> ON <table_name> USING gin (<column>);      # GIN
-    CREATE INDEX <index_name> ON <table_name> USING spgist (<column>);   # SP-GiST
-    CREATE INDEX <index_name> ON <table_name> USING brin (<column>);     # BRIN
+    CREATE INDEX <INDEX> ON <TABLE> USING btree (<COLUMN>);    # B-Tree (デフォルト)
+    CREATE INDEX <INDEX> ON <TABLE> USING hash (<COLUMN>);     # Hash
+    CREATE INDEX <INDEX> ON <TABLE> USING gist (<COLUMN>);     # GiST
+    CREATE INDEX <INDEX> ON <TABLE> USING gin (<COLUMN>);      # GIN
+    CREATE INDEX <INDEX> ON <TABLE> USING spgist (<COLUMN>);   # SP-GiST
+    CREATE INDEX <INDEX> ON <TABLE> USING brin (<COLUMN>);     # BRIN
 
-    CREATE INDEX <index_name> ON <table_name> (<column>) WHERE <condition>;  # 部分インデックス
-    CREATE INDEX <index_name> ON <table_name> (lower(<column>));             # 式インデックス
-    CREATE UNIQUE INDEX <index_name> ON <table_name> (<column>);             # ユニーク制約付き
+    CREATE INDEX <INDEX> ON <TABLE> (<COLUMN>) WHERE <condition>;  # 部分インデックス
+    CREATE INDEX <INDEX> ON <TABLE> (lower(<COLUMN>));             # 式インデックス
+    CREATE UNIQUE INDEX <INDEX> ON <TABLE> (<COLUMN>);             # ユニーク制約付き
 
       ※ 注意点
       ・インデックスの種類に応じて異なるデータ構造とアルゴリズム使用

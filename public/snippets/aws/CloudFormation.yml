@@ -6,7 +6,222 @@
   CATEGORY: CloudFormation
 
 - ENTRY:
-  EXPLAIN: |
-    xxxxxx
+  EXPLAIN: 概要
   BODY: |
-    ■ xxxxx
+    ■ 概要
+
+    ・AWS の IaC(Infrastructure as Code) サービス
+    ・YAML または JSON テンプレートでリソースを宣言的に定義
+    ・スタックとして一括で作成・更新・削除
+    ・変更セットで更新前の差分確認が可能
+    ・ドリフト検出でテンプレートと実リソースの差分を検知
+
+    ■ できること
+
+    ・EC2、VPC、Lambda、RDS、DynamoDB など多数の AWS リソースをテンプレートで定義
+    ・スタックの作成・更新・ロールバック(更新失敗時は自動ロールバック可能)
+    ・パラメータ・条件・マッピングで環境ごとの値を切り替え
+    ・ネストスタックでテンプレートを分割・再利用
+    ・スタックセットで複数リージョン・複数アカウントへ一括デプロイ
+    ・カスタムリソースで AWS 非対応の処理を Lambda 等で補完
+
+    ■ できないこと・制限
+
+    ・アプリケーションコードのデプロイは対象外(CodeDeploy 等と併用)
+    ・テンプレート内の条件分岐・ループは組み込み関数に依存し、複雑なロジックは書けない
+    ・一部リソースはプロパティが未対応または制限あり(最新ドキュメント要確認)
+    ・実行時の動的なリソース作成・削除は不得意(宣言的な定義が前提)
+    ・スタック数・リソース数にクォータあり
+
+    ■ ユースケース
+
+    ・Dev / Staging / Prod で同じテンプレートから環境を再現
+    ・インフラ変更をコードで管理し、レビュー・監査・版管理が可能
+    ・障害時のロールバックで"前のスタック"に戻す
+    ・新規環境の立ち上げをテンプレート実行で短時間に実施
+    ・コンプライアンスや社内ルールに沿ったリソース構成の標準化
+
+    ■ 注意点
+
+    ・テンプレートの文法・論理エラーはデプロイ時に初めて判明するため、事前に cfn-lint 等で検証推奨
+    ・リソース間の依存関係(DependsOn または暗黙の参照)を誤ると作成順で失敗
+    ・本番スタックは削除保護(DeletionPolicy / スタックポリシー)の設定を検討
+    ・スタック削除時はリソースが物理削除されるため、保持したいリソースは Retain を指定
+    ・コストは"作られるリソース"に依存するため、テンプレートから想定コストを把握しておく
+
+- ENTRY:
+  EXPLAIN: テンプレート
+  BODY: |
+    ■ 書法
+
+    ・YAML または JSON で記述。拡張子は .yaml / .yml / .json
+    ・トップレベルはオブジェクト。主要セクションは以下の通り
+
+    ■ 主要セクション
+
+      ・AWSTemplateFormatVersion:  テンプレートバージョン(例: "2010-09-09")
+      ・Description:               スタックの説明(任意)
+      ・Parameters:                デプロイ時に渡すパラメータ定義
+      ・Mappings:                  キーと値のマッピング(環境別設定など)
+      ・Conditions:                条件式(リソースを条件付きで作成するとき)
+      ・Resources:                 必須。作成する AWS リソースの定義
+      ・Outputs:                   スタック作成後に参照できる出力値
+      ・Transform:                 マクロや SAM 等の変換指定(任意)
+
+    ■ 組み込み関数
+
+      ・Ref:                           パラメータやリソースIDの参照(リソースの場合は多くが物理IDを返す)
+      ・Fn::GetAtt:                    リソースの属性取得(Arn、物理IDなど)
+      ・Fn::Sub:                       文字列内の ${LogicalId} を Ref/GetAtt で置換
+      ・Fn::Join / Fn::Select:         文字列結合・配列要素取得
+      ・Fn::If / Fn::Equals / Fn::Not: 条件分岐
+      ・Fn::FindInMap:                 Mappings から値を取得
+      ・Condition 名を参照するときも Fn::If 等で使用
+
+    ・"!" の意味(YAML 短縮タグ)
+
+      ・YAML の "!" はタグ。CloudFormation が組み込み関数の短縮形として解釈
+      ・!Ref = Ref:
+      ・!Sub = Fn::Sub
+      ・!GetAtt = Fn::GetAtt
+      ・JSON では Fn::Ref / Fn::Sub の長い形式のみ
+
+    ■ Resources の書き方
+
+      ・論理ID(英数字)をキーに、Type と Properties を指定
+      ・Type: AWS::サービス名::リソース種別(例: AWS::S3::Bucket)
+      ・DependsOn で他リソースへの依存を明示可能(省略時は参照から推論)
+      ・DeletionPolicy: Retain で削除時にリソースを保持
+      ・UpdateReplacePolicy: 置き換え時(プロパティ変更でリソース再作成時)の挙動
+
+    ■ 記述のコツ
+
+      ・YAML はコメント・複数行が書きやすいため、多くのサンプルで採用
+      ・パラメータは Type / Default を指定。NoEcho でマスク可能
+      ・Outputs で Export を指定すると他スタックから Fn::ImportValue で参照可能
+      ・テンプレートサイズ上限 1MB(圧縮後 51.2MB)。大きい場合はネストスタックで分割
+
+- ENTRY:
+  EXPLAIN: 主要セクション
+  BODY: |
+    ■ AWSTemplateFormatVersion (任意<必須)
+
+    ・テンプレートの機能バージョン
+    ・現行は "2010-09-09" のみ
+    ・省略可能だが、明示すると将来の仕様変更時の挙動が保証されやすい
+
+      AWSTemplateFormatVersion: "2010-09-09"
+
+    ■ Description (任意)
+
+    ・スタックの説明文
+    ・コンソールや変更セットで表示
+    ・最大 1024 文字
+
+      Description: My stack for web app (dev)
+
+    ■ Parameters (任意)
+
+    ・デプロイ時に値を渡すための定義
+    ・Type / Default / AllowedValues / MinLength 等を指定
+    ・Ref で他セクションから参照
+    ・NoEcho: true でマスク表示
+    ・環境(dev/stg/prod)ごとに同じテンプレートで異なる値を渡す用途
+
+      Parameters:
+        Env:
+          Type: String
+          Default: dev
+          AllowedValues: [dev, stg, prod]
+        BucketPrefix:
+          Type: String
+          MinLength: 1
+          MaxLength: 20
+
+    ■ Mappings (任意)
+
+    ・キーで値をマッピング
+    ・Fn::FindInMap で参照
+    ・条件分岐やリージョン別設定に利用
+    ・固定の値の組み合わせをテンプレート内に持つとき向き
+
+      Mappings:
+        RegionMap:
+          ap-northeast-1:
+            AMI: ami-0abc123
+          us-east-1:
+            AMI: ami-0def456
+
+    ■ Conditions (任意)
+
+    ・条件式を定義。Fn::If / Fn::Equals / Fn::Not 等で組み立て、Resources や Outputs のプロパティで参照
+    ・リソースを条件付きで作成する(例: 本番のみ RDS を作る)ときに使用
+
+      Conditions:
+        CreateProdDB: !Equals [!Ref Env, prod]
+      Resources:
+        MyDB:
+          Type: AWS::RDS::DBInstance
+          Condition: CreateProdDB
+          # ... (本番のときだけ作成)
+
+    ■ Resources (必須)
+
+    ・作成する AWS リソースを論理IDをキーに定義
+    ・Type と Properties が基本
+    ・DependsOn / DeletionPolicy / UpdateReplacePolicy 等も指定可能
+    ・他リソースを Ref / GetAtt で参照すると作成順は自動推論(必要なら DependsOn で明示)
+
+      Resources:
+        MyBucket:
+          Type: AWS::S3::Bucket
+          Properties:
+            BucketName: !Sub "${AWS::StackName}-data"
+
+    ■ Outputs (必須, 任意)
+
+    ・スタック作成後に参照できる出力
+    ・Value は必須
+    ・Description / Export は任意
+    ・Export を付けると他スタックから Fn::ImportValue で参照可能(リージョン内で名前一意)
+    ・コンソールや CLI でスタックの出力一覧を確認可能
+
+      Outputs:
+        BucketArn:
+          Description: S3 Bucket ARN
+          Value: !GetAtt MyBucket.Arn
+          Export:
+            Name: !Sub "${AWS::StackName}-BucketArn"
+
+    ■ Transform (任意)
+
+    ・テンプレートの変換を指定
+    ・AWS SAM なら AWS::Serverless-2016-10-31
+    ・マクロもここで指定
+    ・SAM を使うと Lambda 等を短い記法で定義できる
+
+      Transform: AWS::Serverless-2016-10-31
+
+- ENTRY:
+  EXPLAIN: S3 サンプル
+  BODY: |
+    ■ 説明
+
+    ・S3 バケット 1 つを作成する最小テンプレート
+    ・Outputs でバケット名を出力
+    ・デプロイ時はスタック名から一意のバケット名が付与される
+    ・コピーして利用する場合はルートキーを先頭に合わせること
+
+    ■ テンプレート例
+
+    AWSTemplateFormatVersion: "2010-09-09"                  # テンプレートバージョン(固定)
+    Description: S3 bucket (minimal)                        # スタック説明(任意)
+    Resources:                                              # 必須。作成するリソース定義
+      MyBucket:                                             # 論理ID(他から Ref で参照される)
+        Type: AWS::S3::Bucket                               # リソース型
+    Outputs:                                                # スタック作成後の出力
+      BucketName:                                           # 出力の論理ID
+        Description: S3 Bucket name                         # 説明(任意)
+        Value: !Ref MyBucket                                # バケット名(物理ID)を参照
+        Export:                                             # 他スタックから ImportValue 可能に
+          Name: !Sub "${AWS::StackName}-BucketName"         # エクスポート名(リージョン内で一意)

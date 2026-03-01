@@ -70,7 +70,7 @@ export const menuItems: menuByCategories[] = [
         case_sensitive: false,
       },
       {
-        name: "CloudWatch",
+        name: "CloudWatch: Amazon CloudWatch",
         fileName: "",
         codeKeyTypes: [codeKeys.AWSCloud],
         case_sensitive: false,
@@ -105,7 +105,7 @@ export const menuItems: menuByCategories[] = [
         case_sensitive: false,
       },
       {
-        name: "CDK: Cloud Development Kit",
+        name: "CDK: AWS Cloud Development Kit",
         fileName: "aws/CDK",
         codeKeyTypes: [codeKeys.AWSCloud],
         case_sensitive: false,
@@ -116,37 +116,37 @@ export const menuItems: menuByCategories[] = [
     category: "AWS インフラ",
     items: [
       {
-        name: "VPC: Virtual Private Cloud",
+        name: "VPC: Amazon Virtual Private Cloud",
         fileName: "aws/VPC",
         codeKeyTypes: [codeKeys.AWSCloud],
         case_sensitive: false,
       },
       {
-        name: "CloudFront",
+        name: "CloudFront: Amazon CloudFront",
         fileName: "aws/CloudFront",
         codeKeyTypes: [codeKeys.AWSCloud],
         case_sensitive: false,
       },
       {
-        name: "🔺EC2: Elastic Compute Cloud",
+        name: "🔺EC2: Amazon Elastic Compute Cloud",
         fileName: "aws/EC2",
         codeKeyTypes: [codeKeys.AWSCloud],
         case_sensitive: false,
       },
       {
-        name: "🔺ECS: Elastic Container Service",
+        name: "🔺ECS: Amazon Elastic Container Service",
         fileName: "aws/ECS",
         codeKeyTypes: [codeKeys.AWSCloud],
         case_sensitive: false,
       },
       {
-        name: "API Gateway",
+        name: "API Gateway: Amazon API Gateway",
         fileName: "",
         codeKeyTypes: [],
         case_sensitive: false,
       },
       {
-        name: "Route 53",
+        name: "Route 53: Amazon Route 53",
         fileName: "",
         codeKeyTypes: [],
         case_sensitive: false,
@@ -169,43 +169,55 @@ export const menuItems: menuByCategories[] = [
         case_sensitive: false,
       },
       {
-        name: "Amplify(GQL)",
+        name: "Amplify(GQL): AWS Amplify GraphQL",
         fileName: "aws/AmplifyGQL",
         codeKeyTypes: [codeKeys.AWSAmplify_GraphQL],
         case_sensitive: false,
       },
       {
-        name: "CloudFormation",
-        fileName: "",
-        codeKeyTypes: [codeKeys.AWSCloud],
+        name: "CloudFormation: AWS CloudFormation",
+        fileName: "aws/CloudFormation",
+        codeKeyTypes: [codeKeys.AWSCloudFormation],
         case_sensitive: false,
       },
       {
         name: "Lambda: AWS Lambda",
         fileName: "aws/Lambda",
-        codeKeyTypes: [codeKeys.AWSCloud],
+        codeKeyTypes: [codeKeys.AWSLambda],
         case_sensitive: false,
       },
       {
-        name: "🔺AppSync",
+        name: "Lambda(SDK): AWS Lambda SDK",
+        fileName: "aws/LambdaSDK",
+        codeKeyTypes: [codeKeys.AWSLambda],
+        case_sensitive: false,
+      },
+      {
+        name: "🔺AppSync: AWS AppSync",
         fileName: "aws/AppSync",
         codeKeyTypes: [codeKeys.AWSCloud],
         case_sensitive: false,
       },
       {
-        name: "🔺Aurora",
+        name: "🔺Aurora: Amazon Aurora",
         fileName: "aws/Aurora",
         codeKeyTypes: [codeKeys.AWSAurora, codeKeys.Sql],
         case_sensitive: false,
       },
       {
-        name: "DynamoDB",
+        name: "DynamoDB: Amazon DynamoDB",
         fileName: "aws/DynamoDB",
         codeKeyTypes: [],
         case_sensitive: false,
       },
       {
-        name: "MemoryDB",
+        name: "DynamoDB(SDK): Amazon DynamoDB(SDK)",
+        fileName: "aws/DynamoDBSDK",
+        codeKeyTypes: [],
+        case_sensitive: false,
+      },
+      {
+        name: "MemoryDB: Amazon MemoryDB",
         fileName: "",
         codeKeyTypes: [],
         case_sensitive: false,
@@ -715,9 +727,10 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.TypeORM],
       },
       {
-        name: "🔺Prisma",
+        name: "Prisma",
         fileName: "Nestjs/Prisma",
         codeKeyTypes: [codeKeys.Prisma],
+        case_sensitive: false,
       },
       {
         name: "ClassValidator",
@@ -834,6 +847,12 @@ export const menuItems: menuByCategories[] = [
     category: "Database",
     items: [
       {
+        name: "RDBS",
+        fileName: "database/RDBS",
+        codeKeyTypes: [codeKeys.Sql],
+        case_sensitive: false,
+      },
+      {
         name: "SQL",
         fileName: "database/SQL",
         codeKeyTypes: [codeKeys.Sql],
@@ -846,21 +865,10 @@ export const menuItems: menuByCategories[] = [
         case_sensitive: false,
       },
       {
-        name: "SQL(分析、ストアド、トランザクション)",
+        name: "SQL(Analyze,Stored,Transaction)",
         fileName: "database/SQLAnalyzeStored",
         codeKeyTypes: [codeKeys.Sql, codeKeys.SqlAnalyzeStored],
         case_sensitive: false,
-      },
-      {
-        name: "MySQL Topics",
-        fileName: "database/mySql",
-        codeKeyTypes: [codeKeys.Sql],
-        case_sensitive: false,
-      },
-      {
-        name: "🔺PostgreSQL Topics",
-        fileName: "database/PostgreSQL",
-        codeKeyTypes: [codeKeys.Sql],
       },
       {
         name: "MongoDB",
@@ -936,6 +944,12 @@ export const menuItems: menuByCategories[] = [
         name: "Google関連",
         fileName: "Web/Google",
         codeKeyTypes: [codeKeys.CSS, codeKeys.HTML, codeKeys.React],
+        case_sensitive: false,
+      },
+      {
+        name: "Chrome開発ツール",
+        fileName: "Web/Chrome",
+        codeKeyTypes: [],
         case_sensitive: false,
       },
       {

@@ -58,6 +58,41 @@
     gap: 0.5rem;
 
 - ENTRY:
+  EXPLAIN: Flex 1 の役割
+  BODY: |
+    ■ flex: 1 (子に指定)
+
+     ・親: display: flex のコンテナ。主軸方向のサイズ(幅または高さ)が決まると、その内側に「余白」が生じる
+     ・子: flex: 1 は flex-grow: 1 相当。親の余白を「伸びる」形で受け取り、子要素が主軸方向に広がる
+     ・複数の子に flex: 1 を付けると、余白を等分して取り合い、同じ比率で幅(または高さ)が配分される
+     ・親のサイズが未指定だと余白がなく、flex: 1 の効果が出にくい。親に width/height や flex をかける必要あり
+     ・1 つだけ flex: 1 にすると、その子だけが残りスペースを全て占有する
+
+    ■ 記述例
+
+      flex: 1;
+      // 省略時は flex: 1 1 0% 相当(grow=1, shrink=1, basis=0)
+
+    ■ 親子のサンプル
+
+      /* 親: コンテナに幅を指定し flex で横並び */
+      .parent {
+        display: flex;
+        width: 100%;
+        gap: 0.5rem;
+      }
+      /* 子: 左は固定幅、中央と右が余白を等分 */
+      .child-left { width: 120px; }
+      .child-center { flex: 1; }
+      .child-right { flex: 1; }
+
+      <div class="parent">
+        <div class="child-left">固定</div>
+        <div class="child-center">伸びる</div>
+        <div class="child-right">伸びる</div>
+      </div>
+
+- ENTRY:
   EXPLAIN: Font関連
   BODY: |
     color: #777;

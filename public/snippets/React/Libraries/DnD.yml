@@ -385,7 +385,7 @@
     ■ onDrop
 
     ・ドロップ時に呼び出される
-    ・acceptedFiles: 受け入れられたファイル配列
+    ・acceptedFiles: 受け入れられたファイル配列(※フィルタ済の正常ファイルリスト)
     ・fileRejections: 拒否されたファイルとエラー
 
       onDrop: (acceptedFiles, fileRejections) => {
@@ -395,7 +395,7 @@
 
     ■ onDropAccepted
 
-    ・受け入れファイルのみドロップ時
+    ・受け入れファイルのみ
       
       onDropAccepted: (acceptedFiles) => {
         console.log(acceptedFiles);
@@ -403,7 +403,7 @@
 
     ■ onDropRejected
 
-    ・拒否ファイルのみドロップ時
+    ・拒否ファイルのみ
 
       onDropRejected: (fileRejections) => {
         console.log(fileRejections);
