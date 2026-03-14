@@ -73,6 +73,7 @@ import { keysWebAPI } from "./keys/WebAPI";
 import { keysServiceWorker } from "./keys/ServiceWorker";
 import { keysWebSocket } from "./keys/WebSocket";
 import { keysYup } from "./keys/Yup";
+import { keysZod } from "./keys/Zod";
 import { keysZustand } from "./keys/zustand";
 import { keystRPC } from "./keys/tRPC";
 
@@ -155,6 +156,7 @@ export const codeKeys = {
   WebSocket: "WebSocket",
   WebAPI: "WebAPI",
   Yup: "Yup",
+  Zod: "Zod",
   Zustand: "Zustand",
 } as const;
 
@@ -238,6 +240,7 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   WebAPI: keysWebAPI,
   tRPC: keystRPC,
   Yup: keysYup,
+  Zod: keysZod,
   Zustand: keysZustand,
 };
 

@@ -189,10 +189,10 @@
 # カスタムコンポーネント
 #-------------------------------
 - ENTRY:
-  CATEGORY: React Component Custom Samples
+  CATEGORY: カスタムコンポーネント
 
 - ENTRY:
-  EXPLAIN: input カスタムコンポーネント
+  EXPLAIN: input
   BODY: |
     type Props = {
       checkList: readonly boolean[]
@@ -227,7 +227,7 @@
     }
 
 - ENTRY:
-  EXPLAIN: input+Ref カスタムコンポーネント
+  EXPLAIN: input+Ref
   BODY: |
     type Props = {
       text: string
@@ -308,31 +308,3 @@
         </Flex>
       );
     };
-
-#-------------------------------
-# まとめコンポーネント
-#-------------------------------
-- ENTRY:
-  CATEGORY: React Component Wrapper Samples
-
-- ENTRY:
-  EXPLAIN: 複数コンポーネントのまとめ
-  BODY: |
-    type Props = {
-      header: React.ReactNode
-      body: React.ReactNode
-    }
-
-    const MyCompo = ({ header, body }: Props) => {
-      return (
-        <Column>
-          {header}
-          {body}
-        </Column>
-      )
-    }
-
-    export default function Sample() {  // default は Nextjs には非推奨
-      const name = "ABC"
-      return <MyCompo header={<Row>{name}</Row>} body={"ボディ"} />
-    }

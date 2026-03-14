@@ -598,6 +598,7 @@
       SSO	Single Sign-On	[IAM,Cognito]	シングルサインオン
       STS	Security Token Service	[IAM,Cognito,STS]	一時的認証トークン
       TSC	Temporary Security Credentials	[IAM,STS]	一時的認証情報
+      OPT	One-Time Password	[IAM,MFA]	ワンタイムパスワード
       TOPT	Time-based One-Time Password	[IAM,MFA]	時間ベースのワンタイムパスワード
       TTL	Time To Live	[DynamoDB/Caching,CloudFront]	有効期限（キャッシュなど）
       VIF	Virtual Interface	[VPC,DirectConnect]	仮想インターフェース
