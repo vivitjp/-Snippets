@@ -3,8 +3,10 @@
 # Class
 #-------------------------------
 - ENTRY:
-  EXPLAIN: |
-    クラス: プライベートプロパティの定義方法
+  CATEGORY: クラス
+
+- ENTRY:
+  EXPLAIN: プライベートプロパティの定義方法
   BODY: |
     ■ Static版
 
@@ -63,7 +65,10 @@
 # Object
 #-------------------------------
 - ENTRY:
-  EXPLAIN: オブジェクト カスタム汎用関数
+  CATEGORY: オブジェクト
+
+- ENTRY:
+  EXPLAIN: カスタム汎用関数
   BODY: |
     ■ Object判定関数
 
@@ -105,7 +110,7 @@
     }
 
 - ENTRY:
-  EXPLAIN: オブジェクト DeepCopy
+  EXPLAIN: DeepCopy
   BODY: |
     ■ サンプルオブジェクト
 
@@ -167,7 +172,10 @@
 # Array
 #-------------------------------
 - ENTRY:
-  EXPLAIN: 配列 基礎
+  CATEGORY: 配列
+
+- ENTRY:
+  EXPLAIN: 基礎
   BODY: |
     ■ 連番配列作成
 
@@ -211,7 +219,7 @@
       reduce((acc, elm) => acc + elm, 0) / arr.length
 
 - ENTRY:
-  EXPLAIN: 配列 メソッド
+  EXPLAIN: メソッド
   BODY: |
     ■ 反復
 
@@ -299,6 +307,9 @@
 #-------------------------------
 # Map
 #-------------------------------
+- ENTRY:
+  CATEGORY: Map & Set
+
 - ENTRY:
   EXPLAIN: Map 変換
   BODY: |
@@ -459,34 +470,10 @@
       弱参照	×	〇	keyオブジェクト参照が切れた時、WeakMap 上からも要素を削除
 
 #-------------------------------
-# 置換
+# その他
 #-------------------------------
 - ENTRY:
-  EXPLAIN: 置換 replaceAll
-  BODY: |
-    ■ 置換対象文字列
-
-    let sample = "abc aws AWSS AWS DEC"
-    const re = new RegExp(`\\baws\\b`, "ig")      // \\b は単語のみの検索
-
-    ■ 第2引数は置換文字列
-
-    const result1 = sample.replaceAll(re, "*AWS*")
-    console.log(result1)                // "abc *AWS* AWSS *AWS* DEC" 
-
-    ■ 第2引数は置換CB関数(結果に対し、CaseSensitiveな挙動可能)
-
-    const result2 = sample.replaceAll(re, (match:string)=>{ return `[${match}]` })
-    console.log(result2)                // "abc [aws] AWSS [AWS] DEC"
-
-    ■ 置換CB関数の型
-
-    function replacer(match:string, regexpMatch1:number, regexpMatch2:string) {
-      console.log(match)                // 一致:  "aws"
-      console.log(regexpMatch1)         // index: 4
-      console.log(regexpMatch2)         // 全文
-      return `[${match}]`;
-    }
+  CATEGORY: その他
 
 #-------------------------------
 # 日付
@@ -573,17 +560,6 @@
     }
 
 #-------------------------------
-# JSON
-#-------------------------------
-- ENTRY:
-  EXPLAIN: JSON
-  BODY: |
-    ■ jsonの構造表現  
-
-    JSON.stringify(obj, undefined, 3)
-    JSON.parse(jsonObject)
-
-#-------------------------------
 # JSON: Null, Undefined,...
 #-------------------------------
 - ENTRY:
@@ -636,34 +612,42 @@
 - ENTRY:
   EXPLAIN: 不正値判定メソッド
   BODY: |
-    const isValid = (value: unknown|unknown[]): boolean => {
-        const valueArray =(Array.isArray(value)) ? value : [value]
-        for(const item of valueArray){
-            const numValue = Number(item);
-            if(item === null ||
-            item === undefined ||
-            isNaN(numValue) ||
-            !isFinite(numValue)) return false
-        }
-        return true
+    ■ 概要
+
+    ・value が単体または配列のいずれかで、各要素が「有限の数に解釈できる」とき true
+    ・null / undefined は明示的に弾く(Number(null) は 0 になるため)
+    ・空配列 [] はループしないので true になる。空を不正としたい場合は先に length を検証する
+
+    ■ 判定メソッド
+
+    const isValid = (value: unknown | unknown[]): boolean => {
+      const valueArray = Array.isArray(value) ? value : [value]
+      for (const item of valueArray) {
+        if (item === null || item === undefined) return false
+        const numValue = Number(item)
+        if (isNaN(numValue) || !isFinite(numValue)) return false
+      }
+      return true
     };
 
-    isValid(1)                          // True
-    isValid("0")                        // True
-    isValid("1")                        // True
-    isValid("1.5")                      // True
-    isValid("")                         // True 
-    isValid(["0", "1", "1.5", ""])      // True
+    ■ 判定例
 
-    isValid(null)                       // False
-    isValid(undefined)                  // False
-    isValid(NaN)                        // False
-    isValid("A")                        // False
-    isValid("１")                       // False
-    isValid(["0", "1", "1.5", undefined]) // False
-    isValid(["0", "1", "1.5", NaN])     // False
-    isValid(["0", "1", "1.5", null])    // False
-    isValid(["0", "1", "1.5", Infinity]) // False
+    isValid(1)                                    // True
+    isValid("0")                                  // True
+    isValid("1")                                  // True
+    isValid("1.5")                                // True
+    isValid("")                                   // True 
+    isValid(["0", "1", "1.5", ""])                // True
+
+    isValid(null)                                 // False
+    isValid(undefined)                            // False
+    isValid(NaN)                                  // False
+    isValid("A")                                  // False
+    isValid("１")                                 // False
+    isValid(["0", "1", "1.5", undefined])         // False
+    isValid(["0", "1", "1.5", NaN])               // False
+    isValid(["0", "1", "1.5", null])              // False
+    isValid(["0", "1", "1.5", Infinity])          // False
     isValid([null, undefined, NaN, "A", "1A", "１"]) // False
 
 - ENTRY:

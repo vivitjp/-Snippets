@@ -346,7 +346,7 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.JS],
       },
       {
-        name: "Methods List",
+        name: "Methods",
         fileName: "JavaScript/JSMethods",
         codeKeyTypes: [codeKeys.JS],
       },
