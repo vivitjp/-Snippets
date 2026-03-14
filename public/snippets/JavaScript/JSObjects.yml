@@ -429,6 +429,12 @@
     escape()	[X]
     unescape()	[X]
 
+# ----------------------------
+# Event
+# ----------------------------
+- ENTRY:
+  CATEGORY: Event & Handler
+
 - ENTRY:
   EXPLAIN: Event
   OPTIONS:

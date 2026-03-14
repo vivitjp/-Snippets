@@ -976,11 +976,27 @@
 
     ・`ReactDOM.createPortal` の戻り値型
 
+    ■ ユースケース
+
+    ・モーダル・ダイアログを document.body 直下に描画し、親の z-index や overflow の影響を避ける
+    ・トースト・スナックバー等の通知を DOM ツリーの上位に表示する
+    ・ツールチップやドロップダウンを overflow: hidden の祖先の外に出す
+    ・ルートに近いノードに描画して、テーマやスタイルの継承を切りたいとき
+
+    ■ 注意点
+
+    ・Portal 内の要素は、親コンポーネントのスタイルやイベントハンドラにアクセスできない
+
     ■ 使用例
 
     import { createPortal } from 'react-dom'
 
-    const portal: React.ReactPortal = createPortal(<div>Portal</div>, document.body)
+    const Modal = ({ children }) => {
+      return createPortal(
+        children,
+        document.body
+      )
+    }
 
 - ENTRY:
   EXPLAIN: React.Key
@@ -2588,3 +2604,75 @@
         </div>
       );
     }
+
+#-------------------------------
+# Tips
+#-------------------------------
+- ENTRY:
+  CATEGORY: Tips
+
+- ENTRY:
+  EXPLAIN: 配列展開の key 問題
+  BODY: |
+    ■ 目的
+
+    ・ 配列.map() や React.Children.map() などで使用する key は安定すべき
+    ・ index を key にするのは危険
+
+    ■ 悪い例
+
+    const result = 配列.map((item, index) => (
+      <div key={index}>{item}</div>
+    ))
+
+    ■ 良い例(idがあれば)
+
+    const result = 配列.map((item, index) => (
+      <div key={item.id}>{item}</div>
+    ))
+
+    ■ 1) データソースで id を持たせる
+
+    const result = 配列.map((item, index) => (
+      <div key={item.id}>{item}</div>
+    ))
+
+    ■ 2) getSafeKey()
+
+    const idMap = new WeakMap<object, string>()
+
+    const getSafeKey = <T extends object>(item: T): string => {
+      const obj = item as object
+      if (!idMap.has(obj)) {
+        idMap.set(obj, crypto.randomUUID())
+        // ⛔ idMap.set(obj, useId()) 使用不可
+      }
+      return idMap.get(obj)
+    }
+
+    const result = useMemo(() => 配列.map((item, index) => (
+      <div key={getSafeKey(item)}>{item}</div>
+    )), [配列])
+
+    ・SSR で同一オブジェクトにサーバ・クライアントで同じ key が必要な場合
+      -> 要素ごとに useId を呼ぶコンポーネントに分ける等の別パターンが必要
+
+
+    ■ 3) useId で配列を再構成
+
+    const 配列id付 = useMemo(() => 配列.map((item) => (
+      {...item, id: crypto.randomUUID()}
+      // ⛔ {...item, id: useId()} 使用不可
+    )), [配列])
+
+     ※ useId はフックなので、map のコールバック内では使えない
+        親の map で key を決める必要があり、親の key 問題は解決しない
+
+    ■ 4) index を許容
+
+    並び替え・挿入・削除がなく、リストが実質静的ならOK
+    フィルタやソートがあるなら回避
+
+    const result = 配列.map((item, index) => (
+      <div key={index}>{item}</div>
+    ))

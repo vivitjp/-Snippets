@@ -346,7 +346,7 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.JS],
       },
       {
-        name: "Methods List",
+        name: "Methods",
         fileName: "JavaScript/JSMethods",
         codeKeyTypes: [codeKeys.JS],
       },
@@ -532,13 +532,19 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.RHF, codeKeys.Yup],
         case_sensitive: false,
       },
+      {
+        name: "Zod",
+        fileName: "React/Form/Zod",
+        codeKeyTypes: [codeKeys.RHF, codeKeys.Zod],
+        case_sensitive: false,
+      },
     ],
   },
   {
     category: "React UI",
     items: [
       {
-        name: "UI Package",
+        name: "UI Packages",
         fileName: "React/UI/UI",
         codeKeyTypes: [],
       },

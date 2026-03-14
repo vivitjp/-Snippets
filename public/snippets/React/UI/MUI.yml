@@ -3,7 +3,54 @@
 # MUI
 #-------------------------------
 - ENTRY:
-  CATEGORY: リスト
+  EXPLAIN: 設定とインストール
+  BODY: |
+    ■ バージョン履歴
+
+    ・v7: 現行安定版。ネイティブカラー(cssVariables.nativeColor)等のオプションあり
+    ・v6 (2024): Pigment CSS、CSS theme variables、コンテナクエリ対応。IE11 サポート終了
+    ・v5: @mui/material に移行。Emotion がスタイルエンジンに。createTheme / sx 等が標準
+
+    ■ インストール
+
+    ・コアパッケージ (Material Design コンポーネント)
+    npm install @mui/material @emotion/react @emotion/styled
+
+    ・アイコン (任意)
+    npm install @mui/icons-material
+
+    ・日付系・Lab コンポーネント (任意)
+    npm install @mui/x-date-pickers
+    npm install @mui/lab
+
+    ■ 最小構成
+
+    ・アプリのルートで ThemeProvider と CssBaseline を配置
+    ・CssBaseline でブラウザのデフォルトスタイルをリセット
+
+    import { ThemeProvider, CssBaseline } from '@mui/material'
+    import { createTheme } from '@mui/material/styles'
+
+    const theme = createTheme()
+
+    function App() {
+      return (
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          ... アプリのコンポーネント
+        </ThemeProvider>
+      )
+    }
+
+    ■ 依存
+
+    ・React 18+ 推奨。Emotion が peer dependency のため @emotion/react / @emotion/styled を別途入れる
+
+#-------------------------------
+# 機能
+#-------------------------------
+- ENTRY:
+  CATEGORY: 機能
 
 - ENTRY:
   EXPLAIN: methods リスト
@@ -23,6 +70,11 @@
 
     ・useMediaQuery       レスポンシブ判定フック
     ・GlobalStyles        グローバルCSS 定義
+    ・alpha               カラーのアルファ値を計算
+    ・lighten             カラーを明るくする
+    ・darken              カラーを暗くする
+    ・emphasize           カラーを強調する
+    ・responsiveFontSizes ブレークポイントに応じて typography のフォントサイズを調整
 
     ■ 拡張 / 実験パッケージ
 
@@ -108,14 +160,13 @@
     ・Divider              区切り線（レイアウト補助）
 
 # -------------------------------
-#  Methods
+#  Theme
 # -------------------------------
 - ENTRY:
-  CATEGORY: Methods
+  CATEGORY: Theme
 
 - ENTRY:
-  EXPLAIN: |
-    Theme: ThemeProvider
+  EXPLAIN: ThemeProvider
   BODY: |
     ■ 目的
 
@@ -216,8 +267,7 @@
     });
 
 - ENTRY:
-  EXPLAIN: |
-    Theme: createTheme
+  EXPLAIN: createTheme
   BODY: |
     ■ 解説
 
@@ -254,8 +304,7 @@
     zIndex:           z-index の値（appBar, drawer など）
 
 - ENTRY:
-  EXPLAIN: |
-    Theme: useTheme
+  EXPLAIN: useTheme
   BODY: |
     ■ 解説
 
@@ -283,9 +332,22 @@
     - 返されるオブジェクトは `Theme` 型。TypeScript で型補完される
     - `useTheme` はあくまで参照用。テーマを変更するには `ThemeProvider` の再レンダーが必要
 
+
+    ■ theme 経由のカラー関数 (MUI v6 以降)
+
+     ・useTheme() で取得した theme に alpha / lighten / darken が生えている場合、パレットキー(primary.main 等)を渡すとそのまま使える
+
+      const theme = useTheme()
+      sx={{ bgcolor: theme.alpha(theme.palette.primary.main, 0.1) }}
+
+# -------------------------------
+#  Styling
+# -------------------------------
 - ENTRY:
-  EXPLAIN: |
-    Styling: styled
+  CATEGORY: Styling
+
+- ENTRY:
+  EXPLAIN: styled
   BODY: |
     ■ 解説
 
@@ -314,8 +376,7 @@
     - `shouldForwardProp` を使いプロップの受け渡し制御が可能
 
 - ENTRY:
-  EXPLAIN: |
-    Styling: sx
+  EXPLAIN: sx
   BODY: |
     ■ 解説
 
@@ -342,9 +403,14 @@
     - `sx` はテーマのキー名（例: `primary.main`）を文字列で参照できる
     - 配列やブレークポイントオブジェクトでレスポンシブ指定が可能
 
+# -------------------------------
+#  Utilities
+# -------------------------------
 - ENTRY:
-  EXPLAIN: |
-    Utilities: useMediaQuery
+  CATEGORY: Utilities
+
+- ENTRY:
+  EXPLAIN: useMediaQuery
   BODY: |
     ■ 解説
 
@@ -371,8 +437,7 @@
     - サーバーサイドレンダリング環境では `noSsr: true` を検討
 
 - ENTRY:
-  EXPLAIN: |
-    Utilities: GlobalStyles
+  EXPLAIN: GlobalStyles
   BODY: |
     ■ 解説
 
@@ -408,6 +473,45 @@
 
     - `styles` にプレーンオブジェクトか関数を渡せる（関数は `theme` を受け取る）
     - `CssBaseline` と併用してブラウザ差分をリセットするのが一般的
+
+- ENTRY:
+  EXPLAIN: CSS系
+  BODY: |
+    ■ alpha(color, value)
+
+     ・第2引数は 0〜1 の不透明度。背景オーバーレイや disabled 風の見た目に使う
+
+      import { alpha } from '@mui/material/styles'
+      alpha(theme.palette.primary.main, 0.5)
+
+    ■ lighten(color, coefficient)
+
+     ・係数(0〜1)で明るくする。ホバーで少し明るくするときなど
+
+      import { lighten } from '@mui/material/styles'
+      lighten(theme.palette.primary.main, 0.2)
+
+    ■ darken(color, coefficient)
+
+     ・係数(0〜1)で暗くする。押下時やアクティブ状態に使う
+
+      import { darken } from '@mui/material/styles'
+      darken(theme.palette.primary.main, 0.2)
+
+    ■ emphasize(color, coefficient)
+
+     ・light モードでは darken、dark モードでは lighten する。テーマに応じた強調に便利
+
+      import { emphasize } from '@mui/material/styles'
+      emphasize(theme.palette.primary.main, 0.2)
+
+    ■ responsiveFontSizes(theme, options?)
+
+     ・ブレークポイントに応じて typography のフォントサイズを調整したテーマを返す
+
+      import { createTheme, responsiveFontSizes } from '@mui/material/styles'
+      let theme = createTheme({ ... })
+      theme = responsiveFontSizes(theme)
 
 # -------------------------------
 #  コンポーネント Layout

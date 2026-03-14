@@ -35,7 +35,7 @@
   BODY: |
     全非同期の結果を待ち、どれかが Rejected なら error、全てが fullfilled なら Resolved を返す
 
-    ■ 関数(aewait)
+    ■ 関数(await)
     const PromiseAll = async (promises: Promise<string>[]) => {
       try {
         const value = await Promise.all(promises);

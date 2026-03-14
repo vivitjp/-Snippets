@@ -1,10 +1,12 @@
 ---
 #-------------------------------
-# JS DOM
+# リスト
 #-------------------------------
+- ENTRY:
+  CATEGORY: リスト
 
 - ENTRY:
-  EXPLAIN: リスト:Document
+  EXPLAIN: Document
   BODY: |
     el = d.createElement()                        // el生成
 
@@ -12,13 +14,13 @@
     HC = d.getElementsByClassName('class')        // 取得: 複 by class
     HC = d.getElementsByTagName('tag')            // 取得: 複
 
-    el = d.querySelector('#slct')                 // 取得: 複(遅) by ID
-    el = d.querySelector('.slct')                 // 取得: 複(遅) by class
-    NL = d.querySelectorAll('#slct')              // 取得: 複(遅) by ID
-    NL = d.querySelectorAll('.slct')              // 取得: 複(遅) by class
+    el = d.querySelector('#slct')                 // 取得: 単(最初の1件) by セレクタ
+    el = d.querySelector('.slct')                 // 取得: 単 by class
+    NL = d.querySelectorAll('#slct')              // 取得: 複 NodeList by セレクタ
+    NL = d.querySelectorAll('.slct')              // 取得: 複 by class
 
 - ENTRY:
-  EXPLAIN: リスト:Node
+  EXPLAIN: Node
   BODY: |
     ■ 属性
     node.nodeName                                 // 例: DIV
@@ -40,11 +42,11 @@
     node.hasChildNodes()                          // 子有無
     node.isEqualNode(trg)                         // 同一性判定
 
-    node.isSameNode()                             // 廃止
+    node.isSameNode(trg)                          // 廃止(代わりに === 使用)
     node.normalize()                              // 正規化(テキストNodeマージ)
 
 - ENTRY:
-  EXPLAIN: リスト:ParentNode
+  EXPLAIN: ParentNode
   BODY: |
     n  = parentNode.childElementCount             // 子群数
     HC = parentNode.children                      // 子群
@@ -59,7 +61,7 @@
     parentNode.replaceChildren(...from,...to)     // 全置換
 
 - ENTRY:
-  EXPLAIN: リスト:ChildNode
+  EXPLAIN: ChildNode
   BODY: |
     childNode.remove()                            // 自身削除
     childNode.before(el)                          // 自身の兄に
@@ -67,14 +69,14 @@
     childNode.replaceWith(el)                     // 自身入替
 
 - ENTRY:
-  EXPLAIN: リスト:HTMLCollection
+  EXPLAIN: HTMLCollection
   BODY: |
     numb = HC.length                              // サイズ
     node = HC.item(n)                             // n番目のel
     node = HC[n]                                  // n番目のel
 
 - ENTRY:
-  EXPLAIN: リスト:NodeList
+  EXPLAIN: NodeList
   BODY: |
     numb = NL.length                              // サイズ
     node = NL.item(n)                             // n番目のel
@@ -85,12 +87,12 @@
     iter = NL.values()                            // 配列[val]
 
 - ENTRY:
-  EXPLAIN: リスト:Element
+  EXPLAIN: Element
   BODY: |
     ■ 属性
     el.id                                         // id名
     el.tagName                                    // 例:DIV
-    el.innerHTML                                  // TGA変換込
+    el.innerHTML                                  // HTML 文字列(タグ解釈あり)
     el.outerHTML                                  // 含自身
     el.localName                                  // XML用
     el.className                                  // class名
@@ -108,9 +110,9 @@
     window.getComputedStyle(el).xxXxx             // 実際値
 
     ■ サイズ & 位置
-    el.client[Height/Width/Left/Top]              // 含border/scroll内
-    el.scroll[Height/Width/Left/Top]              // 含border/scroll内
-    el.offset[Height/Width/Left/Top]              // 含border
+    el.client[Height/Width/Left/Top]              // padding 含む、border/scrollbar 除く
+    el.scroll[Height/Width/Left/Top]              // スクロール領域全体(overflow 含む)
+    el.offset[Height/Width/Left/Top]              // padding+border 含む
 
     //[全] Height/Width/Left/Right/Top/Bottom/X/Y
     el.getBoundingClientRect()                    // [全]含border(単)
@@ -139,7 +141,7 @@
     el.nextElementSibling                         // 次el
     el.previousElementSibling                     // 前el
     el.closest(slct)                              // 遡上検索
-    el.matches(#slct.slct)                        // 有無判定 
+    el.matches(selector)                          // セレクタ一致判定 
     el.insertAdjacentElement(pos,el)              // el
     el.insertAdjacentHTML(pos,val)                // HTML
     el.insertAdjacentText(pos,text)               // TEXT
@@ -150,8 +152,14 @@
     el.shadowRoot                                 // シャドールート
     el.attachShadow()                             // シャドーツリー
 
+#-------------------------------
+# メソッド
+#-------------------------------
 - ENTRY:
-  EXPLAIN: createElement
+  CATEGORY: メソッド
+
+- ENTRY:
+  EXPLAIN: createElement()
   BODY: |
     var element = document.createElement(tagName[, options]);
 
@@ -180,7 +188,7 @@
     let expandingList = document.createElement('ul', { is : 'expanding-list' })
 
 - ENTRY:
-  EXPLAIN: getElementById
+  EXPLAIN: getElementById()
   BODY: |
     element:Element = document.getElementById(id);
 
@@ -192,7 +200,7 @@
     }
 
 - ENTRY:
-  EXPLAIN: getElementsByClassName
+  EXPLAIN: getElementsByClassName()
   BODY: |
     指定クラス名を "すべて" 持つすべての子要素の配列風オブジェクト(HTMLCollection)を返す
 
@@ -209,7 +217,7 @@
     });
 
 - ENTRY:
-  EXPLAIN: getElementsByTagName
+  EXPLAIN: getElementsByTagName()
   BODY: |
     指定されたタグ名を持つ要素の HTMLCollection を返す。
     WebKit ブラウザーではこのメソッドは NodeList を返す
@@ -236,7 +244,7 @@
     const el = document.querySelector("div.user-panel:not(.main) input[name='login']");
 
 - ENTRY:
-  EXPLAIN: querySelectorAll
+  EXPLAIN: querySelectorAll()
   BODY: |
     elementList:NodeList = parentNode.querySelectorAll(selectors:DOMString);
 
@@ -262,6 +270,100 @@
     var elements:NodeList = document.getElementsByTagNameNS(namespace, name)
 
     var allParas = document.getElementsByTagNameNS("http://www.w3.org/1999/xhtml", "p")
+
+- ENTRY:
+  EXPLAIN: cloneNode()
+  BODY: |
+    現在のノードの複製を返す。ノードのすべての属性とその値をコピー(HTML属性のイベント含)
+    しかし、addEventListener() での追加や、要素のプロパティに代入されたものは複製されない
+    例: node.onclick = fn;
+
+    注意: ドキュメント内で要素の id が重複する可能性がある！
+    注意: 別ドキュメントに追加のためにノード複製: Document.importNode()
+
+    Node.appendChild()などで他のノードに追加されるまで、ドキュメントの一部ではなく、親ノードを持たない
+    deep: false、どの子ノードも複製されず、ノードに含まれる Text ノードも複製されない
+    deep: true、サブツリー全体(テキスト含)もコピー
+    <img>,<input>などの空ノードには影響なし
+
+    var dupNode = node.cloneNode(deep);          // deep: true で子孫も複製。省略時は false
+
+    var p = document.getElementById("para1");
+    var p_prime = p.cloneNode(true);
+
+- ENTRY:
+  EXPLAIN: appendChild()
+  BODY: |
+    特定の親ノードの子ノードリストの末尾にノードを追加
+    移動時には新しい親ノードに追加され、以前の位置からは削除される
+
+    var aChild:Node = element.appendChild(aChild);
+    var p = document.createElement("p");
+    document.body.appendChild(p);
+
+    [X] var aBlock = doc.createElement('block').appendChild(doc.createElement('b'));
+    注意: チェーンメソッドは期待通りに動かない
+
+- ENTRY:
+  EXPLAIN: contains
+  BODY: |
+    指定ノードの子孫ノードに、特定の子ノード(※自身も含む)が含まれるかを示す真偽値を返す。
+
+    const answer:Boolean = node.contains(otherNode)
+
+    function isInPage(node) {
+      return (node === document.body) ? false : document.body.contains(node);
+    }
+
+- ENTRY:
+  EXPLAIN: hasChildNodes()
+  BODY: |
+    指定したノードが、子ノードを持つか否かを示す真偽値を返す。
+
+    const answer:Boolean = node.hasChildNodes()
+    var foo = document.getElementById("foo");
+
+    if ( foo.hasChildNodes() ) {
+      foo.removeChild( foo.childNodes[0] );
+    }
+
+- ENTRY:
+  EXPLAIN: isEqualNode()
+  BODY: |
+    var isEqualNode:Boolean = node.isEqualNode(otherNode);
+    2つのノードが同値かテスト。
+    各ノードが同じ"型"、同じ"特性"(要素であればIDや子要素の数など)、"属性値" などを持つ場合、同値と判定
+    比較される内容はノードの型によって異なる
+
+    <div>最初の要素です。</div>
+    <div>2番目の要素です。</div>
+    <div>最初の要素です。</div>
+
+    let divList = document.getElementsByTagName("div");
+
+    divList[0].isEqualNode(divList[0])  // true
+    divList[0].isEqualNode(divList[1])  // false
+    divList[0].isEqualNode(divList[2])  // true
+
+- ENTRY:
+  EXPLAIN: isSameNode[廃止]
+  BODY: |
+    isSameNode:Boolean = node.isSameNode(org);
+
+    [廃止] ふたつのノードが同一ノード: true, 異なるノード: false
+
+    // 当メソッド
+    node1.isSameNode(node2)
+
+    // 代替策
+    node1 === node2
+    node1 == node2
+
+#-------------------------------
+# プロパティ
+#-------------------------------
+- ENTRY:
+  CATEGORY: プロパティ
 
 - ENTRY:
   EXPLAIN: nodeName
@@ -450,91 +552,3 @@
 
     document.getElementById("b1").previousSibling;    // null
     document.getElementById("b2").previousSibling.id; // "b1"
-
-- ENTRY:
-  EXPLAIN: appendChild
-  BODY: |
-    特定の親ノードの子ノードリストの末尾にノードを追加
-    移動時には新しい親ノードに追加され、以前の位置からは削除される
-
-    var aChild:Node = element.appendChild(aChild);
-    var p = document.createElement("p");
-    document.body.appendChild(p);
-
-    [X] var aBlock = doc.createElement('block').appendChild(doc.createElement('b'));
-    注意: チェーンメソッドは期待通りに動かない
-
-- ENTRY:
-  EXPLAIN: cloneNode
-  BODY: |
-    現在のノードの複製を返す。ノードのすべての属性とその値をコピー(HTML属性のイベント含)
-    しかし、addEventListener() での追加や、要素のプロパティに代入されたものは複製されない
-    例: node.onclick = fn;
-
-    注意: ドキュメント内で要素の id が重複する可能性がある！
-    注意: 別ドキュメントに追加のためにノード複製: Document.importNode()
-
-    Node.appendChild()などで他のノードに追加されるまで、ドキュメントの一部ではなく、親ノードを持たない
-    deep: false、どの子ノードも複製されず、ノードに含まれる Text ノードも複製されない
-    deep: true、サブツリー全体(テキスト含)もコピー
-    <img>,<input>などの空ノードには影響なし
-
-    var dupNode = node.cloneNode(deep:Boolean);  //default Deep: true(子孫を含む)
-
-    var p = document.getElementById("para1");
-    var p_prime = p.cloneNode(true);
-
-- ENTRY:
-  EXPLAIN: contains
-  BODY: |
-    指定ノードの子孫ノードに、特定の子ノード(※自身も含む)が含まれるかを示す真偽値を返す。
-
-    const answer:Boolean = node.contains(otherNode)
-
-    function isInPage(node) {
-      return (node === document.body) ? false : document.body.contains(node);
-    }
-
-- ENTRY:
-  EXPLAIN: hasChildNodes
-  BODY: |
-    指定したノードが、子ノードを持つか否かを示す真偽値を返す。
-
-    const answer:Boolean = node.hasChildNodes()
-    var foo = document.getElementById("foo");
-
-    if ( foo.hasChildNodes() ) {
-      foo.removeChild( foo.childNodes[0] );
-    }
-
-- ENTRY:
-  EXPLAIN: isEqualNode
-  BODY: |
-    var isEqualNode:Boolean = node.isEqualNode(otherNode);
-    2つのノードが同値かテスト。
-    各ノードが同じ"型"、同じ"特性"(要素であればIDや子要素の数など)、"属性値" などを持つ場合、同値と判定
-    比較される内容はノードの型によって異なる
-
-    <div>最初の要素です。</div>
-    <div>2番目の要素です。</div>
-    <div>最初の要素です。</div>
-
-    let divList = document.getElementsByTagName("div");
-
-    divList[0].isEqualNode(divList[0])  // true
-    divList[0].isEqualNode(divList[1])  // false
-    divList[0].isEqualNode(divList[2])  // true
-
-- ENTRY:
-  EXPLAIN: isSameNode[廃止]
-  BODY: |
-    isSameNode:Bpoolean = node.isSameNode(org);
-
-    [廃止] ふたつのノードが同一ノード: true, 異なるノード: false
-
-    // 当メソッド
-    node1.isSameNode(node2)
-
-    // 代替策
-    node1 === node2
-    node1 == node2

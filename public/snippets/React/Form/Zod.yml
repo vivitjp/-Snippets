@@ -1,0 +1,690 @@
+---
+#-------------------------------
+# Zod
+#-------------------------------
+- ENTRY:
+  CATEGORY: 概要
+
+- ENTRY:
+  EXPLAIN: 機能 & インストール
+  BODY: |
+    ■ 機能
+
+    ・Zod: TypeScript ファーストのスキーマバリデーションライブラリ
+    ・スキーマから型を自動推論(z.infer)
+    ・型とスキーマが常に一致
+    ・React Hook Form とは @hookform/resolvers の zodResolver で連携
+    ・resolver で RHF のフィールドエラー形式に自動変換
+    ・軽量で零依存(ランタイム)。TypeScript は peer dependency
+    ・非同期検証は .refine() / .superRefine() で Promise を返す形で実装可能
+
+    ■ パッケージインストール
+
+    npm install zod @hookform/resolvers
+
+    ■ 比較
+    ・Yup: 豊富な API、メッセージカスタマイズが容易。型は InferType で別途取得
+    ・Zod: 型とスキーマが一体。TS 厳密運用に向く
+
+- ENTRY:
+  EXPLAIN: サンプルコンポーネント
+  BODY: |
+    import { useForm } from 'react-hook-form'
+    import { zodResolver } from '@hookform/resolvers/zod'
+    import { z } from 'zod'
+
+    // スキーマ定義
+    const schema = z.object({
+      name: z.string().min(1, '必須'),
+      email: z.string().email('メール形式で入力').min(1, '必須'),
+      age: z.number().positive().int().nullable().optional(),
+    })
+
+    // 型推論(スキーマから自動)
+    type FormValues = z.infer<typeof schema>      // 型とスキーマが常に一致
+
+    export function MyForm() {
+      const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
+        resolver: zodResolver(schema),
+        defaultValues: { name: '', email: '', age: undefined },
+      })
+
+      const onSubmit = (data: FormValues) => { console.log(data) }
+
+      return (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <input {...register('name')} />
+          {errors.name && <span>{errors.name.message}</span>}
+          <input {...register('email')} />
+          {errors.email && <span>{errors.email.message}</span>}
+          <input type="number" {...register('age', { valueAsNumber: true })} />
+          <button type="submit">送信</button>
+        </form>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: サンプルスキーマ
+  BODY: |
+    ■ 基本（名前・メール・年齢）
+
+    import { z } from 'zod'
+    const basic = z.object({
+      name: z.string().trim().min(2, '2文字以上'),
+      email: z.string().email('メール形式').min(1, '必須'),
+      age: z.number().int().positive().min(18, '18歳以上').nullable().optional(),
+    })
+
+    ■ ネスト（住所）
+
+    const nested = z.object({
+      address: z.object({
+        zip: z.string().regex(/^\d{3}-?\d{4}$/, '郵便番号形式'),
+        city: z.string().min(1, '必須'),
+      }),
+    })
+
+    ■ 配列（オブジェクト配列）
+
+    const list = z.object({
+      items: z.array(z.object({
+        title: z.string().min(1, '必須'),
+        qty: z.number().int().min(1),
+      })).min(1, '1つ以上必要'),
+    })
+
+    ■ 非同期カスタム検証の例（API 重複チェック）
+
+    const asyncCheck = z.object({
+      username: z.string().refine(async (val) => {
+        if (!val) return true
+        const ok = await api.checkUsername(val)
+        return ok
+      }, { message: '既に使われている' }),
+    })
+
+    ■ TypeScript での型推論
+
+    const schema = z.object({
+      name: z.string().min(1),
+      age: z.number().nullable().optional(),
+    })
+    type FormData = z.infer<typeof schema>
+
+    ■ 補足
+
+    ・必須は .min(1) や .refine() で表現。.optional() で任意
+    ・条件付きバリデーションは .refine() / .superRefine() でオブジェクト全体を検証
+    ・メッセージは各メソッドの第2引数で { message: '...' } または文字列で指定
+
+#-------------------------------
+# スキーマ
+#-------------------------------
+
+- ENTRY:
+  CATEGORY: スキーマ
+
+- ENTRY:
+  EXPLAIN: スキーマ型一覧
+  BODY: |
+    z.string()                                    // 文字列
+    z.number()                                    // 数値
+    z.boolean()                                   // 真偽値
+    z.date()                                      // 日付
+    z.bigint()                                    // BigInt
+    z.symbol()                                    // Symbol
+    z.undefined()                                 // undefined
+    z.null()                                      // null
+    z.any()                                       // 任意(型チェック緩い)
+    z.unknown()                                   // 未知(安全な any)
+    z.never()                                     // 許可なし
+    z.array(z.xxx)                                // 配列
+    z.object({ key: z.xxx })                      // オブジェクト
+    z.tuple([z.string(), z.number()])             // タプル
+    z.union([z.string(), z.number()])             // Union
+    z.enum(['A', 'B', 'C'])                       // 列挙
+    z.record(z.string(), z.number())              // レコード(キー・値スキーマ)
+    z.lazy(() => z.xxx)                           // 遅延(再帰等)
+    z.function().args(z.xxx).returns(z.xxx)       // 関数
+    z.promise(z.xxx)                              // Promise
+
+- ENTRY:
+  EXPLAIN: z.string()
+  BODY: |
+    z.string()                                    // 任意の文字列
+    z.string().min(1, '必須')                     // 必須(1文字以上)
+    z.string().min(2, '2文字以上').max(100)       // 長さ範囲
+    z.string().email('メール形式で入力')           // メール形式
+    z.string().url('URL形式で入力')                // URL 形式
+    z.string().uuid('UUID形式で入力')              // UUID
+    z.string().regex(/^[a-zA-Z0-9_-]+$/, '半角英数と-_のみ')  // 正規表現
+    z.string().trim()                             // 前後空白削除して検証
+    z.string().toLowerCase()                      // 小文字に変換して検証
+    z.string().startsWith('https://')             // 接頭辞
+    z.string().length(10, '10文字で入力')          // 固定長
+    z.string().optional()                         // 未入力可
+    z.string().default('')                        // デフォルト空文字
+
+- ENTRY:
+  EXPLAIN: z.number()
+  BODY: |
+    z.number()                                    // 任意の数値
+    z.number().int('整数で入力')                   // 整数のみ
+    z.number().positive('正の数で入力')            // 正の数
+    z.number().min(0).max(150)                    // 範囲(年齢等)
+    z.number().multipleOf(0.01, '小数点2桁まで')   // 倍数(金額等)
+    z.number().finite()                           // NaN/Infinity 拒否
+    z.number().optional()                         // 未入力可
+    z.number().nullable()                         // null 許可
+    z.number().default(0)                         // デフォルト0
+    z.number().transform((v) => Math.round(v))    // 四捨五入して検証
+
+- ENTRY:
+  EXPLAIN: z.boolean()
+  BODY: |
+    z.boolean()                                   // true/false
+    z.boolean().default(false)                    // デフォルト false
+    z.boolean().optional()                        // undefined 許可
+    z.boolean().transform((v) => !!v)             // truthy を boolean に
+    z.literal(true).or(z.literal(false))          // 同上の別書き
+
+- ENTRY:
+  EXPLAIN: z.date()
+  BODY: |
+    z.date()                                      // Date 型
+    z.coerce.date()                               // 文字列を Date に変換して検証
+    z.date().min(new Date('2020-01-01'))          // 最小日付
+    z.date().max(new Date())                      // 最大(今日まで)
+    z.date().optional()                           // 未入力可
+    z.date().default(() => new Date())            // デフォルトは現在日時
+    z.date().refine((d) => d.getTime() > 0)       // カスタム(有効な日付)
+
+- ENTRY:
+  EXPLAIN: z.bigint()
+  BODY: |
+    z.bigint()                                    // 任意の BigInt
+    z.bigint().positive()                         // 正の BigInt
+    z.bigint().min(0n)                            // 0 以上
+    z.bigint().optional()                         // 未入力可
+    z.bigint().default(0n)                        // デフォルト 0n
+
+- ENTRY:
+  EXPLAIN: z.array()
+  BODY: |
+    z.array(z.string())                           // 文字列配列
+    z.array(z.number()).min(1, '1件以上')         // 1件以上必須
+    z.array(z.object({                            // オブジェクト配列
+      id: z.number(),
+      name: z.string()
+    }))
+    z.array(z.string()).max(10)                   // 最大10件
+    z.array(z.union([z.string(), z.number()]))    // 文字列または数値の配列
+    z.array(z.string()).nonempty('1件以上必要')    // 非空
+    z.array(z.string()).default([])               // デフォルト空配列
+    z.array(z.string()).refine(                   // 一意制約
+      (arr) => new Set(arr).size === arr.length, 
+      { message: '重複不可' }
+    )
+
+- ENTRY:
+  EXPLAIN: z.object()
+  BODY: |
+    z.object({ name: z.string(), age: z.number() })   // 基本
+    z.object({ a: z.string() }).strict()              // 未知キー禁止
+    z.object({ a: z.string() }).passthrough()         // 未知キーはそのまま通過
+    z.object({ name: z.string() }).extend({ age: z.number() })  // キー追加
+    z.object({ a: z.string() }).partial()             // 全キー optional
+    z.object({ a: z.string() }).pick({ a: true })     // 特定キーのみ
+    z.object({ a: z.string() }).merge(z.object({ b: z.number() }))  // 他スキーマとマージ
+    z.object({ a: z.string() }).default({ a: '' })    // デフォルトオブジェクト
+
+- ENTRY:
+  EXPLAIN: z.union()
+  BODY: |
+    z.union([z.string(), z.number()])             // 文字列または数値
+    z.union([z.string(), z.literal('')])          // 文字列または空
+    z.union([z.date(), z.string()])               // Date または文字列
+    z.union([z.literal('a'), z.literal('b')])     // リテラル Union
+    z.string().or(z.number())                     // union の短縮記法
+
+- ENTRY:
+  EXPLAIN: z.enum()
+  BODY: |
+    z.enum(['A', 'B', 'C'])                       // 列挙(A/B/C のいずれか)
+    z.enum(['draft', 'published', 'archived'])    // ステータス等
+    z.enum(['ja', 'en'] as const)                 // as const で型推論
+    z.nativeEnum(SomeTypeScriptEnum)              // TS の enum を利用する場合
+
+- ENTRY:
+  EXPLAIN: z.tuple()
+  BODY: |
+    z.tuple([z.string(), z.number()])              // [string, number]
+    z.tuple([z.string(), z.number(), z.boolean()]) // 3要素
+    z.tuple([z.string()]).rest(z.number())         // 先頭1つ + 残りは number 配列
+    z.tuple([z.literal('x'), z.literal(1)])        // リテラルタプル
+
+- ENTRY:
+  EXPLAIN: z.record()
+  BODY: |
+    シグネチャ: z.record(keySchema, valueSchema)
+
+      ※ valueSchemaを省略したら、keySchemaの型が値の型になる
+
+    ■ サンプル
+
+    z.record(z.string())                          // { [key: string]: string }
+    z.record(z.string(), z.number())              // キー文字列・値数値
+    z.record(z.enum(['a', 'b']), z.boolean())     // キーは 'a'|'b' のみ
+    z.record(z.string(), z.object({ count: z.number() })) // 値がオブジェクト
+
+- ENTRY:
+  EXPLAIN: z.lazy()
+  BODY: |
+    ■ 概要
+
+    ・定義時ではなく参照時にスキーマを評価
+    ・関数でスキーマを返す
+    ・再帰的な構造(自分自身を子に持つオブジェクト、ツリー等)を定義するときに必須
+    ・循環参照を避けるため、スキーマを () => z.xxx で遅延させる
+    ・フォームの単純なネストでは不要(Tree, Linked list データ)
+
+    ■ シグネチャ
+
+    シグネチャ: z.lazy(() => z.xxx)
+
+    ■ サンプル
+
+    z.lazy(() => z.object({                       // 再帰オブジェクト
+      name: z.string(),
+      child: z.lazy(() => nodeSchema).optional()
+    }))
+
+    const nodeSchema = z.object({
+      value: z.string(), 
+      children: z.array(z.lazy(() => nodeSchema))
+    })
+
+- ENTRY:
+  EXPLAIN: z.any(), z.unknown()
+  BODY: |
+    z.any()                                       // 何でも許可(型チェック緩い)。推論型も any
+    z.unknown()                                   // 何でも受け取り、絞り込み用。推論型は unknown
+    z.unknown().refine((v): v is string => typeof v === 'string')  // 型ガード。通過後は string に推論される
+
+    ※ 注意(以下不可：常に失敗するか無意味)
+      z.undefined().refine((v): v is string => ...)
+      z.null().refine((v): v is string => ...)
+      z.never().refine((v): v is string => ...)
+
+- ENTRY:
+  EXPLAIN: z.undefined(), z.null(), union()
+  BODY: |
+    z.undefined()                                 // undefined のみ。optional なフィールドの型に使う
+    z.null()                                      // null のみ。nullable なフィールドの型に使う
+
+    z.union([z.string(), z.undefined(), z.null()])  // 文字列, undefined または null( nullable の一例)
+
+- ENTRY:
+  EXPLAIN: z.never(), discriminatedUnion()
+  BODY: |
+    いかなる値も拒否。到達しない分岐や impossible 型で使用
+
+    ■ サンプル: 判別可能 Union の「それ以外」で網羅性チェック
+
+      const Shape = z.discriminatedUnion('kind', [
+        z.object({ kind: z.literal('circle'), r: z.number() }),
+        z.object({ kind: z.literal('rect'), w: z.number(), h: z.number() }),
+      ])
+
+      type ShapeType = z.infer<typeof Shape>
+
+      function area(s: ShapeType): number {
+        switch (s.kind) {
+          case 'circle': return Math.PI * s.r ** 2
+          case 'rect': return s.w * s.h
+          default: return z.never().parse(s)      // 未処理の kind があればランタイムで失敗
+        }
+      }
+
+    ・補足: union に z.never() を並べる書き方は実務ではほぼ使わない
+      ・z.union([z.string(), z.number()]) で十分。z.never() を足しても挙動は同じ
+      ・z.never() の主な用途は上の「default: z.never().parse(s)」のような網羅性チェックだけ押さえればよい
+
+    ■ union() と discriminatedUnion() の違い
+
+    ・union(): 左から順に各スキーマを試し、最初に通ったものを採用。オブジェクトが複数あると曖昧になりやすい
+    ・discriminatedUnion(key, [...]): 指定キー(key)の値でどれか1つを選ぶ。判定が速く意図も明確
+
+    ・サンプル: API レスポンス（成功 or 失敗）を扱う場合
+
+      // union: どちらも { status, ... } なので、Zod は先に書いた方から試す。キーで分岐しない
+      const responseUnion = z.union([
+        z.object({ status: z.literal('ok'), data: z.unknown() }),
+        z.object({ status: z.literal('error'), message: z.string() }),
+      ])
+
+      // discriminatedUnion: status の値でどちらの形か決める。パフォーマンス・可読性ともに有利
+      const responseDisc = z.discriminatedUnion('status', [
+        z.object({ status: z.literal('ok'), data: z.unknown() }),
+        z.object({ status: z.literal('error'), message: z.string() }),
+      ])
+      
+      responseDisc.parse({ status: 'ok', data: { id: 1 } })       // OK = 検証成功(parse が通る)
+      responseDisc.parse({ status: 'error', message: 'failed' })  // OK = 検証成功
+      responseDisc.parse({ status: 'ok', message: 'x' })          // 失敗。ok なら data必須、message不要
+
+    ・parse(): 検証成功ならパース結果の値（入力と同じ形）を返す。失敗なら ZodError を throw
+    ・safeParse(): 戻り値は { success: true, data } または { success: false, error }
+
+    ・使い分け: オブジェクトの「形」がキー1つで決まる（kind, type, status 等）なら discriminatedUnion を推奨
+
+- ENTRY:
+  EXPLAIN: z.symbol()
+  BODY: |
+    ■ 概要
+
+    ・JavaScript の Symbol 型を検証するスキーマ
+    ・フォームや API の入出力ではほとんど使わない
+    ・オブジェクトのキーが Symbol だったり、ライブラリが Symbol を渡す仕様のときに利用
+    ・Symbol は一意の識別子
+    ・同じ説明で Symbol() を2回呼んでも別の値になる
+
+    ■ サンプル
+
+    z.symbol()                                    // 任意の Symbol を許可
+    z.symbol().optional()                         // Symbol または undefined
+    z.symbol().describe('識別子')                 // 説明付き(ドキュメント用)
+    z.record(z.symbol(), z.string())              // キーが Symbol、値が string のオブジェクト(例: メタデータ)
+
+- ENTRY:
+  EXPLAIN: z.function()
+  BODY: |
+    ■ シグネチャ
+
+    z.function().args(z.xxx).returns(z.xxx)            // 関数
+
+    ■ サンプル
+
+    z.function().args(z.string()).returns(z.number())   // (s: string) => number
+    z.function().args(z.string()).returns(z.number())   // (s: string) => number
+    z.function().args(z.string(), z.number())           // 複数引数
+    z.function().implement((s) => s.length)             // 実装を渡して検証
+
+    z.promise(z.string())                               // Promise<string>
+    z.promise(z.object({ id: z.number() }))             // 非同期レスポンスの型
+
+- ENTRY:
+  EXPLAIN: z.promise()
+  BODY: |
+
+#-------------------------------
+# チェーンメソッド
+#-------------------------------
+
+- ENTRY:
+  CATEGORY: チェーンメソッド
+
+- ENTRY:
+  EXPLAIN: 共通メソッド
+  BODY: |
+    .optional()                                   // undefined 許可
+      z.string().optional()
+
+    .nullable()                                   // null 許可
+      z.number().nullable()
+
+    .nullish()                                    // null と undefined 許可
+      z.boolean().nullish()
+
+    .default(val)                                 // デフォルト値
+      z.date().default(new Date())
+
+    .describe('説明')                             // 説明(ドキュメント用)
+      z.string().describe('名前')
+
+- ENTRY:
+  EXPLAIN: 文字列
+  BODY: |
+    .min(n, msg) / .max(n, msg)                   // 長さ
+      z.string().min(2, '2文字以上').max(100)
+
+    .length(n, msg)                               // 固定長
+      z.string().length(10, '10文字で入力')
+
+    .email(msg)                                   // メール形式
+      z.string().email('メール形式で入力')
+
+    .url(msg)                                     // URL 形式
+      z.string().url('URL形式で入力')
+
+    .uuid(msg)                                    // UUID 形式
+      z.string().uuid('UUID形式で入力')
+
+    .regex(/.../, msg)                            // 正規表現
+      z.string().regex(/^[a-z]+$/, '英小文字のみ')
+
+    .trim() / .toLowerCase() / .toUpperCase()     // 前処理
+      z.string().trim()
+      z.string().toLowerCase()
+      z.string().toUpperCase()
+
+    .startsWith(s) / .endsWith(s)                 // 接頭辞・接尾辞
+      z.string().startsWith('https://')
+      z.string().endsWith('.json')
+
+- ENTRY:
+  EXPLAIN: 数値
+  BODY: |
+    .min(n, msg) / .max(n, msg)                   // 範囲
+      z.number().min(0).max(150)
+
+    .int(msg)                                     // 整数
+      z.number().int('整数で入力')
+
+    .positive() / .negative()                     // 正・負
+      z.number().positive()
+      z.number().negative()
+
+    .nonnegative() / .nonpositive()               // 0以上・0以下
+      z.number().nonnegative()
+      z.number().nonpositive()
+
+    .multipleOf(n)                                // n の倍数
+      z.number().multipleOf(0.01, '小数点2桁まで')
+
+    .finite()                                     // 有限(NaN/Infinity 拒否)
+      z.number().finite()
+
+- ENTRY:
+  EXPLAIN: オブジェクト
+  BODY: |
+    .strict()                                     // 未知キー禁止
+      z.object({ a: z.string() }).strict()
+
+    .strip()                                      // 未知キー削除(デフォルト)
+      z.object({ a: z.string() }).strip()
+
+    .passthrough()                                // 未知キー通過
+      z.object({ a: z.string() }).passthrough()
+
+    .pick({ a, b }) / .omit({ a, b })             // 部分選択・除外
+      z.object({ a: z.string(), b: z.number() }).pick({ a: true })
+      z.object({ a: z.string(), b: z.number() }).omit({ b: true })
+
+    .partial() / .required()                      // 全キー任意化・必須化
+      z.object({ a: z.string() }).partial()
+      z.object({ a: z.string().optional() }).required()
+
+    .extend({ key: z.xxx })                       // キー追加
+      z.object({ a: z.string() }).extend({ b: z.number() })
+
+    .merge(other)                                 // 他スキーマとマージ
+      z.object({ a: z.string() }).merge(z.object({ b: z.number() }))
+
+- ENTRY:
+  EXPLAIN: 配列
+  BODY: |
+    .min(n, msg) / .max(n, msg)                   // 長さ
+      z.array(z.string()).min(1, '1件以上').max(10)
+
+    .length(n, msg)                               // 固定長
+      z.array(z.string()).length(3, '3件で入力')
+
+    .nonempty(msg)                                // 1件以上
+      z.array(z.string()).nonempty('1件以上必要')
+
+#-------------------------------
+# Method
+#-------------------------------
+
+- ENTRY:
+  CATEGORY: チェーンメソッド(関数)
+
+- ENTRY:
+  EXPLAIN: transform()
+  BODY: |
+    ■ シグネチャ
+
+    ・.transform((val) => T):
+      ・パース後の値を受け取り、別の値に変換して返す
+      ・スキーマの出力型は戻り値の型になる
+    ・検証は transform の前で行われる
+      ・transform 内では「すでに valid な値」が渡る
+
+    ■ サンプル
+
+    z.string().transform((s) => s.trim())              // 前後空白を削除してから採用
+    z.string().transform((s) => s.length)              // 文字列 → 数値。出力型は number
+    z.number().transform((n) => Math.round(n))         // 四捨五入してから採用
+    z.string().transform((s) => new Date(s))           // 文字列 → Date。出力型は Date
+    z.union([z.string(), z.number()]).transform((v) => String(v))  // いずれも string に正規化
+
+    ■ 比較: .trim() と .transform((s) => s.trim())（.min(2) を付けた場合）
+
+    z.string().trim().min(2, '2文字以上')
+    z.string().min(2, '2文字以上').transform((s) => s.trim())
+
+    ・.trim(): トリムしてから検証。min(2) はトリム後の文字列に適用される
+    ・.transform((s) => s.trim()): 検証はトリム前の値に対して行い、通過した値だけをトリムして出力
+
+    ・例（上記2スキーマで）:
+      入力 "  ab  ": どちらも通過し出力は "ab"
+      入力 " a ":
+        .trim().min(2) はトリム後 "a" で長さ1のため失敗
+        .min(2).transform(trim) は " a " の長さ3で min(2) 通過し、出力は "a"（2文字以上の意図とずれる）
+
+    ・長さ・必須をトリム後の値で見たいなら .trim().min(n) の順で書く
+
+- ENTRY:
+  EXPLAIN: refine()
+  BODY: |
+    シグネチャ: .refine(validator, config?)
+
+    ■ validator: (data: T, ctx?: RefinementCtx) => boolean | Promise<boolean>
+
+      ・第1引数 data: スキーマの値(オブジェクトなら全体、単一ならその値)
+      ・第2引数 ctx: 検証コンテキスト(RefinementCtx)。省略可能
+      ・戻り値: true で成功、false で失敗。Promise を返すと非同期検証
+
+    ■ config: { message?: string | ((d, ctx) => string), path?: (string | number)[] }
+
+      ・message:
+        1) エラーメッセージ
+        2) 関数 (d, ctx) d は検証値、ctx は RefinementCtx で動的生成可能
+
+      ・path:
+          エラーを付与するフィールド
+          省略時はオブジェクトルート
+          path: ['confirm'] で errors.confirm に表示
+
+    ■ RefinementCtx
+
+    ・refine / superRefine のコールバックに渡されるコンテキストオブジェクト
+
+    ・プロパティ:
+      ・addIssue({ message?, path?, code? }):
+          エラーを1件追加。path でフィールド指定。複数回呼べば複数エラー
+
+      ・path:
+          現在の検証パス(配列)。ネストしたキーや配列インデックスが並ぶ
+
+      ・parent:
+          親スキーマのパース結果。オブジェクト全体を参照して条件分岐するときに利用
+
+    ・validator の第2引数として渡る。使わない場合は (d) => ... と第1引数のみでよい
+
+- ENTRY:
+  EXPLAIN: refine() サンプル
+  BODY: |
+    ■ validator: (d) => boolean
+
+    ・d はスキーマの値
+    ・z.object(...).refine() なら d はオブジェクト全体
+    ・d.password, d.confirm 等でフィールドを参照し、true/false を返す
+    ・エラー表示先は config.path で指定
+      ・path: ['confirm'] なら confirm フィールドにエラー表示
+
+      const cond = z.object({
+        password: z.string().min(8, '8文字以上'),
+        confirm: z.string(),
+        newsletter: z.boolean(),
+        email: z.string().email().optional(),
+      }).refine(
+          (d) => d.password === d.confirm,          // d でオブジェクト全体を参照
+          { message: '一致しない', path: ['confirm'] }
+        )
+        .refine(
+          (d) => !d.newsletter || (d.email && d.email.length > 0),
+          { message: 'ニュースレター購読時は必須', path: ['email'] }
+        )
+
+    ■ validator: (d, ctx) => boolean
+
+    ・単一フィールドの refine でも ctx を受け取れる
+    ・ctx.parent: 親オブジェクト
+      ・同一オブジェクト内の他フィールドを参照して条件判定するときに利用
+
+    ・例: 文字列フィールドで「親の a と b が等しいときだけ valid」のように書ける
+
+      z.string().refine((d, ctx) => {
+        if (ctx.parent.a === ctx.parent.b) return true
+        return false
+      }, { message: 'a と b が等しくない' })
+
+- ENTRY:
+  EXPLAIN: superRefine()
+  BODY: |
+    ■ refineとの比較
+
+    ・superRefine は refine のようなカスタム検証メソッド
+    ・refine は1つの失敗で1メッセージのみ
+    ・複数フィールドに別々のエラーを付けたいときは superRefine + addIssue
+
+    ■ 概要
+
+    ・superRefine 内で ctx.addIssue({ message, path?, code? }) を呼ぶとエラーを1件追加できる
+    ・path でフィールドを指定すると、そのフィールドにエラーが紐づく
+      ・複数回呼べば複数フィールドにエラーを付けられる
+    ・refine では1つの失敗で1メッセージのみ
+      ・複数フィールドに別々のエラーを付けたいときは superRefine + addIssue
+
+    ・サンプル: パスワード一致 + 両フィールドにエラーを付けたい場合
+
+      z.object({
+        password: z.string().min(8),
+        confirm: z.string(),
+      }).superRefine((d, ctx) => {
+        if (d.password !== d.confirm) {
+          ctx.addIssue({ message: '一致しない', path: ['confirm'] })
+          ctx.addIssue({ message: '確認用と一致させてください', path: ['password'] })
+        }
+      })
+
+    ・サンプル: 条件に応じて path を変える
+
+      z.object({ a: z.string(), b: z.string() }).superRefine((d, ctx) => {
+        if (!d.a && !d.b) {
+          ctx.addIssue({ message: 'a か b のどちらか必須', path: ['a'] })
+          ctx.addIssue({ message: 'a か b のどちらか必須', path: ['b'] })
+        }
+      })

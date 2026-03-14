@@ -1,738 +1,1789 @@
 # ----------------------------
-# JavaScript Methods
+# 機能追加履歴
 # ----------------------------
 - ENTRY:
-  EXPLAIN: Version History
-  BODY: |
-    ■ ECMAScript 5.1 2009/12
-
-    ■ ES2015(別名ES6) 2011/6
-
-      Core
-      Collection
-      Generator
-      Iterable
-      Promise
-      Proxy
-      Reflect
-      Symbol
-      Symbol.WellKnown
-
-    ■ ES2016(別名ES7) 2016/6
-
-      Array.Include
-      Exponentiation operator
-
-    ■ ES2017(別名ES8) 2017/6
-
-      Object.values/Object.entries
-      String.padStart/String.padEnd
-      Object.getOwnPropertyDescriptors
-      Async/Await
-      Shared memory and atomics
-      Intl
-      TypedArrays
-      末尾カンマ許容
-
-    ■ ES2018(別名ES9) 2018/6
-
-      オブジェクトのRest/Spread
-      Promise.finally
-      テンプレートリテラルの改修
-      正規表現:sオプション
-      正規表現:名前付きグループ
-      正規表現:後読み
-      正規表現:uオプション
-      for-await-of
-      Intl
-
-    ■ ES2019(別名ES10)
-
-      catch引数の不要化
-      JSON superset
-      Symbol.description
-      Function.toString revision
-      Object.fromEntries
-      Well-formed JSON.stringify
-      String.trimStart/String.trimEnd
-      Array.flat/Array.flatMap
-
-    ■ ES2020(別名ES11)
-
-      BigInt
-      for-in ループにおける順序保証
-      ヌル合体(??)演算子
-      Optional Chaining(?.)
-      globalThis
-      String.matchAll
-      Dynamic Import
-      export * as ns from module
-      import.meta
-      Promise.allSettled
-      Symbol.wellknown
-      WeakRef
-
-    ■ ES2021(別名ES12)
-
-      ||= &&= ??=
-      数値セパレータ(_)
-      String.replaceAll
-      Promise.any
-      WeakRef
-
-    ■ ES2022(別名ES13)
-
-      Top-level await
-      Array.at/String.at
-      Private fields(#)
-      Static fields
-      静的イニシャライザーブロック
-      Object.hasOwn
-      Error.cause
-      正規表現:dオプション
-
-    ■ ES2023(別名ES14)
-
-      Array findLast/findLastIndex
-      Array toReversed/toSorted/toSpliced/toSorted
-      Hashbang構文
-      Symbol.prototype.description  
-      JSON.parse with reviver for BigInt
-      Intl.DateTimeFormat
-      Change Array by copy methods  
-      WeakMap/WeakSet enhancements
-
-    ■ ES2024(別名ES15)
-
-      Pattern Matching (試験的) 
-      Array group/groupToMap
-      Object internals enhancements
-      RegExp v3
-      Temporal (試験的)
-      Intl.DisplayNames 拡張
-      Function.prototype.toString 拡張
-      Error.prototype.toString 拡張
-      Module namespace exports 拡張
-      数値の改良
-      文字列の改良
-      ArrayBuffer/TypedArrayの改良
-      WebAssemblyの改良
+  CATEGORY: 機能履歴
 
 - ENTRY:
-  EXPLAIN: structural
+  EXPLAIN: ES2025(別名ES16)
   BODY: |
-    try{ throw }                        // 例外を投げる
-    catch([e]){ ... }                   // 例外をキャッチ
-    finally{ ... }                      // 必ず実行
+    Object.group/groupToMap                     // オブジェクトのグループ化
+    Object.internals enhancements               // オブジェクト内部仕様の拡張
+    RegExp v3                                   // 正規表現 v フラグ
+    Temporal (試験的)                            // 日時 API
+    Intl.DisplayNames 拡張                       // 表示名 API 拡張
+    Function.prototype.toString 拡張             // 関数 toString の仕様拡張
+    Error.prototype.toString 拡張               // エラー toString の仕様拡張
 
-    switch(){ case: break; default: }   // 条件分岐
-    if(){ ... }else{ ... }              // 条件分岐
-    for(in/of){ ... }                   // ループ
-    while(){ ... }                      // 条件ループ
-    do{ ... } while()                   // 後条件ループ
-    break/continue                      // ループ制御
-    label/goto                          // ラベルジャンプ
-    with(trg){ ... }                    // スコープ変更
+- ENTRY:
+  EXPLAIN: ES2024(別名ES15)
+  BODY: |
+    Pattern Matching (試験的)                    // match/when によるパターンマッチ
+    Array group/groupToMap                      // 配列のグループ化
+    Object internals enhancements               // オブジェクト内部仕様の拡張
+    RegExp v3                                   // 正規表現 v フラグ
+    Temporal (試験的)                            // 日時 API
+    Intl.DisplayNames 拡張                       // 表示名 API 拡張
+    Function.prototype.toString 拡張             // 関数 toString の仕様拡張
+    Error.prototype.toString 拡張                // エラー toString の仕様拡張
+    Module namespace exports 拡張                // 名前空間エクスポート拡張
+    数値の改良                                   // Number 周りの仕様改善
+    文字列の改良                                 // String 周りの仕様改善
+    ArrayBuffer/TypedArrayの改良                 // バイナリ周りの仕様改善
+    WebAssemblyの改良                            // WASM 連携の改善
+
+- ENTRY:
+  EXPLAIN: ES2023(別名ES14)
+  BODY: |
+    Array findLast/findLastIndex                // 末尾から検索
+    Array toReversed/toSorted/toSpliced/toSorted // 非破壊的配列メソッド
+    Hashbang構文                                // #! による実行環境指定
+    Symbol.prototype.description                // Symbol の説明取得
+    JSON.parse with reviver for BigInt          // BigInt の復元対応
+    Intl.DateTimeFormat                         // 日時フォーマット拡張
+    Change Array by copy methods                // コピーによる配列変更メソッド
+    WeakMap/WeakSet enhancements                // 弱参照コレクション拡張
+
+- ENTRY:
+  EXPLAIN: ES2022(別名ES13)
+  BODY: |
+    Top-level await                             // モジュール直下の await
+    Array.at/String.at                          // 負の添字でのアクセス
+    Private fields(#)                           // プライベートフィールド
+    Static fields                               // 静的フィールド
+    静的イニシャライザーブロック                   // class の static {} 初期化
+    Object.hasOwn                               // 自身プロパティの安全な判定
+    Error.cause                                 // エラー原因のチェーン
+    正規表現:dオプション                          // マッチのインデックス取得
+
+- ENTRY:
+  EXPLAIN: ES2021(別名ES12)
+  BODY: |
+    ||= &&= ??=                                 // 論理代入演算子
+    数値セパレータ(_)                            // 数値リテラル内の _ 区切り
+    String.replaceAll                           // 全置換
+    Promise.any                                 // いずれか1件で fulfill
+    WeakRef                                     // 弱参照(ファイナライザ付き)
+
+- ENTRY:
+  EXPLAIN: ES2020(別名ES11)
+  BODY: |
+    BigInt                                      // 任意精度整数
+    for-in ループにおける順序保証                 // 列挙順の仕様化
+    ヌル合体(??)演算子                           // null/undefined 時のみ右辺
+    Optional Chaining(?.)                       // プロパティアクセスの短路
+    globalThis                                  // グローバルオブジェクトの統一参照
+    String.matchAll                             // 全マッチのイテレータ取得
+    Dynamic Import                              // import() 動的読み込み
+    export * as ns from module                  // 名前空間として再エクスポート
+    import.meta                                 // モジュールメタ情報
+    Promise.allSettled                          // 全件の成否結果を取得
+    Symbol.wellknown                            // Well-known Symbol の整理
+    WeakRef                                     // 弱参照
+
+- ENTRY:
+  EXPLAIN: ES2019(別名ES10)
+  BODY: |
+    catch引数の不要化                            // catch(e) の e 省略可
+    JSON superset                               // JSON が JSON の上位互換に
+    Symbol.description                          // Symbol の説明文字列
+    Function.toString revision                  // 関数の toString 仕様統一
+    Object.fromEntries                          // キー値ペア配列からオブジェクト生成
+    Well-formed JSON.stringify                  // サロゲートの扱いを仕様準拠に
+    String.trimStart/String.trimEnd             // 前後の空白削除
+    Array.flat/Array.flatMap                    // 配列の平坦化
+
+- ENTRY:
+  EXPLAIN: ES2018(別名ES9) 2018/6
+  BODY: |
+    オブジェクトのRest/Spread                    // オブジェクトの残余・展開
+    Promise.finally                             // 成否問わず実行する処理
+    テンプレートリテラルの改修                    // タグ付きテンプレート等
+    正規表現:sオプション                         // ドットが改行にマッチ
+    正規表現:名前付きグループ                     // (?<name>...) のキャプチャ
+    正規表現:後読み                              // (?<=...) / (?<!...)
+    正規表現:uオプション                         // Unicode 対応強化
+    for-await-of                                // 非同期イテラブル反復
+    Intl                                        // 国際化API拡張
+
+- ENTRY:
+  EXPLAIN: ES2017(別名ES8) 2017/6
+  BODY: |
+    Object.values/Object.entries                // オブジェクトの値・キー値ペア取得
+    String.padStart/String.padEnd               // 文字列の前後パディング
+    Object.getOwnPropertyDescriptors            // 全プロパティの記述子取得
+    Async/Await                                 // 非同期の同期風記述
+    Shared memory and atomics                   // 共有メモリとアトミック
+    Intl                                        // 国際化API
+    TypedArrays                                 // 型付き配列
+    末尾カンマ許容                               // 関数引数等の末尾カンマ
+
+- ENTRY:
+  EXPLAIN: ES2016(別名ES7) 2016/6
+  BODY: |
+    Array.Include                               // 配列の要素包含判定
+    Exponentiation operator                     // べき乗演算子(**)
+
+- ENTRY:
+  EXPLAIN: ES2015(別名ES6) 2011/6
+  BODY: |
+    Core                                        // コア言語・組み込み
+    Collection                                  // Map, Set 等コレクション型
+    Generator                                   // ジェネレータ関数
+    Iterable                                    // 反復可能プロトコル
+    Promise                                     // 非同期処理
+    Proxy                                       // オブジェクトの代理・横取り
+    Reflect                                     // メタ操作のユーティリティ
+    Symbol                                      // 一意の識別子
+    Symbol.WellKnown                            // 組み込み Well-known Symbol
+
+# ----------------------------
+# 構造
+# ----------------------------
+- ENTRY:
+  CATEGORY: 構造 & debug
+
+- ENTRY:
+  EXPLAIN: switch
+  BODY: |
+    ■ シグネチャ
+
+    switch ( expression ) {
+      case value1:
+        statements
+        break
+      case value2:
+        statements  // break を書かないと次の case にフォールスルー
+      case value3:
+        statements
+        break
+      default:
+        statements
+    }
+
+    ■ 注意事項
+
+    ・expression と case の value は厳密等価(===)で比較
+    ・break を書かないと次の case にフォールスルー
+    ・default は任意。どの case にもマッチしないときに実行
+
+    ■ 例
+
+    ・expression が変数の場合
+
+      const status = getStatus()
+      switch (status) {
+        case '成功': handleOk(); break
+        case 'ng': handleNg(); break
+        default: handleUnknown()
+      }
+
+    ・定数で分岐する場合
+
+      const KEY = 'ENTER'
+      switch (KEY) {
+        case 'ENTER': submit(); break
+        case 'ESC': cancel(); break
+      }
+
+    ・数値の範囲(大なり・小なり)を使う場合（switch(true) + case に条件）
+
+      const n = 42
+      switch (true) {
+        case n < 0: console.log('負'); break
+        case n >= 0 && n < 10: console.log('一桁'); break
+        case n >= 10: console.log('二桁以上'); break
+      }
+
+    ・フォールスルー（break を意図的に省略）
+
+      switch (ch) {
+        case 'a':
+        case 'e':
+        case 'i':
+        case 'o':
+        case 'u':
+          console.log('母音')
+          break
+        default:
+          console.log('子音')
+      }
+
+- ENTRY:
+  EXPLAIN: if
+  BODY: |
+    ■ シグネチャ
+
+    if ( condition ) { statements }
+    else if ( condition ) { statements }
+    else { statements }
+
+    ■ 注意事項
+
+    ・条件は truthy/falsy で評価。false, 0, '', null, undefined, NaN は falsy
+    ・ブロックが1文なら {} 省略可だが可読性のため非推奨
+    ・else if は複数連鎖可能。実体は else { if (...) { } } の糖衣
+
+    ■ 例
+
+    ・単純な if / else
+
+      if (score >= 60) pass()
+      else fail()
+
+    ・else if で多分岐
+
+      if (x > 0) positive()
+      else if (x < 0) negative()
+      else zero()
+
+    ・falsy の注意（0 や '' も false 扱い）
+
+      const n = 0
+      if (n) console.log('n は truthy')           // 実行されない
+      if (n !== undefined && n !== null) console.log('n は存在')  // 明示判定
+
+- ENTRY:
+  EXPLAIN: for
+  BODY: |
+    ■ シグネチャ
+
+    for ( init; condition; update ) { statements }
+    for ( const item of iterable ) { statements }
+    for ( const key in object ) { statements }
+
+    ■ 注意事項
+
+    ・通常の for: init で初期化、condition が truthy の間繰り返し、update で更新
+    ・for...of: イテラブル(配列・文字列・Map・Set 等)の要素を順に取得
+    ・for...in: オブジェクトの列挙可能プロパティ名。プロトタイプチェーンも列挙される。配列より Object.keys 等が無難な場合あり
+    ・continue で次の反復へ、break でループ脱出
+
+    ■ 例
+
+    ・カウントループ
+
+      for (let i = 0; i < 10; i++) console.log(i)
+
+    ・for...of で配列
+
+      const arr = [1, 2, 3]
+      for (const x of arr) console.log(x)
+
+    ・for...in でオブジェクトのキー
+
+      const obj = { a: 1, b: 2 }
+      for (const key in obj) console.log(key, obj[key])
+
+    ・break / continue
+
+      for (let i = 0; i < 10; i++) {
+        if (i === 3) continue
+        if (i === 7) break
+        console.log(i)
+      }
+
+- ENTRY:
+  EXPLAIN: while
+  BODY: |
+    ■ シグネチャ
+
+    while ( condition ) { statements }
+
+    ■ 注意事項
+
+    ・条件を先に評価。最初から falsy なら1回も実行されない
+    ・条件が常に truthy だと無限ループ。break や条件の更新を忘れないこと
+
+    ■ 例
+
+    ・条件が true の間だけ実行
+
+      let n = 0
+      while (n < 3) { console.log(n); n++ }
+
+    ・break で脱出
+
+      while (true) {
+        const x = getNext()
+        if (!x) break
+        process(x)
+      }
+
+- ENTRY:
+  EXPLAIN: do while
+  BODY: |
+    ■ シグネチャ
+
+    do { statements } while ( condition )
+
+    ■ 注意事項
+
+    ・先に本体を実行してから条件を評価（後判定）
+    ・最低1回は本体が実行される。while との違い
+
+    ■ 例
+
+    ・最低1回は実行したい場合
+
+      let input
+      do {
+        input = prompt('y/n?')
+      } while (input !== 'y' && input !== 'n')
+
+    ・カウント（1回目は条件未チェック）
+
+      let i = 0
+      do { console.log(i); i++ } while (i < 3)
+
+- ENTRY:
+  EXPLAIN: label/goto
+  BODY: |
+    ■ シグネチャ
+
+    labelName: statement
+    break labelName
+    continue labelName
+
+    ■ 注意事項
+
+    ・JS に goto はない。ラベルは break/continue と組み合わせて使う
+    ・ネストしたループの外側を指定して脱出・次反復できる
+    ・ラベルは文(statement)に付ける。関数やブロック単体には付けられない
+
+    ■ 例
+
+    ・二重ループから一気に脱出
+
+      outer: for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          if (i === 1 && j === 1) break outer
+          console.log(i, j)
+        }
+      }
+
+    ・continue で外側の次の反復へ
+
+      outer: for (let i = 0; i < 2; i++) {
+        for (let j = 0; j < 2; j++) {
+          if (j === 1) continue outer
+          console.log(i, j)
+        }
+      }
+
+- ENTRY:
+  EXPLAIN: with
+  BODY: |
+    ■ シグネチャ
+
+    with ( expression ) { statements }
+
+    ■ 注意事項
+
+    ・式の結果のオブジェクトをスコープチェーンの先頭に追加。プロパティを変数のように書ける
+    ・strict モードでは構文エラー。使用禁止
+    ・非 strict でも非推奨。可読性・パフォーマンス・最適化の妨げ。オブジェクトの分割代入や変数に代入して使う
+
+    ■ 例
+
+    ・with の動作（非 strict かつ非推奨）
+
+      const obj = { a: 1, b: 2 }
+      with (obj) { console.log(a + b) }            // 3。a, b が obj から解決
+
+    ・推奨: オブジェクトを変数に
+
+      const { a, b } = obj
+      console.log(a + b)
+
+- ENTRY:
+  EXPLAIN: try catch finally throw
+  BODY: |
+    ■ シグネチャ
+
+    try { statements }
+    catch ( e ) { statements }
+    finally { statements }
+
+    throw expression
+
+    ■ 注意事項
+
+    ・throw で任意の値(Error オブジェクトが一般的)を投げられる
+    ・catch の e は ES2019 で省略可能(optional catch binding)。使わないなら catch { } と書ける
+    ・finally は return や throw の前にも実行される。クリーンアップに使う
+    ・try のあとは catch か finally の少なくとも一方が必須
+
+    ■ 例
+
+      let fd
+      try {
+        fd = openFile()
+        useFile(fd)
+      } catch (e) {
+        console.error('parse failed', e.message)
+      } finally {
+        if (fd) closeFile(fd)
+      }
+
+      ※ catch で e を省略(ES2019+)
+
+        try { risky() } catch { console.error('failed') }
+
+    ■ 総合例
+
+    ・カスタム例外の定義（Error を継承して name/message を活用）
+
+      class ValidationError extends Error {
+        constructor(message, field) {
+          super(message)
+          this.name = 'ValidationError'
+          this.field = field
+        }
+      }
+
+    ・try 内で throw。catch で種類別処理。finally で必ずクリーンアップ
+
+      let resource = null
+      try {
+        resource = acquireResource()
+        const data = JSON.parse(input)
+
+        // エラースロー
+        if (!data.id) throw new ValidationError('id required', 'id')
+        if (data.value < 0) throw new RangeError('value must be >= 0')
+
+        // 正常処理
+        use(data)
+      } 
+      // エラー処理
+      catch (e) {
+        if (e instanceof ValidationError) {
+          console.error('ValidationError', e.field, e.message)
+        } else if (e instanceof SyntaxError) {
+          console.error('JSON parse failed', e.message)
+        } else {
+          console.error(e.name, e.message)
+        }
+        throw e
+      } 
+      // 必ず実行
+      finally {
+        if (resource) releaseResource(resource)
+      }
+
+    ・Error の主なプロパティ: name, message。ES2022 では cause で原因をチェーン可能
+
+      throw new Error('failed', { cause: originalError })
 
 - ENTRY:
   EXPLAIN: debug
   BODY: |
-    debugger
-    console.log()
+    ■ debugger
+
+    debugger;                                     // デバッガを停止
+
+    ■ console
+
+    console.log(value1, value2, ..., valueN)      // ログを出力
+    console.info(value1, value2, ..., valueN)     // 情報を出力
+    console.error(value1, value2, ..., valueN)    // エラーを出力
+    console.warn(value1, value2, ..., valueN)     // 警告を出力
+    console.debug(value1, value2, ..., valueN)    // デバッグ情報を出力
+    console.trace(value1, value2, ..., valueN)    // スタックトレースを出力
+    console.dir(value)                            // オブジェクトのプロパティを出力
+    console.dirxml(value)                         // XML/HTML を出力
+    console.clear()                                // コンソールをクリア
+
+    ■ group: グループ
+
+    console.group(value1, value2, ..., valueN)    // グループを開始
+    console.groupEnd()                            // グループを終了
+
+      console.group('User')
+      console.log('Name: John')
+      console.log('Age: 30')
+      console.groupEnd()
+
+    ■ count: カウント
+
+    console.count(label)
+    console.countReset(label)
+
+    ■ assert: アサーション(条件が false の場合にエラーを投げる)
+
+    console.assert(condition, value1, value2, ..., valueN)
 
 - ENTRY:
-  EXPLAIN: Function
-  OPTIONS:
-    COLS: 2
+  EXPLAIN: debug time
   BODY: |
-    this/arguments
+    ■ time: 時間測定
 
-    func.length
-    .length: 引数数
-    .caller[X]
-    .call => class使用
-    .apply => class使用
-    .bind(thisArg,arg1,...)
-    .toString()
+    console.time(label)
+    console.timeEnd(label)
+    console.timeLog(label)
 
-    (a1,a2) =>{return a1+a2}
-    (a1,a2) => a1+a2
-    (a1) => a1*2
-    a1 => a1*2
-    () => { return }
+    ■ time で計測開始、timeEnd で終了して経過時間を出力。label は同じ文字列を指定
+
+      console.time('fetch')
+      await fetch(url)
+      console.timeEnd('fetch')                     // fetch: 123.456ms のように表示
+
+    ■ timeLog は計測を止めずに途中の経過時間だけ出力。追加の引数も表示可能
+
+      console.time('loop')
+      for (let i = 0; i < 3; i++) {
+        doWork(i)
+        console.timeLog('loop', `step ${i} done`)
+      }
+      console.timeEnd('loop')
+
+    ■ label を省略すると 'default' として扱われる
+
+      console.time()
+      heavyTask()
+      console.timeEnd()                            // default: xxx ms
+
+# ----------------------------
+# 演算子
+# ----------------------------
+- ENTRY:
+  CATEGORY: 演算子
 
 - ENTRY:
-  EXPLAIN: Operator
-  OPTIONS:
-    COLS: 2
+  EXPLAIN: 演算子
   BODY: |
-    a=b
-    a=b=c
-    a=(b=c)
-    + - * / % ** ++ --
-    == != === !== && || !
-    A ? B : C
-    &:AND |:OR ^:XOR ~:NOT
-    << >> >>>
-    += -= *= /= %= **=
-    &= |= ^= <<= >>= >>>=
+    ■ 代入演算子
+
+    a = b                                           // 代入演算子
+    a = b = c                                       // 代入演算子
+    a = (b = c)                                     // 代入演算子
+
+    ■ 算術演算子
+
+    + - * / % ** ++ --                              // 算術演算子
+    += -= *= /= %= **=                              // 算術代入演算子
+
+    ※ エクセルのべき乗「^」は JS では「**」
+
+    ■ 論理演算子
+
+    &&(AND), ||(OR), !(NOT)                         // 論理演算子
+
+    ■ 比較演算子
+
+    == != === !== && || !                           // 比較演算子
+    A ? B : C                                       // 三項演算子
+
+    ■ ビット演算子
+
+    &(AND), |(OR), ^(XOR), ~(NOT)                   // ビット演算子
+    <<(左シフト), >>(右シフト), >>>(符号なし右シフト)  // ビット演算子
+    &= |= ^= <<= >>= >>>=                           // ビット代入演算子
+
+# ----------------------------
+# 変数
+# ----------------------------
+- ENTRY:
+  CATEGORY: プリミティブ変数
 
 - ENTRY:
-  EXPLAIN: Type
+  EXPLAIN: 変数宣言
   BODY: |
-    var
-    let
-    const
-    typeof
+    var                                           // 変数宣言
+    let                                           // 変数宣言
+    const                                         // 変数宣言
+    typeof                                        // 型判定
 
-    ■ Primitive
-    undefined
-    null
-    boolean
-    string
-    number
-    bigint
-    symbol
+- ENTRY:
+  EXPLAIN: プリミティブ型(7種)
+  BODY: |
+    ■ 正式な呼称（ECMAScript 仕様）
 
-    function
-    object
+    ・これらは「型」(言語型 / language types)
+    ・変数は値を持ち、その値に型がある
+    ・typeof は値の型を返す
+    ・プリミティブ型: Undefined, Null, Boolean, String, Number, BigInt, Symbol の7つ。
+    ・値はイミュータブル
+    ・Object 型: オブジェクト(関数、配列等を含む)
+    ・プリミティブ以外は Object 型
+    ・function は Object の一種で typeof が "function" を返すだけ
+
+    ■ 型と値の一覧
+
+    undefined     Undefined 型。この型の値は undefined のみ
+    null          Null 型。この型の値は null のみ
+    boolean       Boolean 型。true / false
+    string        String 型
+    number        Number 型
+    bigint        BigInt 型
+    symbol        Symbol 型
+
+    object        Object 型(関数以外のオブジェクト等)
+    function      Object 型の一種。typeof が "function"
 
 - ENTRY:
   EXPLAIN: Object
-  OPTIONS:
-    COLS: 2
   BODY: |
-    new Object([val])
-    obj={key:val,...}
+    ■ シグネチャ
 
-    Object.create(child,prp)
-    Object.prototype.prop
-    Object.getPrototypeOf(obj)
-    Object.setPrototypeOf(obj)
-    Object.isPrototypeOf(obj)
-    __proto__[X]
+    const obj = new Object({key: value, ...})     // オブジェクト生成
+    const obj = {key: value, ...}                 // オブジェクトリテラル
 
-    Object.keys(obj)
-    Object.values(obj)
-    Object.entries(obj)
-    Object.fromEntries(obj)
+    ...obj                                        // スプレッド。列挙可能な自身プロパティを展開
 
-    Object.getOwnPropertyNames()
-    Object.getOwnPropertySymbols()
-    Object.hasOwnProperty()
-    Object.propertyIsEnumerable
+    ■ プロパティ
 
-    Object.defineProperty(o,p,d)
-    Object.defineProperties(o,p)
-    Object.getOwnProperty
+    obj.key                                      // プロパティアクセス
+    obj.key = value                              // プロパティ設定
+    delete obj.key                               // プロパティ削除
 
-    Object.freeze(obj)
-    Object.seal(obj)
-    Object.preventExtensions(obj)
-    Object.isFrozen(obj)
-    Object.isSealed(obj)
-    Object.isExtensible(obj)
+    ■ メソッド(KV)
 
-    Object.toString()
-    Object.toLocaleString()
-    Object.toSource[X]
+    Object.keys(obj)                              // 列挙可能な自身のキー配列
+    Object.values(obj)                            // 列挙可能な自身の値の配列
+    Object.entries(obj)                           // [key, value] の配列
+    Object.fromEntries(iterable)                  // エントリ配列からオブジェクト生成
 
-    .constructor :参照
-    assign(trg,obj,obj)
-    is(obj,obj)
-    .valueOf()
+      const obj = { key: value }
+      const keys = Object.keys(obj)               // [key]
+      const values = Object.values(obj)           // [value]
+      const entries = Object.entries(obj)         // [[key, value]]
+      const fromEntries = Object.fromEntries(entries) // {key: value}
 
-    set(val)/get
-    ...obj
+    obj.toString()                                // 文字列化。多くの場合 "[object Object]"
+    obj.toLocaleString()                          // ロケールに応じた文字列
 
-    instanceof
+    ■ メソッド(基礎)
 
-- ENTRY:
-  EXPLAIN: Class
-  BODY: |
-    class
-    new/delete
-    constructor()
-    extends
-    static prop/func
-    this/super
-    get/set
+    Object.create(proto[, props])                 // 指定プロトタイプで新オブジェクト生成
+    Object.getPrototypeOf(obj)                    // [[Prototype]] を取得、例: fn.prototype
+    Object.setPrototypeOf(obj, proto)             // [[Prototype]] を設定
+    proto.isPrototypeOf(obj)                      // プロトタイプチェーン上に proto があるか
+    __proto__[NG]                                 // 非標準。getPrototypeOf を使う
+
+    Object.getOwnPropertyNames(obj)               // 自身のプロパティ名(列挙不可含む)
+    Object.getOwnPropertySymbols(obj)             // 自身の Symbol プロパティ
+    obj.hasOwnProperty(prop)                      // 自身のプロパティかどうか
+    obj.propertyIsEnumerable(prop)                // 列挙可能かどうか
+
+    Object.defineProperty(obj, prop, desc)        // プロパティを記述子で定義
+    Object.defineProperties(obj, props)           // 複数プロパティを一括定義
+    Object.getOwnPropertyDescriptor(obj, prop)    // 記述子を取得
+
+    Object.freeze(obj)                            // 凍結(追加・変更・削除不可)
+    Object.seal(obj)                              // 封印(追加・削除不可。既存は変更可)
+    Object.preventExtensions(obj)                 // 拡張禁止(追加不可)
+    Object.isFrozen(obj)                          // 凍結されているか
+    Object.isSealed(obj)                          // 封印されているか
+    Object.isExtensible(obj)                      // 拡張可能か
+
+    obj.constructor                               // インスタンスのコンストラクタ参照
+    obj instanceof Constructor                    // コンストラクタの prototype がチェーン上にあるか
+
+    Object.assign(target, ...sources)             // 列挙可能な自身プロパティをコピー
+    Object.is(a, b)                               // 厳密等価。NaN === NaN が true
+    obj.valueOf()                                 // プリミティブ値への変換で使われる
+
+    obj.toSource()[NG]                            // 非標準。ソース表現
 
 - ENTRY:
   EXPLAIN: Date/Time
-  OPTIONS:
-    COLS: 2
   BODY: |
-    new Date()
-    .get/setFullYear/UTC
-    .get/setYear/UTC[X]
-    .get/setMonth/UTC
-    .get/setDate/UTC
-    .getDay/UTC
-    .get/setHours/UTC
-    .get/setMinutes/UTC
-    .get/setSeconds/UTC
-    .get/setMillis../UTC
+    ■ シグネチャ
 
-    .getTime()
-    .setTime()
-    .getTimezoneOffset
+    const date = new Date()                        // 日時オブジェクト生成
 
-    Date.now()
-    Date.parse()
-    Date.UTC()
+     ※ Full: ローカル、UTC: 世界標準時
 
-    ■ フォーマット
-    .toString()
-    .toDateString()
-    .toTimeString()
-    .toUTCString()
-    .toLocaleString()
-    .toLocaleDateString()
-    .toLocaleTimeString()
-    .toGMTString()
-    .toISOString()
-    .toJSON()
+    ■ プロパティ
+
+    date.getFullYear()       date.setFullYear(year)/(year, month, day)
+    date.getUTCFullYear()    date.setUTCFullYear(year)/(year, month, day)
+
+      date.getFullYear()/.getUTCFullYear()        => 2026 (年)
+      date.setFullYear(y[, m, d])/.setUTCFullYear(2026, 0, 1)
+
+    [NG] date.getYear()                           => 126 (非推奨。1900からの年。getUTCFullYear を使う)
+    date.setYear(year)
+
+    date.getMonth()/.getUTCMonth()                => 0 (月。0=1月, 11=12月)
+    date.setMonth()/.setUTCMonth(m[, d])
+
+    date.getDate()/.getUTCDate()                  => 1 (日。1-31)
+    date.setDate()/.setUTCDate(d)
+
+    date.getDay()/.getUTCDay()                    => 4 (曜日 0=日, 6=土)。setDay は存在しない
+
+    date.getHours()/.getUTCHours()                => 0 (時 0-23)
+    date.setHours()/.setUTCHours(h[, m, s, ms])
+
+    date.getMinutes()/.getUTCMinutes()            => 0 (分 0-59)
+    date.setMinutes()/.setUTCMinutes(m[, s, ms])
+
+    date.getSeconds()/.getUTCSeconds()            => 0 (秒 0-59)
+    date.setSeconds()/.setUTCSeconds(s[, ms])
+
+    date.getMilliseconds()/.getUTCMilliseconds()  => 0 (ミリ秒 0-999)
+    date.setMilliseconds()/.setUTCMilliseconds(ms)
+
+    ■ メソッド(時間) ※ 1970年1月1日 00:00:00 からのミリ秒
+
+    date.getTime()                                => 1767225600000 ms (2026-01-01 00:00:00 UTC)
+    date.setTime(time)                            => date
+    date.getTimezoneOffset()                      => -540 (分) ローカル時間とUTCの差
+
+    Date.now()                                    => 1767225600000 ms (現在時刻のエポック ms)
+    Date.parse(dateString)                        => 1767225600000 ms (パース結果のエポック ms)
+    Date.UTC(y, m, d, h, min, s, ms)              => 1767225600000 ms (UTC 指定でエポック ms)
+
+- ENTRY:
+  EXPLAIN: Date/Time フォーマット
+  BODY: |
+    ■ シグネチャ
+
+    ・date.toString() は引数なし。フォーマット指定は toLocaleString 等を使う
+    ・date.toLocaleString(locales?, options?) / toLocaleDateString / toLocaleTimeString
+    ・options: Intl.DateTimeFormat に渡すオブジェクト
+
+    ■ locale 関連
+
+      localeMatcher = 'lookup' | 'best fit'
+      calendar = 'gregory' | 'japanese' | 'chinese' 等
+      numberingSystem = 'latn' | 'arab' | 'hans' 等
+
+    ■ 時刻・タイムゾーン
+
+      timeZone = 'Asia/Tokyo' | 'UTC' | '+09:00' 等 (IANA 名またはオフセット)
+      hour12 = true | false
+      hourCycle = 'h11' | 'h12' | 'h23' | 'h24'
+      fractionalSecondDigits = 1 | 2 | 3 (ミリ秒桁数。0 は不可)
+      timeZoneName = 'short' | 'long' | 'shortOffset' | 'longOffset' | 'shortGeneric' | 'longGeneric'
+
+    ■ 日時コンポーネント (dateStyle/timeStyle と併用不可)
+
+      weekday = 'long' | 'short' | 'narrow'
+      year, month, day = 'numeric' | '2-digit' 等 (month は 'long'|'short'|'narrow' も可)
+      hour, minute, second = 'numeric' | '2-digit'
+      dayPeriod = 'narrow' | 'short' | 'long'
+
+    ■ スタイル短縮
+
+      dateStyle = 'full' | 'long' | 'medium' | 'short'
+      timeStyle = 'full' | 'long' | 'medium' | 'short'
+
+    ■ メソッド
+
+    date.toString()                               // 引数なし。ロケール依存の日時文字列
+    date.toDateString()                           // 引数なし。日付部分のみ(ロケール依存)
+    date.toTimeString()                           // 引数なし。時刻部分のみ(ロケール依存)
+    date.toUTCString()                            // 引数なし。UTC の日時文字列
+
+    date.toLocaleString(locales?, options?)       // 日時。locales='ja-JP' 等、options は上記 Intl オプション
+    date.toLocaleDateString(locales?, options?)   // 日付のみ。同上
+    date.toLocaleTimeString(locales?, options?)   // 時刻のみ。同上
+
+      date.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo', dateStyle: 'short', timeStyle: 'medium' })
+      date.toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' })
+      date.toLocaleTimeString('ja-JP', { hour12: false, fractionalSecondDigits: 3 })
+
+    date.toGMTString()                            // 引数なし。toUTCString の非推奨エイリアス
+    date.toISOString()                            // 引数なし。ISO 8601 形式 'YYYY-MM-DDTHH:mm:ss.sssZ'
+    date.toJSON()                                 // 引数なし。JSON.stringify 用。toISOString() と同様の文字列を返す
 
 - ENTRY:
   EXPLAIN: Math
-  OPTIONS:
-    COLS: 2
   BODY: |
-    ■ 定数
-    Math.PI
-    Math.E
-    Math.exp/expm1()
-    Math.log/log2/log10/log1p()
-    Math.LN2/LN10/LOG2E/LOG10E
+    ■ 定数: ()不要
 
-    ■ Methods
-    Math.random()
-    Math.abs()
-    Math.ceil/floor()
-    Math.round()    *丸目誤差
-    Math.max/min()
-    Math.pow()
-    Math.sqrt()
-    Math.cbrt()
-    Math.SQRT1_2
-    Math.SQRT2
+    Math.PI                                       // 円周率 π
+    Math.E                                        // 自然対数の底 e
+    Math.LN2                                      // ln(2)
+    Math.LN10                                     // ln(10)
+    Math.LOG2E                                    // log2(e)
+    Math.LOG10E                                   // log10(e)
+    Math.SQRT1_2                                  // 1/√2
+    Math.SQRT2                                    // √2
 
-    Math.cos/sin/tan()
-    Math.acos/asin/atan()
-    Math.acosh/asinh/atanh()
-    Math.atan2(x,y)
+    ■ 指数・対数
 
-    Math.clz32()
-    Math.fround()
-    Math.hypot()
-    Math.imul(x,y)
-    Math.sign()
+    Math.exp(x)                                   // e^x
+    Math.expm1(x)                                 // e^x - 1
+    Math.log(x)                                   // ln(x)
+    Math.log2(x)                                  // log2(x)
+    Math.log10(x)                                 // log10(x)
+    Math.log1p(x)                                 // ln(1 + x)
+
+    ■ 四捨五入・端数処理
+
+    Math.abs(x)                                   // 絶対値
+    Math.ceil(x)                                  // 切り上げ
+    Math.floor(x)                                 // 切り捨て
+    Math.round(x)                                 // 四捨五入。丸め誤差に注意
+    Math.trunc(x)                                 // 小数部を捨てる(0 に近い側へ)
+    Math.max(x, y, ...)                           // 最大値。引数は2個以上が無難
+    Math.min(x, y, ...)                           // 最小値。同上
+    Math.pow(x, y)                                // x^y
+    Math.sqrt(x)                                  // √x
+    Math.cbrt(x)                                  // 立方根
+
+      ※ floor, trunc の違い: 小数部を捨てる方向が異なる
+        floor: 負の方向に丸める 例: floor(-1.5) => -2
+        trunc: 0 に近い方向に丸める 例: trunc(-1.5) => -1
+
+    ■ 三角関数 (引数はラジアン)
+
+    Math.cos(x) / Math.sin(x) / Math.tan(x)
+    Math.acos(x) / Math.asin(x) / Math.atan(x)    // 逆三角。戻りはラジアン
+    Math.atan2(y, x)                              // 点 (x,y) の偏角。象限を考慮
+    Math.acosh(x) / Math.asinh(x) / Math.atanh(x) // 双曲線逆関数
+
+    ■ その他
+
+    Math.random()                                 // 引数なし。0 以上 1 未満の小数を返す。
+    Math.clz32(x)                                 // 32ビット整数での先頭の0の個数
+    Math.fround(x)                                // 最も近い32ビット単精度浮動小数へ
+    Math.hypot(x, y, ...)                         // √(x² + y² + ...)。オーバーフロー回避用
+    Math.imul(x, y)                               // 32ビット整数の乗算
+    Math.sign(x)                                  // 符号。1, -1, 0, -0, NaN
 
 - ENTRY:
   EXPLAIN: Number
-  OPTIONS:
-    COLS: 2
   BODY: |
-    ■ 定数
-    Number.NaN
-    Number.isNaN(isNaN)
-    Number.MAX_VALUE
-    Number.MIM_VALUE
-    Number.POSITIVE_INFINITY
-    Number.NEGATIVE_INFINITY
-    Number.isFinite()
-    Number.isInteger()
-    Number.EPSILON
-    Number.MIN_SAFE_INTEGER
-    Number.MAX_SAFE_INTEGER
-    Number.isSafeInteger
+    ■ プロパティ: ()不要
 
-    ■ Methods
-    number.toString(radix)
-    number.toExponential
-    number.toFixed(digi)
-    number.toPrecision()
-    Intl.NumberFormat
+    Number.NaN                                    // NaN の正式な参照。NaN は global でも可
+    Number.MAX_VALUE                              // 表現可能な最大値(約 1.79e+308)
+    Number.MIN_VALUE                              // 0 に最も近い正の値(約 5e-324)。負の最小値ではない
+    Number.POSITIVE_INFINITY                      // +∞。1/0 等でも得られる
+    Number.NEGATIVE_INFINITY                      // -∞
+    Number.EPSILON                                // 1 とそれより大きい最小値の差(約 2.22e-16)。浮動小数点の誤差判定に使う
+    Number.MIN_SAFE_INTEGER                       // -(2^53 - 1)。整数として正確に扱える最小
+    Number.MAX_SAFE_INTEGER                       // 2^53 - 1。整数として正確に扱える最大
+
+    ■ 静的メソッド
+
+    Number.isNaN(x)                               // NaN かどうか。global isNaN と違い型変換しない
+    Number.isFinite(x)                            // 有限か。NaN/±∞ でないか。global isFinite と違い型変換しない
+    Number.isInteger(x)                           // 整数かどうか
+    Number.isSafeInteger(x)                       // 安全な整数範囲内か(MIN_SAFE_INTEGER ～ MAX_SAFE_INTEGER)
+
+    ■ インスタンスメソッド (number のメソッド)
+
+    const number = new Number(value)              // ラッパーオブジェクト
+    const number = Number(value)                  // 推奨。プリミティブへ変換。null/undefined でも0を返す
+    const number = 10                             // リテラル
+
+    number.toString(radix?)                       // 文字列化。radix は 2～36。省略時は 10
+    number.toExponential(fractionDigits?)         // 指数表記の文字列。'1.23e+2' 等
+    number.toFixed(digits)                        // 小数点以下 digits 桁で固定。文字列を返す
+    number.toPrecision(precision?)                // 有効桁数で丸めて文字列化
+
+    ■ フォーマッタ
+
+    Intl.NumberFormat(locales?, options?)         // ロケールに応じた数値フォーマット。format(number) で文字列化
+
+    ・フォーマッタ作成
+
+      const nf = new Intl.NumberFormat('ja-JP')
+      nf.format(1234567.89)                       // '1,234,567.89' (ja では桁区切りが異なる場合あり)
+
+      const cf = new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' })
+      cf.format(1000)                             // '¥1,000'
+
+      const nf2 = new Intl.NumberFormat('ja-JP', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+      nf2.format(1)                               // '1.00'
+
+    ・formatToParts で部分ごとに取得
+
+      nf.formatToParts(1234.5)
+      [{ "type": "integer", "value": "1"},
+       { "type": "group", "value": ","},
+       { "type": "integer", "value": "234"},
+       { "type": "decimal", "value": "."},
+       { "type": "fraction", "value": "5"}]
 
 - ENTRY:
   EXPLAIN: String
-  OPTIONS:
-    COLS: 2
   BODY: |
-    new String()
-    string.length
-    string.charAt()
-    string.substring(from,to)
-    string.split(from,to)
-    string.substr(from,len)
-    string.trim()
-    string.trimStart/trimEnd()
-    string.split(sep,limit)
-    string.concat()
-    string.repeat(n)
-    string.replace(reg,new) *
-    string.toLowerCase()
-    string.toUpperCase()
+    ■ シグネチャ
 
-    string.indexOf()
-    string.lastIndexOf()
-    string.startsWith(str)
-    string.endsWith(str)
-    string.includes(str)
+    const string = new String(str)                   // ラッパーオブジェクト。通常は String(str) やリテラルで十分
+    const string = String(str)                       // プリミティブへ変換。str が null/undefined でも文字列化
+    const string = String.fromCharCode(c1, c2, ...)  // UTF-16 コード単位(1～2数値)から文字列を生成
+    const string = String.fromCodePoint(c1, c2, ...) // コードポイント(Unicode)から文字列。サロゲートペア対応
 
-    string.match(reg)
-    string.search(reg)
+    ■ プロパティ
 
-    string.charCodeAt(n)
-    string.codePointAt(n)
+    string.length                                 // ()不要。UTF-16 コード単位の個数(サロゲートは2と数える)
 
-    string.padStart(len, str)
-    string.padEnd(len, str)
+    ■ メソッド
 
-    JSON.parse()
-    JSON.stringify()
+    string.charAt(index)                          // 指定位置の文字(1文字の文字列)。範囲外は ''
+    string.slice(start, end?)                     // 同上に近い。負の添字は末尾から
+    string.substring(start, end?)                 // start～end の部分文字列。end 省略時は末尾まで。負の添字は0になる
+    [NG] string.substr(start, length?)            // 非推奨。start から length 文字。
 
-    Number(str)
-    parseInt(str)
-    Number.parseInt(str)
-    parseFloat(str)
-    Number.parseFloat(str)
+    string.trim()                                 // 前後の空白除去
+    string.trimStart()                            // 先頭のみの空白除去
+    string.trimEnd()                              // 末尾のみの空白除去
+    string.padStart(targetLength, padString?)     // 先頭を埋めて targetLength に。padString 省略は空白
+    string.padEnd(targetLength, padString?)       // 末尾を埋めて targetLength に
 
-    .anchor/link()
-    .fontcolor/fontsize()
-    .big/small()
-    .blink()
-    .bold/italics()
-    .strike()
-    .sub/sup()
+    string.split(separator, limit?)               // 区切りで分割して配列に。limit で要素数上限
+    string.concat(str1, str2, ...)                // 連結。+ 演算子でよい場合が多い
+    string.repeat(n)                              // 自身を n 回繰り返した文字列
 
-    .normalize: unicode
+    string.toLowerCase()                          // 小文字化
+    string.toUpperCase()                          // 大文字化
+
+    string.indexOf(searchVal, fromIndex?)         // 検索文字列の先頭位置。見つからなければ -1
+    string.lastIndexOf(searchVal, fromIndex?)     // 末尾から検索した位置
+    string.startsWith(searchStr, position?)       // 先頭が searchStr かどうか
+    string.endsWith(searchStr, endPosition?)      // 末尾が searchStr かどうか
+    string.includes(searchStr, position?)         // 含むかどうか
+
+    string.match(regexp)                          // マッチ結果の配列。g なしなら [全体, グループ1, ...] と index 等
+    string.search(regexp)                         // マッチした先頭のインデックス。見つからなければ -1
+    string.replace(pattern, replacement)          // 最初の1件を置換。正規表現で g フラグなら全置換
+    string.replaceAll(pattern, replacement)       // 全置換。正規表現で g フラグなら全置換
+
+    string.charCodeAt(index)                      // 指定位置の UTF-16 コード単位(0～65535)。サロゲートは片方だけ
+    string.codePointAt(index)                     // 指定位置のコードポイント(Unicode)。サロゲートペアを1文字として返す
+
+    string.normalize(form?)                       // Unicode 正規化。form は 'NFC'|'NFD'|'NFKC'|'NFKD'。省略時は 'NFC'
+
+    ■ 参考メソッド
+
+    JSON.parse(string)                            // JSON 文字列をオブジェクト等に変換。不正時は SyntaxError
+    JSON.stringify(value, replacer?, space?)      // 値を JSON 文字列に。replacer でキー/値の絞り込み、space でインデント
+
+    Number(string)                                // 文字列を数値に。空文字/空白のみは 0。不正は NaN
+    parseInt(string, radix?)                      // 整数にパース。radix は 2～36。省略時は 10(先頭 0x 等で推論)
+    Number.parseInt(string, radix?)               // parseInt と同一。モジュール化時に明示する用
+    parseFloat(string)                            // 小数までパース。先頭の数値部分のみ取り出し
+    Number.parseFloat(string)                     // parseFloat と同一。モジュール化時に明示する用
+
+    ■ 非推奨: HTML ラッパー (文字列を HTML タグで囲んだ文字列を返す。実務では使わない)
+
+    string.anchor(name)                           // <a name="name">str</a> を返す
+    string.link(url)                              // <a href="url">str</a> を返す
+    string.fontcolor(color)                       // <font color="color">str</font>
+    string.fontsize(size)                         // <font size="size">str</font>
+    string.big() / string.small()                 // <big>str</big>, <small>str</small>
+    string.blink()                                // <blink>str</blink> (HTML5 で廃止)
+    string.bold() / string.italics()              // <b>str</b>, <i>str</i>
+    string.strike()                               // <strike>str</strike>
+    string.sub() / string.sup()                   // <sub>str</sub>, <sup>str</sup>
 
 - ENTRY:
-  EXPLAIN: Regular Expression
-  OPTIONS:
-    COLS: 2
+  EXPLAIN: Symbol
   BODY: |
-    newRegExp(/ptn/flag)
+    ■ 概要
 
-    ptn = /[0-9]+/
-    ptn.exec(str)
-    ptn.test(str)
-    str.match(ptn)
+    ・一意の識別子を作るプリミティブ
+    ・new は使わず Symbol(description?) で生成
+    ・同じ description でも別の Symbol が作られる
+    ・列挙で衝突しないプロパティキーに使う
+    ・グローバル共有: Symbol.for(key) で登録、Symbol.keyFor(sym) で key を取得
 
-    ptn.compile(/ptn/flag)[X]
+    ■ シグネチャ・プロパティ
 
-    x               文字
-    xyz             文字列
-    (x)             キャプチャリング
-    [xyz]           x,y,zの1文字
-    [x-z]           x～zどれか
-    [^xyz]          x,y,zでない
-    .               任意1(\n,\r以外)
-    (a|b)           a or b
-    ^x              始
-    x$              終
-    x*              0個>(量指定子)
-    x+              1個>(量指定子)
-    x?              =x{0,1}
-    x{n}            n個
-    x{n,}           n個>
-    x{n,m}          n～m個
-    x*?             0個> NonGreedy
-    x+?             1個> NonGreedy
-    x??             0~1個 NonGreedy
-    x{n}?           n個 NonGreedy
-    x{n,}?          n個> NonGreedy
-    x{n,m}?         n～m個 NonGreedy
-    [\b]            バックスペース
-    (?:x)           x,$1..$n参照除外
-    x(?=y)          x後のy: x
-    x(?!y)          x後のyない: x
-    (?<=x)y         x後のy: y
-    (?<!x)y         x後のyない: y
+    Symbol(description?)                          // 新規 Symbol。description はデバッグ用。省略可
+    sym.description                               // プロパティ。() 不要。生成時に渡した説明文字列
+    Symbol.for(key)                               // グローバルレジストリに key で登録。同じ key なら同じ Symbol を返す
+    Symbol.keyFor(sym)                            // グローバル登録された sym の key。未登録なら undefined
 
-    \0              NUL
-    \b              区切
-    \B              \b以外
-    \cX             Ctrl-X
-    \d              =[0-9]
-    \D              =[^0-9]
-    \f              改Page
-    \n              改行
-    \r              復帰
-    \s              WhiteSpace
-    \S              \s以外
-    \t              タブ
-    \v              垂直タブ
-    \w              =[A-Za-z0-9_]
-    \W              =[^A-Za-z0-9_]
-    \n              マッチn番目
-    \xhh            16進数hh
-    \uhh            UTF-16hh
-    \/              slash
-    \\              back slash
-    \.              dot
-    \他             他自身
-    \p              {sc=Hiragana}等
+    ■ Well-known Symbol (組み込みのプロパティキー。オブジェクトに定義すると言語の挙動をフック)
 
-    g               Global
-    i               Ignore case
-    m               Multiline
-    u               Unicode surrogate
-    y               lastIndex後検索
-    s               (.)が全文字
+    Symbol.iterator                               // for...of 等。メソッドはイテレータ( next を持つオブジェクト)を返す
+    Symbol.asyncIterator                          // for await...of 用。非同期イテレータを返すメソッドのキー
+    Symbol.match                                  // String.prototype.match が参照。正規表現以外のオブジェクトを渡したときのマッチ挙動
+    Symbol.replace                                // String.prototype.replace が参照
+    Symbol.search                                 // String.prototype.search が参照
+    Symbol.split                                  // String.prototype.split が参照
+    Symbol.hasInstance                            // instanceof の右辺が参照。obj[Symbol.hasInstance](instance) で判定をカスタム
+    Symbol.isConcatSpreadable                     // Array.prototype.concat が spread するかどうか。true で配列を展開
+    Symbol.unscopables                            // with 内でプロパティをスコープに含めない一覧(非推奨 API 用)
+    Symbol.species                                // 派生オブジェクトのコンストラクタを決める。Array の map 等が参照
+    Symbol.toPrimitive                            // オブジェクトがプリミティブに変換されるとき。hint は 'number'|'string'|'default'
+    Symbol.toStringTag                            // Object.prototype.toString の結果の [object X] の X 部分
 
-    regexp.flags
-    .global
-    .ignoreCase
-    .multiline
-    .unicode
-    .sticky
-    .source: ptn文字
-    .lastIndex
+    ■ サンプル: 一意キーでオブジェクトにメタデータを付ける(列挙・JSON に出ない)
 
-    .$記号[X]/.$n[X]
-    .lastMatch[X]
-    .leftContext[X]
-    .rightContext[X]
-    .lastParen[X]
-    .input[X]
+      const CACHE = Symbol('cache')
+      obj[CACHE] = new Map()
+      Object.keys(obj)                            // CACHE は出ない
 
-    ?<名>ptn/flg(u)/groups
-    res="2019-12";
-    res.match(/(?<y>\d+)-(?<m>\d+)/u)
-    res.groups.y
-    res.groups.m
+    ■ サンプル: グローバルレジストリで同一キーを共有
+
+      const sym = Symbol.for('app.config')
+      Symbol.keyFor(sym)                          // 'app.config'
+      const same = Symbol.for('app.config')
+      sym === same                                // true
+
+    ■ サンプル: Symbol.iterator で for...of 対応
+
+      const range = {
+        from: 1, to: 3,
+        [Symbol.iterator]() {
+          let cur = this.from
+          return {
+            next: () => cur <= this.to ? { value: cur++, done: false } : { done: true }
+          }
+        }
+      }
+      [...range]                                  // [1, 2, 3]
+
+    ■ サンプル: Symbol.toStringTag で型表示を変える
+
+      class MyClass {
+        get [Symbol.toStringTag]() { return 'MyClass' }
+      }
+      Object.prototype.toString.call(new MyClass())  // '[object MyClass]'
+
+# ----------------------------
+# 正規表現
+# ----------------------------
+- ENTRY:
+  CATEGORY: 正規表現
+
+- ENTRY:
+  EXPLAIN: 正規表現
+  BODY: |
+    ■ シグネチャ
+
+    const ptn = /pattern/flags                    // リテラル。静的パターン
+    const ptn = new RegExp(pattern, flags?)       // コンストラクタ。pattern と flags は文字列。動的作成可能
+    const ptn = new RegExp(/pattern/, 'flags')    // リテラルとフラグの上書き
+
+    ※ flags
+      g: グローバル。複数マッチ
+      i: 大文字小文字を区別しない
+      m: 複数行。行頭行末が ^ と $ にマッチ
+      u: サロゲートペアを1文字として扱う
+      y: lastIndex で指定した位置から検索
+      s: dotAll。[.]が改行にマッチ
+
+    ■ exec(): RegExpExecArray | null
+
+    const result = ptn.exec(str)
+
+      const ptn = /[0-9]+/g
+      const str = '123 456 789'
+      const result = ptn.exec(str)                // ['123', index: 0, input: '123 456 789', groups: undefined]
+
+    ■ test(): boolean
+
+    const result = ptn.test(str)
+
+      const ptn = /[0-9]+/g
+      const str = '123 456 789'
+      const result = ptn.test(str)                // true
+
+    ■ match(): RegExpExecArray | null
+
+    const result = str.match(ptn)
+
+      const ptn = /[0-9]+/g
+      const str = '123 456 789'
+      const result = str.match(ptn)               // ['123', '456', '789']
+
+    ■ compile() 既存インスタンスの書き換え(非推奨)
+
+    ・既存の正規表現オブジェクトの source と flags を書き換えるため、イミュータブルな想定と合わない
+    ・new RegExp(pattern, flags) で新しいオブジェクトを作れば同じことができる。既存インスタンスを書き換える利点がほぼない
+    ・仕様では Annex B のレガシー機能。互換のため残っているが新規コードでは使わない
+
+    代替: ptn = new RegExp(newPattern, newFlags)   // 新しい RegExp を代入する
+
+- ENTRY:
+  EXPLAIN: マッチング表現
+  BODY: |
+    /x/             x という文字
+    /xyz/           xyz という文字列
+    /(x)/           キャプチャリング(グルーピング)
+    /[xyz]/         x,y,z の1文字
+    /[x-z]/         x～z の1文字
+    /[^xyz]/        x,y,z 以外の1文字
+    /./             任意1(\n,\r以外): 任意の1文字 
+    /(x|y)/         x または y のいずれか1文字
+
+    /^x$/           x で始まる文字列
+    /x$/            x で終わる文字列
+    /x*/            x が0個以上
+    /x+/            x が1個以上
+    /x?/            x が0個または1個
+    /x{n}/          x が n 個
+    /x{n,}/         x が n 個以上
+    /x{n,m}/        x が n 個から m 個
+    /[\b]/          バックスペースで記号
+
+    /x*?/           x が0個以上、非貪欲
+    /x+?/           x が1個以上、非貪欲
+    /x??/           x が0個または1個、非貪欲
+    /x{n}?/         x が n 個、非貪欲
+    /x{n,}?/        x が n 個以上、非貪欲
+    /x{n,m}?/       x が n 個から m 個、非貪欲
+
+    /(?:x)/         参照除外
+    /x(?=y)/        x の後に y がある
+    /x(?!y)/        x の後に y がない
+    /(?<=x)y/       x の後に y がある
+    /(?<!x)y/       x の後に y がない
+    /\w/            [A-Za-z0-9_]
+    /\W/            [^A-Za-z0-9_]
+    /\n/            マッチ n 番目
+    /\xhh/          16 進数 hh
+    /\uhh/          UTF-16 hh
+    /\/             slash
+    \\\             back slash
+    /\.             dot
+    /\p/            {sc=Hiragana}等
+
+- ENTRY:
+  EXPLAIN: マッチング記号
+  BODY: |
+    \b              word boundary
+    \B              non-word boundary
+    \d              digit
+    \D              non-digit
+    \s              whitespace
+    \S              non-whitespace
+    \t              tab
+    \v              vertical tab
+    \w              word character
+    \W              non-word character
+    \n              newline
+    \r              carriage return
+    \f              form feed
+
+    ■ Unicode property
+
+    \u{hhhh}          Unicode character(non-surrogate)
+
+    \p{property}                                  // 指定した Unicode プロパティにマッチ。u フラグ必須
+    \P{property}                                  // 指定プロパティにマッチしない文字(否定)
+
+    \p{gc=property}                               // General_Category。Letter(L), Number(N), Punctuation(P) 等
+    \P{gc=property}
+    \p{sc=Script}                                 // スクリプト(書記系)。Hiragana, Katakana, Han, Latin 等
+    \P{sc=property}
+    \p{scx=Script_Extensions}                     // スクリプト拡張。1文字が複数スクリプトに属する場合に使用
+    \P{scx=property}
+    \p{sc=Hiragana}                               // ひらがな
+    \P{sc=Hiragana}
+    \p{sc=Katakana}                               // カタカナ
+    \P{sc=Katakana}
+    \p{sc=Han}                                    // 漢字(CJK 統合漢字等)
+    \P{sc=Han}
+
+- ENTRY:
+  EXPLAIN: フラグ
+  BODY: |
+    ■ フラグ
+
+    g: Global
+    i: Ignore case
+    m: Multiline
+    u: Unicode surrogate
+    y: lastIndex後検索
+    s: (.)が全文字
+
+    ■ RegExp のプロパティ (インスタンス)
+
+    regexp.flags                                  // フラグ文字列をまとめて取得。例: 'gi'
+    regexp.global                                 // g フラグが付いているか。boolean
+    regexp.ignoreCase                             // i フラグ。boolean
+    regexp.multiline                              // m フラグ。boolean
+    regexp.unicode                                // u フラグ。boolean
+    regexp.sticky                                 // y フラグ。boolean
+    regexp.source                                 // パターン文字列。例: '[0-9]+'
+    regexp.lastIndex                              // g/y 時、次に検索を開始する位置。exec 等で更新される
+
+    ■ 非標準・非推奨 (RegExp の静的プロパティ。ブラウザ互換用。使わない)
+
+    RegExp.$1, RegExp.$2, ...                     // 直近の exec の n 番目のキャプチャ
+    RegExp.lastMatch                              // 直近のマッチ全体
+    RegExp.leftContext / RegExp.rightContext      // マッチの前/後の文字列
+    RegExp.lastParen                              // 最後のキャプチャ
+    RegExp.input                                  // 直近の検索対象文字列
+
+    ■ 名前付きキャプチャ (?<name>...) (ES2018。u フラグ必須)
+
+    ・(?<name>pattern) でキャプチャに名前を付ける。match の結果の groups から名前で参照
+    ・replace の置換文字列では $<name> で参照
+
+      const str = '2019-12'
+      const res = str.match(/(?<y>\d+)-(?<m>\d+)/u)
+      res.groups.y                               // '2019'
+      res.groups.m                               // '12'
 
 - ENTRY:
   EXPLAIN: Replace
   BODY: |
-    str.replace(/ptn/flg,rep)
-    $&              全体挿入
-    $`              前部分挿入
-    $'              後部分挿入
-    $n              n(1-2桁)数
-    $<name>         nameを挿入
-    $$              "$"挿入
+    ■ シグネチャ
+
+      str.replace(pattern, replacement)           // replacement が文字列なら $& 等の特殊置換。関数ならコールバックの戻り値で置換
+
+      str.replace(pattern, (match, p1, p2, ..., offset, string, groups) => replacementString)
+
+        match: マッチ全体
+        p1,p2,...: キャプチャ群(数はパターンに依存)
+        offset: マッチ開始位置
+        string: 検索対象全体
+        groups: 名前付きキャプチャ(無ければ undefined)
+        戻り値: 置換文字列
+
+        const str = '2024-01-15'
+        str.replace(/(\d+)-(\d+)-(\d+)/, (match, y, m, d) => `${y}年${m}月${d}日`)
+        // '2024年1月15日' (キャプチャ y,m,d で日付を組み替え)
+
+    ■ $& マッチ全体
+
+    ・ユースケース: マッチを括る・接尾辞を付ける
+
+      const str = 'price: 100 and 200'
+      str.replace(/\d+/g, '[$&]')                 // 'price: [100] and [200]' (数値を [] で囲む)
+      str.replace(/\d+/g, '$&px')                 // 'price: 100px and 200px' (数値に px を付ける)
+
+    ■ $` マッチの「前」の部分
+
+      const str = 'Hello, world!'
+      str.replace(/world/, '$`')                  // 'Hello, Hello, !' (world が 'Hello, ' に置換)
+
+    ■ $' マッチの「後」の部分
+
+      const str = 'Hello, world!'
+      str.replace(/world/, "$'")                  // 'Hello, !!' (world が '!' に置換)
+
+    ■ $n キャプチャ n 番目 (1～2桁)
+
+      const str = 'Hello, world!'
+      str.replace(/(wor)(ld)/, '$2$1')            // 'Hello, ldwor!' ($1=wor, $2=ld を入れ替え)
+
+    ■ $<name> 名前付きキャプチャ (u フラグ)
+
+      const str = '2019-12'
+      str.replace(/(?<y>\d+)-(?<m>\d+)/u, '$<m>/$<y>')  // '12/2019'
+
+      const str = '201-123'
+      str.replace(/(?<y>\d+)-(?<m>\d+)/u, '$<m>/$<y>')  // '12/201' エラー
+
+
+    ■ $$ リテラルの $
+
+      const str = '100 yen'
+      str.replace(/100/, '$$50')                  // '$50 yen' ($$ が $ に)
+
+# ----------------------------
+# 配列
+# ----------------------------
+- ENTRY:
+  CATEGORY: 配列
 
 - ENTRY:
   EXPLAIN: Array
-  OPTIONS:
-    COLS: 2
   BODY: |
-    Array([n])
-    Array(e1,e2,..)
-    Array.from(arrLike)
-    Array.of(e1,e2,..)
-    .length
+    ■ シグネチャ
 
-    for(...)
-    .forEach(cbm,this)
-    .entries()
-    .keys()
-    .values()
-    .map(cb,this)
-    .reduce(cb,this)
-    .reduceRight(cb,this)
+    const arr = new Array(n)                             // 長さ n の空配列。1引数で数値なら長さ、そうでなければ要素1つの配列
+    const arr = new Array(e1, e2, ...)                   // 要素を並べた配列
+    const arr = Array.from(arrayLike, mapFn?, thisArg?)  // イテラブル・array-like から配列を生成。mapFn で変換可
+    const arr = Array.of(e1, e2, ...)                    // 引数を要素とする配列。new Array(1,2) と同様だが 1 引数でも意図が明確
 
-    .indexOf(e1)
-    .includes(e1)
-    .isArray(val)
-    idx in arr
-    .some(cb,this)
-    .every(cb,this)
-    .find(cb,this)
-    .findIndex(cb,this)
+    ■ 構文
 
-    .concat(arr2)
-    .join(sep)
-    .unshift(e1,e2,...):top
-    .push(e1,e2,...):btm
-    .shift():top
-    .pop():btm
-    .slice(bgn,end)
-    .splice(bgn,n,e1,e2,..)
-    delete arr[n]
-    .filter(cb,this)
+    [...arr]                                      // スプレッド。浅いコピーや連結に
+    [a, b] = [c, d]                               // 分割代入
+    delete arr[i]                                 // i 番目を穴に。length は変わらない
 
-    .sort(func)
-    .reverse()
+    ■ プロパティ
 
-    .toString()
-    .toLocaleString()
+    arr.length                                    // 要素数。書き換え可(短くすると要素が削られる)
 
-    .fill(val,bgn,end)
-    .copyWithin(trg,bgn,end)
-    .flat(depth)
-    .flatMap(cb)
+    ■ 静的メソッド
 
-    [...]
-    [a,b]=[c,d]
+    Array.isArray(val)                            // 配列かどうか。typeof では 'object' になるためこれで判定
 
-    ArrayBuffer()
-    .buffer
-    .byteLength
-    Int8Array()
-    Uint8Array()
-    Uint8ClampedArray()
-    Int16Array()
-    Uint16Array()
-    Int32Array()
-    Uint32Array()
-    Float32Array()
-    Float64Array()
+    ■ 反復・走査
+
+    for (const el of arr) { ... }                 // 要素を順に
+
+    arr.entries(callback, thisArg?)               // [index, value] のイテレータ
+    arr.keys(callback, thisArg?)                  // インデックスのイテレータ
+    arr.values(callback, thisArg?)                // 要素のイテレータ(配列のデフォルト)
+
+    arr.forEach(cb, thisArg?)                     // 各要素に cb を実行。break 不可
+    arr.map(callback, thisArg?)                   // 各要素を変換した新配列
+    arr.flatMap(callback, thisArg?)               // map してから flat(1)。1段だけ平坦化
+
+    arr.reduce(callback, initial?)                // 左から畳み込み。初期値省略時は先頭が initial
+    arr.reduceRight(callback, initial?)           // 右から畳み込み
+
+    ■ 判定・検索
+
+    index in arr                                  // そのインデックスが存在するか(穴あり配列の判定に)
+    arr.includes(val, fromIndex?)                 // 含むかどうか。NaN も正しく判定
+
+    arr.indexOf(val, fromIndex?)                  // 最初のインデックス。見つからなければ -1
+    arr.lastIndexOf(val, fromIndex?)              // 最後のインデックス
+
+    arr.some(cb, thisArg?)                        // 1件でも cb が true なら true
+    arr.every(cb, thisArg?)                       // 全て cb が true なら true
+    arr.find(cb, thisArg?)                        // cb が true の最初の要素。無ければ undefined
+    arr.findIndex(cb, thisArg?)                   // cb が true の最初のインデックス。無ければ -1
+
+    ■ 結合・分割
+
+    arr.concat(...items)                          // 配列または値を連結した新配列。items は配列なら展開される
+    arr.join(separator?)                          // 要素を separator で連結した文字列。省略時は ','
+
+    ■ 先頭・末尾の追加・削除
+
+    arr.push(...items)                            // 末尾に追加。戻り値は新しい length
+    arr.pop()                                     // 末尾を削除して返す。空なら undefined
+    arr.unshift(...items)                         // 先頭に追加。戻り値は新しい length
+    arr.shift()                                   // 先頭を削除して返す。空なら undefined
+
+    ■ 部分配列・ splice
+
+    arr.slice(start?, end?)                       // 部分配列を返す。非破壊
+    arr.splice(start, deleteCount?, ...items)     // start から deleteCount 個削除し、その位置に items を挿入。破壊的。削除分の配列を返す
+    arr.toSpliced(start, deleteCount?, ...items)  // splice の非破壊版(ES2023)
+
+    ■ フィルタ・並び替え
+
+    arr.filter(cb, thisArg?)                      // cb が true の要素だけの新配列
+    arr.sort(compareFn?)                          // 破壊的にソート。compareFn 省略時は文字列として比較
+    arr.toSorted(compareFn?)                      // ソートした新配列。非破壊(ES2023)
+    arr.reverse()                                 // 破壊的に反転
+    arr.toReversed()                              // 反転した新配列。非破壊(ES2023)
+
+    ■ その他
+
+    arr.fill(val, start?, end?)                   // start～end を val で埋める。破壊的
+    arr.copyWithin(target, start?, end?)          // start～end を target 位置にコピー。破壊的
+    arr.flat(depth?)                              // 指定段数だけ平坦化。depth 省略時は 1
+    arr.toString() / arr.toLocaleString()         // 文字列化。join(',') に近い
 
 - ENTRY:
-  EXPLAIN: Map (Weakmap)
+  EXPLAIN: ArrayBuffer
   BODY: |
-    new Map()
-    .set('1', 'str1')
-    .set(1, 'num1')
-    .set(true, 'bool1')
+    ■ 概要
 
-    .set(k,v)
-    .get(k)
-    .size
-    .keys()
-    .values()
-    .entries()
-    .forEach(cb,this)
-    .has(k)
-    .delete(k)
-    .clear()
+    ・固定長のバイナリデータを管理するためのメモリ領域
+    ・バイト単位でアクセスできる
+    ・バイト列を操作するためのビューを提供する
+
+    ■ ユースケース
+
+    ・File/Blob の読み込み: file.arrayBuffer() や Blob からバイナリを取得し、TypedArray でパース
+    ・Canvas ImageData: getImageData().data は Uint8ClampedArray(ピクセル RGBA の編集に使用)
+    ・WebSocket / fetch: バイナリフレームや Response.arrayBuffer() で受け取り、プロトコルに応じて Int32 等で解釈
+    ・WebGL / WebGPU: 頂点バッファやユニフォームを TypedArray で用意して GPU に渡す
+    ・Crypto: getRandomValues(Uint8Array) で乱数、SubtleCrypto の encrypt/decrypt で ArrayBuffer を入出力に使用
+    ・バイナリプロトコル・ファイル形式: ヘッダやパケットを byteOffset や DataView で読み書き
+
+    ■ シグネチャ
+
+    const ab = new ArrayBuffer(byteLength)        // byteLength バイトの生バッファ(直接中身は読めない)
+
+    ・ファイル読み込み時: byteLength は自分で設定しない
+    ・file.arrayBuffer() や Response.arrayBuffer() がファイルサイズ分の ArrayBuffer を返す
+    ・100KB なら ab.byteLength === 102400 (100 * 1024)
+    ・自前で確保する場合: 100KB なら new ArrayBuffer(100 * 1024) または new ArrayBuffer(102400)
+
+    const view = new Int8Array(ab)                // 同一バッファを型付きで見る
+    const view2 = new Int8Array(length)           // 長さだけ指定すると ArrayBuffer を内部で確保
+    const view3 = new Int8Array([1, 2, 3])        // 配列から生成
+
+      ※ タイプ: Int8/Uint8/Uint8Clamped/Int16/Uint16/Int32/Uint32/Float32/Float64
+
+    ■ ArrayBuffer のプロパティ・メソッド
+
+    ab.byteLength                                 // バイト長。読み取り専用
+    ab.slice(start?, end?)                        // 指定範囲をコピーした新しい ArrayBuffer
+
+    ■ TypedArray のプロパティ・メソッド (Int8Array 等)
+
+    view.buffer                                   // 参照している ArrayBuffer
+    view.byteLength                               // バイト長
+    view.byteOffset                               // buffer 内の開始オフセット(バイト)
+    view.length                                   // 要素数(バイト長とは型で異なる)
+    view.subarray(begin?, end?)                   // 同一 buffer を参照する新しいビュー(コピーしない)
+
+    ■ ファイル読み込みサンプル
+
+    既存の ArrayBuffer から File を作る例。実務では input[type=file].files[0] 等から取得
+
+    const file = new File([ab], 'filename.bin', { type: 'application/octet-stream' })  
+    const response = await fetch(file)                // Blob/File は Body として扱われる
+    const arrayBuffer = await response.arrayBuffer()  // レスポンスボディを ArrayBuffer で取得(=サイズは元の file.size)
+    const view = new Int8Array(arrayBuffer)           // バイト列として扱うなら Int8Array, Uint8Array のビュー
+    console.log(view)                                 // 要素は 0～255(Uint8) または -128～127(Int8)
 
 - ENTRY:
-  EXPLAIN: Set (Weakset)
-  OPTIONS:
-    COLS: 2
+  EXPLAIN: Map
   BODY: |
-    new Set([iterable])
-    john = { name:"John" }
-    pete = { name:"Pete" }
-    .add(john)
-    .add(pete)
-    .add(john)      // dup
+    ■ 概要
 
-    .add(obj)
-    .size
-    .has(obj)
-    .delete(obj)
-    .clear()
-    .keys()
-    .values()
-    .entries()      // key=val
+    ・キーと値のペアを管理するためのデータ構造
+    ・キーは任意の型(オブジェクトも可)。=== で比較される
+    ・キーの重複は許可されない
+    ・順序は保証されない
+    ・サイズはプロパティで取得できる
+    ・イテレータは keys(), values(), entries() で取得できる
+    ・forEach で各エントリに対して処理を行うことができる
 
-    for(v of set){ ... }
-    for(k of .keys()){ ... }
-    for(v of.values()){ ... }
-    for([k,v]of .entries())
+    ■ シグネチャ
 
-    .forEach((v)=>{ ... })
-    .forEach((v,k)=>{ ... })
-    .forEach((v,k,set)=>{ ... })
-    .forEach((v,k)=>{ ... }, set)
+    const map = new Map()
+    const map = new Map(iterable)
+    const map = new Map<number, string>([[1, 'str1'], [2, 'str2'], [3, 'str3']]) // TypeScript
+
+    ■ メソッド
+
+    map.set(key, value)                           // キーと値を設定。同じ key なら上書き。戻り値は map 自身(チェーン可)
+    map.get(key)                                  // キーに対応する値を取得。無ければ undefined
+    map.size                                      // プロパティ。() 不要。エントリ数
+    map.has(key)                                  // キーが存在するか
+    map.delete(key)                               // キーを削除。削除できたかどうかを boolean で返す
+    map.clear()                                   // 全エントリを削除。戻り値 undefined
+
+    map.keys()                                    // キーのイテレータ
+    map.values()                                  // 値のイテレータ
+    map.entries()                                 // [key, value] のイテレータ。for (const [k,v] of map) で使う
+    map.forEach(cb, thisArg?)                     // 各エントリに cb(value, key, map) を実行
+
+    ■ 使用例
+
+      map.set('1', 'str1')
+      map.set(1, 'num1')
+      map.set(true, 'bool1')
 
 - ENTRY:
-  EXPLAIN: Symbol
-  OPTIONS:
-    COLS: 2
+  EXPLAIN: Weakmap
   BODY: |
-    sym = Symbol("")
-    .description
-    .prototype
-    .keyFor(sym)
-    .iterator
-    .asyncIterator
-    .match
-    .replace
-    .search
-    .split
-    .hasInstance
-    .isConcatSpreadable
-    .unscopables
-    .species
-    .toPrimitive
-    .toStringTag
+    ■ 概要
+
+    ・キーは弱参照（キーは必ずオブジェクト）
+    ・キーへの他の参照が無くなれば、そのエントリは非決定的にGC対象（時間的保証なし、確認方法なし）
+    ・列挙不可・サイズ取得不可・プリミティブ不可
+    ・メモリリーク防止に向くがGCは非決定的
+    ・size なし、get/set/has/delete のみ
+
+    ■ シグネチャ
+
+    const weakMap = new WeakMap()
+    const weakMap = new WeakMap(iterable)
+    const weakMap = new WeakMap<number, string>([[1, 'str1'], [2, 'str2'], [3, 'str3']]) // TypeScript
+
+    ■ メソッド
+
+    weakMap.set(key, value)                       // キーと値を設定。同じ key なら上書き。戻り値は map 自身(チェーン可)
+    weakMap.get(key)                              // キーに対応する値を取得。無ければ undefined
+    weakMap.size                                  // プロパティ。() 不要。エントリ数
+    weakMap.has(key)                              // キーが存在するか
+    weakMap.delete(key)                           // キーを削除。削除できたかどうかを boolean で返す
+    weakMap.clear()                               // 全エントリを削除。戻り値 undefined
+
+    ■ 使用例
+
+    const weakMap = new WeakMap()
+    const obj = { name: 'John' }
+    weakMap.set(obj, 'value')
+    console.log(weakMap.get(obj)) // 'value'
 
 - ENTRY:
-  EXPLAIN: Module import/export
+  EXPLAIN: Set
   BODY: |
-    import './'
-    import { ... } from './'
-    import { as } from './'
-    import * as from './'
-    export function/var/let
+    ■ シグネチャ
+
+    new Set()                                     // 空の Set
+    new Set(iterable)                             // イテラブルから生成。重複は1つにまとまる
+
+    ■ メソッド
+
+    set.add(value)                                // 値を追加。同じ値(===)は重複しない。戻り値は set 自身(チェーン可)
+    set.has(value)                                // 値が存在するか
+    set.delete(value)                             // 値を削除。削除できたかどうかを boolean で返す
+    set.clear()                                   // 全削除
+    set.size                                      // プロパティ。() 不要。要素数
+
+    set.keys()                                    // 値のイテレータ(Set では values と同じ)
+    set.values()                                  // 値のイテレータ
+    set.entries()                                 // [value, value] のイテレータ(Map 互換。key と value が同じ)
+    set.forEach(cb, thisArg?)                     // 各要素に cb(value, value, set) を実行。第2引数は値と同じ
+
+    ■ 反復の例
+
+    for (const v of set) { ... }                  // 要素を順に
+    for (const v of set.values()) { ... }         // 同上
+    for (const [k, v] of set.entries()) { ... }   // k と v は同じ値(Map 互換のため)
+
+    ■ 使用例(重複は追加されない)
+
+    const set = new Set()
+    set.add({ name: 'John' }).add({ name: 'Pete' })
+    set.add({ name: 'John' })                     // 別オブジェクトなので追加される(参照が違う)
+    const john = { name: 'John' }
+    set.add(john).add(john)                       // 同じ参照を2回 add しても要素は1つ
 
 - ENTRY:
-  EXPLAIN: Promise/then
-  OPTIONS:
-    COLS: 2
+  EXPLAIN: WeakSet
   BODY: |
-    ■ then
+    ■ 概要
 
-    function getProm(){
-      new *P((ok,no)=>{
-        return ok(1)/no(0);
-      });
+    ・要素はオブジェクトのみ。プリミティブは不可
+    ・オブジェクトへの参照が弱参照。他に参照が無くなればエントリは GC 対象(非決定的。保証なし)
+    ・列挙不可・size 不可・keys/values/entries/forEach なし。add / has / delete のみ
+    ・オブジェクトの「存在チェック用」やメモリリークを避けたいマーク用途に向く
+
+    ■ シグネチャ・メソッド
+
+    new WeakSet()                                 // 空の WeakSet
+    new WeakSet(iterable)                         // オブジェクトのイテラブルから生成
+    weakSet.add(obj)                              // オブジェクトを追加。戻り値は weakSet 自身
+    weakSet.has(obj)                              // オブジェクトが含まれるか
+    weakSet.delete(obj)                           // オブジェクトを削除。削除できたかどうかを boolean で返す
+
+# ----------------------------
+# 関数
+# ----------------------------
+- ENTRY:
+  CATEGORY: 関数, 演算子, 変数
+
+- ENTRY:
+  EXPLAIN: 関数
+  BODY: |
+    ■ シグネチャ
+
+    const fn = function(args) {                   // 通常の function。this/arguments を持つ
+      return args + 1
     }
-    prom = getProm();
-    prom.then(
-      (res)=>{f_ok(res)},
-      (err)=>{f_no(err)}
-    ).catch()
 
-    ■ Promise
+    const fn = function(...args) {                // 残余引数。args は配列
+      return args.reduce((acc, curr) => acc + curr, 0)
+    }
 
-    new Promise((y,n)=>{
-      y(1)/n(0)
-    }).then(
-      (res)=>{f_ok(res)},
-      (err)=>{f_no(err)}
-    ).catch()
+    const fn = (args) => { ... }                  // アロー関数。this/arguments を持たない
 
-    ■ Promise.all
+    ■ this/arguments(通常function)
 
-    Promise.all([
-      new *P((y,n)=>{ ... }),
-      new *P((y,n)=>{ ... }),
-    ]).then(
-      (res)=>{f_ok(res)},
-      (err)=>{f_no(err)}
+    ・this は呼び出し方で決まる
+      ・メソッドならレシーバ
+      ・call/apply の第1引数
+      ・new ならインスタンス
+      ・それ以外は strict で undefined
+
+    ・arguments は関数内で参照できる array-like（実引数の並び）
+
+      function logThisAndArgs() {                 // 通常 function
+        console.log(this)                         // 呼び出し方で変わる
+        console.log(arguments)                    // [ 1, 2, 3 ] のような並び（配列ではない）
+      }
+      logThisAndArgs.call({ name: 'obj' }, 1, 2, 3)
+
+      const arrow = () => {                       // アロー関数
+        console.log(this)                         // 外側の this を参照（レキシカル）
+        // console.log(arguments)                 // 参照不可。代わりに ...rest を使う
+      }
+      const arrowWithRest = (...args) => { console.log(args) }
+
+    ■ fn.length
+
+    ・宣言された仮引数の個数
+    ・残余引数(...rest)は含まない
+    ・最初のデフォルト引数より前までの個数(それ以降は数えない)
+
+      const f = (a, b, c = 1) => {}
+      f.length                                               // 2 (c はデフォルトのため含まない)
+      const g = (a, ...rest) => {}
+      g.length                                               // 1
+
+    ■ fn.caller
+
+    ・非標準・非推奨。この関数を呼び出した関数への参照
+    ・strict モードでは参照すると TypeError
+    ・代わりにスタックトレースやデバッガで呼び出し元を確認する
+
+    ■ fn.call
+
+    ・this と引数を指定して関数を実行
+    ・第1引数が this、第2引数以降が関数の実引数
+
+      function greet(prefix) { return prefix + this.name }
+      greet.call({ name: 'Alice' }, 'Hello, ')               // "Hello, Alice"
+
+      ※ name プロパティなど、this に直接アクセスできる場合は call は不要
+      function greet() { return this.name }
+      greet.call({ name: 'Alice' })                          // "Alice"
+
+    ■ fn.apply
+
+    ・this と引数配列で関数を実行
+    ・第1引数が this、第2引数が実引数の配列(または array-like)
+
+      const nums = [3, 1, 4]
+      Math.max.apply(null, nums)                              // 4
+
+      const greet = function(prefix) { return prefix + this.name }
+      greet.apply({ name: 'Bob' }, ['Hi, '])                  // "Hi, Bob"
+
+      ※ apply は call のラッパーで、配列を展開して渡すのが基本
+      Math.max(...nums)                                       // 4
+
+    ■ fn.bind(thisArg,arg1,...)
+
+    ・this と事前に渡した引数を束縛した新しい関数を返す
+    ・呼び出し時に追加の引数を渡せる。束縛済み + 追加が実引数になる
+
+      const sayHi = greet.bind({ name: 'Carol' }, 'Hey, ')
+      sayHi()                                                // "Hey, Carol"
+      const add = (a, b) => a + b
+      const add10 = add.bind(null, 10)                       // Curry関数的挙動
+      add10(3)                                               // 13
+
+    ■ fn.toString()
+
+    ・関数のソースコードを文字列で返す
+    ・ネイティブ関数は "[native code]" 等の実装依存の文字列
+    ・ES2019 以降は仕様が統一され、コメントや空白も含む場合がある
+
+      function add(a, b) { return a + b }
+      add.toString()                                         // "function add(a, b) { return a + b }"
+
+- ENTRY:
+  EXPLAIN: Generator 関数
+  BODY: |
+    ■ 概要
+
+    ・function* で定義。呼ぶと Generator オブジェクト(イテレータ)を返す。実行は next() で再開
+    ・yield で値を返しつつ一時停止。next(value) で yield 式に値を渡せる
+    ・for...of や ...gen で消費可能。Symbol.iterator を実装したイテレータ
+
+    ■ シグネチャ
+
+    function* name() { ... }                      // 宣言。呼ぶと Generator オブジェクトを返す(関数本体はまだ実行されない)
+    function* () { yield expr }                   // yield で値を返して一時停止。次に next() で再開
+    yield* iterable                                // 別のイテラブルを委譲。その要素を順に yield
+
+    ■ Generator のメソッド
+
+    gen.next(value?)                              // 次へ進む。戻り値は { value, done }。value は yield の右辺または return の値。done は終了したか
+    gen.return(value?)                            // ジェネレータを終了させる。finally があれば実行される
+    gen.throw(error)                               // ジェネレータ内で例外を投げる。catch されれば次から再開可能
+
+    ■ 例
+
+    function* seq() {
+      yield 1
+      yield 2
+      yield 3
+    }
+
+    const g = seq()
+    g.next()                                      // { value: 1, done: false }
+    g.next()                                      // { value: 2, done: false }
+    g.next()                                      // { value: 3, done: false }
+    g.next()                                      // { value: undefined, done: true }
+
+    [...seq()]                                    // [1, 2, 3]
+
+# ----------------------------
+# 非同期
+# ----------------------------
+- ENTRY:
+  CATEGORY: 非同期
+
+- ENTRY:
+  EXPLAIN: Promise
+  BODY: |
+    ■ Promise ~ then
+
+    const promise = new Promise((resolve, reject)=>{
+      const ok = true
+      if (ok) resolve(someData)
+      else reject(new Error('errorMessage'))
+    })
+
+    promise.then(
+      (res)=>{ return res.data }
+    ).catch(
+      (err)=>{ return err } // 'errorMessage' がここに入る
     )
 
-    ■ Promise.race
+    ■ fetch API
 
-    Promise.race([
-      new *P((y,n)=>{ ... }),
-      new *P((y,n)=>{ ... }),
-    ]).then(
-      (res)=>{f_ok(res)},
-      (err)=>{f_no(err)}
-    )
+      fetch(url).then(r => r.json())
+
+    ■ Promise()
+
+      new Promise(resolve => setTimeout(resolve, ms))
+
+    ■ async ~ await
+
+      async function getData() { return await fetch(url) }
+
+    ■ fs.promises API (Nodejs)
+
+      fs.promises.readFile(path, 'utf-8')
+
+    ■ 動的 import 
+
+      import('./module')
 
 - ENTRY:
   EXPLAIN: Async/Await
   BODY: |
-    ■ async/await 基本形
+    ■ async/await 基本形【ES2017】
+
+    ・catch / finally 内でも await は使用可能
 
     async function func(a){
       try{
-        val= await getProm();
-        val= await getProm();
-      } catch(e){ ... }
+        const val = await getProm();
+        return val
+      } catch(e){
+        const fallback = await getFallback();
+        return fallback
+      } finally{
+        await cleanup();
+      }
     }
 
-    ■ for await...of
+    ・上の関数を呼ぶ例 (Promise として扱う)
+
+    func()
+      .then(res => console.log(res))
+      .catch(err => console.error(err))
+
+    ・async 内で await して呼ぶ例
+
+    (async () => {
+      const res = await func();
+      console.log(res)
+    })()
+
+- ENTRY:
+  EXPLAIN: for await...of
+  BODY: |
+    ■ for await...of【ES2018】 (async generator)
+
+    ・async function* で yield する非同期イテレータを返す
+    ・for await...of は非同期イテレータを消費、async function* がそれを返す
+    ・通常の async function は Promise を1つ返すだけ
+    ・待ちながら値を複数回返すには yield が必要
 
     async function* asyncRange(n) {
       for (let i = 0; i < n; i++) {
-        // 何らかの非同期処理を模擬
         await new Promise(r => setTimeout(r, 200));
         yield i;
       }
     }
 
+    // スクリプト直下で await は書けないため、ここでは IIFE で async を包む
     (async () => {
       for await (const v of asyncRange(5)) {
         console.log('got', v);
@@ -740,7 +1791,29 @@
       console.log('done');
     })();
 
+    ■ for await...of【ES2022】(Top-level await)
+
+    ・ES2022 のモジュールではトップレベルで await 可能
+    ・拡張子 .mjs や type="module" のときは以下でよい
+
+    async function* asyncRange(n) {
+      for (let i = 0; i < n; i++) {
+        await new Promise(r => setTimeout(r, 200));
+        yield i;
+      }
+    }
+
+    // IIFE 不要
+    for await (const v of asyncRange(5)) {
+      console.log('got', v);
+    }
+    console.log('done');
+
     ■ for await...of (Symbol.asyncIterator)
+
+    ・[Symbol.asyncIterator] 
+      ・async next() を返すオブジェクトも for await...of で扱える
+    ・トップレベルで使う場合は IIFE で包むか、モジュールで top-level await を使う
 
     const asyncIterable = {
       [Symbol.asyncIterator]() {
@@ -763,3 +1836,473 @@
       }
       console.log('finished');
     })();
+
+- ENTRY:
+  EXPLAIN: テスト用 delay 関数
+  BODY: |
+    ■ n 秒後に成功/失敗を返すテスト用 Promise
+
+    function delay<T>(
+      ms: number,              // 待ち時間(ミリ秒)
+      value: T | null = null,  // 成功時に resolve で返す値(省略時は null)
+      rejectError?: unknown    // 渡すと ms 経過後に reject(rejectError) (省略時は resolve)
+    ): Promise<T | null> {     // 成功時は value の型(reject 時 catch で受け取る)
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          if (rejectError !== null && rejectError !== undefined) {
+            console.log("in: rejected")
+            reject(rejectError)
+          }
+          else {
+            console.log("in: resolved")
+            resolve(value)
+          }
+        }, ms)
+      })
+    }
+
+    delay(500).then(() => console.log('0.5s later'))
+    delay(1000, { id: 1 }).then(data => console.log(data))
+    delay(500, null, new Error('fail')).catch(err => console.error(err))
+
+- ENTRY:
+  EXPLAIN: Promise.all【ES2015】
+  BODY: |
+    ■ 概要
+
+    ・全成功 -> 成功
+    ・複数の非同期を並列実行し、全て完了してから結果をまとめる
+    ・1つでも reject されると全体が reject
+    ・全員が fulfill したときだけ then の引数に配列が渡る
+
+    ■ シグネチャ
+
+    Promise.all([promise1, promise2, ...])
+      .then((result) => console.log("result:", result))
+      .catch(err => console.error(err))  // err: unknown
+
+    ■ テスト(失敗, 成功)
+
+    const promise1 = delay(100, '成功')
+    const promise2 = delay(50, null, new Error('error'))
+
+    [LOG]: 50,  "rejected" 
+    [ERR]: error
+    [LOG]: 100,  "resolved" 
+
+    ■ テスト(成功, 失敗)
+
+    const promise1 = delay(50, '成功')
+    const promise2 = delay(100, null, new Error('error'))
+
+    [LOG]: 50,  "resolved" 
+    [LOG]: 100,  "rejected" 
+    [ERR]: error
+
+    ■ テスト(成功, 成功)
+
+    const promise1 = delay(50, '成功')
+    const promise2 = delay(100, '成功')
+
+    [LOG]: 50,  "resolved" 
+    [LOG]: 100,  "resolved" 
+    [LOG]: "result:",  ["成功", "成功"]
+
+    ■ テスト(失敗, 失敗)
+
+    const promise1 = delay(50, null, new Error('error'))
+    const promise2 = delay(100, null, new Error('error'))
+
+    [LOG]: 50,  "rejected" 
+    [ERR]: error 
+    [LOG]: 100,  "rejected"
+
+- ENTRY:
+  EXPLAIN: Promise.race【ES2015】
+  BODY: |
+    ■ 概要
+
+    ・複数の Promise のうち、最初に settle(fulfill または reject) した結果がそのまま返る
+    ・残りはそのまま実行されるが、race の結果には影響しない
+    ・タイムアウト実装や「いずれか1つでよい」場合に使う
+
+    ■ シグネチャ
+
+    Promise.race([promise1, promise2, ... ])
+      .then((result) => console.log("result:", result))
+      .catch(err => console.error(err))  // err: unknown
+
+    ■ テスト(失敗, 成功)
+
+    const promise1 = delay(100, '成功')
+    const promise2 = delay(50, null, new Error('error'))
+
+    [LOG]: 50,  "rejected" 
+    [ERR]: error 
+    [LOG]: 100,  "resolved" 
+
+    ■ テスト(成功, 失敗)
+
+    const promise1 = delay(50, '成功')
+    const promise2 = delay(100, null, new Error('error'))
+
+    [LOG]: 50,  "resolved" 
+    [LOG]: "result:",  "成功" 
+    [LOG]: 100,  "rejected" 
+
+    ■ テスト(成功, 成功)
+
+    const promise1 = delay(50, '成功')
+    const promise2 = delay(100, '成功')
+
+    [LOG]: 50,  "resolved" 
+    [LOG]: "result:",  "成功" 
+    [LOG]: 100,  "resolved" 
+
+    ■ テスト(失敗, 失敗)
+
+    const promise1 = delay(50, null, new Error('error'))
+    const promise2 = delay(100, null, new Error('error'))
+
+    [LOG]: 50,  "rejected" 
+    [ERR]: error 
+    [LOG]: 100,  "rejected"
+
+- ENTRY:
+  EXPLAIN: Promise.allSettled【ES2020】
+  BODY: |
+    ■ 概要
+
+    ・全 Promise が settle(fulfill または reject) するまで待ち、結果の配列を返す
+    ・1つでも reject しても全体は reject せず、全結果取得
+    ・各要素は { status: 'fulfilled', value }
+       または { status: 'rejected', reason }
+
+    ■ シグネチャ
+
+    Promise.allSettled([ promise1, promise2, ... ])
+      .then((result) => console.log(result))
+
+      ※ then のみで完結し、catch は不要(全体が reject しないため)
+
+    ■ テスト(失敗, 成功)
+
+    const promise1 = delay(100, '成功')
+    const promise2 = delay(50, null, new Error('error'))
+
+    [LOG]: 50,  "rejected" 
+    [LOG]: 100,  "resolved" 
+    [LOG]: [{
+      "status": "fulfilled",
+      "value": "成功"
+    }, {
+      "status": "rejected",
+      "reason": {}
+    }] 
+
+    ■ テスト(成功, 失敗)
+
+    const promise1 = delay(50, '成功')
+    const promise2 = delay(100, null, new Error('error'))
+
+    [LOG]: 50,  "resolved" 
+    [LOG]: 100,  "rejected" 
+    [LOG]: [{
+      "status": "fulfilled",
+      "value": "成功"
+    }, {
+      "status": "rejected",
+      "reason": {}
+    }] 
+
+    ■ テスト(成功, 成功)
+
+    const promise1 = delay(50, '成功')
+    const promise2 = delay(100, '成功')
+
+    [LOG]: 50,  "resolved" 
+    [LOG]: 100,  "resolved" 
+    [LOG]: [{
+      "status": "fulfilled",
+      "value": "成功"
+    }, {
+      "status": "fulfilled",
+      "value": "成功"
+    }] 
+
+    ■ テスト(失敗, 失敗)
+
+    const promise1 = delay(50, null, new Error('error'))
+    const promise2 = delay(100, null, new Error('error'))
+
+    [LOG]: 50,  "rejected" 
+    [LOG]: 100,  "rejected" 
+    [LOG]: [{
+      "status": "rejected",
+      "reason": {}
+    }, {
+      "status": "rejected",
+      "reason": {}
+    }]
+
+- ENTRY:
+  EXPLAIN: Promise.any【ES2021】
+  BODY: |
+    ■ 概要
+
+    ・複数の Promise のうち、最初に fulfill した値がそのまま返る
+    ・race は「最初に settle」だが、any は「最初に fulfill」のみ採用
+    ・全て reject した場合は AggregateError(errors 配列付き) で reject
+
+    ■ シグネチャ
+
+    Promise.any([ promise1, promise2, ... ])
+      .then((result) => console.log("result:", result))
+      .catch(err => console.error(err.errors)) 
+
+    ※ 1つでも fulfill すれば then、全員 reject なら AggregateError
+    ※ 中身を見るには err.errors を参照
+
+    ■ テスト(失敗, 成功)
+
+    const promise1 = delay(100, '成功')
+    const promise2 = delay(50, null, new Error('error'))
+
+    [LOG]: 50,  "rejected" 
+    [LOG]: 100,  "resolved" 
+    [LOG]: "result:",  "成功" 
+
+    ■ テスト(成功, 失敗)
+
+    const promise1 = delay(50, '成功')
+    const promise2 = delay(100, null, new Error('error'))
+
+    [LOG]: 50,  "resolved" 
+    [LOG]: "result:",  "成功" 
+    [LOG]: 100,  "rejected" 
+
+    ■ テスト(成功, 成功)
+
+    const promise1 = delay(50, '成功')
+    const promise2 = delay(100, '成功')
+
+    [LOG]: 50,  "resolved" 
+    [LOG]: "result:",  "成功" 
+    [LOG]: 100,  "resolved" 
+
+    ■ テスト(失敗, 失敗)
+
+    const promise1 = delay(50, null, new Error('error'))
+    const promise2 = delay(100, null, new Error('error'))
+
+    [LOG]: 50,  "rejected" 
+    [LOG]: 100,  "rejected" 
+    [ERR]: [error, error]
+
+# ----------------------------
+# Module
+# ----------------------------
+- ENTRY:
+  CATEGORY: Module
+
+- ENTRY:
+  EXPLAIN: Module import
+  BODY: |
+    ■ import の種類【ES2015】
+
+    ・副作用のみ(モジュールを実行するだけ)
+
+    import './module.js'
+
+    ・名前付き import
+
+    import { foo, bar } from './module.js'
+
+    ・名前を変えて import (as)
+
+    import { foo as f, bar as b } from './module.js'
+
+    ・名前空間としてまとめて import (* as)
+
+    import * as M from './module.js'
+    M.foo; M.bar
+
+    ・デフォルト export を import
+
+    import Def from './module.js'
+
+    ・デフォルトと名前付きを同時に import
+
+    import Def, { foo, bar } from './module.js'
+    import Def, * as M from './module.js'
+
+    ・動的 import【ES2020】 (Promise を返す。条件付き・遅延読み込み向け)
+
+    const mod = await import('./module.js')
+    import('./module.js').then(mod => { ... })
+
+- ENTRY:
+  EXPLAIN: Module export
+  BODY: |
+    ■ export の種類【ES2015】
+
+    ・宣言と同時に export
+
+    export const a = 1
+    export let b = 2
+    export function fn(){}
+    export class C {}
+    export default function def(){}
+
+    ・既存の識別子をまとめて export
+
+    export { foo, bar }
+    export { foo as f, bar as b }
+
+    ・デフォルト export (1モジュール1つ)
+
+    export default expression
+    export default function name(){}
+    export default class Name {}
+
+    ・他モジュールを再 export (転送)
+
+    export { foo, bar } from './other.js'
+    export * from './other.js'
+    export { default } from './other.js'
+
+# ----------------------------
+# Class
+# ----------------------------
+- ENTRY:
+  CATEGORY: Class
+
+- ENTRY:
+  EXPLAIN: Class
+  BODY: |
+    ■ 概要【ES2015】
+
+    ・コンストラクタとプロトタイプをまとめた糖衣構文
+    ・new でインスタンス化。typeof は "function"
+    ・クラス本体は strict モードで実行される
+
+    ■ クラス宣言とクラス式
+
+    ・宣言 (ホイストされない。TDZ あり)
+    class Foo { }
+
+    ・名前付きクラス式 (クラス名は本体内でのみ参照可能)
+    const Bar = class Bar { }
+
+    ・匿名クラス式
+    const Baz = class { }
+
+    ■ constructor
+
+    ・new 時に1回だけ実行される初期化メソッド
+    ・省略時は空の constructor が暗黙に存在
+    ・return でオブジェクトを返すとそれがインスタンスになる(通常は return しない)
+
+    class Point {
+      constructor(x, y) {
+        this.x = x
+        this.y = y
+      }
+    }
+    const p = new Point(1, 2)
+
+    ■ インスタンスプロパティ・メソッド
+
+    ・constructor 内で this.xxx でプロパティを定義する従来のやり方
+    ・クラスフィールド【ES2022】で this なしでプロパティを宣言可能(public)
+
+    class C {
+      count = 0
+      constructor() {
+        this.name = 'C'
+      }
+      increment() {
+        this.count++
+      }
+    }
+
+    ■ static (静的メソッド・静的プロパティ)
+
+    ・インスタンスではなくクラス自身に属する
+    ・static メソッド内の this はクラスを指す。インスタンスからは呼べない
+
+    class Util {
+      static version = '1.0'
+      static create() {
+        return new Util()
+      }
+    }
+    Util.create()
+    Util.version
+
+    ■ get / set (アクセサ)
+
+    ・プロパティのように見えるが関数で制御できる
+    ・get のみで読み取り専用、set のみで書き込み専用も可能
+
+    class Rect {
+      constructor(w, h) {
+        this._w = w
+        this._h = h
+      }
+      get area() {
+        return this._w * this._h
+      }
+      set width(v) {
+        this._w = v
+      }
+    }
+
+    ■ extends と super【ES2015】
+
+    ・extends で継承。サブクラスの prototype はスーパークラスのインスタンス
+    ・constructor 内で super() を必ず先に1回呼ぶ(this の初期化のため)。super 前に this 参照は不可
+    ・メソッド内で super.メソッド名() でスーパークラスのメソッドを呼べる
+
+    class Animal {
+      constructor(name) {
+        this.name = name
+      }
+      speak() {
+        return this.name
+      }
+    }
+    class Dog extends Animal {
+      constructor(name, breed) {
+        super(name)
+        this.breed = breed
+      }
+      speak() {
+        return super.speak() + ' barks'
+      }
+    }
+
+    ■ プライベートフィールド【ES2022】
+
+    ・# で始まる識別子はクラス内部からのみ参照可能
+    ・# フィールドは constructor の外で宣言。this.#name で参照
+
+    class Person {
+      #name
+      constructor(name) {
+        this.#name = name
+      }
+      get name() {
+        return this.#name
+      }
+    }
+    const u = new Person('Alice')
+    u.name
+    u.#name
+
+    ※ 最後の u.#name は SyntaxError(クラス外からはアクセス不可)
+
+    ■ 注意点
+
+    ・クラスは関数なので call/apply で this を変えて呼ぶと型が崩れる。通常は new 専用
+    ・メソッドはプロトタイプに載る。アロー関数は使えない(インスタンスの this を束縛したい場合は constructor で this.fn = () => {} とする)
