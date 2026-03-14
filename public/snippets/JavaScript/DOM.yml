@@ -124,7 +124,7 @@
 # Node と関連インターフェース
 #-------------------------------
 - ENTRY:
-  CATEGORY: ParentNode
+  CATEGORY: 関連インターフェース
 
 - ENTRY:
   EXPLAIN: ParentNode
@@ -179,9 +179,6 @@
     parentNode.replaceChildren(li1, li2, li3)               // 子をすべて li1, li2, li3 だけにする
 
 - ENTRY:
-  CATEGORY: ChildNode
-
-- ENTRY:
   EXPLAIN: ChildNode
   BODY: |
     ■ 概要
@@ -210,9 +207,6 @@
     childNode.before(document.createElement('span'))  // 自身の直前に span を挿入
     childNode.after('テキストだけでも挿入できる')        // 自身の直後にテキストノードを挿入
     childNode.replaceWith(newEl)                      // 自身を newEl で置換
-
-- ENTRY:
-  CATEGORY: コレクション型
 
 - ENTRY:
   EXPLAIN: HTMLCollection
