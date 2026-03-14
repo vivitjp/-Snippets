@@ -183,13 +183,80 @@
     これで登録は完了です。
 
 #-------------------------------
-# AI
+# プルリクエスト
 #-------------------------------
 - ENTRY:
-  CATEGORY: AI
+  CATEGORY: プルリクエスト & レビュー
 
 - ENTRY:
-  EXPLAIN: Review AI
+  EXPLAIN: プルリクエスト
+  BODY: |
+    ■ 概要
+
+      ・ブランチの変更を別ブランチへ取り込んでもらうための提案
+      ・コード差分をレビューし、コメント、承認、修正、マージを行う場
+      ・一般的には feature ブランチから main や develop へ向けて作成
+
+    ■ 基本フロー
+
+      ・作業ブランチを push
+      ・base ブランチと compare ブランチを指定して Pull Request を作成
+      ・差分、説明、テスト内容を確認してもらう
+      ・レビュー指摘があれば追加 commit を push
+      ・承認後に merge
+
+    ■ 主要項目
+
+      ・base                                      # 取り込み先ブランチ
+      ・compare                                    # 変更元ブランチ
+      ・title                                      # 変更内容を短く表す見出し
+      ・description                                # 目的、変更点、確認観点、テスト結果を記載
+      ・reviewers                                  # レビュー担当者
+      ・assignees                                  # 対応担当者
+      ・labels                                     # 分類や状態管理用タグ
+
+    ■ merge 方法
+
+      ・Create a merge commit
+        ・マージコミットを作る
+        ・ブランチの履歴をそのまま残す
+
+      ・Squash and merge
+        ・複数 commit を 1 commit にまとめて取り込む
+        ・履歴を簡潔にしやすい
+
+      ・Rebase and merge
+        ・マージコミットを作らず、直線的な履歴にする
+        ・commit 単位は残る
+
+    ■ 関連操作
+
+      ・Draft PR
+        ・レビュー前の作業中 PR
+        ・まだ merge しない前提で共有するときに使う
+
+      ・Review
+        ・Comment / Approve / Request changes がある
+
+      ・Close
+        ・取り込まずに PR を閉じる
+
+      ・Merge
+        ・変更を base ブランチへ取り込む
+
+    ■ PR の作成と再作成
+
+      ・PRを作成する
+        ・ブランチを push すると、PR 作成の表示が発現
+
+      ・PRを「閉じて」、再度 push すると、反応しない
+        ・ブランチ名を変更して、push すると、再び反応する
+
+      ・PRを「閉じて削除して」から、再度 push しても反応しない
+        ・この場合は、マニュアルで PR を作成する必要がある
+
+- ENTRY:
+  EXPLAIN: AI Review
   BODY: |
     ■ GitHub Review AI
 
@@ -251,8 +318,7 @@
   CATEGORY: GitHub Actions
 
 - ENTRY:
-  EXPLAIN: |
-    ビルド&テスト(Node.js)
+  EXPLAIN: ビルド&テスト(Node.js)
   BODY: |
     ■ .github/workflows/node-ci.yml
 
@@ -277,12 +343,11 @@
         - name: Install dependencies    # 3. 依存関係のインストール
           run: npm install
 
-        - name: Run tests               # 4. テストの実行
+        - name: Run tests               # 4. テストの実行(package.json の test スクリプトを実行)
           run: npm test
 
 - ENTRY:
-  EXPLAIN: |
-    デプロイ(Node.js)
+  EXPLAIN: デプロイ(Node.js)
   BODY: |
     ■ 運用サーバーにデプロイ
 
@@ -324,8 +389,7 @@
             target: "/var/www/html/myapp"
 
 - ENTRY:
-  EXPLAIN: |
-    Docker: Image Build & Push
+  EXPLAIN: Docker - Image Build & Push
   BODY: |
     ■ Docker Image のビルドとDocker Hubへのプッシュ
 
@@ -365,8 +429,7 @@
             labels: ${{ steps.meta.outputs.labels }}
 
 - ENTRY:
-  EXPLAIN: |
-    Actions: GitHub Pagesへのデプロイ
+  EXPLAIN: Actions - GitHub Pagesへのデプロイ
   BODY: |
     ■ GitHub Pages への静的サイトデプロイ
 
@@ -418,8 +481,7 @@
             uses: actions/deploy-pages@v4
 
 - ENTRY:
-  EXPLAIN: |
-    ChromaticでStorybookのUIテスト
+  EXPLAIN: ChromaticでStorybookのUIテスト
   BODY: |
     ■ ChromaticでStorybookのUIテストを実行
     【.github/workflows/chromatic-ui-test.yml】
