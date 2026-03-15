@@ -1,14 +1,14 @@
-import styled from "@emotion/styled"
-import { getMergedKeys } from "./getKey"
-import { css } from "@emotion/react"
+import styled from "@emotion/styled";
+import { getMergedKeys } from "./getKey";
+import { css } from "@emotion/react";
 
 export type SyntaxHighlight = {
-  code: string
-  codeKeyTypes?: string[]
-  encodeRequired?: boolean
-  case_sensitive?: boolean
-  bgColor?: string
-}
+  code: string;
+  codeKeyTypes?: string[];
+  encodeRequired?: boolean;
+  case_sensitive?: boolean;
+  bgColor?: string;
+};
 
 export const syntaxHighlight = ({
   code,
@@ -17,37 +17,38 @@ export const syntaxHighlight = ({
   case_sensitive = true,
   bgColor = "#F9F9F9",
 }: SyntaxHighlight) => {
-  const escaped = encodeRequired ? escapeHtml(code) : code
-  const rebuilt: JSX.Element[] = []
-  const case_sense = case_sensitive ? "g" : "gi"
+  const escaped = encodeRequired ? escapeHtml(code) : code;
+  const rebuilt: JSX.Element[] = [];
+  const case_sense = case_sensitive ? "g" : "gi";
 
   //  const pattern = /(<\/?[^>]+>)|([^<]+)/g
 
-  const mergedCodeKeyTypes = getMergedKeys(codeKeyTypes)
+  const mergedCodeKeyTypes = getMergedKeys(codeKeyTypes);
 
   escaped.split("\n").forEach((line, idx) => {
-    let result = line
+    let result = line;
 
     if (mergedCodeKeyTypes) {
       Object.entries(mergedCodeKeyTypes).forEach(([color, keys]) => {
-        if (!keys.length) return
+        if (!keys.length) return;
 
         keys.forEach((key) => {
-          if (!key || ["eq", "lt", "gt", "style", "color"].includes(key)) {
-            return // skip <> 系の文字
-          }
-          const re = new RegExp(`\\b${key}\\b`, case_sense)
+          if (!key) return;
+          const escapedKey = key.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&");
+          // 属性名と被る語は「直後に =」のときはマッチさせない（既出の <span style="..."> を壊さない）
+          const attrLike = ["style", "class", "color", "id", "label"];
+          const suffix = attrLike.includes(key) ? "(?!\\s*=)" : "";
+          const re = new RegExp(`\\b${escapedKey}\\b${suffix}`, case_sense);
           result = result.replaceAll(
             re,
-            (match: string) =>
-              `<span style="color:${color}">${switcher(match)}</span>`
-          )
-        })
-      })
+            (match: string) => `<span style="color:${color}">${match}</span>`
+          );
+        });
+      });
     }
 
     if (result.trim()) {
-      const isSubTitle = result.indexOf("■") > -1
+      const isSubTitle = result.indexOf("■") > -1;
       rebuilt.push(
         <Pre
           key={idx}
@@ -57,60 +58,40 @@ export const syntaxHighlight = ({
           // fontWeight={isSubTitle ? "bold" : undefined}
           subTitle={isSubTitle ? true : false}
         />
-      )
+      );
     } else {
       rebuilt.push(
         <Pre key={idx} bgColor={bgColor}>
           &nbsp;
         </Pre>
-      )
+      );
     }
-  })
-  return rebuilt
-}
+  });
+  return rebuilt;
+};
 
-const switcher = (key: string) => {
-  switch (key) {
-    case "style":
-      return "\u0073tyle"
-    case "span":
-      return "\u0073pan"
-    case "class":
-      return "\u0063lass"
-    case "id":
-      return "\u0069d"
-    case "label":
-      return "\u006cabel"
-    default:
-      return key
-  }
-
-  //   U+0073
-  // &#x0073
-}
-
-const HTML_ESCAPE_REPLACE_RE = /[&<>'"]/g
+const HTML_ESCAPE_REPLACE_RE = /[&<>'"]/g;
 const HTML_REPLACEMENTS: { [key: string]: string } = {
   "&": "&amp;",
   "<": "&lt;",
   ">": "&gt;",
   '"': "&quot;",
   "'": "&#39;",
-}
+};
 function replaceUnsafeChar(ch: string): string {
-  return HTML_REPLACEMENTS[ch]
+  return HTML_REPLACEMENTS[ch];
 }
 
 function escapeHtml(str: string): string {
-  return str.replace(HTML_ESCAPE_REPLACE_RE, replaceUnsafeChar)
+  return str.replace(HTML_ESCAPE_REPLACE_RE, replaceUnsafeChar);
 }
 
 type Options = {
-  bgColor?: string
-  fontSize?: string
-  fontWeight?: string
-  subTitle?: boolean
-}
+  bgColor?: string;
+  fontSize?: string;
+  fontWeight?: string;
+  subTitle?: boolean;
+};
 const Pre = styled.pre<Options>`
   ${(props) => css`
     background-color: ${props.bgColor ?? "#F9F9F9"};
@@ -122,4 +103,4 @@ const Pre = styled.pre<Options>`
     margin-bottom: ${props.subTitle ? "0.2em" : undefined};
     width: ${props.subTitle ? "calc(100% + 1.4em)" : undefined};
   `}
-`
+`;

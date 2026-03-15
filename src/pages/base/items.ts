@@ -341,7 +341,7 @@ export const menuItems: menuByCategories[] = [
     category: "JavaScript",
     items: [
       {
-        name: "Objects List",
+        name: "Objects(List)",
         fileName: "JavaScript/JSObjects",
         codeKeyTypes: [codeKeys.JS],
       },
@@ -358,7 +358,7 @@ export const menuItems: menuByCategories[] = [
       {
         name: "DOM",
         fileName: "JavaScript/DOM",
-        codeKeyTypes: [codeKeys.DOM],
+        codeKeyTypes: [codeKeys.JSDOM],
       },
       {
         name: "正規表現",
