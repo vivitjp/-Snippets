@@ -6,7 +6,7 @@ export const DivTitleWrapper = styled.div`
   justify-content: space-between;
   align-items: flex-start;
   width: 100%;
-`
+`;
 
 export const SummaryWrapper = styled.summary`
   display: flex;
@@ -15,7 +15,7 @@ export const SummaryWrapper = styled.summary`
   align-items: flex-start;
   width: 100%;
   cursor: pointer;
-`
+`;
 
 // export const CategoryWrapper = styled.h3`
 //   width: 100%;
@@ -33,30 +33,30 @@ export const CategoryWrapper = styled.div`
   margin-top: 10px;
   margin-bottom: -10px;
   color: #333;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 500;
   line-height: 2rem;
   border-bottom: 1px solid #999;
-`
+`;
 
 export const DivTitle = styled.div`
-  font-size: 18px;
+  font-size: 16px;
   color: Firebrick;
   border-left: 5px solid Firebrick;
   border-bottom: 1px solid Firebrick;
   line-height: 1.8rem;
   padding-left: 10px;
-  width : 100%;
-  `
+  width: 100%;
+`;
 
 export const FoldTitle = styled.div`
   font-size: 12px;
   color: #777;
   line-height: 2rem;
-`
+`;
 
 export const DivPrefix = styled.div`
   font-size: 12px;
   margin-right: 10px;
   color: #777;
-`
+`;

@@ -1,62 +1,64 @@
-import { zooMenu } from "../../store/menuStore"
-import { useState, useEffect, useRef } from "react"
-import { Button } from "../../common/styleInput"
-import { useOCButton } from "../../store/storeOC"
-import styled from "@emotion/styled"
-import { Circles } from "react-loader-spinner"
-import { SpinnerWrapper } from "../../library/hooks/components/SpinnerWrapper"
+import { zooMenu } from "../../store/menuStore";
+import { useState, useEffect, useRef } from "react";
+import { Button } from "../../common/styleInput";
+import { useOCButton } from "../../store/storeOC";
+import styled from "@emotion/styled";
+import { Circles } from "react-loader-spinner";
+import { SpinnerWrapper } from "../../library/hooks/components/SpinnerWrapper";
 
 type Props = {
-  Snippets: () => JSX.Element
-  isPending: boolean
-  isInitialOpened?: boolean
-}
+  Snippets: () => JSX.Element;
+  isPending: boolean;
+  isInitialOpened?: boolean;
+};
 
 export const PageBody = ({ Snippets, isPending, isInitialOpened }: Props) => {
-  const [initState, setInitState] = useState(isInitialOpened)
-  const refButton = useRef<HTMLButtonElement>(null)
-  const selectedMenu = zooMenu((state) => state.selectedMenu)
-  const titles = selectedMenu?.name
+  const [initState, setInitState] = useState(isInitialOpened);
+  const refButton = useRef<HTMLButtonElement>(null);
+  const selectedMenu = zooMenu((state) => state.selectedMenu);
+  const titles = selectedMenu?.name;
 
-  const [elements, setElements] = useState<NodeListOf<Element> | undefined>()
+  const [elements, setElements] = useState<NodeListOf<Element> | undefined>();
 
-  const isOpened = useOCButton((state) => state.isOpened)
-  const toggleClose = useOCButton((state) => state.toggleClose)
-  const toggleOpenClose = useOCButton((state) => state.toggleOpenClose)
+  const isOpened = useOCButton((state) => state.isOpened);
+  const toggleClose = useOCButton((state) => state.toggleClose);
+  const toggleOpenClose = useOCButton((state) => state.toggleOpenClose);
 
   const setAttribute = () => {
-    if (!elements?.length) return
+    if (!elements?.length) return;
     //console.log("setAttribute", isOpened)
     elements.forEach((el) => {
-      isOpened ? el.removeAttribute("open") : el.setAttribute("open", "")
-    })
-    toggleOpenClose()
-  }
+      return isOpened
+        ? (el.removeAttribute("open") as unknown as void)
+        : (el.setAttribute("open", "") as unknown as void);
+    });
+    toggleOpenClose();
+  };
 
   useEffect(() => {
-    if (isPending) return
+    if (isPending) return;
     //console.log("detailClass", isOpened)
-    const els = document.querySelectorAll(".detailClass")
-    setElements(els)
-    toggleClose()
-  }, [isPending, toggleClose])
+    const els = document.querySelectorAll(".detailClass");
+    setElements(els);
+    toggleClose();
+  }, [isPending, toggleClose]);
 
   useEffect(() => {
     //console.log("isInitialOpened", elements?.length, initState)
-    if (!elements?.length || !initState) return
+    if (!elements?.length || !initState) return;
 
     //console.log("isInitialOpened", isInitialOpened)
     elements.forEach((el) => {
-      el.setAttribute("open", "")
-    })
-    setInitState(false)
-  }, [elements, initState])
+      el.setAttribute("open", "");
+    });
+    setInitState(false);
+  }, [elements, initState]);
 
   const handleOpenClose = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation()
-    e.preventDefault()
-    setAttribute()
-  }
+    e.stopPropagation();
+    e.preventDefault();
+    setAttribute();
+  };
 
   return (
     <BodySection data-testid="layout-section">
@@ -69,22 +71,27 @@ export const PageBody = ({ Snippets, isPending, isInitialOpened }: Props) => {
       <BodySection>
         {isPending ? (
           <SpinnerWrapper>
-            <Circles height="120" width="120" color="FireBrick" ariaLabel="loading-indicator" />
+            <Circles
+              height="120"
+              width="120"
+              color="FireBrick"
+              ariaLabel="loading-indicator"
+            />
           </SpinnerWrapper>
         ) : (
           <Snippets />
         )}
       </BodySection>
     </BodySection>
-  )
-}
+  );
+};
 
 const BodySection = styled.section`
   display: flex;
   flex-direction: column;
   gap: 10px;
   width: 100%;
-`
+`;
 const BodyTitleWrapper = styled.div`
   display: flex;
   justify-content: space-between;
@@ -92,10 +99,10 @@ const BodyTitleWrapper = styled.div`
   height: 50px;
   border-bottom: 1px solid var(--main-color);
   padding: 0 1rem;
-`
+`;
 
 const BodyTitle = styled.div`
-  font-size: 2rem;
+  font-size: 1.6rem;
   font-weight: 300;
   color: var(--main-color);
-`
+`;

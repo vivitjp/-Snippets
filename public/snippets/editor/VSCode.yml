@@ -31,6 +31,7 @@
     ・editor.wordWrap: "off"                                折り返し off/on/wordWrapColumn/bounded
     ・editor.minimap.enabled: true                          ミニマップを表示するか
     ・editor.bracketPairColorization.enabled: true          対応する括弧を色分けするか
+    ・editor.rulers: [50],                                  ルーラー文字列目
 
     ■ 補完・編集
 
@@ -51,11 +52,29 @@
 
     ■ 言語別の例(JSON キー)
 
-    ・editor.tabSize: 2                                     タブ幅
-    ・editor.formatOnSave: true                             保存時フォーマット
-    ・editor.defaultFormatter: "esbenp.prettier-vscode"     デフォルトフォーマッタ
+    ・editor.tabSize: 2                                               タブ幅
+    ・editor.formatOnSave: true                                       保存時フォーマット
+    ・editor.defaultFormatter: "esbenp.prettier-vscode"               デフォルトフォーマッタ
     ・[typescript].editor.defaultFormatter: "esbenp.prettier-vscode"  TS 用フォーマッタ
     ・[javascript].editor.defaultFormatter: "esbenp.prettier-vscode"  JS 用フォーマッタ
+
+    ■ AI
+
+    ・github.copilot.enable: {}                            Copilot の有効化。言語別に true/false を指定可能
+    ・github.copilot.editor.enableAutoCompletions: true    インライン補完の表示有無
+    ・editor.inlineSuggest.enabled: true                   エディタのインラインサジェスト(Copilot 等)の表示
+    ・editor.inlineSuggest.showToolbar: "onHover"          onHover/always/off。インライン候補のツールバー表示
+    ・github.copilot.chat.enableCodeActions: true          Chat からコードアクションを実行するか
+
+    ・テレメトリ: コードを AI サーバに保存・学習させない
+
+    ・telemetry.telemetryLevel: "off"                      VSCode と Copilot のテレメトリ送信を止める
+
+    ・Copilot: GitHub の設定 (github.com/settings/copilot) 
+       ※ 「Allow GitHub to use my data for AI model training」をオフにするとコードが学習に使われない
+
+    ・Cursor: Settings > General > Privacy Mode を有効
+       ※ コードが学習に使われず保持もされない(Business はデフォルトで有効)
 
 - ENTRY:
   EXPLAIN: 拡張機能
