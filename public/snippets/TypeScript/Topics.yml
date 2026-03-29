@@ -1,12 +1,5 @@
 ---
 #-------------------------------
-# TypeScript
-#-------------------------------
-
-- ENTRY:
-  CATEGORY: Tips
-
-#-------------------------------
 # ENUM
 #-------------------------------
 - ENTRY:
@@ -26,8 +19,7 @@
 # ENUM
 #-------------------------------
 - ENTRY:
-  EXPLAIN: |
-    makeEnum: const配列からenum(Object)作成
+  EXPLAIN: makeEnum - const配列からenum(Object)作成
   BODY: |
     function makeEnum<T extends readonly string[]>(配列: T) {
         return 配列.filter(Boolean).reduce(

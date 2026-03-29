@@ -1,0 +1,613 @@
+---
+#-------------------------------
+# 原則
+#-------------------------------
+- ENTRY:
+  CATEGORY: 開発原則
+
+- ENTRY:
+  EXPLAIN: KISS
+  BODY: |
+    ■ Keep It Simple Stupid
+
+    ・シンプルなコードが最良のコード
+    ・複雑なコードは理解やメンテナンスが難しい
+    ・コードは必要最小限の機能を持つべき
+    ・コードは読みやすく、理解しやすいべき
+    ・コードはテストしやすいべき
+    ・コードはデバッグしやすいべき
+    ・コードは拡張しやすいべき
+    ・コードは保守しやすいべき
+
+    ■ 悪例
+    ・1つの関数に責務を詰め込む
+    ・条件分岐が増えて追跡しづらい
+    ・変更時に影響範囲が広がりテストしづらい
+
+      function handleSubmit(input) {
+        // validation
+        if (!input) return
+        // auth
+        if (!user) return
+        // fetch
+        const data = fetchSomething()
+        // render
+        return render(data)
+      }
+
+    ■ 良例
+    ・責務ごとに関数へ分割する
+    ・分割した単位でテストしやすくする
+    ・変更時の影響範囲を小さくする
+
+      function validate(input) {
+        // ...
+      }
+      function authorize(user) {
+        // ...
+      }
+      function fetchData() {
+        return fetchSomething()
+      }
+      function buildView(data) {
+        return render(data)
+      }
+      function handleSubmit(input) {
+        validate(input)
+        authorize(user)
+        const data = fetchData()
+        return buildView(data)
+      }
+
+- ENTRY:
+  EXPLAIN: YAGNI
+  BODY: |
+    ■ 用途
+
+    ・必要になるまで実装しない
+    ・将来の仮説だけでコードを増やさない
+
+    ■ 悪例
+
+    ・まだ使われない機能を先に作り込む
+    ・要件が未確定なのに抽象化だけ先行させる
+
+      function buildFutureFeature() {
+        throw new Error('未使用の実装')
+      }
+
+    ■ 良例
+
+    ・最小の仕様だけ実装して検証する
+    ・実際に必要になった時点で拡張する
+
+      function handleRequest(req) {
+        return doCurrentWork(req)
+      }
+
+- ENTRY:
+  EXPLAIN: DRY
+  BODY: |
+    ■ 用途
+
+    ・重複を減らして変更コストを下げる
+    ・同じロジックを1か所に集約して不整合を防ぐ
+
+    ■ 悪例
+
+    ・同じバリデーションや変換処理を複数箇所にコピペする
+    ・片方だけ更新されて挙動がズレる
+
+      function validateInputA(input) {
+        if (!input) return false
+        if (input.length < 3) return false
+        return true
+      }
+      function validateInputB(input) {
+        if (!input) return false
+        if (input.length < 3) return false
+        return true
+      }
+
+    ■ 良例
+
+    ・共通処理を関数やユーティリティにまとめる
+    ・更新は1か所に限定する
+
+      function validateInput(input) {
+        if (!input) return false
+        if (input.length < 3) return false
+        return true
+      }
+      function validateInputA(input) {
+        return validateInput(input)
+      }
+      function validateInputB(input) {
+        return validateInput(input)
+      }
+
+- ENTRY:
+  EXPLAIN: PIE
+  BODY: |
+    ■ 用途
+
+    ・実装ではなくインターフェースに依存する
+    ・具体クラスの差し替えを容易にして拡張に強くする
+    ・TypeScript では interface / type を「契約」として扱い、呼び出し側は契約だけに依存する
+    ・具体実装に直接依存しない形にすると、モック差し替えや実装の追加が容易になる
+
+    ■ TypeScript に応用する要点
+
+    ・呼び出し側で `new` して具体クラスを作らない
+    ・依存は関数引数や DI コンテナを通して注入する
+    ・構造的型付けなので「形が合っている」だけで安全と決め打ちしない。必要な制約や戻り型を契約側に明確化する
+    ・エラーや例外の扱いも契約側に寄せると差し替え時の挙動ズレが減る
+
+    ■ 悪例
+
+    ・具体クラスに直接依存する
+    ・別実装へ差し替えるたびに呼び出し側を修正する羽目になる
+
+      class PaymentProcessor {
+        charge(amount: number): string {
+          return doStripeCharge(amount)
+        }
+      }
+
+      function checkout(amount: number): string {
+        const processor = new PaymentProcessor()
+        return processor.charge(amount)
+      }
+
+    ■ 良例
+
+    ・インターフェース(型)で依存を切る
+    ・実装差し替えは注入側だけで完結する
+
+      interface PaymentProcessor {
+        charge(amount: number): string
+      }
+
+      class StripePaymentProcessor implements PaymentProcessor {
+        charge(amount: number) {
+          return doStripeCharge(amount)
+        }
+      }
+
+      function checkout(amount: number, processor: PaymentProcessor): string {
+        return processor.charge(amount)
+      }
+
+- ENTRY:
+  EXPLAIN: SOLID
+  BODY: |
+    ■ 概要
+
+    ・オブジェクト指向プログラミングにおけるガイドライン
+    ・以下5つの原則の頭文字を取ってSOLIDの原則と呼ばれる
+
+      SRP 単一責任の原則
+      OCP オープン・クローズドの原則
+      LSP リスコフの置換原則
+      ISP インターフェース分離の原則
+      DIP 依存性逆転の法則
+
+- ENTRY:
+  EXPLAIN: SOLID - SRP
+  BODY: |
+    ■ SRP: 単一責任の原則
+
+    ・クラスは単一の責任を持つべき
+    ・継承関係以外の依存関係は避ける
+
+    ■ 悪例
+
+    ・永続化、通知、ログ出力が同じクラスに混在
+    ・要件変更時に影響範囲が広がりやすい
+
+      class UserOnboardingService {
+        constructor(private repo: UserRepo, private mail: MailClient) {}
+
+        async onboard(user: User) {
+          // 永続化
+          await this.repo.save(user)
+          // 通知
+          await this.mail.sendWelcome(user.email)
+          // ログ
+          console.log("onboarded", user.id)
+        }
+      }
+
+    ■ 良例
+
+    ・責務ごとにクラスを分け、変更単位を小さくする
+    ・責務ごとにテスト観点を分離できる
+
+      class UserRepository {
+        async save(user: User) {
+          return doSave(user)
+        }
+      }
+
+      class WelcomeMailSender {
+        async sendWelcome(email: string) {
+          return doSendWelcome(email)
+        }
+      }
+
+      class Logger {
+        log(message: string) {
+          console.log(message)
+        }
+      }
+
+      class UserOnboardingUseCase {
+        constructor(
+          private repo: UserRepository,
+          private sender: WelcomeMailSender,
+          private logger: Logger
+        ) {}
+
+        async onboard(user: User) {
+          await this.repo.save(user)
+          await this.sender.sendWelcome(user.email)
+          this.logger.log(`onboarded ${user.id}`)
+        }
+      }
+
+- ENTRY:
+  EXPLAIN: SOLID - OCP
+  BODY: |
+    ■ OCP: オープン・クローズドの原則
+
+    ・変更ではなく、拡張追加
+    ・新機能の追加は既存のコードを変更せずに行えるようにする
+
+    ■ 悪例
+
+    ・既存の `if/else` や `switch` を増やし続け、変更がリスクになる
+    ・新機能追加のたびに既存ファイルを編集して回帰が起きやすい
+
+      type PaymentMethod = "card" | "cash"
+
+      function pay(method: PaymentMethod, amount: number): string {
+        if (method === "card") {
+          return doCardPay(amount)
+        }
+        if (method === "cash") {
+          return doCashPay(amount)
+        }
+        throw new Error("unknown method")
+      }
+
+    ■ 良例
+
+    ・支払い方式を契約(インターフェース)として分離し、追加は実装追加だけにする
+    ・既存の呼び出し側は契約に依存したまま変更しない
+
+      interface PaymentMethod {
+        pay(amount: number): string
+      }
+
+      class CardPayment implements PaymentMethod {
+        pay(amount: number) {
+          return doCardPay(amount)
+        }
+      }
+
+      class CashPayment implements PaymentMethod {
+        pay(amount: number) {
+          return doCashPay(amount)
+        }
+      }
+
+      function pay(method: PaymentMethod, amount: number): string {
+        return method.pay(amount)
+      }
+
+      const card = new CardPayment()
+      pay(card, 1000)
+
+- ENTRY:
+  EXPLAIN: SOLID - LSP
+  BODY: |
+    ■ LSP: リスコフの置換原則
+
+    ■ 悪例
+
+    ・呼び出し側が想定する契約(事後条件)が、派生で満たされない
+    ・継承したつもりでも挙動が変わり差し替えで壊れる
+
+      interface WidthHeight {
+        setWidth(w: number): void
+        setHeight(h: number): void
+        area(): number
+      }
+
+      class Rectangle implements WidthHeight {
+        constructor(private w: number, private h: number) {}
+        setWidth(w: number) { this.w = w }
+        setHeight(h: number) { this.h = h }
+        area() { return this.w * this.h }
+      }
+
+      class Square implements WidthHeight {
+        private side = 0
+        setWidth(w: number) { this.side = w }
+        setHeight(h: number) { this.side = h }
+        area() { return this.side * this.side }
+      }
+
+      function resizeBoth(x: WidthHeight) {
+        x.setWidth(10)
+        x.setHeight(20)
+        return x.area()
+      }
+
+      // Rectangle は 10 * 20 になる想定
+      // Square は setHeight が side を上書きして期待とズレる
+
+    ■ 良例
+
+    ・期待する契約が異なる場合は、1つの契約に詰め込まず別契約へ分ける
+    ・派生の性質が違うなら継承ではなく、責務に合う型へ落とし込む
+
+      interface RectangleWH {
+        setWidth(w: number): void
+        setHeight(h: number): void
+        area(): number
+      }
+
+      class Rectangle2 implements RectangleWH {
+        constructor(private w: number, private h: number) {}
+        setWidth(w: number) { this.w = w }
+        setHeight(h: number) { this.h = h }
+        area() { return this.w * this.h }
+      }
+
+      interface SquareSide {
+        setSide(s: number): void
+        area(): number
+      }
+
+      class Square2 implements SquareSide {
+        constructor(private side: number) {}
+        setSide(s: number) { this.side = s }
+        area() { return this.side * this.side }
+      }
+
+      function resizeRectangle(x: RectangleWH) {
+        x.setWidth(10)
+        x.setHeight(20)
+        return x.area()
+      }
+
+      function resizeSquare(x: SquareSide, side: number) {
+        x.setSide(side)
+        return x.area()
+      }
+
+- ENTRY:
+  EXPLAIN: SOLID - ISP
+  BODY: |
+    ■ ISP: インターフェース分離の原則
+
+    ・クライアントが使用しないメソッドへの依存を強制すべきでない
+
+    ■ 悪例
+
+    ・1つの interface に全部の責務を詰め込み、使わないメソッドを実装させる
+    ・クライアント側の責務と interface の粒度が合わない
+
+      interface Printer {
+        print(doc: string): void
+        scan(filePath: string): void
+      }
+
+      class MultiFunctionDevice implements Printer {
+        print(doc: string) {
+          doPrint(doc)
+        }
+
+        scan(filePath: string) {
+          doScan(filePath)
+        }
+      }
+
+      class OldPrinter implements Printer {
+        print(doc: string) {
+          doPrint(doc)
+        }
+
+        scan(filePath: string) {
+          throw new Error("scan is not supported")
+        }
+      }
+
+      function printOnly(device: Printer) {
+        device.print("hello")
+      }
+
+    ■ 良例
+
+    ・クライアントが使う分だけ interface を分ける
+    ・実装側が不要な API を throw で隠さない
+
+      interface Printer {
+        print(doc: string): void
+      }
+
+      interface Scanner {
+        scan(filePath: string): void
+      }
+
+      class MultiFunctionDevice implements Printer, Scanner {
+        print(doc: string) {
+          doPrint(doc)
+        }
+
+        scan(filePath: string) {
+          doScan(filePath)
+        }
+      }
+
+      class OldPrinter implements Printer {
+        print(doc: string) {
+          doPrint(doc)
+        }
+      }
+
+      function printOnly(device: Printer) {
+        device.print("hello")
+      }
+
+- ENTRY:
+  EXPLAIN: SOLID - DIP
+  BODY: |
+    ■ DIP: 依存性逆転の法則
+
+    ・上位モジュールは下位モジュールに依存してはならない
+    ・それぞれ抽象に依存すべき
+
+    ■ 悪例
+
+    ・usecase が具体実装を new して依存する
+    ・低レイヤの変更が高レイヤに波及しやすい
+
+      class UserRepository {
+        async findById(id: string) {
+          return doFindById(id)
+        }
+      }
+
+      class UserService {
+        private repo = new UserRepository()
+
+        async getUserName(id: string): Promise<string> {
+          const user = await this.repo.findById(id)
+          return user.name
+        }
+      }
+
+    ■ 良例
+
+    ・usecase は interface(抽象)に依存し、実装は注入側で決める
+    ・実装差し替えが usecase に影響しにくい
+
+      interface UserRepository {
+        findById(id: string): Promise<{ name: string }>
+      }
+
+      class UserRepositoryImpl implements UserRepository {
+        async findById(id: string) {
+          return doFindById(id)
+        }
+      }
+
+      class UserService {
+        constructor(private repo: UserRepository) {}
+
+        async getUserName(id: string): Promise<string> {
+          const user = await this.repo.findById(id)
+          return user.name
+        }
+      }
+
+      const repo = new UserRepositoryImpl()
+      const service = new UserService(repo)
+      service.getUserName("u-1")
+
+- ENTRY:
+  EXPLAIN: 抽象性とDI
+  BODY: |
+    ■ 用途
+
+    ・抽象(インターフェース)で契約を表す
+    ・DI(依存性注入)で具体実装の選択を外に出す
+    ・モジュール間結合を弱めて差し替えやテストを容易にする
+
+    ■ 悪例
+
+    ・コンポーネント内部で具体実装を作って依存を固定する
+    ・差し替えやテストが難しくなる
+
+    import React, { useEffect, useState } from "react"
+
+    type User = { name: string }
+
+    interface UserRepository {
+      findById(id: string): Promise<User>
+    }
+
+    async function doFindById(id: string): Promise<User> {
+      return { name: "user-" + id }
+    }
+
+    export const UserNameBad = ({ id }: { id: string }) => {
+      const [name, setName] = useState<string | null>(null)
+
+      useEffect(() => {
+        const repo: UserRepository = {
+          findById: async (userId: string) => {
+            return doFindById(userId)
+          },
+        }
+
+        repo.findById(id).then((u) => setName(u.name))
+      }, [id])
+
+      return <div>{name ?? "Loading..."}</div>
+    }
+
+    ■ 良例
+
+    ・依存(リポジトリ)を props で注入し interface に依存する
+    ・実装差し替えがコンポーネント外で完結する
+
+    export const UserName = ({
+      id,
+      repo,
+    }: {
+      id: string
+      repo: UserRepository
+    }) => {
+      const [name, setName] = useState<string | null>(null)
+
+      useEffect(() => {
+        repo.findById(id).then((u) => setName(u.name))
+      }, [id, repo])
+
+      return <div>{name ?? "Loading..."}</div>
+    }
+
+    const realRepo: UserRepository = {
+      findById: doFindById,
+    }
+
+    const mockRepo: UserRepository = {
+      findById: async (userId: string) => ({ name: "mock-" + userId }),
+    }
+
+    export const Example = () => {
+      return <UserName id="u-1" repo={realRepo} />
+    }
+
+- ENTRY:
+  EXPLAIN: 関心の分離
+  BODY: |
+
+- ENTRY:
+  EXPLAIN:
+  BODY: |
+
+- ENTRY:
+  EXPLAIN:
+  BODY: |
+
+- ENTRY:
+  EXPLAIN:
+  BODY: |
+
+- ENTRY:
+  EXPLAIN:
+  BODY: |

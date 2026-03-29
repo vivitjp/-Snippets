@@ -4,7 +4,7 @@
 #-------------------------------
 
 - ENTRY:
-  EXPLAIN: 基礎、設定
+  EXPLAIN: init, ls, list, bin
   BODY: |
     ■ package.json生成
       npm init
@@ -23,7 +23,7 @@
       yarn [Global] bin
 
 - ENTRY:
-  EXPLAIN: インストール
+  EXPLAIN: install(add)
   BODY: |
     ■ package.json 記載パッケージ全インストール
       npm i                             // package.json の指示どおりに範囲インストール
@@ -38,6 +38,13 @@
         yarn install --check-files      // yarn.lock のバージョンを強制的にインストール
         yarn cache clean --force        // 事前にキャッシュクリア
 
+    ■ CI(lockfile を書き換えない)
+      yarn install --frozen-lockfile
+
+    ■ npm i と npm ci の違い(要約)
+      npm i                             // package.json の範囲に合わせて解決し lock を更新し得る
+      npm ci                            // lock に完全一致するよう node_modules を再構築(開発用の手軽さより再現性)
+
     ■ dependencies(--global/-g)
       npm i [-g] <PCKG>
       yarn [Global] add <PCKG>
@@ -47,7 +54,7 @@
       yarn add --dev <PCKG>
 
 - ENTRY:
-  EXPLAIN: アンインストール
+  EXPLAIN: un(remove)
   BODY: |
     ■ 指定
       npm un [-g] <PCKG>
@@ -58,7 +65,7 @@
       yarn remove <PCKG>
 
 - ENTRY:
-  EXPLAIN: アップデート
+  EXPLAIN: update
   BODY: |
     ■ 全体
       npm update [-g]
@@ -69,7 +76,7 @@
       yarn [Global] upgrade <PCKG>
 
 - ENTRY:
-  EXPLAIN: パッケージの情報
+  EXPLAIN: info, outdated
   BODY: |
     ■ パッケージの情報
       npm info [-g] <PCKG>
@@ -92,26 +99,26 @@
       yarn outdated <PCKG>
 
 - ENTRY:
-  EXPLAIN: キャッシュクリア
+  EXPLAIN: cache
   BODY: |
     ■ クリア
       npm cache verify
       *npm cache clean (<v5)
 
       yarn cache clean
-      yarn cache clean --force             強制クリア
-      yarn cache clean --all               local & global 共に
-      yarn cache clean --list              一覧
-      yarn cache clean --path <PATH>       指定パス
-      yarn cache clean --pattern <PATTERN> 指定パターン
-      yarn cache clean --json              json出力 
-      yarn cache clean --help              ヘルプ
+        --force                                   強制クリア
+        --all                                     local & global 共に
+        --list                                    一覧
+        --path <PATH>                             指定パス
+        --pattern <PATTERN>                       指定パターン
+        --json                                    json出力 
+        --help                                    ヘルプ
 
     ■ ディレクトリ
       yarn cache dir
 
 - ENTRY:
-  EXPLAIN: コンフィグ
+  EXPLAIN: config
   BODY: |
     ■ 表示
       npm config list
@@ -127,8 +134,12 @@
     ■ 属性名指定(json出力)
       npm config list --json
 
+    ■ 属性名指定(set)
+      npm config set {属性名} {値}
+      yarn config set {属性名} {値}
+
 - ENTRY:
-  EXPLAIN: スクリプト
+  EXPLAIN: run
   BODY: |
     ■ スクリプト一覧
       npm run
@@ -138,21 +149,43 @@
       npm run {script}
       yarn run {script}
 
+    ■ スクリプト実行(Yarn Classic の省略)
+      yarn {script}                     // yarn run {script} と同等
+
     ■ 環境変数
       npm run env
       yarn run env
 
 - ENTRY:
-  EXPLAIN: ローカルPCKG実行、脆弱性、ヘルプ
+  EXPLAIN: link, pack, why, dedupe, prune
+  BODY: |
+    ■ ローカルパッケージのリンク
+      npm link [<PCKG>]
+      yarn link [<PCKG>]
+
+    ■ tarball 生成
+      npm pack [<PCKG>]
+
+    ■ なぜその依存が入ったか(Yarn Classic)
+      yarn why <PCKG>
+
+    ■ 依存の整理
+      npm dedupe
+      npm prune
+
+- ENTRY:
+  EXPLAIN: npx, audit, help
   BODY: |
     ■ ローカルPCKG実行
       npx <PCKG>
+      npm exec <PCKG>                   // npm 7+ 系の公式相当
       yarn -s run <PCKG>
 
     ■ 脆弱性と解決
       npm audit
+      npm audit --production            // dependencies のみ
       npm audit fix
-      npm audit fix --force"
+      npm audit fix --force
 
     ■ ヘルプ
       npm -l

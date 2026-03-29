@@ -74,6 +74,38 @@
         case "B": return ...
         default: let _ng:never = props       // 警告
 
+    ■ 定義済み関数型
+
+    CallableFunction    Function 由来の呼び出し可能オブジェクト用
+
+      例:
+        declare const fn: CallableFunction
+        fn.call(undefined, 1, 2)
+
+    NewableFunction     new で呼べるコンストラクタ用
+
+      例:
+        declare const Ctor: NewableFunction
+        new Ctor()
+
+    VoidFunction        引数なしで void を返す関数型（() => void に近い）
+
+      例:
+        const onDone: VoidFunction = () => {}
+        setTimeout(() => {}, 0)
+
+    ※ 実務では () => void や (...args: never[]) => void を書くことも多い
+
+    ■ DOM/JS ランタイム(lib に含まれる型)
+
+    Promise<T>          async/await の戻りや then/catch/finally を持つ標準の Promise
+    PromiseLike<T>      then だけ持てば Promise 互換として扱える最小形
+    ArrayLike<T>        length と数値インデックスで要素にアクセスできる(配列に似た集合)
+    Iterable<T>         Symbol.iterator を持ち for...of で列挙できる
+    Iterator<T>         next() で1要素ずつ進めるイテレータ(IteratorResult を返す)
+
+    ※ DOM を有効にしている場合は HTMLElement, Document など大量にある
+
 - ENTRY:
   EXPLAIN: Union & Intersection
   BODY: |

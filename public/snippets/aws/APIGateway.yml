@@ -3,10 +3,142 @@
 # AWS
 #-------------------------------
 - ENTRY:
-  CATEGORY: APIGateway
+  EXPLAIN: 概要
+  BODY: |
+    ■ API Gateway
+
+    ・クライアントとバックエンド(Lambda、VPC 内 HTTP、他 AWS 等)の間に置くマネージド API の入口
+    ・HTTP(S) のルーティング・認可・スロットリング等を AWS 側でまとめて扱う
+    ・主に REST API と HTTP API(API Gateway v2) の 2 系統がある
+
+    ■ REST API と HTTP API
+
+    ・HTTP API (v2):
+
+      ・ドキュメント上の「HTTP API」がこれ。比較的新しい系統
+      ・料金・レイテンシを抑えやすい設計が売り
+      ・Lambda や HTTP プロキシ統合、JWT 認証などに寄せたシンプルな機能セット
+      ・API キー、Gateway キャッシュ、モデルによるリクエストバリデーションは無い
+
+    ・REST API (v1):
+
+      ・従来型で機能が多い
+      ・API キー・利用プラン・クォータの組み合わせが使える
+      ・モデルでリクエスト・レスポンスを検証できる
+      ・エッジ最適化キャッシュ(API Gateway キャッシュ)を使える
+      ・新規でシンプルな API なら HTTP API を検討し
+      ・API キーやキャッシュ等が要るなら REST API、という選び方が多い
 
 - ENTRY:
-  EXPLAIN: |
-    xxxxxx
+  EXPLAIN: 機能
   BODY: |
-    ■ xxxxx
+    ■ ルーティング
+
+    ・REST API はリソースの木構造に HTTP メソッドをぶら下げる
+    ・HTTP API はルート一覧でメソッド・パスと統合を定義
+    ・統合先の例:
+
+      ・Lambda: プロキシ統合や非プロキシ統合でペイロードの渡し方を選べる
+      ・HTTP / VPC リンク: オリジン URL や NLB/ALB 経由のプライベート HTTP
+      ・Mock: バックエンド無しで固定レスポンス
+      ・AWS サービス: 一部サービスを REST API から直接呼ぶ統合
+
+    ・ステージごとにデプロイ
+    ・カスタムドメインでエンドポイントをまとめられる
+    ・パスパラメータやクエリをマッピングして Lambda や HTTP に渡す設定が可能(種類により表現が異なる)
+
+    ■ 認証・認可
+
+    ・クライアント認証の例:
+
+      ・IAM: SigV4。主にプログラム間や AWS 内からの呼び出し向け
+      ・Cognito User Pools: トークン検証。REST では Cognito オーソライザがよく使われる
+      ・Lambda オーソライザ: 任意ロジックで許可・拒否。トークン型とリクエスト全体型がある
+      ・JWT: HTTP API でビルトインの JWT オーソライザを使えることが多い
+
+    ・REST API ではリソースポリシーで「どのプリンシパルからこの API を叩けるか」を追加で縛れる場合がある
+    ・認証は「誰か」を確認し、認可はメソッドやルート単位の IAM ポリシー等で「何を許すか」を決めるイメージ
+
+    ■ 利用制御
+
+    ・スロットリング:
+
+      ・バースト上限と安定レートで急な流量を抑える
+      ・アカウント全体・ステージ・メソッド・利用プラン(REST)など階層がある
+
+    ・REST API の利用プラン:
+
+      ・API キーをクライアントに配り、プランに紐付けてレートやクォータを適用
+      ・クォータは期間あたりのリクエスト上限のイメージ
+
+    ・HTTP API は API キーが無く、利用プランの組み方は REST と異なる。必要なら設計を分けて検討
+
+    ■ 観測
+
+    ・アクセスログ:
+
+      ・リクエスト ID、ステータス、レイテンシ、統合エラー等を CloudWatch Logs に出せる
+      ・ログ形式やフィールドは設定次第
+
+    ・実行ログ(主に REST):
+
+      ・リクエスト・レスポンス本文レベルまで取れるがデータ量とコストに注意
+
+    ・CloudWatch メトリクス:
+
+      ・4xx/5xx、Count、Latency、統合レイテンシ等でダッシュボードやアラームに使える
+
+    ・X-Ray:
+
+      ・トレーシング有効化で API Gateway から Lambda 等への経路を追跡(対応統合に依存)
+
+- ENTRY:
+  EXPLAIN: サンプル設定
+  BODY: |
+    ■ 読み方のコツ
+
+    ・コンソールでも IaC でも、まず「どの URL・メソッドを公開するか」と「その先をどこに繋ぐか」だけ押さえる
+    ・認証やレート制限は後から足せるので、最初はルートと統合だけでも全体像が掴みやすい
+
+    ■ 1 リクエストの流れ(概念的)
+
+    ・クライアントが `GET https://xxxx.execute-api.region.amazonaws.com/prod/items` のように叩く
+    ・API Gateway がステージ `prod` とルート `GET /items` を解決する
+    ・統合で Lambda や HTTP オリジンを呼び、返ってきた結果をクライアントに返す
+
+    ■ 用語の対応(ざっくり)
+
+    ・公開 URL のホスト + 先頭パス: デプロイした API とステージ(または `$default` 等)で決まる
+    ・ルート(HTTP API) / メソッド(REST): 「このパスと HTTP メソッドの組」
+    ・統合: その組が実際に呼ぶ先(Lambda 名、HTTP URL 等)
+    ・オーソライザ: 統合の前にトークン等を検証するかどうか
+
+    ■ SAM で見る最小イメージ(HTTP API)
+
+    ・Lambda のイベントに `HttpApi` をぶら下げると、裏で API Gateway(HTTP API) のルートと統合が作られるイメージ
+    ・実テンプレートはプロパティが増えるため、
+      [Serverless Application Model のドキュメント]
+      https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-function-httpapi.html
+
+      # 説明用の疑似抜粋。動かすための完全形ではない
+      HelloFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+          Handler: index.handler
+          Runtime: nodejs20.x
+          Events:
+            GetHello:
+              Type: HttpApi
+              Properties:
+                Path: /hello
+                Method: GET
+
+    ■ REST API の木(概念的)
+
+    ・ルート `/` の下に `/items` リソースをぶら下げ、`GET` メソッドに Lambda 統合を付ける、という階層で覚えるとコンソールの画面と対応しやすい
+    ・`POST /items` は同じ `/items` に別メソッドとして追加するイメージ
+
+    ■ OpenAPI で一括定義する場合
+
+    ・HTTP API は OpenAPI 3 をインポートしてルートと統合をまとめて作れる流れがある
+    ・「パスとメソッドの表」がそのまま設定の骨格になるので、仕様書ファーストのチームと相性が良い

@@ -2,6 +2,9 @@ import styled from "@emotion/styled";
 import { getMergedKeys } from "./getKey";
 import { css } from "@emotion/react";
 
+// 属性名と被る語は「直後に =」のときはマッチさせない（既出の <span style="..."> を壊さない）
+const attrLike = ["style", "class", "color", "id", "label"];
+
 export type SyntaxHighlight = {
   code: string;
   codeKeyTypes?: string[];
@@ -36,7 +39,6 @@ export const syntaxHighlight = ({
           if (!key) return;
           const escapedKey = key.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&");
           // 属性名と被る語は「直後に =」のときはマッチさせない（既出の <span style="..."> を壊さない）
-          const attrLike = ["style", "class", "color", "id", "label"];
           const suffix = attrLike.includes(key) ? "(?!\\s*=)" : "";
           const re = new RegExp(`\\b${escapedKey}\\b${suffix}`, case_sense);
           result = result.replaceAll(

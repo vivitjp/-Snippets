@@ -28,7 +28,7 @@
     CRUD                                Create, Read, Update, Delete
 
 - ENTRY:
-  EXPLAIN: 英語単語
+  EXPLAIN: プログラミング用語
   BODY: |
     invoke                              関数や処理を呼び出す（実行要求）
     emit                                イベントを発火する／送出する動作
@@ -62,8 +62,23 @@
   EXPLAIN: 開発手法
   BODY: |
     Waterfall                           ウォーターフォール：フェーズが明確な逐次的な開発モデル
-    Agile                               アジャイル：反復的かつ漸進的に開発を進める手法
     Phase                               フェーズ：プロジェクトの段階・ライフサイクルのフェーズ
+    Draft                               ドラフト：レビュー用の暫定版
+    Refactor                            リファクタ：振る舞いを変えず内部構造を整理する改修
+    Optimization                        オプティマイゼーション：性能や設計を改善・最適化する作業
+    Regression                          リグレッション：変更で生じる既存機能の不具合（回帰）
+    Boilerplate                         ボイラープレート：プロジェクトの雛形や初期コード
+    Skeleton                            スケルトン：プロジェクトの雛形や初期コード
+    Template                            テンプレート：プロジェクトの雛形や初期コード
+    CI/CD                               CI/CD：継続的インテグレーションとデリバリー
+    MVC (Model-View-Controller)         MVC（モデル・ビュー・コントローラ）：関心事を分離するアーキテクチャパターン
+    DDD (Domain-Driven Design)          DDD（ドメインドリブンデザイン）：ドメインモデルに着目した設計手法
+    PoC (Proof of Concept)              PoC：実現可能性を確認する概念実証
+
+- ENTRY:
+  EXPLAIN: 開発手法(アジャイル)
+  BODY: |
+    Agile                               アジャイル：反復的かつ漸進的に開発を進める手法
     Scrum                               スクラム：スプリントと役割で運営するアジャイル手法
     Sprint                              スプリント：期間を区切った反復作業（通常1〜4週間）
     Velocity                            ベロシティ：スプリントごとのチーム完了ストーリーポイント
@@ -71,26 +86,33 @@
     Fibonacci                           フィボナッチ：ストーリーポイント推定で使われる数列
     Retrospective                       レトロスペクティブ：振り返りと改善を行うレビュー会議
     KPT (Keep, Problem, Try)            KPT：実行改善のための簡易振り返り手法
-    Draft                               ドラフト：レビュー用の暫定版
-    Refactor                            リファクタ：振る舞いを変えず内部構造を整理する改修
-    Optimization                        オプティマイゼーション：性能や設計を改善・最適化する作業
-    Regression                          リグレッション：変更で生じる既存機能の不具合（回帰）
-    MVC (Model-View-Controller)         MVC（モデル・ビュー・コントローラ）：関心事を分離するアーキテクチャパターン
-    DDD (Domain-Driven Design)          DDD（ドメインドリブンデザイン）：ドメインモデルに着目した設計手法
+    Kanban                              カンバン：作業を可視化し流れで管理する手法
+    XP (Extreme Programming)            XP（エクストリームプログラミング）：反復と実践を重視するアジャイル手法
+    TDD (Test-Driven Development)       TDD：テストを先に書いてから実装する開発
+    BDD (Behavior-Driven Development)   BDD：振る舞いを仕様として記述する開発手法
+    MVP (Minimum Viable Product)        MVP：最小限の機能で価値検証する製品
+    Pair Programming                    ペアプログラミング：2人で1件のコードを協働する手法
+    Daily Stand-up                      デイリースタンドアップ：短時間の日次進捗共有ミーティング
+    Backlog                             バックログ：未着手タスクや要求の優先付き一覧
+    User Story                          ユーザーストーリー：ユーザー視点で価値を短く記述した要件
 
 - ENTRY:
-  EXPLAIN: ライブラリ/フレームワーク
+  EXPLAIN: Web系 フロントエンド・ライブラリ/フレームワーク
   BODY: |
-    JS: React                           リアクト：コンポーネントベースのUIライブラリ
-    JS: Angular                         アングラー：包括的なフロントエンドフレームワーク
-    JS: Vue                             ヴュー：柔軟なコンポーネント指向フレームワーク
-    JS: Nextjs                          ネクスト.js：SSR/SSG対応のReactフレームワーク
-    JS: Svelte                          スヴェルト：コンパイル時に効率化するUIフレームワーク
-    JS: Nestjs                          ネストJS：構造化されたサーバサイドフレームワーク
-    JS: Remix                           リミックス：フルスタック向けのReactベースフレームワーク
-    JS: Vite                            ヴァイト：超高速なビルド/開発サーバーツール
-    PHP: Laravel                        ララベル：PHPのフルスタックフレームワーク
-    PHP: Blade(view)                    ブレード：Laravelのテンプレートエンジン
+    JS
+      React                             リアクト：コンポーネントベースのUIライブラリ
+      Angular                           アングラー：包括的なフロントエンドフレームワーク
+      Vue                               ヴュー：柔軟なコンポーネント指向フレームワーク
+      Nextjs                            ネクスト.js：SSR/SSG対応のReactフレームワーク
+      Svelte                            スヴェルト：コンパイル時に効率化するUIフレームワーク
+      Nestjs                            ネストJS：構造化されたサーバサイドフレームワーク
+      Remix                             リミックス：フルスタック向けのReactベースフレームワーク
+      Vite                              ヴァイト：超高速なビルド/開発サーバーツール
+
+    PHP
+      Laravel                           ララベル：PHPのフルスタックフレームワーク
+      Blade(view)                       ブレード：Laravelのテンプレートエンジン
+
     トランスパイル                       ソースを別形式へ変換する処理（例: TS→JS）
     バンドル                             複数モジュールを1ファイルへ結合する処理
 
@@ -139,11 +161,32 @@
       ・ステート: あり
 
 - ENTRY:
-  EXPLAIN: デザインTool
+  EXPLAIN: デザイン
   BODY: |
     Figma                               フィグマ：デザイン制作とプロトタイピングツール
     Miro                                ミロ：ホワイトボード形式の共同作業ツール
     Storybook                           ストーリーブック：UIコンポーネントの開発・ドキュメント
+    Sketch                              スケッチ：Mac向けのUIデザインツール
+    Adobe XD                            Adobe XD：プロトタイプまで扱うUI/UXデザインツール
+    Tone & Manner                       トンマナ：ブランドや画面全体のトーンと振る舞いの統一指針
+    Wireframe                           ワイヤーフレーム：レイアウト骨子を示す低詳細の図
+    Mockup                              モックアップ：見た目に近い静止画のデザイン案
+    Prototype                           プロトタイプ：操作や遷移を試せる試作品・試作モデル
+    Design System                       デザインシステム：コンポーネントとルールを体系化した共通基盤
+    Style Guide                         スタイルガイド：色・タイポ・コンポーネントの使い方を定めた文書
+    Brand Guideline                     ブランドガイドライン：ロゴ・色・トーンなどブランドの公式規定
+    UI (User Interface)                 UI：画面上の操作対象となるインターフェース全体
+    UX (User Experience)                UX：利用体験の質や満足度に関わる設計領域
+    Usability                           ユーザビリティ：目的を達成しやすい使いやすさ
+    Accessibility (a11y)                アクセシビリティ：障害の有無に関わらず利用できる設計
+    Typography                          タイポグラフィ：書体・行間・階層など文字の見せ方の設計
+    Visual Hierarchy                    ビジュアルヒエラルキー：重要度が伝わる視覚的な優先順位づけ
+    Affordance                          アフォーダンス：操作可能だと直感できる手がかり
+    Grid                                グリッド：縦横の基準線でレイアウトを揃える枠組み
+    Spacing                             スペーシング：余白や間隔の取り方
+    Color Palette                       カラーパレット：製品で使う色の組み合わせセット
+    Responsive Design                   レスポンシブデザイン：画面幅に応じてレイアウトが変わる設計
+    Breakpoint                          ブレークポイント：レイアウト切り替えの幅のしきい値
 
 - ENTRY:
   EXPLAIN: DB
@@ -151,20 +194,46 @@
     Relational Database System(RDS)     リレーショナルDB：表形式で関係を管理するDB
     Entity Relation(ER)図               ER図：データのエンティティと関係を図示
     SQL                                 構造化照会言語：RDB操作の標準言語
-    RDS: Oracle                         Oracle DB（商用のリレーショナルDB）
-    RDS: Postgres                       PostgreSQL（高機能なオープンソースDB）
-    RDS: MySQL                          MySQL（広く使われるリレーショナルDB）
-    NoSQL: Mongo                        MongoDB：ドキュメント指向のNoSQL
-    NoSQL: Redis                        Redis：インメモリ型のデータストア
-    GraphQL                             グラフQL：型付きクエリ言語（APIの問い合わせ仕様）
-    Query                               クエリ：データ取得操作
-    Mutation                            ミューテーション：データ変更操作
+    RDS                                 リレーショナルDB
+      Oracle                            商用のリレーショナルDB
+      PostgreSQL                        高機能なオープンソースDB
+      MySQL                             広く使われるリレーショナルDB
+    NoSQL                               非リレーショナルDB
+      MongoDB                           ドキュメント指向のNoSQL
+      Redis                             インメモリ型のデータストア
+    GraphQL                             型付きクエリ言語
+      GraphQL                           型付きクエリ言語（APIの問い合わせ仕様）
+        Query                           データ取得操作
+        Mutation                        データ変更操作
 
 - ENTRY:
   EXPLAIN: デザインパターン
   BODY: |
     Closure                             クロージャ：関数とそのスコープを保持する構造
-    Factory                             ファクトリ：オブジェクト生成を抽象化するパターン
+    Factory                             ファクトリ：オブジェクト生成を抽象化
+    Singleton                           シングルトン：インスタンスを1つに制限
+    Abstract Factory                    抽象ファクトリ：関連オブジェクト群をまとめて生成
+    Builder                             ビルダー：複雑なオブジェクトを段階的に組み立てる
+    Prototype                           プロトタイプ：既存インスタンスを複製して生成
+    Adapter                             アダプター：既存のインターフェースを別の形に合わせる
+    Decorator                           デコレータ：オブジェクトに動的に責務を追加
+    Facade                              ファサード：複雑なサブシステムを単純なAPIで隠す
+    Proxy                               プロキシ：本体の前に立ちアクセス制御や遅延を行う
+    Composite                           コンポジット：部分と全体を同じ操作で扱う木構造
+    Bridge                              ブリッジ：抽象と実装を分離して独立に拡張
+    Flyweight                           フライウェイト：共有でメモリを節約する軽量オブジェクト
+    Observer                            オブザーバー：状態変化を購読者へ通知
+    Strategy                            ストラテジー：アルゴリズムを差し替え可能に
+    Command                             コマンド：操作をオブジェクト化し undo やキューに使う
+    Template Method                     テンプレートメソッド：処理の骨格は固定し一部だけ差し替える
+    Iterator                            イテレータ：集合要素を順に辿る走査を抽象化
+    State                               ステート：状態ごとに振る舞いを切り替える
+    Chain of Responsibility             チェーン・オブ・レスポンシビリティ：要求を連鎖して順に処理
+    Mediator                            メディエータ：オブジェクト間の通信を仲介者に集約
+    Memento                             メメント：状態のスナップショット保存と復元
+    Visitor                             ビジター：データ構造を変えずに操作だけを追加
+    Repository                          リポジトリ：データ取得・永続化をドメインから隠蔽
+    Dependency Injection                依存性の注入：依存オブジェクトを外部から差し込む
 
 - ENTRY:
   EXPLAIN: FE & BE

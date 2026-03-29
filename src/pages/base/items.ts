@@ -15,6 +15,10 @@ export const menuItems: menuByCategories[] = [
         fileName: "ai/AI",
       },
       {
+        name: "MCP",
+        fileName: "ai/MCP",
+      },
+      {
         name: "OpenAI",
         fileName: "ai/OpenAI",
       },
@@ -24,9 +28,8 @@ export const menuItems: menuByCategories[] = [
       },
     ],
   },
-
   {
-    category: "クラウド",
+    category: "AWS・クラウド",
     items: [
       {
         name: "🔺Cloud",
@@ -34,11 +37,6 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.AWSCloud],
         case_sensitive: false,
       },
-    ],
-  },
-  {
-    category: "AWS",
-    items: [
       {
         name: "AWS 概要",
         fileName: "aws/_AWS",
@@ -141,8 +139,8 @@ export const menuItems: menuByCategories[] = [
       },
       {
         name: "API Gateway: Amazon API Gateway",
-        fileName: "",
-        codeKeyTypes: [],
+        fileName: "aws/APIGateway",
+        codeKeyTypes: [codeKeys.AWSCloud],
         case_sensitive: false,
       },
       {
@@ -446,10 +444,10 @@ export const menuItems: menuByCategories[] = [
       {
         name: "React",
         fileName: "React/React",
-        codeKeyTypes: [codeKeys.HTML, codeKeys.JS, codeKeys.React],
+        codeKeyTypes: [codeKeys.HTML, codeKeys.TS, codeKeys.JS, codeKeys.React],
       },
       {
-        name: "DOM",
+        name: "ReactDOM",
         fileName: "React/ReactDom",
         codeKeyTypes: [codeKeys.React, codeKeys.ReactDom],
       },
@@ -698,7 +696,7 @@ export const menuItems: menuByCategories[] = [
         codeKeyTypes: [codeKeys.NPM],
       },
       {
-        name: "npm",
+        name: "npm/package.json",
         fileName: "Node/npm/npm",
         codeKeyTypes: [codeKeys.NPM],
       },
@@ -1089,22 +1087,23 @@ export const menuItems: menuByCategories[] = [
   //   ],
   // },
   {
-    category: "ユビキタス",
+    category: "開発・Editor・原則",
     items: [
       {
         name: "🔺IT",
-        fileName: "Ubiquitous/IT",
+        fileName: "other/IT",
         codeKeyTypes: [],
       },
-    ],
-  },
-  {
-    category: "Editor",
-    items: [
       {
         name: "🔺VSCode",
-        fileName: "editor/VSCode",
+        fileName: "other/VSCode",
         codeKeyTypes: [],
+      },
+      {
+        name: "🔺開発原則",
+        fileName: "other/Principle",
+        codeKeyTypes: [codeKeys.JS, codeKeys.TS],
+        case_sensitive: false,
       },
     ],
   },

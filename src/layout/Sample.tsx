@@ -1,21 +1,24 @@
-import { MenuGroupTitle, MenuItemGroupItems, MenuNav } from "./Layout.style"
-import { Link, Route, Routes } from "react-router-dom"
-import { Heading, HStack, Stack, VStack } from "@chakra-ui/react"
+import { MenuGroupTitle, MenuItemGroupItems, MenuNav } from "./Layout.style";
+import { Link, Route, Routes } from "react-router-dom";
+import { Heading, HStack, Stack, VStack } from "@chakra-ui/react";
 
-import LocalStoragePage from "../pages/localStorage"
-import RegressionPage from "../pages/regression"
-import ExcelInputPage from "../pages/excelInput"
-import SvgGraphSample from "../pages/SVG"
-import { ReactChildrenWith } from "../pages/React-children-with"
-import { ReactChildren } from "../pages/React-children"
+import LocalStoragePage from "../pages/localStorage";
+import RegressionPage from "../pages/regression";
+import ExcelInputPage from "../pages/excelInput";
+import SvgGraphSample from "../pages/SVG";
+import { ReactChildrenWith } from "../pages/React-children-with";
+import { ReactChildren } from "../pages/React-children";
+import { ContextParentHasMethod } from "../pages/contextParentHasMethod";
+import { ContextChildrenHaveMethod } from "../pages/contextChildrenHaveMethod";
+import { ContextUseImperativeMixedSample } from "../pages/contextUseImperativeMixed";
 
 type SampleType = {
-  name: string
-  to: string
-  element: JSX.Element
-}
+  name: string;
+  to: string;
+  element: JSX.Element;
+};
 
-type GroupName = string
+type GroupName = string;
 
 const samples: Record<GroupName, SampleType[]> = {
   React: [
@@ -28,6 +31,21 @@ const samples: Record<GroupName, SampleType[]> = {
       name: "Children With",
       to: "/react-children-with",
       element: <ReactChildrenWith />,
+    },
+    {
+      name: "Context 子で登録",
+      to: "/react-context-children-register",
+      element: <ContextChildrenHaveMethod />,
+    },
+    {
+      name: "Context 親で登録",
+      to: "/react-context-parent-register",
+      element: <ContextParentHasMethod />,
+    },
+    {
+      name: "Context + imperative",
+      to: "/react-context-imperative-mixed",
+      element: <ContextUseImperativeMixedSample />,
     },
   ],
   Form: [
@@ -58,7 +76,7 @@ const samples: Record<GroupName, SampleType[]> = {
       element: <RegressionPage />,
     },
   ],
-}
+};
 
 //------------------------------
 // Sample
@@ -107,17 +125,17 @@ export const Sample = () => {
         minWidth={0}
       >
         <Routes>
-          {Object.entries(samples).map(([_, samples], index) =>
-            samples.map((sample, sIndex) => (
+          {Object.values(samples).flatMap((groupSamples, groupIndex) =>
+            groupSamples.map((sample, sIndex) => (
               <Route
-                key={`${index}-${sIndex}`}
+                key={`${groupIndex}-${sIndex}`}
                 path={sample.to}
                 element={sample.element}
               />
-            )),
+            ))
           )}
         </Routes>
       </Stack>
     </HStack>
-  )
-}
+  );
+};
