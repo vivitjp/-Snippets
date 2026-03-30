@@ -1,4 +1,4 @@
-import { KeyDef } from "../../../types/type"
+import { KeyDef } from "../../../types/type";
 
 export const keysTS: KeyDef = {
   // ■ Main(赤)
@@ -38,9 +38,13 @@ export const keysTS: KeyDef = {
     "Error",
     "any",
     "unknown",
-    "",
-    "",
-    "",
+    "CallableFunction",
+    "NewableFunction",
+    "VoidFunction",
+    "PromiseLike",
+    "ArrayLike",
+    "Iterable",
+    "Iterator",
   ],
   // ■ 緑
   DarkOrchid: [
@@ -65,7 +69,6 @@ export const keysTS: KeyDef = {
     "Uncapitalize",
     "Primitive",
     "Builtin",
-    "Function",
     "InstanceType",
     "ThisParameterType",
     "OmitThisParameter",
@@ -129,4 +132,4 @@ export const keysTS: KeyDef = {
   // DarkOrange: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
   // // ■ グレー
   // "#555": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-}
+};

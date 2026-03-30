@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react"
-import { Snippets } from "../../types/type"
-import { copyToClipboard } from "../utilities/copyToClipboard"
-import { makeSnippets } from "./makeSnippets"
+import { useEffect, useState } from "react";
+import { Snippets } from "../../types/type";
+import { copyToClipboard } from "../utilities/copyToClipboard";
+import { makeSnippets } from "./makeSnippets";
 import {
   Column,
   Div,
@@ -12,61 +12,60 @@ import {
   TH,
   THead,
   TR,
-} from "../../common/styleDiv"
-import { Button } from "../../common/styleInput"
-import { syntaxHighlight } from "../syntaxHighlighter/syntaxHighlighter"
-import { useSelect } from "./useSelect"
+} from "../../common/styleDiv";
+import { Button } from "../../common/styleInput";
+import { syntaxHighlight } from "../syntaxHighlighter/syntaxHighlighter";
+import { useSelect } from "./useSelect";
 import {
   CategoryWrapper,
   DivTitle,
   FoldTitle,
   SummaryWrapper,
-} from "./components/DivTitle"
-import { MenuItemType } from "../../store/menuStore"
-import { DetailInside, Details } from "./components/Detail"
+} from "./components/DivTitle";
+import { MenuItemType } from "../../store/menuStore";
+import { DetailInside, Details } from "./components/Detail";
 
 export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
-  const [isPending, setIsPending] = useState(false)
-  const [data, setData] = useState<Snippets | string[] | undefined>()
-  const [dataFormatted, setDataFormatted] = useState<JSX.Element[]>([])
+  const [isPending, setIsPending] = useState(false);
+  const [data, setData] = useState<Snippets | string[] | undefined>();
+  const [dataFormatted, setDataFormatted] = useState<JSX.Element[]>([]);
 
   const { JSX: SnippetsStyleSelection, value } = useSelect({
     title: "形式",
     initValue: "",
     values: ["", "typescriptreact", "typescript", "python"],
-  })
+  });
 
   useEffect(() => {
     //console.log("selectedMenu", selectedMenu)
 
     if (!selectedMenu?.fileName) {
-      console.log("File Name", selectedMenu?.fileName)
-      return
+      console.log("File Name", selectedMenu?.fileName);
+      return;
     }
 
-    setIsPending(true)
+    setIsPending(true);
     void (async () => {
       //ファイルからデータ読み込みEXPLAIN
       const result = await makeSnippets({
         file: `snippets/${selectedMenu.fileName}.yml`,
         scope: value,
-      })
-      setData(result)
+      });
+      setData(result);
       if (!result) {
-        console.log("File Data")
-        return
+        console.log("File Data");
+        return;
       }
 
       //配列化
-      const array = Object.values(result ?? {})
+      const array = Object.values(result ?? {});
       //Highlight
-      const codeKeyTypes = selectedMenu?.codeKeyTypes
+      const codeKeyTypes = selectedMenu?.codeKeyTypes;
       //Highlightして JSX.Element[] に変換
-      let highlightedBody: JSX.Element[] = []
+      let highlightedBody: JSX.Element[] = [];
       //折りたたみ要素
-      let highlightedFold: JSX.Element[]
+      let highlightedFold: JSX.Element[];
 
-      let debugIndex = 0
       try {
         const formatted = array.map((snippetsObject, index) => {
           if (snippetsObject.category) {
@@ -74,9 +73,8 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
               <CategoryWrapper key={index}>
                 {snippetsObject.category}
               </CategoryWrapper>
-            )
+            );
           } else {
-            debugIndex = index
             if (snippetsObject.body) {
               const code = (
                 !snippetsObject.body.at(-1)
@@ -84,16 +82,16 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
                   : snippetsObject.body
               )
                 .map((n) => (!n ? " " : n))
-                .join("\n")
+                .join("\n");
 
               highlightedBody = syntaxHighlight({
                 code,
                 codeKeyTypes,
                 encodeRequired: selectedMenu.encodeRequired,
                 case_sensitive: selectedMenu.case_sensitive,
-              })
+              });
             } else {
-              highlightedBody = []
+              highlightedBody = [];
             }
 
             if (snippetsObject.fold) {
@@ -103,7 +101,7 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
                   : snippetsObject.fold
               )
                 .map((n) => (!n ? " " : n))
-                .join("\n")
+                .join("\n");
 
               highlightedFold = syntaxHighlight({
                 code: foldCode,
@@ -111,7 +109,7 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
                 encodeRequired: selectedMenu.encodeRequired,
                 case_sensitive: selectedMenu.case_sensitive,
                 bgColor: "Cornsilk",
-              })
+              });
             }
 
             return (
@@ -173,7 +171,7 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
                                     key={index}
                                     width={
                                       snippetsObject?.table?.options?.width?.[
-                                      index
+                                        index
                                       ] || "auto"
                                     }
                                   >
@@ -186,7 +184,7 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
                         <TBody>
                           {snippetsObject?.table.body
                             ?.splice(
-                              snippetsObject?.table.options?.hasTitle ? 1 : 0,
+                              snippetsObject?.table.options?.hasTitle ? 1 : 0
                             )
                             .map((line, i) => {
                               return (
@@ -205,10 +203,10 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
                                           </span>
                                         )
                                       })}
-                                    </TD>,
+                                    </TD>
                                   )}
                                 </TR>
-                              )
+                              );
                             })}
                         </TBody>
                       </Table>
@@ -216,39 +214,40 @@ export const useSnippets = (selectedMenu: MenuItemType | undefined) => {
                   )}
                 </Details>
               </Column>
-            )
+            );
           }
-        })
-        setDataFormatted(formatted)
-        setIsPending(false)
+        });
+        setDataFormatted(formatted);
+        setIsPending(false);
       } catch (error) {
-        console.log(debugIndex)
+        console.error(error);
+        setIsPending(false);
       }
-    })()
-  }, [selectedMenu, value])
+    })();
+  }, [selectedMenu, value]);
 
   const Snippets = () => {
-    return <>{dataFormatted}</>
-  }
+    return <>{dataFormatted}</>;
+  };
 
-  const [copied, setCopied] = useState<boolean>(false)
+  const [copied, setCopied] = useState<boolean>(false);
   const handleClickInputButton = (e: React.MouseEvent<HTMLButtonElement>) => {
-    void copyToClipboard(JSON.stringify(data, undefined, 2))
-    e.stopPropagation()
+    void copyToClipboard(JSON.stringify(data, undefined, 2));
+    e.stopPropagation();
 
-    setCopied(true)
+    setCopied(true);
     setTimeout(() => {
-      setCopied(false)
-    }, 500)
-  }
+      setCopied(false);
+    }, 500);
+  };
 
   const CopyButton = () => {
     return (
       <Button onClick={handleClickInputButton} width="160px">
         {copied ? "Copied" : "Copy Snippets"}
       </Button>
-    )
-  }
+    );
+  };
 
-  return { SnippetsStyleSelection, Snippets, CopyButton, isPending }
-}
+  return { SnippetsStyleSelection, Snippets, CopyButton, isPending };
+};

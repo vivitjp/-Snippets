@@ -14,7 +14,7 @@ import { keysClassValidator } from "./keys/ClassValidator";
 import { keysShell } from "./keys/Shell";
 import { keysCSS } from "./keys/CSS";
 import { keysCurl } from "./keys/curl";
-import { keysDOM } from "./keys/DOM";
+import { keysJSDOM } from "./keys/JSDOM";
 import { keysLodash } from "./keys/lodash";
 import { keysDocker } from "./keys/Docker";
 import { keysEnv } from "./keys/Env";
@@ -93,7 +93,6 @@ export const codeKeys = {
   ClassValidator: "ClassValidator",
   CSS: "CSS",
   Curl: "Curl",
-  DOM: "DOM",
   Docker: "Docker",
   Env: "Env",
   Excel: "Excel",
@@ -108,6 +107,7 @@ export const codeKeys = {
   JWT: "JWT",
   Jotai: "Jotai",
   JS: "JS",
+  JSDOM: "JSDOM",
   JSUtilities: "JSUtilities",
   Lint: "Lint",
   Linux: "Linux",
@@ -179,7 +179,6 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   ClassValidator: keysClassValidator,
   CSS: keysCSS,
   Curl: keysCurl,
-  DOM: keysDOM,
   Docker: keysDocker,
   Env: keysEnv,
   Excel: keysExcel,
@@ -194,6 +193,7 @@ export const KeyAndCodes: Record<string, KeyDef> = {
   JWT: keysJWT,
   Jotai: keysJotai,
   JS: keysJS,
+  JSDOM: keysJSDOM,
   JSUtilities: keysJSUtilities,
   keysRHF: keysRHF,
   Lint: keysLint,

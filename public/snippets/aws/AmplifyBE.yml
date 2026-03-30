@@ -309,6 +309,7 @@
       ・通常のチーム開発のベストプラクティスとしては、Gitの運用と合わせて以下のようにするのが一般的
       ・作業開始時: git pull で最新のコードを取得。
       ・もし他のメンバーがBEも更新していた場合、以下に変更が含まれている
+
           .amplify/
           aws-exports.js
           amplifyconfiguration.json     // または
@@ -335,6 +336,8 @@
       ・CloudFormationは、AWSリソースを一括で定義・作成・更新できるサービス
       ・amplify push は、ローカル変更を基にCloudFormationのテンプレートを生成・更新、クラウド環境に適用
 
+        ※ スタックとは: AWS CloudFormation で管理されるリソースの集合
+
     ■ 3.リソースのプロビジョニング（作成・更新）
 
       ・CloudFormationがAWSの各サービス（S3、DynamoDB、Cognito、Lambdaなど）と通信
@@ -352,3 +355,169 @@
           amplify add auth (認証機能の追加)
           amplify update api (GraphQLスキーマの変更など)
           Lambda関数のコード修正
+
+- ENTRY:
+  CATEGORY: サービスの概要
+
+- ENTRY:
+  EXPLAIN: Minimum 構成
+  BODY: |
+    ■ 「最小」の取り方
+
+    ・ここでは「AWS 上に載せる範囲が最も少ない」という意味で整理する
+    ・実務では認証や API がすぐ要るため、この最小構成は学習用やランディングのみ公開などに近い
+
+    ■ いちばん少ないのは Hosting のみ(バックエンド無し)
+
+    ・Amplify Hosting にフロントのリポジトリを繋ぐか、ビルド成果物だけをデプロイする
+    ・Cognito・AppSync・Lambda といった Amplify バックエンドカテゴリは追加しない
+    ・裏側はホスティング用の配信スタック(S3 と CloudFront 等の説明が一般的)に留まるイメージ
+    ・`amplify init` や `amplify/backend` をローカルに持たなくても、コンソールだけで完結させられる運用がある
+
+    ■ 「Amplify プロジェクト」として最小に近い状態
+
+    ・Gen1: `amplify init` でアプリと環境だけ作り、`amplify add auth` 等をまだ実行していない状態
+    ・この時点ではバックエンド用の大きなリソースは載っていないが、プロジェクト用のメタデータや以降の push 用の枠はできる
+    ・Gen2: `amplify/` 以下で auth や data をまだ定義していない段階、またはサンドボックスだけ起動して確認している状態に近い
+
+    ■ バックエンドを「1 つだけ」足した最小例(イメージ)
+
+    ・認証だけ: Cognito を Amplify の auth として追加し、ホスティングと組み合わせる
+    ・API だけ: GraphQL(AppSync) または REST(Lambda + API Gateway) のどちらか一方だけを追加する
+    ・どれも「必要なカテゴリだけ add / 定義する」が最小に近い増やし方
+
+    ■ まとめ
+
+    ・AWS リソース数で見る最小は Hosting のみで静的配信だけ
+    ・CLI / Gen2 のプロジェクトとしての最小は init または空に近い backend 定義
+    ・機能付きの最小は auth か api など 1 カテゴリだけ追加と考えると説明しやすい
+
+- ENTRY:
+  EXPLAIN: Minimum 構成(CloudFormation)
+  BODY: |
+    ■ 概要
+
+    ・Amplify Hosting がデプロイすると、コンソールの CloudFormation にはアプリ用のネストスタックなどとして複数スタックが出る
+    ・「静的ホスティングの背骨」が S3 と CloudFront と IAM ロール、Git 連携なら CodeBuild やパイプライン関連、といった塊
+    ・手元で「配信だけ」の最小イメージを YAML で書くなら、概念的には次のような骨格に近い
+      (プロパティは省略や古い OAI 表記の例。本番の Amplify 生成物とは別物)
+
+    ・Git 連携ビルドを含めると、CodeBuild のプロジェクトやサービスロール、ビルド成果物を S3 に置く手前のバケットなどが別スタックまたは追加リソースとして増える
+    ・実際のテンプレートは Amplify コンソールの該当スタックから「テンプレート」タブで確認するのが確実
+
+    ※ ブランチ・ビルド・再デプロイのたびに名前やリソース数が変わるため、以下は実際の生成テンプレートのコピーではない
+
+    ■ コード
+
+    AWSTemplateFormatVersion: "2010-09-09"
+    Description: Hosting の骨格イメージ(S3 + CloudFront)。Amplify 実スタックと同一ではない
+    Resources:
+      HostingBucket:
+        Type: AWS::S3::Bucket
+        Properties:
+          PublicAccessBlockConfiguration:
+            BlockPublicAcls: true
+            BlockPublicPolicy: true
+            IgnorePublicAcls: true
+            RestrictPublicBuckets: true
+
+      HostingOAI:
+        Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+        Properties:
+          CloudFrontOriginAccessIdentityConfig:
+            Comment: OAI for S3 origin
+
+      HostingBucketPolicy:
+        Type: AWS::S3::BucketPolicy
+        Properties:
+          Bucket: !Ref HostingBucket
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Principal:
+                  CanonicalUser: !GetAtt HostingOAI.S3CanonicalUserId
+                Action: s3:GetObject
+                Resource: !Sub "${HostingBucket.Arn}/*"
+
+      HostingDistribution:
+        Type: AWS::CloudFront::Distribution
+        Properties:
+          DistributionConfig:
+            Enabled: true
+            DefaultRootObject: index.html
+            Origins:
+              - Id: S3Hosting
+                DomainName: !GetAtt HostingBucket.RegionalDomainName
+                S3OriginConfig:
+                  OriginAccessIdentity: !Sub "origin-access-identity/cloudfront/${HostingOAI}"
+            DefaultCacheBehavior:
+              TargetOriginId: S3Hosting
+              ViewerProtocolPolicy: redirect-to-https
+              ForwardedValues:
+                QueryString: false
+            PriceClass: PriceClass_100
+
+    Outputs:
+      BucketName:
+        Value: !Ref HostingBucket
+      DistributionId:
+        Value: !Ref HostingDistribution
+      DistributionDomainName:
+        Value: !GetAtt HostingDistribution.DomainName
+
+- ENTRY:
+  EXPLAIN: Web Hosting
+  BODY: |
+    ■ ホスティングの裏側(代表的な構成)
+
+    ・静的サイトや SPA のビルド成果物を配るのが中心
+    ・バックエンドプロセスを Hosting 上に常駐させるというより、CDN 越しのファイル配信に近い
+
+    ・ビルドは Amplify のマネージドパイプラインが実行する
+    ・ドキュメント上の典型は、配信のオリジンに Amazon S3 を使い成果物を置く
+    ・クライアント向けにはその手前に Amazon CloudFront を載せて HTTPS で配信する
+
+    ・CloudFront 側で HTTPS とエッジキャッシュを扱う
+    ・独自ドメインは ACM の証明書とセットで構成することが多い
+
+    ・Git と接続すると、トリガー後に `npm run build` 等が走り、成功した成果物が配信スタックへデプロイされる
+
+    ・実際のリソースの組み方はコンソール設定や Amplify の世代(Gen1 / Gen2)で差がある
+    ・最新の構成は公式の Hosting ドキュメントで確認するのが安全
+
+    ■ バックエンド(BE)との関係
+
+    ・認証・GraphQL・REST・DB などのバックエンドは、ホスティング用スタックとは別にデプロイされる
+
+    ・代表例:
+
+      ・AppSync(GraphQL やデータ同期まわり)
+      ・API Gateway と Lambda(REST やカスタム API)
+      ・Cognito(認証)
+
+    ・フロントは `aws-exports.js` や `amplifyconfiguration.json` などに書かれたエンドポイントへ、ブラウザから HTTPS でアクセスする
+
+    ■ WebSocket は使えるか
+
+    ・Amplify Hosting を「自分用 WebSocket サーバを常駐させる場所」とはみなさない
+    ・配信は静的ファイル + CDN が主で、ゲートウェイがクライアントの WebSocket を長時間ホールドし続けるモデルではない
+
+    ・ブラウザから WebSocket を開くこと自体は可能
+    ・接続先は別の AWS サービスのエンドポイントに向けるのが一般的
+
+    ・リアルタイムの典型:
+
+      ・AppSync の Subscription や Events(Event API) を使うと、AWS 側が接続を維持しプッシュ型に近い更新を扱える
+      ・API Gateway の WebSocket API と Lambda は、双方向メッセージを細かく制御したいときの選択肢
+
+    ・Amplify でバックエンドを定義している場合でも、上記のようなリソースを別途プロビジョニングして組み合わせるイメージ
+
+    ・役割の切り分け:
+
+      ・画面と JS などの配信は Amplify Hosting
+      ・WebSocket の「サーバ側の末端」は AppSync や API Gateway など別サービス
+
+- ENTRY:
+  EXPLAIN: auth
+  BODY: |
+    ■ 認証の追加

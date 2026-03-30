@@ -897,11 +897,13 @@
     ・formatToParts で部分ごとに取得
 
       nf.formatToParts(1234.5)
-      [{ "type": "integer", "value": "1"},
-       { "type": "group", "value": ","},
-       { "type": "integer", "value": "234"},
-       { "type": "decimal", "value": "."},
-       { "type": "fraction", "value": "5"}]
+      [
+        { "type": "integer", "value": "1"},
+        { "type": "group", "value": ","},
+        { "type": "integer", "value": "234"},
+        { "type": "decimal", "value": "."},
+        { "type": "fraction", "value": "5"}
+      ]
 
 - ENTRY:
   EXPLAIN: String

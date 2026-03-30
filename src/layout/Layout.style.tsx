@@ -1,5 +1,5 @@
-import { css } from "@emotion/react"
-import styled from "@emotion/styled"
+import { css } from "@emotion/react";
+import styled from "@emotion/styled";
 
 export const Section = styled.section`
   display: flex;
@@ -10,7 +10,7 @@ export const Section = styled.section`
   width: 100%;
   /* allow page to grow when content is taller than viewport */
   overflow: visible;
-`
+`;
 
 export const HeaderWrapper = styled.section`
   display: flex;
@@ -21,13 +21,13 @@ export const HeaderWrapper = styled.section`
   height: 50px;
   padding: 0 20px;
   background-color: var(--main-color);
-`
+`;
 
 export const HeaderTitle = styled.section`
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: 300;
   color: #fff;
-`
+`;
 
 export const HeaderOptions = styled.section`
   display: flex;
@@ -36,18 +36,17 @@ export const HeaderOptions = styled.section`
   align-items: center;
   gap: 10px;
   height: 100%;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: 300;
   color: #fff;
-`
+`;
 
 export const Body = styled.div`
   display: flex;
   flex-direction: row;
-  /* let Body expand with children; keep a sensible minimum to fill viewport */
   flex: 1 1 auto;
   min-height: calc(100vh - 50px);
-`
+`;
 
 export const MenuNav = styled.nav`
   display: flex;
@@ -64,7 +63,7 @@ export const MenuNav = styled.nav`
   align-self: stretch;
   height: auto;
   overflow: auto;
-`
+`;
 
 export const Group = styled.details`
   display: flex;
@@ -73,7 +72,7 @@ export const Group = styled.details`
   align-items: flex-start;
   gap: 5px;
   width: 100%;
-`
+`;
 
 export const GroupRow = styled.div`
   display: flex;
@@ -84,7 +83,7 @@ export const GroupRow = styled.div`
   width: 100%;
   padding: 6px;
   border-bottom: 1px solid #aaa;
-`
+`;
 
 export const MenuGroupTitle = styled.summary`
   display: flex;
@@ -104,7 +103,7 @@ export const MenuGroupTitle = styled.summary`
   }
   font-size: 0.8rem;
   font-weight: 600;
-`
+`;
 
 export const GroupBody = styled.div`
   display: flex;
@@ -112,7 +111,7 @@ export const GroupBody = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   padding-left: 5px;
-`
+`;
 
 export const GroupBodyRow = styled.div`
   display: flex;
@@ -120,11 +119,11 @@ export const GroupBodyRow = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   padding-left: 5px;
-`
+`;
 
 type MenuItem = {
-  isPending?: boolean
-}
+  isPending?: boolean;
+};
 export const MenuItem = styled.div<MenuItem>`
   ${({ isPending = false }) => css`
     padding: 5px;
@@ -138,18 +137,17 @@ export const MenuItem = styled.div<MenuItem>`
     cursor: pointer;
     :hover {
       color: var(--main-color);
-    };
+    }
     ${isPending &&
     css`
-      color: #BBB;
+      color: #bbb;
       cursor: default;
       :hover {
-        color: #BBB;
+        color: #bbb;
       }
-    `
-    }
+    `}
   `}
-`
+`;
 
 export const MenuItemGroup = styled.div`
   display: flex;
@@ -157,7 +155,7 @@ export const MenuItemGroup = styled.div`
   justify-content: space-between;
   align-items: flex-start;
   width: 100%;
-`
+`;
 
 export const MenuItemGroupItems = styled.div`
   text-decoration: none;
@@ -167,7 +165,7 @@ export const MenuItemGroupItems = styled.div`
   :hover {
     color: var(--main-color);
   }
-`
+`;
 
 export const Playground = styled.div`
   display: flex;
@@ -178,4 +176,4 @@ export const Playground = styled.div`
   width: 100%;
   /* allow playground/content to grow and scroll if needed */
   overflow: visible;
-`
+`;

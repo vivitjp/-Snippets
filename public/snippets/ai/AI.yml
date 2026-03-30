@@ -158,136 +158,220 @@
     今後は、より高度なプロンプト設計や、専門的なノウハウの蓄積が重要になる。
     プロンプト設計の標準化や、ベストプラクティスの共有が進むことで、AI活用の精度・効率が向上する可能性がある。
 
+#-------------------------------
+# 開発フロー
+#-------------------------------
 - ENTRY:
-  CATEGORY: MCP
+  CATEGORY: 開発フロー
 
 - ENTRY:
-  EXPLAIN: 概要
+  EXPLAIN: プルリク前
   BODY: |
-    ■ MCP (Model-Context Protocol) 概要
+    ■ プルリク前にチェックリストを作成
 
-    ・モデルとコンテキストをやり取りするための軽量プロトコル
-    ・セッション管理、コンテキスト注入、ツール呼び出し、ストリーミング応答を整理して扱うための設計方針
-    ・目的: 再現性のある対話、外部知識の組み込み、マルチモデル連携、監査ログ確保
+    ・フォーマット
+    ・型チェック
+    ・テスト(ロジック単体のテスト、UIあれば統合テスト)
+    ・リファクタ(コメントは削除しないこと)
+    ・レビュー
 
-    ■ ユースケース
+    ■ レビューに関するプロンプトルール
 
-    ・RAG（Retrieval-Augmented Generation）で検索結果を安全にプロンプトに注入してモデルに渡す
-    ・モデルによる外部ツール呼び出し（データベースクエリ、コード実行、WebAPI 呼び出し）の仲介
-    ・マルチモデルルーティングとフェイルオーバー（用途に応じて最適モデルへ仲介）
-    ・セッション履歴の管理と会話コンテキストの差分同期
-    ・モデル応答のストリーミング（部分応答をクライアントへ逐次送信）と中断制御
-
-    ■ 設計パターン
-
-    ・HTTP REST 型: 単純なリクエスト/レスポンス、導入が容易
-    ・WebSocket ストリーミング型: 応答を逐次送信するシナリオに適合
-    ・gRPC 型: 高スループット・双方向ストリーミングが必要な場合に有効
-    ・イベント駆動（Pub/Sub）型: 大規模分散環境での非同期ワークフロー向け
-    ・エージェント指向型: ツール呼び出しや複数モデルの協調を扱う上位プロトコル
-
-    ■ 実装上の注意点
-
-    ・入力は常に正規化/サニタイズする（外部ツール呼び出し時の安全対策）
-    ・セッションとトレーサビリティを保持する（監査ログ、再現性）
-    ・トークン制限を実装してコスト制御する
-    ・エラーやタイムアウトの扱いを明確化する（中断、再試行ポリシー）
-
-    ■ まとめ
-
-    ・MCP はモデル統合の共通インターフェースとなり得る設計思想
-    ・シンプルな REST から双方向ストリーミングまでニーズに合わせて選択
-    ・セキュリティ、コスト、再現性を考慮して実装を決める
+    ・あらかじめ ## / ### で体系化したレビュールールを用意しておく
+    ・プロンプトでは「このルールに従ってレビューして」の一言でよい
 
 - ENTRY:
-  EXPLAIN: メッセージ設計
+  EXPLAIN: コードレビュールール
   BODY: |
-    ■ MCP のメッセージ設計（例）
+    ## 可読性
+    ### 命名
+    ・変数・関数・型は役割が分かる名前にする
+    ・略語はプロジェクトで統一したものだけ使う
+    ### 構造
+    ・1関数は単一責任。長すぎる場合は分割する
+    ・ネストは深くしすぎない(目安: 3段階まで)
 
-    ・Request:
-      {
-        "sessionId": "string",
-        "type": "prompt", // prompt | tool | control
-        "payload": { "messages": [{"role":"user","text":"..."}], "context": {...} }
-      }
-    ・Response:
-      {
-        "sessionId": "string",
-        "type": "response", // response | tool-result | error
-        "payload": { "output": "...", "meta": {...} }
-      }
+    ## 保守性
+    ### 重複
+    ・同じロジックが2回以上出たら共通化を検討する
+    ### 依存
+    ・外部ライブラリ・API に直接依存しすぎない。ラップや抽象を検討する
+
+    ## セキュリティ
+    ### 入力
+    ・ユーザ入力は検証・サニタイズする
+    ・SQL はパラメータ化。文字列結合で組み立てない
+    ### 秘匿
+    ・秘密情報は環境変数やシークレット管理。コードに直書きしない
+
+    ## 出力形式
+    ・指摘は「ファイル:行」または該当コード引用 + 理由
+    ・重要度を必須/推奨/任意のいずれかで付ける
+    ・修正案がある場合は簡潔なコード例を添える
+
+    ・上記をプロンプト用のシステム設定や別ドキュメントに保存し、「このルールに従ってレビューして」とだけ依頼する
 
 - ENTRY:
-  EXPLAIN: 実装サンプル 1 — HTTP REST 型
+  EXPLAIN: コードレビュールール(React+TypeScript)
   BODY: |
-    ■ 実装サンプル 1 — HTTP REST 型（簡易 TypeScript/Express）
+    # コードレビュールール (React + TypeScript)
 
-      import express from 'express'
-      import bodyParser from 'body-parser'
+    ## TypeScript
+    ### 型
+    ・any は原則使わない。unknown やジェネリックで代替
+    ・props / state は interface または type で定義する
+    ・イベントハンドラは React の型(ChangeEvent, FormEvent 等)を使う
+    ### コンポーネント
+    ・関数コンポーネントを基本とする
+    ・children が必要なときは React.ReactNode で型付けする
 
-      const app = express()
-      app.use(bodyParser.json())
+    ## React
+    ### コンポーネント設計
+    ・1コンポーネント1ファイル。責務が増えたら分割を提案する
+    ・presentational / container の分離を検討する
+    ・ロジックとUIを分離する
+    ### Hooks
+    ・Hooks はトップレベル
+    ・カスタムフックは use プレフィックスを付ける
+    ・抽象性を維持する
+    ### 状態・副作用
+    ・useState の更新は不変にする。直接ミューテートしない
+    ・useEffect の依存配列を正しく指定する。不要な再実行を防ぐ
+    ### リスト・key
+    ・key は安定した一意の値を使う
+    ・index はリストが静的な場合のみOK
+    ### パフォーマンス
+    ・不要な再レンダーを避ける。memo / useMemo / useCallback は必要に応じて使う
+    ・memo(コンポーネント) のコール先がuseCallbackでメモ化されていること
 
-      app.post('/mcp', async (req, res) => {
-        const { sessionId, type, payload } = req.body
-        // 1. コンテキストを取得/正規化
-        const context = payload.context || {}
-        // 2. (省略) 検索やサニタイズ、トークン制限を実施
-        // 3. モデル呼び出し（ここは実装依存、プレースホルダ）
-        const modelReply = await callModel({ messages: payload.messages, context })
-        res.json({ sessionId, type: 'response', payload: { output: modelReply } })
-      })
+    ## 可読性
+    ### 命名
+    ・コンポーネントは PascalCase、hooks と関数は camelCase
+    ・boolean の props は is / has / should などの接頭辞を検討
+    ### JSX
+    ・1行が長いときは属性ごとに改行する
+    ・条件付きレンダリングは三項または && で明確に書く
 
-      async function callModel(args: any) { return 'モデルの応答（ダミー）' }
-      app.listen(3000)
+    ## 出力形式
+    ・指摘は「ファイル:行」または該当コード引用 + 理由
+    ・重要度を必須/推奨/任意のいずれかで付ける
+    ・修正案がある場合は簡潔なコード例を添える
 
-    ■ callModel の実装例(OpenAI GPT-4o)
-
-      import { OpenAIApi, Configuration } from 'openai'
-      const openai = new OpenAIApi(new Configuration({ apiKey: process.env.OPENAI_API_KEY }))
-
-      async function callModel(args: any) {
-        const response = await openai.chat.completions.create({
-          model: 'gpt-4o',
-          messages: args.messages,
-          max_tokens: 1000,
-        })
-        return response.choices[0].message.content
-      }
+#-------------------------------
+# プロンプト
+#-------------------------------
+- ENTRY:
+  CATEGORY: プロンプト
 
 - ENTRY:
-  EXPLAIN: 実装サンプル 2 — WebSocket ストリーミング型
+  EXPLAIN: 設定サンプル
   BODY: |
-    ■ 実装サンプル 2 — WebSocket ストリーミング型（簡易 TypeScript）
+    ■ 
 
-      import http from 'http'
-      import WebSocket from 'ws'
+    ---
+    description: Snippet BODY and explanatory text - bullets only, no ですます, no trailing period
+    alwaysApply: true
+    ---
 
-      const server = http.createServer()
-      const wss = new WebSocket.Server({ server })
+    # Snippet / 解説の記述ルール
 
-      wss.on('connection', (ws) => {
-        ws.on('message', async (raw) => {
-          const req = JSON.parse(raw.toString())
-          // 逐次トークナイズしてモデルからストリーミングで受け取りながら client に送る例
-          const stream = simpleModelStream(req.payload)
-          for await (const chunk of stream) {
-            ws.send(JSON.stringify({ sessionId: req.sessionId, type: 'response-chunk', payload: { chunk } }))
-          }
-          ws.send(JSON.stringify({ sessionId: req.sessionId, type: 'response-end' }))
-        })
-      })
+    以下のルールは **public/snippets/** の YAML の BODY および、本プロジェクト内の解説・説明文に適用する。守れ。
 
-    ■ simpleModelStream の実装例(OpenAI GPT-4o)
+    ## 1. 説明は必ず箇条書き
 
-      async function* simpleModelStream(payload: any) {
-        // OpenAI のストリーミング API 呼び出し例
-        const response = await openai.chat.completions.create({
-          model: 'gpt-4o',
-          messages: payload.messages,
-          stream: true,
-        })
-        for await (const chunk of response) {
-          yield chunk.choices[0].delta.content
-        }
-      }
+    - 解説・説明は **必ず** 箇条書きで書く
+    - 記号は「・」(中黒) を使う。「•」や「-」の MD リストは BODY では使わない
+    - 段落でだらだら書かず、1項目1行の「・」で切る
+
+    ## 2. 箇条書き
+
+    - サブタイトルには文頭に「■」を用い、一行空けてから内容の箇条書きを記述する
+    - 箇条書きの記述はインデント(半角スペース2つ)して文頭に「・」をつける
+
+    ### 例
+
+    悪い例:
+    ・文章が始まりました。さらに文章が続きます。
+
+    いい例:
+    ・文章が開始
+    ・さらに文章が継続
+
+    ## 3. サブタイトルのさらにサブタイトル
+
+    - サブタイトルのさらにサブタイトルには文頭に「・」をつけ、一行空けてから内容の箇条書きを記述
+    - 箇条書きの記述はインデント(半角スペース2つ)して文頭に「・」をつける
+
+    ### 適用例
+
+    ■ サブタイトル
+
+    ・箇条書き内容
+    ・箇条書き内容
+
+    ・サブタイトルのサブタイトル
+
+        ・箇条書き内容
+        ・箇条書き内容
+
+    ## 4. ですます不要
+
+    - 「です」「ます」は使わない。体言止めが基本。例外的にに常体(だ・である / する・した)を認める
+    - 例: 「〜です」→「〜」「〜ます」→「〜する」「〜しました」→「〜した」
+
+    ## 5. 文末の「。」不要
+
+    - 文末に句読点「。」を付けない
+    - 箇条書きの各項目の末尾も「。」なし
+
+    ## 6. 全角の記号は使用しない
+
+    - 特に、（）｛｝ー￥＿？｜＝ などの全角記号を使用せずに、使用する際には半角を用いる。
+    - 一方、文章の句読点である「。、」は使用してもよい。だたし、箇条書きの文末の「。」は使用しないこと。
+
+    ## 7. 直前に説明した内容を守る
+
+    - 上記(箇条書き・ですますなし・句読点なし)は既に何度も指示済みのため、編集時は **毎回このルールを満たす**。同じ注意を繰り返させないこと。
+
+    ## 8. 1行に「。」でつなげて詰めない
+
+    - 箇条書きの1項目の中でも、複数の内容を「。」でつなげて1行に詰めない
+    - 内容ごとに改行して分ける。行数は増えてよいので、普通に改行して読める形で書く
+    - ただ同列の「・」で並べると、どれがどの見出しに属するか分からなくなるので避ける
+    - **親項目「・○○:」のあと、続く説明はインデントを増やした子の「・」で書く**。そうすると「次の行にもかかる」関係が明確になる
+    - 子のインデントは**スペース2つ**でよい
+
+    ### 悪い例
+
+    ・$queryRaw: SELECT 等の結果を返す。タグ付きテンプレート(バッククォート)でプレースホルダを渡すとエスケープされ安全
+
+    ただの改行(親子関係が分からない):
+    ・$queryRaw: SELECT 等の結果を返す
+    ・タグ付きテンプレート(バッククォート)でプレースホルダを渡すとエスケープされ安全
+
+    ### 良い例
+
+    ・$queryRaw:
+    ・SELECT 等の結果を返す
+    ・タグ付きテンプレート(バッククォート)でプレースホルダを渡すとエスケープされ安全
+
+    ## 適用例
+
+    悪い例:
+    「テーブル名は必須です。パーティションキーを指定してください。」
+    「GetItem では Key にプライマリキーを指定します。」
+    resetModules: 全モジュールのキャッシュをクリア。その後 require すると全て新しく読み込まれる
+    isolateModules: コールバック内の require だけ別レジストリで実行。外側の require は従来どおり
+
+    良い例:
+    ・テーブル名は必須
+    ・Key にプライマリキー指定
+    ・複合キーの場合はパーティションキーとソートキーの両方が指定必要
+
+    ・resetModules:
+    ・全モジュールのキャッシュをクリア
+    ・その後 require すると全て新しく読み込まれる
+
+    ・isolateModules:
+    ・コールバック内の require だけ別レジストリで実行
+    ・外側の require は従来どおり

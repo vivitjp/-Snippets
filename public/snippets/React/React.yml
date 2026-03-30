@@ -2009,37 +2009,17 @@
       }
     }), [dependencies])
 
-    ■ サンプル
+    ■ サンプル(useImperativeHandle)
 
     import React, { useImperativeHandle, useRef, forwardRef } from "react"
 
     export type ImperativeHandleRef = {
-      focusInput: () => void
       getValue: () => string
     }
 
-    export const ImperativeHandle = forwardRef<ImperativeHandleRef>((props, ref) => {
-      const inputRef = useRef<HTMLInputElement>(null)
-
-      useImperativeHandle(ref, () => ({
-        focusInput: () => {
-          inputRef.current?.focus()
-        },
-        getValue: () => {
-          return inputRef.current?.value || ''
-        }
-      }), [])
-
-      return <input ref={inputRef} />
-    })
-
-    // 使用例
+    // 親: 子の ref 経由で focusInput / getValue を呼ぶ
     const ParentComponent = () => {
       const ref = useRef<ImperativeHandleRef>(null)
-
-      const handleFocus = () => {
-        ref.current?.focusInput()
-      }
 
       const handleGetValue = () => {
         const value = ref.current?.getValue()
@@ -2048,13 +2028,50 @@
 
       return (
         <div>
-          <ImperativeHandle ref={ref} />
-          <button onClick={handleFocus}>Focus</button>
+          <ChildComponent ref={ref} />
           <button onClick={handleGetValue}>Get Value</button>
         </div>
       )
     }
 
+    // 子: ref で公開するメソッドを useImperativeHandle で定義
+    export const ChildComponent = forwardRef<ImperativeHandleRef>((props, ref) => {
+      const inputRef = useRef<HTMLInputElement>(null)
+
+      useImperativeHandle(ref, () => ({
+        getValue: () => {
+          return inputRef.current?.value || ''
+        }
+      }), [])
+
+      return <input ref={inputRef} />
+    })
+
+    ■ サンプル(useImperativeHandleを使わない実装)
+
+    import React, { useRef, forwardRef } from "react"
+
+    // 子: DOM の input 要素そのものを ref で公開する
+    export const ChildComponentDOMRef = forwardRef<HTMLInputElement, {}>((props, ref) => {
+      return <input ref={ref} />
+    })
+
+    // 親: 子の ref で input を直接操作する
+    const ParentComponentWithoutImperativeHandle = () => {
+      const inputRef = useRef<HTMLInputElement>(null)
+
+      const handleGetValue = () => {
+        const value = inputRef.current?.value || ''
+        console.log(value)
+      }
+
+      return (
+        <div>
+          <ChildComponentDOMRef ref={inputRef} />
+          <button onClick={handleGetValue}>Get Value</button>
+        </div>
+      )
+    }
 - ENTRY:
   EXPLAIN: useSuspense
   BODY: |
