@@ -1,4 +1,5 @@
-import { menuItems } from "../pages/base/items"
+import { Link } from "react-router-dom"
+import { menuItems, menuItemHref } from "../pages/base/items"
 import {
   Group,
   GroupBody,
@@ -6,15 +7,8 @@ import {
   MenuItem,
   MenuNav,
 } from "./Layout.style"
-import { MenuItemType, zooMenu } from "../store/menuStore"
 
 export const Menu = () => {
-  const setMenu = zooMenu((state) => state.setMenu)
-
-  const handleMenu = (menu: MenuItemType) => {
-    setMenu(menu)
-  }
-
   return (
     <MenuNav data-testid="menu">
       <>
@@ -27,15 +21,19 @@ export const Menu = () => {
               <GroupBody>
                 {menu.items.map((item) => {
                   const names = item.name.split(":")
-                  return (
-                    <MenuItem
+                  const label = names.length > 1 ? names[0] : item.name
+                  const href = menuItemHref(item)
+                  return href ? (
+                    <Link
                       key={item.name}
-                      onClick={
-                        item.fileName ? () => handleMenu(item) : undefined
-                      }
-                      isPending={!item.fileName}
+                      to={href}
+                      style={{ textDecoration: "none", color: "inherit" }}
                     >
-                      {names.length > 1 ? names[0] : item.name}
+                      <MenuItem>{label}</MenuItem>
+                    </Link>
+                  ) : (
+                    <MenuItem key={item.name} isPending>
+                      {label}
                     </MenuItem>
                   )
                 })}

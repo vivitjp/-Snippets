@@ -10,13 +10,20 @@ type Props = {
   Snippets: () => JSX.Element;
   isPending: boolean;
   isInitialOpened?: boolean;
+  /** ルートから渡すタイトル(URL 同期時は store より優先) */
+  menuTitle?: string;
 };
 
-export const PageBody = ({ Snippets, isPending, isInitialOpened }: Props) => {
+export const PageBody = ({
+  Snippets,
+  isPending,
+  isInitialOpened,
+  menuTitle,
+}: Props) => {
   const [initState, setInitState] = useState(isInitialOpened);
   const refButton = useRef<HTMLButtonElement>(null);
   const selectedMenu = zooMenu((state) => state.selectedMenu);
-  const titles = selectedMenu?.name;
+  const titles = menuTitle ?? selectedMenu?.name;
 
   const [elements, setElements] = useState<NodeListOf<Element> | undefined>();
 

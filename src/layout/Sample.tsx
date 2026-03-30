@@ -24,55 +24,55 @@ const samples: Record<GroupName, SampleType[]> = {
   React: [
     {
       name: "Children",
-      to: "/react-children",
+      to: "/samples/react-children",
       element: <ReactChildren />,
     },
     {
       name: "Children With",
-      to: "/react-children-with",
+      to: "/samples/react-children-with",
       element: <ReactChildrenWith />,
     },
     {
       name: "Context 子で登録",
-      to: "/react-context-children-register",
+      to: "/samples/react-context-children-register",
       element: <ContextChildrenHaveMethod />,
     },
     {
       name: "Context 親で登録",
-      to: "/react-context-parent-register",
+      to: "/samples/react-context-parent-register",
       element: <ContextParentHasMethod />,
     },
     {
       name: "Context + imperative",
-      to: "/react-context-imperative-mixed",
+      to: "/samples/react-context-imperative-mixed",
       element: <ContextUseImperativeMixedSample />,
     },
   ],
   Form: [
     {
       name: "Excel Input",
-      to: "/excel-input",
+      to: "/samples/excel-input",
       element: <ExcelInputPage />,
     },
   ],
   Storage: [
     {
       name: "LocalStorage",
-      to: "/localStorage",
+      to: "/samples/localStorage",
       element: <LocalStoragePage />,
     },
   ],
   SVG: [
     {
       name: "SVG",
-      to: "/SVG",
+      to: "/samples/SVG",
       element: <SvgGraphSample />,
     },
   ],
   統計: [
     {
       name: "Regression",
-      to: "/regression",
+      to: "/samples/regression",
       element: <RegressionPage />,
     },
   ],

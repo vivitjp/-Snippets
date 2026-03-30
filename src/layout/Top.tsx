@@ -1,16 +1,10 @@
 import styled from "@emotion/styled";
+import { Link } from "react-router-dom";
 import { Div, Row } from "../common/styleDiv";
-import { menuItems } from "../pages/base/items";
-import { zooMenu, MenuItemType } from "../store/menuStore";
+import { menuItems, menuItemHref } from "../pages/base/items";
 import { MenuItem, GroupRow } from "./Layout.style";
 
 export const Top = () => {
-  const setMenu = zooMenu((state) => state.setMenu);
-
-  const handleMenu = (menu: MenuItemType) => {
-    setMenu(menu);
-  };
-
   return (
     <>
       {menuItems.map((menu, index) => {
@@ -20,13 +14,19 @@ export const Top = () => {
             <RowTop width="79%" justifyContent="flex-start" gap="5px">
               {menu.items.map((item) => {
                 const names = item.name.split(":");
-                return (
-                  <Item
+                const label = names.length > 1 ? names[0] : item.name;
+                const href = menuItemHref(item);
+                return href ? (
+                  <Link
                     key={item.name}
-                    onClick={item.fileName ? () => handleMenu(item) : undefined}
-                    isPending={!item.fileName}
+                    to={href}
+                    style={{ textDecoration: "none", color: "inherit" }}
                   >
-                    {names.length > 1 ? names[0] : item.name}
+                    <Item>{label}</Item>
+                  </Link>
+                ) : (
+                  <Item key={item.name} isPending>
+                    {label}
                   </Item>
                 );
               })}
