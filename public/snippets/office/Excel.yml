@@ -471,7 +471,7 @@
   EXPLAIN: |
     式: LET()
   BODY: |
-    =LET(変数名1,値1,[変数名2,値2,...,] 式)
+    =LET(変数名1,式/値1,[変数名2,式/値2,...,] 最終出力式/値)
 
     ■ 例
     =LET(x, 5, SUM(x,1))      6
@@ -479,28 +479,29 @@
     <div class="row" style="align-items:flex-start;gap:20px">
       <table class="excel">
         <thead>
-          <th></th><th> A </th><th> B </th>
+          <th></th><th> A </th><th colspan="2"> B </th>
         </thead>
         <tbody>
-          <tr><td> 1 </td><td> 1 </td><td style="background-color:Linen"> 2 </td></tr>
-          <tr><td> 2 </td><td> 2 </td><td style="background-color:Linen"> 3 </td></tr>
-          <tr><td> 3 </td><td> 3 </td><td style="background-color:Linen"> 4 </td></tr>
+          <tr>
+            <td> 1 </td>
+            <td> 1 </td>
+            <td style="background-color:Linen;min-width:40px"> 2 </td>
+            <td style="text-align:left"> =LET(x,A1,SUM(x,1)) </td>
+          </tr>
+          <tr>
+            <td> 2 </td>
+            <td> 2 </td>
+            <td style="background-color:Linen;min-width:40px"> 3 </td>
+            <td style="text-align:left"> =LET(x,SUM(A2,1),y,SUM(x,1),y) </td>
+          </tr>
+          <tr>
+            <td> 3 </td>
+            <td> 3 </td>
+            <td style="background-color:Linen;min-width:40px"> 4 </td>
+            <td style="text-align:left"> =LET(x,A3,SUM(x,1)) </td>
+          </tr>
         </tbody>
       </table>
-      <div class="col">
-        <div class="row">
-          <div class="rowBorder" style="background-color:Linen"> B1 </div>
-          <div class="rowBorder"> =LET(x,A1,SUM(x,1)) </div>
-        </div>
-        <div class="row">
-          <div class="rowBorder" style="background-color:Linen"> B2 </div>
-          <div class="rowBorder"> =LET(x,A2,SUM(x,1)) </div>
-        </div>
-        <div class="row">
-          <div class="rowBorder" style="background-color:Linen"> B3 </div>
-          <div class="rowBorder"> =LET(x,A3,SUM(x,1)) </div>
-        </div>
-      </div>
     </div>
 
 - ENTRY:
@@ -749,7 +750,7 @@
 
 - ENTRY:
   EXPLAIN: |
-    ⬜条件関数
+    条件関数
   BODY: |
     ■ IF()                    
 
@@ -980,7 +981,7 @@
 
 - ENTRY:
   EXPLAIN: |
-    ⬜判定関数
+    判定関数
   BODY: |
     全メソッドの戻り値: TRUE/FALSE
     ■ ISBLANK(CELL参照)       CELL番地空白判定
@@ -1028,7 +1029,7 @@
 
 - ENTRY:
   EXPLAIN: |
-    ⬜数値関数
+    数値関数
   BODY: |
     ■ ABS(数)                 絶対値(範囲指定不可)
      =ABS(A2)
@@ -1273,7 +1274,7 @@
 
 - ENTRY:
   EXPLAIN: |
-    ⬜日付関数
+    日付関数
   BODY: |
     ■ DATE(年,月,日)             数値から日付データ作成
      =DATE(2012,5,2)            2012/5/2
