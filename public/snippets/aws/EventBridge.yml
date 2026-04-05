@@ -28,7 +28,7 @@
       span.公式説明図-text { font-size: 0.8em; }
     </style>
     <div class="公式説明図">
-      <img class="公式説明図" src="snippets/aws/asset/EventBridge/EventBridgeFlow.avif"/>
+      <img class="公式説明図" src="/snippets/aws/asset/EventBridge/EventBridgeFlow.avif"/>
       <span class="公式説明図-text"> 公式説明図 </span>
     </div>
 

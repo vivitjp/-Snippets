@@ -6,54 +6,109 @@
   CATEGORY: システムマネージャー
 
 - ENTRY:
-  EXPLAIN: |
-    パラメータストア
+  EXPLAIN: 概要と機能
   BODY: |
+    ■ AWS Systems Manager(SSM) とは
+
+    ・EC2、オンプレミスサーバ、エッジノードなどをまとめて運用・自動化するためのマネージドサービス
+    ・エージェント(SSM Agent)と IAM・VPC 設定を組み合わせ、リモート操作や設定配布を API とコンソールから扱う
+
+    ■ 主な機能の束(代表例)
+
+    ・パラメータストア: 設定値や(暗号化した)シークレット風の値を階層パスで保管し、インスタンスや Lambda から取得
+    ・Run Command: ドキュメントに沿って複数台にコマンドやスクリプトを一括実行
+    ・セッションマネージャー: SSH 鍵や踏み台なしでブラウザや CLI からシェル接続(要 IAM とエージェント)
+    ・パッチマネージャー: パッチの適用スケジュールとコンプライアンス報告
+    ・ステートマネージャー: 望ましい状態(ドキュメント)を継続的に維持
+    ・インベントリ: インストールソフトやネットワーク設定などのメタデータ収集
+    ・オートメーション: メンテナンスウィンドウや EventBridge 連携で定型オペを自動化
+    ・OpsCenter、Change Manager など運用チケット・変更管理に寄せた機能
+
+    ■ 向くシーン
+
+    ・台数の多い EC2 / ハイブリッド環境の設定・パッチ・トラブルシュートを標準化したい
+    ・踏み台 SSH と個別鍵配布を減らし、IAM ベースで接続を監査したい
+    ・アプリから安全に設定を読みたい(Parameter Store と SDK/CLI)
+
+    ■ 注意のメモ
+
+    ・エージェントの起動、IAM ロール(インスタンスプロファイル)、エンドポイント到達(VPC エンドポイントや NAT)が揃わないと機能が使えないことがある
+    ・長期ローテーションや RDS クレデンシャル自動更新などは別サービスの AWS Secrets Manager が担うことが多い(Parameter Store と役割分担して設計)
+
+- ENTRY:
+  EXPLAIN: パラメータストア
+  BODY: |
+    ■ 概要
+
     • AWS CLIやSDKを使用して、プログラムから簡単にアクセス可能
     • AWS LambdaやEC2インスタンスなどからもアクセス可能
-  TABLE:
-    OPTION:
-      ALIGN:
-        - left
-        - left
-      WIDTH:
-        - 30%
-      HAS_TITLE: false
-    BODY: |
-      情報の保管単位	"/dev/os-users"のような階層型のパラメータに保管可能。パラメータには1つまたは複数の値を保管可能。パラメータと値は1:1または1:n
-      保管された情報の暗号化	暗号化され、KMSに保存
-      保管された情報へのAPIアクセス	可能
-      APIアクセス時のRate limit	1 秒間に最大 1,000 件のリクエストサポート
-      保管された情報へのアクセス制御	IAMポリシーで制御可能
-      連携可能なAWSサービス	多数(参照)
-      保管された情報のバージョニング	複数バージョンを保持可能。1パラメータにつき100(参照)
-      保管された情報の使用状況の監査・監視	CloudTrail、CloudWatch、SNSを活用して監査・監視可能
-      シークレット情報の自動更新	Parameter Storeの機能としては不可。AWS CLIやLambda等を活用して作り込みすることで対応可能
-      利用料金	無料、但し、暗号化に利用されるKMSにてCMK(カスタマーマスターキー: ユーザ生成キー)利用時、KMSのAPI呼び出し料金が必要
+
+    ■ 機能
+
+    ・情報の保管単位
+      ・"/dev/os-users"のような階層型のパラメータに保管可能
+      ・パラメータには1つまたは複数の値を保管可能
+      ・パラメータと値は1:1または1:n
+    ・保管された情報の暗号化: 暗号化され、KMSに保存
+    ・保管された情報へのAPIアクセス: 可能
+    ・APIアクセス時のRate limit: 1 秒間に最大 1,000 件のリクエストサポート
+    ・保管された情報へのアクセス制御: IAMポリシーで制御可能
+    ・連携可能なAWSサービス: 多数(参照)
+    ・保管された情報のバージョニング: 複数バージョンを保持可能。1パラメータにつき100(参照)
+    ・保管された情報の使用状況の監査・監視: CloudTrail、CloudWatch、SNSを活用して監査・監視可能
+    ・シークレット情報の自動更新
+      ・Parameter Storeの機能としては不可
+      ・AWS CLIやLambda等を活用して作り込みすることで対応可能
+    ・利用料金
+      ・無料、但し、暗号化に利用されるKMSにてCMK(カスタマーマスターキー: ユーザ生成キー)利用時、KMSのAPI呼び出し料金が必要
+
+    ■ アクセスサンプル
+
+      const { ParameterStoreClient, GetParameterCommand } = require('@aws-sdk/client-ssm');
+      const client = new ParameterStoreClient({ region: 'ap-northeast-1' });
+      const command = new GetParameterCommand({ Name: '/dev/os-users' });
+      const result = await client.send(command);
+      console.log(result);
 
 - ENTRY:
   EXPLAIN: |
     Secrets Manager
   BODY: |
+    ■ 概要
+
     • AWS Systems Managerの機能の一つ
     • パラメータストアよりも高機能
     • コストがかかる
-  TABLE:
-    OPTION:
-      ALIGN:
-        - left
-        - left
-      WIDTH:
-        - 30%
-      HAS_TITLE: false
-    BODY: |
-      情報の保管単位	dev/db-string"のような階層型のシークレットに保管可能。 **シークレットには、1つまたは複数の「キーと値のペア」を保管可能。 **シークレットと、「キーと値のペア」は1:1または1:n
-      保管された情報の暗号化	暗号化され、KMSに保存
-      保管された情報へのAPIアクセス	可能
-      APIアクセス時のRate limit	700 Req/sec。※DescribeSecret、GetSecretValueの場合(参照)
-      保管された情報へのアクセス制御	IAMポリシーで制御可能
-      連携可能なAWSサービス	RDS for MySQL、PostgreSQL、Auroraの認証情報保存を標準サポート。(Secrets Managerの設定画面上で、対象のRDSを選択可能)。AWS CLIやSDKを通じてEC2やECS、Labmda等と連携可能
-      保管された情報のバージョニング	複数バージョンを保持可能。内部的には1シークレットにつき約100保持可能。だが、バージョンに付与できるラベルの最大数は20(参照)。
-      保管された情報の使用状況の監査・監視	CloudTrail、CloudWatch、SNSを活用して監査・監視可能
-      シークレット情報の自動更新	RDS for MySQL、PostgreSQL、Auroraの認証情報自動更新を標準サポート。他DBの接続情報やAPIキー等は Parameter Storeが提供するLambdaスクリプトカスタマイズで対応
-      利用料金	有料。シークレット 1 件あたり 0.40 USD/月。10,000 回の API コールあたり 0.05 USD。更に、Parameter Storeと同様、KMSの暗号化にCMKを利用する場合、KMSのAPI呼び出し料金が必要
+
+    ■ 機能
+
+    ・情報の保管単位
+      ・dev/db-string"のような階層型のシークレットに保管可能。
+      ・シークレットには、1つまたは複数の「キーと値のペア」を保管可能。
+      ・シークレットと、「キーと値のペア」は1:1または1:n
+    ・保管された情報の暗号化: 暗号化され、KMSに保存
+    ・保管された情報へのAPIアクセス: 可能
+    ・APIアクセス時のRate limit: 700 Req/sec。※DescribeSecret、GetSecretValueの場合(参照)
+    ・保管された情報へのアクセス制御: IAMポリシーで制御可能
+    ・連携可能なAWSサービス: 多数(参照)
+    ・保管された情報のバージョニング
+      ・複数バージョンを保持可能。内部的には1シークレットにつき約100保持可能
+      ・だが、バージョンに付与できるラベルの最大数は20(参照)
+    ・保管された情報の使用状況の監査・監視
+      ・CloudTrail、CloudWatch、SNSを活用して監査・監視可能
+    ・シークレット情報の自動更新
+      ・RDS for MySQL、PostgreSQL、Auroraの認証情報自動更新を標準サポート
+      ・他DBの接続情報やAPIキー等は Parameter Storeが提供するLambdaスクリプトカスタマイズで対応
+    ・利用料金
+      ・有料
+      ・シークレット 1 件あたり 0.40 USD/月
+      ・10,000 回の API コールあたり 0.05 USD
+      ・更に、Parameter Storeと同様、KMSの暗号化にCMKを利用する場合、KMSのAPI呼び出し料金が必要
+
+    ■ アクセスサンプル
+
+      const { SecretsManagerClient, GetSecretValueCommand } = require('@aws-sdk/client-secrets-manager');
+      const client = new SecretsManagerClient({ region: 'ap-northeast-1' });
+      const command = new GetSecretValueCommand({ SecretId: 'dev/db-string' });
+      const result = await client.send(command);
+      console.log(result);

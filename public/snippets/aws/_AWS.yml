@@ -224,23 +224,23 @@
         <div class="group_title">Security, Identity & Compliance</div>
         <div class="icon_row">
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Security-Identity-Compliance/Identity_and_Access_Management.png"/>
+              <img class="icon" src="/snippets/aws/icons/Security-Identity-Compliance/Identity_and_Access_Management.png"/>
               <span class="tooltip-text"> AWS Identity and Access Management(IAM) </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Security-Identity-Compliance/Cognito.png"/>
+              <img class="icon" src="/snippets/aws/icons/Security-Identity-Compliance/Cognito.png"/>
               <span class="tooltip-text"> Amazon Cognito </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Security-Identity-Compliance/Secrets_Manager.png"/>
+              <img class="icon" src="/snippets/aws/icons/Security-Identity-Compliance/Secrets_Manager.png"/>
               <span class="tooltip-text"> AWS Secrets Manager </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Security-Identity-Compliance/Key_Management_Service.png"/>
+              <img class="icon" src="/snippets/aws/icons/Security-Identity-Compliance/Key_Management_Service.png"/>
               <span class="tooltip-text"> AWS Key Management Service(KMS) </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Security-Identity-Compliance/GuardDuty.png"/>
+              <img class="icon" src="/snippets/aws/icons/Security-Identity-Compliance/GuardDuty.png"/>
               <span class="tooltip-text"> AWS GuardDuty </span>
             </div>
         </div>  
@@ -250,27 +250,27 @@
         <div class="group_title">Networking & Content Delivery</div>
         <div class="icon_row">
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Networking-Content-Delivery/Virtual_Private_Cloud.png"/>
+              <img class="icon" src="/snippets/aws/icons/Networking-Content-Delivery/Virtual_Private_Cloud.png"/>
               <span class="tooltip-text"> Amazon Virtual Private Cloud(VPC) </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Networking-Content-Delivery/CloudFront.png"/>
+              <img class="icon" src="/snippets/aws/icons/Networking-Content-Delivery/CloudFront.png"/>
               <span class="tooltip-text"> Amazon CloudFront </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Networking-Content-Delivery/API_Gateway.png"/>
+              <img class="icon" src="/snippets/aws/icons/Networking-Content-Delivery/API_Gateway.png"/>
               <span class="tooltip-text"> Amazon API Gateway </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Networking-Content-Delivery/Elastic_Load_Balancing.png"/>
+              <img class="icon" src="/snippets/aws/icons/Networking-Content-Delivery/Elastic_Load_Balancing.png"/>
               <span class="tooltip-text"> Amazon Elastic Load Balancing(ELB) </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Networking-Content-Delivery/Route_53.png"/>
+              <img class="icon" src="/snippets/aws/icons/Networking-Content-Delivery/Route_53.png"/>
               <span class="tooltip-text"> Amazon Route 53 </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Networking-Content-Delivery/App_Mesh.png"/>
+              <img class="icon" src="/snippets/aws/icons/Networking-Content-Delivery/App_Mesh.png"/>
               <span class="tooltip-text"> Amazon App Mesh </span>
             </div>
         </div>  
@@ -280,27 +280,27 @@
         <div class="group_title">Compute</div>
         <div class="icon_row">
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Compute/EC2.png"/>
+              <img class="icon" src="/snippets/aws/icons/Compute/EC2.png"/>
               <span class="tooltip-text"> Amazon Elastic Compute Cloud(EC2) </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Compute/App_Runner.png"/>
+              <img class="icon" src="/snippets/aws/icons/Compute/App_Runner.png"/>
               <span class="tooltip-text"> App Runner </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Compute/Batch.png"/>
+              <img class="icon" src="/snippets/aws/icons/Compute/Batch.png"/>
               <span class="tooltip-text"> AWS Batch </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Compute/Elastic_Beanstalk.png"/>
+              <img class="icon" src="/snippets/aws/icons/Compute/Elastic_Beanstalk.png"/>
               <span class="tooltip-text"> Amazon Elastic Beanstalk </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Compute/Lambda.png"/>
+              <img class="icon" src="/snippets/aws/icons/Compute/Lambda.png"/>
               <span class="tooltip-text"> AWS Lambda </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Compute/Lightsail.png"/>
+              <img class="icon" src="/snippets/aws/icons/Compute/Lightsail.png"/>
               <span class="tooltip-text"> Amazon Lightsail </span>
             </div>
         </div>  
@@ -310,27 +310,27 @@
         <div class="group_title">App-Integration</div>
         <div class="icon_row">
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/App-Integration/Step_Functions.png"/>
+              <img class="icon" src="/snippets/aws/icons/App-Integration/Step_Functions.png"/>
               <span class="tooltip-text"> AWS Step Functions </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/App-Integration/EventBridge.png"/>
+              <img class="icon" src="/snippets/aws/icons/App-Integration/EventBridge.png"/>
               <span class="tooltip-text"> Amazon EventBridge </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/App-Integration/Simple_Notification_Service.png"/>
+              <img class="icon" src="/snippets/aws/icons/App-Integration/Simple_Notification_Service.png"/>
               <span class="tooltip-text"> Amazon Simple Notification Service(SNS) </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/App-Integration/Simple_Queue_Service.png"/>
+              <img class="icon" src="/snippets/aws/icons/App-Integration/Simple_Queue_Service.png"/>
               <span class="tooltip-text"> Amazon Simple Queue Service(SQS) </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/App-Integration/AppFlow.png"/>
+              <img class="icon" src="/snippets/aws/icons/App-Integration/AppFlow.png"/>
               <span class="tooltip-text"> Amazon AppFlow </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/App-Integration/AppSync.png"/>
+              <img class="icon" src="/snippets/aws/icons/App-Integration/AppSync.png"/>
               <span class="tooltip-text"> AWS AppSync </span>
             </div>
         </div>  
@@ -340,19 +340,19 @@
         <div class="group_title">Container</div>
         <div class="icon_row">
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Containers/Elastic_Container_Service.png"/>
+              <img class="icon" src="/snippets/aws/icons/Containers/Elastic_Container_Service.png"/>
               <span class="tooltip-text"> Amazon Elastic Container Service(ECS) </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Containers/Fargate.png"/>
+              <img class="icon" src="/snippets/aws/icons/Containers/Fargate.png"/>
               <span class="tooltip-text"> Amazon Fargate </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Containers/Elastic_Container_Registry.png"/>
+              <img class="icon" src="/snippets/aws/icons/Containers/Elastic_Container_Registry.png"/>
               <span class="tooltip-text"> Amazon Elastic Container Registry(ECR) </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Containers/Elastic_Kubernetes_Service.png"/>
+              <img class="icon" src="/snippets/aws/icons/Containers/Elastic_Kubernetes_Service.png"/>
               <span class="tooltip-text"> Amazon Elastic Kubernetes Service(EKS) </span>
             </div>
         </div>  
@@ -362,27 +362,27 @@
         <div class="group_title">Storage</div>
         <div class="icon_row">
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Storage/Simple_Storage_Service.png"/>
+              <img class="icon" src="/snippets/aws/icons/Storage/Simple_Storage_Service.png"/>
               <span class="tooltip-text"> Amazon Simple Storage Service(S3) </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Storage/Simple_Storage_Service_Glacier.png"/>
+              <img class="icon" src="/snippets/aws/icons/Storage/Simple_Storage_Service_Glacier.png"/>
               <span class="tooltip-text"> Amazon Simple Storage Service Glacier </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Storage/Elastic_Block_Store.png"/>
+              <img class="icon" src="/snippets/aws/icons/Storage/Elastic_Block_Store.png"/>
               <span class="tooltip-text"> Amazon Elastic Block Store(EBS) </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Storage/EFS.png"/>
+              <img class="icon" src="/snippets/aws/icons/Storage/EFS.png"/>
               <span class="tooltip-text"> Amazon Elastic File System(EFS) </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Storage/Snowball.png"/>
+              <img class="icon" src="/snippets/aws/icons/Storage/Snowball.png"/>
               <span class="tooltip-text"> AWS Snowball </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Storage/Backup.png"/>
+              <img class="icon" src="/snippets/aws/icons/Storage/Backup.png"/>
               <span class="tooltip-text"> AWS Backup </span>
             </div>
         </div>  
@@ -392,31 +392,31 @@
         <div class="group_title">Database</div>
         <div class="icon_row">
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Database/RDS.png"/>
+              <img class="icon" src="/snippets/aws/icons/Database/RDS.png"/>
               <span class="tooltip-text"> Amazon Relational Database Service(RDS) </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Database/Aurora.png"/>
+              <img class="icon" src="/snippets/aws/icons/Database/Aurora.png"/>
               <span class="tooltip-text"> Amazon Aurora </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Database/DynamoDB.png"/>
+              <img class="icon" src="/snippets/aws/icons/Database/DynamoDB.png"/>
               <span class="tooltip-text"> Amazon DynamoDB </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Database/DocumentDB.png"/>
+              <img class="icon" src="/snippets/aws/icons/Database/DocumentDB.png"/>
               <span class="tooltip-text"> Amazon DocumentDB </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Database/Neptune.png"/>
+              <img class="icon" src="/snippets/aws/icons/Database/Neptune.png"/>
               <span class="tooltip-text"> Amazon Neptune </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Database/MemoryDB.png"/>
+              <img class="icon" src="/snippets/aws/icons/Database/MemoryDB.png"/>
               <span class="tooltip-text"> Amazon MemoryDB </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Database/ElastiCache.png"/>
+              <img class="icon" src="/snippets/aws/icons/Database/ElastiCache.png"/>
               <span class="tooltip-text"> Amazon ElastiCache </span>
             </div>
         </div>  
@@ -426,7 +426,7 @@
         <div class="group_title">Frontend Web Mobile</div>
         <div class="icon_row">
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Front-End-Web-Mobile/Amplify.png"/>
+              <img class="icon" src="/snippets/aws/icons/Front-End-Web-Mobile/Amplify.png"/>
               <span class="tooltip-text"> AWS Amplify </span>
             </div>
         </div>  
@@ -436,35 +436,35 @@
         <div class="group_title">Management & Governance</div>
         <div class="icon_row">
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Management-Governance/CloudTrail.png"/>
+              <img class="icon" src="/snippets/aws/icons/Management-Governance/CloudTrail.png"/>
               <span class="tooltip-text"> AWS CloudTrail </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Management-Governance/CloudFormation.png"/>
+              <img class="icon" src="/snippets/aws/icons/Management-Governance/CloudFormation.png"/>
               <span class="tooltip-text"> AWS CloudFormation </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Management-Governance/CloudWatch.png"/>
+              <img class="icon" src="/snippets/aws/icons/Management-Governance/CloudWatch.png"/>
               <span class="tooltip-text"> Amazon CloudWatch </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Management-Governance/Systems_Manager.png"/>
+              <img class="icon" src="/snippets/aws/icons/Management-Governance/Systems_Manager.png"/>
               <span class="tooltip-text"> AWS Systems Manager(SSM) </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Management-Governance/Auto_Scaling.png"/>
+              <img class="icon" src="/snippets/aws/icons/Management-Governance/Auto_Scaling.png"/>
               <span class="tooltip-text"> AWS Auto Scaling </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Management-Governance/Management_Console.png"/>
+              <img class="icon" src="/snippets/aws/icons/Management-Governance/Management_Console.png"/>
               <span class="tooltip-text"> AWS Management Console </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Management-Governance/User_Notifications.png"/>
+              <img class="icon" src="/snippets/aws/icons/Management-Governance/User_Notifications.png"/>
               <span class="tooltip-text"> AWS User Notifications </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Management-Governance/Config.png"/>
+              <img class="icon" src="/snippets/aws/icons/Management-Governance/Config.png"/>
               <span class="tooltip-text"> AWS Config </span>
             </div>
         </div>  
@@ -474,19 +474,19 @@
         <div class="group_title">Cloud-Financial-Management</div>
         <div class="icon_row">
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Cloud-Financial-Management/Budgets.png"/>
+              <img class="icon" src="/snippets/aws/icons/Cloud-Financial-Management/Budgets.png"/>
               <span class="tooltip-text"> AWS Budgets </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Cloud-Financial-Management/Cost_Explorer.png"/>
+              <img class="icon" src="/snippets/aws/icons/Cloud-Financial-Management/Cost_Explorer.png"/>
               <span class="tooltip-text"> AWS Cost Explorer </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Cloud-Financial-Management/Cost_and_Usage_Report.png"/>
+              <img class="icon" src="/snippets/aws/icons/Cloud-Financial-Management/Cost_and_Usage_Report.png"/>
               <span class="tooltip-text"> AWS Cost and Usage Report </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Cloud-Financial-Management/Billing_Conductor.png"/>
+              <img class="icon" src="/snippets/aws/icons/Cloud-Financial-Management/Billing_Conductor.png"/>
               <span class="tooltip-text"> AWS Billing Conductor </span>
             </div>
         </div>  
@@ -496,35 +496,35 @@
         <div class="group_title">Developer-Tools</div>
         <div class="icon_row">
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Developer-Tools/Tools_and_SDKs.png"/>
+              <img class="icon" src="/snippets/aws/icons/Developer-Tools/Tools_and_SDKs.png"/>
               <span class="tooltip-text"> Tools and SDKs </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Developer-Tools/CodeCommit.png"/>
+              <img class="icon" src="/snippets/aws/icons/Developer-Tools/CodeCommit.png"/>
               <span class="tooltip-text"> Amazon CodeCommit </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Developer-Tools/CodeBuild.png"/>
+              <img class="icon" src="/snippets/aws/icons/Developer-Tools/CodeBuild.png"/>
               <span class="tooltip-text"> Amazon CodeBuild </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Developer-Tools/CodeDeploy.png"/>
+              <img class="icon" src="/snippets/aws/icons/Developer-Tools/CodeDeploy.png"/>
               <span class="tooltip-text"> Amazon CodeDeploy </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Developer-Tools/CodePipeline.png"/>
+              <img class="icon" src="/snippets/aws/icons/Developer-Tools/CodePipeline.png"/>
               <span class="tooltip-text"> Amazon CodePipeline </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Developer-Tools/Cloud9.png"/>
+              <img class="icon" src="/snippets/aws/icons/Developer-Tools/Cloud9.png"/>
               <span class="tooltip-text"> AWS Cloud9 </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Developer-Tools/X_Ray.png"/>
+              <img class="icon" src="/snippets/aws/icons/Developer-Tools/X_Ray.png"/>
               <span class="tooltip-text"> AWS X-Ray </span>
             </div>
             <div class="icon tooltip">
-              <img class="icon" src="snippets/aws/icons/Developer-Tools/CodeArtifact.png"/>
+              <img class="icon" src="/snippets/aws/icons/Developer-Tools/CodeArtifact.png"/>
               <span class="tooltip-text"> AWS CodeArtifact </span>
             </div>
         </div>  

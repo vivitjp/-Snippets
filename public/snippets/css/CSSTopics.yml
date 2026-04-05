@@ -269,7 +269,7 @@
 
     ■ HTML
       <div class="tooltip">
-        <img class="icon" src="snippets/aws/icons/Compute/EC2.png"/>
+        <img class="icon" src="/snippets/aws/icons/Compute/EC2.png"/>
         <span class="tooltip-text"> EC2 </span>
       </div>
 

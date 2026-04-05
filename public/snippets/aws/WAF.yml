@@ -7,6 +7,7 @@
   BODY: |
     ■ 概要
 
+    ・Web Application Firewall(WAF)
     ・ウェブアプリケーションを攻撃から保護するためのファイアウォールサービス
     ・OWASP Top 10の脆弱性（SQLインジェクション、クロスサイトスクリプティングなど）に対する防御ルールを提供
     ・CloudFront や Application Load Balancer(ALB) と連携
