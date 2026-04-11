@@ -338,8 +338,7 @@
       });
 
 - ENTRY:
-  EXPLAIN: |
-    Buffer
+  EXPLAIN: Buffer
   BODY: |
     ■ バイナリデータを扱うためのクラス
     • Node.js専用のクラスでUint8Arrayのサブクラス 
