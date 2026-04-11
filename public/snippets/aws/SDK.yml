@@ -6,7 +6,8 @@
   CATEGORY: 概要
 
 - ENTRY:
-  EXPLAIN: SDK for JS in GitHub
+  EXPLAIN: |
+    SDK for JS in GitHub
   BODY: |
     ■ v2(2024-09-08 メンテモード, 2025-09-08 終了)
     https://github.com/aws/aws-sdk-js
@@ -24,45 +25,6 @@
     ■ コードでの見分け方
       V2: import {...} from 'aws-sdk'
       V3: import {...} from '@aws-sdk/{service}'
-
-    ■ 概要
-
-    ・AWS の API をプログラムから呼ぶための公式クライアント群(JavaScript / TypeScript 向けは本ファイルの主題)
-
-    ・向き先のイメージ:
-
-      ・バックエンド・サーバサイドが主戦場
-      ・Node.js 上の API サーバ、BFF、バッチ、デプロイスクリプト、CI のジョブ内処理など
-      ・AWS Lambda 上の関数(イベント処理、S3 トリガ、キュー消費など)でも同じ SDK を使うことが多い
-
-      ・フロントエンド(ブラウザ)から直接フル権限の IAM ユーザキーを埋め込んで使うのは避けるべき
-      ・ブラウザで AWS を触る場合は Cognito や一時クレデンシャル、もしくは自前 API 経由など設計を分けるのが一般的
-
-    ・CLI と SDK の違い:
-
-      ・CLI は対話・スクリプト・運用向けのコマンド
-      ・SDK はアプリのロジックに組み込み、型・エラーハンドリング・テストと一緒に保守する向き
-
-    ・JavaScript SDK が向く開発:
-
-      ・既存の Node / TS プロジェクトから S3・DynamoDB・SQS 等を読み書きする
-      ・サーバーレス構成で Lambda と API Gateway や EventBridge と連携する
-      ・インフラの一部操作をアプリから行う(権限は最小限の IAM ロールに閉じる)
-
-    ・向かない・注意が要る場面:
-
-      ・シークレットをクライアントに配る前提の「ブラウザ単体」でのフル AWS 操作
-      ・単発の運用なら CLI やコンソールの方が早いことも多い
-
-    ・v3 の特徴(運用上のメリット):
-
-      ・サービスごとにパッケージ分割され、バンドルサイズを抑えやすい
-      ・TypeScript ファーストで型が付きやすい
-
-    ・認証の基本:
-
-      ・EC2 や Lambda などではインスタンスロール・実行ロールのクレデンシャルが自動で載ることが多い
-      ・ローカル開発では環境変数、共有クレデンシャルファイル、SSO 等で同一のデフォルトチェーンに乗せる
 
 - ENTRY:
   EXPLAIN: パッケージリスト
@@ -124,7 +86,8 @@
     @aws-sdk/client-outposts                 # Outposts: ハイブリッドクラウド
 
 - ENTRY:
-  EXPLAIN: 環境変数による認証情報設定
+  EXPLAIN: |
+    環境変数による認証情報設定
   BODY: |
     ■ 環境変数一覧
 

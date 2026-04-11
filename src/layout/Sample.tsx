@@ -1,6 +1,6 @@
 import { MenuGroupTitle, MenuItemGroupItems, MenuNav } from "./Layout.style";
 import { Link, Route, Routes } from "react-router-dom";
-import { Box, Heading, HStack, Stack, VStack } from "@chakra-ui/react";
+import { Heading, HStack, Stack, VStack } from "@chakra-ui/react";
 
 import LocalStoragePage from "../pages/localStorage";
 import RegressionPage from "../pages/regression";
@@ -11,7 +11,6 @@ import { ReactChildren } from "../pages/React-children";
 import { ContextParentHasMethod } from "../pages/contextParentHasMethod";
 import { ContextChildrenHaveMethod } from "../pages/contextChildrenHaveMethod";
 import { ContextUseImperativeMixedSample } from "../pages/contextUseImperativeMixed";
-import WebSocketClientPage from "../pages/webSocketClient";
 
 type SampleType = {
   name: string;
@@ -77,13 +76,6 @@ const samples: Record<GroupName, SampleType[]> = {
       element: <RegressionPage />,
     },
   ],
-  Network: [
-    {
-      name: "WebSocket チャット",
-      to: "/samples/websocket-client",
-      element: <WebSocketClientPage />,
-    },
-  ],
 };
 
 //------------------------------
@@ -91,18 +83,8 @@ const samples: Record<GroupName, SampleType[]> = {
 //------------------------------
 export const Sample = () => {
   return (
-    <HStack
-      align="stretch"
-      width={"100%"}
-      flex={1}
-      minH={0}
-      h="100%"
-      overflow="hidden"
-    >
-      <MenuNav
-        data-testid="body"
-        style={{ minHeight: "100%", overflowY: "auto", flexShrink: 0 }}
-      >
+    <HStack align="stretch" width={"100%"} minHeight={"fit-content"}>
+      <MenuNav data-testid="body" style={{ minHeight: "100vh" }}>
         <HStack align="start" width={"100%"}>
           <VStack align="start" gap={4} width={"100%"}>
             <Heading>サンプルコード</Heading>
@@ -137,27 +119,22 @@ export const Sample = () => {
       </MenuNav>
       <Stack
         data-testid="sample-content"
-        alignItems={"stretch"}
+        alignItems={"flex-start"}
         justifyContent={"flex-start"}
         flex={1}
         minWidth={0}
-        minH={0}
-        h="100%"
-        overflow="hidden"
       >
-        <Box flex={1} minH={0} h="100%" display="flex" flexDirection="column">
-          <Routes>
-            {Object.values(samples).flatMap((groupSamples, groupIndex) =>
-              groupSamples.map((sample, sIndex) => (
-                <Route
-                  key={`${groupIndex}-${sIndex}`}
-                  path={sample.to}
-                  element={sample.element}
-                />
-              ))
-            )}
-          </Routes>
-        </Box>
+        <Routes>
+          {Object.values(samples).flatMap((groupSamples, groupIndex) =>
+            groupSamples.map((sample, sIndex) => (
+              <Route
+                key={`${groupIndex}-${sIndex}`}
+                path={sample.to}
+                element={sample.element}
+              />
+            ))
+          )}
+        </Routes>
       </Stack>
     </HStack>
   );

@@ -86,7 +86,8 @@
         - 20%
         - 25%
     BODY: |
-      サービス名	タイプ	価格体系と最新の概要
+      サービス名
+        タイプ	価格体系と最新の概要
       Amazon RDS	RDBMS (マネージド)	無料利用枠あり。最小構成は月額15〜25 USD程度が目安。
       Amazon Aurora	RDBMS (高性能マネージド)	Serverless v2の最小構成で月額43〜45 USD程度が目安。
       Amazon DynamoDB	NoSQL (フルマネージド)	永続的な無料利用枠あり。小規模利用なら無料運用可能。
@@ -120,7 +121,8 @@
         - 20%
         - 25%
     BODY: |
-      サービス名	提供元	主な特徴
+      サービス名
+        提供元	主な特徴
       AWS IAM Identity Center (旧 AWS SSO)	Amazon Web Services	AWSアカウントや各種SaaSへのSSO（シングルサインオン）を一元管理。AWS環境をメインに利用している企業にとって非常に便利。
       AWS IAM (Identity and Access Management)	Amazon Web Services	AWSリソース（EC2, S3など）へのアクセス権限を詳細に管理するための基本サービス。ユーザー、グループ、ロール、ポリシーで構成される。
       Okta (オクタ)	Okta	IDaaS市場のリーダー。SSO、MFA、ライフサイクル管理など機能が豊富で、多くのエンタープライズ企業で利用されている。

@@ -85,19 +85,7 @@ export const Layout = () => {
   }
 
   return (
-    <Section
-      data-testid="layout"
-      ref={refBody}
-      style={
-        isSamples
-          ? {
-              height: "100dvh",
-              overflow: "hidden",
-              minHeight: 0,
-            }
-          : undefined
-      }
-    >
+    <Section data-testid="layout" ref={refBody}>
       <HeaderWrapper>
         <HeaderTitle>Sunabar</HeaderTitle>
         <HStack>
@@ -112,16 +100,7 @@ export const Layout = () => {
 
       <>
         {isSamples ? (
-          <div
-            style={{
-              width: "100%",
-              flex: 1,
-              minHeight: 0,
-              display: "flex",
-              flexDirection: "column",
-              overflow: "hidden",
-            }}
-          >
+          <div style={{ width: "100%", minHeight: "100%", height: "auto" }}>
             <Sample />
           </div>
         ) : (
