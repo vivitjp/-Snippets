@@ -1,0 +1,200 @@
+---
+#-------------------------------
+# Cookie
+#-------------------------------
+- ENTRY:
+  EXPLAIN: 概要
+  BODY: |
+    ■ Set-Cookie ヘッダ例
+
+    Set-Cookie: sessionId=abc123; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=3600
+
+    ■ 概要
+
+    ・サーバーがクライアントに送信、以降のリクエストで自動的に返送される小さなデータ片
+    ・サイズ制限: 1 クッキーあたり約4KB
+    ・個数制限: ドメインあたり約20個(要確認)のクッキー
+    ・用途:セッション管理、ユーザー認証、ユーザー設定の保存などに使用
+    ・`Set-Cookie` ヘッダでサーバーからクライアントへ送信
+    ・`Cookie` ヘッダでクライアントからサーバーへ返送
+
+    ■ セキュリティ考慮点
+
+    ・XSS 攻撃対策として `HttpOnly` 属性を使用
+    ・CSRF 攻撃対策として `SameSite` 属性を適切に設定
+    ・機密情報はクッキーに保存せず、セッション ID のみを保存することが推奨される
+
+    ■ ユースケース
+
+    ・ユーザー認証: ログイン後にセッション ID をクッキーに保存し、以降のリクエストで認証状態を維持
+    ・ユーザー設定: テーマや言語設定などのユーザー固有の設定を保存
+
+    ■ ブラウザでの確認方法
+
+    ・開発者ツールの Application > Cookies タブで確認可能
+    ・JavaScript で document.cookie をコンソール出力
+
+    ■ トラブルシューティング
+
+    ・Cookie が送信されない場合: SameSite, Secure, Domain, Path の設定を確認
+    ・HttpOnly Cookie は JavaScript からアクセス不可
+    ・ブラウザの Cookie 設定（プライバシーモードなど）が影響する場合あり
+
+- ENTRY:
+  EXPLAIN: Cookie の属性
+  BODY: |
+    `HttpOnly`:              JavaScript からアクセス不可 
+    `Secure`:                HTTPS 接続でのみ送信
+    `SameSite`:              クロスサイトリクエストでの送信制御
+    `Domain`:                クッキーが有効なドメイン
+    `Path`:                  クッキーが有効なパス
+    `Expires`/`Max-Age`:     クッキーの有効期限
+
+    ■ HttpOnly
+
+    ・JavaScript からアクセス不可（XSS 攻撃防止）
+
+    ■ Secure
+
+    ・HTTPS 接続でのみ送信（盗聴防止）
+
+    ■ SameSite
+
+    ・クロスサイトリクエストでの送信制御
+    ・`Strict`: クロスサイトリクエストで送信しない
+    ・`Lax`: 一部のクロスサイトリクエストで送信（GET リクエストなど）
+    ・`None`: すべてのリクエストで送信（Secure 属性が必要）
+
+    ■ Domain
+
+    ・クッキーが有効なドメインを指定
+    ・サブドメイン間で共有可能
+
+    ■ Path
+
+    ・クッキーが有効なパスを指定
+    ・`/` に設定するのが一般的
+    ・指定されたパス以下でのみクッキーが送信
+
+    ■ Expires / Max-Age
+
+    ・クッキーの有効期限を設定
+    ・Expires: 固定日時で有効期限を指定
+    ・Max-Age: 秒数で有効期限を指定（Expires より優先） 1時間なら `Max-Age=3600`
+
+    ・セッション Cookie: Expires/Max-Age なし、ブラウザ閉じると削除
+    ・永続 Cookie: Expires/Max-Age あり、指定期間保存
+
+    ■ 任意属性の追加
+
+    ・可能だが、サイズ制限と個数制限に注意
+    ・機密情報は保存せず、セッション ID のみが推奨される
+    ・例: JSON.stringify でオブジェクトを保存
+    ・注意: XSS や CSRF のリスクが高まるため、慎重に使用
+
+- ENTRY:
+  EXPLAIN: ID 生成と保存
+  BODY: |
+    ■ セッション ID の生成
+
+    ・セッション ID は推測困難なランダムな文字列で生成
+    ・長さは少なくとも 16 バイト（128 ビット）以上が推奨
+    ・暗号学的に安全な乱数生成器を使用（例: Node.js の `crypto.randomBytes`）
+
+    ■ 例: Node.js
+
+    const crypto = require('crypto');
+
+    function generateSessionId() {
+      return crypto.randomBytes(16).toString('hex'); // 32 文字の 16 進数文字列
+    }
+
+    ■ ID の保存
+
+    ・サーバー側でセッションストア（メモリ、データベース、Redis など）に保存
+    ・クライアントにはセッション ID のみをクッキーで送信
+
+- ENTRY:
+  EXPLAIN: サーバー側(Express)
+  BODY: |
+    ■ Set-Cookie ヘッダ例
+
+    Set-Cookie: sessionId=abc123; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=3600
+
+    ■ クッキー設定(サーバー -> クライアント)
+
+    const sessionId = crypto.randomBytes(16).toString('hex'); // 32 文字の 16 進数文字列
+
+    const express = require('express');
+    const app = express();
+
+    app.post('/login', (req, res) => {
+      // 認証処理後にクッキーを設定
+      res.cookie('sessionId', sessionId, {
+        httpOnly: true,                 // JavaScript からアクセス不可
+        secure: true,                   // HTTPS 接続でのみ送信
+        sameSite: 'Strict',             // クロスサイトリクエストで送信しない 
+        path: '/',                      // クッキーの有効パス
+        maxAge: 3600                    // 1 時間で有効期限切れ 
+
+        // 他の情報を追加可能
+        domain: 'example.com',          // ドメイン指定
+        expires: new Date(Date.now() + 3600000), // 有効期限
+      });
+
+      res.send('Logged in');
+    });
+
+    ■ クッキー受信と認証確認(クライアント -> サーバー)
+
+    app.get('/protected', (req, res) => {
+      const sessionId = req.cookies.sessionId; // クッキーからセッション ID を取得
+
+      // セッションストアでセッション ID を確認
+      if (isValidSession(sessionId)) {
+        res.send('Protected content');
+      } else {
+        res.status(401).send('Unauthorized');
+      }
+    });
+
+    ■ クッキー削除(ログアウト)
+
+    app.post('/logout', (req, res) => {
+      res.clearCookie('sessionId', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'Strict',
+        path: '/'
+      });
+
+      res.send('Logged out');
+    });
+
+    ■ 削除されたクッキー(クライアント)
+
+    Set-Cookie: sessionId=; HttpOnly; Secure; SameSite=Strict; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT
+
+- ENTRY:
+  EXPLAIN: クライアント側
+  BODY: |
+    ■ Cookie ヘッダ例
+
+    Cookie: sessionId=abc123
+
+    ■ ID 取得方法
+
+    ・クライアント側（JavaScript）での取得例:
+
+    const getCookie = (name) => {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    };
+
+    const sessionId = getCookie('sessionId');
+
+    ■ 注意点
+
+    ・`HttpOnly` 属性が付与されたクッキーは JavaScript からアクセスできず、XSS 攻撃から保護
+    ・クライアントは自動的にクッキーをサーバーに送信するため、明示的に取得する必要はない

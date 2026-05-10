@@ -1,0 +1,259 @@
+# ----------------------------
+# HTML By Purpose
+# ----------------------------
+
+- ENTRY:
+  EXPLAIN: フォントサイズ
+  BODY: |
+    ■ px: 絶対値
+    html { font-size: 12px; }
+    h1   { font-size: 20px; }           // 20px
+    span { font-size: 18px; }           // 18px
+
+    ■ em: 直親要素 font-size 基準
+    html { font-size: 12px; }
+    h1   { font-size: 2em;  }           // 24px
+    span { font-size: 0.5em;}           // 6px
+
+    ■ %: 親要素の相対値(emと同じ)
+    html { font-size: 32px; }
+    h1   { font-size: 200%; }           // 64px
+    h1>span { font-size: 50%;  }        // 32px
+
+    ■ rem: root em(html要素の font-size 基準)
+    html { font-size: 32px; }
+    h1   { font-size: 2rem; }           // 64px
+    span { font-size: 0.5rem; }         // 16px
+
+- ENTRY:
+  EXPLAIN: フォントサイズ(62.5%)
+  BODY: |
+    htmlのフォント基準サイズは 16px
+    1em -> 10pxに合わせると使いやすい
+
+    html {
+      font-size: 62.5%;                 // 10px
+    }
+    body {
+      font-size: 1.4em;                 // 14px
+    }
+
+- ENTRY:
+  EXPLAIN: テーブル
+  SAMPLE: BODY
+  BODY: |
+    <style>
+    table.sample_table {
+      border-collapse: collapse;
+      border: 1px solid #AAA;
+    }
+    table.sample_table th,table.sample_table td{
+      padding: 3px;
+      border: 1px solid #AAA;
+    }
+    </style>
+
+    <table class="sample_table">
+      <caption>TABLE CAPTION</caption>
+      <thead>
+        <th>TTL 1</th><th>TTL 2</th><th>TTL 3</th>
+      </thead>
+      <tbody>
+        <tr>
+          <td>A</td><td>B</td><td>C</td>
+        </tr>
+        <tr>
+          <td>X</td><td>Y</td><td>Z</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <th>FOOT 1</th><th>FOOT 2</th><th>FOOT 3</th>
+      </thead>
+    </table>
+
+- ENTRY:
+  EXPLAIN: リスト ul
+  SAMPLE: BODY
+  BODY: |
+    <div class="flexRow">
+      <ul style="list-style-type: none">
+        <li>Item A</li>
+        <li>Item B</li>
+        <li>Item C</li>
+      </ul>
+
+      <ul class="myUi" style="list-style-type: disc">
+        <li>Item A</li>
+        <li>Item B</li>
+        <li>Item C</li>
+      </ul>
+
+      <ul style="list-style-type: circle">
+        <li>Item A</li>
+        <li>Item B</li>
+        <li>Item C</li>
+      </ul>
+
+      <ul style="list-style-type: square">
+        <li>Item A</li>
+        <li>Item B</li>
+        <li>Item C</li>
+      </ul>
+    </div>
+
+- ENTRY:
+  EXPLAIN: リスト ol
+  SAMPLE: BODY
+  BODY: |
+    <div class="flexRow">
+      <ol style="list-style-type: lower-roman">
+        <li>Item A</li>
+        <li>Item B</li>
+        <li>Item C</li>
+      </ol>
+
+      <ol style="list-style-type: upper-roman">
+        <li>Item A</li>
+        <li>Item B</li>
+        <li>Item C</li>
+      </ol>
+
+      <ol style="list-style-type: lower-greek">
+        <li>Item A</li>
+        <li>Item B</li>
+        <li>Item C</li>
+      </ol>
+
+    </div>
+
+- ENTRY:
+  EXPLAIN: リスト ol(cjk)
+  SAMPLE: BODY
+  BODY: |
+    <div class="flexRow">
+      <ol style="list-style-type: cjk-ideographic">
+        <li>Item A</li>
+        <li>Item B</li>
+        <li>Item C</li>
+      </ol>
+
+      <ol style="list-style-type: hiragana">
+        <li>Item A</li>
+        <li>Item B</li>
+        <li>Item C</li>
+      </ol>
+
+      <ol style="list-style-type: katakana">
+        <li>Item A</li>
+        <li>Item B</li>
+        <li>Item C</li>
+      </ol>
+
+      <ol style="list-style-type: hiragana-iroha">
+        <li>Item A</li>
+        <li>Item B</li>
+        <li>Item C</li>
+      </ol>
+
+      <ol style="list-style-type: katakana-iroha">
+        <li>Item A</li>
+        <li>Item B</li>
+        <li>Item C</li>
+      </ol>
+    </div>
+
+- ENTRY:
+  EXPLAIN: 詳細折りたたみ要素
+  SAMPLE: BODY
+  BODY: |
+    <details class="htmlSample">
+        <summary class="htmlSample">タイトル</summary>
+        隠された内容はこちら
+    </details>
+
+- ENTRY:
+  EXPLAIN: 詳細折りたたみ要素(内包)
+  SAMPLE: BODY
+  BODY: |
+    <details class="htmlSample">
+      <summary class="htmlSample">質問</summary>
+      中国語で"馬上"の意味は何？
+      <ul>
+        <li>A. すぐに</li>
+        <li>B. そのうち</li>
+        <li>C. まだ</li>
+      </ul>
+      <details>
+        <summary>正解</summary>
+          A. すぐに
+      </details>
+    </details>
+
+- ENTRY:
+  EXPLAIN: タイトル付き枠
+  SAMPLE: BODY
+  BODY: |
+    <fieldset class="htmlSample">
+        <legend>次の選択肢から正しいものを選べ</legend>
+
+        <label for="JavaScript" class="htmlSample">
+          <input type="radio" id="JavaScript" name="language">JavaScript
+        </label>
+
+        <label for="TypeScript" class="htmlSample">
+          <input type="radio" id="TypeScript" name="language">TypeScript
+        </label>
+
+        <label for="CoffeeScript" class="htmlSample">
+          <input type="radio" id="CoffeeScript" name="language">CoffeeScript
+        </label>
+    </fieldset>
+
+- ENTRY:
+  EXPLAIN: ルビ
+  SAMPLE: BODY
+  BODY: |
+    <ruby class="htmlSample">
+      <rb>明天</rb>
+      <rp>（</rp><rt>míng tiān</rt><rp>）</rp>
+    </ruby>
+
+- ENTRY:
+  EXPLAIN: 記事
+  SAMPLE: BODY
+  BODY: |
+    <article class="htmlSample">
+      <header>
+        <h3>吾輩は猫である。</h3>
+      </header>
+      <section>
+        <h4>名前はまだ無い。</h4>
+        <p>吾輩は猫である。名前はまだ無い。どこで生れたかとんと見当がつかぬ。
+        何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。
+        吾輩はここで始めて人間というものを見た。
+        しかもあとで聞くとそれは書生という人間中で一番獰悪な種族であったそうだ。
+        この書生というのは時々我々を捕えて煮て食うという話である。
+        しかしその当時は何という考もなかったから別段恐しいとも思わなかった。</p>
+      </section>
+      <footer>
+        <address>
+          メール:<a href="mailto:foo@hoo.com">foo@hoo.com</a>
+        </address>
+      </footer>
+    </article>
+
+- ENTRY:
+  EXPLAIN: イメージ(キャプション付き)
+  SAMPLE: BODY
+  BODY: |
+    <figure class="htmlSample">
+      <img src="/assets/images/fuji.jpg" style="width:50%;">
+      <figcaption>富士山</figcaption>
+    </figure>
+
+- ENTRY:
+  EXPLAIN: Flex
+  SAMPLE: BODY
+  BODY: |
+
+  

@@ -1,0 +1,60 @@
+---
+#-------------------------------
+# curl
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: 5タイプ
+  BODY: |
+    curl -XGET    URL
+    curl -XPOST   -d(--data) BODY URL
+    curl -XPUT    -d BODY URL
+    curl -XDELETE -d BODY URL
+    curl -XPATCH  -d BODY URL
+
+- ENTRY:
+  EXPLAIN: パラメタ書式
+  BODY: |
+    curl -XPOST -d 'name=tanaka&age=20' URL
+    curl -XPOST -d 'name=tanaka' -d 'age=20' URL
+    curl -XPOST -d @postdata.txt URL
+    curl -XPOST -H "Content-Type:application/json" -d '{"age":18}' URL
+
+- ENTRY:
+  EXPLAIN: 認証
+  BODY: |
+    Token認証
+    curl -H "Authorization: Bearer xxxx....xxxx" URL
+
+    Basic認証
+    curl -u(--user) user:password URL
+
+- ENTRY:
+  EXPLAIN: ユーザエージェント設定
+  BODY: |
+    curl -H "User-Agent: Mozilla/5.0 Chrome/69.0" URL
+    curl -A(--user-agent) "Mozilla/5.0 Chrome/69.0" URL
+
+- ENTRY:
+  EXPLAIN: ヘッダ
+  BODY: |
+    curl -i(--include) URL
+
+- ENTRY:
+  EXPLAIN: リダイレクト
+  BODY: |
+    curl -L URL
+
+- ENTRY:
+  EXPLAIN: 出力
+  BODY: |
+    curl -o(--output) 出力.txt URL
+    curl -O(--remote-name) URL  //ファイル名RemoteName
+
+    出力制限
+    curl -S(--silent) URL > 出力.txt
+
+- ENTRY:
+  EXPLAIN: アップロード
+  BODY: |
+    curl -T(--upload-file) ファイル.txt URL

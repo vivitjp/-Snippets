@@ -1,0 +1,9 @@
+---
+#-------------------------------
+# Lint Rules TypeScript
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: TS URL for more
+  BODY: |
+    https://typescript-eslint.io/rules/

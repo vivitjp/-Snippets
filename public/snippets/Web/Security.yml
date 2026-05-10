@@ -1,0 +1,144 @@
+---
+#-------------------------------
+# Security
+#-------------------------------
+- ENTRY: Security.category
+  CATEGORY: Security
+
+- ENTRY:
+  EXPLAIN: セキュリティ問題一覧
+  BODY: |
+    ■ 主なウェブセキュリティ問題
+
+    ・XSS (Cross-Site Scripting)
+    ・CSRF (Cross-Site Request Forgery)
+    ・SQL Injection
+    ・Clickjacking
+
+- ENTRY:
+  EXPLAIN: XSS (Cross-Site Scripting)
+  BODY: |
+    ■ XSS の概要
+
+    ・XSS は、ウェブアプリケーションの脆弱性
+    ・攻撃者が悪意あるスクリプトをユーザーのブラウザで実行させる攻撃
+    ・主に、ユーザー入力が適切にエスケープされていない場合に発生
+    ・Stored XSS, Reflected XSS, DOM-based XSS の3種類がある
+
+    ■ 被害が生じる実装
+
+    ・ユーザー入力（フォーム、URLパラメータ、コメントなど）をHTMLとして直接出力する場合
+    ・例: <div>{{ userInput }}</div> で、userInput に <script>alert('XSS')</script>
+
+    ・JavaScript で innerHTML や document.write を使用してユーザー入力を挿入する場合
+    ・例: element.innerHTML = userInput; でスクリプトが実行される
+
+    ■ 防衛するための実装（マニュアル）
+
+    ・入力データのサニタイズ: 特殊文字をエスケープ（< を &lt; に変換）
+    ・出力時のエスケープ: テンプレートエンジン（EJS, Handlebars）の auto-escape 機能を使用
+    ・Content Security Policy (CSP): script-src 'self' などで外部スクリプトを制限
+    ・HttpOnly Cookie: JavaScript から Cookie にアクセスできないようにする
+    ・入力検証: 許可された文字のみを受け入れるホワイトリスト方式
+
+    ■ CDK での対応比較
+
+    ・AWS WAF や CloudFront のセキュリティヘッダーを設定可能
+    ・例: CloudFront Distribution にセキュリティヘッダー（X-Frame-Options, X-Content-Type-Options）追加
+    ・WAF で XSS パターンをブロックするルールを定義
+    ・Lambda@Edge でレスポンスに CSP ヘッダーを挿入
+    ・マニュアル実装よりインフラレベルで一元管理可能だが、アプリケーション側のサニタイズは別途必要
+
+- ENTRY:
+  EXPLAIN: CSRF (Cross-Site Request Forgery)
+  BODY: |
+    ■ CSRF の概要
+
+    ・CSRF は、ユーザーが認証された状態で、攻撃者の用意したリクエストを強制的に実行させる攻撃
+    ・攻撃者はユーザーのブラウザを悪用して、正当なリクエストを送信させる
+    ・主に POST, PUT, DELETE などの状態変更リクエストが対象
+
+    ■ 被害が生じる実装
+
+    ・セッションやCookie ベースの認証を使用し、トークン検証がない場合
+    ・例: ログインフォームが <form action="/transfer" method="POST"> で、CSRF トークンなし
+    ・API が Cookie を自動送信する設定で、Origin チェックがない場合
+    ・攻撃サイトから <img src="http://bank.com/transfer?amount=1000"> で GET リクエストを誘発
+
+    ■ 防衛するための実装（マニュアル）
+
+    ・CSRF トークンの使用: フォームやリクエストにランダムトークンを含め、サーバーで検証
+    ・SameSite Cookie 属性: Cookie をクロスサイトリクエストで送信しないようにする
+    ・Origin/Referer ヘッダーのチェック: リクエストの送信元を検証
+    ・Double Submit Cookie: Cookie とリクエストボディの両方にトークンを含める
+    ・CAPTCHA の使用: 重要な操作で人間性を確認
+
+    ■ CDK での対応比較
+
+    ・CDK では、API Gateway + Lambda で CSRF トークンを検証するカスタムオーソライザーを実装
+    ・WAF で CSRF パターンを検知するルールを作成（Referer チェックなど）
+    ・CloudFront + Lambda@Edge でリクエストに CSRF トークンを追加/検証
+    ・マニュアル実装より、スケーラブルで一貫したセキュリティポリシーを適用可能
+    ・ただし、アプリケーションのロジック変更が必要な場合はマニュアルの方が柔軟
+
+- ENTRY:
+  EXPLAIN: SQL Injection
+  BODY: |
+    ■ SQL Injection の概要
+
+    ・SQL Injection は、データベースクエリに悪意あるSQLコードを注入する攻撃
+    ・ユーザー入力が適切にエスケープされていない場合に発生
+    ・データベースの不正アクセス、データ改ざん、削除が可能
+
+    ■ 被害が生じる実装
+
+    ・文字列連結でSQLクエリを構築する場合
+    ・例: "SELECT * FROM users WHERE id = '" + userId + "'" で、userId に ' OR '1'='1 を注入
+    ・Prepared Statement を使用せず、直接クエリを実行する場合
+    ・ORM の Raw SQL 機能でパラメータ化されていない場合
+
+    ■ 防衛するための実装（マニュアル）
+
+    ・Prepared Statement / Parameterized Query の使用: プレースホルダーでパラメータを分離
+    ・入力データのエスケープ: 特殊文字をエスケープ（ただし Prepared Statement が推奨）
+    ・ホワイトリスト入力検証: 許可されたパターン以外を拒否
+    ・最小権限の原則: データベースユーザーに必要最小限の権限のみ付与
+    ・エラーメッセージの隠蔽: SQLエラーをユーザーに表示しない
+
+    ■ CDK での対応比較
+
+    ・CDK では、RDS Proxy や Aurora Serverless で SQL Injection を防ぐ仕組みを導入
+    ・WAF で SQL Injection パターンを検知するルールを定義
+    ・Lambda 関数でクエリを検証してから実行
+    ・マニュアル実装より、インフラレベルでクエリを保護可能だが、アプリケーションコードの修正が必要
+
+- ENTRY:
+  EXPLAIN: Clickjacking
+  BODY: |
+    ■ Clickjacking の概要
+
+    ・Clickjacking は、ユーザーのクリックを悪用して、意図しない操作を実行させる攻撃
+    ・透明なフレームやiframe を重ねて、ユーザーが見えないボタンをクリックさせる
+    ・主にソーシャルエンジニアリングと組み合わせて使用
+
+    ■ 被害が生じる実装
+
+    ・X-Frame-Options ヘッダーが設定されていない場合
+    ・iframe で外部サイトを埋め込み可能
+    ・例: <iframe src="target-site.com" style="opacity: 0"> で透明フレームを作成
+    ・CSP の frame-ancestors ディレクティブが設定されていない場合
+
+    ■ 防衛するための実装（マニュアル）
+
+    ・X-Frame-Options ヘッダー: DENY, SAMEORIGIN, ALLOW-FROM を設定
+    ・Content Security Policy (CSP): frame-ancestors 'self' でフレーム埋め込みを制限
+    ・JavaScript でフレーム検知: top.location と self.location を比較
+    ・SameSite Cookie: クロスサイトでのCookie送信を制限（間接的に防御）
+
+    ■ CDK での対応比較
+
+    ・CDK では、CloudFront Distribution にセキュリティヘッダーを追加
+    ・例: Response Headers Policy で X-Frame-Options を設定
+    ・WAF で Clickjacking パターンをブロック
+    ・API Gateway でヘッダーを強制追加
+    ・マニュアル実装より、CDNレベルで全レスポンスに適用可能で管理が容易

@@ -1,0 +1,296 @@
+---
+#-------------------------------
+# Emotion
+#-------------------------------
+- ENTRY:
+  CATEGORY: パッケージ & インストール
+
+- ENTRY:
+  EXPLAIN: Package
+  BODY: |
+    https://qiita.com/cheez921/items/1d13545f8a0ea46beb51
+
+    @emotion/css
+        フレームワークにとらわれず、Emotionを使用するためのパッケージ。
+    @emotion/react
+        React用のEmotionパッケージ。
+    @emotion/styled
+        styled-component っぽい記法で書くことができるEmotionパッケージ。
+        (筆者はstyled-componentから乗り換える人用のパッケージだと思っています)
+    [NG] @emotion/core
+        @emotion/core はEmotion 11で @emotion/react に改名したため、忘れ去ってください。
+        参考：https://emotion.sh/docs/emotion-11#package-renaming
+    @emotion/babel-preset-css-prop
+        css propsを使用する場合、本来はすべてのファイルに/** @jsx jsx */を書く必要がある。
+        このJSX Pragmaの問題を解決するためのプラグインが@emotion/babel-preset-css-prop。
+    @emotion/babel-plugin
+        Emotionのコンパイルを最適化するためのプラグイン。
+        version 8 以上は不要
+    @emotion/server
+        サーバー側レンダリングするAPI
+
+- ENTRY:
+  EXPLAIN: インストール
+  BODY: |
+    "@emotion/babel-preset-css-prop": "^11.12.0",
+    "@emotion/css": "^11.13.5",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "framer-motion": "^12.6.3",
+
+- ENTRY:
+  CATEGORY: Styled 宣言
+
+- ENTRY:
+  EXPLAIN: Styled 宣言と上書き
+  BODY: |
+    const EmotionStyled = styled(Input)`
+      font-size: 20px;
+      color: red;
+    `
+
+    ■ 用法
+    <EmotionStyled {...props} />
+
+    ■ CSS属性の上書き => 効果なし
+    <EmotionStyled {...props} color={"blue"} />
+
+    ■ CSS属性の上書き => 効果あり
+    <EmotionStyled {...props} color={"blue !important"} />
+
+- ENTRY:
+  CATEGORY: CSS 宣言
+
+- ENTRY:
+  EXPLAIN: CSS 宣言と上書き
+  BODY: |
+    const EmotionCSS = css`
+      font-size: 20px;
+      color: red;
+    `
+
+    ■ 用法
+    <Input value="Hello" css={EmotionCSS} {...props} />
+
+    ■ CSS属性の上書き => 効果なし
+    <Input value="Hello" css={EmotionCSS} {...props} color={"green"}/>
+
+    ■ CSS属性の上書き => 効果あり
+    <Input value="Hello" css={EmotionCSS} {...props} color={"green !important"}/>
+
+- ENTRY:
+  EXPLAIN: CSS オブジェクトスタイル
+  BODY: |
+    const objectStyle = css({
+      maxWidth: '400px',
+      margin: '0 auto',
+      padding: '10px'
+      '&:hover': {
+        opacity: 0.5,
+      },
+    });
+
+- ENTRY:
+  EXPLAIN: CSS オブジェクト拡張
+  BODY: |
+    const marginBottom = css({
+      marginBottom: '16px'
+    })
+
+    const style = css({
+      ...marginBottom,
+      padding: '16px'
+    })
+
+- ENTRY:
+  EXPLAIN: CSS ストリングスタイル
+  BODY: |
+    const stringStyle = css`
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 10px
+      &:hover {
+        opacity: 0.5;
+      }
+    `
+
+    render(
+      <div css={stringStyle}>
+        {/* ... */}
+      </div>
+    )
+
+- ENTRY:
+  EXPLAIN: CSS ストリング拡張
+  BODY: |
+    const marginBottom = css`
+      margin-bottom: 16px
+    `
+
+    const style = css`
+      ${marginBottom}
+      padding: 16px;
+    `
+
+- ENTRY:
+  EXPLAIN: CSS ストリング入れ子
+  BODY: |
+    const listStyle = css`
+      li {
+        //...
+      }
+    `
+
+    return (
+      <ul css={listStyle}>
+        <li css={item}>{/* */}</li>
+      </ul>
+    );
+
+- ENTRY:
+  EXPLAIN: CSS ストリング親指定
+  BODY: |
+    const item = css`
+      ul & {
+        //...
+      }
+    `
+
+    return (
+      <>
+        <ul>
+          <li css={item}>{/* あたる */}</li>
+        </ul>
+        <div>
+          <span css={item}>{/* あたらない */}</span>
+        </div>
+      </>
+    );
+
+- ENTRY:
+  EXPLAIN: CSS 引数として
+  BODY: |
+    const buttonWrapperStyle = css`
+      background-color: #ddd;
+    `
+
+    const ButtonWrapper =  () => (
+      <Button css={buttonWrapperStyle}>ボタン</Button>
+    )
+
+    // cssで渡しても、classNameに変換される
+    const Button = ({className, children}) => (
+      <button className={className}>{children}</button>
+    )
+
+- ENTRY:
+  EXPLAIN: CSS 引数(配列)として
+  BODY: |
+    const marginBottom = css`
+      margin-bottom: 16px
+    `
+
+    const style = css`
+      padding: 16px;
+    `
+
+    render (
+      <div css={[marginBottom, style]}>{/* */}</div> 
+    )
+
+- ENTRY:
+  EXPLAIN: CSS メディアクエリ
+  BODY: |
+    type breakpointsType = {
+      id: 'tablet' | 'pc';
+      breakpoint: number;
+    }[];
+
+    const breakpoints: breakpointsType = [
+      {
+        id: 'tablet',
+        breakpoint: 960,
+      },
+      {
+        id: 'pc',
+        breakpoint: 560,
+      },
+    ];
+
+    // min-widthのみしか設定できてないからもう少し工夫は必要かも？
+    export const MediaQuery = breakpoints.reduce((acc, { id, breakpoint }) => {
+      return {
+        ...acc,
+        [id]: `@media (min-width: ${breakpoint}px)`,
+      };
+    }, {});
+
+    // inline style
+    const style = css`
+      background-color: '#fff';
+      ${MediaQuery['pc']} {
+        color: gray;
+      }
+    `
+
+    // object style
+    const style = css({
+      backgroundColor: '#fff',
+      [MediaQuery['pc']]: {
+        padding: 20,
+      },
+    });
+
+- ENTRY:
+  EXPLAIN: CSS グローバル
+  BODY: |
+    import { Global, css } from '@emotion/core'
+
+    const global = css`
+      * {
+        margin: 0;
+        padding: 0;
+      }
+    `
+
+    render(
+      <Global styles={global}/>
+    )
+
+- ENTRY:
+  EXPLAIN: CSS アニメーション Component
+  BODY: |
+    使用Package: react-intersection-observer
+    https://www.npmjs.com/package/react-intersection-observer
+
+    const text = css`
+      color: hotpink;
+      opacity: 0;
+      transform: translateY(-10px);
+    `
+
+    const fadeIn = keyframes`
+      100% {
+        opacity: 1
+        transform: translateY(0);
+      }
+    `
+
+    const animation = css`
+      animation: ${fadeIn} 1s ease-out both;
+    `
+
+    const Component = () => {
+      const [ref, inView] = useInView({
+        rootMargin: '10px',
+        threshold: 0,
+      })
+
+      return (
+        <p ref={ref} css={[text, inView && animation]}>
+          animation
+        </p>
+      )
+    }
+
+    export default Component

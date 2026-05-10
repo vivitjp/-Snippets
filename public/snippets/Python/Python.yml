@@ -1,0 +1,2496 @@
+---
+#-------------------------------
+# Python
+#-------------------------------
+- ENTRY:
+  CATEGORY: |
+    環境設定・管理
+
+- ENTRY:
+  EXPLAIN: インストール
+  BODY: |
+    ■ 本家ダウンロード https://www.python.org/downloads/
+
+    ■ 下記をPATHに追加（自動で追加）
+      C:\Users\VIVIT\AppData\Local\Programs\Python\Python39\Scripts
+
+    ■ 別バージョンの混在OK、VSCODEで切り替え可能
+
+    ■ 環境管理
+    pip     パッケージの管理
+            - Pythonの標準パッケージマネージャー
+            - PyPIからパッケージをインストール
+
+    venv    仮想環境の管理 
+            - プロジェクトごとに独立したPython環境を作成
+
+    pyenv   Pythonバージョンの管理 
+            - 複数のPythonバージョンをインストール・管理
+            - グローバルやプロジェクト単位でのバージョン切替
+
+            pyenv install 3.10.13       # バージョン指定インストール
+            pyenv global  3.10.13       # システム全体のデフォルト
+            pyenv local   3.9.7         # カレントディレクトリのバージョン
+
+    Poetry  パッケージ+仮想環境管理
+            - pyproject.tomlを使った依存関係管理
+            - パッケージのビルドと公開を容易に実行可能
+    Pipenv  パッケージ+仮想環境管理
+            - Pipfileを使用して依存関係を管理
+    Rye     パッケージ+仮想環境+Pythonバージョン管理
+            - Pythonバージョン管理も含めて、すべてこれ1つで完結できるツール
+
+- ENTRY:
+  EXPLAIN: pythonバージョン
+  BODY: |
+    py --version
+    Python 3.12  3.12.1   2028年10月  bugfix
+    Python 3.11  3.11.7   2027年10月  bugfix
+    Python 3.10  3.10.13  2026年10月  security
+    Python 3.9   3.9.18   2025年10月  security
+    Python 3.8   3.8.18   2024年10月  security
+
+- ENTRY:
+  EXPLAIN: 実行
+  BODY: |
+    ■ 実行
+    VSC からインタープリター選択、py.exe 指定
+    ファイル拡張子 file.py
+    1) 右上の「ターミナルでPythonファイルを実行」をクリック
+      PS B:\PATH> & c:/Windows/py.exe PATH/FILE.py
+      PS B:\PATH> py FILE.py
+    2) または、F5 でデバッグモード
+
+- ENTRY:
+  EXPLAIN: パッケージ管理
+  BODY: |
+    ■ 1) 実行
+    pip install pipenv
+
+- ENTRY:
+  EXPLAIN: パッケージインストール
+  BODY: |
+    ■ パッケージ管理(pip)のアップグレード
+      > python.exe -m pip install --upgrade pip
+      > pip install --upgrade/-U pip
+      > pip install --force-reinstall --upgrade pip
+
+- ENTRY:
+  EXPLAIN: パッケージ追加
+  BODY: |
+    ■ パッケージインストール
+      > pip install <LIBRARY>
+      > pip install <LIBRARY>==1.23 //バージョン指定
+      例: pip install pandas
+
+    ■ インストール済リスト
+      > pip list
+      > pip list --format=columns | sls <LIBRARY>
+      > list --outdated          # 最新でない
+      > pip freeze (見にくい)
+
+    ■ アンインストール
+      > pip uninstall <LIBRARY>
+
+    ■ アップグレード
+      > pip install --upgrade/-U <LIBRARY>
+
+    ■ 依存関係
+      > pip show <LIBRARY>
+      > pipdeptree -p LIBRARY    # 詳細
+
+- ENTRY:
+  EXPLAIN: パッケージ追加(ユーザ)
+  BODY: |
+    ■ インストール先の確認
+    > site --user-base
+    C:\Users\VIVIT\AppData\Roaming\Python
+    > pip install --user pandas
+
+#-------------------------------
+# VSCODE
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: VSCode設定
+  BODY: |
+    ■ formatter
+    Black Formatter  "ms-python.black-formatter"
+
+    ■ linter
+    Flake8  "ms-python.flake8"
+
+    ■ sorter
+    isort  "ms-python.isort"
+
+    ■ 型Checker
+    Mypy Type Checker  "ms-python.mypy-type-checker"
+
+    [setting.json]
+    {
+        "python.analysis.typeCheckingMode": "strict"
+    }
+
+    // VS Codeの組み込み型チェックをオフにして、Mypyの設定を優先させる場合
+    "python.analysis.typeCheckingMode": "off",
+    "python.linting.mypyEnabled": true,
+    "python.linting.enabled": true
+
+#=================================================
+# 書式
+#=================================================
+
+- ENTRY:
+  CATEGORY: |
+    Kick Start
+
+#-------------------------------
+# コメント
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: コメント
+  BODY: |
+    # コメント
+    """コメント(関数Doc)"""
+    123 \                               # 数式内のコメントNG
+    + 789
+    'Hello \                            # カッコ内のコメントNG
+    world!'
+
+    'aaa\nbbb'                          # 改行(エスケープ解釈)
+    r'aaa\nbbb'                         # Row String(エスケープそのまま表示)
+
+    """A simple
+    module is ...
+    """                                 # 改行温存(HTMLの<pre>)
+
+    a = ['Jan','Feb',                   # 配列内は改行OK
+    'Apr','Oct']
+
+- ENTRY:
+  EXPLAIN: クラス関数既述
+  BODY: |
+    """A sample module"""
+    class MyClass:
+        """A sample class"""
+        def myfunc(self, x, y):
+            """A sample function"""
+            return x + y
+
+    import mymod
+    print(mymod.__doc__)                # A sample module
+    print(mymod.MyClass.__doc__)        # A sample class
+    print(mymod.MyClass.myfunc.__doc__) # A sample function
+
+    $ python
+    >>> import mymod
+    >>> help(mymod)
+    Help on module mymod:
+    NAME
+        mymod - A sample module
+    FILE
+        /root/mymod.py
+    ...
+
+#=================================================
+# 入力・出力
+#=================================================
+
+- ENTRY:
+  CATEGORY: |
+    入力・出力
+
+#-------------------------------
+# 入力・出力
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: 入力/出力
+  BODY: |
+    a = input(msg)
+    print(a)
+
+    print(3)                            # 3
+    print([1,2,3])                      # [1,2,3] List配列
+    print((1,2,3))                      # (1,2,3) Tuple
+    print({'A':1})                      # {'A':2} Dict辞書
+    print('Hello world!')               # Hello world!
+    print('Hi', var, sep='-')           # Hi-...
+    print('A','B')                      # A B
+    print('A')                          # 出力後改行
+    print('A', end='')                  # 出力後改行なし
+
+    import sys
+    sys.stdout.write('Hi')              # 半角SP無
+    sys.stdout.write('World')
+
+#-------------------------------
+# フォーマット
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: format種類
+  BODY: |
+    ■ 1 書式指定 % 値
+    print("%.1f" % 12.345)              # 12.3
+
+    ■ 2 format(値, 書式指定)
+    print(format(12.345, ".1f"))        # 12.3
+
+    ■ 3 "{:書式指定}".format(値)
+    print("{:.1f}".format(12.345))      # 12.3
+
+    ■ 4 f"{値:書式指定}"
+    print(f"{12.345:.1f}")              # 12.3
+
+- ENTRY:
+  EXPLAIN: 出力(型指定)
+  BODY: |
+    print("%s" % "ABC")                 # ABC
+    print("%d" % 123)                   # 123
+    print("%f" % 1.23)                  # 1.23
+    print("%x" % 255)                   # ff
+    print("%o" % 255)                   # 377
+    print("%%%d" % 80)                  # %80
+
+    print('I\'m %s' % 'Tanaka')         # 1つはそのまま: I'm Tanaka
+    print('%s is %d' % ('Tanaka', 28))  # 2つ以上は(): Tanaka is 28
+    m = 'Message'
+    c = 42
+    print('%s (%d)' % (m, c))           # 変数: Message (42)
+
+    errMsg = "Execution"
+    errCode = 15632
+    msg = "ERROR: %s (%d)" % (errMsg, errCode)
+    print(msg)                          # ERROR: Execution (15632)
+
+- ENTRY:
+  EXPLAIN: 出力(幅指定)
+  BODY: |
+    print("|%5s|"   % 'ABC')            # |  ABC|
+    print("|%-5s|"  % 'ABC')            # |ABC  |
+    print("|%5d|"   % 123)              # |  123|
+    print("|%-5d|"  % 123)              # |123  |
+    print("|%+5d|"  % 123)              # | +123|
+    print("|%5.2f|" % 1.23)             # | 1.23|
+    print("|%05d|"  % 123)              # |00123|
+
+- ENTRY:
+  EXPLAIN: format関数
+  BODY: |
+    ■ 引数
+    a = 'A'
+    b = 'B'
+    '{}, {}'.format(a,b)                # 引数位置: A, B
+    '{0}, {1}'.format(a,b)              # 引数idx: A, B
+    '{a}, {b}'.format(a='1',b='2')      # 引数名: 1, 2
+
+    ■ 簡易表記
+    print(f'{a}, {b}')                  # 引数名簡略: A, B
+    pi= math.pi
+    "π={pi:.2f}".format(pi=pi)          # 小数点 {変数:.2f}
+    "Amount: {:,}".format(num1)         # 桁表示 {:,}
+    '|{0:<7}|'.format('前')             # |前      |
+    '|{0:^7}|'.format('中央')           # |  中央   |
+    '|{0:>7}|'.format('後')             # |      後|
+
+    ■ List(配列)
+    l = ['A', 'B']
+    '{}, {}'.format(*l)                 # A, B
+    '{}, {}'.format(l)                  # Error
+
+    a = 2 b = 4
+    l = [a, b]
+    print('A:{0[0]} B:{0[1]}'.format(l)) # A:2 B:4
+
+    ■ Tuple
+    tpl = (3,5)
+    print('{0[0]},{0[1]}'.format(tpl))  # 3,5
+
+- ENTRY:
+  EXPLAIN: format(数)
+  BODY: |
+    decimal = 106
+    format(3456, '0>8d')                # 00003456 整数/0埋め(右)/Min8桁
+    format(3456, '0<8d')                # 34560000 整数/0埋め(左)/Min8桁
+    format(3456, '0^8d')                # 00345600 整数/0埋め(中)/Min8桁
+    format(1.234,'0=+8f')               # +01.234000 小数点/+-/0埋め/Min8桁
+    '{0}=Bin:{0:b}'.format(decimal)     # 106=Bin:1101010
+    '{0}=Oct:{0:o}'.format(decimal)     # 106=Oct:152
+    '{0}=Hex:{0:X}'.format(decimal)     # 106=Hex:6A
+
+- ENTRY:
+  EXPLAIN: format(日付)
+  BODY: |
+    import datetime
+    today = datetime.date.today()
+    format(today,'%Y/%m/%d')            # Date: 2019/02/04
+
+- ENTRY:
+  EXPLAIN: f(文字列)
+  BODY: |
+    a = "Hello"
+    print(f"{a:10}")                    # Hello
+    print(f"{a:<10}")                   # Hello
+    print(f"{a:^10}")                   #   Hello
+    print(f"{a:>10}")                   #      Hello
+    print(f"{a:.<10}")                  # Hello.....
+    print(f"{a:.^10}")                  # ..Hello...
+    print(f"{a:.>10}")                  # .....Hello
+    print(f"{'':-<20}")                 # --------------------
+
+- ENTRY:
+  EXPLAIN: pprint整形
+  BODY: |
+    dict= [
+        {"Name": "John Smith", "Age":18, "GPA":[70, 30]},
+        {"Name": "Jeff Brook", "Age":19, "GPA":[40, 60]},
+    ]
+
+    pprint.pprint(dict, width=40)  #幅(1全要素で折り返し)
+
+    [{'Age': 18,
+      'Name': 'John Smith',
+      'GPA': [70, 30]},
+    {'Age': 19,
+      'Name': 'Jeff Brook',
+      'GPA': [40, 60]}]
+
+    pprint.pprint(dict, depth=2)   #深さ(指定以上は省略)
+
+    [{'Age': 18, 'Name': 'John Smith', 'GPA': [...]},
+    {'Age': 19, 'Name': 'Jeff Brook', 'GPA': [...]}]
+
+    pprint.pprint(dict, indent=4, width=20) #インデント
+
+    [   {   'Age': 18,
+            'Name': 'John Smith',
+            'GPA': [70, 30]},
+        {   'Age': 19,
+            'Name': 'Jeff Brook',
+            'GPA': [40, 60]}]
+
+    pprint.pprint(dict, compact=1)  #改行最小限
+
+    [{'Age': 18, 'Name': 'John Smith', 'GPA': [70, 30]},
+    {'Age': 19, 'Name': 'Jeff Brook', 'GPA': [40, 60]}]
+
+- ENTRY:
+  EXPLAIN: str(改行なし)
+  BODY: |
+    dict= [
+        {"Name": "John Smith", "Age":18, "GPA":[70, 30]},
+        {"Name": "Jeff Brook", "Age":19, "GPA":[40, 60]},
+    ]
+
+    str(dict) #文字列(改行なし)
+    [{'Name': 'John Smith', 'Age': 18, 'GPA': [70, 30]}, {'Name': 'Jeff Brook', 'Age': 19, 'GPA': [40, 60]}]
+
+- ENTRY:
+  EXPLAIN: pformat(適宜改行)
+  BODY: |
+    dict= [
+        {"Name": "John Smith", "Age":18, "GPA":[70, 30]},
+        {"Name": "Jeff Brook", "Age":19, "GPA":[40, 60]},
+    ]
+
+    pprint.pformat(dict) #適宜改行
+    [{'Age': 18, 'GPA': [70, 30], 'Name': 'John Smith'},
+    {'Age': 19, 'GPA': [40, 60], 'Name': 'Jeff Brook'}]
+
+    pprint.pformat(dict, depth=2, width=40, indent=2) #各種オプション
+    [ { 'Age': 18,
+        'GPA': [...],
+        'Name': 'John Smith'},
+      { 'Age': 19,
+        'GPA': [...],
+        'Name': 'Jeff Brook'}]
+
+#=================================================
+# 演算子
+#=================================================
+
+- ENTRY:
+  CATEGORY: |
+    演算子
+
+#-------------------------------
+# 演算子
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: 演算子(数)
+  BODY: |
+    a = 10
+    b = 2
+              operator.truth(a)         # True
+    +a        operator.pos(a)           # +a: 10
+    -a        operator.neg(a)           # -a: -10
+    a + b     operator.add(a,b)         # 12
+    a - b     operator.sub(a,b)         # 8
+    a * b     operator.mul(a,b)         # 20
+    a / b     operator.truediv(a,b)     # 5.0
+    a // b    operator.floordiv(a,b)    # 切捨除算: 5
+    a % b     operator.mod(a,b)         # 余: 0
+    a ** b    operator.pow(a,b)         # 乗算: 100
+              operator.invert(a)        # bit反転: -11
+    a & b     operator.and_(a,b)        # bitAND積: 2
+    a | b     operator.or_(a,b)         # bit和: 10
+    a ^ b     operator.xor(a,b)         # bitXOR排他和: 8
+    a << b    operator.lshift(a,b)      # 左シフト: 40
+    a >> b    operator.rshift(a,b)      # 右シフト: 2
+
+- ENTRY:
+  EXPLAIN: 演算子(数i)
+  BODY: |
+    a = 10
+    b = 2
+    operator.iadd(a,b)                  # a+b: 12
+    operator.isub(a,b)                  # a-b: 8
+    operator.imul(a,b)                  # a*b: 20
+    operator.itruediv(a,b)              # a/b: 5.0
+    operator.imod(a,b)                  # a%b: 0
+    operator.ipow(a,b)                  # a**b: 100
+    operator.ifloordiv(a,b)             # a//b: 5
+    operator.iand(a,b)                  # a&b: 2
+    operator.ior(a,b)                   # a|b: 10
+    operator.ixor(a,b)                  # a^b: 8
+    operator.ilshift(a,b)               # a<<b: 40
+    operator.irshift(a,b)               # a>>b: 2
+
+- ENTRY:
+  EXPLAIN: 演算子(比較)
+  BODY: |
+    a = 5
+    b = 8
+    operator.eq(a,b)                    # a==b: False
+    operator.ne(a,b)                    # a!=b: True
+    operator.lt(a,b)                    # a<b:  True
+    operator.gt(a,b)                    # a>b:  False
+    operator.le(a,b)                    # a<=b: True
+    operator.ge(a,b)                    # a>=b: False
+
+    a = 'AB'
+    b = 'XY'
+    operator.concat(a,b)                # a+b(結合): 'ABXY'
+    operator.iconcat(a,b)               # a+b(結合): 'ABXY'
+
+    a = True
+    b = False
+    a and b                             # AND: False
+    a or b                              # OR: True
+    not a                               # NOT: False
+
+    a = -10
+    b = 0
+    a and b                             # AND: False
+    a or b                              # OR: True
+
+#=================================================
+# 変数
+#=================================================
+
+- ENTRY:
+  CATEGORY: |
+    変数
+
+#-------------------------------
+# 変数
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: 変数
+  BODY: |
+    value1     = 123                    # 変数代入
+    _value1    = 123                    # private的に
+    test_value = 123                    # スネークケースOK
+    value1:int = 123                    # 型付き
+
+    TEST_VALUE = 123                    # 習慣的定数(全部大文字)
+    PI = 3.14                           # 一般的な const なし
+
+    a = b = 'A'                         # 一括初期化/一括代入
+    a = a * 3                           # 'AAA'(文字列の掛け算)
+
+    x: int
+    print(x)                            # 未定義エラー
+    print(bool(x))                      # 未定義エラー
+
+    a = 'A'
+    print(a)                            # 'A'
+    del a                               # 削除
+    print(a)                            # NameError: name 'a' is not defined
+
+    x = 5
+    y = [1,2,3]
+    z = MyClass()
+    del x, y, z                         # 全オブジェクト削除可能
+
+    a = 5 b = 3                         # セミコロンOK
+    a, b = b, a                         # 分割代入
+    print(a, b)                         # a=3, b=5
+
+- ENTRY:
+  EXPLAIN: グローバル変数
+  BODY: |
+    a1 = "ABC"
+    b1 = "XYZ"
+
+    def func():
+      global a1
+      a1 = "---"
+      b1 = "==="
+
+    func()
+    print(a1)                           # ---
+    print(b1)                           # XYZ
+
+- ENTRY:
+  EXPLAIN: 変数スコープ
+  BODY: |
+    dir()                               # ローカルスコープ変数名などのリスト
+    globals()['val1']                   # グローバル値(引数:変数名) -> 値取得
+    locals()                            # ローカル値(引数なし)
+
+- ENTRY:
+  EXPLAIN: メモリー値
+  BODY: |
+    o = bytes(123)
+    mo = memoryview(o)
+    print(mo)                           # < memory at 0x000002B2AAA78C40 >
+
+#=================================================
+# 型
+#=================================================
+
+- ENTRY:
+  CATEGORY: |
+    型
+
+#-------------------------------
+# 型(v3.9以上)
+#-------------------------------
+- ENTRY:
+  EXPLAIN: 変数型(v3.9以上)
+  BODY: |
+    bool      真偽値                     True/False
+    str       文字列                     'Hello',"Hello"
+    int       整数                       1234
+    int       2進数                      0b11000
+    int       8進数                      0o777
+    int       16進数                     0xffff
+    long[X]   廃止=>int統合              922337203688L
+    float     浮動小数点                 1.234, 1.2e3
+    complex   虚数(complex)              3.14j
+    list      リスト                     [1,2,3] => Python3.8:from typing import List
+    tuple     タプル                     (1,2,3) => Python3.8:from typing import Tuple
+    dict      辞書                       {'A':1} => Python3.8:from typing import Dict
+    NoneType  他言語Null                 None
+
+    * list[int|str]  UNION型は v3.10以上
+    * 浮動小数点 (0.1+0.2)==0.3 -> False   丸め誤差あり
+
+    ■ 型判定: type()
+    var1 = 100                          print(type(var1) is int)
+    var2 = 123.12                       print(type(var2) is float)
+    var3 = True                         print(type(var3) is bool)
+    var4 = "abc"                        print(type(var4) is str)
+    var5 = ["a", "b"]                   print(type(var5) is list)
+    var6 = ("a", "b")                   print(type(var6) is tuple)
+    var7 = {"a", "b"}                   print(type(var7) is set)
+    var8 = {"a": "a"}                   print(type(var8) is dict)
+    # from types import NoneType
+    var9 = None                         print(type(var9) is NoneType)
+
+- ENTRY:
+  EXPLAIN: 組み込み定数
+  BODY: |
+    False                               # bool 型の偽値
+    True                                # bool 型の真値
+    None                                # 型 NoneType の唯一値
+    NotImplemented                      # 二項演算のメソッドに関する当別な値
+    Ellipsis                            # ="..." 拡張スライス構文やユーザ定義コンテナデータ型の特殊値
+    __debug__                           # Python が -O オプションを有効にして開始されたのでなければ真
+
+#-------------------------------
+# 型定義全般
+#-------------------------------
+- ENTRY:
+  EXPLAIN: 変数型一覧
+  BODY: |
+    ■ 型定義(Primitives)
+    var1: int = 100
+    var2: float = 123.12 
+    var3: bool = True
+    var4: str = "abc"
+
+    ■ 型定義(組み込みのコンテナ型)
+    var5: list[str] = ["a", "b"]        # Python 3.9+
+    var6: tuple[int,int] = (1, 2)       # Python 3.9+
+    var7: set[str] = {"a", "b"}         # Python 3.9+
+    var8: dict[str,int] = {"a": 1}      # Python 3.9+
+    var9: NoneType = None
+
+    ■ タプルの特別な指定方法
+    tuple[int, str, float]              # 固定長タプル
+    tuple[int, ...]                     # 可変長タプル(全要素同型)
+
+    ■ typing モジュールからの主要な型
+    from typing import Optional, Union, List, Dict, Set, Tuple, Any, Callable
+
+    List[T]       items: List[str] = ["a", "b"]      # list[T] の古い書き方(Python 3.8以前向け)
+    Dict[K, V]    user: Dict[str, int] = {"id": 1}   # dict[K, V] の古い書き方
+    Tuple[...]    point: Tuple[int, int] = (10, 20)  # tuple[...] の古い書き方
+    Set[T]        ids: Set[int] = {1, 2, 3}          # set[T] の古い書き方
+
+    Optional[T]   value: Optional[str] = None        # T または None を許容する
+    Union[T1,T2]  data: Union[int, str] = 100        # 複数の型のうちどれかを許容する
+    Any           anything: Any = 1.23               # 任意の型を許容する(型チェック無効)
+    Callable      func: Callable[int,str] = func     # 関数オブジェクトの型ヒント
+
+    ■ 新記法 (Python 3.10以降)
+    data: int | str = 100               # Union[int, str]
+    value: str | None = None            # Optional[str]
+
+    ■ 特殊な型ヒント
+    None                                # 値がないことを明示する（関数の戻り値など）
+    NoReturn                            # 関数が値を返さずに終了すること（例外発生など）を示す
+    Iterable[T]                         # ループ可能なオブジェクト（リスト、タプル、ジェネレータなど）の汎用型
+    Iterator[T]                         # next()で要素を取り出せるオブジェクトの汎用型
+    Sequence[T]                         # 順序付けられたコレクション（リスト、タプルなど）の汎用型
+    Mapping[K, V]                       # キーと値のペアを持つコレクション（辞書など）の汎用型
+    TypeVar                             # ジェネリック型を定義するための型変数
+
+#-------------------------------
+# 関数宣言の型
+#-------------------------------
+- ENTRY:
+  EXPLAIN: 関数宣言の型
+  BODY: |
+    def FUNCTION_NAME(param:TYPE): -> RETURN_TYPE
+      ...
+      return VALUE
+
+    ■ 引数と戻り値の型指定
+    def add(x: int, y: int) -> int:
+        return x + y
+
+    例: result = add(3, 5)              # 8
+
+    ■ Any
+    from typing import Any
+    def process(value: Any) -> Any:
+        return value
+
+    ■ Optional
+    from typing import Optional
+    def get_length(value: Optional[str]) -> int:
+        if value is None:
+            return 0
+        else:
+            return int(value)
+
+    例: length = get_length("7")        # 7
+    例: length = get_length(None)       # 0
+
+    ■ list
+    def sum_numbers(numbers: list[int]) -> list[int]:   # Python 3.9+
+        return [x * 2 for x in numbers]
+
+    例: doubled = sum_numbers([1, 2])   # [2, 4]
+
+    ■ tuple
+    from typing import tuple
+    def get_coordinates(numbers: list[int]) -> tuple[int, int]:   # Python 3.9+
+        return (numbers[0], numbers[1])
+
+    例: x, y = get_coordinates([10, 20]) 
+    例: [x, y] = get_coordinates([10, 20])  #同じ
+
+    ■ dict
+    from typing import dict   
+    def invert_mapping(mapping: dict[str, int]) -> dict[int, str]:   # Python 3.9+
+        return {v: k for k, v in mapping.items()} 
+
+    例: inverted = invert_mapping({'a': 1, 'b': 2})
+
+    ■ UNION
+    from typing import Union
+    def process(value: Union[int, str]) -> int:  # int | str  Python 3.10+
+        if isinstance(value, int):
+            return value
+        else:
+            return int(value)
+
+    ■ Mapping
+    def get_config() -> Mapping[str, int]:
+      config_data = {"max_users": 100, "timeout": 30}
+      return config_data
+
+    例: config = get_config()           # {'max_users': 100, 'timeout': 30}
+
+    ■ コールバック関数
+    from typing import Callable 
+    def execute_callback(callback: Callable[[int, int], int], a: int, b: int) -> int:
+        return callback(a, b)
+
+    例: result = execute_callback(lambda x, y: x + y, 3, 5)  # 8
+
+    ■ TypedDict によるオブジェクト定義
+    from typing import TypedDict, List
+
+    class Company(TypedDict):
+        name: str
+        founded_year: int
+        departments: List[str]
+        is_active: bool
+
+    data: Company = {
+        "name": "Tech Corp",
+        "founded_year": 2005,
+        "departments": ["Engineering", "Sales"],
+        "is_active": True
+    }
+
+    def get_company_info(company: Company) -> str:
+        return f"{company['name']} was founded in {company['founded_year']}."
+
+#=================================================
+# 構文
+#=================================================
+
+- ENTRY:
+  CATEGORY: |
+    構文
+
+#-------------------------------
+# 構文
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: 制御構文(if)
+  BODY: |
+    n = 3
+    if n == 1:
+        x = "OK"
+    elif n == 2:
+        x = "NG"
+    else:
+        x = "NO"
+
+    print(x) # スコープ外のxもOK
+
+    n=1
+    if n == 1: x = "OK"
+    else     : x = "NO"
+
+    x = "OK" if n == 1 else "NO"
+
+- ENTRY:
+  EXPLAIN: 三項分岐
+  BODY: |
+    ■ 一般変数
+    <TRUE_RESULT> if <CONDITION> else <FALSE_RESULT>
+    res = 100 if True else 1
+
+    ■ 配列(要素数2)
+    [Falseの値, Trueの値][条件式]
+    status = "active"
+    res = ["オフ", "オン"][status == "active"]
+    補足: Trueは数値として1、Falseは0として扱える
+
+    ■ 配列(変換)
+    numbers = [1, 2, 3, 4, 5, 6]        # [0, 2, 0, 4, 0, 6]
+    res = [num if num % 2 == 0 else 0 for num in numbers]
+
+    ■ 配列(フィルタリング)
+    numbers = [1, 2, 3, 4, 5, 6]        # [2, 4, 6]
+    res = [num for num in numbers if num % 2 == 0]
+
+    ■ 辞書(フィルタリング)
+    d = {'a':1, 'b':2, 'c':3, 'd':4}    # {'b':2, 'd':4}
+    res = {k: v for k, v in d.items() if v % 2 == 0}
+
+    ■ None合体演算子
+    key = None
+    res = key if key is not None else 'Stranger'
+
+    key = "Alice"
+    res = key if key is not None else 'Stranger'
+
+    ■ or記法
+    name = None
+    res = name or 'Stranger'
+
+- ENTRY:
+  EXPLAIN: 制御構文(while)
+  BODY: |
+    n = 1
+    while n < 10:
+      n += 1
+      if n > 8:  break                  # ループ脱出
+      if n == 4: continue               # 処理中断してTopにジャンプ
+      print(n)                          # 2 3 [4:ジャンプ] 5 6 7 8[break]
+
+- ENTRY:
+  EXPLAIN: 制御構文(for)
+  BODY: |
+    arr = [1,2,3]
+    for n in arr:
+        print(n)
+
+    arr = [1,2,3]
+    for n in arr:
+        if n==2:
+          break
+        print(n)
+    else: 
+        print('END')                    # breakの場合 END は表示されない
+
+    arr = ["A", "B", "C"]
+    for i, v in enumerate(arr):         # indexが必要な場合
+        print(i, v)                     # 0 A  1 B  2 C
+
+    for n in (1, 2, 3):                 # Tuple
+      print(n)                          # 1 2 3
+
+    dict = {'A':1,'B':2}
+    for k in dict:                      # Dict
+      print(k, dict[k])                 # A 1 B 2
+
+    for c in '123':                     # 文字列
+      print(c)                          # 1 2 3
+
+    for c in u'あいう':                 # Unicode
+      print(c)                          # あ い う
+
+    for n in range(5):                  # 連数(0-4)
+      print(n)                          # 0 1 2 3 4
+
+    for f in open('a.txt'):             # File読み取り
+      print(f)
+
+- ENTRY:
+  EXPLAIN: 制御構文(=switch)
+  BODY: |
+    ■ v3.10 以前
+    def http_error(status):
+      error_string = {
+        400: "Bad request",
+        404: "Not found",
+        418: "I'm a teapot",
+      }
+      return error_string.get(status, "Something's wrong with the Internet")
+
+    ■ match(int)
+    match status:
+      case 400:
+        return "Bad request"
+      case 404:
+        return "Not found"
+      case 418:
+        return "I'm a teapot"
+      case _:                           # default 1
+        return "Something's wrong with the Internet"
+      case _:                           # default 2
+        pass
+
+    ■ match(tuple)
+    match point:
+      case (0, 0):
+        return "Center"
+      case (0, y):
+        return f"Y={y}"
+      case (x, 0):
+        return f"X={x}"
+      case (x, y):
+        return f"X={x}, Y={y}"
+      case _:
+        raise ValueError("Not a point")
+
+    ■ match(class)
+    class Point:
+      x: int
+      y: int
+
+    match point:
+      case Point(x=0, y=0):
+        return "Center"
+      case Point(x=0, y=defY):
+        return f"Y={defY}"
+      case Point(x=defX, y=0):
+        return f"X={defX}"
+      case Point(x=defX, y=defY):
+        return f"X={defX}, Y={defY}"
+      case _:
+        raise ValueError("Not a point")
+
+    ■ match(classes)
+    class Point:
+    class Rectangle:
+    class Circle:
+
+    match shape:
+      case Point():
+        return f"Point({shape.x}, {shape.y})"
+      case Rectangle():
+        return f"Rectangle({shape.width}, {shape.length})"
+      case Circle():
+        return f"Circle({shape.radius})"
+      case _:
+        return "Unknown shape"
+
+#-------------------------------
+# 例外・デバグ
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: 例外
+  BODY: |
+    import random
+    try:
+      a = random.randint(1, 10)
+      if a%2 == 1:
+          print("Success")
+      else:
+          raise Exception("messgae")
+    except SystemError as e: print("SystemErrorMsg: ", e)
+    except IOError as e:     print("IOErrorMsg: ", e)
+    except IndexError as e:  print("IndexErrorMsg: ", e)
+    except Exception as e:   print("ExceptionMsg: ", e)
+    # 一般例外は特定エラーの後に定義
+    except Exception as e:   raise e                  # 元の例外そのまま再発生
+    except Exception:        raise MyErr()            # 新例外発生
+    except Exception as e:   raise MyErr() from e     # 元+新で例外発生
+    except Exception:        raise MyErr() from None  # 元無視->新例外発生
+    # デフォルト例外
+    except:                  print("Unknown Error")
+    else:
+      print("No Error Occurred")
+    finally:
+      print("Finally Msg")
+
+- ENTRY:
+  EXPLAIN: 例外(assert)
+  BODY: |
+    try:
+      status = 'B'
+      assert status=='B', 'Got Error'   # 'B'以外でAssert
+      print(status)                     # B
+
+      status = 'A'
+      assert status=='B', 'Got Error'   # 'B'以外でAssert
+      print(status)                     # Raise Error!!
+    except AssertionError as e:
+      print("AssertionError: ", e)
+
+- ENTRY:
+  EXPLAIN: デバグ
+  BODY: |
+    try:
+      if __debug__:
+          print('Debug Mode')
+      if not 1==2:
+          raise AssertionError
+    except AssertionError as e:
+        print("AssertionError: ", e)
+
+    breakpoint()                        # 実行STOP -> 入力 exit で終了
+
+    a = 3
+    print('OK' if a<10 else 'No')       # 三項演算子: OK
+
+#=================================================
+# ブーリアン・数字型
+#=================================================
+
+- ENTRY:
+  CATEGORY: |
+    メソッド：数字型・ブーリアン型
+
+- ENTRY:
+  EXPLAIN: 型(バイト)
+  BODY: |
+    bytes(2)             = b'\x00\x00'            # *immutable(変更不可)
+    bytes('ABC','utf-8') = b'ABC'                 # utf-8
+    bytearray(2)         = bytearray(b'\x00\x00') # mutable(変更可)
+    bytearray([50,99])   = b'2c'                  # ASCIIコード値
+
+- ENTRY:
+  EXPLAIN: 型(数)
+  BODY: |
+    int(0)                              # 整数: 0
+    int(10.5)                           # 整数: 10
+    int('12')                           # 整数: 12
+    int('01001',2)                      # 整数: 9
+    float(3.4)                          # 浮動小数点: 3.4
+    complex('3+2j')                     # 複素数: (3+2j)
+    bin(0)                              # Binary: '0b0'
+    oct(0)                              # Octal: '0o0'
+    hex(0)                              # Hex: '0x0'
+
+- ENTRY:
+  EXPLAIN: 型(数)メソッド
+  BODY: |
+    abs(-3.4)                           # 絶対値: 3.4
+    pow(2,3)                            # 冪乗: 8
+    pow(10, -3)                         # 冪乗: 0.001
+    divmod(7, 2)                        # 商と余り(Tuple): (3,1)
+    round(1.49)                         # 1(偶数丸め)
+    round(1.50)                         # 2(偶数丸め)
+    round(3.141592, 2)                  # 四捨五入: 3.14
+    round(-1.49)                        # 1(偶数丸め)
+    round(-1.5)                         # 1(偶数丸め)
+
+- ENTRY:
+  EXPLAIN: 型(真偽値)
+  BODY: |
+    bool(1)               = True
+    bool(0)               = False
+
+#=================================================
+# 文字列型
+#=================================================
+
+- ENTRY:
+  CATEGORY: |
+    メソッド：文字列型
+
+#-------------------------------
+# 型：Char, String
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: エスケープ文字
+  BODY: |
+    \改行                               # BackSlashと\n無視
+    \\                                  # バックスラッシュ(\)
+    \'                                  # シングルクォート(')
+    \"                                  # ダブルクォート(")
+    \a                                  # ベル(BEL)
+    \b                                  # バックスペース(BS)
+    \f                                  # フォームフィード(FF)
+    \n                                  # 改行(LF)
+    \r                                  # 復帰(CR)
+    \t                                  # 水平タブ(HT)
+    \v                                  # 垂直タブ(VT)
+    \nnn                                # Octal(8進表記文字)
+    \xnn                                # Hex(16進表記文字)
+    \uxxxx                              # Unicode(u'\u3042')
+    \U....xxxx                          # Unicode
+    \N{name}                            # UnicodeDBChar
+
+- ENTRY:
+  EXPLAIN: 文字コード
+  BODY: |
+    utf-8                               # Unicodeの文字符号化
+    sjis                                # Shift_JIS 
+    euc_jp                              # Unix環境
+    cp932                               # Windows環境の日本語の文字コード
+
+    str = 'あ'
+    str = str.encode('utf-8')           # b'\xe3\x81\x82'
+    str = str.decode('utf-8')           # あ
+    str = str.encode('sjis')            # b'\x82\xa0'
+    str = str.decode('sjis')            # あ
+
+- ENTRY:
+  EXPLAIN: 文字列型
+  BODY: |
+    chr(65)                             # 文字コードから文字: 'A'
+    chr(0x3042)                         # 文字コードから文字: 'あ'
+    ord('A')                            # 文字から文字コード: 65
+    ascii(1)                            # '1'
+    ascii('ア')                         # アスキーコード: '\\u30a2'
+
+- ENTRY:
+  EXPLAIN: 文字列長さ
+  BODY: |
+    txt = 'ABC'                         # 'ABC'
+    len(txt)                            # 文字長さ: 3
+    [NG] txt.len()                      # Python には存在せず
+
+- ENTRY:
+  EXPLAIN: 文字列結合・分離
+  BODY: |
+    ite = ['A','B','C']
+    ','.join(ite)                       # *Iter参照: 'A,B,C'
+    txt = 'A B C'
+    txt.split(' ')                      # ['A','B','C']
+
+- ENTRY:
+  EXPLAIN: 文字列トリミング
+  BODY: |
+    txt = '  H  '
+    txt.strip()                         # 'Hi'
+    txt.rstrip()                        # '  H'
+    txt.lstrip()                        # 'H  '
+
+- ENTRY:
+  EXPLAIN: 文字列埋め
+  BODY: |
+    txt = 'Hi'
+    txt.center(5)                       # '  Hi '
+    txt.center(5,'*')                   # '**Hi*'
+    txt.ljust(5)                        # 'Hi   '
+    txt.ljust(5,'*')                    # 'Hi***'
+    txt.rjust(5)                        # '   Hi'
+    txt.rjust(5,'*')                    # '***Hi'
+    txt.zfill(5)                        # '000Hi'
+
+- ENTRY:
+  EXPLAIN: 文字列Index
+  BODY: |
+    txt = 'Hello'
+    txt[0]                              # 'H'
+    txt[1]                              # 'e'
+    txt[0:2]                            # 'He'
+    txt[3:]                             # 'lo'
+    txt[:3]                             # 'Hel'
+    txt[-3]                             # 'l'
+    txt[-3:]                            # 'llo'
+
+- ENTRY:
+  EXPLAIN: 文字列検索
+  BODY: |
+    txt.startswith('A')                 # True
+    txt.endswith('Z')                   # False
+    txt.lower().startswith('a')         # CaseInsトリック
+    txt.lower().endswith('z')           # CaseInsトリック
+
+    ■ in(有無)
+    'ab' in txt                         # True/False
+
+    ■ find(位置取得)
+    txt.find('ab')                      # (idx:0~): 3
+    txt.find('xy')                      # (不一致): -1 <--注意
+    txt.find('ab', 2, 5)                # (KEY,Start,end)
+    txt.lower().find('a')               # CaseInsトリック
+    txt.rfind('ab')                     # 後方検索(idx:0~): 3
+
+    ■ index(位置取得)
+    txt.index('ab')                     # (idx:0~): 3
+    txt.index('xy')                     # (不一致): Error! <--注意
+
+    ■ count(Hit数)
+    txt.count('ab')                     # Hit数: 3
+    txt.count('xy')                     # Hit数: 0
+    txt.count('ab', 2, 5)               # (KEY,Start,end)
+    txt.lower().count('ab')             # CaseInsトリック
+
+- ENTRY:
+  EXPLAIN: 文字列正規検索
+  BODY: |
+    import re                           # ライブラリのimport
+
+    txt = 'This is a pen. That are not a pens.'
+
+    ■ 単数検索
+    res = re.search('pen',txt)          # 引数(検索Key, 検索先文字列)
+    print(res)                          # <re.Match object; span=(10, 13), match='pen'>
+    res.group()                         # pen  (*単数Hit)
+    res.start()                         # 10
+    res.end()                           # 13
+    res.span()                          # (10, 13) タプル
+    [NG] res.match()
+
+    ■ 複数検索(結果文字列)
+    res = re.findall('pen', txt)
+    print(res)                          # ['pen','pen']
+    print(len(res))                     # 2
+    res = re.findall('that|this', txt, flags=re.IGNORECASE)
+    print(res)                          # ['This', 'That']
+    print(len(res))                     # 2
+
+    ■ 複数検索(結果Indices)
+    x = [res.span() for res in re.finditer('pen', txt, flags=re.IGNORECASE)]
+    print(x)                            # [(10, 13), (29, 32)]
+    print(len(x))                       # 2
+
+- ENTRY:
+  EXPLAIN: 文字列置換
+  BODY: |
+    txt = 'ab cd ab ob cd'
+    res = txt.replace(' ', '-')         # ab-cd-ab-ob-cd
+    res = txt.replace('ab','AB',1)      # AB cd ab ob cd *回数制限
+
+    ■ エスケープ文字
+    txt = 'ab\ncd\nab\n'
+    res = txt.replace('\n', '')         # abcdab
+
+    ■ 複数実行の順序
+    txt = 'AB AB'
+    res = txt.replace('A','B').replace('B','A')     # 失敗: AA AA
+    res = txt.translate(str.maketrans('AB','BA'))   # 成功: BA BA (*strは文字列型)
+
+    ■ 正規表現
+    import re
+    txt = 'ab cd ef'
+    res = re.sub('ab|cd', 'XX', txt)    # XX XX ef
+    res = re.sub('ab|cd', 'XX', txt, 1) # XX cd ef *回数指定
+
+- ENTRY:
+  EXPLAIN: 文字コード変換
+  BODY: |
+    var = 'あ'
+    res = var.encode('utf-8')           # b'\xe3\x81\x82'
+    org = res.decode('utf-8')           # 'あ'
+
+    res = var.encode('sjis')            # b'\x82\xa0'
+    org = res.decode('sjis')            # 'あ'
+
+    res = var.encode('cp932')           # b'\x82\xa0'
+    org = res.decode('cp932')           # 'あ'
+
+    res = var.encode('euc_jp')          # b'\xa4\xa2'
+    org = res.decode('euc_jp')          # 'あ'
+
+    res = var.encode('iso2022_jp')      # b'\x1b$B$"\x1b(B'
+    org = res.decode('iso2022_jp')      # 'あ'
+
+- ENTRY:
+  EXPLAIN: 文字コード検出
+  BODY: |
+    file = 'sample.txt'
+    with open(file, 'rb') as f:         # mode='rb'
+      rawData = f.read()
+
+    from chardet import detect
+    res = detect(rawData)['encoding']   # utf-8
+
+#=================================================
+# 構造体
+#=================================================
+
+- ENTRY:
+  CATEGORY: |
+    構造体(List, Tuple, Set, Dict)
+
+- ENTRY:
+  EXPLAIN: 4構造体
+  BODY: |
+    myList:  list  = []   # myList = [1,2,"A","B"]
+    myTuple: tuple = ()   # myTuple= (1,"A")
+    mySet:   set   = {}   # mySet  = (1,2,"A","B")
+    myDict:  dict  = {}   # myDict = {1:"A", 2:"B"}
+
+    ■ List
+    bool([])    # False
+    bool([1])   # True
+
+    ■ Tuple
+    bool(())    # False
+    bool((1))   # True
+
+    ■ Set
+    bool({})    # False
+    bool({1})   # True
+
+    ■ Dict
+    bool({})    # False
+    bool({1:1}) # True
+
+#-------------------------------
+# 構造体：List 配列
+#-------------------------------
+- ENTRY:
+  CATEGORY: |
+    List型
+
+- ENTRY:
+  EXPLAIN: 生成/取得
+  BODY: |
+    ■ 生成
+    a = [1, 2, "a"]
+    a: list = [1, 2]                    # 型指定
+    a: list = [1, "A"]                  # 型指定
+    a: list = [1, "A", 2]               # 型指定
+    a: list[int] = [1, 2]               # 型指定: intのみ
+    [NG] a: list[int] = [1, "A"]        # 型Error
+    a: list[int|str] = [1, "A"]         # 型指定: UNION型 v3.10以上
+    a: list[list[int]] = [[1, 2], [3, 4]]       # 型指定: 多次元配列
+    a: list[object] = [1, "A", [1, 2], {"A":1}] # 型指定: 任意型
+    a: list = list()                    # 空配列生成
+    a: list = []                        # 空配列生成
+    a: list = [0] * 5                   # 要素数5の配列生成 [0,0,0,0,0]
+
+    ■ 取得
+    a: list[int] = [1, 2, 3, 4, 5, 6, 7]
+    a[1]                                # 要素: 2
+    a[:]                                # 全部: [1, 2, 3, 4, 5, 6, 7]
+    a[1:3]                              # n～m-1: [2, 3]
+    a[3:]                               # n～最後: [4, 5, 6, 7]
+    a[:3]                               # 最初～m-1: [1, 2, 3]
+    a[1:4:2]                            # s個とばし: [2, 4]
+    a[1::2]                             # s個とばし: [2, 4, 6]
+    a[-3]                               # 後n: 5
+    a[-5:-1]                            # 後n～後m: [3, 4, 5, 6]
+    a[-1:-5]                            # 後n～後m: []
+
+- ENTRY:
+  EXPLAIN: 代入/追加
+  BODY: |
+    ■ 代入
+    a = [1,2,3]
+    a[1] = 9                            # [1, 9, 3]
+    a[1] = ['A','B']                    # [1, ['A', 'B'], 3]
+
+    ■ 追加
+    a = [1, 2]
+    a.append(3)                         # [1, 2, 3]
+    [NG] a += 3                         # Error オペランドによる追加
+
+    b: list[int] = [1, 2]
+    b.insert(1, 5)                      # [1, 5, 2]
+
+    c: list[int | list[int]] = [1, 2]
+    c.insert(1, [7])                    # [1, [7], 2]
+
+    d: list[int] = [1, 2]
+    d.extend([9])                       # [1, 2, 9]
+
+    e = ["A", "B"]
+    e += "X"                            # 文字列OK ['A', 'B', 'X']
+
+    f = ["A", "B"]
+    f += "XY"                           # 文字列OK ['A', 'B', 'X', 'Y']
+
+    g = ["A", "B"]
+    g += ["X", "Y"]                     # List ['A', 'B', 'X', 'Y']
+
+    h = ["A", "B"]
+    h += ("X", "Y")                     # Tuple ['A', 'B', 'X', 'Y']
+
+    i = ["A", "B"]
+    i += {"X", "Y"}                     # Set ['A', 'B', 'X', 'Y']
+
+- ENTRY:
+  EXPLAIN: 置換/挿入/削除
+  BODY: |
+    ■ 置換/挿入
+    a = [1,2,3]
+    a[1] = 3                            # 置換 [1, 3, 3]
+    [NG] a[100] = 3                     # Index超過：list assignment index out of range
+    a[1:1] = "A"                        # 挿入 [1, 'A', 3, 3]
+    a[1:1] = ["A"]                      # 挿入 [1, 'A', 'A', 3, 3]
+
+    b = ["A", "B", "C"]
+    b[1:1] = "X"                        # 挿入 ['A', 'X', 'B', 'C']
+
+    c = ["A", "B", "C"]
+    c[1:1] = ["X", "Y"]                 # 挿入 ['A', 'X', 'Y', 'B', 'C']
+
+    d = ["A", "B", "C"]
+    d[1:2] = ["X", "Y"]                 # 置換挿入 ['A', 'X', 'Y', 'C']
+
+    e = ["A", "B", "C"]
+    e[1:6] = ["X", "Y"]                 # 置換挿入 ['A', 'X', 'Y'] *index超過OK
+
+    ■ 削除
+    a = [1, 2, 3]
+    del a[0]                            # [2, 3]
+
+    b = [1, 2, 3]
+    del b[0:2]                          # [3]
+
+    c = [1, 2, 3, 1]
+    c.remove(1)                         # [2, 3, 1]
+
+- ENTRY:
+  EXPLAIN: 配列同士の四則演算
+  BODY: |
+    a: list = [1, 2]
+    b: list = [2, 3]
+
+    c = a + b                           # [1, 2, 2, 3]
+    c = a.extend([2, 3])                # [1, 2, 2, 3]
+    [NG] c = a - b                      # NG -> numpy
+    [NG] c = a * b
+    [NG] c = a / b
+    [NG] c = a + 1
+    [NG] c = a - 1
+
+    c = a * 2                           # [1, 2, 1, 2]
+    [NG] c = a / 2
+
+    ■ numpy
+    import numpy as np                  # pip install numpy
+
+    list_a = [10, 20, 30]
+    list_b = [1, 2, 3]
+    a = np.array(list_a)                # NumPy配列に変換 ※list_aへの変更は影響しない
+    b = np.array(list_b)                # NumPy配列に変換
+
+    result_add = a + b                  # [11 22 33]
+    result_sub = a - b                  # [ 9 18 27]
+    result_mul = a * b                  # [10 40 90]
+    result_div = a / b                  # [10. 10. 10. ]
+
+- ENTRY:
+  EXPLAIN: join/len/count/in/分割代入
+  BODY: |
+    var1 = ['A','B','C']
+
+    ■ join
+    ','.join(var1)                      # A,B,C
+
+    ■ len
+    len(var1)                           # 3
+
+    ■ count
+    a = ['A','AB','AA']
+    len(a)                              # 3  配列数
+    a.count('A')                        # 1  完全一致数
+
+    ■ in
+    'A' in var1                         # True
+
+    ■ 分割代入
+    x, y, z = var1                      # 
+    print(x, y, z)                      # "A", "B", "C"
+    [NG] x, y = var1                    # Error 変数不足
+
+- ENTRY:
+  EXPLAIN: コピー
+  BODY: |
+    import copy
+
+    ■ 参照コピー
+    a = [1, 2, 3]
+    b = a                               # 参照コピー
+    a[0] = 9
+
+    print(a)                            # [9, 2, 3]
+    print(b)                            # [9, 2, 3]
+
+    ■ 浅い(Shallow)コピー
+    a = [1, 2, [1, 2]]
+    b1 = copy.copy(a)                   # 浅い(Shallow)コピー1
+    b2 = a[:]                           # 浅い(Shallow)コピー2
+    b3[:] = a[:]                        # 浅い(Shallow)コピー3
+    a[0] = 9                            # 浅いレベルでは b に反映されない
+    a[2][0] = 9                         # 深いレベルでは b に反映される
+
+    print(a)                            # [9, 2, [9, 2]]
+    print(b1)                           # [1, 2, [9, 2]]
+    print(b2)                           # [1, 2, [9, 2]]
+    print(b3)                           # [1, 2, [9, 2]]
+
+    ■ 深い(Deep)コピー
+    a = [1, 2, [1, 2]]
+    b = copy.deepcopy(a)                # 深い(Deep)コピー
+    a[0] = 9
+    a[2][0] = 9
+
+    print(a)                            # [9, 2, [9, 2]]
+    print(b)                            # [1, 2, [1, 2]]
+
+- ENTRY:
+  EXPLAIN: 値渡し/参照渡し
+  BODY: |
+    ■ list, dict, set は参照渡し
+    def funcVal(x):                     # 値渡し
+      x[0] = 9
+    # return x 不要
+
+    x = [7, 7]
+    y = funcVal(x)                      # [9, 7]
+
+    ■ primitives(int, str, bool, float) は値渡し
+    def funcVal(x):                     # 値渡し
+      x = 9
+      return x
+
+    x = 7
+    y = funcVal(x)                      # x:7, y:9
+
+- ENTRY:
+  EXPLAIN: ループ For in/Iterator
+  BODY: |
+    ■ int
+    a = [1, 2, 3, 4]
+    for n in a:
+      print(n)
+
+    b = [[1, 2], [3, 4]]
+    for x in b:
+      for y in x:
+        print(y)
+
+    ■ Iterator
+    it = iter([1, 2])                   # Iterator
+    next(it)                            # 1
+    next(it)                            # 2
+    next(it)                            # Error
+
+- ENTRY:
+  EXPLAIN: 要素のTuple変換(for index,n in Loop)
+  BODY: |
+    arr = ["A", "B", "C"]
+
+    x = enumerate(arr)                  # 戻り値: iterator
+    print(list(x))                      # [(0,'A'),(1,'B'),(2,'C')]
+
+    x = enumerate(c * 2 for c in arr)   # 戻り値: iterator
+    print(list(x))                      # [(0,'AA'), (1,'BB'), (2,'CC')]
+
+    x = enumerate(arr, 3)
+    x = enumerate(arr, start=3)         # 戻り値: iterator
+    print(list(x))                      # [(3,'A'),(4,'B'),(5,'C')]
+
+    for i, v in enumerate(arr):
+        print(i, v)                     # 0 A  1 B  2 C
+
+    ■ iter() vs enumerate()
+    arr = [2, 4, 6]
+    a: int = reduce(lambda k, j: k + j, iter(arr), 0)
+    b: int = sum(value for index, value in enumerate(arr))
+
+- ENTRY:
+  EXPLAIN: 内包表記[for in ...]
+  BODY: |
+    ■ 内包表記の戻り値は Iterator
+    a = [1, 2, 3] b = [4, 5, 6]
+
+    [x - 1 for x in a]                      # [0,1,2]
+    [x * 2 for x in a if x == 3]            # [6]
+    [[x, x * 2] for x in a]                 # [[1,2],[2,4],[3,6]] 配列
+    [(x, x * 2) for x in a]                 # [(1,2),(2,4),(3,6)] タプル
+    [x * y for x in a for y in b]           # [4,5,6,8,10,12,12,15,18] 配列x配列
+
+    [a[i] * b[i] for i in range(len(a))]    # [4,10,18] *非推奨
+    [a[i] * b[i] for i, _ in enumerate(a)]  # [4,10,18] *推奨
+
+- ENTRY:
+  EXPLAIN: all/any
+  BODY: |
+    ■ all
+    all([1, 2, 3])                      # True
+    all([1, 2, None])                   # False
+    all([-1, -2, -3])                   # True
+    all([])                             # True
+    all([None])                         # False
+
+    ■ any
+    any([1, 2, None])                   # True
+    any([-1, -2, -3])                   # True
+    any([])                             # False
+    any([None])                         # False
+
+- ENTRY:
+  EXPLAIN: max/min/sum
+  BODY: |
+    ■ max
+    max([-1, 0, 1, 2])                  # 2
+    [NG] max([])                        # Error
+    [NG] max([None])                    # Error
+    max(["A", "Z", "M"])                # Z
+    [NG] max(["A", 1, 7])               # Error混在
+
+    ■ min
+    min([-1, 0, 1, 2])                  # -1
+    [NG] min([])                        # Error
+    [NG] min([None])                    # Error
+
+    ■ sum
+    sum([1, 2, 3, 4, 5])                # 15
+    sum([-1, -2, -3])                   # -6
+    sum([])                             # 0
+    [NG] sum([None])                    # Error
+    [NG] sum([1, 2, "A"])               # Error
+    [NG] sum(["A", "B"])                # Error
+
+- ENTRY:
+  EXPLAIN: filter/map/reduce/zip(合体)
+  BODY: |
+    ■ filter
+    arr = [1, 2, 3, 4, 5]
+    a = filter(lambda k: (k % 2 == 1), arr)  # 注意戻り値: iterator
+    print(list(a))                           # [1, 3, 5]
+    print(list(a))                           # [] <= a の中身は空
+
+    ■ map
+    arr = [1, 2, 3, 4, 5]
+    a = map(lambda k: k * 2, arr)       # 注意戻り値: iterator
+    print(list(a))                      # [2, 4, 6, 8, 10]
+    print(list(a))                      # 2回目コール [] <= a の中身は空
+
+    ■ reduce
+    from functools import reduce
+    arr = [2, 4, 6]
+    a: int = reduce(lambda k, j: k + j, iter(arr), 0)             # 12
+    b: int = reduce(lambda k, j: int(k + (j / 2)), iter(arr), 0)  # 6
+
+    ■ zip
+    arr = [1, 2, 3, 4, 5]
+    a = zip(arr, ["A", "B", "C"])       # 注意戻り値: iterator
+    print(list(a))                      # [(1,'A'),(2,'B'),(3,'C')]
+    print(list(a))                      # 2回目コール [] <= a の中身は空
+
+    header = ["name", "age"]
+    info = [["Kevin", 23], ["John", 45]]
+    res = [dict(zip(header, n)) for n in info]
+
+    # [{'name': 'Kevin', 'age': 23}, {'name': 'John', 'age': 45}]
+
+- ENTRY:
+  EXPLAIN: ソート
+  BODY: |
+    ■ Mutable                           # 引数自体が変化
+    score1 = [5, 8, 2, 4]
+    score1.sort()                       # [2, 4, 5, 8]
+
+    score = [("A", 4), ("B", 8), ("C", 2)]
+    score.sort(key=lambda x:x[1])       # [('C', 2), ('A', 4), ('B', 8)]
+
+    ■ Immutable                         # 引数から戻り値を分離
+    a = [4, 3, 1, 2, 10]
+    list(reversed(a))                   # [10, 2, 1, 3, 4]
+    list(sorted(a))                     # [1, 2, 3, 4, 10]
+    list(sorted(a, reverse=True))       # [10, 4, 3, 2, 1]
+
+    b = ["F", "A", "1", "2", "10"]
+    list(sorted(b))                     # ['1','10','2','A','F']
+
+    ■ ナチュラルソート
+    # pip install natsort
+    from natsort import natsorted
+    c = ["F", "A", "1", "2", "10"]
+    list(natsorted(c))                  # ['1','2','10','A','F']
+
+- ENTRY:
+  CATEGORY: |
+    Tuple型
+
+- ENTRY:
+  EXPLAIN: タプル
+  BODY: |
+    a = (1, 2, 3)
+    print(type(a))                      # Class 'tuple'
+
+    [NG] a[0] = 2                       # Error(代入不可)
+    print(a[0], a[1])                   # 1 2
+
+    x = 1
+    print(type(x))                      # Class 'int' 注意
+    x = (1,)
+    print(type(x))                      # Class 'tuple'
+
+- ENTRY:
+  CATEGORY: |
+    Dict型
+
+- ENTRY:
+  EXPLAIN: 辞書
+  BODY: |
+    ■ 生成
+    dict({"A": 3, "B": 8})              # {'A':3, 'B':8}  🔴個別要素の型設定不可!
+
+    x = ("A", "B")
+    dict.fromkeys(x, 0)                 # {'A': 0, 'B': 0}
+
+    ■ 代入
+    d["A"] = 7                          # {'A': 7, 'B': 8}
+
+    ■ 取得
+    print(d.get("D"))                   # None(Errorではない)
+    print(d.get("B"))                   # 8
+
+    ■ 取得(value)
+    d.pop("A")                          # 7
+    [NG] d.push({...})
+
+    ■ 取得((key,value))
+    d.popitem()                         # ('B', 8)
+
+    ■ 削除
+    d = dict({"A": 3, "B": 8})
+    del d["B"]
+
+    ■ 削除(判定)
+    # del d["D"]                        # KeyError: 存在しない
+    if "D" in d:                        # 削除前に要素判定
+      del d["D"]
+
+    ■ 削除(複数) NG
+    [NG] del d["A", "B"]                # KeyError: 複数不可
+
+    ■ 全要素削除
+    d.clear()
+
+- ENTRY:
+  EXPLAIN: 辞書(KVメソッド)
+  BODY: |
+    d = dict({"A": 12, "B": 8})
+    print(d)
+
+    ■ KEYS & VALUES
+    for key, value in d.items():
+        print(key, value)               # A 12 B 8
+
+    ■ KEYS
+    for key in d.keys():
+        print(key, d[key])              # A 12 B 8
+
+    ■ VALUES
+    for value in d.values():
+        print(value)                    # 12 8
+
+    ■ 内包表記
+    # KV 交換(Keyがstr以外で型error)
+    d = {v: k for k, v in d.items()}
+
+- ENTRY:
+  CATEGORY: |
+    Set型
+
+- ENTRY:
+  EXPLAIN: セット
+  BODY: |
+    ■ 生成
+    a = set([5, 1, 2, 1, 5])
+    a = {1, 2, 3}                       # 簡易生成
+
+    ■ 内包表記
+    a = { i % 5 for i in range(10) }    # {0, 1, 2, 3, 4} *重複排除
+
+    ■ 要素数
+    len(a)                              # 要素数
+
+    ■ 追加(単数要素)
+    a.add(5)                            # {1, 2, 3, 5}
+
+    ■ 追加(複数要素)
+    a.update([3, 4])                    # {1, 2, 3, 4, 5}
+
+    ■ 削除
+    a = set([5, 1, 2, 1])
+    [NG] a.remove(6)                    # (非存在)削除: Error
+    a.remove(2)                         # 削除
+    a.discard(7)                        # (非存在)削除(No Error)
+
+    ■ Pop
+    x = a.pop()
+
+    ■ 全削除
+    a.clear()
+
+    # ■ コピー
+    a = set([1, 2, 3])
+    b = a                               # 参照コピー
+    c = a.copy()                        # 浅いコピー(Shallow Copy)
+
+- ENTRY:
+  EXPLAIN: セット(サブセット)
+  BODY: |
+    a = {1, 2, 3, 4, 5} b = {2, 3, 4}
+
+    a.isdisjoint(b)                     # 共通要素有:False
+
+    ■ サブセット
+    b.issubset(a)                       # True: b は a のサブセット
+    b <= a                              # True: b は a のサブセット
+    b < a                               # True: 真部分集合(set <= other and set != other)
+
+    ■ スーパーセット
+    a.issuperset(b)                     # True: a は b のスーパーセット
+    a >= b                              # True: a は b のスーパーセット
+    a > b                               # True: 真上位集合(set >= other and set != other)
+
+- ENTRY:
+  EXPLAIN: セット(操作)
+  BODY: |
+    a = {1, 2, 3}
+    b = {3, 4}
+
+    1 in a                              # True: 包含
+    1 not in a                          # False: 非包含
+
+    ■ Difference
+    x = a - b                           # DIFF: {1, 2}
+    x = a.difference(b)
+
+    ■ Union
+    x = a | b                           # UNION: {1, 2, 3, 4}
+    x = a.union(b)
+
+    ■ Intersect
+    x = a & b                           # INTERSECT: {3}
+    x = a.intersection(b)
+
+    ■ XOR(Union-Intersect)
+    x = a ^ b                           # XOR: {1, 2, 4}
+    x = a.symmetric_difference(b)
+
+- ENTRY:
+  CATEGORY: |
+    Range型
+
+- ENTRY:
+  EXPLAIN: 配列生成(range)
+  BODY: |
+    ■ 戻り値は Iterator  *配列ではない
+    range(5)                            # [0, 1, 2, 3, 4]
+    range(2, 5)                         # (始,終-1): [2, 3, 4]
+    range(2, 10, 3)                     # (開,終-1,間): [2, 5, 8]
+    [NG] range(5, 1)                    # (開<終-1): []
+    range(5, 1, -1)                     # 逆順(開<終-1,間): [5, 4, 3, 2]
+    [NG] range(-1, -5)                  # (-開>-終): 空[]
+    range(-5, -1)                       # (-開<-終): [-5, -4, -3, -2]
+    for _ in range(3):                  # 反復(数)
+    [NG] range(1.1)                     # 非整数: Error
+
+#=================================================
+# オブジェクト型
+#=================================================
+
+- ENTRY:
+  CATEGORY: |
+    オブジェクト型
+
+#-------------------------------
+# 型：Object
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: 関数
+  BODY: |
+    o = object()                        # 生成: < object object at 0x7fe2e5ecff20 >
+    id(o)                               # ID(メモリアドレス): 140612496850720
+    callable(o)                         # 呼び出し可能: False
+    hash(o)                             # ハッシュ値: 0
+    repr(o)                             # 文字列: 0
+    type(o)                             # obj型: < class 'str' >
+
+#=================================================
+# Generic
+#=================================================
+
+- ENTRY:
+  CATEGORY: |
+    Generic
+
+- ENTRY:
+  EXPLAIN: ジェネリック(TypeVar)
+  BODY: |
+    ■ ジェネリック型変数の定義
+    from typing import TypeVar
+    T = TypeVar("T")                    # T は任意の型（int, str, listなど）
+
+    def identity(item: T) -> T:
+        """受け取った引数をそのまま返すジェネリック関数"""
+        return item
+
+    ■ 複数の型
+    from typing import TypeVar, Dict, List, Union
+
+    T = TypeVar("T")  # 辞書のキーの型
+    V = TypeVar("V")  # 辞書の値の型
+
+    def get_keys_as_list(data: Dict[T, V]) -> List[T]:
+        """
+        辞書を受け取り、そのキーをリストにして返す
+        キーと値の型は実行時に推論される
+        """
+        return list(data.keys())
+
+    data = {"apple": 150, "banana": 80}
+    keys = get_keys_as_list(data)       # T は str、V は int と推論される
+    print(keys)                         # ['apple', 'banana']
+
+- ENTRY:
+  EXPLAIN: ジェネリック(TypedDict)
+  BODY: |
+    ■ 型制限
+    from typing import TypeVar, List
+    Numeric = TypeVar("Numeric", int, float) # int または float のみ
+
+    def calculate_average(data: List[Numeric]) -> float:
+        if not data:
+            return 0.0
+        return sum(data) / len(data)    # 数値演算が安全に行える
+
+    # サンプル実行
+    int_list = [10, 20, 30]
+    average_int = calculate_average(int_list)
+
+    float_list = [1.5, 2.5, 3.0]
+    average_float = calculate_average(float_list)
+
+    ■ TypedDict によるオブジェクト定義
+    from typing import TypedDict, List
+
+    class Company(TypedDict):
+        """会社の情報を表す型付き辞書"""
+        name: str
+        founded_year: int
+        departments: List[str]
+        is_active: bool
+
+    data: Company = {
+        "name": "Tech Corp",
+        "founded_year": 2005,
+        "departments": ["Engineering", "Sales"],
+        "is_active": True
+    }
+
+    ■ TypeVar を使ったジェネリック関数の定義
+    from typing import TypeVar, TypedDict, List
+
+    CompanyLike = TypeVar("CompanyLike", bound=Company)
+
+    def get_company_name(company_data: CompanyLike) -> str:
+        return company_data["name"]     # name キーが存在することが保証
+
+    # Company 型のデータ
+    tech_corp: Company = {
+        "name": "Tech Corp",
+        "founded_year": 2005,
+        "departments": ["Engineering", "Sales"],
+        "is_active": True
+    }
+
+    name = get_company_name(tech_corp)  # "Tech Corp"
+
+- ENTRY:
+  EXPLAIN: 複数の「似た構造」を扱う場合
+  BODY: |
+    Company 以外に Employee という似た構造の型があり、両方に対して使えるジェネリック関数を定義
+
+    from typing import TypedDict
+
+    class Company(TypedDict):
+        name: str
+
+    class Employee(TypedDict):
+        name: str
+
+    NamedObject = TypeVar("NamedObject", Company, Employee)
+
+    def get_name(obj: NamedObject) -> str:
+        return obj["name"]
+
+    c: Company = {"name": "ABC Inc.", ...}
+    e: Employee = {"name": "Alice", ...}
+
+    print(get_name(c))
+    print(get_name(e))
+
+#=================================================
+# 関数
+#=================================================
+
+- ENTRY:
+  CATEGORY: |
+    関数
+
+#-------------------------------
+# 関数
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: 関数(引数)
+  BODY: |
+    ■ 引数
+    def func(arg1:int, arg2:int)->None:
+        print(arg1, arg2)
+
+    func(1, 2)                          # 1 2
+    func(arg1=1, arg2=2)                # 1 2
+    func(arg2=1, arg1=2)                # 2 1
+
+    ■ 引数(default)
+    def func(arg1:int, arg2:int=7)->None:
+        print(arg1, arg2)
+
+    func(1, 2)                          # 1 2
+    func(1)                             # 1 7 (default値)
+    func(arg1=1)                        # 1 7 (default値)
+    func(arg1=1, arg2=None)             # 1 7 (default値)
+
+    ■ 引数(default悪例)
+    def func(arg1, arg2=[]):            # 悪例: default値が参照 []
+        arg2.append(arg1)
+        print(arg1, arg2)
+
+    func(1)                             # 1 [1]
+    func(2)                             # 2 [1, 2] <== Wrong
+
+    ■ 引数(default：上記関数の修正版)
+    def func(arg1, arg2=None):
+        if not arg2:
+            arg2 = []
+        arg2.append(arg1)
+        print(arg1, arg2)
+
+    ■ デフォルト引数、残余引数、可変長引数
+    def greet(name: str, greeting: str = "Hello", *args: str) -> str:
+        message = f"{greeting}, {name}!"
+        for extra in args:
+            message += f" {extra}"
+        return message
+
+    msg = greet("Alice")                      # "Hello, Alice!"
+    msg = greet("Bob", "Hi")                  # "Hi, Bob!"
+    msg = greet(name="Bob", greeting="Hey")   # "Hey, Bob!"
+    msg = greet(name="Bob", "Hi", "Welcome")  # "Hi, Bob! Welcome"
+
+    ■ 引数(残余引数：+名前付き)
+    def func(*arg, more):               # 名前付き必須
+        print(arg, more)
+
+    func(more=5)                        # () 5
+    func(1, more=5)                     # (1,) 5
+    func(1, 2, 3, more=5)               # (1, 2, 3) 5
+    [NG] func(1)
+    [NG] func(1, 2, 3)
+    [NG] func(more=5, 1)
+
+    ■ 引数(名前付き)
+    def func(*, arg, more):
+        print(arg, more)
+
+    func(arg=1, more=5)                 # 1 5
+    [NG] func(1)
+    [NG] func(1, 2, 3)
+    [NG] func(1, arg=1, more=5)
+
+    ■ 引数(残余引数+名前付き残余引数)
+    def func(*arg, **kwargs):           # keyWordArguments
+        print(arg, kwargs)
+
+    [NG] def func(**kwargs, *arg):      # パラメタ位置反対
+
+    func(1, 2, 3)                       # (1, 2, 3) {}
+    func(arg1=1)                        # () {'arg1': 1}
+    func(1, 2, arg1=1, abc=3)           # (1, 2) {'arg1': 1, 'abc': 3}
+    [NG] func(arg1=1, 2, abc=3, 4)      # Error
+
+- ENTRY:
+  EXPLAIN: ファクトリ関数
+  BODY: |
+    from typing import Callable
+    def factory() -> Callable:
+      def add(a: int) -> int:
+          return a + 1
+      return add                        # 戻り値:関数
+
+    factAdd = factory()
+    print(factAdd(1))                   # 2
+
+- ENTRY:
+  EXPLAIN: カリー関数
+  BODY: |
+    from typing import Callable
+    def curry(a: int = 0) -> Callable:
+      def add(b: int) -> int:
+          value = a + b
+          return value
+      return add                        # 戻り値:関数
+
+    curryAdd = curry(3)
+    print(curryAdd(2))                  # 5
+
+    print(curry(3)(2))                  # 5
+
+- ENTRY:
+  EXPLAIN: クロージャ関数
+  BODY: |
+    from typing import Callable
+    def factory() -> tuple[Callable, int]:
+        sum: int = 0
+        def add(a: int) -> int:
+            global sum
+            sum += a
+            return a + 1
+        return (add, sum)
+
+    (factAdd, sum) = factory()
+    print(factAdd(3), sum)              # 4 3
+    print(factAdd(2), sum)              # 3 5
+    print(factAdd(1), sum)              # 2 6
+
+- ENTRY:
+  EXPLAIN: ラムダ関数
+  BODY: |
+    ■ 一般関数
+    def lambdaWrap(func: Callable, numbers: list[int]) -> list[int]:
+        return [func(n) for n in numbers]
+
+    ■ ラムダ関数
+    result = lambdaWrap(lambda n: n + 1, arr)     # [2, 3, 4]
+
+    arr = [1, 2, 3]
+    a = map(lambda k: k * 2, arr)                 # [2, 4, 6]
+    a = filter(lambda k: k % 2, arr)              # [1, 3]
+
+    from functools import reduce
+    a: int = reduce(lambda k, j: k + j, iter(arr), 0)             # 12
+    b: int = reduce(lambda k, j: int(k + (j / 2)), iter(arr), 0)  # 6
+
+    ■ リスト内包表記比較
+    res = map(lambda num: num * 2, numbers)
+    res = [num * 2 for num in numbers]
+
+    ■ 警告: lambdaをアサインするな(デバッグの困難さ)
+    f = lambda x, *args, rival, **kwargs: [rival, args, kwargs]
+    f(1, 2, 3, rival="ruby", name="python")
+    # => ['ruby', (2, 3), {'name': 'python'}]
+    コーディングスタイルガイド: PEP 8では「lambda式を直接変数に代入すべきではない」と強く推奨
+
+#=================================================
+# 他
+#=================================================
+
+- ENTRY:
+  CATEGORY: |
+    他
+
+#-------------------------------
+# 他
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: eval/exec/compile
+  BODY: |
+    ■ 数式の文字列化
+    a = eval('2**10')                   # 1024
+    x = 2
+    a = eval('x**10')                   # 1024
+
+    ■ 関数の文字列化
+    str = """
+    def test(num):
+      return num * 2
+    """ 
+
+    ■ exec
+    a = exec(str)
+    print('result', a)                  # None 値が返らない
+
+    ■ compile
+    b = compile(str, filename='< string >', mode='exec')  # AST Obj
+    a = b(2)                            # 4
+
+#=================================================
+# Class
+#=================================================
+
+- ENTRY:
+  CATEGORY: |
+    Class
+
+#-------------------------------
+# Class
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: サンプル
+  BODY: |
+    import abc  # 抽象基底クラスのためにabcモジュールをインポート
+
+    class Animal(abc.ABC):  # 抽象基底クラスの定義
+        """動物を表す抽象基底クラス。"""
+        
+        # クラス変数：全インスタンスで共有される
+        kingdom = "Animalia"
+
+        def __init__(self, name: str, sound: str):
+            """コンストラクタ：インスタンス変数を初期化する。"""
+            self._name = name  # インスタンス変数（非公開を意図する属性には慣習として_を付ける）
+            self.sound = sound
+
+        @abc.abstractmethod
+        def speak(self):
+            """抽象メソッド：継承先で必ず実装する必要がある。"""
+            pass
+
+        @property  # プロパティ：属性へのアクセスを制御する (ゲッター)
+        def name(self) -> str:
+            """名前を取得するゲッターメソッド。"""
+            return self._name
+
+        @name.setter  # プロパティ：属性へのアクセスを制御する (セッター)
+        def name(self, new_name: str):
+            """名前を設定するセッターメソッド。バリデーションも可能。"""
+            if not isinstance(new_name, str) or not new_name.strip():
+                raise ValueError("名前は有効な文字列である必要があります。")
+            self._name = new_name
+            print(f"名前が {self._name} に変更されました。")
+
+        def __str__(self):
+            """特殊メソッド：print() 関数などでオブジェクトの文字列表現を返す。"""
+            return f"{self.__class__.__name__}(Name: {self.name}, Sound: {self.sound})"
+
+        @staticmethod  # スタティックメソッド：インスタンスやクラスに依存しない汎用的なメソッド
+        def show_info():
+            """動物に関する一般的な情報を提供する。"""
+            print("動物は生命体の一種で、通常は動き回ることができます。")
+
+        @classmethod  # クラスメソッド：クラス自体に紐づくメソッド、第一引数はクラス自身(cls)
+        def get_kingdom(cls):
+            """クラス変数 'kingdom' を取得する。"""
+            return cls.kingdom
+
+    class Dog(Animal):  # Animalクラスを継承する
+        """犬を表すクラス。Animalクラスの具体的な実装。"""
+        
+        # メソッドのオーバーライド：親クラスのspeakメソッドを上書きする
+        def speak(self):
+            """犬の鳴き声を表現する。"""
+            print(f"{self.name} says: {self.sound}!")
+
+    class Cat(Animal):
+        """猫を表すクラス。Animalクラスの具体的な実装。"""
+        def speak(self):
+            """猫の鳴き声を表現する。"""
+            print(f"{self.name} says: {self.sound}!")
+
+    ■ --- 使用例 ---
+
+    ■ 抽象クラスはインスタンス化できない（エラーになる）
+    animal = Animal("Generic", "sound") 
+
+    ■ 具体的なクラスのインスタンス化
+    dog = Dog("Buddy", "Woof")
+    cat = Cat("Whiskers", "Meow")
+
+    ■ インスタンス変数へのアクセスとメソッド呼び出し
+    dog.speak()
+    cat.speak()
+
+    ■ プロパティ（ゲッターとセッター）の使用
+    print(f"Dog's name: {dog.name}")
+    dog.name = "Max"  # セッターが呼ばれる
+    print(f"Dog's new name: {dog.name}")
+
+    ■ クラス変数の利用
+    print(f"Kingdom of animals: {Dog.kingdom}")
+    print(f"Kingdom via classmethod: {Cat.get_kingdom()}")
+
+    ■ スタティックメソッドの呼び出し
+    Animal.show_info()
+
+    ■ ポリモーフィズム：異なるクラスのオブジェクトを同じように扱う
+    animals = [dog, cat]
+    for animal in animals:
+        animal.speak() # 各オブジェクトのspeakメソッドが適切に実行される
+        print(animal)  # __str__ メソッドが呼ばれる
+
+- ENTRY:
+  EXPLAIN: シングルトン
+  BODY: |
+    class SingletonConfig:
+        """
+        シングルトンパターンを実装した設定管理クラス。
+        A, B, C の3種類の変数を保持する。
+        """
+        _instance = None
+        _initialized = False
+
+        # シングルトンが保持するデータ（クラス変数として初期値を定義）
+        _data = {
+            'A': 'Default A Value',
+            'B': 123,
+            'C': True
+        }
+
+        def __new__(cls, *args, **kwargs):
+            """
+            インスタンス生成時に呼び出され、常に同じインスタンスを返すことを保証する。
+            """
+            if cls._instance is None:
+                cls._instance = super(SingletonConfig, cls).__new__(cls)
+            return cls._instance
+
+        def __init__(self):
+            """
+            初期化メソッド。シングルトンでは複数回呼ばれる可能性があるため、
+            初期化フラグを使って初回のみ実行されるように制御することが重要。
+            """
+            if not SingletonConfig._initialized:
+                print("SingletonConfig: 初回初期化を実行しました。")
+                SingletonConfig._initialized = True
+            else:
+                print("SingletonConfig: インスタンスは既に存在します。初期化をスキップします。")
+
+        def get_value(self, key: str):
+            """指定されたキー（A, B, C）の値を取得する。"""
+            if key in self._data:
+                return self._data[key]
+            else:
+                raise KeyError(f"無効なキーです: {key}")
+
+        def set_value(self, key: str, value):
+            """指定されたキー（A, B, C）の値を設定する。"""
+            if key in self._data:
+                self._data[key] = value
+                print(f"'{key}' の値を '{value}' に更新しました。")
+            else:
+                raise KeyError(f"無効なキーです: {key}")
+
+        def display_all(self):
+            """全ての変数の現在値を表示する。"""
+            print("\n--- Current Configuration ---")
+            for key, value in self._data.items():
+                print(f"{key}: {value}")
+            print("-----------------------------\n")
+
+    ■ --- 使用例 ---
+
+    ■ 1. 最初のインスタンスを作成する（初回初期化メッセージが表示される）
+    config1 = SingletonConfig()
+    config1.display_all()
+
+    ■ 2. 2番目のインスタンスを作成しようとする（初期化はスキップされるが、同じオブジェクトを指す）
+    config2 = SingletonConfig()
+    print(f"config1 is config2: {config1 is config2}") # True になる
+
+    ■ 3. config1 を通じて変数 'A' を更新する
+    config1.set_value('A', 'Updated A Value by config1')
+    config1.set_value('B', 999)
+
+    ■ 4. config2 を通じて変更後の値を取得する（同じデータを見ているため値が反映されている）
+    print(f"Value of B using config2: {config2.get_value('B')}")
+
+    ■ 5. 全て表示してみる
+    config2.display_all()
+
+- ENTRY:
+  EXPLAIN: ダンダーメソッド
+  BODY: |
+    class Person:
+        """person class"""
+        city: str = ""  # クラス変数
+        def __init__(self, name, age) -> None:
+            """person class コンストラクタ"""
+            self.name = name
+            self.age = age
+
+        def __repr__(self) -> str:
+            return f"repr => name:{man.name} age:{man.age}"
+
+        def __str__(self) -> str:
+            return f"str => name:{man.name} age:{man.age}"
+
+        def __eq__(self, other: object) -> bool:
+            if not isinstance(other, Person):
+                return NotImplemented
+            return self.__dict__ == other.__dict__
+            # =return self.name == other.name and self.age == other.age
+
+    man: Person = Person("John", 10)
+    pan: Person = Person("John", 10)
+
+    print(f"name:{man.name} age:{man.age}")  # name:John age:10
+    print(man)                               # str => name:John age:10
+    print(repr(man))                         # repr => name:John age:10
+    print(f"{man}")                          # str => name:John age:10
+    print(man == pan)                        # True
+    print(man.__dict__)                      # {'name': 'John', 'age': 10}
+
+- ENTRY:
+  EXPLAIN: ダンダーメソッド(数)
+  BODY: |
+    class XMath:
+        def __init__(self, value):
+            self.value = value
+        def __add__(self, other):
+            return self.value + other.value
+        def __sub__(self, other):
+            return self.value - other.value
+        def __mul__(self, other):
+            return self.value * other.value
+        def __truediv__(self, other):
+            return self.value / other.value
+        def __floordiv__(self, other):
+            return self.value // other.value
+
+    xmath1 = XMath(10)
+    xmath2 = XMath(20)
+
+    print(xmath1 + xmath2)              # 30
+    print(xmath1 - xmath2)              # -10
+    print(xmath1 * xmath2)              # 200
+    print(xmath1 / xmath2)              # 0.5
+    print(xmath1 // xmath2)             # 0
+
+- ENTRY:
+  EXPLAIN: クラス継承
+  BODY: |
+    class School:
+        def __init__(self, schoolName) -> None:
+            self.schoolName = schoolName
+
+        def getSchool(self):
+            return self.schoolName
+
+    class Student(School):
+        def __init__(self, school, name) -> None:
+            super().__init__(school)
+            self.name = name
+
+        def __str__(self) -> str:
+            return f"School:{self.getSchool()} name:{self.name}"
+
+    Karen = Student("東大", "Karen")    # School:東大 name:Karen
+
+- ENTRY:
+  EXPLAIN: メタクラス
+  BODY: |
+    # メタクラスはtypeを継承する
+    class MetaClass(type):
+        # name:クラス名, bases:親クラス, attributes:クラス属性
+        def __new__(meta, name, bases, attributes):
+            if bases != (object,):  # 抽象クラスは検証しない
+                if attributes["age"] < 20:
+                    raise ValueError("No Class Allowed")
+            return type.__new__(meta, name, bases, attributes)
+
+    class People(object, metaclass=MetaClass):
+        age: int | None = None
+
+    class John(People):
+        age = 25
+
+    class Smith(People):
+        age = 18           # Raise Error
+
+- ENTRY:
+  EXPLAIN: ダンダーメソッド自動生成
+  BODY: |
+    from dataclasses import dataclass
+
+    @dataclass
+    class Movie:
+        name: str
+        year: int
+
+    starwars1 = Movie("Star wars", 1979)
+    starwars2 = Movie(year=1979, name="Star wars")
+
+    print(starwars1)                    # Movie(name='Star wars', year=1979)
+    print(starwars1 == starwars2)       # True
+
+#-------------------------------
+# Class Decorator
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: デコレータ
+  BODY: |
+    def switch_type(func):
+        def wrapper(*args, **kwargs):
+            # --------------------------------------
+            new_args = [f"[{str(a)}]" for a in args]
+            # --------------------------------------
+            return func(*new_args, **kwargs)  # パラメタのオーバーライド
+        return wrapper
+
+    @switch_type
+    def add(x, y):
+        return x + y
+
+    print(add(1, 2))                    # [1][2]
+    print(add("a", "b"))                # [a][b]

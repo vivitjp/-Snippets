@@ -1,0 +1,1530 @@
+---
+#-------------------------------
+# Document
+#-------------------------------
+- ENTRY:
+  CATEGORY: Document
+
+- ENTRY:
+  EXPLAIN: Document
+  BODY: |
+    ■ 概要
+
+    ・DOM ツリーのルート。ページ(HTML 文書)全体を表すオブジェクト
+    ・グローバルでは window.document または document で参照
+    ・要素の生成・取得、DOM 操作の入口
+
+    ■ プロパティ
+
+    document.documentElement                      // <html> 要素
+    document.body                                 // <body> 要素(存在時)
+    document.head                                 // <head> 要素
+    document.title                                // タイトル文字列
+    document.URL                                  // 文書の完全 URL
+    document.readyState                           // loading / interactive / complete
+
+    ■ メソッド (要素の生成・取得)
+
+    el = document.createElement()                 // el生成
+
+    el = document.getElementById('id')            // 取得: 単 by ID
+    HC = document.getElementsByClassName('class') // 取得: 複 by class
+    HC = document.getElementsByTagName('tag')     // 取得: 複
+
+    el = document.querySelector('#slct')          // 取得: 単(最初の1件) by セレクタ
+    el = document.querySelector('.slct')          // 取得: 単 by class
+    NL = document.querySelectorAll('#slct')       // 取得: 複 NodeList by セレクタ
+    NL = document.querySelectorAll('.slct')       // 取得: 複 by class
+
+- ENTRY:
+  EXPLAIN: Node と Element
+  BODY: |
+    ■ Node
+
+      ・ノードの基底インターフェース
+      ・Element / Text / Comment / Document 等の基底
+
+    ■ Element
+
+      ・要素のインターフェース
+      ・HTML 要素を表す
+      ・Node を継承
+
+    ■ TREE 構造で見る関係 (Node の主なサブタイプ)
+
+      Node (基底。nodeType で種別を判別)
+      ├─ Document (9)          … 文書ルート。document がこれ
+      ├─ Element (1)           … タグ付き要素。ParentNode / ChildNode を include
+      ├─ DocumentFragment (11) … 軽量の親。ParentNode を include
+      ├─ Text (3)              … テキストノード。#text
+      ├─ Comment (8)           … コメントノード
+      ├─ DocumentType (10)     … <!DOCTYPE>
+      └─ Attr (2)              … 属性ノード(要素の .attributes の各要素)
+
+    ・継承のイメージ: Element は Node の子。document.body は Node でもあり Element でもある
+    ・ParentNode は「インターフェース」なのでツリーには書かない。Element / Document / DocumentFragment がこのメソッド群を持つ
+
+- ENTRY:
+  EXPLAIN: Node 概要
+  BODY: |
+    ■ 概要
+
+    ・DOM ツリーを構成する1単位
+    ・Element / Text / Comment / Document 等の基底インターフェース
+    ・すべてのノードが共通で持つプロパティとメソッドを定義
+    ・nodeType で種別(1〜12)を判定できる
+    ・Element 固有の API や ParentNode / ChildNode の API は別
+
+    ■ プロパティ
+
+    node.nodeName                                 // タグ名など。例: DIV, #text
+    node.nodeType                                 // 種別(1=ELEMENT, 3=TEXT, 9=DOCUMENT 等)
+    node.textContent                              // 子孫のテキストを連結(タグなし)
+    node.parentNode                               // 親ノード
+    node.parentElement                            // 親要素(Element の場合のみ)
+    node.childNodes                               // 子ノード一覧(NodeList。要素以外も含む)
+    node.firstChild                               // 先頭の子ノード
+    node.lastChild                                // 末尾の子ノード
+    node.nextSibling                              // 次の兄弟ノード
+    node.previousSibling                          // 前の兄弟ノード
+
+    ■ メソッド
+
+    node.appendChild(el)                          // 子の末尾に追加
+    node.cloneNode(deep)                          // 複製。deep: true で子孫も
+    node.contains(trg)                            // 自身または子孫に trg を含むか
+    node.hasChildNodes()                          // 子ノードの有無
+    node.isEqualNode(trg)                         // 同値判定(型・属性・子を比較)
+    node.normalize()                              // 隣接テキストノードをマージ
+
+    node.isSameNode(trg)                          // 廃止。代わりに === で同一参照判定
+
+    ■ サンプル
+
+    ・childNodes と children の違い(改行・空白がテキストノードになる)
+
+      <div id="box"><span>A</span><span>B</span></div>
+
+      const box = document.getElementById('box');
+      box.childNodes.length;                      // 5 になりうる(#text + span + #text + span + #text)
+      box.children.length;                        // 2 (要素だけ。span が2つ)
+
+    ・nodeType で種別を判定
+
+      box.nodeType;                               // 1 (ELEMENT_NODE)
+      box.firstChild.nodeType;                    // 3 のときテキストノード、1 のとき要素
+      document.nodeType;                          // 9 (DOCUMENT_NODE)
+
+    ・子孫に含まれるか
+
+      box.contains(document.querySelector('span')); // true
+      box.contains(box);                            // true(自身も含む)
+
+#-------------------------------
+# Node と関連インターフェース
+#-------------------------------
+- ENTRY:
+  CATEGORY: 関連インターフェース
+
+- ENTRY:
+  EXPLAIN: ParentNode
+  BODY: |
+    ■ 概要
+
+    ・子ノードを持つノードが持つプロパティ・メソッドをまとめたインターフェース(ミックスイン)
+    ・Element / Document / DocumentFragment が該当
+    ・子は「要素のみ」を扱うプロパティ(children, firstElementChild 等)と、子の追加・削除・置換メソッドを提供
+    ・childNodes と違い、テキストノード・コメントを除いた要素だけが対象
+
+      ※ ミックスイン
+        ・単体の型ではなく、Element 等の「別のインターフェースに含まれる」形で定義
+        ・document.body は Element かつ ParentNode なので .children や .append が使える
+
+    ■ プロパティ
+
+    n  = parentNode.childElementCount             // 子要素の数
+    HC = parentNode.children                      // 子要素の生きた HTMLCollection
+    el = parentNode.firstElementChild             // 先頭の子要素
+    el = parentNode.lastElementChild              // 末尾の子要素
+
+    ■ メソッド
+
+    parentNode.prepend(...nodes)                  // 先頭に追加。ノードまたは文字列可
+    parentNode.append(...nodes)                   // 末尾に追加。ノードまたは文字列可
+    parentNode.insertBefore(el, ref)              // ref の直前に el を挿入。移動にも使える
+    parentNode.removeChild(child)                 // 指定した子を削除
+    parentNode.replaceChild(newChild, oldChild)   // 子を別ノードで置換
+    parentNode.replaceChildren(...nodes)          // 子をすべて nodes で置換(既存の子は消える)
+
+    ■ サンプル
+
+    ・ある node を取得し、その parentNode プロパティで親(ParentNode)を取得する流れ
+
+    const node = document.querySelector('li')     // 子ノード(例: <li>)を取得
+    const parentNode = node.parentNode            // 親を取得。この親が ParentNode
+    parentNode.childElementCount                  // 子の <li> の数
+    parentNode.firstElementChild                  // 先頭の <li>
+    parentNode.children[0]                        // 同上。HTMLCollection はライブ
+
+    ・取得した parentNode の先頭・末尾に追加(prepend / append は文字列も可)
+
+    parentNode.prepend(document.createElement('li'))        // 先頭に li を追加
+    parentNode.append('テキストだけでも追加できる')           // 末尾にテキストノードができる
+    parentNode.insertBefore(newLi, parentNode.children[1])  // 2番目の子の直前に挿入
+
+    ・取得した parentNode の子を削除・置換
+
+    parentNode.removeChild(parentNode.lastElementChild)     // 最後の子を削除
+    parentNode.replaceChild(newLi, parentNode.children[0])  // 先頭の子を newLi で置換
+    parentNode.replaceChildren(li1, li2, li3)               // 子をすべて li1, li2, li3 だけにする
+
+- ENTRY:
+  EXPLAIN: ChildNodes
+  BODY: |
+    ■ 概要
+
+    ・親を持つノードが持つメソッドをまとめたインターフェース(ミックスイン)
+    ・親の childNodes(複数)で得られる各ノードが ChildNode
+    ・自身を基準にした「前後の兄弟の挿入」「自身の削除・置換」を提供
+    ・Node の firstChild / nextSibling と違い、要素のみを対象にした簡潔な API
+
+    ■ メソッド
+
+    childNode.remove()                            // 自身を DOM から削除
+    childNode.before(...nodes)                    // 自身の直前に挿入。ノードまたは文字列可
+    childNode.after(...nodes)                     // 自身の直後に挿入。ノードまたは文字列可
+    childNode.replaceWith(...nodes)               // 自身を指定ノードで置換
+
+    ■ サンプル
+
+    ・親ノードを取得し、その childNodes から子を取得
+    ・その子が childNode(ChildNode)
+    ・自身の削除・前後の挿入・置換を行う流れ
+
+    const parentNode = document.querySelector('ul')   // 親を取得
+    const childNode = parentNode.childNodes[1]        // 親の childNodes(複数)で子を取得。この子が ChildNode
+    childNode.remove()                                // 自身を DOM から削除
+    childNode.before(document.createElement('span'))  // 自身の直前に span を挿入
+    childNode.after('テキストだけでも挿入できる')        // 自身の直後にテキストノードを挿入
+    childNode.replaceWith(newEl)                      // 自身を newEl で置換
+
+- ENTRY:
+  EXPLAIN: HTMLCollection
+  BODY: |
+    ■ 概要
+
+    ・要素の「生きた」リスト
+    ・getElementsByClassName / getElementsByTagName / element.children の戻り値
+    ・DOM の変更に応じて中身が変わる
+    ・インデックスと length でアクセス
+    ・配列ではないので forEach 等はない
+    ・配列にしたい場合は Array.from(HC) 等
+
+    ■ プロパティ
+
+    HC.length                                     // 要素の数
+    HC.item(index)                                // index 番目の要素(範囲外は null)
+    HC[index]                                     // index 番目の要素(同上)
+
+    ■ サンプル
+
+    <ul id="list">
+      <li class="item">A</li>
+      <li class="item">B</li>
+    </ul>
+
+    ・取得と参照
+
+    const list = document.getElementById('list')
+    const HC = list.children                      // HTMLCollection
+    HC.length                                     // 2
+    HC[0].textContent                             // "A"
+    HC.item(1).textContent                        // "B"
+
+    ・ループ
+
+    for (let i = 0; i < HC.length; i++) {
+      console.log(HC[i].textContent)
+    }
+    for (const el of HC) {
+      console.log(el.textContent)
+    }
+
+    ・「生きた」集合の意味
+      ※ 同じ list に子要素を追加すると、再取得しなくても HC が変わる
+
+    const li = document.createElement('li')
+    li.className = 'item'
+    li.textContent = 'C'
+    list.append(li)
+
+    HC.length                                     // 3
+    HC[2].textContent                             // "C"
+
+    ・アンチパターン
+      ※ HC.forEach(...) は使えない
+      ※ ループしながら同じ HC を前から削除すると、要素を飛ばす原因になる
+
+    for (let i = 0; i < HC.length; i++) {
+      list.removeChild(HC[i])                     // NG
+    }
+
+    ・安全なやり方
+      ※ Array.from(HC) で配列化してから処理する
+
+    Array.from(HC).forEach(el => {
+      list.removeChild(el)
+    })
+
+- ENTRY:
+  EXPLAIN: NodeList
+  BODY: |
+    ■ 概要
+
+    ・ノードのリスト
+    ・querySelectorAll の戻り値など
+    ・静的(スナップショット)なものとライブなものがある
+    ・length とインデックスでアクセス
+    ・forEach / keys / values / entries が使える
+    ・HTMLCollection と違い、forEach が使える
+    ・ただし Array そのものではないため map / filter / push は使えない
+
+    ■ プロパティ
+
+    nodeList.length                                     // ノードの数
+    nodeList.item(index)                                // index 番目のノード(範囲外は null)
+    nodeList[index]                                     // index 番目のノード(同上)
+
+    ■ メソッド
+
+    nodeList.forEach(callback)                          // 各ノードに対して callback を実行
+    iter = nodeList.entries()                           // [index, node] のイテレータ
+    iter = nodeList.keys()                              // インデックスのイテレータ
+    iter = nodeList.values()                            // ノードのイテレータ
+
+    ■ サンプル
+
+    <ul id="list">
+      <li class="item">A</li>
+      <li class="item">B</li>
+    </ul>
+
+    ・querySelectorAll で取得
+      ※ 戻り値は静的な NodeList
+
+    const nodeList = document.querySelectorAll('#list .item')
+    nodeList.length                                     // 2
+    nodeList[0].textContent                             // "A"
+    nodeList.item(1).textContent                        // "B"
+
+    ・forEach と for...of で走査
+
+    nodeList.forEach((node, index) => {
+      console.log(index, node.textContent)
+    })
+    for (const node of nodeList) {
+      console.log(node.textContent)
+    }
+
+    ・静的(スナップショット)の意味
+      ※ 取得後に DOM を変更しても、同じ nodeList の中身は変わらない
+
+    const list = document.getElementById('list')
+    const li = document.createElement('li')
+    li.className = 'item'
+    li.textContent = 'C'
+    list.append(li)
+    nodeList.length                                     // 2 のまま
+
+    const nodeList2 = document.querySelectorAll('#list .item')
+    nodeList2.length                                    // 3
+
+    ・アンチパターン
+      ※ nodeList を Array と勘違いして map / filter / push を呼ばない
+      ※ 配列メソッドを使いたいときは Array.from(nodeList) で配列化する
+
+    const arr = Array.from(nodeList)
+    arr.map(node => node.textContent)
+
+#-------------------------------
+# プロパティ
+#-------------------------------
+- ENTRY:
+  CATEGORY: プロパティ
+
+- ENTRY:
+  EXPLAIN: nodeName
+  BODY: |
+    ■ 概要
+
+    ・読取専用
+    ・ノードの名前を文字列で返す
+    ・nodeName は nodeType によって異なる
+    ・Element はタグ名を返す
+    ・HTML 要素では大文字になることが多い
+    ・タグ名の比較用途なら 'tagName' / 'localName' も検討
+
+    ■ 構文
+
+    str:String = node.nodeName;
+
+    ■ 主な戻り値
+
+    ・Element
+      ・'DIV'
+      ・'SPAN'
+      ・'P'
+
+    ・Text
+      ・'#text'
+
+    ・Comment
+      ・'#comment'
+
+    ・Document
+      ・'#document'
+
+    ■ サンプル
+
+    <p id="para-01">
+      <span>First span</span>
+    </p>
+
+    const p01 = document.getElementById('para-01')
+    p01.nodeName                                  // "P"
+    p01.firstChild.nodeName                       // "#text" (改行や空白が Text ノードになる)
+    p01.firstElementChild.nodeName                // "SPAN"
+    document.nodeName                             // "#document"
+
+- ENTRY:
+  EXPLAIN: nodeType
+  BODY: |
+    ■ 概要
+
+    ・読取専用
+    ・ノードの種類を表す整数コードを返す
+    ・'nodeName' が文字列なのに対し、'nodeType' は数値で種別判定するときに使う
+    ・実務でよく使うのは '1'(Element)、'3'(Text)、'8'(Comment)、'9'(Document)、'11'(DocumentFragment)
+
+    ■ 構文
+
+    type:UnsignedShort = node.nodeType;
+
+    ■ 汎用値
+
+    1: Node.ELEMENT_NODE
+    3: Node.TEXT_NODE
+    8: Node.COMMENT_NODE
+    9: Node.DOCUMENT_NODE
+    11: Node.DOCUMENT_FRAGMENT_NODE
+
+    ・参考
+    2: Node.ATTRIBUTE_NODE
+    4: Node.CDATA_SECTION_NODE
+    7: Node.PROCESSING_INSTRUCTION_NODE
+    10: Node.DOCUMENT_TYPE_NODE
+
+    ■ サンプル
+
+    const p01 = document.getElementById('para-01')
+    p01.nodeType                                  // 1
+    p01.firstChild.nodeType                       // 3 (改行や空白が Text ノードになる)
+    document.nodeType                             // 9
+
+    if (p01.firstChild.nodeType === Node.TEXT_NODE) {
+      console.log('先頭はテキストノード')
+    }
+
+- ENTRY:
+  EXPLAIN: textContent
+  BODY: |
+    ■ 概要
+
+    ・ノードおよびその子孫のテキスト内容を表す
+    ・getter で読むとテキストを取得
+    ・setter で代入すると既存の子ノードを文字列1つで置き換える
+    ・HTML を解釈しないため、テキストの安全な挿入に向く
+
+    ■ 構文
+
+    let text:String = node.textContent
+    node.textContent = string
+
+    ■ ノード種別ごとの挙動
+
+    ・Document / DocumentType
+      ・null
+
+    ・Text / Comment / CDATA / ProcessingInstruction
+      ・そのノード自身の文字列(Node.nodeValue 相当)
+
+    ・その他のノード
+      ・コメントノードと処理命令ノードを除く、すべての子孫テキストを連結した文字列
+
+    ■ innerText との違い
+
+    ・textContent
+      ・'<script>' や '<style>' を含むテキストも取得
+      ・CSS の表示状態を考慮しない
+      ・レイアウト計算を伴わず比較的軽い
+
+    ・innerText
+      ・人間に見える文字列寄り
+      ・'display: none' などの非表示要素は除外されることがある
+      ・スタイルやレイアウトの影響を受けやすい
+
+    ■ innerHTML との違い
+
+    ・innerHTML
+      ・HTML 文字列として扱う
+      ・代入時に HTML として解釈される
+
+    ・textContent
+      ・常にテキストとして扱う
+      ・'<b>' を入れてもタグではなく文字列のまま入る
+      ・HTML 解釈をしないため XSS 回避に向く
+
+    ■ サンプル
+
+    <div id="divA">This is <span>some</span> text!</div>
+
+    const el = document.getElementById('divA')
+    el.textContent                                // "This is some text!"
+
+    el.textContent = 'This text is different!'
+    // <div id="divA">This text is different!</div>
+
+    el.textContent = '<b>bold</b>'
+    // innerHTML と違い、<b>bold</b> がそのまま文字列として入る
+
+- ENTRY:
+  EXPLAIN: parentNode
+  BODY: |
+    ■ 概要
+
+    ・そのノードの親ノードを返す
+    ・親がなければ null
+    ・戻り値は Element / Document / DocumentFragment など
+    ・要素だけを期待するなら 'parentElement' も候補
+
+    ■ 構文
+
+    parentNode:Element/Document/DocumentFragment = node.parentNode;
+
+    ■ 補足
+
+    ・'parentNode' は親が Document の場合も返す
+    ・'parentElement' は親が Element のときだけ返し、それ以外は null
+
+    ■ サンプル
+
+    const child = document.querySelector('li')
+    const parent = child.parentNode
+    parent.nodeName                               // "UL"
+
+    if (child.parentNode) {
+      child.parentNode.removeChild(child)         // 親から child を削除
+    }
+
+- ENTRY:
+  EXPLAIN: childNodes
+  BODY: |
+    ■ 概要
+
+    ・読取専用
+    ・子ノード一覧を NodeList で返す
+    ・index は 0 開始
+    ・Element だけでなく Text / Comment などの非要素ノードも含む
+    ・ライブな NodeList のため、DOM を変更すると中身も変わる
+
+    ■ 構文
+
+    let nodeList:NodeList = node.childNodes;
+
+    ■ 補足
+
+    ・改行や空白も Text ノードとして入ることがある
+    ・要素だけを取りたい場合は 'children' / 'firstElementChild' を使う
+
+    ■ サンプル
+
+    <ul id="list">
+      <li>A</li>
+      <li>B</li>
+    </ul>
+
+    const list = document.getElementById('list')
+    const nodeList = list.childNodes
+
+    nodeList.length                               // 改行や空白も含めた数
+    nodeList[0].nodeName                          // "#text" になることがある
+    nodeList[1].nodeName                          // "LI"
+
+    for (let i = 0; i < nodeList.length; i++) {
+      console.log(nodeList[i].nodeName)
+    }
+
+    while (list.firstChild) {
+      list.removeChild(list.firstChild)           // ライブなので firstChild が毎回変わる
+    }
+
+- ENTRY:
+  EXPLAIN: firstChild & lastChild
+  BODY: |
+    ■ 概要
+
+    ・'firstChild' は最初の子ノードを返す
+    ・'lastChild' は最後の子ノードを返す
+    ・どちらも返すのは Element に限らず Node
+    ・改行や空白があると Text ノード('#text')を返すことがある
+    ・子がなければ 'null'
+
+    ■ 構文
+
+    const first = node.firstChild
+    const last = node.lastChild
+
+    ■ 補足
+
+    ・要素だけを取りたい場合は 'firstElementChild' / 'lastElementChild' を使う
+    ・'childNodes[0]' は 'firstChild' とほぼ同じ意味
+    ・'childNodes[childNodes.length - 1]' は 'lastChild' とほぼ同じ意味
+
+    ■ サンプル
+
+    <p id="para-01">
+      <span>First span</span>
+    </p>
+
+    const p01 = document.getElementById('para-01')
+    p01.firstChild.nodeName                       // "#text" (改行や空白が Text ノードになる)
+    p01.lastChild.nodeName                        // "#text" になりうる
+    p01.firstElementChild.nodeName                // "SPAN"
+    p01.lastElementChild.nodeName                 // "SPAN"
+
+    const p02 = document.createElement('p')
+    p02.appendChild(document.createTextNode('hello'))
+    p02.firstChild.nodeName                       // "#text"
+    p02.lastChild.nodeName                        // "#text"
+
+- ENTRY:
+  EXPLAIN: nextSibling & previousSibling
+  BODY: |
+    ■ 概要
+
+    ・'nextSibling' は次の兄弟ノードを返す
+    ・'previousSibling' は前の兄弟ノードを返す
+    ・どちらも返すのは Element に限らず Node
+    ・兄弟がなければ 'null'
+    ・改行や空白があると Text ノード('#text')を返すことがある
+
+    ■ 構文
+
+    nextNode = node.nextSibling
+    previousNode = node.previousSibling
+
+    ■ 補足
+
+    ・要素だけをたどりたい場合は 'nextElementSibling' / 'previousElementSibling' を使う
+    ・HTML の整形用改行や空白で '#text' が兄弟として挟まることがある
+
+    ■ サンプル
+
+    <div id="div-01">Here is div-01</div>
+    <div id="div-02">Here is div-02</div>
+
+    const div01 = document.getElementById('div-01')
+    div01.nextSibling.nodeName                    // "#text" になりうる
+    div01.nextElementSibling.id                   // "div-02"
+
+    let next = div01.nextSibling
+    while (next) {
+      console.log(next.nodeName)
+      next = next.nextSibling
+    }
+
+    <a><b1 id="b1"></b1><b2 id="b2"></b2></a>
+    document.getElementById('b1').previousSibling // null
+    document.getElementById('b2').previousSibling.nodeName // "B1"
+
+- ENTRY:
+  EXPLAIN: offsetParent
+  BODY: |
+    ■ 概要
+
+    ・読取専用
+    ・位置計算の基準になる親要素を返す
+    ・主に 'offsetTop' / 'offsetLeft' が「どの要素基準か」を知るときに使う
+    ・戻り値は最も近い位置指定祖先、または表要素系、該当なしなら 'body'
+
+    ■ 構文
+
+    parentObj = element.offsetParent;
+
+    ■ 補足
+
+    ・祖先に 'position: relative / absolute / fixed / sticky' などがあると、その近い祖先が候補
+    ・位置指定祖先がない場合、'td' / 'th' / 'table'、さらに無ければ 'body' になることがある
+    ・'offsetTop' / 'offsetLeft' はこの 'offsetParent' の padding edge 基準
+
+    ・'null' を返す主なケース
+      ・要素または祖先が 'display: none'
+      ・要素が 'position: fixed'
+      ・要素が '<body>' または '<html>'
+
+    ■ サンプル
+
+    const child = document.getElementById('child')
+    child.offsetParent                             // 位置計算の基準親
+    child.offsetTop                               // offsetParent 基準の上方向距離
+    child.offsetLeft                              // offsetParent 基準の左方向距離
+
+#-------------------------------
+# Element
+#-------------------------------
+- ENTRY:
+  CATEGORY: Element
+
+- ENTRY:
+  EXPLAIN: 概要
+  BODY: |
+    ■ 概要
+
+    ・Element は Node を継承した「タグ付き要素」
+    ・Node のプロパティ・メソッドに加えて、属性・class・サイズ・セレクタ検索等の API を持つ
+    ・さらに ParentNode / ChildNode ミックスイン由来の API も使える
+
+    ■ Element 固有プロパティ
+
+    el.id                                         // id 名
+    el.tagName                                    // 例: DIV
+    el.localName                                  // ローカル名。例: div
+    el.className                                  // class 文字列
+    el.classList                                  // DOMTokenList
+    el.attributes                                 // 属性一覧(NamedNodeMap)
+    el.style                                      // インライン style オブジェクト
+    el.innerHTML                                  // 内側の HTML 文字列
+    el.outerHTML                                  // 自身を含む HTML 文字列
+    el.clientXXX                                  // padding 含む、border/scrollbar 除く
+    el.scrollXXX                                  // スクロール領域全体(overflow 含む)
+    el.offsetXXX                                  // padding+border 含む
+    el.offsetParent                               // 位置指定された直近の祖先
+    el.shadowRoot                                 // ShadowRoot(open のとき)
+
+    ■ Element 固有メソッド
+
+    el.getAttribute(name)                         // 属性取得
+    el.setAttribute(name, value)                  // 属性設定
+    el.removeAttribute(name)                      // 属性削除
+    el.hasAttribute(name)                         // 属性有無判定
+    el.getAttributeNames()                        // 属性名一覧
+
+    el.closest(selector)                          // 祖先方向にセレクタ検索
+    el.matches(selector)                          // セレクタ一致判定
+
+    el.insertAdjacentElement(position, el2)       // 隣接位置に要素挿入
+    el.insertAdjacentHTML(position, html)         // 隣接位置に HTML 挿入
+    el.insertAdjacentText(position, text)         // 隣接位置にテキスト挿入
+
+    el.getBoundingClientRect()                    // 位置とサイズ取得
+    el.getClientRects()                           // 複数矩形取得
+    el.attachShadow({ mode: 'open' })             // ShadowRoot 作成
+
+    ■ Node 由来で Element でも使えるプロパティ
+
+    el.nodeName                                   // 例: DIV
+    el.nodeType                                   // 1 (ELEMENT_NODE)
+    el.textContent                                // 子孫のテキスト
+    el.parentNode                                 // 親ノード
+    el.parentElement                              // 親要素
+    el.childNodes                                 // 子ノード一覧(NodeList)
+    el.firstChild                                 // 先頭の子ノード
+    el.lastChild                                  // 末尾の子ノード
+    el.nextSibling                                // 次の兄弟ノード
+    el.previousSibling                            // 前の兄弟ノード
+
+    ■ Node 由来で Element でも使えるメソッド
+
+    el.appendChild(node)                          // 子の末尾に追加
+    el.cloneNode(deep)                            // 複製
+    el.contains(node)                             // 自身または子孫に含むか
+    el.hasChildNodes()                            // 子ノードの有無
+    el.isEqualNode(node)                          // 同値判定
+    el.normalize()                                // 隣接テキストノードをマージ
+
+    ■ ParentNode / ChildNode 由来で Element でも使える API
+
+    el.children                                   // 子要素一覧(HTMLCollection)
+    el.childElementCount                          // 子要素数
+    el.firstElementChild                          // 先頭の子要素
+    el.lastElementChild                           // 末尾の子要素
+
+    el.append(...nodes)                           // 末尾に追加
+    el.prepend(...nodes)                          // 先頭に追加
+    el.querySelector(selector)                    // 子孫から最初の1件取得
+    el.querySelectorAll(selector)                 // 子孫から複数取得(NodeList)
+    el.replaceChildren(...nodes)                  // 子要素を全置換
+
+    el.remove()                                   // 自身を削除
+    el.before(...nodes)                           // 自身の直前に挿入
+    el.after(...nodes)                            // 自身の直後に挿入
+    el.replaceWith(...nodes)                      // 自身を置換
+
+    ■ EventTarget 由来で Element でも使えるメソッド
+
+    el.addEventListener(type, listener)           // イベント登録
+    el.removeEventListener(type, listener)        // イベント解除
+    el.dispatchEvent(event)                       // イベント発火
+
+- ENTRY:
+  EXPLAIN: classList
+  BODY: |
+    ■ 概要
+
+    ・'class' 属性を DOMTokenList として扱う API
+    ・文字列連結せずに class の追加・削除・判定ができる
+    ・複数 class の付け外しを安全に行いやすい
+
+    ■ 構文
+
+    el.classList.add('class')                     // class を追加
+    el.classList.remove('class')                  // class を削除
+    el.classList.toggle('class')                  // あれば削除、なければ追加
+    el.classList.contains('class')                // class 有無判定
+
+    ■ サンプル
+
+    const el = document.getElementById('box')
+    el.classList.add('active')
+    el.classList.remove('hidden')
+    el.classList.toggle('selected')
+    el.classList.contains('active')               // true
+
+- ENTRY:
+  EXPLAIN: Style
+  BODY: |
+    ■ 概要
+
+    ・'el.style' は要素の inline style を扱う
+    ・CSS ファイルや '<style>' で当たっている最終結果は 'getComputedStyle()' で読む
+    ・JS では CSS プロパティ名を camelCase で扱うことが多い
+
+    ■ 構文
+
+    el.style.backgroundColor = 'red'
+    el.style['background-color'] = 'red'
+    el.style.setProperty('background-color', 'red')
+    window.getComputedStyle(el).backgroundColor
+    window.getComputedStyle(el).getPropertyValue('background-color')
+
+    ■ 補足
+
+    ・'el.style.xxx' で読めるのは基本的に inline style
+    ・外部 CSS や class による適用結果を見たいときは 'getComputedStyle(el)' を使う
+    ・'margin-top' のような CSS 名は JS では 'marginTop'
+    ・'float' は 'cssFloat'
+    ・カスタムプロパティは 'style.setProperty('--name', value)' / 'getPropertyValue('--name')' を使う
+
+    ■ サンプル
+
+    const el = document.getElementById('box')
+
+    el.style.width = '120px'                       // inline style を設定
+    el.style.backgroundColor = 'tomato'           // camelCase で指定
+    el.style.setProperty('margin-top', '8px')     // kebab-case 文字列で設定
+    el.style.setProperty('--main-color', '#0af')  // CSS 変数を設定
+
+    el.style.width                                // "120px"
+    el.style.marginTop                            // "8px"
+    el.style.getPropertyValue('--main-color')     // "#0af"
+
+    const styles = window.getComputedStyle(el)
+    styles.display                                // 最終的な display
+    styles.backgroundColor                        // 最終的な背景色
+    styles.getPropertyValue('margin-top')         // 最終的な margin-top
+
+- ENTRY:
+  EXPLAIN: サイズ & 位置
+  BODY: |
+    ■ 概要
+
+    ・要素の大きさや位置を取得する API 群
+    ・画面上の座標を知りたいときは 'getBoundingClientRect()' が使いやすい
+
+      ・'clientWidth' / 'clientHeight' は見えている内側の領域
+      ・'scrollWidth' / 'scrollHeight' ははみ出した見えない部分も含む
+      ・'offsetWidth' / 'offsetHeight' は border を含む
+
+    ・'getBoundingClientRect()' の 'top' / 'left' / 'right' / 'bottom' / 'x' / 'y' は viewport 基準
+    ・ページ全体基準にしたい場合は 'window.scrollX' / 'window.scrollY' を加味する
+
+    ■ 主なプロパティ
+
+    el.clientWidth                                // padding 含む、border / scrollbar 除く幅
+    el.clientHeight                               // padding 含む、border / scrollbar 除く高さ
+    el.clientLeft                                 // 左 border 幅
+    el.clientTop                                  // 上 border 幅
+
+    el.scrollWidth                                // スクロール可能領域を含む内容全体の幅
+    el.scrollHeight                               // スクロール可能領域を含む内容全体の高さ
+    el.scrollLeft                                 // 横スクロール位置
+    el.scrollTop                                  // 縦スクロール位置
+
+    el.offsetWidth                                // padding + border を含む幅
+    el.offsetHeight                               // padding + border を含む高さ
+    el.offsetLeft                                 // offsetParent 基準の左位置
+    el.offsetTop                                  // offsetParent 基準の上位置
+
+    ■ メソッド
+
+    el.getBoundingClientRect()                    // viewport 基準の位置とサイズ(DOMRect)
+    el.getClientRects()                           // 複数行要素などの矩形一覧
+
+    ■ サンプル
+
+    const box = document.getElementById('box')
+
+    box.clientWidth                               // 内側の見えている幅
+    box.scrollHeight                              // スクロール含む内容全体の高さ
+    box.offsetTop                                 // offsetParent 基準の上位置
+
+    const rect = box.getBoundingClientRect()
+    rect.width                                    // border を含む表示幅
+    rect.top                                      // viewport 基準の上位置
+    rect.left + window.scrollX                    // ページ全体基準の左位置
+
+- ENTRY:
+  EXPLAIN: Event Listener
+  BODY: |
+    ■ 概要
+
+    ・イベントを登録、解除、発火する API
+    ・'onclick = ...' より柔軟で、同じイベントに複数登録できる
+    ・捕捉フェーズや once / passive 等のオプションも指定可能
+
+    ■ 構文
+
+    el.addEventListener('click', onClick)         // リスナー登録
+    el.removeEventListener('click', onClick)      // 同じ関数参照で解除
+    el.dispatchEvent(new Event('click'))          // イベント発火
+
+    ■ 補足
+
+    ・'removeEventListener' はイベント名と同じ関数参照が必要
+    ・無名関数で登録すると後で解除しづらい
+    ・'dispatchEvent()' は既定では同期実行
+
+    ■ サンプル
+
+    const button = document.getElementById('btn')
+
+    function onClick(e) {
+      console.log('clicked')
+    }
+
+    button.addEventListener('click', onClick, { once: true })
+    button.removeEventListener('click', onClick)
+    button.dispatchEvent(new Event('click'))
+
+- ENTRY:
+  EXPLAIN: Attributes Methods
+  BODY: |
+    ■ 概要
+
+    ・HTML 属性を文字列として取得・設定・削除する API
+    ・'id' や 'value' のような DOM プロパティとは別物
+    ・'data-*' / 'aria-*' / 'disabled' / 'src' などを動的に扱うときに使う
+
+    ■ 構文
+
+    el.attributes                                 // 設定済み属性一覧(NamedNodeMap)
+    el.getAttributeNames()                        // 属性名一覧
+    el.getAttribute(attr)                         // 属性値取得(無ければ null)
+    el.getAttributeNS(NS, attr)                   // 名前空間付き属性取得
+    el.setAttribute(attr, val)                    // 属性追加・更新
+    el.removeAttribute(attr)                      // 属性削除
+    el.hasAttribute(attr)                         // 属性有無判定
+
+    ■ 補足
+
+    ・'setAttribute('disabled', "")' のように、真偽属性は「存在するか」で効く
+    ・'getAttribute()' の戻り値は文字列または 'null'
+    ・'href' / 'src' / 'value' などは DOM プロパティと属性値が一致しない場合がある
+    ・SVG など名前空間付き属性では 'getAttributeNS()' / 'setAttributeNS()' を使うことがある
+
+    ■ サンプル
+
+    const img = document.getElementById('avatar')
+    img.getAttribute('src')                       // 属性としての src を取得
+    img.setAttribute('alt', 'ユーザー画像')        // alt を設定
+    img.hasAttribute('loading')                   // loading 属性の有無
+    img.removeAttribute('width')                  // width 属性を削除
+
+    const button = document.getElementById('save')
+    button.setAttribute('disabled', "")           // disabled を有効化
+    button.hasAttribute('disabled')               // true
+    button.removeAttribute('disabled')            // disabled を解除
+
+    const box = document.getElementById('box')
+    box.setAttribute('data-status', 'active')     // data-* を設定
+    box.getAttribute('data-status')               // "active"
+    box.getAttributeNames()                       // 例: ["id", "class", "data-status"]
+
+- ENTRY:
+  EXPLAIN: 隣接 Methods
+  BODY: |
+    ■ 概要
+
+    ・兄弟要素の取得
+    ・祖先方向の検索
+    ・要素の前後や内側への挿入
+    ・「近い位置の要素」を扱うときの API 群
+
+    ■ 構文
+
+    el.nextElementSibling                         // 次の兄弟要素
+    el.previousElementSibling                     // 前の兄弟要素
+    el.closest(selector)                          // 自身を含めて祖先方向に検索
+    el.matches(selector)                          // 自身が selector に一致するか判定
+    el.insertAdjacentElement(position, el2)       // 隣接位置に要素挿入
+    el.insertAdjacentHTML(position, html)         // 隣接位置に HTML 挿入
+    el.insertAdjacentText(position, text)         // 隣接位置にテキスト挿入
+
+    ■ position の値
+
+    'beforebegin'                                 // 要素の直前(外側)
+    'afterbegin'                                  // 要素の先頭子(内側)
+    'beforeend'                                   // 要素の末尾子(内側)
+    'afterend'                                    // 要素の直後(外側)
+
+    ■ サンプル
+
+    const item = document.querySelector('.item')
+    item.nextElementSibling                        // 次の兄弟要素
+    item.previousElementSibling                    // 前の兄弟要素
+    item.closest('.list')                          // 近い祖先 .list を取得
+    item.matches('.item.active')                   // true / false
+
+    item.insertAdjacentText('beforebegin', '前')
+    item.insertAdjacentHTML('beforeend', '<span>内側の末尾</span>')
+    item.insertAdjacentElement('afterend', document.createElement('hr'))
+
+- ENTRY:
+  EXPLAIN: Dataset
+  BODY: |
+    ■ 概要
+
+    ・'data-*' 属性を JS から扱うための API
+    ・'data-user-id' は 'dataset.userId' のように camelCase で参照する
+    ・値は常に文字列として扱われる
+
+    ■ 構文
+
+    el.dataset.xxx
+    el.dataset['xxx']
+    delete el.dataset.xxx
+
+    ■ 主な操作
+
+    el.dataset.userId                             // 'data-user-id' を取得
+    el.dataset['userId']                          // 同上
+    el.dataset.status = 'active'                  // 'data-status="active"' を設定
+    delete el.dataset.status                      // 'data-status' を削除
+
+    ■ 補足
+
+    ・'dataset.xxx = value' は属性 'data-xxx="value"' を設定する
+    ・数値や真偽値を入れても文字列化される
+    ・属性名にハイフンがある場合、JS 側では camelCase に変換される
+
+    ■ サンプル
+
+    const card = document.getElementById('card')
+    card.dataset.userId                           // 'data-user-id' を取得
+    card.dataset.status = 'active'                // 'data-status="active"' を設定
+    card.dataset.count = 10                       // 実際には "10" が入る
+    delete card.dataset.status                    // 'data-status' を削除
+
+- ENTRY:
+  EXPLAIN: Shadow
+  BODY: |
+    ■ 概要
+
+    ・Shadow DOM を扱う API
+    ・コンポーネント内部の DOM と style を外側から分離できる
+    ・外側の CSS 影響を受けにくく、内部実装も隠しやすい
+
+    ■ 構文
+
+    el.shadowRoot
+    el.attachShadow({ mode: 'open' })
+
+    ■ 主な API
+
+    el.shadowRoot                                 // 既存の ShadowRoot(open のとき)
+    el.attachShadow({ mode: 'open' })             // ShadowRoot を作成して返す
+
+    ■ 補足
+
+    ・'mode: "open"' なら 'el.shadowRoot' で参照可能
+    ・'mode: "closed"' だと外側から 'el.shadowRoot' で取れない
+    ・ShadowRoot 内に '<style>' を置くと、そのスタイルは基本的に内部へ閉じる
+    ・カスタム要素として HTML で使うには 'customElements.define()' で事前登録が必要
+    ・"customElements" は 'window' オブジェクトのプロパティ
+
+    ■ サンプル
+
+    ・本番実装寄りの Web Component
+
+    class UserCard extends HTMLElement {
+      connectedCallback() {
+        const root = this.attachShadow({ mode: 'open' })
+
+        const name = this.getAttribute('name') ?? 'Unknown'
+        const role = this.getAttribute('role') ?? 'Member'
+
+        root.innerHTML = '
+          <style>
+            .card { ... }
+            .name { ... }
+            .role { ... }
+          </style>
+          <article class="card">
+            <div class="name">${name}</div>
+            <div class="role">${role}</div>
+            <slot></slot>
+          </article>
+        '
+      }
+    }
+
+    customElements.define('user-card', UserCard)
+
+    ・読み込み側
+
+    <user-card name="Vivit" role="Admin">
+      <button>詳細</button>
+    </user-card>
+
+    const card = document.querySelector('user-card')
+    card.shadowRoot.querySelector('.name').textContent   // "Vivit"
+
+#-------------------------------
+# メソッド
+#-------------------------------
+- ENTRY:
+  CATEGORY: メソッド
+
+- ENTRY:
+  EXPLAIN: createElement()
+  BODY: |
+    ■ 概要
+
+    ・指定したタグ名の要素ノードを生成する
+    ・生成しただけでは DOM に入らない
+    ・'append' / 'appendChild' / 'insertBefore' などで追加して初めて表示される
+    ・不明なタグ名では 'HTMLUnknownElement' 相当になることがある
+
+    ■ 構文
+
+    var element = document.createElement(tagName[, options]);
+
+    ■ 補足
+
+    ・通常は 'document.createElement('div')' のように使う
+    ・Web Components の customized built-in element では第2引数 'options.is' を使うことがある
+    ・文字だけを作りたい場合は 'document.createTextNode()' を使う
+
+    ■ サンプル
+
+    const newDiv = document.createElement('div')
+    newDiv.textContent = 'Hello'
+
+    const currentDiv = document.getElementById('div1')
+    document.body.insertBefore(newDiv, currentDiv)
+
+    ■ Web Components の例
+
+    class ExpandingList extends HTMLUListElement {
+      constructor() {
+        super()
+      }
+    }
+
+    ・使う前に 'customElements.define()' で登録が必要
+
+    customElements.define('expanding-list', ExpandingList, { extends: 'ul' })
+    const expandingList = document.createElement('ul', { is: 'expanding-list' })
+
+- ENTRY:
+  EXPLAIN: getElementById()
+  BODY: |
+    ■ 概要
+
+    ・指定した 'id' に一致する要素を 1 件返す
+    ・一致しなければ 'null'
+    ・'id' は文書内で一意である前提
+      ・一意でない場合の戻り値は、最初に見つかった要素
+    ・'querySelector('#id')' より意図が明確で、'id' 取得専用
+
+    ■ 構文
+
+    element:Element = document.getElementById(id);
+
+    ■ 補足
+
+    ・戻り値は 1 件だけ
+    ・'document' に対して使うメソッド
+    ・取得結果が 'null' の可能性を考慮する
+
+    ■ サンプル
+
+    const elem = document.getElementById('id_name')
+    if (elem) {
+      elem.style.color = 'tomato'
+    }
+
+- ENTRY:
+  EXPLAIN: getElementsByClassName()
+  BODY: |
+    ■ 概要
+
+    ・指定した class 名を持つ要素をすべて取得する
+    ・戻り値はライブな 'HTMLCollection'
+    ・複数 class を空白区切りで渡すと AND 条件になる
+    ・'document' に対しても、特定要素に対しても使える
+
+    ■ 構文
+
+    var elements:HTMLCollection = document.getElementsByClassName(names);
+    var elements:HTMLCollection = rootElement.getElementsByClassName(names);
+
+    ■ 補足
+
+    ・配列ではないので 'forEach' / 'map' はそのまま使えない
+    ・ライブコレクションなので DOM 変更で中身が変わる
+    ・先頭だけ欲しいなら '[0]' で取れるが、存在しないと 'undefined'
+
+    ■ サンプル
+
+    const HCs = document.getElementsByClassName('test')
+    HCs.length
+    HCs[0]                                         // 最初の一致要素 or undefined
+
+    const both = document.getElementsByClassName('red test')  // red かつ test
+
+    const root = document.getElementById('list')
+    const localHC = root.getElementsByClassName('item')       // root 配下だけ検索
+
+    const divs = Array.from(HCs).filter(el => {
+      return el.nodeName === 'DIV'
+    })
+
+- ENTRY:
+  EXPLAIN: getElementsByTagName()
+  BODY: |
+    ■ 概要
+
+    ・指定したタグ名を持つ要素をすべて取得する
+    ・戻り値はライブな 'HTMLCollection'
+    ・'document' にも特定要素にも使える
+    ・要素名で一括取得したいときに使う
+
+    ■ 構文
+
+    var elements:HTMLCollection = document.getElementsByTagName(name);
+    var elements:HTMLCollection = rootElement.getElementsByTagName(name);
+
+    ■ 補足
+
+    ・'p' / 'div' のようなタグ名を渡す
+    ・'*' を渡すとすべての要素を取得できる
+    ・ライブコレクションなので DOM 変更で中身が変わる
+
+    ■ サンプル
+
+    const allParas = document.getElementsByTagName('p')
+    allParas.length                               // 文書内の <p> の数
+
+    const div1 = document.getElementById('div1')
+    const div1Paras = div1.getElementsByTagName('p')
+    div1Paras.length                              // #div1 内の <p> の数
+
+    const allElements = document.getElementsByTagName('*')
+    allElements.length                            // 文書内の全要素数
+
+- ENTRY:
+  EXPLAIN: querySelector()
+  BODY: |
+    ■ 概要
+
+    ・指定した CSS セレクタに一致する最初の要素を 1 件返す
+    ・一致しなければ null
+    ・document に対しても、特定要素に対しても使える
+    ・単一要素だけ欲しいときに使う
+
+    ■ 構文
+
+    element:Element = document.querySelector(selectors:DOMString);
+
+    ■ 補足
+
+    ・返るのは最初の 1 件だけ
+    ・複数欲しい場合は querySelectorAll() を使う
+    ・id / class / 属性 / 疑似クラスなど、CSS セレクタをそのまま使える
+
+    ■ サンプル
+
+    const el1 = document.querySelector('.myclass')
+    const el2 = document.querySelector("div.user-panel.main input[name='login']")
+    const el3 = document.querySelector("div.user-panel:not(.main) input[name='login']")
+
+    const form = document.getElementById('login-form')
+    const input = form.querySelector("input[name='email']")   // form 配下だけ検索
+
+- ENTRY:
+  EXPLAIN: querySelectorAll()
+  BODY: |
+    ■ 概要
+
+    ・指定した CSS セレクタに一致する要素をすべて取得する
+    ・戻り値は静的な NodeList
+    ・取得後に DOM が変わっても、同じ NodeList の中身は自動更新されない
+    ・複数要素をまとめて扱いたいときに使う
+
+    ■ 構文
+
+    elementList:NodeList = parentNode.querySelectorAll(selectors:DOMString);
+
+    ■ 補足
+
+    ・CSS セレクタをそのまま使える
+    ・戻り値は NodeList なので 'forEach' が使える
+    ・ライブコレクションが欲しい場合は 'children' や 'getElementsByClassName()' と挙動が異なる
+
+    ■ サンプル
+
+    const els1 = document.querySelectorAll('p')
+    const els2 = document.querySelectorAll('div.note, div.alert')
+
+    const container1 = document.querySelector('#test')
+    const els3 = container1.querySelectorAll('div.highlighted > p')
+
+    const els4 = document.querySelectorAll('iframe[data-src]')
+
+    const container2 = document.querySelector('#userlist')
+    const els5 = container2.querySelectorAll("li[data-active='1']")
+
+    els5.forEach(el => {
+      console.log(el.textContent)
+    })
+
+- ENTRY:
+  EXPLAIN: getElementsByTagNameNS()
+  BODY: |
+    ■ 概要
+
+    ・名前空間(namespace)とローカル名で要素を取得する
+    ・SVG や XML 名前空間を扱うときに使う
+    ・戻り値はライブな HTMLCollection
+
+    ■ 構文
+
+    var elements:HTMLCollection = document.getElementsByTagNameNS(namespace, name)
+
+    ■ 補足
+
+    ・HTML だけなら通常は 'getElementsByTagName()' で足りる
+    ・SVG の 'http://www.w3.org/2000/svg' や XHTML の 'http://www.w3.org/1999/xhtml' を指定する
+    ・'*' を使うと任意のローカル名や任意の namespace にマッチできる
+
+    ■ サンプル
+
+    var allParas = document.getElementsByTagNameNS('http://www.w3.org/1999/xhtml', 'p')
+    var svgCircles = document.getElementsByTagNameNS('http://www.w3.org/2000/svg', 'circle')
+    var anySvg = document.getElementsByTagNameNS('http://www.w3.org/2000/svg', '*')
+
+- ENTRY:
+  EXPLAIN: cloneNode()
+  BODY: |
+    ■ 概要
+
+    ・ノードの複製を返す
+    ・属性値はコピーされる
+    ・'deep: true' なら子孫も含めて複製する
+    ・複製しただけでは DOM に入らない
+
+    ■ 構文
+
+    var dupNode = node.cloneNode(deep);
+
+    ■ 補足
+
+    ・'deep: false' では子ノードを複製しない
+    ・'deep: true' ではテキストノードも含めてサブツリー全体を複製する
+    ・'addEventListener()' で登録したイベントは複製されない
+    ・'id' を持つ要素を複製すると重複 id になりうるので注意
+    ・別ドキュメントへ移す用途では 'Document.importNode()' が候補
+
+    ■ サンプル
+
+    const p = document.getElementById('para1')
+
+    const shallow = p.cloneNode(false)            // 自身だけ複製
+    const deepCopy = p.cloneNode(true)            // 子孫も含めて複製
+
+    deepCopy.id = 'para1-copy'                    // id 重複を避ける
+    document.body.appendChild(deepCopy)           // 追加して初めて表示される
+
+- ENTRY:
+  EXPLAIN: appendChild()
+  BODY: |
+    ■ 概要
+
+    ・親ノードの末尾に子ノードを追加する
+    ・すでに別の場所にあるノードを渡すと「複製」ではなく「移動」になる
+    ・戻り値は追加された子ノードそのもの
+
+    ■ 構文
+
+    var appendedChild:Node = parent.appendChild(child);
+
+    ■ 補足
+
+    ・文字列は渡せない。文字を追加したい場合は 'append()' か 'createTextNode()' を使う
+    ・1つのノードは同時に複数箇所へ存在できない
+    ・戻り値が親要素ではないので、チェーンすると意図とずれることがある
+
+    ■ サンプル
+
+    const p = document.createElement('p')
+    p.textContent = 'Hello'
+    document.body.appendChild(p)                  // body の末尾に追加
+
+    const list = document.getElementById('list')
+    const item = document.createElement('li')
+    list.appendChild(item)                        // list の末尾に追加
+
+    const other = document.getElementById('other')
+    other.appendChild(item)                       // item は list から消えて other へ移動
+
+    const child = document.createElement('b')
+    const appended = document.createElement('div').appendChild(child)
+    appended.nodeName                             // 'B'
+
+- ENTRY:
+  EXPLAIN: contains()
+  BODY: |
+    ■ 概要
+
+    ・あるノードが、別ノードを自分自身または子孫に含むかを判定する
+    ・戻り値は boolean
+    ・自身を渡した場合も true
+
+    ■ 構文
+
+    const answer:Boolean = node.contains(otherNode)
+
+    ■ 補足
+
+    ・'contains()' は子孫判定だけでなく自己一致も true
+    ・親子関係の有無を手軽に調べたいときに使う
+    ・DOM 上に存在しないノード同士では通常 false
+
+    ■ サンプル
+
+    const root = document.getElementById('root')
+    const child = root.querySelector('.item')
+
+    root.contains(child)                          // true
+    root.contains(root)                           // true
+    child.contains(root)                          // false
+
+    function isInPage(node) {
+      return node === document.body ? false : document.body.contains(node)
+    }
+
+- ENTRY:
+  EXPLAIN: hasChildNodes()
+  BODY: |
+    ■ 概要
+
+    ・子ノードを1つ以上持つかを判定する
+    ・戻り値は boolean
+    ・Element だけでなく Text 以外の各種 Node で使える
+
+    ■ 構文
+
+    const answer:Boolean = node.hasChildNodes()
+
+    ■ 補足
+
+    ・改行や空白の Text ノードも子に含まれる
+    ・要素だけを見たい場合は 'children.length > 0' や 'firstElementChild !== null' も候補
+
+    ■ サンプル
+
+    const foo = document.getElementById('foo')
+
+    foo.hasChildNodes()                           // true / false
+
+    if (foo.hasChildNodes()) {
+      foo.removeChild(foo.childNodes[0])
+    }
+
+- ENTRY:
+  EXPLAIN: isEqualNode()
+  BODY: |
+    ■ 概要
+
+    ・2つのノードが同じ内容かを比較する
+    ・同一参照かどうかではなく、型・属性・子ノード内容などを見て判定する
+    ・戻り値は boolean
+
+    ■ 構文
+
+    var isEqualNode:Boolean = node.isEqualNode(otherNode);
+
+    ■ 補足
+
+    ・'===' は同じオブジェクトかどうか
+    ・'isEqualNode()' は別オブジェクトでも内容が同じなら true
+    ・要素ではタグ名、属性、子ノード構造などが比較対象になる
+
+    ■ サンプル
+
+    <div>最初の要素です</div>
+    <div>2番目の要素です</div>
+    <div>最初の要素です</div>
+
+    let divList = document.getElementsByTagName('div')
+
+    divList[0].isEqualNode(divList[0])            // true
+    divList[0].isEqualNode(divList[1])            // false
+    divList[0].isEqualNode(divList[2])            // true
+    divList[0] === divList[2]                     // false
+
+- ENTRY:
+  EXPLAIN: isSameNode[廃止]
+  BODY: |
+    ■ 概要
+
+    ・2つのノードが同一参照かを判定する旧メソッド
+    ・現在は廃止
+    ・代わりに '===' を使う
+
+    ■ 構文
+
+    isSameNode:Boolean = node.isSameNode(otherNode);
+
+    ■ 補足
+
+    ・'isEqualNode()' は内容比較
+    ・'isSameNode()' は同一オブジェクト比較
+    ・現在は 'node1 === node2' で十分
+
+    ■ サンプル
+
+    node1.isSameNode(node2)                       // 旧書き方
+    node1 === node2                               // 推奨
+    node1 == node2                                // 非推奨

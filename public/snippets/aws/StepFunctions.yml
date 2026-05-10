@@ -1,0 +1,12 @@
+---
+#-------------------------------
+# AWS
+#-------------------------------
+- ENTRY:
+  CATEGORY: StepFunctions
+
+- ENTRY:
+  EXPLAIN: |
+    xxxxxx
+  BODY: |
+    ■ xxxxx

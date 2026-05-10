@@ -1,0 +1,300 @@
+---
+#-------------------------------
+# ClassTransformer
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: 型変換(Primitive)
+  BODY: |
+    // Request Parameter などで多用される型変換
+
+    @Column()                           // Entity 定義の場合のみ
+    @Type(() => Number)                 // Number型への変換
+    age: number;
+
+- ENTRY:
+  EXPLAIN: 型変換(Class)
+  BODY: |
+    export class AClass {
+      id: number;
+      name: string;
+    }
+
+    export class BClass {
+      id: number;
+
+      // @Column()                      // ReqパラメタにはEntity定義不必要
+      @Type(() => AClass)               // AClass型への変換
+      aclass: AClass;
+
+      @Type(() => AClass)               // AClass型への変換
+      aclasses: AClass[];               // 配列
+    }
+
+- ENTRY:
+  EXPLAIN: 型変換(Set & Map)
+  BODY: |
+    export class AClass {
+      name: string;
+    }
+
+    export class BClass {
+      name: string;
+      age: number;
+    }
+
+    export class XClass {
+      name: string;
+
+      @Type(() => AClass)               // AClass型への変換
+      aClassSet: Set<AClass>;           // Set
+      
+      @Type(() => BClass)               // BClass型への変換
+      bClassMap: Map<string, BClass>;   // Map
+    }
+
+- ENTRY:
+  EXPLAIN: 型変換(Class多重)
+  BODY: |
+    export abstract class Photo {
+      id: number;
+      fileName: string;
+    }
+
+    export class Landscape extends Photo {
+      panorama: boolean;
+    }
+
+    export class Portrait extends Photo {
+      person: Person;
+    }
+
+    export class Album {
+      id: number;
+      name: string;
+
+      @Type(() => Photo, {
+        discriminator: {
+          property: '__type',
+          subTypes: [{ value: Landscape, name: 'landscape' },
+                    { value: Portrait, name: 'portrait' } ],
+        },
+      })
+      topPhoto: Landscape | Portrait;
+    }
+
+- ENTRY:
+  EXPLAIN: 除外と露出
+  BODY: |
+    @Exclude()                                    // 1.一旦、全属性を除外
+    export class AResponse {
+      @Expose() id: number;                       // 2.特定属性のみ出力
+    }
+
+    export class AData {
+      @Expose({ name: 'secretKey' })              // 属性名を変えて出力
+      @Exclude()                                  // 除外
+      @Exclude({ toPlainOnly: true })             // 除外オプション
+      @Exclude({ toClassOnly: true })
+      password: string;
+
+      firstName: string;
+      lastName: string;
+
+      @Expose()
+      get name() { return this.firstName + ' ' + this.lastName; }
+      
+      @Expose()
+      getFullName() { return this.firstName + ' ' + this.lastName; }
+    }
+
+- ENTRY:
+  EXPLAIN: Class から Object に変更
+  BODY: |
+    class User {
+      id: number;
+      name: string;
+    }
+
+    const aInst = new User({id: 1, name:"John"})
+    const aObj= classToPlain(aInst);              //{id: 1, name:"John"}
+
+- ENTRY:
+  EXPLAIN: Object から Class に変更
+  BODY: |
+    class User {
+      id: number;
+      name: string;
+    }
+    const aObj = {id: 1, name:"John"}
+
+    const aInst = plainToClass(AClass, aObj);     // Object優先
+
+    const aInst = plainToClass(AClass, aObj, {
+      excludeExtraneousValues:true                // Class優先
+    });
+
+    ■ 優先
+    const aUser = { a: 'XXX', name: 'ABC' };      // id なし
+
+    class User1 {
+      id: number;
+      name: string;
+    }
+
+    class User2 {
+      @Expose()
+      id: number;
+      @Expose()
+      name: string;
+    }
+
+    // Object優先
+    const res1 = plainToClass(User1, aUser)       // { a: 'XXX', name: 'ABC' }
+
+    // Class優先
+    const res2 = plainToClass(User2, aUser, {     // { id: undefined, name: 'ABC' }
+      excludeExtraneousValues: true
+    }));
+
+- ENTRY:
+  EXPLAIN: Object から Class に変更(属性除外)
+  BODY: |
+    export class User {
+      id: number;
+      private _first: string;
+      private _last: string;
+      _password: string;
+
+      setName(first: string, last: string){
+        this._first=first;
+        this._last=last;
+      }
+
+      @Expose()
+      get name() { return this._first + ' ' + this._last; }
+
+      @Expose({ groups: ['user'] })
+      password: string;
+    }
+
+    const user = new User();
+    user.id = 1;
+    user.setName('Johny', 'Cage');
+    user._password = '123';
+
+    const plainUser = classToPlain(user, {        // { id: 1, name: "Johnny Cage" }
+      excludePrefixes: ['_']                      // _で始まる属性を除外
+    });
+
+- ENTRY:
+  EXPLAIN: Object から Class に変更(出力指定)
+  BODY: |
+    export class User {
+      id: number;
+      @Expose({ groups: ['user'] })               // Group指定
+      password: string;
+    }
+
+    const user1 = classToPlain(user);             // { id: 1 }
+
+    const user2 = classToPlain(user, {            // { id: 1, password: "xxxx" }
+      groups: ['user']                            // 指定Groupを出力
+    });
+
+- ENTRY:
+  EXPLAIN: Object から Class に変更(version指定)
+  BODY: |
+    export class User {
+      id: number;
+
+      @Expose({ since: 0.7, until: 1 })
+      email: string;
+      
+      @Expose({ since: 2.1 })
+      password: string;
+    }
+
+    const user1 = classToPlain(user, {            // { id: 1 }
+      version: 0.5
+    });
+
+    const user2 = classToPlain(user, {            // { id: 1, email: "xxxx@com" }
+      version: 1
+    });
+
+- ENTRY:
+  EXPLAIN: Object から Class に変更(FromExist)
+  BODY: |
+    //別インスタンスを使用してObjectに変換
+    const aInst= new AClass();
+    const cInst = plainToClassFromExist(aInst, bInst);
+
+- ENTRY:
+  EXPLAIN: Class から Class に変更
+  BODY: |
+    //別インスタンスを使用して、さらに別インスタンスに変換
+    const aInst= new AClass();
+    const bInst= instanceToInstance(aInst);
+
+- ENTRY:
+  EXPLAIN: インスタンスをObject/Instanceに変更
+  BODY: |
+    const aPlainObject = serialize(aInstance);
+
+    const aInstance= deserialize(AClass, aPlainObject);
+
+    const aInstanceArray = deserializeArray(AClass, aPlainObjectArray);
+
+- ENTRY:
+  EXPLAIN: 型と値変換
+  BODY: |
+    import * as moment from 'moment';
+    import { Moment } from 'moment';
+
+    export class AClass {
+      id: number;
+
+      @Type(() => Date)
+      @Transform(
+        ({ value }) => moment(value),             // 文字列日付を日付型に変換
+        { toClassOnly: true }
+      )
+      date: Moment;
+    }
+
+- ENTRY:
+  EXPLAIN: 型と値変換(Class)
+  BODY: |
+    @Exclude()
+    class User {
+      id: number;
+
+      @Expose()
+      name: string;
+      
+      @Expose({ groups: ['user.email'] })
+      email: string;
+      
+      password: string;
+    }
+
+    class UserController {
+      @TransformClassToPlain({ groups: ['user.email'] })
+      getUser() {
+        const user = new User();
+        user.name = 'John';
+        user.password = 'abcdefg';
+        return user;
+      }
+    }
+
+    const controller = new UserController();
+    const user = controller.getUser();
+
+- ENTRY:
+  EXPLAIN: 型と値変換(その他)
+  BODY: |
+    @TransformClassToClass({ groups: ["user"] })
+
+    @TransformPlainToClass({ groups: ["user"] })

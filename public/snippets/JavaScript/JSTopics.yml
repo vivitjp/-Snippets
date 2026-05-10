@@ -1,0 +1,667 @@
+---
+#-------------------------------
+# Class
+#-------------------------------
+- ENTRY:
+  CATEGORY: クラス
+
+- ENTRY:
+  EXPLAIN: プライベートプロパティの定義方法
+  BODY: |
+    ■ Static版
+
+    const Foo1 = (() => {
+      function privateStaticMethod (string) { console.log(string); }
+
+      return class Foo1 {
+        bar () { privateStaticMethod('Hello, World!'); }
+      };
+    })();
+    new Foo1().bar();
+
+    ■ Instance版1
+
+    const Foo2 = (() => {
+      var privateMap = new WeakMap;
+
+      return class Foo2 {
+        constructor (message) {
+          const privateObject = Object.create(null);
+          privateObject.message = message;
+          privateMap.set(this, privateObject);
+        }
+
+        bar () { console.log(privateMap.get(this).message); }
+      };
+    })();
+
+    new Foo2('Hello, World!').bar();
+    new Foo2('Hello, JavaScript!').bar();
+
+    ■ Instance版2
+
+    const createPivateMap = () => {
+      const wm = new WeakMap;
+      return function (key /* [, value] */) {
+        return wm.has(key) ? wm.get(key) : wm.set(key, arguments[1]);
+      };
+    };
+
+    const Foo3 = (() => {
+      var pm = createPivateMap();
+
+      return class Foo3 {
+        constructor (message) {
+          pm(this, {message: message});
+        }
+        bar () { console.log(pm(this).message); }
+      };
+    })();
+
+    new Foo3('Hello, World!').bar();
+    new Foo3('Hello, JavaScript!').bar();
+
+#-------------------------------
+# Object
+#-------------------------------
+- ENTRY:
+  CATEGORY: オブジェクト
+
+- ENTRY:
+  EXPLAIN: カスタム汎用関数
+  BODY: |
+    ■ Object判定関数
+
+    const isObject = (obj: any) => {
+      return obj !== null && typeof obj === "object"
+    }
+
+    ■ getStringValueOrEmpty             // 数値=>文字列変換関数
+
+    export const getStringValueOrEmpty = (
+      value: number | null | undefined,
+      returnValue = ""
+    ): string => {
+      if (
+        value === null ||
+        value === undefined ||
+        value === 0 ||
+        value === Infinity ||
+        value === -Infinity ||
+        Number.isNaN(value) ||
+        !Number(value)
+      )
+        return returnValue;
+      else return String(value);
+    };
+
+    ■ Object「空」判定関数
+
+    const isEmpty = (obj: any) => {
+      return Object.keys(obj).length === 0 && obj.constructor === Object
+    }
+
+    ■ object から undefined を削除
+
+    const removeUndefined = (obj: object) => {
+      return Object.fromEntries(
+        Object.entries(obj).filter(([, v]) => v !== undefined)
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: DeepCopy
+  BODY: |
+    ■ サンプルオブジェクト
+
+    const objectFrom = {
+      a: 12,
+      b: "A",
+      c: undefined,
+      d: null,
+      e: true,
+      f: [1, undefined],
+      g: { a: 1, b: "B", c: [5, undefined], d: { k: 1 } },
+    };
+
+    ■ structuredClone: 望ましい DeepCopy
+
+    const copiedObject = structuredClone(object)
+
+    const objectToClone = structuredClone(objectFrom);
+    objectFrom.a = 13;
+    console.log(objectFrom);
+    console.log(objectToClone);  // objectFromから影響を受けない
+
+    ■ JSON.parse & stringify: 望ましくない DeepCopy
+
+    const deepCopyNG = (objOrArr: object) => {
+      return JSON.parse(JSON.stringify(objOrArr))
+    }
+
+    const objectToJsonCopy = JSON.parse(JSON.stringify(objectFrom));
+
+    const objectToJsonCopy_Result = {
+      a: 12,
+      b: "A",
+      // c: undefined, <--- 消失: Undefined が削除される
+      d: null,
+      e: true,
+      f: [1, undefined],
+      g: { a: 1, b: "B", c: [5, undefined], d: { k: 1 } },
+    };
+
+    objectFrom.f[1] = 0
+    console.log(objectFrom.f);
+    console.log(objectToJsonCopy.f);
+
+    ■ shallowCopy : 浅いコピー(Object)
+
+    const shallowCopy = <T,>(arr: T[]) => {
+      return arr.map((list) => ({ ...list }))
+    }
+
+    ■ lodashのcloneDeepでDeepCopy
+
+    npm i --save lodash
+
+    import _ from 'lodash'
+    let copyLists = _.cloneDeep(lists)
+
+#-------------------------------
+# Array
+#-------------------------------
+- ENTRY:
+  CATEGORY: 配列
+
+- ENTRY:
+  EXPLAIN: 基礎
+  BODY: |
+    ■ 連番配列作成
+
+    const arr1 = [...Array(20)].map((_, idx) => idx)
+    const arr2 = Array.from({ length: 20 }, (_, i) => i)
+    const arr3 = [...Array(20)].fill(0)
+
+    ■ map(配列)
+
+    const sample: number[] = [1, 4, 7]
+
+    const res: number[] = sample.map((id) => id * 2)
+
+    ■ map(オブジェクト)
+
+    type Obj = { id: number }
+    const sample: Obj[] = [{ id: 1 }, { id: 4 }, { id: 7 }]
+
+    const res: number[] = sample.map(({ id }) => id * 2)
+
+    ■ reduce(配列)
+
+    const sample: number[] = [1, 4, 7]
+
+    const res: number[] = sample.reduce((acc, id) => {
+      return [...acc, id * 2]
+    }, [] as number[])
+
+    ■ reduce(オブジェクト)
+
+    type Obj = { id: number }
+    const sample: Obj[] = [{ id: 1 }, { id: 4 }, { id: 7 }]
+
+    const res: number[] = sample.reduce((acc, { id }) => {
+      return [...acc, id * 2]
+    }, [] as number[])
+
+    ■ reduce(平均値)
+
+    const getAverage = (arr: number[]) =>
+      reduce((acc, elm) => acc + elm, 0) / arr.length
+
+- ENTRY:
+  EXPLAIN: メソッド
+  BODY: |
+    ■ 反復
+
+    arr.forEach(elm=>{})                        //void
+    arr.map(elm=>{})                            //配列
+    arr.reduce((acc,elm,arr)=>{}, 初期値)        //any
+    arr.reduceRight((acc,elm,arr)=>{}, 初期値)   //any
+
+    ■ コピー
+
+    arr.slice([start, end])                     //部分配列(シャローコピー)
+    arr.splice(start, [delCount, item1, itemN]) //削除配列
+    arr.copyWithin([target, start, end])        //内部コピー後の配列
+
+    spliced = arr.toSpliced([start, [delCount, item1, itemN]]) //2023 削除配列(新規配列)
+    [X]sliced = arr.toSliced([start, end])     //存在せず
+
+    ■ 検索
+
+    arr.filter(value => value>1)        //条件一致要素の配列
+    arr.find(value => value>1)          //最初の該当要素
+    arr.findIndex(value => value>1)     //最初の該当index
+    arr.findLast(value => value>1)      //最後の該当要素
+    arr.findLastIndex(value => value>1) //最後の該当index
+    arr.indexOf(要素)                   //最初の該当要素
+    arr.lastIndexOf(要素)               //最後の該当要素
+
+    ■ 判定
+
+    Array.isArray(配列)
+    arr.includes(要素)                  //Boolean 判定
+    arr.some(value => value>1)          //該当が1でもあれば true
+    arr.every(value => value>1)         //全てが該当すれば true
+
+    ■ オブジェクト反復
+
+    arr.entries(([key, {id,name}])=>{}) //キーと値iterator
+    arr.values(value => {})             //値iterator
+    arr.keys(key=>{})                   //キーiterator
+
+    ■ Index/生成/変更
+
+    arr.at(index)                       //要素取得(2022)
+    Array.of(1,2,3)                     //配列もどきから配列生成
+    Array.from(文字列,Map,Set)          //配列生成
+    arr.fill(値)                        //全上書き(破壊的)
+    arr.flat(深さ数値)                   //配列: 多重配列のフラット化
+    arr.flatMap(value=>value)           //配列: 多重配列のフラット化
+    arr.concat(配列)                    //配列合体
+    arr.join(配列)                      //文字列化
+
+    result = arr.with(index, value) //2023 指定Index要素の置換で新配列を戻す
+
+    ■ 挿入/取得
+
+    arr.pop()                           //最後の要素取得(破壊的)
+    arr.push(value)                     //末尾に追加(破壊的)
+    arr.shift()                         //最初の要素取得(破壊的)
+    arr.unshift(value)                  //先頭に追加(破壊的)
+
+    ■ ソート
+
+    arr.sort((a,b)=>a-b)                //昇順ソート(破壊的)
+    arr.sort((a,b)=>b-a)                //降順ソート(破壊的)
+    arr.reverse()                       //逆ソート(破壊的)
+    -----------------------------------------------------------
+    sorted = arr.toSorted((a,b)=>a-b)   //昇順ソート(2023)
+    sorted = arr.toReversed()           //逆ソート(2023)
+
+    ■ 文字列化
+
+    arr.toLocaleString()                //文字列化
+    arr.toString()                      //文字列化
+
+    ■ フィッシャーイェーツの配列シャッフルアルゴリズム
+    const shuffleArray_FisherYates = (arrParam: number[]) => {
+      let arr = [...arrParam]
+      for (let i = arr.length - 1; i >= 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1))
+        ;[arr[i], arr[j]] = [arr[j], arr[i]]
+      }
+      return arr
+    }
+
+#-------------------------------
+# Map
+#-------------------------------
+- ENTRY:
+  CATEGORY: Map & Set
+
+- ENTRY:
+  EXPLAIN: Map 変換
+  BODY: |
+    ■ Object -> Map
+
+    const objArr = [
+      { id: 23, name: "apple" },
+      { id: 45, name: "orange" },
+    ]
+    const map = new Map<number, string>(objArr.map(({ id, name }) => [id, name]))
+
+    ■ Map -> Array
+
+    const map = new Map([["a", 1],["b", 2]])
+    const arr = Array.from(map)
+
+    ■ Map -> Object(制限あり)
+
+    const map = new Map([["a", 1],["b", 2]])   //keyはstringに変換
+    const obj = Object.fromEntries(map)
+
+    ■ Map -> Map
+
+    const map1 = new Map<string, number>()
+    const map2 = new Map(map1)
+
+    ■ Array -> Map 生成
+
+    const data = [["A","M1"],["B","M2"]];   // 型宣言に問題あり
+
+    const map1 = new Map(data);             // ⛔ 型エラー
+    const map2 = new Map(Array.from(data)); // ⛔ 型エラー
+    const map3 = new Map(data.map(n=>n));   // ⛔ 型エラー
+
+    const data:[string, string][] = [["A","M1"],["B","M2"]]; // 型指定
+
+    const map1 = new Map(data);              // ✅
+    const map2 = new Map(Array.from(data))   // ✅
+    const map3 = new Map(data.map((n) => n)) // ✅
+
+    const data = [["A","M1"],["B","M2"]] as const; // ReadOnlyで対応
+
+    const map1 = new Map(data)              // ✅
+    const map2 = new Map(Array.from(data))  // ✅
+    const map3 = new Map(data.map(n=>n))    // ✅
+
+- ENTRY:
+  EXPLAIN: Set -> Map 変換
+  BODY: |
+    ■ データ
+
+    const data = [
+      { name: "A", type: "M1" },
+      { name: "B", type: "M2" },
+    ];
+
+    ■ オブジェクト -> Set 生成
+
+    const aSet = new Set( // 🛑 型指定不十分
+      data.map((n) => [n.name, n.type]),
+    );
+
+    const bSet = new Set<[string, string]>( // ✅ 型指定 Mapへの変換用
+      data.map((n) => [n.name, n.type]),
+    );
+
+    ■ Set -> Map 生成
+
+    const aMap = new Map(aSet)   // ⛔ 型エラー
+    const bMap = new Map(bSet)   // ✅
+
+    const aMap = new Map(
+      Array.from(aMap, ([v1,v2])=>[v1, v2]) // ✅ Iterator必須
+    );
+
+    const aArray1 = Array.from(aSet);
+    const aMap2 = new Map(aArray1);  // ⛔
+    const aMap3 = new Map(aArray1 as [string,string][]);  // ✅
+
+    const bArray1 = Array.from(bSet);
+    const bMap2 = new Map(bArray1);  // ✅
+    const bMap3 = new Map(bArray1 as [string,string][]);  // ✅
+
+- ENTRY:
+  EXPLAIN: Map と WeakMap
+  BODY: |
+    ■ Map
+
+    ・キーは強参照
+    ・キー/値は明示的に削除しない限り残る（GCされない）
+    ・列挙・サイズ取得が可能
+    ・任意の値（オブジェクト、文字列、数値、Symbol など）をキーにできる
+    ・map.size、map.keys()、map.entries() 等で列挙できる
+
+    ■ WeakMap
+
+    ・キーは弱参照（キーは必ずオブジェクト）
+    ・キーへの他の参照が無くなれば、そのエントリは非決定的にGC対象（時間的保証なし、確認方法なし）
+    ・列挙不可・サイズ取得不可・プリミティブ不可
+    ・メモリリーク防止に向くがGCは非決定的
+    ・size なし、get/set/has/delete のみ
+
+- ENTRY:
+  EXPLAIN: Map と WeakMap サンプル
+  BODY: |
+    ■ Map
+
+    const map = new Map();
+    let obj = {id:1};
+    map.set(obj, {cached: true});
+    obj = null;                         // オブジェクトへの参照を外しても map が強参照
+
+    console.log(map.size);              // エントリが残っている
+
+    map.forEach((v,k)=>{
+      if (/* 条件 */) map.delete(k);    // 明示的に削除の必要
+    });
+
+    ■ WeakMap
+
+    const w = new WeakMap();
+    let node = {el: 'DOM node'};
+
+    w.set(node, {metadata: 'x'});
+    node = null;                        // GC でエントリ回収(非決定的)
+
+- ENTRY:
+  EXPLAIN: WeakMap 比較
+  BODY: |
+    WeakMap 比較
+  TABLE:
+    OPTION:
+      ALIGN:
+        - left
+        - center
+        - center
+        - left
+      HAS_TITLE: true
+      WIDTH:
+        - 30%
+        - 12%
+        - 12%
+    BODY: |
+      プロパティ/機能 	Map 	WeakMap 	機能説明
+      *.prototype.constructor	〇	〇	インスタンス生成元のコンストラクタ(書き換え可能)
+      *.prototype.size	〇	×	要素数
+      *.prototype.delete()	〇	〇	対要素削除
+      *.prototype.get()	〇	〇	要素を返す
+      *.prototype.has()	〇	〇	要素の存在判定
+      *.prototype.set()	〇	〇	[key,value]を要素に格納
+      *.prototype.clear()	〇	×	全要素を削除
+      *.prototype.entries()	〇	×	[key,value]を持つItelator
+      *.prototype.forEach()	〇	×	定義順で要素を列挙
+      *.prototype.keys()	〇	×	keyを持つItelator
+      *.prototype.values()	〇	×	valueを持つItelator
+      *.prototype[@@iterator]()	〇	×	要素列挙時に実行されるIterator関数
+      *.prototype[@@toStringTag]()	〇	〇	インスタンスに与えられるオブジェクト種を表す名前
+      弱参照	×	〇	keyオブジェクト参照が切れた時、WeakMap 上からも要素を削除
+
+#-------------------------------
+# その他
+#-------------------------------
+- ENTRY:
+  CATEGORY: その他
+
+#-------------------------------
+# 日付
+#-------------------------------
+- ENTRY:
+  EXPLAIN: 日付
+  BODY: |
+    ■ 日付フォーマット関数
+
+    export const getFormatDate = (targetDate: Date) => {
+      return targetDate.toLocaleDateString("ja-JP", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    };
+
+    ■ Excel日付 vs JS日付
+
+    const DAY_MS = 24 * 60 * 60 * 1000; //日数とミリ秒を変換する係数
+    const UNIX_EXCEL_DIFF = 70 * 365 + 17 + 1 + 1; //「1900/1/0」～「1970/1/1」 (日数)
+    const UTC_JST_DIFF = 9 * 60 * 60 * 1000; //UTCとJSTの時差 (ミリ秒)
+
+    ■ UnixTime -> ExcelDateSerial
+
+    export function convertUnixTime2ExcelDateSerial(unixTimeMS: number) {
+      return (unixTimeMS + UTC_JST_DIFF) / DAY_MS + UNIX_EXCEL_DIFF;
+    }
+
+    ■ ExcelDateSerial -> UnixTime
+
+    export function convertExcelDateSerial2UnixTime(excelDataSerial: number) {
+      return (excelDataSerial - UNIX_EXCEL_DIFF) * DAY_MS - UTC_JST_DIFF;
+    }
+
+#-------------------------------
+# 乱数
+#-------------------------------
+- ENTRY:
+  EXPLAIN: ランダム
+  BODY: |
+    ■ ランダム数(桁)
+
+    const getRandomDigit = (digit: number) => {
+      return Math.floor(Math.random() * 10 ** digit)
+    }
+
+    ■ ランダム数(MinMax)
+
+    const getRandomMinMax = (min: number, max: number) => {
+      return Math.floor(Math.random() * (max - min) + min)
+    }
+
+    ■ ランダム文字列(Reactの場合 useMemo 必須)
+
+    const randStr1 = useMemo(() => window.crypto.randomUUID(), [])
+    const typedArray = new Uint32Array(6)
+    const randStr2 = useMemo(() => window.crypto.getRandomValues(typedArray), [])
+
+#-------------------------------
+# 時間計測
+#-------------------------------
+- ENTRY:
+  EXPLAIN: 処理時間計測
+  BODY: |
+    ■ 処理時間計測
+
+    const performanceAbout = (func: () => void) => {
+      const startTime = Date.now()
+      func()
+      console.log(`経過時間: ${Date.now() - startTime}`)
+    }
+
+    ■ 処理時間計測(精密)
+
+    const performanceAccurate = (func: () => void) => {
+      const start = performance.now()
+      func()
+      const elapsed = performance.now() - start
+      const elapsedStr = elapsed.toPrecision(3)
+      console.log(`経過時間: ${elapsedStr}`)
+    }
+
+#-------------------------------
+# JSON: Null, Undefined,...
+#-------------------------------
+- ENTRY:
+  EXPLAIN: 不正値判定
+  BODY: |
+    ■ infinite()
+
+    isFinite(1)                         //True
+    isFinite(Number(""))                //=> 0 True
+    isFinite(Number(null))              //=> 0 True
+    isFinite(1/0)                       //False
+    isFinite(Number(1/0))               //False
+    isFinite(Number(undefined))         //False
+
+    ■ NaN
+
+    Number("")                          // 0
+    Number(0)                           // 0
+    Number(null)                        // 0
+    Number(undefined)                   // NaN
+    Number(NaN)                         // NaN
+    Number("A")                         // NaN
+
+    ■ Infinity
+
+    String(1 / 1)                       // 1
+    String(1 / Number(""))              // "Infinity" 文字列化
+    String(1 / Number(undefined) || "") // ""
+    String((1 / Number(null) || "")     // "Infinity" 文字列化
+
+    1/0 < 0                             // false
+    1/0 < 1                             // false
+    1/0 === Infinity                    // true
+    1/0 === 1/0                         // true
+
+    String(1/0)                         // "Infinity"
+    Number(1/0) / 1                     // Infinity
+    Number(1/0) / 0                     // Infinity
+
+    1/0)                                // Infinity
+    1/(1/0)                             // 0
+    1 / (1/0) || ""                     // ""
+    1*(1/0) || ""                       // Infinity
+    1+(1/0) || ""                       // Infinity
+    1-(1/0) || ""                       // -Infinity
+    isFinite(1/0)                       // false
+    String(1/0)                         // "Inifinity"
+    Number(String(1/0))                 // Inifinity
+
+- ENTRY:
+  EXPLAIN: 不正値判定メソッド
+  BODY: |
+    ■ 概要
+
+    ・value が単体または配列のいずれかで、各要素が「有限の数に解釈できる」とき true
+    ・null / undefined は明示的に弾く(Number(null) は 0 になるため)
+    ・空配列 [] はループしないので true になる。空を不正としたい場合は先に length を検証する
+
+    ■ 判定メソッド
+
+    const isValid = (value: unknown | unknown[]): boolean => {
+      const valueArray = Array.isArray(value) ? value : [value]
+      for (const item of valueArray) {
+        if (item === null || item === undefined) return false
+        const numValue = Number(item)
+        if (isNaN(numValue) || !isFinite(numValue)) return false
+      }
+      return true
+    };
+
+    ■ 判定例
+
+    isValid(1)                                    // True
+    isValid("0")                                  // True
+    isValid("1")                                  // True
+    isValid("1.5")                                // True
+    isValid("")                                   // True 
+    isValid(["0", "1", "1.5", ""])                // True
+
+    isValid(null)                                 // False
+    isValid(undefined)                            // False
+    isValid(NaN)                                  // False
+    isValid("A")                                  // False
+    isValid("１")                                 // False
+    isValid(["0", "1", "1.5", undefined])         // False
+    isValid(["0", "1", "1.5", NaN])               // False
+    isValid(["0", "1", "1.5", null])              // False
+    isValid(["0", "1", "1.5", Infinity])          // False
+    isValid([null, undefined, NaN, "A", "1A", "１"]) // False
+
+- ENTRY:
+  EXPLAIN: ProtoType
+  BODY: |
+    ■ ProtoType 追加
+
+    String.addId = function (str: string) {
+      return this + (this.length ? "-" + str : str)
+    }
+
+    //types.d.ts への追加
+    export declare global {
+      interface String {
+        addId(id: string): string
+      }
+    }

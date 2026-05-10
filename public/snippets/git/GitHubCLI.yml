@@ -1,0 +1,325 @@
+---
+#-------------------------------
+# GitHub CLI
+#-------------------------------
+- ENTRY:
+  CATEGORY: GitHub CLI
+
+- ENTRY:
+  EXPLAIN: 概説
+  BODY: |
+    GitHub CLI (gh) はGitHubの公式コマンドラインツール
+
+    ■ 特徴
+
+
+    ・ コマンドラインからGitHub操作が可能
+    ・ リポジトリ、Issue、Pull Request等の管理
+    ・ Git操作と連携したワークフロー
+    ・ シェルスクリプトやCI/CDでの活用
+
+    ■ 主な機能
+
+
+    ・ リポジトリ管理 (作成、クローン、フォーク)
+    ・ Issue管理 (作成、編集、クローズ)
+    ・ Pull Request管理 (作成、レビュー、マージ)
+    ・ リリース管理
+    ・ GitHub Actions管理
+    ・ 認証・設定管理
+
+- ENTRY:
+  EXPLAIN: インストール
+  BODY: |
+    ■ Windows (winget)
+
+    winget install --id GitHub.cli
+
+    ■ Windows (chocolatey)
+
+    choco install gh
+
+    ■ macOS (Homebrew)
+
+    brew install gh
+
+    ■ Linux (Ubuntu/Debian)
+
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+    sudo apt update
+    sudo apt install gh
+
+    ■ バージョン確認
+
+    gh --version
+
+- ENTRY:
+  EXPLAIN: 認証
+  BODY: |
+    ■ 対話式認証 (推奨)
+
+    gh auth login
+
+    ■ ブラウザで認証する場合
+
+    gh auth login --web
+
+    ■ Personal Access Token使用
+
+    gh auth login --with-token < oken.txt
+
+    ■ 認証状態確認
+
+    gh auth status
+
+    ■ ログアウト
+
+    gh auth logout
+
+    ■ 認証方法の選択
+
+    ・ GitHub.com: 通常のGitHub
+    ・ GitHub Enterprise Server: 企業内GitHub
+
+- ENTRY:
+  EXPLAIN: リポジトリ管理
+  BODY: |
+    ■ リポジトリ作成
+
+    gh repo create <name> --public          // 公開リポジトリ
+    gh repo create <name> --private         // 非公開リポジトリ
+    gh repo create <name> --source=. --push // 既存ローカルリポジトリから作成・プッシュ
+
+    ■ リポジトリクローン
+
+    gh repo clone <owner>/<repo>
+
+    ■ リポジトリ情報表示
+
+    gh repo view <owner>/<repo>
+    gh repo view                           // カレントディレクトリの情報
+
+    ■ リポジトリ一覧
+
+    gh repo list                           // 自分のリポジトリ
+    gh repo list <owner>                   // 指定ユーザーのリポジトリ
+
+    ■ リポジトリ編集
+
+    gh repo edit --description "New description"
+    gh repo edit --homepage "https://example.com"
+
+    ■ リポジトリ削除 (注意!)
+
+    gh repo delete <owner>/<repo>
+
+    ■ フォーク
+
+    gh repo fork <owner>/<repo>
+
+- ENTRY:
+  EXPLAIN: Issue管理
+  BODY: |
+    ■ Issue作成
+    gh issue create --title "Issue title" --body "Issue description"
+
+    ■ Issue一覧表示
+    gh issue list
+    gh issue list --state closed           // クローズ済み
+    gh issue list --assignee @me           // 自分に割り当てられたもの
+    gh issue list --label "bug"            // 特定のラベル
+
+    ■ Issue詳細表示
+    gh issue view <number>
+
+    ■ Issue編集
+    gh issue edit <number> --title "New title"
+    gh issue edit <number> --body "New body"
+    gh issue edit <number> --add-label "bug,urgent"
+
+    ■ Issueステータス変更
+    gh issue close <number>
+    gh issue reopen <number>
+
+    ■ Issueコメント
+    gh issue comment <number> --body "Comment text"
+
+- ENTRY:
+  EXPLAIN: Pull Request管理
+  BODY: |
+    ■ PR作成
+
+    gh pr create --title "PR title" --body "PR description"
+    gh pr create --base main --head feature-branch
+
+    ■ PR一覧表示
+
+    gh pr list
+    gh pr list --state closed
+    gh pr list --assignee @me
+
+    ■ PR詳細表示
+
+    gh pr view <number>
+    gh pr view                             // カレントブランチのPR
+
+    ■ PR編集
+
+    gh pr edit <number> --title "New title"
+    gh pr edit <number> --body "New body"
+
+    ■ PRレビュー
+
+    gh pr review <number> --approve        // 承認
+    gh pr review <number> --request-changes --body "Changes needed"
+    gh pr review <number> --comment --body "Comment"
+
+    ■ PRマージ
+
+    gh pr merge <number>                   // マージ
+    gh pr merge <number> --squash          // squashマージ
+    gh pr merge <number> --rebase          // rebaseマージ
+
+    ■ PRクローズ
+
+    gh pr close <number>
+
+    ■ PRコメント
+
+    gh pr comment <number> --body "Comment"
+
+- ENTRY:
+  EXPLAIN: リリース管理
+  BODY: |
+    ■ リリース作成
+
+    gh release create v1.0.0 --title "Release v1.0.0" --notes "Release notes"
+
+    ■ リリース一覧
+
+    gh release list
+
+    ■ リリース詳細表示
+
+    gh release view v1.0.0
+
+    ■ リリース編集
+
+    gh release edit v1.0.0 --title "New title"
+
+    ■ リリース削除
+
+    gh release delete v1.0.0
+
+    ■ アセットアップロード
+
+    gh release upload v1.0.0 ./path/to/asset.zip
+
+- ENTRY:
+  EXPLAIN: GitHub Actions管理
+  BODY: |
+    ■ ワークフロー実行
+
+    gh workflow run <workflow-name>
+
+    ■ ワークフロー一覧
+
+    gh workflow list
+
+    ■ ワークフロー詳細表示
+
+    gh workflow view <workflow-name>
+
+    ■ ワークフロー無効化/有効化
+
+    gh workflow disable <workflow-name>
+    gh workflow enable <workflow-name>
+
+    ■ 実行一覧表示
+
+    gh run list
+
+    ■ 実行詳細表示
+
+    gh run view <run-id>
+
+    ■ 実行ログ表示
+
+    gh run view <run-id> --log
+
+    ■ 実行キャンセル
+
+    gh run cancel <run-id>
+
+- ENTRY:
+  EXPLAIN: 設定とエイリアス
+  BODY: |
+    ■ 設定表示
+
+    gh config get <key>
+    gh config set <key> <value>
+
+    ■ エディタ設定
+
+    gh config set editor "code --wait"
+
+    ■ ブラウザ設定
+
+    gh config set browser "chrome"
+
+    ■ エイリアス一覧
+
+    gh alias list
+
+    ■ エイリアス作成
+
+    gh alias set prs 'pr list --author @me'
+    gh alias set issues 'issue list --assignee @me'
+
+    ■ エイリアス削除
+
+    gh alias delete <alias-name>
+
+- ENTRY:
+  EXPLAIN: 実用例
+  BODY: |
+    ■ 新規プロジェクト開始
+
+    mkdir my-project && cd my-project
+    git init
+    echo "# My Project" > README.md
+    git add . && git commit -m "Initial commit"
+    gh repo create my-project --public --source=. --push
+
+    ■ Issue駆動開発
+
+    gh issue create --title "Add user authentication" --label "enhancement"
+    gh issue list --label "enhancement"
+
+    ■ PR作成とレビュー
+
+    git checkout -b feature/auth
+    # 作業後コミット
+    git push -u origin feature/auth
+    gh pr create --title "Add authentication feature"
+    gh pr review --approve
+
+    ■ リリース作成
+
+    gh release create v1.0.0 --generate-notes
+
+- ENTRY:
+  EXPLAIN: スクリプトでの活用
+  BODY: |
+    ■ 定期的なIssue確認
+
+    gh issue list --state open --limit 10
+
+    ■ 自分のPRステータス確認
+
+    gh pr list --author @me --state open
+
+    ■ チームのアクティビティ確認
+
+    gh repo list <org-name> --limit 20

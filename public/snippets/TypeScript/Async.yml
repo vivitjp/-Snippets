@@ -1,0 +1,226 @@
+---
+#-------------------------------
+# Async
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: sleep関数
+  BODY: |
+    const sleep = async (ms: number) =>
+      new Promise((resolve) => setTimeout(resolve, ms))
+
+- ENTRY:
+  EXPLAIN: promise シミュレータ(値付き)
+  BODY: |
+    条件: msミリ秒後に 名前付きで OK/NG を返す
+
+    type Props = {
+      ms?: number;
+      name?: string;
+      isResolved?: boolean;
+    };
+
+    const promise = ({ ms = 1000, name = "", isResolved = true }: Props) => {
+      const COLON = name ? ":" : ""
+      return new Promise<string>((resolve, reject) => {
+        setTimeout(
+          () => (isResolved ? resolve(`${name}${COLON}OK`) : reject(`${name}${COLON}NG`)),
+          ms,
+        );
+      });
+    };
+
+- ENTRY:
+  EXPLAIN: Promise.all【ES2015】
+  BODY: |
+    全非同期の結果を待ち、どれかが Rejected なら error、全てが fullfilled なら Resolved を返す
+
+    ■ 関数(await)
+    const PromiseAll = async (promises: Promise<string>[]) => {
+      try {
+        const value = await Promise.all(promises);
+        return { result: "Resolved", value };
+      } catch (error) {
+        return { result: "Rejected", value: [] };
+      }
+    };
+
+    ■ 関数(then/catch)
+    const PromiseAll = async (promises: Promise<string>[]) => {
+      return Promise.all(promises).then((value)=>{
+        return { result: "Resolved", value };
+      }).catch((error)=>{
+        return { result: "Rejected", value: [] };
+      })
+    };
+
+    (async () => {console.log(await PromiseAll([p1, p2]))})();
+
+    ■ 実行(Resolved⭕)
+    const p1 = promise({ ms: 800, name: "A", isResolved: true }); // ⭕ 後
+    const p2 = promise({ ms: 500, name: "B", isResolved: true }); // ⭕ 先
+
+    {
+      "result": "Resolved",
+      "value": [ "A:OK", "B:OK" ]
+    }
+
+    ■ 実行(Rejected⛔)
+    const p1 = promise({ ms: 800, name: "A", isResolved: false }); // ⛔ 後
+    const p2 = promise({ ms: 500, name: "B", isResolved: true });  // ⭕ 先
+
+    {
+      "result": "Rejected",
+      "value": []
+    }
+
+- ENTRY:
+  EXPLAIN: Promise.any【ES2021】
+  BODY: |
+    全非同期の結果を待ち、どれかが fullfilled なら Resolved、全てが Rejected なら error を返す
+
+    ■ 関数
+    const PromiseAny = async (promises: Promise<string>[]) => {
+      try {
+        const value = await Promise.any(promises);
+        return { result: "Resolved", value };
+      } catch (error) {
+        return { result: "Rejected", value: [] };
+      }
+    };
+    (async () => {console.log(await PromiseAny([p1, p2]))})();
+
+    ■ 実行(Resolved⭕)
+    const p1 = promise({ ms: 800, name: "A", isResolved: true });  // ⭕ 後
+    const p2 = promise({ ms: 500, name: "B", isResolved: false }); // ⛔ 先
+
+    {
+      "result": "Resolved",
+      "value": "A:OK"
+    }
+
+    ■ 実行(Rejected⛔)
+    const p1 = promise({ ms: 800, name: "A", isResolved: false }); // ⛔ 後
+    const p2 = promise({ ms: 500, name: "B", isResolved: false }); // ⛔ 先
+
+    {
+      "result": "Rejected",
+      "value": []
+    }
+
+- ENTRY:
+  EXPLAIN: Promise.race【ES2015】
+  BODY: |
+    全非同期の結果を待ち、最初の結果が fullfilled なら Resolved、Rejected なら error を返す
+    残りの結果は無視される
+
+    ■ 関数
+    const PromiseRace = async (promises: Promise<string>[]) => {
+      try {
+        const value = await Promise.race(promises);
+        return { result: "Resolved", value };
+      } catch (error) {
+        return { result: "Rejected", value: [] };
+      }
+    };
+
+    (async () => {console.log(await PromiseRace([p1, p2]))})();
+
+    ■ 実行(Resolved⭕)
+    const p1 = promise({ ms: 800, name: "A", isResolved: false }); // ⛔ 後
+    const p2 = promise({ ms: 500, name: "B", isResolved: true });  // ⭕ 先
+
+    {
+      "result": "Resolved",
+      "value": "B:OK"
+    }
+
+    ■ 実行(Rejected⛔)
+    const p1 = promise({ ms: 800, name: "A", isResolved: true });  // ⭕ 後
+    const p2 = promise({ ms: 500, name: "B", isResolved: false }); // ⛔ 先
+
+    {
+      "result": "Rejected",
+      "value": []
+    }
+
+    ■ 実行(Rejected⛔)
+    const p1 = promise({ ms: 800, name: "A", isResolved: false }); // ⛔ 後
+    const p2 = promise({ ms: 500, name: "B", isResolved: false }); // ⛔ 先
+
+    {
+      "result": "Rejected",
+      "value": []
+    }
+
+- ENTRY:
+  EXPLAIN: Promise.allSettled【ES2020】
+  BODY: |
+    全非同期の結果を待ち、全ての結果を返す
+    どれか/すべてが Rejected でも Resolved を返す
+
+    ■ 関数
+    const PromiseAllSettled = async (promises: Promise<string>[]) => {
+      try {
+        const value: PromiseSettledResult<string>[] = await Promise.allSettled(promises);
+        return { result: "Resolved", value };
+      } catch (error) {
+        return { result: "Rejected", value: [] };
+      }
+    };
+
+    (async () => {console.log(await PromiseAllSettled([p1, p2]))})();
+
+    ■ 実行(Resolved⭕)
+    const p1 = promise({ ms: 800, name: "A", isResolved: true });  // ⭕ 後
+    const p2 = promise({ ms: 500, name: "B", isResolved: true });  // ⭕ 先
+
+    {
+      "result": "Resolved",
+      "value": [
+        {
+          "status": "fulfilled",
+          "value": "A:OK"
+        },
+        {
+          "status": "fulfilled",
+          "value": "B:OK"
+        }
+      ]
+    }
+
+    ■ 実行(Resolved⭕)
+    const p1 = promise({ ms: 800, name: "A", isResolved: true });  // ⭕ 後
+    const p2 = promise({ ms: 500, name: "B", isResolved: false }); // ⛔ 先
+
+    {
+      "result": "Resolved",
+      "value": [
+        {
+          "status": "fulfilled",
+          "value": "A:OK"
+        },
+        {
+          "status": "rejected",
+          "reason": "B:NG"
+        }
+      ]
+    }
+
+    ■ 実行(Resolved⭕)
+    const p1 = promise({ ms: 800, name: "A", isResolved: false }); // ⛔ 後
+    const p2 = promise({ ms: 500, name: "B", isResolved: false }); // ⛔ 先
+
+    {
+      "result": "Resolved",
+      "value": [
+        {
+          "status": "rejected",
+          "reason": "A:NG"
+        },
+        {
+          "status": "rejected",
+          "reason": "B:NG"
+        }
+      ]
+    }

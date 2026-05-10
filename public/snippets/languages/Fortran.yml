@@ -1,0 +1,48 @@
+# ----------------------------
+# Excel
+# ----------------------------
+- ENTRY:
+  CATEGORY: コンパイラ & 環境
+
+- ENTRY:
+  EXPLAIN: コンパイラ
+  BODY: |
+    ■ linux インストール
+    > sudo apt install gfortran
+
+    ■ コンパイル
+    > gfortran hello.f90
+    > ./a.out
+    > gfortran -o hello hello.f90         // 実行ファイル名指定
+    > ./hellog
+
+- ENTRY:
+  EXPLAIN: VSCode 環境
+  BODY: |
+    A
+
+- ENTRY:
+  EXPLAIN: |
+    サンプルコード1
+  BODY: |
+    subroutine hello()
+      print *, "HELLO"
+    end subroutine
+
+- ENTRY:
+  EXPLAIN: |
+    サンプルコード2
+  BODY: |
+    1
+
+- ENTRY:
+  EXPLAIN: |
+    サンプルコード3
+  BODY: |
+    2
+
+- ENTRY:
+  EXPLAIN: |
+    サンプルコード4
+  BODY: |
+    3

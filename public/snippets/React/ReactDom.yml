@@ -1,0 +1,102 @@
+---
+#-------------------------------
+# React Dom
+#-------------------------------
+- ENTRY:
+  CATEGORY: React Dom
+
+- ENTRY:
+  EXPLAIN: React Dom コンポーネント
+  BODY: |
+    ■ 概要
+
+    ・ReactDOM は React アプリケーションをブラウザの DOM にレンダリングするためのライブラリ
+    ・React のコアライブラリと連携して動作し、仮想 DOM と実際の DOM の同期を管理
+    ・主にウェブアプリケーションで使用、React Native など他のプラットフォーム向けには別のレンダラー存在
+
+    ■ 主な機能
+
+    ・レンダリング: React コンポーネントを指定した DOM ノードにレンダリング
+    ・アンマウント: DOM からコンポーネントを安全に削除
+    ・イベントハンドリング: React のイベントシステムを通じてユーザーインタラクションを処理
+
+    ■ インストール
+
+      npm install react-dom
+
+      | React バージョン | ReactDOM バージョン |
+      |------------------|----------------------|
+      | 16.x             | 16.x                 |
+      | 17.x             | 17.x                 |
+      | 18.x             | 18.x                 |
+
+    ■ 使用例: React 17 以前のレンダリング方法
+
+      import React from 'react';
+      import ReactDOM from 'react-dom';
+      import App from './App';
+
+      ReactDOM.render(
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>,
+        document.getElementById('root')
+      );
+
+      // コンポーネントのアンマウント
+      ReactDOM.unmountComponentAtNode(document.getElementById('root'));
+
+    ■ 使用例: React 18 以降の新しいレンダリング方法
+
+      import { createRoot } from 'react-dom/client';
+      const container = document.getElementById('root');
+      const root = createRoot(container);
+
+      root.render(
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      );
+
+      // コンポーネントのアンマウント
+      root.unmount();
+
+- ENTRY:
+  EXPLAIN: React Dom Server コンポーネント
+  BODY: |
+    ■ 概要
+
+    ・ReactDOMServer は React コンポーネントをサーバーサイドでレンダリングするためのライブラリ
+    ・主にサーバーサイドレンダリング (SSR) に使用され、初期 HTML を生成してクライアントに送信
+    ・SEO の向上や初回ロード時間の短縮に役立つ
+
+    ■ 主な機能
+
+    ・静的マークアップの生成: React コンポーネントを静的な HTML 文字列に変換
+    ・ストリーミングレンダリング: 大きなコンテンツを部分的にレンダリングし、クライアントに逐次送信
+
+    ■ インストール
+
+      npm install react-dom
+
+      | React バージョン | ReactDOMServer バージョン |
+      |------------------|----------------------------|
+      | 16.x             | 16.x                       |
+      | 17.x             | 17.x                       |
+      | 18.x             | 18.x                       |
+
+    ■ 使用例
+
+      import React from 'react';
+      import ReactDOMServer from 'react-dom/server';
+      import App from './App';
+
+      const htmlString = ReactDOMServer.renderToString(<App />);
+      console.log(htmlString);
+
+    ■ 詳細な使用例
+
+      // ストリーミングレンダリング
+      import { renderToNodeStream } from 'react-dom/server';
+      const stream = renderToNodeStream(<App />);
+      stream.pipe(process.stdout);

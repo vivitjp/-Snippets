@@ -1,0 +1,219 @@
+---
+#-------------------------------
+# Library
+#-------------------------------
+- ENTRY:
+  CATEGORY: |
+    @lukemorales/query-key-factory
+
+- ENTRY:
+  EXPLAIN: 概要とサンプル
+  BODY: |
+    ■ 概要
+
+    ・TypeScriptで型安全なクエリキーを生成するライブラリ
+    ・TanStack Query（React Query）と組み合わせて使用可能
+    ・クエリキーの一貫性と再利用性を向上させる
+    ・GitHub: https://github.com/lukemorales/query-key-factory
+
+    ■ メソッド
+
+    ・createQueryKeys: クエリキーファクトリを作成
+    ・createQueryKeyStore: クエリストアを作成
+    ・queryKeys: 生成されたクエリキーオブジェクト
+
+    ■ インストール
+
+    npm install @lukemorales/query-key-factory
+
+    ■ サンプル(深いオブジェクト構造)
+
+    import { createQueryKeys } from '@lukemorales/query-key-factory';
+
+    // eコマースアプリのクエリキー定義例
+    const queries = createQueryKeys('ecommerce', {         // ルートキー('ecommerce')
+      products: {                                          // サブキー('products')
+        list: (filters: ProductFilters) => [filters],      // 商品リスト取得
+        detail: (id: string) => [id],                      // 商品詳細取得
+        search: (query: string) => [query],                // 商品検索
+        categories: (categoryId: string) => ({             // ネストされたカテゴリキー
+          queryKey: [categoryId],                          // queries.products.categories()
+            // => ['ecommerce', 'products', 'categories', categoryId] という段階を示すキーになる
+          contextQueries: {                                // 🔵 contextQueries オブジェクト
+            list: () => [],                                // queries.products.categories('xxx')._ctx.list()
+            detail: (productId: string) => [productId],    // queries.products.categories('xxx')._ctx.detail(productId)
+            featured: () => ['featured'],                  // queries.products.categories('xxx')._ctx.featured()
+          },
+        }),
+      },
+    });
+
+    const queryClient = useQueryClient();
+
+    // 商品リスト取得
+    const { data: products } = useQuery({
+      queryKey: queries.products.list({ category: 'electronics', limit: 20 }),
+      // 生成キー: ['ecommerce', 'products', 'list', { category: 'electronics', limit: 20 }]
+      queryFn: ({ queryKey }) => fetchProducts(queryKey[1]),
+    });
+
+    // 商品詳細取得
+    const { data: product } = useQuery({
+      queryKey: queries.products.detail('product-123'),
+      // 生成キー: ['ecommerce', 'products', 'detail', 'product-123']
+      queryFn: ({ queryKey }) => fetchProduct(queryKey[2]),
+    });
+
+    // カテゴリ内の商品取得
+    const { data: categoryProducts } = useQuery({
+      queryKey: queries.products.categories('electronics')._ctx.detail('product-456'), // 🔵 _ctx の使用
+      // 生成キー: ['ecommerce', 'products', 'categories', 'electronics', 'detail', 'product-456']
+      queryFn: () => fetchProductInCategory('electronics', 'product-456'),
+    });
+
+    // 商品カテゴリの全商品を🔴無効化
+    queryClient.invalidateQueries({
+      queryKey: queries.products.categories('electronics')._def,
+      // 生成キー: ['ecommerce', 'products', 'categories', 'electronics']
+    });
+
+      ※ 無効化とは: キャッシュされたクエリデータを無効にし、次回のアクセス時に再取得を促す操作
+
+- ENTRY:
+  EXPLAIN: ルートキーの運用
+  BODY: |
+    ■ 概要
+
+    ・ルートキーは全てのクエリキーのプレフィックスとして機能
+    ・運用では名前空間の確立、キャッシュ管理、デバッグに使用
+
+    ■ 主な用途
+
+    ・クエリキーの構造化: 全てのキーが ['ecommerce', ...] で始まる
+    ・キャッシュ管理: ルートレベルでの無効化が可能
+    ・名前空間の分離: 異なるドメインのクエリを分離
+    ・デバッグ: DevToolsでクエリを特定しやすくする
+
+      ※ 無効化とは: キャッシュされたクエリデータを無効にし、次回のアクセス時に再取得を促す操作
+
+    ■ 運用例
+
+    // 無効化: ルートキーを使用したキャッシュ操作
+    queryClient.invalidateQueries({ 
+      queryKey: ['ecommerce'],  // eコマース関連の全クエリを🔴無効化
+      refetchType: 'active'     // アクティブなクエリのみ再取得
+    });
+
+    // 無効化: 特定のサブドメインのみ
+    queryClient.invalidateQueries({ 
+      queryKey: ['ecommerce', 'products']  // 商品関連のみ🔴無効化
+    });
+
+    // 生成されるクエリキーの例
+    queries.products.list({ category: 'electronics' })
+    // => ['ecommerce', 'products', 'list', { category: 'electronics' }]
+
+    queries.products.categories('electronics')._ctx.detail('product-123')
+    // => ['ecommerce', 'products', 'categories', 'electronics', 'detail', 'product-123']
+
+- ENTRY:
+  EXPLAIN: メソッドの定義方法
+  BODY: |
+    ■ 概要
+
+    ・createQueryKeys関数でクエリキーを定義する際のメソッドの書き方
+    ・引数付き/なしのメソッド、戻り値の型（配列やオブジェクト）について解説
+
+    ■ 引数を戻り値の配列に直接使用する書き方
+
+    ・必須ではないが、非常に一般的で推奨される慣用的な書き方
+    ・理由: キャッシュのユニーク性確保のため、引数（パラメータ）の値をクエリキーに含めるのが基本
+    ・TanStack Queryではクエリキーがキャッシュの識別子になるため、異なるパラメータで別々のキャッシュが必要
+    ・例: detail: (id: string) => [id] で、idの値がキーに含まれる
+    ・必要に応じて変換可能（例: detail: (id: string) => ['product', id]）だが、シンプルに引数を返すのが標準
+
+    ■ メソッドの種類
+
+    1. 引数なしメソッド
+
+       methodName: () => []
+
+       ・引数なしのメソッド
+       ・返り値は空配列
+       ・生成されるキー: ['rootKey', 'methodName']
+
+    2. 引数付きメソッド
+
+        methodName: (arg1: Type1, arg2: Type2) => [arg1, arg2]
+
+        ・引数付きのメソッド
+        ・返り値は引数を含む配列
+        ・生成されるキー: ['rootKey', 'methodName', arg1, arg2]
+
+    3. contextQueries内のメソッド
+
+        methodName: (arg: Type) => [arg]
+
+        ・contextQueries内のメソッド
+        ・返り値は引数を含む配列
+        ・生成されるキー: ['rootKey', 'parentKey', 'methodName', arg]
+
+    ■ 戻り値の型
+
+    ・配列（string[]やany[]など）
+
+      methodName: (arg1: Type1, arg2: Type2) => [arg1, arg2]
+
+    ・オブジェクト（{ queryKey: [...], contextQueries: {...} }など）
+      
+      methodName: (arg: Type) => ({
+        queryKey: [arg],
+        contextQueries: {
+          subMethod: (subArg: SubType) => [subArg],
+        },
+      })
+
+    ■ 基本的な書き方
+
+    const queries = createQueryKeys('ecommerce', {         // ルートキー('ecommerce')
+      products: {                                          // サブキー('products')
+        list: (filters: ProductFilters) => [filters],      // 商品リスト取得
+        detail: (id: string) => [id],                      // 商品詳細取得
+        search: (query: string) => [query],                // 商品検索
+        categories: (categoryId: string) => ({             // ネストされたカテゴリキー
+          queryKey: [categoryId],                          // queries.products.categories()
+            // => ['ecommerce', 'products', 'categories', categoryId] という段階を示すキーになる
+          contextQueries: {                                // 🔵 contextQueries オブジェクト
+            list: () => [],                                // queries.products.categories('xxx')._ctx.list()
+            detail: (productId: string) => [productId],    // queries.products.categories('xxx')._ctx.detail(productId)
+            featured: () => ['featured'],                  // queries.products.categories('xxx')._ctx.featured()
+          },
+        }),
+      },
+    });
+
+    ■ 解説
+
+      list: () => []
+
+      ・引数なしのメソッド
+      ・返り値は空配列
+      ・生成されるキー: ['ecommerce', 'products', 'list']
+
+      detail: (id: string) => [id],
+
+      ・引数付きのメソッド
+      ・返り値はidを含む配列
+      ・生成されるキー: ['ecommerce', 'products', 'detail', id]
+
+      search: (query: string) => [query]
+
+      ・引数付きのメソッド
+      ・返り値はqueryを含む配列
+      ・生成されるキー: ['ecommerce', 'products', 'search', query]
+
+      featured: () => ['featured']                 // 戻り値の型は string[]
+
+      ・contextQueries内の引数なしメソッド
+      ・返り値は文字列配列
+      ・生成されるキー: ['ecommerce', 'products', 'categories', categoryId, 'featured']

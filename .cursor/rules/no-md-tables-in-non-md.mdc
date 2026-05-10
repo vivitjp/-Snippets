@@ -1,0 +1,13 @@
+---
+description: Do not suggest Markdown table format in non-.md files; use bullet points instead
+alwaysApply: true
+---
+
+# No Markdown Tables in Non-Markdown Files
+
+- **Inline suggestions and edits**: Do not propose Markdown table syntax in files that are not Markdown.
+- **Affected formats**: In particular, do not use `| col | col |` table syntax in `.yml`, `.yaml`, `.ts`, `.tsx`, `.js`, `.json`, or any file whose extension is not `.md` or `.mdx`.
+- **Instead**: Use bullet lists (e.g. `・item (type) 必須/任意: 説明`) or plain list format appropriate to the file type.
+- **Exception**: In `.md` and `.mdx` files, Markdown tables are allowed.
+
+Example for YAML snippet bodies: use `・TableName (string) 必須: 説明` instead of `| TableName | string | 必須 | 説明 |`.

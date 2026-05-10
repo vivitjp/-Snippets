@@ -1,0 +1,2002 @@
+- ENTRY:
+  EXPLAIN: install URL
+  BODY: |
+    ■ v3(2024-10)が登場した
+    https://www.chakra-ui.com/docs/get-started/frameworks/next-app
+
+    ■ 現状(2024)では v2 が主流
+    "@chakra-ui/react": "^2.10.3",
+    "@emotion/react": "^11.13.3",
+
+- ENTRY:
+  EXPLAIN: Provider 設定(pages)
+  BODY: |
+    ■ [src/pages/_app.tsx]
+    import { theme } from "~/theme";
+    import { ChakraProvider } from "@chakra-ui/react";
+
+    return (
+      <ChakraProvider theme={theme}>
+        <Component {...pageProps} />
+      </ChakraProvider>
+    );
+
+- ENTRY:
+  EXPLAIN: extendTheme 設定サンプル
+  BODY: |
+    ■ [src/pages/theme.tsx]
+    import { extendTheme } from "@chakra-ui/react";
+
+    export const theme = extendTheme({
+      colors: {
+        primary: "black",
+        secondary: "#777",
+        lightgray: {
+          primary: "#999",
+          secondary: "#AAA",
+        },
+        label: "#AAA",
+        error: "red",
+        disabled: "#F7F7F7",
+      },
+      components: {
+        Checkbox: {
+          baseStyle: {
+            icon: {
+              color: "#4E4E4E",
+              background: "white",
+              borderColor: "gray.300",
+              _checked: {
+                background: "white",
+                borderColor: "gray.300",
+              },
+            },
+            control: {
+              border: "2px",
+              borderColor: "gray.300",
+              background: "white",
+              borderRadius: "base",
+              _checked: {
+                borderColor: "#4E4E4E",
+                background: "white",
+                _hover: {
+                  background: "white",
+                  borderColor: "#4E4E4E",
+                },
+              },
+              _hover: {
+                background: "white",
+              },
+            },
+            label: {
+              fontWeight: "medium",
+              color: "gray.900",
+            },
+          },
+        },
+      },
+    });
+
+- ENTRY:
+  CATEGORY: |
+    CSS Style
+
+- ENTRY:
+  EXPLAIN: Style 定義
+  BODY: |
+    ■
+    import { Box } from "@chakra-ui/react"
+
+    <Box m={2}>Tomato</Box>             => theme.space[2]
+    <Box maxW="960px" mx="auto" />
+    <Box m={[2, 3]} />                  `8px`,`12px`,～
+
+- ENTRY:
+  CATEGORY: |
+    コンポーネント: Layout
+
+- ENTRY:
+  EXPLAIN: Box
+  BODY: |
+    <Box w='100%' p={4}>                =div
+      This is the Box
+    </Box>
+
+    ■ 背景イメージ & ボタン
+    <Box
+      display='flex'
+      alignItems='center'
+      justifyContent='center'
+      width='100%'
+      py={12}
+      bgImage="url('https://bit.ly/2Z4KKcF')"
+      bgPosition='center'
+      bgRepeat='no-repeat'
+      mb={2}
+    >
+      <ButtonGroup gap='4'>
+        <Button colorScheme='whiteAlpha'>WhiteAlpha</Button>
+        <Button colorScheme='blackAlpha'>BlackAlpha</Button>
+      </ButtonGroup>
+    </Box>
+
+- ENTRY:
+  EXPLAIN: Center
+  BODY: |
+    <Center w='40px' h='40px'>
+      <Box as='span' fontWeight='bold' fontSize='lg'>
+        1
+      </Box>
+    </Center>
+
+- ENTRY:
+  EXPLAIN: Container
+  BODY: |
+    <Container>
+      There are many benefits to a joint design and development system. Not only
+      does it bring benefits to the design team, but it also brings
+    </Container>
+
+- ENTRY:
+  EXPLAIN: Flex
+  BODY: |
+    <Flex minWidth='max-content' alignItems='center' gap='2'>
+      <Box p='2'>
+        <Heading size='md'>Chakra App</Heading>
+      </Box>
+      <Spacer />                        // ■ SpaceBetween
+      <ButtonGroup gap='2'>
+        <Button colorScheme='teal'>Sign Up</Button>
+        <Button colorScheme='teal'>Log in</Button>
+      </ButtonGroup>
+    </Flex>
+
+- ENTRY:
+  EXPLAIN: Grid
+  BODY: |
+    <Grid
+      templateRows   ='repeat(2, 1fr)'
+      templateColumns='repeat(5, 1fr)'
+      h='200px' gap={4}
+    >
+      <GridItem rowSpan={2} colSpan={1} />
+      <GridItem colSpan={2} />
+      <GridItem colSpan={2} />
+      <GridItem colSpan={4} />
+    </Grid>
+
+- ENTRY:
+  EXPLAIN: SimpleGrid
+  BODY: |
+    <SimpleGrid columns={2} spacing={10}>
+
+    <SimpleGrid columns={[2, null, 3]} spacing='40px'>
+
+    <SimpleGrid minChildWidth='120px' spacing='40px'>
+      <Box height='80px'></Box>
+      <Box height='80px'></Box>
+      <Box height='80px'></Box>
+      <Box height='80px'></Box>
+      <Box height='80px'></Box>
+    </SimpleGrid>
+
+- ENTRY:
+  EXPLAIN: Stack
+  BODY: |
+    <Stack spacing='24px'>              = flex flexFlow="row"
+
+    ■ HStack = Stack
+    <HStack spacing='24px'>
+      <Box w='40px' h='40px'> 1 </Box>
+      <Box w='40px' h='40px'> 2 </Box>
+    </HStack>
+
+    ■ VStack
+    <VStack                             = flex flexFlow="column"
+      divider={<StackDivider borderColor='gray.200' />}
+      spacing={4} align='stretch'
+    >
+      <Box h='40px'> 1 </Box>
+      <Box h='40px'> 2 </Box>
+    </VStack>
+
+- ENTRY:
+  EXPLAIN: Wrap
+  BODY: |
+    <Wrap>                              = flex wrap
+      <WrapItem>
+        <Center w='180px' h='80px'> Box 1 </Center>
+      </WrapItem>
+      <WrapItem>
+        <Center w='180px' h='80px'> Box 2 </Center>
+      </WrapItem>
+    </Wrap>
+
+- ENTRY:
+  EXPLAIN: AspectRatio
+  BODY: |
+    ■ レスポンシブなビデオやマップなどを埋め込み
+    <AspectRatio maxW='560px' ratio={1}>
+      <iframe
+        title='naruto'
+        src='https://www.youtube.com/embed/QhBnZ6NPOY0'
+        allowFullScreen
+      />
+    </AspectRatio>
+
+- ENTRY:
+  CATEGORY: |
+    コンポーネント: Form
+
+- ENTRY:
+  EXPLAIN: FormControl
+  BODY: |
+    ■ Input
+    <FormControl isRequired>
+      <FormLabel>First name</FormLabel>
+      <Input placeholder='First name' />
+    </FormControl>
+
+    ■ Select
+    <FormControl>
+      <FormLabel>Country</FormLabel>
+      <Select placeholder='Select country'>
+        <option>United Arab Emirates</option>
+        <option>Nigeria</option>
+      </Select>
+    </FormControl>
+
+    ■ Radio
+    <FormControl as='fieldset'>
+      <FormLabel as='legend'>Favorite Naruto Character</FormLabel>
+      <RadioGroup defaultValue='Itachi'>
+        <HStack spacing='24px'>
+          <Radio value='Sasuke'>Sasuke</Radio>
+          <Radio value='Nagato'>Nagato</Radio>
+          <Radio value='Itachi'>Itachi</Radio>
+          <Radio value='Sage of the six Paths'>Sage of the six Paths</Radio>
+        </HStack>
+      </RadioGroup>
+      <FormHelperText>Select only if you're a fan.</FormHelperText>
+    </FormControl>
+
+    ■ コンポーネントサンプル
+    function errorMessageExample() {
+      const [input, setInput] = useState('')
+      const handleInputChange = (e) => setInput(e.target.value)
+      const isError = input === ''
+
+      return (
+        <FormControl isInvalid={isError}>
+          <FormLabel>Email</FormLabel>
+          <Input type='email' value={input} onChange={handleInputChange} />
+          {!isError ? (
+            <FormHelperText>
+              Enter the email you'd like to receive the newsletter on.
+            </FormHelperText>
+          ) : (
+            <FormErrorMessage>Email is required.</FormErrorMessage>
+          )}
+        </FormControl>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: Button
+  BODY: |
+    <Button colorScheme='teal' variant='solid'  > Button </Button>
+    <Button colorScheme='teal' variant='outline'> Button </Button>
+    <Button colorScheme='teal' variant='ghost'  > Button </Button>
+    <Button colorScheme='teal' variant='link'   > Button </Button>
+
+    ■ アイコン
+    <Button leftIcon={<EmailIcon />} colorScheme='teal' variant='solid'> Email </Button>
+    <Button rightIcon={<ArrowForwardIcon />} colorScheme='teal' variant='outline'>
+      Call us
+    </Button>
+
+    ■ Loading & Spinner
+    <Button isLoading colorScheme='teal' variant='solid'> Email </Button>
+    <Button isLoading loadingText='Submitting' colorScheme='teal' variant='outline'>
+      Submit
+    </Button>
+    <Button isLoading loadingText='Loading' colorScheme='teal' variant='outline' spinnerPlacement='start'>
+      Submit
+    </Button>
+
+    ■ グループ(設定共有)
+    <ButtonGroup variant='outline' spacing='6'>
+      <Button colorScheme='blue'>Save</Button>
+      <Button>Cancel</Button>
+    </ButtonGroup>
+
+    ■ バタン分割
+    <ButtonGroup size='sm' isAttached variant='outline'>
+      <Button>Save</Button>
+      <IconButton aria-label='Add to friends' icon={<AddIcon />} />
+    </ButtonGroup>
+
+- ENTRY:
+  EXPLAIN: IconButton
+  BODY: |
+    <IconButton aria-label='Search database' icon={<SearchIcon />} />
+
+    <IconButton
+      variant='outline'
+      colorScheme='blue'
+      aria-label='Search database'
+      size='lg'
+      isRound={true}
+      icon={<SearchIcon />}
+    />
+
+- ENTRY:
+  EXPLAIN: Input
+  BODY: |
+    <Input placeholder='Basic usage' />
+    <Input htmlSize={4} width='auto' />
+
+    ■ Variant
+    <Stack spacing={3}>
+      <Input variant='outline' placeholder='Outline' />
+      <Input variant='filled' placeholder='Filled' />
+      <Input variant='flushed' placeholder='Flushed' />
+      <Input variant='unstyled' placeholder='Unstyled' />
+    </Stack>
+
+    ■ Input Group: InputLeftAddon / InputRightAddon
+    <Stack spacing={4}>
+      <InputGroup>
+        <InputLeftAddon> +234 </InputLeftAddon>
+        <Input type='tel' placeholder='phone number' />
+      </InputGroup>
+
+      {/* 定義共有 */}
+      <InputGroup size='sm'>
+        <InputLeftAddon> https:// </InputLeftAddon>
+        <Input placeholder='mysite' />
+        <InputRightAddon> .com </InputRightAddon>
+      </InputGroup>
+    </Stack>
+
+    ■ Input Group: InputLeftElement / InputRightElement
+    <Stack spacing={4}>
+      <InputGroup>
+        <InputLeftElement pointerEvents='none'>
+          <PhoneIcon color='gray.300' />
+        </InputLeftElement>
+        <Input type='tel' placeholder='Phone number' />
+      </InputGroup>
+
+      <InputGroup>
+        <InputLeftElement pointerEvents='none' color='gray.300' fontSize='1.2em'>
+          $
+        </InputLeftElement>
+        <Input placeholder='Enter amount' />
+        <InputRightElement>
+          <CheckIcon color='green.500' />
+        </InputRightElement>
+      </InputGroup>
+    </Stack>
+
+    ■ コンポーネントサンプル
+    function Example() {
+      const [value, setValue] = React.useState('')
+      const handleChange = (event) => setValue(event.target.value)
+
+      return (
+        <>
+          <Text mb='8px'>Value: {value}</Text>
+          <Input value={value} onChange={handleChange} placeholder='placeholder' size='sm' />
+        </>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: NumberInput
+  BODY: |
+    <NumberInput defaultValue={15} min={10} max={20} step={5} precision={2} >
+      <NumberInputField />
+      <NumberInputStepper>
+        <NumberIncrementStepper />
+        <NumberDecrementStepper />
+      </NumberInputStepper>
+    </NumberInput>
+
+    ■ コンポーネントサンプル
+    function Example() {
+      const format = (val) => `$` + val
+      const parse = (val) => val.replace(/^\$/, '')
+
+      const [value, setValue] = React.useState('1.53')
+
+      return (
+        <NumberInput
+          onChange={(valueString) => setValue(parse(valueString))}
+          value={format(value)}
+          max={50}
+        >
+          <NumberInputField />
+          <NumberInputStepper>
+            <NumberIncrementStepper />
+            <NumberDecrementStepper />
+          </NumberInputStepper>
+        </NumberInput>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: PinInput
+  BODY: |
+    <PinInput>
+      <PinInputField />
+      <PinInputField />
+      <PinInputField />
+      <PinInputField />
+    </PinInput>
+
+- ENTRY:
+  EXPLAIN: Editable
+  BODY: |
+    ■ クリックで編集可能な「Input」に変わる 
+    <Editable defaultValue='Take some chakra'>
+      <EditablePreview />
+      <EditableInput />
+    </Editable>
+
+    ■ クリックで編集可能な「TextArea」に変わる 
+    <Editable defaultValue='Take some chakra'>
+      <EditablePreview />
+      <EditableTextarea />
+    </Editable>
+
+- ENTRY:
+  EXPLAIN: Textarea
+  BODY: |
+    <Textarea placeholder='Here is a sample placeholder' />
+
+    ■ コンポーネントサンプル
+    function Example() {
+      let [value, setValue] = React.useState('')
+
+      let handleInputChange = (e) => {
+        let inputValue = e.target.value
+        setValue(inputValue)
+      }
+      
+      return (
+        <>
+          <Text mb='8px'>Value: {value}</Text>
+          <Textarea
+            value={value}
+            onChange={handleInputChange}
+            placeholder='Here is a sample placeholder'
+            size='sm'
+          />
+        </>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: Select
+  BODY: |
+    <Select placeholder='Select option'>
+      <option value='option1'>Option 1</option>
+      <option value='option2'>Option 2</option>
+      <option value='option3'>Option 3</option>
+    </Select>
+
+    <Select variant='outline'  placeholder='Outline' />
+    <Select variant='filled'   placeholder='Filled' />
+    <Select variant='flushed'  placeholder='Flushed' />
+    <Select variant='unstyled' placeholder='Unstyled' />
+
+- ENTRY:
+  EXPLAIN: Radio
+  BODY: |
+    <RadioGroup defaultValue='2'>
+      <Stack spacing={5} direction='row'>
+        <Radio colorScheme='red' value='1'>
+          Radio
+        </Radio>
+        <Radio colorScheme='green' value='2'>
+          Radio
+        </Radio>
+      </Stack>
+    </RadioGroup>
+
+    ■ コンポーネントサンプル
+    function RadioExample() {
+      const [value, setValue] = React.useState('1')
+      return (
+        <RadioGroup onChange={setValue} value={value}>
+          <Stack direction='row'>
+            <Radio value='1'>First</Radio>
+            <Radio value='2'>Second</Radio>
+            <Radio value='3'>Third</Radio>
+          </Stack>
+        </RadioGroup>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: Checkbox
+  BODY: |
+    <Checkbox defaultChecked> Checkbox </Checkbox>
+
+    ■ isDisabled
+    <Stack spacing={5} direction='row'>
+      <Checkbox isDisabled colorScheme='red'> Checkbox </Checkbox>
+      <Checkbox isDisabled defaultChecked> Checkbox </Checkbox>
+    </Stack>
+
+    ■ isInvalid
+    <Checkbox isInvalid>Checkbox</Checkbox>
+
+- ENTRY:
+  EXPLAIN: Switch
+  BODY: |
+    <FormControl display='flex' alignItems='center'>
+      <FormLabel htmlFor='email-alerts' mb='0'>
+        Enable email alerts?
+      </FormLabel>
+      <Switch id='email-alerts' />
+    </FormControl>
+
+- ENTRY:
+  EXPLAIN: RangeSlider
+  BODY: |
+    <RangeSlider aria-label={['min', 'max']} defaultValue={[10, 30]}>
+      <RangeSliderTrack>
+        <RangeSliderFilledTrack />
+      </RangeSliderTrack>
+      <RangeSliderThumb index={0} />
+      <RangeSliderThumb index={1} />
+    </RangeSlider>
+
+- ENTRY:
+  EXPLAIN: Slider
+  BODY: |
+    <Slider aria-label='slider-ex-1' defaultValue={30}>
+      <SliderTrack>
+        <SliderFilledTrack />
+      </SliderTrack>
+      <SliderThumb />
+    </Slider>
+
+- ENTRY:
+  CATEGORY: |
+    コンポーネント: Data
+
+- ENTRY:
+  EXPLAIN: Table
+  BODY: |
+    <TableContainer>
+      <Table variant='simple'>
+        <TableCaption> Table Caption </TableCaption>
+        <Thead>
+          <Tr>
+            <Th>A</Th> <Th>B</Th> <Th isNumeric>C</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          <Tr>
+            <Td>1</Td> <Td>100 (mm)</Td> <Td isNumeric>25.4</Td>
+          </Tr>
+          <Tr>
+            <Td>2</Td> <Td>200 (cm)</Td> <Td isNumeric>30.48</Td>
+          </Tr>
+          <Tr>
+            <Td>3</Td> <Td>300 (m)</Td>  <Td isNumeric>0.914</Td>
+          </Tr>
+        </Tbody>
+        <Tfoot>
+          <Tr>
+            <Th>X</Th> <Th>Y</Th> <Th isNumeric>Sum</Th>
+          </Tr>
+        </Tfoot>
+      </Table>
+    </TableContainer>
+
+- ENTRY:
+  EXPLAIN: List
+  BODY: |
+    <UnorderedList>
+      <ListItem>Lorem ipsum dolor sit amet</ListItem>
+      <ListItem>Consectetur adipiscing elit</ListItem>
+      <ListItem>Integer molestie lorem at massa</ListItem>
+      <ListItem>Facilisis in pretium nisl aliquet</ListItem>
+    </UnorderedList>
+
+    <OrderedList>
+
+    <List spacing={3}>
+      <ListItem>
+        <ListIcon as={MdCheckCircle} color='green.500' />
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit
+      </ListItem>
+
+      <ListItem>
+        <ListIcon as={MdSettings} color='green.500' />   //react-icons
+        Quidem, ipsam illum quis sed voluptatum quae eum fugit earum
+      </ListItem>
+    </List>
+
+- ENTRY:
+  EXPLAIN: Card
+  BODY: |
+    <Card>
+      <CardBody>
+        <Text>View a summary of all</Text>
+      </CardBody>
+    </Card>
+
+    <Card>
+      <CardHeader>
+        <Heading size='md'>Client Report</Heading>
+      </CardHeader>
+
+      <CardBody>
+        <Stack divider={<StackDivider />} spacing='4'>
+          <Box>
+            <Heading size='xs' textTransform='uppercase'>
+              Summary
+            </Heading>
+            <Text pt='2' fontSize='sm'>
+              View a summary of all your clients over the last month.
+            </Text>
+          </Box>
+        </Stack>
+      </CardBody>
+    </Card>
+
+- ENTRY:
+  EXPLAIN: Code
+  BODY: |
+    <Code>Hello world</Code>
+
+    <Stack direction='row'>
+      <Code children='console.log(welcome)' />
+      <Code colorScheme='red' children="var chakra = 'awesome!'" />
+      <Code colorScheme='yellow' children='npm install chakra' />
+    </Stack>
+
+- ENTRY:
+  EXPLAIN: Divider
+  BODY: |
+    <Divider />
+
+    <Divider orientation='horizontal' />
+
+    <Center height='50px'>
+      <Divider orientation='vertical' />
+    </Center>
+
+    <Box position='relative' padding='10'>
+      <Divider />
+      <AbsoluteCenter bg='white' px='4'>
+        Content
+      </AbsoluteCenter>
+    </Box>
+
+- ENTRY:
+  EXPLAIN: Keyboard Key
+  BODY: |
+    <span>
+      <Kbd>shift</Kbd> + <Kbd>H</Kbd>
+    </span>
+
+- ENTRY:
+  EXPLAIN: Stat
+  BODY: |
+    <Stat>
+      <StatLabel>Collected Fees</StatLabel>
+      <StatNumber>£0.00</StatNumber>
+      <StatHelpText>Feb 12 - Feb 28</StatHelpText>
+    </Stat>
+
+    <StatGroup>
+      <Stat>
+        <StatLabel>Sent</StatLabel>
+        <StatNumber>345,670</StatNumber>
+        <StatHelpText>
+          <StatArrow type='increase' />
+          23.36%
+        </StatHelpText>
+      </Stat>
+
+      <Stat>
+        <StatLabel>Clicked</StatLabel>
+        <StatNumber>45</StatNumber>
+        <StatHelpText>
+          <StatArrow type='decrease' />
+          9.05%
+        </StatHelpText>
+      </Stat>
+    </StatGroup>
+
+- ENTRY:
+  EXPLAIN: Badge
+  BODY: |
+    <Badge>Default</Badge>
+    <Badge variant='outline' colorScheme='green'> Default </Badge>
+    <Badge variant='solid'   colorScheme='green'> Success </Badge>
+    <Badge variant='subtle'  colorScheme='green'> Removed </Badge>
+
+- ENTRY:
+  EXPLAIN: Tag
+  BODY: |
+    <Tag>Sample Tag</Tag>
+
+    <HStack spacing={4}>
+      {['sm', 'md', 'lg'].map((size) => (
+        <Tag size={size} key={size} variant='solid' colorScheme='teal'>
+          Teal
+        </Tag>
+      ))}
+    </HStack>
+
+- ENTRY:
+  CATEGORY: |
+    コンポーネント: Feed Back
+
+- ENTRY:
+  EXPLAIN: Alert
+  BODY: |
+    <Alert status='error'>
+      <AlertIcon />
+      <AlertTitle>Your browser is outdated!</AlertTitle>
+      <AlertDescription>Your Chakra experience may be degraded.</AlertDescription>
+    </Alert>
+
+    <Stack spacing={3}>
+      <Alert status='error'>
+        <AlertIcon />
+        There was an error processing your request
+      </Alert>
+
+      <Alert status='success'>
+        <AlertIcon />
+        Data uploaded to the server. Fire on!
+      </Alert>
+
+      <Alert status='warning'>
+        <AlertIcon />
+        Seems your account is about expire, upgrade now
+      </Alert>
+
+      <Alert status='info'>
+        <AlertIcon />
+        Chakra is going live on August 30th. Get ready!
+      </Alert>
+    </Stack>
+
+- ENTRY:
+  EXPLAIN: Progress
+  BODY: |
+    <CircularProgress value={80} />
+    <Progress value={80} />
+
+- ENTRY:
+  EXPLAIN: Skeleton
+  BODY: |
+    <Stack>
+      <Skeleton height='20px' />
+      <Skeleton height='20px' />
+      <Skeleton>
+        <div>contents wrapped</div>
+        <div>won't be visible</div>
+      </Skeleton>
+    </Stack>
+
+    ■ コンポーネントサンプル
+    function Card() {
+      const { data, loading, error } = useRemoteData()
+      if (error) return <Box children='error' />
+      return (
+        <Box>
+          <Skeleton isLoaded={!loading}>
+            <Heading>{data.title}</Heading>
+          </Skeleton>
+        </Box>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: Spinner
+  BODY: |
+    <Spinner />
+
+- ENTRY:
+  EXPLAIN: Toast
+  BODY: |
+    function ToastExample() {
+      const toast = useToast()
+      return (
+        <Button
+          onClick={() =>
+            toast({
+              title: 'Account created.',
+              description: "We've created your account for you.",
+              status: 'success',
+              duration: 9000,
+              isClosable: true,
+            })
+          }
+        >
+          Show Toast
+        </Button>
+      )
+    }
+
+- ENTRY:
+  CATEGORY: |
+    コンポーネント: Overlay
+
+- ENTRY:
+  EXPLAIN: AlertDialog
+  BODY: |
+    function AlertDialogExample() {
+      const { isOpen, onOpen, onClose } = useDisclosure()
+      const cancelRef = React.useRef()
+
+      return (
+        <>
+          <Button colorScheme='red' onClick={onOpen}>
+            Delete Customer
+          </Button>
+
+          <AlertDialog
+            isOpen={isOpen}
+            leastDestructiveRef={cancelRef}
+            onClose={onClose}
+          >
+            <AlertDialogOverlay>
+              <AlertDialogContent>
+                <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+                  Delete Customer
+                </AlertDialogHeader>
+
+                <AlertDialogBody>
+                  Are you sure? You can't undo this action afterwards.
+                </AlertDialogBody>
+
+                <AlertDialogFooter>
+                  <Button ref={cancelRef} onClick={onClose}>
+                    Cancel
+                  </Button>
+                  <Button colorScheme='red' onClick={onClose} ml={3}>
+                    Delete
+                  </Button>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialogOverlay>
+          </AlertDialog>
+        </>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: Drawer
+  BODY: |
+    function DrawerExample() {
+      const { isOpen, onOpen, onClose } = useDisclosure()
+      const btnRef = React.useRef()
+
+      return (
+        <>
+          <Button ref={btnRef} colorScheme='teal' onClick={onOpen}>
+            Open
+          </Button>
+          <Drawer
+            isOpen={isOpen}
+            placement='right'
+            onClose={onClose}
+            finalFocusRef={btnRef}
+          >
+            <DrawerOverlay />
+            <DrawerContent>
+              <DrawerCloseButton />
+              <DrawerHeader>Create your account</DrawerHeader>
+
+              <DrawerBody>
+                <Input placeholder='Type here...' />
+              </DrawerBody>
+
+              <DrawerFooter>
+                <Button variant='outline' mr={3} onClick={onClose}>
+                  Cancel
+                </Button>
+                <Button colorScheme='blue'>Save</Button>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
+        </>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: Menu
+  BODY: |
+    <Menu>
+      <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+        Actions
+      </MenuButton>
+      <MenuList>
+        <MenuItem>Download</MenuItem>
+        <MenuItem>Create a Copy</MenuItem>
+        <MenuItem>Mark as Draft</MenuItem>
+        <MenuItem>Delete</MenuItem>
+        <MenuItem>Attend a Workshop</MenuItem>
+      </MenuList>
+    </Menu>
+
+- ENTRY:
+  EXPLAIN: Modal
+  BODY: |
+    function BasicUsage() {
+      const { isOpen, onOpen, onClose } = useDisclosure()
+      return (
+        <>
+          <Button onClick={onOpen}>Open Modal</Button>
+
+          <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Modal Title</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <Lorem count={2} />
+              </ModalBody>
+
+              <ModalFooter>
+                <Button colorScheme='blue' mr={3} onClick={onClose}>
+                  Close
+                </Button>
+                <Button variant='ghost'>Secondary Action</Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+        </>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: Popover
+  BODY: |
+    <Popover>
+      <PopoverTrigger>
+        <Button>Trigger</Button>
+      </PopoverTrigger>
+      <PopoverContent>
+        <PopoverArrow />
+        <PopoverCloseButton />
+        <PopoverHeader>Confirmation!</PopoverHeader>
+        <PopoverBody>Are you sure you want to have that milkshake?</PopoverBody>
+      </PopoverContent>
+    </Popover>
+
+- ENTRY:
+  EXPLAIN: Tooltip
+  BODY: |
+    const CustomCard = React.forwardRef(({ children, ...rest }, ref) => (
+      <Box p='1'>
+        <Tag ref={ref} {...rest}>
+          {children}
+        </Tag>
+      </Box>
+    ))
+
+    const CustomToolTip = () => (
+      <Tooltip label='Hover me'>
+        <CustomCard>Tag Here</CustomCard>
+      </Tooltip>
+    )
+
+    render(<CustomToolTip />)
+
+- ENTRY:
+  CATEGORY: |
+    コンポーネント: Disclosure
+
+- ENTRY:
+  EXPLAIN: Accordion
+  BODY: |
+    <Accordion>
+      <AccordionItem>
+        <h2>
+          <AccordionButton>
+            <Box as='span' flex='1' textAlign='left'>
+              Section 1 title
+            </Box>
+            <AccordionIcon />
+          </AccordionButton>
+        </h2>
+        <AccordionPanel pb={4}>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        </AccordionPanel>
+      </AccordionItem>
+
+      <AccordionItem>
+        <h2>
+          <AccordionButton>
+            <Box as='span' flex='1' textAlign='left'>
+              Section 2 title
+            </Box>
+            <AccordionIcon />
+          </AccordionButton>
+        </h2>
+        <AccordionPanel pb={4}>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        </AccordionPanel>
+      </AccordionItem>
+    </Accordion>
+
+- ENTRY:
+  EXPLAIN: Tabs
+  BODY: |
+    <Tabs variant='enclosed'>
+    <Tabs isFitted variant='enclosed'>
+    <Tabs size='md' variant='enclosed'>
+    <Tabs variant='soft-rounded' colorScheme='green'>
+    <Tabs onChange={(idx) => {...}} defaultIndex={initialTab}>
+      <TabList>
+        <Tab>One</Tab>
+        <Tab>Two</Tab>
+      </TabList>
+
+      <TabPanels>
+        <TabPanel>
+          <p>one!</p>
+        </TabPanel>
+        <TabPanel>
+          <p>two!</p>
+        </TabPanel>
+      </TabPanels>
+    </Tabs>
+
+    ■ 動的タブ変更サンプル
+    function ControlledExample() {
+      const [tabIndex, setTabIndex] = useState(0)
+      const handleTabsChange =(index)=>{ setTabIndex(index)}
+      return (
+        <Tabs index={tabIndex} onChange={handleTabsChange}>
+          <TabList>
+            <Tab>One</Tab>
+            <Tab>Two</Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel> <p>Click</p> </TabPanel>
+            <TabPanel> <p>Yeah</p>  </TabPanel>
+          </TabPanels>
+        </Tabs>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: Visually Hidden
+  BODY: |
+    For screen-readers
+    function Example() {
+      return (
+        <Button>
+          <VisuallyHidden>Checkmark</VisuallyHidden>
+          <CheckIcon />
+        </Button>
+      )
+    }
+
+- ENTRY:
+  CATEGORY: |
+    コンポーネント: Navigation
+
+- ENTRY:
+  EXPLAIN: Breadcrumb
+  BODY: |
+    <Breadcrumb>
+    <Breadcrumb separator='-'>
+    <Breadcrumb spacing='8px' separator={<ChevronRightIcon color='gray.500' />}>
+      <BreadcrumbItem>
+        <BreadcrumbLink href='#'>Home</BreadcrumbLink>
+      </BreadcrumbItem>
+
+      <BreadcrumbItem>
+        <BreadcrumbLink href='#'>Docs</BreadcrumbLink>
+      </BreadcrumbItem>
+
+      <BreadcrumbItem isCurrentPage>
+        <BreadcrumbLink href='#'>Breadcrumb</BreadcrumbLink>
+      </BreadcrumbItem>
+    </Breadcrumb>
+
+- ENTRY:
+  EXPLAIN: Link
+  BODY: |
+    <Link>Chakra UI</Link>
+
+    <Link href='https://chakra-ui.com' isExternal>
+      Chakra Design system <ExternalLinkIcon mx='2px' />
+    </Link>
+
+    <Text>
+      Did you know that{' '}
+      <Link color='teal.500' href='#'>
+        links can live inline with text
+      </Link>
+    </Text>
+
+    ■ Usage with Routing Library
+    import { Link as ReactRouterLink } from 'react-router-dom'
+    import { Link as ChakraLink, LinkProps } from '@chakra-ui/react'
+
+    <ChakraLink as={ReactRouterLink} to='/home'>
+      Home
+    </ChakraLink>
+
+    ■ Usage with Next.js(>13)
+    import NextLink from 'next/link'
+    import { Link } from '@chakra-ui/react'
+
+    <Link as={NextLink} href='/home'>
+      Home
+    </Link>
+
+    ■ Usage with Next.js(<13)
+    import NextLink from 'next/link'
+
+    <NextLink href='/home' passHref>
+      <Link>Home</Link>
+    </NextLink>
+
+- ENTRY:
+  EXPLAIN: Link Overlay
+  BODY: |
+    <LinkBox as='article' maxW='sm' p='5' borderWidth='1px' rounded='md'>
+      <Box as='time' dateTime='2021-01-15 15:30:00 +0000 UTC'>
+        13 days ago
+      </Box>
+      <Heading size='md' my='2'>
+        <LinkOverlay href='#'>
+          New Year, New Beginnings: Smashing Workshops & Audits
+        </LinkOverlay>
+      </Heading>
+      <Text>
+        Catch up on what’s been cookin’ at Smashing and explore some of the most
+        popular community resources.
+      </Text>
+    </LinkBox>
+
+- ENTRY:
+  EXPLAIN: Skip Nav
+  BODY: |
+    <>
+      // If you want to make it the first element the user encounters
+      <SkipNavLink>Skip to content</SkipNavLink>
+      <App />
+    </>
+
+    // And inside another component, like App
+    <div>
+      <SkipNavContent />
+      // The main content below
+    </div>
+
+- ENTRY:
+  EXPLAIN: Stepper(New)
+  BODY: |
+    const steps = [
+      { title: 'First', description: 'Contact Info' },
+      { title: 'Second', description: 'Date & Time' },
+      { title: 'Third', description: 'Select Rooms' },
+    ]
+
+    function Example() {
+      const { activeStep } = useSteps({
+        index: 1,
+        count: steps.length,
+      })
+
+      return (
+        <Stepper index={activeStep}>
+          {steps.map((step, index) => (
+            <Step key={index}>
+              <StepIndicator>
+                <StepStatus
+                  complete={<StepIcon />}
+                  incomplete={<StepNumber />}
+                  active={<StepNumber />}
+                />
+              </StepIndicator>
+
+              <Box flexShrink='0'>
+                <StepTitle>{step.title}</StepTitle>
+                <StepDescription>{step.description}</StepDescription>
+              </Box>
+
+              <StepSeparator />
+            </Step>
+          ))}
+        </Stepper>
+      )
+    }
+
+    render(<Example />)
+
+- ENTRY:
+  CATEGORY: |
+    コンポーネント: Media Icon
+
+- ENTRY:
+  EXPLAIN: Avatar
+  BODY: |
+    <Wrap>
+      <WrapItem>
+        <Avatar name='Dan Abrahmov' src='https://bit.ly/dan-abramov' />
+      </WrapItem>
+      <WrapItem>
+        <Avatar name='Kola Tioluwani' src='https://bit.ly/tioluwani-kolawole' />
+      </WrapItem>
+      <WrapItem>
+        <Avatar name='Kent Dodds' src='https://bit.ly/kent-c-dodds' />
+      </WrapItem>
+    </Wrap>
+
+- ENTRY:
+  EXPLAIN: Icon
+  BODY: |
+    ■ npm i @chakra-ui/icons
+    import { PhoneIcon, AddIcon, WarningIcon } from '@chakra-ui/icons'
+
+    // The default icon size is 1em (16px)
+    <PhoneIcon />
+
+    // Use the `boxSize` prop to change the icon size
+    <AddIcon boxSize={6} />
+
+    // Use the `color` prop to change the icon color
+    <WarningIcon w={8} h={8} color="red.500" />
+
+- ENTRY:
+  EXPLAIN: Image
+  BODY: |
+    <Box boxSize='sm'>
+      <Image src='https://bit.ly/dan-abramov' alt='Dan Abramov' />
+    </Box>
+
+- ENTRY:
+  CATEGORY: |
+    コンポーネント: Other
+
+- ENTRY:
+  EXPLAIN: Close Button
+  BODY: |
+    <CloseButton />
+
+- ENTRY:
+  EXPLAIN: Portal
+  BODY: |
+    function Example() {
+      return (
+        <Box bg='red.400' color='white'>
+          I'm here,
+          <Portal>This text is portaled at the end of document.body!</Portal>
+        </Box>
+      )
+    }
+
+    function Example() {
+      const ref = React.useRef()
+      return (
+        <Box bg='red.400' color='white'>
+          I'm here,
+          <Portal containerRef={ref}>
+            Portal: This text is portaled to the yellow box!
+          </Portal>
+          <Box ref={ref} bg='yellow.500'>
+            <div>Container: Hey,</div>
+          </Box>
+        </Box>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: Show/Hide(Media Query)
+  BODY: |
+    <Show breakpoint='(max-width: 400px)'>
+      <Box>This text appears only on screens 400px and smaller.</Box>
+    </Show>
+
+    <>
+      <Show above='sm'>
+        <Box>This text appears at the "sm" value screen width or greater.</Box>
+      </Show>
+      <Hide below='md'>
+        <Box>This text hides at the "md" value screen width and smaller.</Box>
+      </Hide>
+    </>
+
+- ENTRY:
+  EXPLAIN: Transitions
+  BODY: |
+    function FadeEx() {
+      const { isOpen, onToggle } = useDisclosure()
+
+      return (
+        <>
+          <Button onClick={onToggle}>Click Me</Button>
+          <Fade in={isOpen}>
+          <ScaleFade initialScale={0.9} in={isOpen}>
+          <Slide direction='bottom' in={isOpen} style={{ zIndex: 10 }}>
+          <SlideFade in={isOpen} offsetY='20px'>
+          <Collapse in={isOpen} animateOpacity>
+            <Box
+              p='40px' color='white' mt='4' bg='teal.500'
+              rounded='md' shadow='md'
+            >
+              Fade
+            </Box>
+          </Fade>
+        </>
+      )
+    }
+
+- ENTRY:
+  CATEGORY: Hooks
+
+- ENTRY:
+  EXPLAIN: useBoolean
+  BODY: |
+    オン、オフ、トグル関数でブール値管理
+
+    ■ サンプル
+    function Example() {
+      const [flag, setFlag] = useBoolean()
+
+      return (
+        <>
+          <p>Boolean state: {flag.toString()}</p>
+          <button onClick={setFlag.toggle}>
+            Click me to toggle the boolean value
+          </button>
+        </>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: useBreakpointValue
+  BODY: |
+    responsive オブジェクトから現在のブレークポイントの値を返す
+    デフォルトでSSRで向けに構築(メディアクエリでは誤った値が一瞬表示)
+
+    ■ サンプル
+    function Example() {
+      const variant = useBreakpointValue(
+        {
+          base: 'outline',
+          md: 'solid',
+        },
+        {
+          // SSRなど、メディアクエリが使用できない場合のブレークポイント
+          // (Defaults to 'base')
+          fallback: 'md',
+        },
+      )
+
+      return (
+        <VStack align='flex-start'>
+          <Text>Resize your window to see the button variant change</Text>
+          <Button colorScheme='teal' variant={variant}>
+            Button
+          </Button>
+        </VStack>
+      )
+    }
+
+    クライアント側でレンダリングされる場合は ssr 引数を利用、初レンダリングで正しい値を取得
+
+    ■ サンプル
+    const buttonSize = useBreakpointValue({ base: 'sm', lg: 'md' }, { ssr: false })
+    const breakpoint = useBreakpoint({ ssr: false })
+
+- ENTRY:
+  EXPLAIN: useClipboard
+  BODY: |
+    クリップボードへのコンテンツのコピーを処理します
+
+    ■ サンプル
+    function Example() {
+      const placeholder = 'text to be copied...'
+      const { onCopy, value, setValue, hasCopied } = useClipboard('')
+
+      return (
+        <>
+          <Flex mb={2}>
+            <Input
+              placeholder={placeholder}
+              value={value}
+              onChange={(e) => {
+                setValue(e.target.value)
+              }}
+              mr={2}
+            />
+            <Button onClick={onCopy}>{hasCopied ? 'Copied!' : 'Copy'}</Button>
+          </Flex>
+          <Editable placeholder='Paste here'>
+            <EditablePreview width='100%' />
+            <EditableInput />
+          </Editable>
+        </>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: useConst
+  BODY: |
+    useConst は初期化して定数値を返す。useMemo とは異なり常に同値を返し、初期化子が関数の場合は1回だけ呼び出す。
+
+    ■ サンプル
+    function Example() {
+      const mountTime = useConst(() => new Date().toTimeString())
+      const obj = useConst({ a: Math.random() })
+      return (
+        <>
+          <p>Mount time: {mountTime}</p>
+          <p>Value from constant object: {obj.a}</p>
+        </>
+      )
+    }
+
+    ■ useMemo を使用しないのはなぜか?
+
+    メモ化済の値の一部を「忘れ」て次レンダリング時に再計算する可能性があり、
+    useMemo なしでも動作させ、パフォーマンス最適化のために useMemo を追加すべし。
+    useMemo は、依存関係に基づいて値を再計算する必要がある場合にのみ使用すべし。
+
+    ■ useState を使用しない理由
+
+    定数として機能するが意味的に間違いで、不必要なレデューサー処理によりコスト高
+
+- ENTRY:
+  EXPLAIN: useControllableState/useControllableProp
+  BODY: |
+    ■ useControllableState
+
+    任意のコンポーネントが controlled/uncontrolled を処理できるようにし、
+    内部 state 制御を提供。
+    ほとんどの Chakra コンポーネントは、useControllableState を使用して、
+    制御状態と非制御状態の両方のシナリオをシームレスに管理します。
+
+    const [value, setValue] = useControllableState(options)
+
+    ■ サンプル
+    ● uncontrolled
+    function Example() {
+      const [value, setValue] = useControllableState({ defaultValue: 40 })
+      return (
+        <div>
+          <Button onClick={() => setValue(value + 1)}>+</Button>
+          <Box> {value} </Box>
+          <Button onClick={() => setValue(value - 1)}>-</Button>
+        </div>
+      )
+    }
+
+    ● controlled
+    function Example() {
+      const [value, setValue] = React.useState(40)
+
+      // 使用意義は？
+      const [internalValue, setInternalValue] = useControllableState({
+        value,
+        onChange: setValue,
+      })
+
+      return (
+        <div>
+          <Button onClick={() => setInternalValue(value + 1)}>+</Button>
+          <Box> {internalValue} </Box>
+          <Button onClick={() => setInternalValue(value - 1)}>-</Button>
+        </div>
+      )
+    }
+
+    ■ useControllableProp
+
+    prop 値と state 値を指定すると、controlled/uncontrolledを判断、計算値も返す。
+    controlled の場合は prop 値を返す。
+    uncontrolled の場合は state value を返す。
+
+    const [isControlled, value] = useControllableProp(propValue, stateValue)
+
+- ENTRY:
+  EXPLAIN: useDimensions
+  BODY: |
+    ボックスモデルに基づいて参照要素の寸法を測定
+
+    ■ Return
+      marginBox   top, right, bottom, left, width, height, x, y, center (x, y)
+      borderBox   top, right, bottom, left, width, height, x, y, center (x, y)
+      paddingBox  top, right, bottom, left, width, height, x, y, center (x, y)
+      contentBox  top, right, bottom, left, width, height, x, y, center (x, y)
+      border      top, right, bottom, left
+      padding     top, right, bottom, left
+      margin      top, right, bottom, left
+
+    ■ サンプル
+    function example() {
+      const elementRef = useRef()
+      const dimensions = useDimensions(elementRef)
+
+      return (
+        <Box ref={elementRef} color='white' width='fit-content' bg='blue.700' p={4}>
+          <Heading>
+            <code>borderBox</code> dimensions
+          </Heading>
+          <List>
+            <ListItem>
+              The Width: {dimensions && dimensions.borderBox.width}
+            </ListItem>
+            <ListItem>
+              The x coordinate: {dimensions && dimensions.borderBox.x}
+            </ListItem>
+          </List>
+        </Box>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: useDisclosure
+  BODY: |
+    オープン、クローズ、切り替えを処理。Modal、AlertDialog、Drawer など制御
+
+    ■ サンプル: isOpen, onOpen, onClose
+    function Example() {
+      const { isOpen, onOpen, onClose } = useDisclosure()
+
+      return (
+        <>
+          <Button onClick={onOpen}>Open Drawer</Button>
+          <Drawer placement='right' onClose={onClose} isOpen={isOpen}>
+            <DrawerOverlay />
+            <DrawerContent>
+              <DrawerHeader borderBottomWidth='1px'>Basic Drawer</DrawerHeader>
+              <DrawerBody>
+                <p>Some contents...</p>
+                <p>Some contents...</p>
+                <p>Some contents...</p>
+              </DrawerBody>
+            </DrawerContent>
+          </Drawer>
+        </>
+      )
+    }
+
+    ■ サンプル: getDisclosureProps, getButtonProps
+    function Basic() {
+      const { getDisclosureProps, getButtonProps } = useDisclosure()
+
+      const buttonProps = getButtonProps()
+      const disclosureProps = getDisclosureProps()
+      return (
+        <>
+          <Button {...buttonProps}>Toggle Me</Button>
+          <Text {...disclosureProps} mt={4}>
+            This text is being visibly toggled hidden and shown by the button.
+            <br />
+            (Inspect these components to see the rendered attributes)
+          </Text>
+        </>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: useMediaQuery
+  BODY: |
+    単/複数のメディアクエリ一致を検出
+
+    const [isLargerThan800] = useMediaQuery('(min-width: 800px)')
+
+    // ssr-friendly media query with fallback
+    const [isLargerThan800] = useMediaQuery('(min-width: 800px)', {
+      ssr: true,
+      fallback: false, // return false on the server, re-evaluate on the client side
+    })
+
+    function Example() {
+      const [isLargerThan1280] = useMediaQuery('(min-width: 1280px)')
+
+      return (
+        <Text>
+          {isLargerThan1280 ? 'larger than 1280px' : 'smaller than 1280px'}
+        </Text>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: useMergeRefs
+  BODY: |
+    複数の ref を単一の ref にマージ
+
+    ■ サンプル：外部と内部の ref を連結
+    function Example({ ref, ...props }) {
+      const internalRef = React.useRef()
+      const refs = useMergeRefs(internalRef, ref)
+
+      return (
+        <div {...props} ref={refs}>
+          A div with multiple refs.
+        </div>
+      )
+    }
+
+    ■ サンプル：本体と外部の ref を連結
+    function Example({ ref, ...props }) {
+      const outsideRef = React.useRef()
+      const { isOpen, onOpen, onClose } = useDisclosure()
+      const { popperRef, referenceRef } = usePopper()
+
+      useOutsideClick({
+        ref: outsideRef,
+        handler: () => isOpen && onClose(),
+      })
+
+      const buttonEl = useMergeRefs(outsideRef, referenceRef)
+
+      return (
+        <>
+          <button ref={buttonEl} onClick={onOpen}>
+            Click me to see the popover
+          </button>
+          {isOpen && (
+            <Box ref={popperRef} bg='green'>
+              Click outside to close me
+            </Box>
+          )}
+        </>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: useOutsideClick
+  BODY: |
+    参照要素の外側でイベントが発生するとコールされる
+
+    ■ サンプル
+    function Example() {
+      const ref = React.useRef()
+      const [isModalOpen, setIsModalOpen] = React.useState(false)
+      useOutsideClick({
+        ref: ref,
+        handler: () => setIsModalOpen(false),
+      })
+
+      return (
+        <>
+          {isModalOpen ? (
+            <div ref={ref}>
+              👋 Hey, I'm a modal. Click anywhere outside of me to close.
+            </div>
+          ) : (
+            <button onClick={() => setIsModalOpen(true)}>Open Modal</button>
+          )}
+        </>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: usePrefersReducedMotion
+  BODY: |
+    ユーザーがモーションの軽減を好むかどうかを示すブール値を返す
+    ブラウザの window.matchMedia に依存
+
+    ■ サンプル
+    import { Image, keyframes, usePrefersReducedMotion } from '@chakra-ui/react'
+    import logo from './logo.svg'
+
+    const spin = keyframes`
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    `
+
+    function Example() {
+      const prefersReducedMotion = usePrefersReducedMotion()
+
+      const animation = prefersReducedMotion
+        ? undefined
+        : `${spin} infinite 20s linear`
+
+      return <Image animation={animation} src={logo} {...props} />
+    }
+
+- ENTRY:
+  EXPLAIN: useTheme
+  BODY: |
+    コンテキストからテーマ オブジェクトを取得
+
+    ■ サンプル
+    function Example() {
+      const theme = useTheme()
+      return <div>{/* Do something with the theme */}</div>
+    }
+
+- ENTRY:
+  EXPLAIN: useToken
+  BODY: |
+    テーマからデザイントークンを解決
+    sx prop と テーマ トークン で記述も可能
+
+    ■ サンプル
+    function Example() {
+      const [red100, blue200] = useToken(
+        // key: `theme.colors`
+        'colors',
+        // subkey(s): `theme.colors.red.100`
+        ['red.100', 'blue.200'],
+      )
+
+      return (
+        <Box p={4} boxShadow={`inset 0 4px 0 ${red100}, 0 0 8px ${blue200}`}>
+          <Code>useToken</Code> to create a <Code>boxShadow</Code>
+        </Box>
+      )
+    }
+
+- ENTRY:
+  CATEGORY: Components Hooks
+
+- ENTRY:
+  EXPLAIN: useCheckbox
+  BODY: |
+    チェックボックス機能、状態、フォーカス管理提供
+
+    ■ サンプル
+    function Example() {
+      const CustomCheckbox = (props) => {
+        const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } =
+          useCheckbox(props)
+
+        return (
+          <chakra.label display='flex' {...htmlProps}>
+            <input {...getInputProps()} />
+            <Flex {...getCheckboxProps()} >
+              {state.isChecked && <Box />}
+            </Flex>
+            <Text {...getLabelProps()}>
+              Click me
+            </Text>
+          </chakra.label>
+        )
+      }
+
+      return (<CustomCheckbox />)
+    }
+
+- ENTRY:
+  EXPLAIN: useCheckboxGroup
+  BODY: |
+    チェックボックスのグループのstate管理ロジック提供
+
+    ■ サンプル
+    function Example() {
+      function CustomCheckbox(props) {
+        const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } =
+          useCheckbox(props)
+
+        return (
+          <chakra.label {...htmlProps}>
+            <input {...getInputProps()} hidden />
+            <Flex {...getCheckboxProps()}>
+              {state.isChecked && <Box />}
+            </Flex>
+            <Text {...getLabelProps()}>
+              Click me for {props.value}
+            </Text>
+          </chakra.label>
+        )
+      }
+
+      const { value, getCheckboxProps } = useCheckboxGroup({
+        defaultValue: ['2'],
+      })
+
+      return (
+        <Stack>
+          <Text>The selected checkboxes are: {value.sort().join(' and ')}</Text>
+          <CustomCheckbox {...getCheckboxProps({ value: '1' })} />
+          <CustomCheckbox {...getCheckboxProps({ value: '2' })} />
+          <CustomCheckbox {...getCheckboxProps({ value: '3' })} />
+        </Stack>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: useRadio
+  BODY: |
+    radio 機能, カスタムradioコンポーネントに state, focus 管理提供
+
+    ■ サンプル
+    function Example() {
+      const CustomRadio = (props) => {
+        const { image, ...radioProps } = props
+        const { state, getInputProps, getRadioProps, htmlProps, getLabelProps } =
+          useRadio(radioProps)
+
+        return (
+          <chakra.label {...htmlProps}>
+            <input {...getInputProps({})} />
+            <Box {...getRadioProps()} bg={state.isChecked ? 'green.200' : 'transparent'}>
+              <Image src={image} rounded='full' {...getLabelProps()} />
+            </Box>
+          </chakra.label>
+        )
+      }
+
+      return (<CustomRadio image={url} />)
+    }
+
+- ENTRY:
+  EXPLAIN: useRadioGroup
+  BODY: |
+    radio グループのstate管理ロジック提供
+
+    ■ サンプル
+    function Example() {
+      function CustomRadio(props) {
+        const { image, ...radioProps } = props
+        const { state, getInputProps, getRadioProps, htmlProps, getLabelProps } =
+          useRadio(radioProps)
+
+        return (
+          <chakra.label {...htmlProps}>
+            <input {...getInputProps({})} hidden />
+            <Box
+              {...getRadioProps()}
+              bg={state.isChecked ? 'green.200' : 'transparent'}
+            >
+              <Image src={image} {...getLabelProps()} />
+            </Box>
+          </chakra.label>
+        )
+      }
+
+      const toast = useToast()
+
+      const avatars = [
+        { name: 'Kat', image: 'url/44.jpg' },
+        { name: 'Kevin', image: 'url/86.jpg' },
+      ]
+
+      const handleChange = (value) => {
+        toast({
+          title: `Changed: ${value}!`,
+          status: 'success',
+          duration: 2000,
+        })
+      }
+
+      const { value, getRadioProps, getRootProps } = useRadioGroup({
+        defaultValue: 'Kevin',
+        onChange: handleChange,
+      })
+
+      return (
+        <Stack {...getRootProps()}>
+          <Text>The selected radio is: {value}</Text>
+          <HStack>
+            {avatars.map((avatar) => {
+              return (
+                <CustomRadio
+                  key={avatar.name}
+                  image={avatar.image}
+                  {...getRadioProps({ value: avatar.name })}
+                />
+              )
+            })}
+          </HStack>
+        </Stack>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: useSlider
+  BODY: |
+    スライダー機能、カスタム スライダー コンポーネントの state, focus 提供
+
+    ■ サンプル
+    import Actions from "./Actions";
+    import Instructions from "./Instructions";
+    type Props = {
+      stepByNumber: number;
+      stepToNumber: number;
+    };
+
+    export default function App({stepByNumber, stepToNumber}: Props) {
+      const { 
+        state, actions, getInnerTrackProps, getInputProps, getMarkerProps, 
+        getRootProps, getThumbProps, getTrackProps
+      } = useSlider({ min: 0, max: 100, stepByNumber, stepToNumber });
+
+      const { onKeyDown: onThumbKeyDown, ...thumbProps } = getThumbProps();
+      
+      const markers = []
+
+      for (let i = 1; i <= 3; i++) {
+        markers.push(getMarkerProps({ value: i * 25 }))
+      }
+      
+      return (
+        <Box>
+          <Flex>
+            <Instructions stepByNumber={stepByNumber} />
+            <Actions actions={actions} stepToNumber={stepToNumber} />
+          </Flex>
+          <chakra.div {...getRootProps()}>
+            <input {...getInputProps()} hidden />
+            {markers.map((markerProps, index) => {
+              const value = String((index + 1) * 25) + '%';
+              return <Badge {...markerProps}> {value} </Badge>
+            })}
+            <Box {...getTrackProps()}>
+              <Box {...getInnerTrackProps()} />
+            </Box>
+            <Box onKeyDown={(e) => {
+                if (e.code === "ArrowRight") actions.stepUp(stepByNumber);
+                else if (e.code === "ArrowLeft") actions.stepDown(stepByNumber);
+                else onThumbKeyDown(e);
+              }} {...thumbProps}>
+              <Flex>
+                <Text>{state.value}</Text>
+              </Flex>
+            </Box>
+          </chakra.div>
+        </Box>
+      );
+    };
+
+    [./Actions.tsx]----------------------------------------------
+    import { Button } from "@chakra-ui/react";
+    type Props = {
+      actions: {
+        stepUp(step?: number): void;
+        stepDown(step?: number): void;
+        reset(): void;
+        stepTo(value: number): void;
+      };
+      stepToNumber: number;
+    };
+
+    const Actions = ({ actions, stepToNumber }: Props) => {
+      return (
+        <>
+          <Button onClick={() => actions.stepTo(stepToNumber)}>
+            Step to {stepToNumber}
+          </Button>
+          <Button onClick={() => actions.reset()}>
+            Reset to 0
+          </Button>
+        </>
+      );
+    };
+    export default Actions;
+
+    [./Instructions.tsx]-----------------------------------------
+    type Props = {
+        stepByNumber: number;
+    };
+
+    const Instructions = ({ stepByNumber }: Props) => {
+      return (
+        <Text>
+          Use <Kbd>&#8592;</Kbd> or <Kbd>&#8594;</Kbd>
+          <Text>to step by {stepByNumber}</Text>
+        </Text>
+      );
+    };
+    export default Instructions;
+
+- ENTRY:
+  EXPLAIN: useRangeSlider
+  BODY: |
+    スライダー機能、カスタム スライダー コンポーネントの state, focus 提供
+
+    ■ サンプル 省略

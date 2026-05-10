@@ -1,0 +1,170 @@
+---
+#-------------------------------
+# Session
+#-------------------------------
+- ENTRY: Session.category
+  CATEGORY: Session
+
+- ENTRY:
+  EXPLAIN: HTML セッション
+  BODY: |
+    ■ 概要
+
+    ・ブラウザとサーバー間におけるセッション管理の仕組み
+    ・代表的な交信順序（Cookie ベース、JWT ベース）
+    ・ログイン状態を維持するための一般的な方式（クッキー、JWT、リフレッシュトークン等）を解説
+    ・目的
+    ・実装者が安全かつ実用的に「ログイン状態」を維持できるように、運用上のトレードオフと対策を理解すること
+
+    ■ 用語
+
+    ・セッション: 認証状態やユーザー固有の情報（サーバーまたはクライアントに保持）
+    ・セッショントークン: セッション識別子（session id）や JWT などのトークン
+    ・アクセストークン: 短命の認証トークン（例: JWT）
+    ・リフレッシュトークン: 長命のトークンで、新しいアクセストークンを取得するために使用
+    ・Cookie: ブラウザに自動送信されるストレージ（HttpOnly, Secure, SameSite 属性あり）
+
+    ■ HTTP/Cookie の基本（短い復習）
+
+    ・ブラウザは `Set-Cookie` ヘッダを受け取ると、ドメイン/パス/属性に従ってクッキーを保存
+    ・以後、その範囲に該当するリクエストでは自動的に `Cookie` ヘッダが送信
+
+    ■ 運用上のベストプラクティス（まとめ）
+
+    ・セキュリティ最優先: `HttpOnly` + `Secure` + `SameSite` を活用
+    ・XSS と CSRF を同時に考える。XSS 防御が不十分なら localStorage にトークンを置かない
+    ・セッション無効化が必要ならサーバー側で状態を持つ（セッションストア）
+    ・JWT を使う場合はリフレッシュトークンローテーションや失効リストを検討して盗難リスクを下げる
+    ・証跡（Audit）とログインの異常検知（IP/UA の変化など）を導入すると安全性が上がる
+
+    ■ 参考（実装上のヒント）
+
+    ・ログインの成功 / 失敗ログを残す
+    ・セッションの有効期限とスライディング有効期限の使い分け
+    ・セッションストアは速くて永続化可能な Redis 等を推奨
+
+- ENTRY:
+  EXPLAIN: Cookie シーケンス
+  BODY: |
+    Cookie（サーバーセッション ID）ベース（推奨の安全設定あり）
+
+    ■ フロー（簡潔）
+
+    1. クライアント -> サーバー: POST /login（資格情報）
+
+    2. サーバー: 資格情報確認後、サーバー側に session を作成（DB/Redis 等）
+
+    3. サーバー -> クライアント: 
+      `Set-Cookie: sessionId=...; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=...`
+
+    4. 以降のリクエスト: ブラウザが自動で `Cookie: sessionId=...` を付与
+
+    5. サーバー: sessionId を照合してユーザ状態を復元
+
+    6. ログアウト: サーバー側でセッション破棄、または `Set-Cookie` で期限切れにする
+
+    ■ 特徴・利点
+
+    ・サーバー側でセッションを制御できる（強制ログアウト、セッション無効化が容易）
+    ・Cookie の `HttpOnly` により JS から盗まれにくく、XSS の影響を軽減
+
+    ■ 注意点 / 対策
+
+    ・CSRF 対策が必要（SameSite 属性、CSRF トークン、double submit cookie など）
+    ・セッションストアのスケーリング（共有ストア Redis 等が一般的）
+
+- ENTRY:
+  EXPLAIN: JWT シーケンス
+  BODY: |
+    JWT（JSON Web Token）ベース（アクセストークン + リフレッシュトークン）
+
+    ■ フロー（代表的）
+    ・1. クライアント -> サーバー: POST /login
+
+    ・2. サーバー: 認証成功 → `accessToken` (短命 5-15m) と `refreshToken` (長命 7-30d) を生成
+
+    ・3. サーバー -> クライアント: 返却
+      `accessToken` はメモリ保存（推奨）か `HttpOnly` クッキーに保存
+      `refreshToken` は安全な場所に保存
+
+    ・4. クライアント -> サーバー: API リクエストに `Authorization: Bearer <accessToken>` を付与
+
+    ・5. サーバー: accessToken を検証（署名、有効期限、発行者など）して処理
+
+    ・6. accessToken が期限切れの場合、クライアントが `refreshToken` を使って新しい accessToken を取得
+
+    ■ 特徴・利点
+
+    ・サーバー側で状態を持たない（スケーラブル）
+    ・ただしリフレッシュの管理や失効リストを導入する場合は状態管理が必要
+    ・トークンは署名されているため改ざん検知が可能
+
+    ■ 注意点 / 対策
+
+    ・トークン盗難（XSS）対策: アクセストークンは可能な限りメモリ保存し
+    ・`HttpOnly` クッキー を使う場合は CSRF を考慮
+    ・リフレッシュトークンの失効・ローテーション（refresh token rotation）を実装し盗難リスクを下げる
+    ・サーバーでブラックリスト（失効リスト）を持つと、完全に stateless ではなくなる
+
+    ■ なぜ、アクセストークンとリフレッシュトークンの組み合わせか？
+
+    ・アクセストークンだけではなぜダメなのか -> 盗難リスクが高く、長命にできない
+    ・リフレッシュトークンだけではなぜダメなのか -> 頻繁なログインが必要になり UX が悪化
+
+    ・アクセストークンは短命にして盗難リスクを下げる
+    ・リフレッシュトークンは長命にして頻繁なログインを避ける
+    ・リフレッシュトークンの盗難リスクを下げるために、セキュアな保存とローテーションを行う
+
+- ENTRY:
+  EXPLAIN: ログイン維持（セッションを長持ちさせる方法）
+  BODY: |
+    ■ サーバーセッション + Cookie（セッションID）
+
+    ・JWT（短命 access token + 長命 refresh token）
+    ・Cookie の永続化（`Max-Age` 付きクッキー）
+    ・Browser storage（localStorage/sessionStorage）にトークン保存（一般には推奨しない：XSS の影響大）
+
+    ■ 比較（簡潔）
+
+    ・セキュリティ（XSS/CSRF）: Cookie(HttpOnly+SameSite) > JWT in-memory > localStorage
+    ・スケーラビリティ: JWT (stateless) > server session (stateful: DB/Redis 必須)
+    ・失効制御: server session (容易) > JWT (難しい：失効リストが必要)
+
+- ENTRY:
+  EXPLAIN: クッキー属性とセキュリティ
+  BODY: |
+    ■ クッキー属性とセキュリティ
+
+    ・HttpOnly: JavaScript からアクセス不可。XSS によるトークン窃取を防止
+    ・Secure: HTTPS の場合のみ送信
+    ・SameSite: `Lax` / `Strict` / `None`。Cross-site リクエストでの送信制御（CSRF 軽減）
+    ・Path / Domain: クッキーの送信範囲を限定
+
+    ■ 攻撃と対策
+
+    ・XSS 対策: CSP、入力サニタイズ、HttpOnly クッキー推奨、React 等のライブラリ利用
+    ・CSRF 対策: SameSite、CSRF トークン、double submit cookie、Referer/Origin チェック
+    ・トークン窃盗: リフレッシュトークンの短命化、ローテーション、失効リスト
+
+- ENTRY:
+  EXPLAIN: 実装
+  BODY: |
+    ■ Express（Cookie セッション）
+
+      // サーバー
+      app.post('/login', async (req, res) => {
+        const user = await auth(req.body)
+        const sessionId = await createSession(user.id) // DB/Redis に保存
+        res.cookie('sid', sessionId, { httpOnly: true, secure: true, sameSite: 'lax' })
+        res.send({ ok: true })
+      })
+
+    ■ JWT（アクセストークン + リフレッシュ）
+
+      // サーバー
+      const accessToken = sign({ sub: user.id }, ACCESS_SECRET, { expiresIn: '15m' })
+      const refreshToken = sign({ sub: user.id }, REFRESH_SECRET, { expiresIn: '30d' })
+      
+      // refreshToken は HttpOnly cookie に入れるか、セキュアなストレージで管理
+      res.cookie('refresh', refreshToken, { httpOnly: true, secure: true, sameSite: 'lax' })
+      res.json({ accessToken })

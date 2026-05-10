@@ -1,0 +1,601 @@
+---
+#-------------------------------
+# TypeScript
+#-------------------------------
+- ENTRY:
+  CATEGORY: TSC
+
+- ENTRY:
+  EXPLAIN: TSC
+  BODY: |
+    ■ TypeScript コンパイラ (TSC) のインストール
+
+      > npm install -g typescript
+
+    ■ コマンド & オプション
+
+      tsc -v                            // バージョン確認
+      tsc ファイル名.ts                  // コンパイル実行、出力は同ディレクトリにファイル名.js
+      tsc ファイル名.ts --watch          // 変更監視モードでコンパイル実行
+      tsc ファイル名.ts --noEmit         // コンパイルのみ実行、出力ファイルは生成しない
+      tsc --init                        // tsconfig.json 初期化
+      tsc --project tsconfig.json       // 指定した tsconfig.json でコンパイル実行
+      tsc --build                       // プロジェクトのビルド
+      tsc --build --clean               // ビルド成果物のクリーン
+      tsc --help                        // ヘルプ表示
+
+- ENTRY:
+  EXPLAIN: TSC メモリ対策
+  BODY: |
+    ■ tsc 実行時のメモリ関連 Node/V8 オプションと、メモリ負荷を下げる TypeScript 側の設定
+
+    ■ Node/V8 のメモリ上限を増やす（推奨）
+
+    ・直接 node で tsc を起動（単位は MB。例は 4GB）
+
+      node --max-old-space-size=4096 ./node_modules/typescript/bin/tsc -p 
+
+        開発・小規模プロジェクト: 512MB ～ 1024MB
+        中規模プロジェクト: 2048MB
+        大規模アプリ / 多数の依存: 4096MB
+        大規模モノレポ / 並列ビルド: 8192MB〜16384MB（ホストの物理RAMに依存）
+
+    ・npm スクリプト例（package.json）:
+
+      "scripts": {
+        "build:ts": "node --max-old-space-size=4096 ./node_modules/typescript/bin/tsc -p tsconfig.json"
+        "build:ts": "cross-env NODE_OPTIONS=--max-old-space-size=4096 npx tsc -p tsconfig.json"   // cross-env 使用例
+      }
+
+    ・ぷらっとフォーム別の実行例:
+
+      NODE_OPTIONS=--max-old-space-size=4096 npx tsc -p             環境変数で指定（POSIX）:
+      $env:NODE_OPTIONS="--max-old-space-size=4096"; npx tsc -p     Windows（PowerShell）:
+      set NODE_OPTIONS=--max-old-space-size=4096 && npx tsc -p      Windows（cmd.exe）:
+
+    ■ GC / プロファイリング用の Node フラグ（トラブルシュート時）
+
+    ・ガベージコレクション追跡:
+
+      node --trace_gc --max-old-space-size=4096 ./node_modules/typescript/bin/tsc -p 
+
+    ・メモリスナップショット / デバッガ:
+
+      node --inspect --max-old-space-size=4096 ./node_modules/typescript/bin/tsc -p 
+
+    ■ TypeScript 側でメモリ負荷を下げる設定（tsconfig.json）
+
+      {
+        "compilerOptions": {
+          "skipLibCheck": true,                  // 外部型のチェックをスキップしてメモリ/時間削減
+          "incremental": true,                   // 増分ビルドで再コンパイルを減らす        
+          "tsBuildInfoFile": ".tsbuildinfo",     // 増分ビルド情報の保存先ファイル 
+          "composite": false                     // 大規模なら true + project references で分割ビルドにする           
+        }
+      }
+
+    ■ 運用上の追加Tips
+
+      ・CI ではまず npx tsc --noEmit（型チェック）を走らせ、必要時にメモリ増加を適用
+      ・大規模リポジトリはプロジェクト参照でビルドを分割する（メモリ節約＋並列化）
+      ・必要以上に大きなユーティリティ型や巨大な型演算はコンパイラ負荷を上げるので見直す
+      ・メモリ不足エラー（OOM）が出る場合はまず --max-old-space-size を増やし、併せて skipLibCheck を有効化
+
+- ENTRY:
+  EXPLAIN: TSC Tips
+  BODY: |
+    【strict: true】 モードを有効にして型品質を担保
+
+    【npx tsc --noEmit】 CIでは型チェックのみ実行、ビルドとは別に型チェックを走らせる（早く失敗を検知）
+
+    【incremental: true】 .tsbuildinfo により再ビルドが高速化、開発時は増分コンパイル
+
+    【composite: true】 references 大型リポジトリはプロジェクト参照を使い、並列/段階的ビルド
+
+    【skipLibCheck: true】 外部型のチェック高速化、サードパーティ型で問題なければ設定型チェックを早める
+
+    【isolatedModules: true】 Babel 等でトランスパイルするなら有効にして単一ファイル単位の変換に適合させる
+
+    【declaration/declarationMap: true】 ライブラリならエクスポート用型定義を出すを使い、emitDeclarationOnly を検討
+
+    【モジュール互換の問題対処】 esModuleInterop: true と allowSyntheticDefaultImports: true で import の互換性を改善
+
+    【パスエイリアス管理】 baseUrl + paths を使い、ビルドツール（webpack/vite）側でも同じ alias を設定
+
+    【型のみのインポートを明示】 不要な実行時の依存を避けるため import type { Foo } from 'x' を使う
+
+    【漸進的マイグレーション】 allowJs: true + checkJs: false で JS を併用しつつ段階的に TS 化
+
+    【実行時の JSON 取り込み】 resolveJsonModule: true を使うと import data from './a.json' が型付きで可能
+
+    【パフォーマンス診断】 ビルドプロファイルは tsc --diagnostics / tsc --extendedDiagnostics で解析
+
+    【エディタ/tsserver の負荷対策】 大規模プロジェクトでは exclude を適切に設定し、typeRoots を整理する
+
+    【型のコスト対策】 巨大な型演算はコンパイル遅延の原因、冗長なユーティリティ型や非常に深いネストを見直す
+
+    【型方針をドキュメント化】 tsconfig.json のコメントやリポジトリ README に推奨ルール（noImplicitAny など）を書いて統一
+
+- ENTRY:
+  EXPLAIN: 設定 typescript.suggestions
+  BODY: |
+    ■ typescript.Suggest
+
+    "typescript.suggest.autoImports": true              // 自動インポート候補を表示
+    "typescript.suggest.completeFunctionCalls": true    // 関数呼び出しの括弧と引数を自動補
+    "typescript.suggest.enabled": true                  // 全般的なコード補完を有効化
+    "typescript.suggest.includeCompletionsForModuleExports": true // モジュールのエクスポートも補完候補に含める
+    "typescript.suggest.includeCompletionsWithInsertText": true    // 補完テキストを含む候補を表示
+    "typescript.suggest.names": true                    // 変数名の候補を表示
+    "typescript.suggest.paths": true                    // パス補完を有効化
+
+    ■ typescript.Preferences
+
+    "typescript.preferences.importModuleSpecifier": "relative"  // 相対パスでインポートを生成
+    "typescript.preferences.quoteStyle": "single"               // シングルクォートで囲む
+    "typescript.preferences.includeCompletionsForImportStatements": true // インポート文の補完を含める
+    "typescript.preferences.includeCompletionsWithSnippetText": true      // スニペットテキストを含む補完を有効化
+    "typescript.preferences.autoImportFileExcludePatterns": { "**/node_modules/**": true } // 自動インポートから node_modules を除外
+
+    ■ typescript.CodeFix
+
+    "typescript.codeFix.autoFixOnSave": true               // 保存時に自動修正を適用
+    "typescript.codeFix.enableBetterFunctionCompletion": true // 関数補完の改善を有効化
+    "typescript.codeFix.enableImportFixes": true           // インポート修正を有効化
+    "typescript.codeFix.enableRefactorings": true          // リファクタリングを有効化
+    "typescript.codeFix.enableSuggestions": true           // コード修正の提案を有効化
+
+    ■ typescript.format
+
+    "typescript.format.enable": true                       // フォーマット機能を有効化
+    "typescript.format.insertSpaceAfterCommaDelimiter": true // カンマの後にスペースを挿入
+    "typescript.format.placeOpenBraceOnNewLineForControlBlocks": false // 制御ブロックの開き波括弧を新しい行に配置しない
+    "typescript.format.semicolons": "insert"              // セミコロンを自動挿入
+    "typescript.format.trimTrailingWhitespace": true       // 行末の空白を削除
+
+    ■ typescript.preferences.organizeImports
+    "typescript.preferences.organizeImports.sortImports": true        // インポートをソート
+    "typescript.preferences.organizeImports.removeUnusedImports": true // 未使用のインポートを削除
+
+#-------------------------------
+# TypeScript
+#-------------------------------
+- ENTRY:
+  CATEGORY: 実行、トランスパイル、バンドル、ビルド
+
+- ENTRY:
+  EXPLAIN: トランスパイル
+  BODY: |
+    ■ トランスパイルとは
+
+    ・TypeScript (TS) や JSX などの高レベル言語を、ブラウザや Node.js で実行可能な JavaScript に変換するプロセス
+    ・主な目的: 最新の言語機能を古い環境で動作させる、型チェック後のコード生成
+    ・コンパイルとの違い: コンパイルは低レベル言語 (機械語) への変換、トランスパイルは同レベル言語間の変換
+
+    ■ 選び方のポイント
+
+    ・速度重視: esbuild, SWC
+    ・型安全重視: tsc, Next.js
+    ・柔軟性重視: Babel
+    ・フレームワーク使用: Next.js, Vite
+    ・大規模プロジェクト: 高速ツール + tsc 型チェックの組み合わせ
+
+    ■ Tips
+
+    ・開発時は高速ツール、本番ビルド時は安定ツール
+    ・ソースマップを有効にしてデバッグしやすくする
+    ・CI/CD で型チェックを別途実行 (esbuild 等では型チェックされない)
+
+- ENTRY:
+  EXPLAIN: トランスパイラ一
+  BODY: |
+    ■ TypeScript (tsc)
+
+    ・開発者:      Microsoft (TypeScript 公式コンパイラ)
+    ・開発言語:    TypeScript
+    ・機能:        TS → JS 変換、ソースマップ生成
+    ・バンドル機能: なし
+    ・型チェック:   あり
+    ・速度:        遅い
+    ・設定:        tsconfig.json で詳細設定可能
+    ・出力ファイル: .js、.d.ts、ソースマップ等(jsファイルは単一または複数)
+    ・利点:        標準的、設定豊富 (tsconfig.json)
+    ・欠点:        遅い (大規模プロジェクトで数秒〜数分)
+    ・使用例:      スタンドアロン、ビルドスクリプト
+
+    ■ Babel (@babel/preset-typescript)
+
+    ・開発者:      Sebastian McKenzie 他
+    ・開発言語:    JavaScript
+    ・機能:        JS → 互換 JS、TS サポート(プラグインによる)、React 対応
+    ・バンドル機能: 限定的
+    ・型チェック:   型チェックを行わず、型注釈は削除(型チェックは `tsc --noEmit` で行う運用)
+    ・速度:        中程度
+    ・設定:        babel.config.json で詳細設定可能
+    ・出力ファイル: .js、ソースマップ等(jsファイルは単一または複数)
+    ・利点:        柔軟性高、プラグイン豊富、ブラウザ互換性調整
+    ・欠点:        遅い、設定が複雑、バンドル機能が限定的
+    ・使用例:      カスタム変換、ライブラリ開発
+
+    ※ バンドル機能が限定的な理由
+      ・Babel は主にコード変換に特化しており、バンドルは専門外
+      ・バンドラ (webpack, Rollup など) と組み合わせて使用
+      ・Babel 自体のバンドル機能は基本的なものであり、最適化や依存関係管理には限界あり
+
+    ■ ts-node / ts-node-dev
+
+    ・開発者:      egoist（コミュニティ）
+    ・開発言語:    TypeScript
+    ・機能:        ランタイムで TypeScript を即時トランスパイルして実行
+    ・バンドル機能: なし（単体実行向け、バンドルは別途実施）
+    ・型チェック:   オプションで有効化可能だが、基本は実行時トランスパイル
+    ・速度:        高速
+    ・出力ファイル: なし（メモリ上で即時実行）
+    ・利点:        ビルド不要でスクリプトやテストを素早く実行できる
+    ・欠点:        本番用途には不向き（パフォーマンス・安定性の観点）、型チェックは別手段推奨
+    ・使用例:      開発用スクリプト、ローカル CLI、テストランナー（`ts-node-dev` はホットリロード付き）
+
+    ■ SWC
+
+    ・開発者:      Andrew Branch 他
+    ・開発言語:    Rust
+    ・機能:        TS/JSX → JS、バンドル、ミニファイ
+    ・バンドル機能: 内蔵
+    ・型チェック:   なし (tsc と組み合わせ推奨)
+    ・速度:        高速
+    ・設定:        swc.config.json で詳細設定可能
+    ・出力ファイル: .js、ソースマップ等(jsファイルは単一または複数)
+    ・利点:        高速 (esbuild 並み)、Next.js 標準採用
+    ・欠点:        設定が複雑、一部 Babel プラグイン未対応
+    ・使用例:      Next.js ビルド、Rust エコシステム
+
+    ■ esbuild
+
+    ・開発者:      Evan Wallace 他
+    ・開発言語:    Go
+    ・機能:        TS/JSX → JS、バンドル、ミニファイ
+    ・バンドル機能: 内蔵
+    ・型チェック:   なし (tsc と組み合わせ推奨)
+    ・速度:        非常に高速
+    ・設定:        esbuild.config.js で詳細設定可能
+    ・出力ファイル: .js、ソースマップ等(jsファイルは単一または複数)
+    ・利点:        非常に速い (他のツールの 10-100 倍)、シンプル
+    ・欠点:        一部機能未成熟
+    ・使用例:      高速ビルド、Vite の開発サーバー
+
+        ※ `esbuild-register` を使うと即時トランスパイルも可能
+        例: node -r esbuild-register script.ts
+
+    ■ Sucrase
+
+    ・開発者:      Rich Harris 他
+    ・開発言語:    TypeScript
+    ・機能:        高速な構文トランスパイル（TypeScript の型注釈を削除）
+    ・バンドル機能: なし（トランスフォームのみ、別途バンドラと併用）
+    ・型チェック:   なし（`tsc` 等と組み合わせて型チェックを行う）
+    ・速度:        非常に高速
+    ・設定:        sucrase.config.js で詳細設定可能
+    ・出力ファイル: .js、ソースマップ等(jsファイルは単一または複数)
+    ・利点:        非常に高速で開発向けのホットリロードやテストに最適
+    ・欠点:        型情報を無視するため型安全性は別途担保が必要
+    ・使用例:      ローカル開発サーバー、テストランナー、スクリプト実行
+
+      ※ 非常に高速なトランスパイルを目的としたツール。
+         生産環境ビルドでは `tsc` と併用する運用が一般的。
+
+    ■ Rome
+
+    ・開発者:      Rome プロジェクト（オープンソース）
+    ・開発言語:    Rust
+    ・機能:        フォーマッタ、リンタ、テストランナー、トランスパイラ等を統合
+    ・バンドル機能: あり（統合ツールチェーンとして将来的に拡張）
+    ・型チェック:   限定的（現在は実験的な部分があるため `tsc` と併用推奨）
+    ・速度:        高速
+    ・設定:        rome.json で詳細設定可能
+    ・出力ファイル: .js、ソースマップ等(jsファイルは単一または複数)
+    ・利点:        ツールチェーンを一本化できるため開発体験が改善される可能性
+    ・欠点:        一部機能が未成熟・実験段階であり移行コストが発生する
+    ・使用例:      小〜中規模プロジェクトでのDX改善、将来的な統一ツール導入検証
+
+      ※ Rome は将来的なオールインワンを目指すが、安定運用では既存ツールとの併用が現実的。
+
+    ■ Parcel
+
+    ・開発者:      Parcel チーム
+    ・開発言語:    TypeScript / JavaScript
+    ・バンドル機能: あり（自動で依存解析・バンドルを実行）
+    ・型チェック:   オプション（内部で Babel/SWC を使うため `tsc` で型チェックを行うことが多い）
+    ・速度:        高速
+    ・設定:        不要（ゼロコンフィグが特徴）
+    ・出力ファイル: .js、ソースマップ等(jsファイルは単一または複数)
+    ・利点:        立ち上げが速く設定不要でプロトタイプに最適、HMR 標準搭載
+    ・欠点:        複雑な最適化や大規模プロジェクトでの微調整に制約がある
+    ・使用例:      小〜中規模の SPA、プロトタイプ、静的サイトの高速構築
+
+    ■ tsup
+
+    ・開発者:      egoist（コミュニティ）
+    ・開発言語:    TypeScript
+    ・機能:        ライブラリ向けの高速ビルド（バンドル・トランスパイル・型定義出力）
+    ・バンドル機能: あり（esbuild を内部で利用しシンプルにバンドル）
+    ・型チェック:   `tsc` と組み合わせて型定義を生成するのが一般的（tsup 単体で強力な型チェックは行わない）
+    ・速度:        高速
+    ・設定:        簡単（package.json や tsup.config.ts で設定可能）
+    ・出力ファイル: .js、.d.ts、ソースマップ等(jsファイルは単一または複数)
+    ・利点:        設定が簡単で高速、ESM/CJS 両対応や型定義生成が便利
+    ・欠点:        高度なバンドル最適化や特殊なプラグイン要件には制約がある
+    ・使用例:      ライブラリのビルド・配布、CLI ツールのバンドル
+
+    ■ @rollup/plugin-typescript / ts-loader
+
+    ・開発者:      TypeStrong 他
+    ・開発言語:    TypeScript
+    ・機能:        Rollup/Webpack に TypeScript を統合するプラグイン/ローダー
+    ・バンドル機能: あり（Rollup/Webpack のエコシステムの元で最適化・バンドルを実行）
+    ・型チェック:   `ts-loader` は `tsc` と連携してフルな型チェックが可能（`transpileOnly` オプションで無効化可）
+                   `@rollup/plugin-typescript` は簡易的で完全な型チェックを行わない場合がある
+    ・速度:        中程度
+    ・設定:        多少の設定が必要（Rollup/Webpack の設定ファイルで指定）
+    ・出力ファイル: .js、ソースマップ等(jsファイルは単一または複数)
+    ・利点:        高度な最適化・ツリーシェイキングが可能でライブラリ向けに強力
+    ・欠点:        設定が複雑になりやすくビルド設定の習熟が必要
+    ・使用例:      ライブラリの本番ビルド、大規模アプリでの細かな最適化
+
+    ■ ncc
+
+    ・開発者:      Vercel チーム
+    ・開発言語:    TypeScript / JavaScript
+    ・機能:        依存関係を解決して単一の実行ファイルにバンドル
+    ・バンドル機能: あり（単一ファイル出力、ネイティブモジュール含む取りまとめ）
+    ・型チェック:   なし（トランスパイル/バンドルのみ、型チェックは別途実施）
+    ・速度:        中程度
+    ・設定:        簡単（コマンドラインオプションで指定）
+    ・出力ファイル: 単一の .js ファイル(jsファイルは単一または複数)
+    ・利点:        デプロイ用の単一出力が得られ、サーバレスや小さい配布物に便利
+    ・欠点:        出力が大きくなる場合や特殊なネイティブ依存で問題が出ることがある
+    ・使用例:      Vercel のサーバレス関数、CLI 配布、単一ファイルデプロイ
+
+- ENTRY:
+  EXPLAIN: フレームワークのトランスパイラー
+  BODY: |
+    ■ Next.js
+
+    ・React フレームワーク、内部で tsc や SWC を使用
+    ・機能:        TS/JSX → JS、SSR/SSG 対応、自動最適化
+    ・バンドル機能: 内蔵 (webpack ベース)
+    ・型チェック:   あり (tsc ベース)
+    ・利点:        フルスタック開発、Vercel 統合
+    ・欠点:        設定が複雑、ビルド時間が長い場合あり
+    ・使用例:      Web アプリ開発
+
+    ■ Vite
+
+    ・ビルドツール、開発時は esbuild、本番時は Rollup
+    ・機能:        高速 HMR、TS サポート、プラグイン豊富
+    ・バンドル機能: 内蔵 (Rollup ベース)
+    ・型チェック:   なし (tsc と組み合わせ推奨)
+    ・利点:        開発速度が速い (esbuild 採用)
+    ・欠点:        本番ビルドは Rollup のためやや遅い
+    ・使用例:      モダン Web 開発
+
+    ■ Node.js
+
+    ・Node.js 自体は .ts をネイティブに解釈しない
+      ランタイム単体で TypeScript を直接実行するわけではない
+      ただし、Node 20 以降で ESM ローダーや V8 の改善が進み、カスタムローダーや外部ランタイムを使い
+      ランタイムでトランスパイルして実行する運用が一般的
+
+    ・代表的な実行方法 / ランタイム:
+      - `ts-node` / `ts-node-dev`（開発向け。オンザフライ実行、型チェックはオプション）
+      - `tsx`（高速な TypeScript 実行ツール。内部で esbuild/SWC を利用する実装があり起動が速い）
+      - `esbuild-register` / `@swc/register`（登録型の即時トランスパイラ。軽量で高速）
+      - Node の `--loader` フックを利用する方法（例: `node --loader ts-node/esm src/index.ts`）
+      - `Bun` など TypeScript をネイティブサポートする別ランタイム
+
+        ※ tsx について
+          - tsx は TypeScript を高速に実行するためのツールで、内部で esbuild や SWC を利用していることが多い
+          - 起動が非常に速く、開発用スクリプトや CI/CD パイプラインでの短時間実行に適する
+          - 例: `npx tsx src/index.ts` で TypeScript ファイルを即時実行可能
+
+    ・パフォーマンスと運用の目安:
+      - 事前に `tsc` でトランスパイルした静的出力が最も高速で、本番運用ではこちらが推奨される。
+      - オンザフライ実行は開発時の利便性が高いが、起動時間や初回読み込みで遅延が発生しやすい。
+      - `tsx` や `esbuild-register` は比較的高速で、開発用スクリプトや CI の短時間実行に向く。
+      - 型チェックは別プロセス（例: `tsc --noEmit`）で行う運用が一般的で、実行速度への影響を抑えられる。
+
+    ・短い実行例:
+      - `npx ts-node src/index.ts`
+      - `node --loader ts-node/esm src/index.ts`
+      - `npx tsx src/index.ts`
+      - `bun run src/index.ts`
+      - `node -r esbuild-register src/index.ts`
+
+    ・注意点:
+      - 本番環境でのオンザフライ実行は原則推奨されない（パフォーマンス・安定性・デバッグの観点）。
+      - ソースマップやスタックトレースの差異に注意し、デバッグ設定を確認すること。
+
+    ■ Deno
+
+    ・Deno は Ryan Dahl（Node.js の作者）による次世代の JavaScript/TypeScript ランタイム
+    ・ランタイムに TypeScript サポートを内蔵し、追加のビルドステップなしで .ts/.tsx をそのまま実行可能
+    ・ランタイム: V8 + Rust による実装（高速かつ小さいバイナリ）
+    ・設計方針: セキュリティをデフォルト、標準モジュールの活用、URL ベースのモジュール解決
+    ・TypeScript のネイティブサポート: トランスパイルは内部で行われる（追加設定不要）
+    ・モジュール解決: `import` に URL を直接指定（例: `https://deno.land/std@0.200.0/fs/mod.ts`）
+    ・標準ライブラリ: `std` を中心とした公式ユーティリティ群（ファイル操作、HTTP 等）
+    ・セキュリティモデル: デフォルトで権限が厳格（ネットワークやファイルアクセスは明示的許可が必須）
+    ・組み込みツール: `deno run`, `deno fmt`, `deno lint`, `deno test`, `deno bundle`, `deno cache`, `deno compile`
+
+    ■ Bun
+
+    ・一人プロダクトとして Jarred Sumner によって開発されたランタイム
+    ・Bun は JavaScript/TypeScript の高速ランタイム兼パッケージマネージャ
+    ・ランタイムに TypeScript サポートを内蔵し、追加のビルドステップなしで .ts/.tsx をそのまま実行可能
+    ・ランタイム: JavaScriptCore（Safari のエンジン）をベースに Rust で実装
+    ・設計方針: 高速性、開発者体験の向上、統合されたツールチェーン
+    ・TypeScript のネイティブサポート: トランスパイルは内部で行われる（追加設定不要）
+    ・モジュール解決: Node.js 互換のモジュール解決を採用（CommonJS/ESM 両対応）
+    ・標準ライブラリ: HTTP サーバー、ファイルシステム、データベースクライアント等の組み込み機能
+    ・セキュリティモデル: Node.js に近いが、一部セキュリティ強化が図られている
+    ・組み込みツール: `bun run`, `bun build`, `bun test`, `bun install`, `bun create`
+
+- ENTRY:
+  EXPLAIN: モジュールバンドラ
+  BODY: |
+    ■ バンドルとは?
+
+      ・複数のモジュールやファイルを1つのファイルにまとめるプロセス
+      ・目的: ネットワーク要求の削減、依存関係の管理、最適化
+
+    ■ モジュールバンドラの選び方ポイント
+
+      ・プロジェクト規模: 小規模は Parcel、大規模は WebPack
+      ・パフォーマンス: esbuild や SWC ベースのツール
+      ・設定の柔軟性: WebPack は高度なカスタマイズが可能
+      ・エコシステム: プラグインやローダーの豊富さ
+      ・フレームワーク統合: Next.js や Vite など
+
+    ■ WebPack
+
+    ・モジュールバンドラ、依存関係解析と最適化に特化
+    ・機能:        モジュール結合、コード分割、アセット管理
+    ・利点:        柔軟な設定、多数のローダー/プラグイン
+    ・欠点:        設定が複雑、学習コスト高い
+    ・使用例:      大規模アプリケーションのビルド
+
+    ・基本的な TypeScript 対応設定例 (webpack.config.js):
+
+      config.module.rules = [
+        {
+          test: /\.tsx?$/,
+          use: 'ts-loader',
+          exclude: /node_modules/,
+        },
+      ];
+
+    ■ Rollup
+
+    ・モジュールバンドラ、ライブラリ向けに最適化
+    ・機能:        モジュール結合、ツリーシェイキング、プラグイン豊富
+    ・利点:        小さなバンドルサイズ、ESM サポート
+    ・欠点:        設定が複雑、大規模アプリには不向き
+    ・使用例:      ライブラリ開発、ESM 出力
+
+    ・基本的な設定例 (rollup.config.js):
+
+      import typescript from '@rollup/plugin-typescript';
+
+      export default {
+        input: 'src/index.ts',
+        output: {
+          file: 'dist/bundle.js',
+          format: 'cjs',
+        },
+        plugins: [typescript()],
+      };
+
+    ■ Parcel
+
+    ・ゼロコンフィグバンドラ、初心者向け
+    ・機能:        自動依存解析、ホットリロード、アセット管理
+    ・利点:        設定不要、使いやすい
+    ・欠点:        大規模アプリには不向き、カスタマイズ性低い
+    ・使用例:      小規模プロジェクト、プロトタイピング
+
+    ・基本的な設定例 (package.json):
+
+      {
+        "scripts": {
+          "build": "parcel build src/index.html",
+          "start": "parcel src/index.html"
+        }
+      }
+
+- ENTRY:
+  EXPLAIN: ビルド・オプション
+  BODY: |
+    ■ TreeShaking
+
+    ・未使用コードを削除し、バンドルサイズを削減
+    ・Rollup や WebPack でサポート
+    ・ESM モジュールを使用することで効果的に機能
+
+     ・WebPack での設定例: production モードではデフォルトで有効
+
+      module.exports = {
+        mode: 'production',
+        optimization: {
+          usedExports: true,            // Tree Shaking を有効化
+        },
+      };
+
+      ※ Nextjs や Vite ではデフォルトで有効
+        無効にしたい場合: Nextjs: next.config.js で optimization.usedExports = false
+
+    ■ Code Splitting
+
+    ・コードを複数のチャンクに分割し、必要な部分だけをロード
+    ・WebPack の dynamic import() で実現可能
+    ・初期ロード時間の短縮に有効
+
+    ■ Minification
+
+    ・コードを圧縮し、ファイルサイズを削減
+    ・Terser や UglifyJS などのツールを使用
+    ・可読性は低下するが、パフォーマンス向上に寄与
+
+    ・Terser を WebPack で使用する例:
+
+      const TerserPlugin = require('terser-webpack-plugin');
+
+      module.exports = {
+        optimization: {
+          minimize: true,
+          minimizer: [new TerserPlugin()],
+        },
+      };
+
+      ※ Nextjs や Vite ではデフォルトで有効
+      無効にしたい場合: Nextjs: next.config.js で optimization.minimize = false
+
+    ■ Source Maps
+
+    ・圧縮コードと元のソースコードを対応付けるマッピングファイル
+    ・デバッグ時に役立つ
+    ・ビルドツールで自動生成可能
+
+- ENTRY:
+  EXPLAIN: TS-loader
+  BODY: |
+    ■ 概要
+
+    ・TypeScript ファイルを WebPack で処理するためのローダー
+    ・TypeScript コンパイラ (tsc) で TS を JS に変換、WebPack のバンドルプロセスに統合
+
+    ■ 主な機能
+    ・TypeScript ファイルのコンパイル
+    ・ソースマップの生成
+    ・WebPack のモジュールシステムとの統合
+
+    ■ インストール
+
+      npm install --save-dev ts-loader typescript
+
+    ■ 使い方(webpack.config.js)
+
+      module.exports = {
+        entry: './src/index.ts',
+        module: {
+          rules: [
+            {
+              test: /\.tsx?$/,
+              use: 'ts-loader',
+              exclude: /node_modules/,
+            },
+          ],
+        },
+        resolve: {
+          extensions: ['.tsx', '.ts', '.js'],
+        },
+        output: {
+          filename: 'bundle.js',

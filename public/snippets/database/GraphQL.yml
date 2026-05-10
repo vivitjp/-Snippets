@@ -1,0 +1,836 @@
+---
+#-------------------------------
+# GraphQL
+#-------------------------------
+- ENTRY:
+  CATEGORY: Kick Start
+
+- ENTRY:
+  EXPLAIN: スキーマ定義
+  BODY: |
+    ■ スキーマ定義 (Schema Definition)
+
+    # User型
+    type User {
+      id: ID!
+      username: String!
+      email: String
+      posts: [Post!]!                   # そのユーザーが投稿した記事のリスト
+    }
+
+    # Post型
+    type Post {
+      id: ID!
+      title: String!
+      content: String!
+      author: User! # この記事を書いたユーザー
+    }
+
+    # クエリ定義
+    type Query {
+      user(id: ID!): User               # IDでユーザーを取得するクエリ
+      allUsers: [User!]!                # 全ユーザーのリストを取得するクエリ
+    }
+
+    # ミューテーション定義
+    type Mutation {
+      createPost(title: String!, content: String!, authorId: ID!): Post!
+    }
+
+- ENTRY:
+  EXPLAIN: クエリ
+  BODY: |
+    ■ サンプル
+    query GetAllUserNames {
+      allUsers {
+        id
+        username
+        # emailフィールドは不要なので取得しない
+      }
+    }
+
+    レスポンス
+    {
+      "data": {
+        "allUsers": [
+          {
+            "id": "1",
+            "username": "alice"
+          },
+          {
+            "id": "2",
+            "username": "bob"
+          }
+        ]
+      }
+    }
+
+    ■ サンプル(引数付き)
+    query GetUserWithPosts($userId: ID!) {
+      user(id: $userId) {
+        username
+        email
+        posts {
+          title
+        }
+      }
+    }
+
+    ●クエリ変数
+    {
+      "userId": "1"
+    }
+
+    ●レスポンス
+    {
+      "data": {
+        "user": {
+          "username": "alice",
+          "email": "alice@example.com",
+          "posts": [
+            {
+              "title": "GraphQL入門"
+            },
+            {
+              "title": "Pythonの新しい機能"
+            }
+          ]
+        }
+      }
+
+- ENTRY:
+  EXPLAIN: ミューテーション
+  BODY: |
+    ■ サンプル
+    mutation CreateNewPost($title: String!, $content: String!, $authorId: ID!) {
+      createPost(title: $title, content: $content, authorId: $authorId) {
+        # 作成成功後、サーバーから返してほしい情報を指定
+        id
+        title
+        author {
+          username
+        }
+      }
+    }
+
+    ●クエリ変数
+    {
+      "title": "VSCodeの設定",
+      "content": "便利なVSCodeの設定を紹介します。",
+      "authorId": "2"
+    }
+
+    ●レスポンス
+    {
+      "data": {
+        "createPost": {
+          "id": "3",
+          "title": "VSCodeの設定",
+          "author": {
+            "username": "bob"
+          }
+        }
+      }
+    }
+
+- ENTRY:
+  EXPLAIN: |
+    キーワード
+  TABLE:
+    OPTION:
+      ALIGN:
+        - left
+        - left
+        - left
+      HAS_TITLE: false
+      WIDTH:
+        - 15%
+        - 15%
+    BODY: |
+      スキーマ	Schema	APIを通じてアクセスできるデータの形や、可能な操作（クエリ・ミューテーション）の全体像を定義するもの。
+      クエリ	Query	クライアントがサーバーからデータを取得するために使用する操作。どのフィールドが必要かをクライアントが指定できる。
+      ミューテーション	Mutation	クライアントがサーバー上のデータを変更（作成・更新・削除）するために使用する操作。
+      リゾルバ	Resolver	スキーマで定義された特定のフィールドや操作（クエリ・ミューテーション）が要求された際に、実際にデータをデータベースなどから取得・処理するサーバー側のロジック（関数）。
+      フィールド	Field	スキーマ内の型が持つ具体的なデータ属性。クライアントはクエリで取得したいフィールドを選択する。
+      スカラー型	Scalar Types	それ以上分解できない、基本的なデータ型（例: String, Int, Boolean, Float, ID）。
+      非ヌル	Non-Null / !	フィールドの定義で型の末尾に ! を付けることで、その値が null にならないことを保証する制約。
+      リスト	List / []	フィールドが単一の値ではなく、その型の値の配列であることを示す（例: [Post], [String!]!）。
+      クエリ変数	Variables	クエリやミューテーションの実行時に、動的な値を外部から安全に注入するための仕組み（例: 検索IDや入力フォームの値）。
+      フラグメント	Fragment	複数のクエリや場所で共通して使用するフィールドの集合を定義し、再利用可能にする機能。
+      ディレクティブ	Directives	クエリやスキーマ定義に付加的な指示やメタデータを与えるための構文（例: @include(if: ...) や @deprecated）。
+      イントロスペクション	Introspection	スキーマ自体をクエリする（問い合わせる）機能。開発ツールがAPIの構造を動的に解析するのに利用する。
+      サブスクリプション	Subscription	サーバーからクライアントへリアルタイムでデータ更新をプッシュするための操作（通常WebSocketを使用）。
+      ルートフィールド	Root Field / Root Operation	スキーマの開始点となる特別な型（通常は Query, Mutation, Subscription の3つ）。
+      タイプデフ	TypeDefs	スキーマ定義言語 (SDL) を使って記述された、具体的な型定義の文字列やファイル。
+
+#-------------------------------
+# Apollo Server
+#-------------------------------
+- ENTRY:
+  CATEGORY: サーバ（Apollo & Axios）
+
+- ENTRY:
+  EXPLAIN: パッケージ
+  BODY: |
+    ■ 必要なパッケージのインストール (Node.js + Express + Apollo Server)
+    npm install express @apollo/server graphql
+    npm install -D typescript @types/node ts-node @apollo/server @types/express
+
+- ENTRY:
+  EXPLAIN: プロジェクト構成例
+  BODY: |
+    ■ プロジェクト構成例
+    graphql-server-example/
+    ├── src/
+    │   ├── index.ts        # サーバー起動とExpressの設定
+    │   ├── schema.ts       # GraphQLスキーマ定義 (typeDefs)
+    │   ├── resolvers.ts    # データ処理ロジック (resolvers) <--- ここを修正
+    │   └── apiService.ts   # 外部API呼び出しのヘルパー関数
+    ├── package.json
+    ├── tsconfig.json
+
+- ENTRY:
+  EXPLAIN: APIコール(axios)
+  BODY: |
+    ■ src/apiService.ts
+
+    import axios, { AxiosError } from 'axios';
+
+    ■ 型定義
+    export interface ExternalPost {
+        userId: number;
+        id: number;
+        title: string;
+        body: string;
+    }
+
+    export interface CreatePostArgs {
+        title: string;
+        body: string;
+        userId: number;
+    }
+
+    const API_URL = 'https://jsonplaceholder.typicode.com';
+
+    ■ fetch all
+    export const fetchPosts = async (): Promise<ExternalPost[]> => {
+        try {
+            const response = await axios.get<ExternalPost[]>(`${API_URL}/posts`);
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                console.error(`API Error: ${error.message}`);
+                throw new Error(`外部APIの呼び出しに失敗しました: ${error.message}`);
+            } else {
+                console.error(`Unexpected Error: ${error}`);
+                throw new Error('不明なエラーが発生しました');
+            }
+        }
+    };
+
+    ■ fetch by ID
+    export const fetchPostById = async (id: number): Promise<ExternalPost> => {
+        try {
+            const response = await axios.get<ExternalPost>(`${API_URL}/posts/${id}`);
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response?.status === 404) {
+                throw new Error(`投稿ID ${id} が見つかりませんでした`);
+            } else if (axios.isAxiosError(error)) {
+                throw new Error(`API Error: ${error.message}`);
+            } else {
+                throw new Error('不明なエラーが発生しました');
+            }
+        }
+    };
+
+    ■ create
+    export const createPost = async (postData: CreatePostArgs): Promise<ExternalPost> => {
+        try {
+            const response = await axios.post<ExternalPost>(`${API_URL}/posts`, postData);
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                console.error(`API Error during creation: ${error.message}`);
+                throw new Error(`投稿の作成に失敗しました: ${error.message}`);
+            } else {
+                throw new Error('不明なエラーが発生しました');
+            }
+        }
+    };
+
+    ■ delete
+    export const deletePost = async (id: number): Promise<{ success: boolean; id: number }> => {
+        try {
+            await axios.delete(`${API_URL}/posts/${id}`);
+            return { success: true, id: id };
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response?.status === 404) {
+                throw new Error(`削除対象の投稿ID ${id} が見つかりませんでした`);
+            } else if (axios.isAxiosError(error)) {
+                console.error(`API Error during deletion: ${error.message}`);
+                throw new Error(`投稿の削除に失敗しました: ${error.message}`);
+            } else {
+                throw new Error('不明なエラーが発生しました');
+            }
+        }
+    };
+
+- ENTRY:
+  EXPLAIN: スキーマ定義
+  BODY: |
+    ■ src/schema.ts
+
+    export const typeDefs = `#graphql
+      type Post {
+        id: ID!
+        title: String!
+        body: String!
+        userId: Int!
+      }
+
+      type Query {
+        posts: [Post]
+        post(id: ID!): Post
+      }
+
+      # 削除の成否を返すための型を新しく定義
+      type DeleteResult {
+        success: Boolean!
+        id: ID!
+      }
+
+      type Mutation {
+        createPost(title: String!, body: String!, userId: Int!): Post!
+        deletePost(id: ID!): DeleteResult!
+      }
+    `;
+
+- ENTRY:
+  EXPLAIN: リゾルバ
+  BODY: |
+    ■ src/resolvers.ts 
+
+    import { fetchPosts, fetchPostById, createPost, deletePost } from './apiService';
+    import { GraphQLError } from 'graphql';
+
+    export const resolvers = {
+      Query: {
+        ■ 全取得
+        posts: async () => {
+          try {
+            const data = await fetchPosts();
+            return data;
+          } catch (error: any) {
+            throw new Error(`投稿の取得中にエラーが発生しました: ${error.message}`);
+          }
+        },
+
+        ■ ID指定取得
+        post: async (parent: any, args: { id: string }) => {
+          try {
+            const data = await fetchPostById(Number(args.id));
+            return data;
+          } catch (error: any) {
+            throw new Error(`投稿の取得中にエラーが発生しました: ${error.message}`);
+          }
+        },
+      },
+
+      Mutation: {
+        ■ 作成
+        createPost: async (parent: any, args: { title: string, body: string, userId: number }) => {
+          try {
+            const newPost = await createPost(args);
+            return newPost;
+          } catch (error: any) {
+            throw new GraphQLError(`Mutation failed: ${error.message}`, {
+                extensions: { code: 'API_CREATION_ERROR' },
+            });
+          }
+        },
+        
+        ■ 削除
+        deletePost: async (parent: any, args: { id: string }) => {
+            try {
+                // APIサービスを呼び出し、削除結果を返す
+                const result = await deletePost(Number(args.id));
+                return result;
+            } catch (error: any) {
+                throw new GraphQLError(`Deletion failed: ${error.message}`, {
+                    extensions: { code: 'API_DELETION_ERROR' },
+                });
+            }
+        }
+      },
+    };
+
+- ENTRY:
+  EXPLAIN: サーバー起動処理
+  BODY: |
+    ■ src/index.ts
+
+    import { ApolloServer } from '@apollo/server';
+    import { expressMiddleware } from '@apollo/server/express4';
+    import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+    import express from 'express';
+    import http from 'http';
+    import cors from 'cors';
+    import bodyParser from 'body-parser';
+
+    import { typeDefs } from './schema';
+    import { resolvers } from './resolvers';
+
+    interface MyContext {
+      token?: String;
+    }
+
+    const app = express();
+    const httpServer = http.createServer(app);
+
+    const server = new ApolloServer<MyContext>({
+      typeDefs,
+      resolvers,
+      plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    });
+
+    async function startServer() {
+        await server.start();
+
+        app.use(
+            '/graphql',
+            cors< cors.CorsRequest >(),
+            bodyParser.json(),
+            expressMiddleware(server, {
+                context: async ({ req }) => ({ token: req.headers.token }),
+            }),
+        );
+
+        await new Promise<void>((resolve) => httpServer.listen({ port: 4000 }, resolve));
+        console.log(`🚀 Server ready at http://localhost:4000/graphql`);
+    }
+
+    startServer();
+
+#-------------------------------
+# Apollo Client
+#-------------------------------
+- ENTRY:
+  CATEGORY: クライアント(Apollo)
+
+- ENTRY:
+  EXPLAIN: パッケージ
+  BODY: |
+    npm install @apollo/client graphql
+    npm install -D typescript ts-node @types/node # ts-nodeは実行用
+
+- ENTRY:
+  EXPLAIN: client.ts (Apollo Client設定)
+  BODY: |
+    import { ApolloClient, InMemoryCache, gql, ApolloQueryResult } from '@apollo/client';
+
+    const client = new ApolloClient({
+      uri: 'http://localhost:4000/graphql', // <-- GraphQLサーバーURL
+      cache: new InMemoryCache(),
+    });
+
+    // --- 1. クエリ定義 ---
+    const GET_POSTS = gql`
+      query GetPosts {
+        posts {
+          id
+          title
+          userId
+        }
+      }
+    `;
+
+    // --- 2. ミューテーション定義 ---
+    const CREATE_POST = gql`
+      mutation CreateNewPost($title: String!, $body: String!, $userId: Int!) {
+        createPost(title: $title, body: $body, userId: $userId) {
+          id
+          title
+          userId
+        }
+      }
+    `;
+
+    // --- 3. データ取得 ---
+    async function fetchPosts() {
+      console.log("--- 投稿リストを取得中 ---");
+      try {
+        const result: ApolloQueryResult<any> = await client.query({
+          query: GET_POSTS
+        });
+        console.log("取得結果:", result.data.posts);
+      } catch (error) {
+        console.error("投稿の取得中にエラーが発生しました:", error);
+      }
+    }
+
+    // --- 4. データ登録 ---
+    async function createNewPost(title: string, body: string, userId: number) {
+      console.log(`--- 新しい投稿を作成中: ${title} ---`);
+      try {
+        const result = await client.mutate({
+          mutation: CREATE_POST,
+          variables: { // クエリ変数としてデータを渡す
+            title,
+            body,
+            userId
+          },
+        });
+        console.log("作成された投稿:", result.data.createPost);
+      } catch (error) {
+        console.error("投稿の作成中にエラーが発生しました:", error);
+      }
+    }
+
+    async function main() {
+      await fetchPosts();
+
+      await createNewPost("クライアントからの投稿", "Apollo Clientを使って投稿しました。", 1);
+      
+      // 新しい投稿を含めて再度リストを取得
+      await fetchPosts();
+    }
+
+    main();
+
+- ENTRY:
+  EXPLAIN: useMutationの使用例(App.tsx)
+  BODY: |
+    ■ App.tsx や index.tsx 
+    import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+    import React from 'react';
+    import ReactDOM from 'react-dom/client';
+    import CreatePostForm from './CreatePostForm'; 
+
+    const client = new ApolloClient({
+      uri: 'http://localhost:4000/graphql', 
+      cache: new InMemoryCache(),
+    });
+
+    const App = () => (
+      <ApolloProvider client={client}>
+        <h1>GraphQL Mutations Example</h1>
+        <CreatePostForm />
+      </ApolloProvider>
+    );
+
+    ReactDOM.createRoot(document.getElementById('root')!).render(<App />);
+
+- ENTRY:
+  EXPLAIN: Form使用例
+  BODY: |
+    ■ CreatePostForm.tsx
+    import React, { useState } from 'react';
+    import { useMutation, gql } from '@apollo/client';
+
+    // ミューテーション定義 (GraphQLスキーマに依存)
+    const CREATE_POST = gql`
+      mutation CreateNewPost($title: String!, $body: String!, $userId: Int!) {
+        createPost(title: $title, body: $body, userId: $userId) {
+          id
+          title
+          # ここでサーバーから返ってくるデータを指定
+        }
+      }
+    `;
+
+    const CreatePostForm: React.FC = () => {
+      const [title, setTitle] = useState('');
+      const [body, setBody] = useState('');
+      const [userId, setUserId] = useState(1); // デフォルトでユーザーID 1 を使用
+
+      // useMutation フックの使用
+      // [ミューテーション関数, 結果オブジェクト] の配列を返す
+      const [createPost, { loading, error, data }] = useMutation(
+        CREATE_POST,
+        // ミューテーション成功後、GET_POSTS クエリを自動的に再実行する
+        refetchQueries: [
+          { query: GET_POSTS } // クエリの名前またはドキュメントを指定
+        ],
+      );
+
+      const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        try {
+          // ミューテーション関数を実行し、variables（変数）を渡す
+          const response = await createPost({
+            variables: {
+              title,
+              body,
+              userId,
+            },
+          });
+
+          console.log("投稿が成功しました:", response.data.createPost);
+          setTitle('');
+          setBody('');
+
+        } catch (err) {
+          // エラーは useMutation の error ステートでも捕捉される
+          console.error("ミューテーションの実行中にエラーが発生しました:", err);
+        }
+      };
+
+      return (
+        <form onSubmit={handleSubmit}>
+          <h2>新しい投稿を作成</h2>
+
+          {/* ロード中、エラー、成功時の表示 */}
+          {loading && <p>送信中です...</p>}
+          {error && <p style={{ color: 'red' }}>エラーが発生しました: {error.message}</p>}
+          {data && <p style={{ color: 'green' }}>投稿ID {data.createPost.id} が正常に作成されました！</p>}
+
+          <div>
+            <label>タイトル:</label>
+            <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
+          </div>
+          <div>
+            <label>本文:</label>
+            <textarea value={body} onChange={(e) => setBody(e.target.value)} required />
+          </div>
+          
+          <button type="submit" disabled={loading}>
+            投稿する
+          </button>
+        </form>
+      );
+    };
+
+    export default CreatePostForm;
+
+- ENTRY:
+  EXPLAIN: キャッシュオプション
+  BODY: |
+    const CREATE_POST = gql`...`;
+    const GET_POSTS = gql`...`;
+
+    const CreatePostForm = () => {
+      const [createPost] = useMutation(CREATE_POST, {
+        // キャッシュを直接操作する
+        update(cache, { data }) {
+          const newPost = data?.createPost;
+
+          // GET_POSTS クエリの結果をキャッシュから読み取る
+          const existingPosts: any = cache.readQuery({ query: GET_POSTS });
+
+          // 新しい投稿を既存のリストの先頭に追加して、キャッシュに書き戻す
+          if (existingPosts && newPost) {
+            cache.writeQuery({
+              query: GET_POSTS,
+              data: {
+                posts: [newPost, ...existingPosts.posts],
+              },
+            });
+          }
+        }
+      });
+
+      // ... handleSubmit ロジック ...
+    };
+
+- ENTRY:
+  EXPLAIN: useQueryの使用例
+  BODY: |
+    import React from 'react';
+    import { useQuery, gql } from '@apollo/client';
+
+    // ----------------------------------------------------
+    // 1. クエリ定義 (GraphQLスキーマに依存)
+    // ----------------------------------------------------
+    const GET_POSTS = gql`
+      query GetPosts {
+        posts {
+          id
+          title
+          userId
+        }
+      }
+    `;
+
+    // サーバーからのレスポンスデータの型定義
+    interface Post {
+      id: string;
+      title: string;
+      userId: number;
+    }
+
+    // クエリ結果全体の型定義
+    interface QueryData {
+      posts: Post[];
+    }
+
+
+    // ----------------------------------------------------
+    // 2. コンポーネントでの useQuery の使用
+    // ----------------------------------------------------
+    const PostList: React.FC = () => {
+      // 自動的にサーバーへリクエストが飛び、ステータスが更新される
+      const { loading, error, data, refetch } = useQuery<QueryData>(
+        GET_POSTS
+        // 5秒 (5000ミリ秒) ごとに自動でクエリを再実行する
+        pollInterval: 5000, 
+      
+      );
+
+      // --- 状態に応じた描画 ---
+
+      if (loading) {
+        // データ取得中の表示
+        return <p>投稿を読み込み中...</p>;
+      }
+
+      if (error) {
+        // エラー発生時の表示
+        return <p style={{ color: 'red' }}>エラーが発生しました: {error.message}</p>;
+      }
+
+      // 更新ボタンを押したときのハンドラ
+      const handleRefreshClick = () => {
+        refetch(); // データを再取得する
+      };
+      
+      // データが正常に取得できた場合の表示
+      return (
+        <div>
+          <h2>投稿リスト</h2>
+          <ul>
+            {/* data.posts が存在し、リストであることを確認してマップ処理 */}
+            {data?.posts.map((post) => (
+              <li key={post.id}>
+                <strong>{post.title}</strong> (ユーザーID: {post.userId})
+              </li>
+            ))}
+          </ul>
+        <div>
+          <button onClick={handleRefreshClick}>最新の情報に更新</button>
+        </div>          
+        </div>
+      );
+    };
+
+    export default PostList;
+
+#-------------------------------
+# codegen
+#-------------------------------
+- ENTRY:
+  CATEGORY: GraphQL Code Generator
+
+- ENTRY:
+  EXPLAIN: 解説
+  BODY: |
+    ■ GraphQL Code Generator（graphql-codegen）
+
+    ・スキーマとドキュメント（クエリ/ミューテーション/フラグメント）から型定義や型付きコード自動生成
+    ・TypeScript, Apollo/Urql/React, Query/graphl-request など向けの豊富なプラグイン
+
+    ■ 主な利点
+
+    ・型安全: クエリの変数とレスポンスの型を自動生成して、型エラーを早期に検出できます
+    ・生産性: 手動での型定義が不要になりリファクタが楽になります
+    ・多様な出力: types / operations / hooks / SDK など用途に応じた出力が可能
+
+- ENTRY:
+  EXPLAIN: フロントエンド 導入（最小構成）
+  BODY: |
+    ■ パッケージインストール
+
+       npm i -D
+       @graphql-codegen/cli
+       @graphql-codegen/typescript
+       @graphql-codegen/typescript-operations
+       @graphql-codegen/typescript-react-apollo
+
+    ■ `codegen.yml` 例
+
+      schema: https://api.example.com/graphql
+      documents: src/**/*.graphql
+      generates:
+        src/__generated__/graphql.tsx:
+          plugins:
+            - typescript
+            - typescript-operations
+            - typescript-react-apollo
+          config:
+            withHooks: true
+            withHOC: false
+            withComponent: false
+            scalars:
+              DateTime: string
+
+- ENTRY:
+  EXPLAIN: フロントエンド generate 実行
+  BODY: |
+    ■ スクリプト追加/実行:
+
+    ・package.json に追加
+
+      "generate": "graphql-codegen --config codegen.yml"
+
+    ・`yarn generate` 実行
+
+    ■ よく使うプラグイン
+
+    ・`@graphql-codegen/typescript`             : スキーマから TypeScript 型生成
+    ・`@graphql-codegen/typescript-operations`  : queries/mutationsから variables/result 型生成
+    ・`@graphql-codegen/typescript-react-apollo`: Apollo 用の型付き hooks 生成
+
+- ENTRY:
+  EXPLAIN: 導入から運用までの流れ
+  BODY: |
+    ■ バックエンド準備
+
+    ・スキーマ確定（SDL または実行中サーバー）
+    ・スキーマ公開（schema.graphql ファイル or introspection エンドポイント）
+
+    ■ フロントエンド準備
+
+    ・ドキュメント準備（.graphql ファイル / gql テンプレート）
+    ・codegen.yml 作成（schema, documents, generates, plugins）
+
+    ■ 実行（開発）
+
+    ・スキーマ最新化（バックエンド）
+    ・yarn graphql-codegen 実行（ローカル）
+    ・生成物出力（types, operations, hooks）
+    ・IDEで確認、開発継続
+
+    ■ 実行（CI/リリース）
+
+    ・バックエンド CI でスキーマ検証・公開
+    ・フロントCIで yarn generate 実行（ビルド前）
+    ・型チェック合格後ビルド・デプロイ
+
+    ■ 注意点（短）
+
+    ・カスタムスカラーは scalars マッピング必須
+    ・.tsx 内の gql を拾うなら documents の glob を拡張
+    ・スキーマ変更はフロント同期リリースを検討
+
+- ENTRY:
+  EXPLAIN: 設定と注意点
+  BODY: |
+    ■ よくある設定と注意点
+
+    ・`documents` に `.tsx` 内の `gql` を含める場合は glob を `"src/**/*.{graphql,ts,tsx}"` のように拡張
+    ・カスタムスカラーは `scalars` で必ずマッピングする（例: DateTime: string）
+    ・認証付きスキーマを取得する場合は `schema` の下に `headers` を設定し、CIでは環境変数を使う
+    ・生成ファイルをコミットするかどうかは方針次第。
+      CI でのみ生成する運用も可能だが、IDE の型補完のためにリポジトリに含めるケースが多い
+
+    ■ 運用フロー
+
+    ・開発: `graphql-codegen --watch` で変更を監視し自動生成
+    ・CI: ビルド前に `yarn generate` を実行して型整合性を保証
+
+    ■ 実務ヒント
+
+    ・生成先を `src/__generated__` に分けると IDE とビルドが使いやすくなる
+    ・`namingConvention` や `avoidOptionals` の設定で出力型の形を調整する
+    ・大規模プロジェクトでは `generates` を分割して API ごとに出力先を分離すると高速化に寄与します

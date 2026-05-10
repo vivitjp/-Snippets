@@ -1,0 +1,366 @@
+---
+#-------------------------------
+# RDBMS
+#-------------------------------
+- ENTRY:
+  CATEGORY: RDBM
+
+- ENTRY:
+  EXPLAIN: 略称一覧
+  BODY: |
+    RDBMS(Relational Database Management System): リレーショナルデータベース管理システム
+    RDBS(Relational Database System): リレーショナルデータベースシステム
+    RDB(Relational Database): リレーショナルデータベース
+
+- ENTRY:
+  EXPLAIN: 著名なRDBMS
+  BODY: |
+    ■ MySQL
+
+    ・オープンソース
+    ・Web アプリや LAMP 構成で広く利用
+    ・InnoDB がデフォルトストレージエンジン
+    ・トランザクション対応
+    ・レプリケーション・クラスタ(Group Replication 等)でスケールアウト可能
+
+    ■ PostgreSQL
+
+    ・オープンソース
+    ・ACID 準拠で拡張性が高い
+    ・JSON/JSONB、全文検索、PostGIS 等の拡張が豊富
+    ・論理レプリケーション・宣言的パーティションを標準サポート
+
+    ■ Oracle
+
+    ・Oracle 社のエンタープライズ向け RDBMS
+    ・大規模・高可用性向け
+    ・RAC(Real Application Clusters)、Data Guard で可用性・負荷分散
+    ・PL/SQL、豊富な管理ツール(OEM)、ライセンスは有償
+
+    ■ DB2
+
+    ・IBM 製
+    ・メインフレーム(z/OS)から Linux/Windows/クラウドまで対応
+    ・ハイブリッドデータ、列指向ストア、圧縮・チューニングに強い
+    ・LUW(Linux, Unix, Windows)版と z/OS 版でエディションが分かれる
+
+    ■ SQL Server
+
+    ・Microsoft 製
+    ・Windows と統合し、.NET との連携が容易
+    ・T-SQL、SSIS/SSAS/SSRS で ETL・分析・レポーティングを一通り提供
+    ・Linux 版・Azure SQL も展開
+    ・エディションは Express/Standard/Enterprise 等
+
+    ■ SQLite
+
+    ・サーバ不要
+    ・単一ファイルに DB を格納
+    ・組み込み・デスクトップ向け
+    ・アプリ内蔵、モバイル(iOS/Android)、プロトタイプやテストで多用
+    ・トランザクション対応
+    ・C ライブラリのため軽量で移植性が高い
+
+    ■ Firebird
+
+    ・オープンソース
+    ・InterBase から派生
+    ・軽量で組み込み・中規模向け
+    ・単一ファイルまたはサーバモード
+    ・マルチバージョニング対応
+    ・Windows/Linux 等で動作
+    ・ストアドプロシージャ・トリガをサポート
+
+    ■ MaxDB
+
+    ・SAP が提供
+    ・旧 SAP DB
+    ・SAP システムのバックエンド DB として利用されることが多い
+    ・エンタープライズ向け
+    ・高可用性・バックアップ・管理ツールを提供
+    ・MySQL との互換モードもあったが、現在は SAP 環境向けが主
+
+    ■ InterBase
+
+    ・エンバカデロ(旧 Borland)製
+    ・組み込みからエンタープライズまで
+    ・Firebird の元になった
+    ・クロスプラットフォーム、トランザクション対応
+    ・InterBase To Go 等でモバイル・組み込み向けにも展開
+
+    ■ Apache Derby
+
+    ・Apache の Java 用 RDBMS
+    ・JDK に同梱されることも(Java DB)
+    ・サーバモードと組み込み(embedded)モード
+    ・単体 JAR で完結
+    ・JDBC でそのまま利用
+    ・軽量のため開発・テスト・組み込みに多用
+
+#----------------------------
+# PostgreSQL
+#----------------------------
+- ENTRY:
+  CATEGORY: PostgreSQL
+
+- ENTRY:
+  EXPLAIN: インストール
+  BODY: |
+    ■ Windows
+
+    18 	2022, 2019
+    17 	2022, 2019
+    16 	2022, 2019
+    15 	2019, 2016
+    14 	2019, 2016
+    13 	2019, 2016
+
+    ・ダウンロード & インストール
+    https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
+
+    ■ Ubuntsu
+
+    postgresql-client-17 	              // client libraries and client binaries
+    postgresql-17 	                    // core database server
+    postgresql-doc-17 	                // documentation
+    libpq-dev 	                        // libraries and headers for C frontend development
+    postgresql-server-dev-17 	          // libraries and headers for C backend development
+
+    ・インストール
+    sudo apt update
+    sudo apt install postgresql-17 postgresql-client-17 postgresql-doc-17 libpq-dev postgresql-server-dev-17
+
+    PATH: /usr/local/pgsql/bin/
+
+- ENTRY:
+  EXPLAIN: CLI(psql)
+  BODY: |
+    ・PostgreSQL 付属の対話型 CUI クライアント
+    ・SQL の実行、メタコマンド(\h, \q 等)で操作
+    ・接続先 DB に対して対話的に接続・切断する
+
+    ■ アクセス
+
+    ・接続
+    psql <db_name>
+    psql -U <user_name> -d <db_name> -h <host_name> -p <port_number>
+    psql -U postgres -d postgres -h localhost -p 5432
+
+      psql (16.4)
+      Type "help" for help.
+      mydb=>
+
+    ・接続中の DB 切り替え
+    mydb=> \connect <db_name>                               \connect <db_name>
+
+    ・終了
+    mydb=> \q
+
+    ■ 一覧・定義の表示
+
+    ・データベース一覧
+    mydb=> \l or \list
+
+    ・テーブル一覧(現在のスキーマ)
+    mydb=> \dt
+    mydb=> \dt *.*                // 全スキーマ
+
+    ・テーブル定義
+    mydb=> \d <table_name>
+    mydb=> \d+ <table_name>       // 詳細(サイズ等)
+
+    ・ロール(ユーザ)一覧
+    mydb=> \du                    // ロール(ログイン可能なユーザ)一覧
+    mydb=> \dg                    // グループロール一覧
+
+    ・スキーマ一覧
+    mydb=> \dn
+
+    ■ バージョン・ヘルプ・終了
+
+    ・サーバ/クライアントのバージョン
+    mydb=> SELECT version();
+
+    ・SQL 文のヘルプ
+    mydb=> \h
+    mydb=> \h CREATE TABLE
+
+    ・メタコマンド一覧
+    mydb=> \?
+
+- ENTRY:
+  EXPLAIN: SQL 実行
+  BODY: |
+    ■ DB 作成
+
+    sudo -u postgres createdb <db_name>
+    sudo -u postgres psql -c "CREATE DATABASE <db_name>;"
+
+    ■ DB 削除
+
+    sudo -u postgres dropdb <db_name>
+    psql -U postgres -d postgres -c "DROP DATABASE <db_name>;"   // 削除対象以外の DB に接続して実行
+
+    ■ ユーザ作成
+
+    sudo -u postgres createuser <user_name>
+    sudo -u postgres psql -c "CREATE USER <user_name> WITH PASSWORD '<password>';"
+
+    ■ ユーザ削除
+
+    sudo -u postgres dropuser <user_name>
+    psql -U postgres -d postgres -c "DROP USER <user_name>;"   // 接続先 DB は任意(例: postgres)
+
+    ■ 表示・計測・入出力
+
+    ・拡張表示(\x):
+      ・縦並びで長い行を見やすくする
+      ・再実行でトグル
+    mydb=> \x
+
+    ・実行時間の表示(\timing): 再実行でトグル
+    mydb=> \timing
+
+    ・ファイルから SQL 実行
+    mydb=> \i /path/to/script.sql
+
+    ・クエリ結果をファイルに出力
+    mydb=> \o /path/to/result.txt
+    mydb=> SELECT * FROM t;
+    mydb=> \o   // 出力解除
+
+    ・エディタで編集して実行
+      ・\e でバッファをエディタに渡す
+    mydb=> \e
+
+- ENTRY:
+  EXPLAIN: pgAdmin
+  BODY: |
+    ■ pgAdmin とは
+
+    ・PostgreSQL 用の GUI 管理ツール(公式推奨)
+    ・DB 接続、オブジェクト一覧・編集、SQL 実行、バックアップ等を画面上で操作
+    ・左のツリーで DB 内のオブジェクトを階層表示
+
+    ■ DB 直下のノード
+
+    ・Casts:
+      ・型キャスト。ある型から別の型への変換定義
+    ・Catalogs:
+      ・システムカタログ。スキーマ・オブジェクト・ユーザ等のメタデータを格納した特殊テーブル
+    ・Event Triggers:
+      ・イベントトリガ。CREATE/DROP 等の DDL 発生時に実行する関数
+    ・Extensions:
+      ・拡張機能(PostGIS 等)。追加インストールしたモジュール一覧
+    ・Foreign Data Wrappers:
+      ・外部データラッパ。他 DB やファイル等をあたかもローカルテーブルのように扱う
+    ・Languages:
+      ・手続き言語(pl/pgSQL, pl/Python 等)。関数・トリガで利用
+    ・Publications:
+      ・論理レプリケーションの「配信元」。どのテーブル変更を配信するか定義
+    ・Schemas:
+      ・スキーマの一覧。名前空間。通常は public にテーブル等を配置
+    ・Subscriptions:
+      ・論理レプリケーションの「購読」。どの Publication から受け取るか定義
+
+    ■ スキーマ直下のノード
+
+    ・Aggregates:
+      ・集約関数。複数行をまとめて 1 値にする(SUM, AVG 等のユーザ定義)
+    ・Collations:
+      ・照合順序。文字列のソート・比較ルール
+    ・Domains:
+      ・ドメイン。既存型に制約を付けたユーザ定義型
+    ・FTS Configurations / Dictionaries / Parsers / Templates:
+      ・全文検索まわり。設定・辞書・パーサ・テンプレート
+    ・Foreign Tables:
+      ・外部テーブル。Foreign Data Wrapper で参照する外部データの表
+    ・Functions:
+      ・ユーザ定義関数。戻り値ありのストアドルーチン
+    ・Materialized Views:
+      ・マテリアライズドビュー。結果を物理保持し、REFRESH で更新
+    ・Operators:
+      ・演算子。ユーザ定義の +, -, 比較等
+    ・Procedures:
+      ・ストアドプロシージャ。戻り値なしで副作用を実行(PostgreSQL 11 以降)
+    ・Sequences:
+      ・シーケンス。連番生成(主キー用の SERIAL の実体等)
+    ・Tables:
+      ・テーブル。通常のデータを格納する表
+    ・Trigger Functions:
+      ・トリガ用に定義した関数。BEFORE/AFTER INSERT 等で実行
+    ・Types:
+      ・ユーザ定義型。複合型・列挙型等
+    ・Views:
+      ・ビュー。仮想テーブル。クエリ結果を表として参照
+
+#-------------------------------
+# MySQL
+#-------------------------------
+- ENTRY:
+  CATEGORY: MySQL
+
+- ENTRY:
+  EXPLAIN: 概要
+  BODY: |
+    ■ MySQL とは
+
+    ・オープンソースの RDBMS。LAMP や Web アプリで広く利用
+    ・InnoDB がデフォルト。トランザクション・外部キー対応
+    ・レプリケーション(主従)、Group Replication(マルチマスタ)でスケール構成が可能
+
+- ENTRY:
+  EXPLAIN: インストール
+  BODY: |
+    ■ Windows
+
+    ・公式インストーラ(MySQL Installer)または ZIP で導入
+    https://dev.mysql.com/downloads/installer/
+    https://dev.mysql.com/downloads/mysql/
+
+    ・PATH に bin を追加。例: C:\Program Files\MySQL\MySQL Server 8.0\bin
+
+    ■ Ubuntu
+
+    ・パッケージ
+    mysql-server 		// サーバ
+    mysql-client 		// クライアント
+    libmysqlclient-dev 	// 開発用ヘッダ・ライブラリ
+
+    ・インストール
+    sudo apt update
+    sudo apt install mysql-server mysql-client libmysqlclient-dev
+
+    ・起動確認
+    sudo systemctl status mysql
+
+- ENTRY:
+  EXPLAIN: CLI
+  BODY: |
+    ■ mysql クライアント
+
+    ・対話型 CUI。SQL 実行、バッチでスクリプトを流す用途
+    ・接続後は SQL をそのまま入力。\G で縦表示、exit または \q で終了
+
+    ・接続
+    mysql -u <user_name> -p
+    mysql -u <user_name> -p -h <host> -P 3306 <db_name>
+
+    ・接続後の例
+    mysql> SELECT version();
+    mysql> SHOW DATABASES;
+    mysql> USE <db_name>;
+    mysql> SHOW TABLES;
+    mysql> exit
+
+- ENTRY:
+  EXPLAIN: GUI 管理ツール
+  BODY: |
+    ・MySQL Workbench
+    ・公式の GUI。接続・クエリ・ER 図・管理を一通り扱える
+
+    ・phpMyAdmin
+    ・Web ベース。ブラウザから DB 操作。LAMP 環境でよく利用
+
+    ・DBeaver / HeidiSQL / TablePlus 等
+    ・多 DB 対応または MySQL 特化の GUI クライアント

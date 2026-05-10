@@ -1,0 +1,226 @@
+---
+#-------------------------------
+# lodash
+#-------------------------------
+- ENTRY:
+  CATEGORY: lodash
+
+- ENTRY:
+  EXPLAIN: lodash-es
+  BODY: |
+    ■ 概要
+
+    ・lodash-es は lodash の ES モジュール版
+    ・ツリーシェイキングに対応し、不要なコードを除去可能
+    ・モダンなビルドツール (Webpack, Rollup, Parcel など) と相性が良い
+    ・個別に関数をインポートすることで、バンドルサイズを最小化可能
+
+    ■ インストール
+
+      npm install lodash-es
+
+    ■ 使用例
+
+      import { map, filter } from 'lodash-es';
+
+      const numbers = [1, 2, 3, 4, 5];
+
+      const doubled = map(numbers, n => n * 2);  // [2, 4, 6, 8, 10]
+      const evens = filter(numbers, n => n % 2 === 0);  // [2, 4]
+
+    ■ 詳細な使用例
+
+      import _ from 'lodash-es';
+
+      const str = 'hello world';  
+
+      const cap = _.capitalize(str);        // 'Hello world'
+      const camel = _.camelCase('foo-bar'); // 'fooBar'
+      const trimmed = _.trim('  hello  ');  // 'hello'
+      const debounced = _.debounce(() => console.log('debounced'), 300);
+      const memoized = _.memoize((n) => n * n);
+      const items = [
+        { category: 'fruit', name: 'apple' },
+        { category: 'fruit', name: 'banana' },
+        { category: 'vegetable', name: 'carrot' }
+      ];
+      const grouped = _.groupBy(items, 'category');
+      const isEqual = _.isEqual({ a: 1 }, { a: 1 });  // true
+
+- ENTRY:
+  EXPLAIN: lodash
+  BODY: |
+    ■ インストール
+
+      npm install lodash
+
+    ■ 概要
+
+    ・JavaScript のユーティリティライブラリ
+    ・配列、オブジェクト、文字列などの操作を簡単にする関数を提供
+    ・関数型プログラミングスタイルをサポート
+    ・モジュール化可能で、必要な関数のみインポート可能
+    ・ブラウザと Node.js 両方で動作
+    ・パフォーマンス最適化された実装
+
+    ■ 主な特徴
+
+    ・配列操作: map, filter, reduce, find, sort, uniq など
+    ・オブジェクト操作: clone, merge, pick, omit, keys, values など
+    ・文字列操作: capitalize, camelCase, kebabCase, trim など
+    ・関数操作: debounce, throttle, memoize, curry など
+    ・コレクション操作: groupBy, countBy, partition など
+    ・ユーティリティ: isEqual, isEmpty, random, range など
+
+    ■ 注意点
+
+    ・パフォーマンス: lodash はネイティブメソッドより遅い場合がある。必要に応じてネイティブ使用を検討
+    ・バンドルサイズ: 全インポートすると大きい。個別インポートや lodash-es を使用
+    ・fp バージョン: 関数型プログラミング向け。引数の順序が異なるので注意
+    ・互換性: バージョン4以降でAPI変更あり。ドキュメント確認推奨
+    ・代替ライブラリ: 小規模ならネイティブや Ramda 検討
+    ・TypeScript: @types/lodash で型定義利用可能
+
+    ■ 初期設定
+
+      // 全インポート
+      const _ = require('lodash');
+
+      // 個別インポート (ツリーシェイキング対応)
+      import { map, filter, cloneDeep } from 'lodash';
+
+      // ES6 モジュール
+      import _ from 'lodash';
+
+      // fp バージョン (関数型プログラミング向け)
+      import map from 'lodash/fp/map';
+      import filter from 'lodash/fp/filter';
+
+- ENTRY:
+  EXPLAIN: lodash 実装例
+  BODY: |
+    ■ 配列操作
+
+      const _ = require('lodash');
+
+      const numbers = [1, 2, 3, 4, 5];
+
+      // map(⛔)
+      const doubled = _.map(numbers, n => n * 2);  // [2, 4, 6, 8, 10]
+
+      // filter(⛔)
+      const evens = _.filter(numbers, n => n % 2 === 0);  // [2, 4]
+
+      // reduce(⛔)
+      const sum = _.reduce(numbers, (acc, n) => acc + n, 0);  // 15
+
+      // find(⛔)
+      const found = _.find(numbers, n => n > 3);  // 4
+
+      // sortBy(🔵)
+      const users = [{ name: 'Alice', age: 25 }, { name: 'Bob', age: 20 }];
+      const sorted = _.sortBy(users, 'age');  // [{ name: 'Bob', age: 20 }, { name: 'Alice', age: 25 }]
+
+    ■ オブジェクト操作
+
+      const _ = require('lodash');
+
+      const obj = { a: 1, b: 2, c: 3 };
+
+      // cloneDeep (深いコピー)(⛔)
+      const cloned = _.cloneDeep(obj);  // { a: 1, b: 2, c: 3 }
+
+      // merge(⛔)
+      const merged = _.merge({ a: 1 }, { b: 2 }, { c: 3 });  // { a: 1, b: 2, c: 3 }
+
+      // pick (指定プロパティ抽出)(🔵)
+      const picked = _.pick(obj, ['a', 'c']);  // { a: 1, c: 3 }
+
+      // omit (指定プロパティ除去)(🔵)
+      const omitted = _.omit(obj, ['b']);  // { a: 1, c: 3 }
+
+      // keys / values(⛔)
+      const keys = _.keys(obj);    // ['a', 'b', 'c']
+      const values = _.values(obj);  // [1, 2, 3]
+
+    ■ 文字列操作
+
+      const _ = require('lodash');
+
+      const str = 'hello world';
+
+      // capitalize(🔵)
+      const cap = _.capitalize(str);  // 'Hello world'
+
+      // camelCase(🔵)
+      const camel = _.camelCase('foo-bar');  // 'fooBar'
+
+      // kebabCase(🔵)
+      const kebab = _.kebabCase('Foo Bar');  // 'foo-bar'
+
+      // trim(⛔)
+      const trimmed = _.trim('  hello  ');  // 'hello'
+
+    ■ 関数操作
+
+      const _ = require('lodash');
+
+      // debounce (遅延実行)(🔵)
+      const debounced = _.debounce(() => console.log('debounced'), 300);
+
+        用途: 入力フィールドのオートコンプリートやウィンドウリサイズイベントの最適化
+
+      // throttle (間引き実行)
+      const throttled = _.throttle(() => console.log('throttled'), 300);
+
+        用途: スクロールやリサイズイベントの最適化
+
+      // memoize (メモ化)(React⛔)
+      const memoized = _.memoize((n) => n * n);
+      memoized(5);  // 計算実行
+      memoized(5);  // キャッシュから返却
+
+      // curry (カリー化)(🔵)
+      const add = _.curry((a, b) => a + b);
+      const add5 = add(5);
+      add5(3);  // 8
+
+    ■ コレクション操作(🔵)
+
+      const _ = require('lodash');
+
+      const items = [
+        { category: 'fruit', name: 'apple' },
+        { category: 'fruit', name: 'banana' },
+        { category: 'vegetable', name: 'carrot' }
+      ];
+
+      // groupBy
+      const grouped = _.groupBy(items, 'category');
+      // { fruit: [{...}, {...}], vegetable: [{...}] }
+
+      // countBy
+      const counted = _.countBy(items, 'category');
+      // { fruit: 2, vegetable: 1 }
+
+      // partition (条件で分割)
+      const [fruits, veggies] = _.partition(items, item => item.category === 'fruit');
+
+    ■ ユーティリティ
+
+      const _ = require('lodash');
+
+      // isEqual (深い比較)
+      _.isEqual({ a: 1 }, { a: 1 });  // true
+
+      // isEmpty
+      _.isEmpty([]);      // true
+      _.isEmpty({});      // true
+      _.isEmpty('');      // true
+
+      // random (ランダム数生成)
+      _.random(1, 10);   // 1-10 のランダム整数
+
+      // range (数列生成)
+      _.range(5);        // [0, 1, 2, 3, 4]
+      _.range(1, 6);     // [1, 2, 3, 4, 5]

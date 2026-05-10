@@ -1,0 +1,267 @@
+---
+#-------------------------------
+# Chrome
+#-------------------------------
+- ENTRY:
+  CATEGORY: Chrome Developer Tools
+
+- ENTRY:
+  EXPLAIN: 機能タブ一覧
+  BODY: |
+    ■ 機能タブ一覧
+
+     ・Elements: DOM・CSS の確認と編集
+     ・Console: ログ表示、JS 実行、エラー確認
+     ・Sources: デバッグ、ブレークポイント、ファイルツリー
+     ・Network: リクエスト・レスポンスの確認
+     ・Performance: パフォーマンス計測、プロファイリング
+     ・Memory: ヒープスナップショット、メモリ解析
+     ・Application: ストレージ、Cookie、キャッシュ等
+     ・Security: 証明書、混合コンテンツ確認
+     ・Lighthouse: 監査(パフォーマンス、アクセシビリティ等)
+     ・Recorder: ユーザー操作の記録と再生
+
+- ENTRY:
+  EXPLAIN: 要素(Elements)
+  BODY: |
+    ■ 機能概要
+
+     ・DOM ツリーの閲覧とリアルタイム編集
+     ・HTML タグの追加・削除・属性変更
+     ・Styles ペインで CSS の確認・編集(適用ルール、継承、優先度)
+     ・Computed で最終的なスタイル値の確認
+     ・Layout でボックスモデル、グリッド・フレックス表示
+     ・Event listeners で要素に紐づくリスナー一覧
+     ・右クリック「検証」で該当要素を Elements で開く
+
+    ■ サンプル
+
+     ・コンソールで $0: 現在 Elements で選択中のノードを参照
+     ・要素をダブルクリック: インラインで HTML 編集
+     ・タグ上で F2: 同じく編集モード
+     ・ノード右クリック → Copy → copy selector / copy JS path: セレクタやパスを取得
+
+    ■ 開発者が機能を使いこなすためのTips、注意点
+
+     ・DOM の変更はページ再読み込みで失われる(永続化は Sources でファイル編集)
+     ・擬似要素(::before 等)は DOM ツリーに表示されないが Styles で確認可能
+     ・Break on → subtree modifications で DOM 変更時にブレーク可能
+     ・Computed のフィルタでプロパティ名検索すると目的の値が探しやすい
+
+- ENTRY:
+  EXPLAIN: コンソール
+  BODY: |
+    ■ 機能概要
+
+     ・ログ出力の表示(log, warn, error, info, debug)
+     ・ページ内の JavaScript をその場で実行
+     ・エラー・警告の表示と該当ソースへのジャンプ
+     ・Elements で選択したノードを $0〜$4 で参照
+     ・ネットワークエラーや CORS 等のメッセージ表示
+     ・フィルタでログレベル・テキスト・正規表現で絞り込み可能
+
+    ■ サンプル
+
+     ・$0: Elements で選択中のノード
+     ・copy($0): オブジェクトをクリップボードにコピー(JSON)
+     ・clear(): コンソール表示をクリア
+     ・console.table(配列): 表形式で表示
+     ・console.time("label") / timeEnd("label"): 処理時間計測
+     ・document.querySelector("...") 等で DOM 取得して確認
+
+    ■ 開発者が機能を使いこなすためのTips、注意点
+
+     ・「Preserve log」をオンにするとページ遷移後もログを残す
+     ・「Selected context only」で iframe 等のコンテキストを切り替え可能
+     ・エラー行をクリックで Sources の該当箇所に飛べる
+     ・複数行入力は Shift+Enter で改行(Ctrl+Enter で実行)
+     ・async の戻り値は自動で Promise の結果が表示される
+
+- ENTRY:
+  EXPLAIN: レコーダー
+  BODY: |
+    ■ 機能概要
+
+     ・ユーザー操作(クリック、入力、スクロール等)を記録
+     ・記録したフローをその場で再生(リプレイ)
+     ・記録を Puppeteer スクリプトや JSON でエクスポート可能
+     ・再生時にパフォーマンス計測を同時に取得可能
+     ・手動テストや E2E の下書き、不具合再現手順の共有に利用
+
+    ■ サンプル
+
+     ・「Create a new recording」で新規記録開始
+     ・ページ上で操作するとステップが順に追加される
+     ・「Replay」で記録した操作を再実行
+     ・「Export」で @puppeteer/replay 形式や JSON を取得
+     ・「Add step」で手動でステップ(クリック対象等)を追加可能
+
+    ■ 開発者が機能を使いこなすためのTips、注意点
+
+     ・動的コンテンツやタイミングに依存する操作は再生で失敗しやすい
+     ・セレクタは記録時の DOM に依存するため、変更でずれることがある
+     ・エクスポートした Puppeteer スクリプトは編集してテストに組み込み可能
+     ・再生前に「Slow down」で速度を落とすとデバッグしやすい
+
+- ENTRY:
+  EXPLAIN: ソース
+  BODY: |
+    ■ 機能概要
+
+     ・読み込まれた JS/CSS 等のファイルをツリー表示し、ソースを閲覧・編集
+     ・ブレークポイントで実行を止めて変数・コールスタックを確認
+     ・ステップ実行(Step over / into / out)で処理を追う
+     ・Watch で式を登録し、スコープでローカル・クロージャ変数を確認
+     ・Local overrides でファイルを上書きし、変更をディスクに保存して永続化可能
+     ・コンソールのエラー行クリックで該当ファイルの該当行にジャンプ
+
+    ■ サンプル
+
+     ・行番号クリック: ブレークポイント設置/解除
+     ・右クリック → Add conditional breakpoint: 条件付きブレーク(式が true のときだけ停止)
+     ・右クリック → Add logpoint: 止めずに console.log 相当の出力
+     ・Ctrl+P: ファイル名でファイルを開く
+     ・Ctrl+Shift+O: 現在ファイル内の関数・メソッドでジャンプ
+     ・デバッガー行に debugger と書いても停止可能
+
+    ■ 開発者が機能を使いこなすためのTips、注意点
+
+     ・Overrides を使うと Elements で編集した内容をファイルとして保存できる
+     ・Blackbox でライブラリ等のスクリプトをステップ対象外にすると追いやすい
+     ・XHR/fetch ブレークポイントで特定 URL のリクエスト時に停止可能
+     ・ブレーク中もコンソールで $0 や変数を参照・操作できる
+
+- ENTRY:
+  EXPLAIN: ネットワーク
+  BODY: |
+    ■ 機能概要
+
+     ・ページが発行した HTTP リクエスト・レスポンスを一覧表示
+     ・各リクエストのヘッダー、ボディ、タイミング、ステータスを確認
+     ・タイプ(XHR/fetch, JS, CSS, Img 等)やドメインでフィルタ可能
+     ・リクエストの再送(Replay)、cURL や fetch としてコピー可能
+     ・スロットリングで通信速度を疑似的に制限して挙動確認
+     ・特定 URL をブロックしてリソースなしの動作を検証可能
+
+    ■ サンプル
+
+     ・リクエスト行をクリック: 右ペインで Headers / Preview / Response / Timing を表示
+     ・右クリック → Copy → Copy as cURL: 同じリクエストを curl で再現
+     ・「Preserve log」: ページ遷移後も一覧を残す
+     ・「Disable cache」: キャッシュ無効で毎回サーバから取得
+     ・フィルタ欄にドメイン名やパスを入力して該当だけ表示
+     ・Waterfall で各リクエストの開始・終了タイミングを視覚的に確認
+
+    ■ 開発者が機能を使いこなすためのTips、注意点
+
+     ・赤いステータスや CORS エラーはコンソールと合わせて確認すると原因が分かりやすい
+     ・XHR/fetch の Request payload / Response で API の入出力をその場で確認できる
+     ・「Block request URL」で広告やサードパーティをブロックして軽量化の影響を見る
+     ・スロットリングは「Slow 3G」等でモバイル環境の体感を再現するのに有効
+
+- ENTRY:
+  EXPLAIN: パフォーマンス
+  BODY: |
+    ■ 機能概要
+
+     ・ページの実行を記録し、CPU・レンダリングの負荷をタイムラインで可視化
+     ・メインスレッドの処理(スクリプト、レイアウト、ペイント等)を棒グラフで表示
+     ・記録中はスクリーンショットを取得し、操作と描画の対応を確認可能
+     ・Summary で Loading / Scripting / Rendering / Painting の時間割合を把握
+     ・Bottom-up / Call tree でどの関数・スクリプトが時間を消費しているか分析
+     ・CPU スロットリングで低スペック環境を疑似的に再現して計測可能
+
+    ■ サンプル
+
+     ・「Record」で記録開始、もう一度で停止してプロファイル表示
+     ・タイムライン上の棒をクリック: 下部に該当タスクの詳細(関数名等)を表示
+     ・ズーム: マウスホイールや範囲ドラッグで時間軸を拡大
+     ・「Screenshots」をオンにすると記録中にフレーム画像が並ぶ
+     ・歯車アイコンで CPU 4x slowdown 等のスロットリングを設定
+     ・「Reload」でページ再読み込みから記録して初期表示の負荷を計測
+
+    ■ 開発者が機能を使いこなすためのTips、注意点
+
+     ・記録時間は短め(数秒〜十数秒)にするとノイズが減り原因に集中しやすい
+     ・黄色(スクリプト)が長い場合は JS の最適化、紫色(レイアウト)は reflow の削減を検討
+     ・Long task は 50ms 超のブロッキングなので、分割や Worker 化の候補になる
+     ・Recorder の「Measure performance」で操作フローを記録しつつパフォーマンスを取得できる
+
+- ENTRY:
+  EXPLAIN: メモリー
+  BODY: |
+    ■ 機能概要
+
+     ・ヒープスナップショットで JS オブジェクトのメモリ使用量を取得
+     ・スナップショット同士を比較し、増加したオブジェクトやデタッチされた DOM を特定
+     ・Allocation instrumentation で一定時間の割り当て履歴を時系列で確認
+     ・オブジェクトを保持している参照チェーン(retainer)をたどってリーク原因を追う
+     ・Summary / Comparison / Containment 等のビューでヒープの内訳を分析
+
+    ■ サンプル
+
+     ・「Take snapshot」: その時点のヒープを取得
+     ・2回スナップショット後、Comparison で「#Delta」を見て増加分を確認
+     ・「Allocation instrumentation on timeline」で記録し、操作後にどの型が増えたか確認
+     ・クラス名やコンストラクタ名でフィルタして該当オブジェクトに絞り込み
+     ・オブジェクトを選択し、下部の Retainers でどこから参照されているか確認
+
+    ■ 開発者が機能を使いこなすためのTips、注意点
+
+     ・スナップショットはページの状態によってサイズが変わるので、比較時は同じ操作手順で取得
+     ・Detached DOM が増え続ける場合は、参照を残したままノードを削除している可能性が高い
+     ・「Clear console」等で不要な参照を捨ててからスナップショットするとノイズが減る
+     ・本番では使わず、問題再現用のページやローカルで計測するのが一般的
+
+- ENTRY:
+  EXPLAIN: アプリケーション
+  BODY: |
+    ■ 機能概要
+
+     ・Local Storage / Session Storage のキー・値を閲覧・編集・削除
+     ・IndexedDB のデータベースとオブジェクトストアの中身を確認
+     ・Cookies をドメイン別に一覧表示し、値や有効期限を編集可能
+     ・Cache Storage で Service Worker が保持するキャッシュ一覧を表示
+     ・Service Workers の登録状態、スコープ、ソースを確認
+     ・Manifest で PWA の名前やアイコン等の設定を表示
+
+    ■ サンプル
+
+     ・Storage → Local Storage を展開: オリジンごとのキー・値が表示される
+     ・キーや値をダブルクリックで編集、右クリックで削除
+     ・Application → Cookies → オリジン: 各 Cookie の Name / Value / Domain / Path 等を確認
+     ・Cache Storage を展開: キャッシュ名をクリックすると保存済み URL 一覧を表示
+     ・Service Workers で「Update」で再登録、「Unregister」で解除
+
+    ■ 開発者が機能を使いこなすためのTips、注意点
+
+     ・Storage の変更は即時にページに反映される(リロード不要)
+     ・Third-party cookie はコンテキストによっては表示されないことがある
+     ・Clear site data でストレージ・キャッシュ・Cookie を一括削除して初期状態に戻せる
+     ・IndexedDB は大量データでもツリーを開いて中身を少しずつ確認できる
+
+- ENTRY:
+  EXPLAIN: Lighthouse レポート
+  BODY: |
+    ■ 機能概要
+
+     ・ページを自動解析し、パフォーマンス・アクセシビリティ・ベストプラクティス・SEO 等をスコア化
+     ・各カテゴリで問題点と改善提案を箇条書きで表示
+     ・モバイル / デスクトップのシミュレーションを選択して計測可能
+     ・レポートは HTML で保存・共有可能
+     ・CI 等では CLI(lighthouse) で同じ指標を取得できる
+
+    ■ サンプル
+
+     ・「Analyze page load」で現在のページを解析(ナビゲーションのみ)
+     ・「Performance / Accessibility / Best practices / SEO / PWA」でカテゴリを選択
+     ・「Mobile」と「Desktop」でデバイスを切り替えてから計測
+     ・「View report」でスコアと「Passed / Opportunities / Diagnostics」を確認
+     ・「Save as HTML」でレポートを保存し、後から開いて比較可能
+
+    ■ 開発者が機能を使いこなすためのTips、注意点
+
+     ・スコアはネットワークや CPU の状態で変動するため、複数回取って傾向を見るとよい
+     ・Opportunities は具体的な改善案(画像最適化、未使用 JS 削減等)なので優先して対応しやすい
+     ・アクセシビリティは色コントラストや ARIA、フォームラベル等の指摘がまとまる
+     ・本番に近い環境で計測するほど、実運用に近い結果になる

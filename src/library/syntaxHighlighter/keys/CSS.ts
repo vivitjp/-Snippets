@@ -1,0 +1,82 @@
+import { KeyDef } from "../../../types/type"
+
+export const keysCSS: KeyDef =
+  // ■ Sub(青)
+  {
+    RoyalBlue: [
+      "color",
+      "background",
+      "border",
+      "display",
+      "width",
+      "height",
+      "font",
+      "family",
+      "size",
+      "overflow",
+      "white-space",
+      "weight",
+      "line",
+      "text",
+      "decoration",
+      "box-shadow",
+      "transform",
+      "margin",
+      "padding",
+      "right",
+      "left",
+      "top",
+      "bottom",
+      "origin",
+      "skip-ink",
+      "thickness",
+      "object-fit",
+      "object-position",
+    ],
+    // ■ 別青
+    CadetBlue: [
+      "ellipsis",
+      "hidden",
+      "solid",
+      "dotted",
+      "dashed",
+      "double",
+      "none/underline/overline",
+      "auto/all",
+      "pre",
+      "rgba",
+      "translate",
+      "translateX",
+      "scale",
+      "rotate",
+      "skew",
+      "none",
+      "all",
+    ],
+    // ■ Main(赤)
+    Crimson: [
+      "justify-content",
+      "align-items",
+      "flex-direction",
+      "flex-wrap",
+      "flex-flow",
+      "gap",
+      "important",
+      "styled", //Emotion
+    ],
+    // ■ オレンジ
+    darkOrange: [
+      //"flex",
+      "flex-end",
+      "flex-start",
+      "center",
+      "stretch",
+      "baseline",
+      "space-between",
+      "row",
+      "column",
+      "nowrap",
+    ],
+    // ■
+    LightSeaGreen: ["transition", "animation"],
+  }

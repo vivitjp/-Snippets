@@ -1,0 +1,670 @@
+---
+#-------------------------------
+# tRPC
+#-------------------------------
+- ENTRY:
+  EXPLAIN: 概要
+  BODY: |
+    ■ tRPC (TypeScript Remote Procedure Call) とは
+
+    ・TypeScript を活用した型安全な API 構築ライブラリ
+    ・サーバーとクライアント間で型定義を共有し、API 呼び出しを完全に型安全にする
+    ・REST API や GraphQL とは異なり、RPC (Remote Procedure Call) スタイルを採用
+    ・エンドポイントを関数として定義し、クライアントから直接呼び出すイメージ
+
+    ■ 主な特徴
+
+    ・完全な型安全: TypeScript の型システムを活用し、API の入出力が厳密に型付けされる
+    ・自動コード生成: API 定義からクライアントコードが自動生成される
+    ・軽量: 追加のスキーマ定義ファイルが不要
+    ・柔軟性: HTTP/WS など様々なトランスポート層に対応
+    ・開発体験の向上: インテリセンスによる補完、エラーの早期発見
+
+    ■ ユースケース
+
+    ・モノリスアプリケーションの API 層
+    ・マイクロサービス間の通信
+    ・フルスタック TypeScript アプリケーション
+    ・リアルタイムアプリケーション (WebSocket 対応)
+
+    ■ アーキテクチャ
+
+    ・Server: API ルーターとプロシージャーを定義
+    ・Client: サーバー定義から生成された型付きクライアントを使用
+    ・Protocol: JSON-RPC 2.0 ベースのプロトコル
+
+- ENTRY:
+  EXPLAIN: インストール
+  BODY: |
+    ■ 基本パッケージ
+
+    npm install @trpc/server @trpc/client @trpc/react @trpc/next
+
+    ■ バージョン対応
+
+    ・@trpc/server: サーバーサイドの実装
+    ・@trpc/client: 汎用クライアント
+    ・@trpc/react: React 向けクライアント (React Query 統合)
+    ・@trpc/next: Next.js 向け統合
+
+    ■ 追加推奨パッケージ
+
+    npm install @tanstack/react-query # React Query (データフェッチング)
+    npm install zod # 入力検証
+    npm install superjson # 高度な JSON シリアライズ
+
+- ENTRY:
+  EXPLAIN: 注意点
+  BODY: |
+    ■ TypeScript 必須
+
+    ・tRPC は TypeScript の型システムに依存するため、.ts/.tsx ファイルでの使用が前提
+    ・JavaScript プロジェクトでは使用不可
+
+    ■ バージョン互換性
+
+    ・@trpc/* パッケージのバージョンは揃えることを推奨
+
+    ■ パフォーマンス考慮
+
+    ・大規模 API の場合、ルーターの分割を検討
+    ・バッチング機能を活用してリクエスト数を削減
+
+    ■ セキュリティ
+
+    ・入力検証を必ず実装 (Zod 推奨)
+    ・認証/認可ミドルウェアの使用を検討
+    ・CORS 設定に注意
+
+- ENTRY:
+  CATEGORY: Server
+
+- ENTRY:
+  EXPLAIN: 基本設定 (Node.js + Express)
+  BODY: |
+    ■ プロジェクト構造
+
+    src/
+    ├── server.ts         # Express サーバー設定
+    ├── trpc.ts           # tRPC 初期化
+    ├── routers/
+    │   ├── index.ts      # ルーターマージ
+    │   ├── user.ts       # ユーザールーター
+    │   └── post.ts       # ポストルーター
+    └── types.ts          # 共有型定義
+
+    ■ 依存関係インストール
+
+    npm install express cors @types/express @types/cors
+
+    ■ tRPC 初期化 (trpc.ts)
+
+    import { initTRPC } from '@trpc/server';
+    import superjson from 'superjson';
+
+    // コンテキスト型定義
+    export interface Context {
+      user?: {
+        id: string;
+        name: string;
+      };
+    }
+
+    // tRPC インスタンス作成
+    const t = initTRPC.context<Context>().create({
+      transformer: superjson, // 高度な JSON シリアライズ
+      errorFormatter({ shape, error }) {
+        return {
+          ...shape,
+          data: {
+            ...shape.data,
+            zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
+          },
+        };
+      },
+    });
+
+    export const router = t.router;
+    export const publicProcedure = t.procedure;
+
+    ■ Express サーバー設定 (server.ts)
+
+    import express from 'express';
+    import cors from 'cors';
+    import { createExpressMiddleware } from '@trpc/server/adapters/express';
+    import { appRouter } from './routers';
+    import { createContext } from './context';
+
+    const app = express();
+
+    // CORS 設定
+    app.use(cors({
+      origin: process.env.CLIENT_URL || 'http://localhost:3000',
+      credentials: true,
+    }));
+
+    // JSON パース
+    app.use(express.json());
+
+    // tRPC ミドルウェア
+    app.use(
+      '/trpc',
+      createExpressMiddleware({
+        router: appRouter,
+        createContext,
+      }),
+    );
+
+    const PORT = process.env.PORT || 4000;
+    app.listen(PORT, () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+    });
+
+    ■ コンテキスト作成 (context.ts)
+
+    import type { CreateExpressContextOptions } from '@trpc/server/adapters/express';
+
+    export async function createContext({ req, res }: CreateExpressContextOptions) {
+      // JWT トークンからユーザー情報を取得
+      const token = req.headers.authorization?.split(' ')[1];
+      let user = undefined;
+
+      if (token) {
+        try {
+          // JWT 検証ロジック
+          user = { id: '1', name: 'John Doe' }; // 仮実装
+        } catch (error) {
+          // トークン無効
+        }
+      }
+
+      return {
+        user,
+        req,
+        res,
+      };
+    }
+
+- ENTRY:
+  EXPLAIN: ルーター定義
+  BODY: |
+    ■ 基本的なルーター構造
+
+    import { router, publicProcedure } from '../trpc';
+    import { z } from 'zod';
+
+    // 入力検証スキーマ
+    const userSchema = z.object({
+      name: z.string().min(1),
+      email: z.string().email(),
+    });
+
+    export const userRouter = router({
+      // クエリ: データ取得
+      getUser: publicProcedure
+        .input(z.object({ id: z.string() }))
+        .query(async ({ input, ctx }) => {
+          // データベースからユーザー取得
+          return { id: input.id, name: 'John', email: 'john@example.com' };
+        }),
+
+      // ミューテーション: データ変更
+      createUser: publicProcedure
+        .input(userSchema)
+        .mutation(async ({ input, ctx }) => {
+          // データベースにユーザー作成
+          const user = { id: '1', ...input };
+          return user;
+        }),
+
+      // リスト取得
+      listUsers: publicProcedure
+        .query(async () => {
+          return [
+            { id: '1', name: 'John', email: 'john@example.com' },
+            { id: '2', name: 'Jane', email: 'jane@example.com' },
+          ];
+        }),
+    });
+
+    ■ ルーターマージ (routers/index.ts)
+
+    import { router } from '../trpc';
+    import { userRouter } from './user';
+    import { postRouter } from './post';
+
+    export const appRouter = router({
+      user: userRouter,
+      post: postRouter,
+    });
+
+    // 型エクスポート (クライアントで使用)
+    export type AppRouter = typeof appRouter;
+
+- ENTRY:
+  EXPLAIN: ミドルウェアと認証
+  BODY: |
+    ■ 認証ミドルウェア
+
+    import { TRPCError } from '@trpc/server';
+    import { t } from '../trpc';
+
+    // 認証済みプロシージャー
+    export const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {
+      if (!ctx.user) {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: '認証が必要です',
+        });
+      }
+
+      return next({
+        ctx: {
+          ...ctx,
+          user: ctx.user, // 型安全にユーザー情報利用可能
+        },
+      });
+    });
+
+    ■ 使用例
+
+    export const protectedRouter = router({
+      getSecretData: protectedProcedure
+        .query(async ({ ctx }) => {
+          // ctx.user が確実に存在
+          return { secret: '機密データ', userId: ctx.user.id };
+        }),
+    });
+
+    ■ ロールベース認可
+
+    export const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
+      if (ctx.user.role !== 'admin') {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: '管理者権限が必要です',
+        });
+      }
+
+      return next();
+    });
+
+- ENTRY:
+  EXPLAIN: エラーハンドリング
+  BODY: |
+    ■ TRPCError の使用
+
+    import { TRPCError } from '@trpc/server';
+
+    // 様々なエラーコード
+    throw new TRPCError({
+      code: 'BAD_REQUEST',      // 400
+      message: '無効なリクエスト',
+    });
+
+    throw new TRPCError({
+      code: 'UNAUTHORIZED',     // 401
+      message: '認証が必要です',
+    });
+
+    throw new TRPCError({
+      code: 'FORBIDDEN',        // 403
+      message: 'アクセス権限がありません',
+    });
+
+    throw new TRPCError({
+      code: 'NOT_FOUND',        // 404
+      message: 'リソースが見つかりません',
+    });
+
+    throw new TRPCError({
+      code: 'INTERNAL_SERVER_ERROR', // 500
+      message: 'サーバーエラー',
+    });
+
+    ■ Zod バリデーションエラー
+
+    // エラーフォーマッターで自動処理
+    errorFormatter({ shape, error }) {
+      return {
+        ...shape,
+        data: {
+          ...shape.data,
+          zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
+        },
+      };
+    }
+
+- ENTRY:
+  CATEGORY: Client
+
+- ENTRY:
+  EXPLAIN: React クライアント設定
+  BODY: |
+    ■ 依存関係
+
+    npm install @tanstack/react-query @trpc/client @trpc/react
+
+    ■ tRPC クライアント作成 (client.ts)
+
+    import { createTRPCReact } from '@trpc/react-query';
+    import type { AppRouter } from '../server/routers';  // 🔵重要ポイント
+
+    export const trpc = createTRPCReact<AppRouter>();
+
+    ■ React Query 設定 (App.tsx)
+
+    import React from 'react';
+    import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+    import { httpBatchLink } from '@trpc/client';
+    import { trpc } from './client';
+
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: 3,
+          staleTime: 1000 * 60 * 5, // 5分
+        },
+      },
+    });
+
+    const trpcClient = trpc.createClient({
+      links: [
+        httpBatchLink({
+          url: 'http://localhost:4000/trpc',
+          // 認証ヘッダー
+          headers() {
+            return {
+              authorization: `Bearer ${localStorage.getItem('token')}`,
+            };
+          },
+        }),
+      ],
+    });
+
+    function App() {
+      return (
+        <trpc.Provider client={trpcClient} queryClient={queryClient}>
+          <QueryClientProvider client={queryClient}>
+            <MyApp />
+          </QueryClientProvider>
+        </trpc.Provider>
+      );
+    }
+
+- ENTRY:
+  EXPLAIN: AppRouter 型の同期方法
+  BODY: |
+    ■ 同一リポジトリ（monorepo/同プロジェクト）
+
+    ・サーバ側で型をエクスポート：
+      // server/routers/index.ts
+      export const appRouter = router({ /* ... */ });
+      export type AppRouter = typeof appRouter;
+
+    ・クライアント側で型をインポート：
+      // client/trpc.ts
+      import type { AppRouter } from '../server/routers';
+      export const trpc = createTRPCReact<AppRouter>();
+
+    ・補足：必ず import type を使う（ビルドで型のみ参照され、ランタイムでサーバコードが取り込まれない）
+
+    ■ 別リポジトリ／別パッケージ（推奨：共有 types パッケージ）
+
+    ・サーバの AppRouter 型だけを切り出して @org/trpc-types のような package にする
+        monorepo の packages/shared-types など
+
+    ・package.json に types を含めて .d.ts を公開（または tsc で型定義を出力）
+
+    ・クライアントで通常の npm 依存としてインストールして型を import
+        import type { AppRouter } from "@org/trpc-types";
+        const trpc = createTRPCReact<AppRouter>();
+
+    ・配布方法：npm（公開/プライベート）、git URL、npm scope、または workspace
+
+    ■ 別案（軽量）
+
+    ・API スキーマと型を別リポジトリに JSON/TS で保持して両方から参照
+    ・あるいは Zod を共有して型を両方で再利用（ただし型エイリアスをきちんと揃える必要あり）
+
+    ■ 重要な注意点
+
+    ・「型だけ」を共有すること：絶対にサーバの実行コードをクライアントにバンドルしない
+      型だけなら import type で安全
+
+    ・相対パスで直接サーバの実装ファイルを参照すると、ツールチェーンによっては実行時依存を引き込む可能性あり
+      共有用の型エントリポイント（types-only package / index.d.ts）を作るのが安全
+
+    ・バージョン管理：tRPC の型はサーバとクライアントで整合性が必要
+      shared package を導入するとバージョン管理が楽
+
+    ・Next.js / Vite 等の環境では tsconfig の paths でも参照可能（monorepo 時に便利）
+
+    ■ 短い推奨セットアップ（monorepo）
+
+    ・packages/
+        server/ (appRouter をエクスポート)
+        web/ (frontend)
+        shared-types/ (optional: 型のみエクスポート)
+
+    ・server: export type AppRouter = typeof appRouter
+
+    ・web: import type { AppRouter } from "shared-types"
+      または "../server/routers"（型専用エントリ推奨）
+
+- ENTRY:
+  EXPLAIN: クエリとミューテーション
+  BODY: |
+    ■ クエリの使用
+
+    import { trpc } from '../client';
+
+    function UserList() {
+      const { data, isLoading, error } = trpc.user.listUsers.useQuery();
+
+      if (isLoading) return <div>Loading...</div>;
+      if (error) return <div>Error: {error.message}</div>;
+
+      return (
+        <ul>
+          {data?.map(user => (
+            <li key={user.id}>{user.name} - {user.email}</li>
+          ))}
+        </ul>
+      );
+    }
+
+    ■ ミューテーションの使用
+
+    function CreateUserForm() {
+      const createUser = trpc.user.createUser.useMutation();
+      const queryClient = useQueryClient();
+
+      const handleSubmit = async (formData: { name: string; email: string }) => {
+        try {
+          await createUser.mutateAsync(formData);
+          // 成功時にキャッシュ無効化
+          queryClient.invalidateQueries(['user.listUsers']);
+        } catch (error) {
+          console.error('作成失敗:', error);
+        }
+      };
+
+      return (
+        <form onSubmit={handleSubmit}>
+          {/* フォーム要素 */}
+        </form>
+      );
+    }
+
+    ■ 楽観的更新
+
+    const createUser = trpc.user.createUser.useMutation({
+      onMutate: async (newUser) => {
+        // キャッシュを楽観的に更新
+        await queryClient.cancelQueries(['user.listUsers']);
+        const previousUsers = queryClient.getQueryData(['user.listUsers']);
+
+        queryClient.setQueryData(['user.listUsers'], (old: any) => [
+          ...old,
+          { id: 'temp', ...newUser },
+        ]);
+
+        return { previousUsers };
+      },
+      onError: (err, newUser, context) => {
+        // エラー時にロールバック
+        queryClient.setQueryData(['user.listUsers'], context?.previousUsers);
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries(['user.listUsers']);
+      },
+    });
+
+- ENTRY:
+  EXPLAIN: その他の構成オプション
+  BODY: |
+    ■ バッチング
+
+    // 複数のリクエストを1つのHTTPリクエストにまとめる
+    httpBatchLink({
+      url: 'http://localhost:4000/trpc',
+      maxURLLength: 2083, // URL長制限
+    });
+
+    ■ WebSocket サポート
+
+    npm install @trpc/server ws @types/ws
+
+    import { applyWSSHandler } from '@trpc/server/adapters/ws';
+    import ws from 'ws';
+
+    const wss = new ws.Server({ port: 3001 });
+    const handler = applyWSSHandler({ wss, router: appRouter, createContext });
+
+    ■ ストリーミング
+
+    // サーバー側
+    streamingProcedure: publicProcedure
+      .input(z.object({ message: z.string() }))
+      .subscription(async function* ({ input }) {
+        for (let i = 0; i < 10; i++) {
+          yield { message: `${input.message} ${i}` };
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+      }),
+
+    // クライアント側
+    const subscription = trpc.streamingProcedure.subscribe(
+      { message: 'Hello' },
+      {
+        onData: (data) => console.log(data),
+        onError: (error) => console.error(error),
+      }
+    );
+
+    ■ カスタムリンク
+
+    import { createTRPCClient, httpLink } from '@trpc/client';
+
+    const customLink = httpLink({
+      url: 'http://localhost:4000/trpc',
+      // カスタムフェッチ関数
+      fetch: (url, options) => {
+        // リクエスト前処理
+        console.log('Sending request to:', url);
+        return fetch(url, {
+          ...options,
+          headers: {
+            ...options.headers,
+            'X-Custom-Header': 'value',
+          },
+        });
+      },
+    });
+
+    ■ キャッシュ設定
+
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          staleTime: 1000 * 60 * 5, // 5分
+          gcTime: 1000 * 60 * 10,   // 10分 (以前の cacheTime)
+          retry: (failureCount, error) => {
+            // カスタムリトライロジック
+            if (error instanceof TRPCError && error.code === 'UNAUTHORIZED') {
+              return false; // 認証エラーはリトライしない
+            }
+            return failureCount < 3;
+          },
+        },
+        mutations: {
+          retry: false, // ミューテーションはリトライしない
+        },
+      },
+    });
+
+    ■ 型安全なエラーハンドリング
+
+    type RouterError = TRPCClientError<AppRouter>;
+
+    try {
+      await trpc.user.createUser.mutateAsync(userData);
+    } catch (error) {
+      if (error instanceof TRPCClientError) {
+        // 型安全なエラー処理
+        if (error.data?.zodError) {
+          // Zod バリデーションエラー
+          console.log(error.data.zodError);
+        }
+      }
+    }
+
+- ENTRY:
+  EXPLAIN: デプロイと運用
+  BODY: |
+    ■ 環境変数
+
+    .env
+    DATABASE_URL=postgresql://...
+    JWT_SECRET=your-secret-key
+    CLIENT_URL=http://localhost:3000
+    PORT=4000
+
+    ■ Docker 化
+
+    Dockerfile
+    FROM node:18-alpine
+    WORKDIR /app
+    COPY package*.json ./
+    RUN npm ci --only=production
+    COPY . .
+    RUN npm run build
+    EXPOSE 4000
+    CMD ["npm", "start"]
+
+    ■ ヘルスチェックエンドポイント
+
+    app.get('/health', (req, res) => {
+      res.status(200).json({ status: 'ok' });
+    });
+
+    ■ ログと監視
+
+    import pino from 'pino';
+    const logger = pino();
+
+    // ミドルウェアでログ
+    app.use((req, res, next) => {
+      logger.info(`${req.method} ${req.url}`);
+      next();
+    });
+
+    ■ パフォーマンス最適化
+
+    ・バッチング有効化
+    ・適切なキャッシュ設定
+    ・データベース接続プーリング
+    ・gzip 圧縮有効化
+
+    app.use(compression());

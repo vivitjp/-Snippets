@@ -1,0 +1,12 @@
+---
+#-------------------------------
+# AWS
+#-------------------------------
+- ENTRY:
+  CATEGORY: CloudWatch
+
+- ENTRY:
+  EXPLAIN: |
+    xxxxxx
+  BODY: |
+    ■ xxxxx

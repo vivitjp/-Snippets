@@ -1,0 +1,412 @@
+---
+#-------------------------------
+# Redis
+#-------------------------------
+- ENTRY:
+  CATEGORY: インストール & 概要
+
+- ENTRY:
+  EXPLAIN: Redis
+  BODY: |
+    ■ 概要
+
+    ・オープンソースのインメモリデータ構造ストア
+    ・キーと値のペアでデータを保存
+    ・高速な読み書き性能を持ち、キャッシュやセッション管理に適している
+    ・データ構造として、文字列、リスト、セット、ハッシュ、ソート済みセットなどをサポート
+    ・サーバで動作し、クライアントはネットワーク経由で接続して操作可能
+
+    ■ 主な特徴
+
+    ・インメモリ: データは主にメモリ上に保存され、高速アクセスが可能
+    ・永続化: ディスクへのスナップショットやAOF(Append Only File)によるデータ永続化が可能
+    ・高可用性: レプリケーションやクラスタリング機能を備え、高可用性を実現
+    ・豊富なデータ構造: 多様なデータ構造をサポートし、柔軟なデータ操作が可能
+    ・Pub/Subモデル: メッセージングシステムとしても利用可能
+
+    ■ 主な用途
+
+    ・キャッシュ: 頻繁にアクセスされるデータのキャッシュとして使用
+    ・セッション管理: ユーザーセッション情報の保存に利用
+    ・リアルタイム分析: 高速なデータ処理が求められる分析用途に適用
+    ・キューイングシステム: タスクキューやメッセージキューとして利用可能
+
+    ■ インストール(Nodejs サーバ)
+
+      npm install redis
+
+    ■ インストール(クライアント React)
+
+      npm install redis
+
+#-------------------------------
+# サーバサイド
+#-------------------------------
+- ENTRY:
+  CATEGORY: サーバサイド
+
+- ENTRY:
+  EXPLAIN: サーバサイドの実装
+  BODY: |
+    ■ Redis サーバの起動
+
+      redis-server
+
+    ■ Redis CLI の使用
+
+      redis-cli
+
+    ■ 基本コマンド例
+
+      SET key value                     // 文字列の設定
+      GET key                           // 文字列の取得
+      LPUSH mylist item1                // リストの左側に要素を追加
+      LRANGE mylist 0 -1                // リストの全要素を取得
+      HSET myhash field1 val1           // ハッシュにフィールドを設定
+      HGET myhash field1                // ハッシュからフィールドを取得
+
+    ■ ドキュメント
+
+    https://redis.io/documentation
+
+- ENTRY:
+  EXPLAIN: Nestjs での使用例
+  BODY: |
+    ■ 概要
+
+    ・NestJS で Redis を使用する方法を解説
+    ・キャッシュやセッション管理に Redis を活用する例を紹介
+
+    ■ インストール
+
+      npm install redis @nestjs-modules/ioredis
+
+    ■ Redis モジュールの設定
+
+      import { Module } from '@nestjs/common';
+      import { RedisModule } from '@nestjs-modules/ioredis';
+
+      @Module({
+        imports: [
+          RedisModule.forRoot({
+            config: {
+              host: 'localhost',
+              port: 6379,
+            },
+          }),
+        ],
+      })
+      export class AppModule {}
+
+    ■ サービスでの使用例
+
+      import { Injectable } from '@nestjs/common';
+      import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
+
+      @Injectable()
+      export class AppService {
+        constructor(@InjectRedis() private readonly redis: Redis) {}
+
+        async setValue(key: string, value: string): Promise<void> {
+          await this.redis.set(key, value);
+        }
+
+        async getValue(key: string): Promise<string> {
+          return this.redis.get(key);
+        }
+      }
+
+    ■ 使用例
+
+      const appService = new AppService(redisClient);
+      await appService.setValue('myKey', 'myValue');
+      const value = await appService.getValue('myKey');
+      console.log(value);               // 'myValue'
+
+#-------------------------------
+# クライアントサイド
+#-------------------------------
+- ENTRY:
+  CATEGORY: クライアントサイド
+
+- ENTRY:
+  EXPLAIN: 文字列
+  BODY: |
+    ■ 概要
+
+    ・Redis の基本的なデータ型である文字列の操作方法を解説
+    ・Node.js の redis クライアントを使用して、文字列のセットとゲットを行う
+
+    ■ ユースケース
+
+    ・キャッシュデータの保存
+    ・セッション情報の保存
+
+    ■ Redis クライアント作成
+
+      const redis = require('redis');
+      const client = redis.createClient({
+        host: 'localhost',
+        port: 6379
+      });
+
+    ■ 接続
+
+      client.on('connect', () => {
+        console.log('Redis に接続しました');
+      });
+
+    ■ エラー処理
+
+      client.on('error', (err) => {
+        console.error('Redis エラー:', err);
+      });
+
+    ■ 文字列のセット
+
+      client.set('key', 'value', (err, reply) => {
+        if (err) throw err;
+        console.log('SET 結果:', reply);            // OK
+      });
+
+    ■ 文字列のゲット
+
+      client.get('key', (err, reply) => {
+        if (err) throw err;
+        console.log('GET 結果:', reply);            // value
+      });
+
+    ■ 接続終了
+
+      client.quit();
+
+- ENTRY:
+  EXPLAIN: リスト操作
+  BODY: |
+    ■ 概要
+
+    ・Redis のリストデータ型の操作方法を解説
+    ・Node.js の redis クライアントを使用して、リストへの要素の追加、取得、削除を行う
+
+    ■ ユースケース
+
+    ・タスクキューの実装
+    ・メッセージングシステム
+
+    ■ Redis クライアント作成
+
+      const redis = require('redis');
+      const client = redis.createClient();
+
+    ■ リストに要素を追加 (右側)
+
+      client.rpush('mylist', 'item1', 'item2', 'item3', (err, reply) => {
+        console.log('RPUSH 結果:', reply);            // 3 (リストの長さ)
+      });
+
+    ■ リストから要素を取得
+
+      client.lrange('mylist', 0, -1, (err, reply) => {
+        console.log('LRANGE 結果:', reply);          // ['item1', 'item2', 'item3']
+      });
+
+    ■ リストの左側から要素を削除
+
+      client.lpop('mylist', (err, reply) => {
+        console.log('LPOP 結果:', reply);            // item1
+      });
+
+    ■ 接続終了
+
+      client.quit();
+
+- ENTRY:
+  EXPLAIN: ハッシュ操作
+  BODY: |
+    ■ 概要
+
+    ・ハッシュはフィールドと値のペアを格納するデータ構造
+    ・ユーザ情報や設定データの保存に適している
+
+    ■ ユースケース
+
+    ・ユーザプロファイルの保存
+    ・設定オプションの管理
+
+    ■ Redis クライアント作成
+
+      const redis = require('redis');
+      const client = redis.createClient();
+
+    ■ ハッシュにフィールドを設定
+
+      client.hset(
+        'user:1',                       // ハッシュキー
+        'name',                         // フィールド名
+        'Alice',                        // フィールド値
+        'age',                          // フィールド名
+        '30',                           // フィールド値
+        (err, reply) => {               // コールバック
+          console.log('HSET 結果:', reply); // 2 (設定されたフィールド数)
+        }
+      );
+
+    ■ ハッシュからフィールドを取得
+
+      client.hget(
+        'user:1',                       // ハッシュキー
+        'name',                         // フィールド名
+        (err, reply) => {
+          console.log('HGET 結果:', reply); // Alice
+        }
+      );
+
+    ■ ハッシュ全体を取得
+
+      client.hgetall('user:1', (err, reply) => {
+        console.log('HGETALL 結果:', reply);    // { name: 'Alice', age: '30' }
+      });
+
+    ■ 接続終了
+
+      client.quit();
+
+- ENTRY:
+  EXPLAIN: Pub/Sub モデル
+  BODY: |
+    ■ 概要
+
+    ・Publish/Subscribe モデルは、メッセージングパターンの一つで
+    ・メッセージの送信者（パブリッシャー）が特定のチャネルにメッセージを送信
+    ・そのチャネルを購読している受信者（サブスクライバー）がメッセージを受け取る
+
+    ■ ユースケース
+
+    ・リアルタイム通知システム
+    ・チャットアプリケーション
+
+    ■ Redis クライアント作成
+
+      const redis = require('redis');
+
+    ■ パブリッシャー 
+
+      const publisher = redis.createClient();
+
+      publisher.publish(
+        'channel',                                // チャネル名
+        'Hello from publisher!',                  // メッセージ
+        (err, reply) => {                         // コールバック
+          console.log('PUBLISH 結果:', reply);    // 購読者数
+        }
+      );
+
+    ■ サブスクライバー
+
+      const subscriber = redis.createClient();
+      subscriber.subscribe('channel');
+
+      subscriber.on(
+        'message',                                 // イベント名
+        (channel, message) => {                    // コールバック
+          console.log(`受信: ${channel} - ${message}`);  // 受信: channel - Hello from publisher!
+        }                                          
+      );
+
+    ■ 一定時間後に終了
+
+      setTimeout(() => {
+        publisher.quit();
+        subscriber.quit();
+      }, 1000);
+
+- ENTRY:
+  EXPLAIN: キャッシュとしての使用例
+  BODY: |
+    ■ 概要
+
+    ・Redis をキャッシュとして使用する例を解説
+    ・頻繁にアクセスされるデータを Redis に保存し、パフォーマンスを向上させる
+
+    ■ ユースケース
+
+    ・データベースクエリの結果キャッシュ
+    ・API レスポンスのキャッシュ
+
+    ■ Redis クライアント作成
+
+      const redis = require('redis');
+      const client = redis.createClient();
+
+    ■ データのキャッシュ取得関数
+
+      function getCachedData(key, callback) {
+        client.get(key, (err, data) => {
+          if (err) return callback(err);
+          if (data) {
+            console.log('キャッシュから取得');
+            return callback(null, JSON.parse(data));
+          }
+
+          // キャッシュがない場合、データを取得 (ここではダミー)
+          const newData = { id: 1, name: 'Sample Data' };
+          client.setex(key, 3600, JSON.stringify(newData)); // 1時間キャッシュ
+          console.log('新規データをキャッシュ');
+          callback(null, newData);
+        });
+      }
+
+    ■ キャッシュデータの取得
+
+      getCachedData('sample:key', (err, data) => {
+        if (err) throw err;
+        console.log('データ:', data);
+        client.quit();
+      });
+
+- ENTRY:
+  EXPLAIN: ログインユーザの管理
+  BODY: |
+    ■ Redis クライアント作成
+
+      const redis = require('redis');
+      const client = redis.createClient();
+
+    ■ ユーザのログイン情報を保存
+
+      function loginUser(userId, sessionData, callback) {
+        const sessionKey = `session:${userId}`;
+        client.setex(sessionKey, 86400, JSON.stringify(sessionData), (err, reply) => {
+          if (err) return callback(err);
+          console.log('ユーザがログインしました:', reply);
+          callback(null, reply);
+        });
+      }
+
+    ■ ユーザのセッションデータを取得
+
+      function getUserSession(userId, callback) {
+        const sessionKey = `session:${userId}`;
+        client.get(sessionKey, (err, data) => {
+          if (err) return callback(err);
+          if (data) {
+            console.log('セッションデータを取得しました');
+            return callback(null, JSON.parse(data));
+          }
+          console.log('セッションが見つかりません');
+          callback(null, null);
+        });
+      }
+
+    ■ ユーザのログイン
+
+      loginUser('user123', { name: 'Alice', role: 'admin' }, (err) => {
+        if (err) throw err;
+
+        // セッションデータの取得
+        getUserSession('user123', (err, session) => {
+          if (err) throw err;
+          console.log('セッションデータ:', session);
+          client.quit();
+        });
+      });

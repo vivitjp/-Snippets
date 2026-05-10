@@ -1,0 +1,437 @@
+---
+#-------------------------------
+# Lint
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: インストール & init
+  BODY: |
+    ■ インストール
+    npm i -D eslint
+    yarn add eslint --dev
+
+    ■ 設定
+    yarn run eslint --init
+
+    ■ VScode
+    ESLint プラグイン追加
+
+#-------------------------------
+# パッケージ
+#-------------------------------
+- ENTRY:
+  EXPLAIN: パッケージ
+  BODY: |
+    ■ eslint(JS)
+    eslint 🔵                                     ~9.0.0
+    eslint-config-prettier                        ~9.1.0
+    @eslint/js 🔵                                 ^9.0.0
+    @types/eslint__js 🔵
+
+    ■ eslint(TS) + plugin
+    typescript-eslint 🔵
+    @typescript-eslint/eslint-plugin 🔵           ~7.5.0
+    @typescript-eslint/parser 🔵                  ~7.5.0
+
+    ■ eslint(React) + plugins
+    eslint-plugin-react 🔵                        ~7.34.1
+    eslint-config-react-app                       ~7.0.1
+    eslint-plugin-react-hooks 🔵                  ~4.6.0
+    eslint-plugin-jsx-a11y                        ~6.8.0
+    eslint-plugin-react-refresh
+
+    ■ plugins
+    eslint-plugin-import                          ~2.29.0
+    eslint-plugin-jest                            ~28.2.0
+    eslint-plugin-jsdoc                           ~48.2.3
+    eslint-plugin-jsonc                           ~2.15.0
+    eslint-plugin-prettier                        ~5.1.3
+    eslint-plugin-sort-keys-fix                   ~1.1.2
+    eslint-plugin-spellcheck                      0.0.20
+    eslint-plugin-testing-library                 ~6.2.0
+
+    ■ 必要なユーティリティ
+    globals 🔵                                    ^15.0.0
+    @babel/eslint-parser                          ~7.24.1
+
+#-------------------------------
+# setting
+#-------------------------------
+- ENTRY:
+  EXPLAIN: 設定システム移行
+  BODY: |
+    ■ バージョン比較
+    旧(<=8): .eslistrc.js
+    新(>=9): eslint.config.js
+
+    ・設定システム Flat Config
+    ・v10 で 旧 .eslintrc.js は完全削除
+
+    ■ 変更点
+    ・plugin, parser 構文変更
+    ・extends 廃止
+    ・glob pattern で対象ファイル毎に設定可能
+    ・.eslintignore で除外ファイル指定が不必要
+    ・overrides プロパティ不必要
+
+- ENTRY:
+  EXPLAIN: 初期設定(init)
+  BODY: |
+    ■ @eslint/config で設定
+    > npm init @eslint/config@latest
+
+    Need to install the following packages:
+    @eslint/create-config@1.1.4
+    Ok to proceed? (y) y
+    > snippets@0.0.0 npx
+    > create-config
+    √ How would you like to use ESLint?
+    √ What type of modules does your project use? · esm
+    √ Which framework does your project use? · react
+    √ The React plugin doesn't officially support ESLint v9 yet. What would you like to 
+    do? · 9.x
+    √ Does your project use TypeScript? · typescript
+    √ Where does your code run? · browser
+    The config that you've selected requires the following dependencies:
+
+    ■ 以下のパッケージインストール
+    eslint@9.x
+    globals
+    @eslint/js
+    typescript-eslint
+    eslint-plugin-react
+    @eslint/compat
+
+- ENTRY:
+  EXPLAIN: v9 前の古設定(.eslistrc.js)
+  BODY: |
+    【.eslistrc.js】
+
+    module.exports = {
+      "env": {
+        "browser": true,                          // ブラウザ対応
+        "es2021": true,                           // ES2021に対応
+        "node": true                              // Node.js対応
+      },
+
+      "extends": [                                // ESLintの推奨設定を使う
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",  //型チェック
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",  //より厳密な型チェック
+        'plugin:react/recommended',
+        'plugin:react/jsx-runtime',
+        'plugin:react-hooks/recommended',
+      ],
+
+      // ALL 
+      "extends": ["eslint:all", "plugin:react/all"]
+
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        project: './tsconfig.json',               // 直指定でOKの場合も...
+        # "ecmaVersion": 12,                      // 12 or latest
+        # "sourceType": "module"
+      },
+
+      "plugins": [
+        "@typescript-eslint"
+        'react',
+        'react-refresh',
+      ],
+
+      "rules": {
+        "semi": ["error", "never"]                // []の第1引数:【error/warn/off】
+                                                  // []の第2引数: rule固有のOptionを定義
+                                                  // semiには"never"というOptionあり
+        'newline-before-return': 'error',
+        'no-console': 'warn',
+        'no-var': 'error',
+      }
+    }
+
+    //React
+    "settings": {
+      "react": {
+        "createClass": "createReactClass",
+        "pragma": "React",
+        "fragment": "Fragment",
+        "version": "detect",
+        "flowVersion": "0.53"
+      },
+    }
+
+    //以下 Vite
+    "plugins": [
+      'react-refresh'
+    ],
+    "rules": {
+      'react-refresh/only-export-components': 'warn',  // vite
+    }
+
+- ENTRY:
+  EXPLAIN: v9 後の新設定(eslint.config.js)
+  BODY: |
+    export default [
+      // ■ 対象 & 除外
+      {
+        files: ["**/*.{ts, tsx, js,jsx}"],           // 対象ファイル 
+        ignores: ["**/dist/**", ".lintstagedrc.js"], // 除外ファイル
+      },
+
+      // ■ JavaScript
+      pluginJs.configs.recommended,
+
+      // ■ TypeScript
+      // ...tseslint.configs.recommended,
+      // ...tseslint.configs.strict,
+      // ...tseslint.configs.stylistic,
+      ...tseslint.configs.recommendedTypeChecked,
+
+      // ■ languageOptions
+      {
+        languageOptions: {
+          globals: {
+            ...globals.browser, // FrontEnd
+          },
+          parser: typescriptEslintParser,
+          parserOptions: {
+            ecmaFeatures: {
+              jsx: true,  // React JSX
+            },
+            project: true,
+          },
+        },
+      },
+
+      // ■ プラグイン
+      {
+        plugins: {
+          "@typescript-eslint": typescriptEslint,
+        },
+        rules: {
+          ...typescriptEslint.configs.recommended.rules,
+        }
+      }
+
+- ENTRY:
+  EXPLAIN: 対象と除外
+  BODY: |
+    {
+      files: ["**/*.{ts, tsx, js,jsx}"],
+      ignores: ["**/dist/**"],
+    }
+
+- ENTRY:
+  EXPLAIN: TypeScriptパーサー
+  BODY: |
+    {
+      languageOptions: {
+        parser: typescriptEslintParser,
+        parserOptions: {
+          allowAutomaticSingleRunInference?: boolean;
+          cacheLifetime?: {
+            glob?: number | 'Infinity';
+          };
+          ecmaFeatures: {
+            jsx: true,                            // 🔵 Boolean
+            globalReturn?: boolean;
+          },
+          ecmaVersion?: number | 'latest';
+          emitDecoratorMetadata?: boolean;
+          experimentalDecorators?: boolean;
+          extraFileExtensions?: string[];
+          jsDocParsingMode?: 'all' | 'none' | 'type-info';
+          jsxFragmentName?: string | null;
+          jsxPragma?: string | null;
+          lib?: string[];
+          programs?: import('typescript').Program[];
+          project: true,                          // 🔵 string|string[]|boolean|null;
+                                                  // 最も近い tsconfig.json を探す
+          projectFolderIgnoreList?: string[];
+          tsconfigRootDir?: string;
+          warnOnUnsupportedTypeScriptVersion?: boolean;
+          EXPERIMENTAL_useProjectService?: boolean;
+        },
+      }
+    }
+
+- ENTRY:
+  EXPLAIN: プラグイン
+  BODY: |
+    {
+      plugins: {
+        "@typescript-eslint": typescriptEslint,
+      },
+      rules: {
+        ...typescriptEslint.configs.recommended.rules, // 🔵
+        ...typescriptEslint.configs.strict.rules,
+        
+        // 以下は現時点でエラー(2024-06)
+        [ERROR] ...typescriptEslint.configs["recommended-type-checked"].rules,
+        [ERROR] ...typescriptEslint.configs["strict-type-checked"].rules,
+        
+        // ルールの有効化/無効化を個別に設定することもできる
+        "@typescript-eslint/no-unused-vars": "on/off",
+        "@typescript-eslint/no-misused-promises": "on/off",
+        "@typescript-eslint/no-floating-promises": "on/off",
+
+        "@typescript-eslint/consistent-type-definitions": "on/off",
+        //  Use an `interface` instead of a `type`
+        
+        "@typescript-eslint/consistent-indexed-object-style": "on/off",
+        //  A record is preferred over an index signature
+        
+        "@typescript-eslint/no-extraneous-class": "on/off",
+        //  Unexpected class with only static properties
+        
+        "@typescript-eslint/no-unused-vars": "on/off",
+        //  'n' is defined but never used
+      },
+    },
+
+- ENTRY:
+  EXPLAIN: React 設定
+  BODY: |
+    // 現状、pluginReactConfig が正式対応しておらず要修正
+    ...fixupConfigRules(pluginReactConfig),
+    {
+      // 上の理由から下のように定義不可
+      // また、上で react を一度定義すると再定義不可
+      // plugins: {
+      //  react: { ...pluginReactAllConfig, ...pluginReactConfig },
+      // },
+
+      settings: { react: { version: "detect" } },
+
+      rules: {                                    // "off"=0, "warn"=1, "error"=2
+        'react/react-in-jsx-scope': 'off',
+        // 'React' must be in scope when using JSX  react/react-in-jsx-scope
+        "react/jsx-uses-react": "off",
+
+        'react/display-name': "warn",
+        'react/jsx-key': "warn",
+        //  Missing "key" prop for element in iterator
+        'react/jsx-no-comment-textnodes': "warn",
+        'react/jsx-no-duplicate-props': "warn",
+        'react/jsx-no-target-blank': "warn",
+        'react/jsx-no-undef': "warn",
+        'react/jsx-uses-vars': "warn",
+        'react/no-children-prop': "warn",
+        'react/no-danger-with-children': "warn",
+        'react/no-deprecated': "warn",
+        'react/no-direct-mutation-state': "warn",
+        'react/no-find-dom-node': "warn",
+        'react/no-is-mounted': "warn",
+        'react/no-render-return-value': "warn",
+        'react/no-string-refs': "warn",
+        'react/no-unescaped-entities': "warn",
+        'react/no-unknown-property': "warn",
+        'react/no-unsafe': 0,
+        'react/prop-types': "warn",
+        'react/require-render-return': "warn",
+      },
+    }
+
+#-------------------------------
+# 実行
+#-------------------------------
+- ENTRY:
+  EXPLAIN: CLI 実行 & Options
+  BODY: |
+    // ■ 実行
+    npx eslint [options] [file|dir|glob]*
+    npx eslint file1.js file2.js
+    npx eslint lib/**
+    npx eslint                          // files が設定済みなら
+
+    // ■ Options
+    Basic configuration:
+      --no-config-lookup                // eslint.config.js を使用しない
+      -c, --config path::String         // eslint.config.jsなどを使用せず、CLIで定義
+      --inspect-config                  // Open the config inspector with the current configuration
+      --global [String]                 // global 変数定義
+      --parser String                   // Parser 指定
+      --parser-options Object           // Parser Options
+
+    Specify Rules and Plugins:
+      --plugin [String]                 // plugins 指定
+      --rule Object                     // rules 指定
+
+    Fix Problems:
+      --fix                             // 自動修正
+      --fix-dry-run                     // 保存せずに 自動修正
+      --fix-type Array                  // 自動修正タイプ(directive, problem, suggestion, layout)
+
+    Ignore Files:
+      --no-ignore                       // 除外ファイルパターンを使用せず
+      --ignore-pattern [String]         // 除外ファイルパターン
+
+    Use stdin:
+      --stdin                           // <STDIN> - default: false
+      --stdin-filename String           // STDIN ファイル名指定
+
+    Handle Warnings:
+      --quiet                           // レポート errors のみ - default: false
+      --max-warnings Int                // 警告数 nonzero exit code - default: -1
+
+    Output:
+      -o, --output-file path::String    // レポートファイルPATH&名
+      -f, --format String               // output format - default: stylish
+      --color, --no-color               // 色
+
+    Inline configuration comments:
+      --no-inline-config                // 設定変更に関するコメント無視
+      --report-unused-disable-directives  // 未使用 eslint-disable, eslint-enable レポート追加
+      --report-unused-disable-directives-severity String
+                                        // 報告レベル設定 off(0), warn(1), error(2)
+
+    Caching:
+      --cache                           // 変更ファイルのみ - default: false
+      [DEPR]--cache-file path::String   // cacheファイル
+      --cache-location path::String     // cacheファイル
+      --cache-strategy String           // 変更ファイル判定方法 def: metadata or content
+
+    Miscellaneous:
+      --init                            // 初回設定 - default: false
+      --env-info                        // 環境変数報告 - default: false
+      --no-error-on-unmatched-pattern   // Prevent errors when pattern is unmatched
+      --exit-on-fatal-error             // Exit with exit code 2 in case of fatal error - default: false
+      --no-warn-ignored                 // Suppress warnings when the file list includes ignored files
+      --pass-on-no-patterns             // Exit with exit code 0 in case no file patterns are passed
+      --debug                           // Output debugging information
+      -h, --help                        // Show help
+      -v, --version                     // Output the version number
+      --print-config path::String       // Print the configuration for the given file
+      --stats                           // Add statistics to the lint report - default: false
+
+#-------------------------------
+# Exception
+#-------------------------------
+- ENTRY:
+  EXPLAIN: |
+    例外: 単数行をチェックから除外
+  BODY: |
+    // eslint-disable-next-line
+    // eslint-disable-next-line no-unused-vars    // 特定
+
+    alert('foo'); // eslint-disable-line
+
+    // eslint-disable-next-line
+    alert('foo');
+
+    /* eslint-disable-next-line */
+    alert('foo');
+
+    alert('foo'); /* eslint-disable-line */
+
+- ENTRY:
+  EXPLAIN: |
+    例外: 囲い行をチェックから除外
+  BODY: |
+    /* eslint-disable */
+    ...
+    /* eslint-enable */
+
+    /* eslint-disable no-unused-vars */
+    ...
+    /* eslint-enable no-unused-vars */

@@ -1,0 +1,25 @@
+---
+#-------------------------------
+# AWS
+#-------------------------------
+- ENTRY:
+  CATEGORY: AppSync
+
+- ENTRY:
+  EXPLAIN: |
+    概要
+  BODY: |
+    ■ AWS AppSync GraphQL API 
+    • GraphQL APIを簡単に構築できるフルマネージドサービス
+
+    ■ AppSync vs API Gateway
+    • AppSync
+      • GraphQL のエンドポイント提供(1つのみ)
+    • API Gateway
+      • 複数のAPIエンドポイントを提供
+
+- ENTRY:
+  EXPLAIN: |
+    xxxxxx
+  BODY: |
+    ■ xxxxx

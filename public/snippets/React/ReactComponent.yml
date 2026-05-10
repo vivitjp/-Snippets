@@ -1,0 +1,310 @@
+---
+#-------------------------------
+# React Component
+#-------------------------------
+- ENTRY:
+  CATEGORY: React Component
+
+- ENTRY:
+  EXPLAIN: 関数コンポーネント
+  BODY: |
+    ■ FC(FunctionComponent) コンポーネント
+
+    type Props = {
+      foo: string;
+      age?: number;
+    }
+
+    const MyComponent: React.FC<Props> = ({ foo, age=0 }) => {
+      return <span>{foo}:{age}</span>
+    }
+
+    ■ コール方法(2方法)
+
+    <MyComponent foo="bar" />                        // JSXタグ形式
+
+    { MyComponent({ foo: "hoo", age: 20 }) }         // 関数呼び出し形式
+
+    ■ コール方法の違いによる再レンダー挙動の違いに注意
+
+    ・JSXタグ形式(<MyComponent ... />)
+
+      Reactのレンダリングサイクルに組み込まれ、状態管理やライフサイクルメソッドが適切に機能
+
+    ・関数呼び出し形式(MyComponent(...))
+
+      通常のJavaScript関数として扱われ、Reactのライフサイクルや状態管理の恩恵を受けない
+
+    どちらを使うべきか? 
+
+    ・通常はJSXタグ形式が推奨: これにより、Reactの機能をフルに活用でき、予期せぬ挙動を避けられる
+    ・関数呼び出し形式は、特定のユースケース（例:条件付きレンダリングなど）でのみ使用を検討
+    ・一貫性を保つ: プロジェクト全体でどちらの形式を使用するかを統一し、コードの可読性と保守性を向上
+
+- ENTRY:
+  EXPLAIN: クラスコンポーネント
+  BODY: |
+    ■ クラスコンポーネント
+    type Props = {
+      foo: string;
+      age?: number;
+    }
+     
+    class MyComponent extends React.Component<Props, {}> {
+      render() {
+        return <span>{this.props.foo}:{this.props.age || 0}</span>
+      }
+    }
+
+#-------------------------------
+# Component + Handler サンプル
+#-------------------------------
+- ENTRY:
+  CATEGORY: Component + Handler サンプル
+
+- ENTRY:
+  EXPLAIN: Button
+  BODY: |
+    ■ ハンドラ
+    const handleClickButton = useCallback(
+      (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation()
+      },
+      []
+    )
+
+    <button onClick={handleClickButton} value="">
+      Submit
+    </button>
+
+- ENTRY:
+  EXPLAIN: Text
+  BODY: |
+    ■ ハンドラ
+    const handleChangeText = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.currentTarget.value
+        setText(value)
+      },
+      []
+    )
+
+    <input
+      type="text"
+      onChange={handleChangeText}
+      value={text}
+      placeholder="name"
+    />
+
+- ENTRY:
+  EXPLAIN: InputButton
+  BODY: |
+    ■ ハンドラ
+    const handleClickInputButton = useCallback(
+      (e: React.MouseEvent<HTMLInputElement>) => {
+        e.stopPropagation()
+      },
+      []
+    )
+
+    <input type="button" onClick={handleClick} value="Click" />
+
+- ENTRY:
+  EXPLAIN: Checkbox
+  BODY: |
+    ■ ハンドラ
+    const handleChangeCheck = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.currentTarget.checked
+        setIsChecked(value)
+      },
+      []
+    )
+
+    <input
+      type="checkbox"
+      id={checkId}
+      onChange={handleChangeCheck}
+      checked={isChecked}
+    />
+    <label htmlFor={checkId}>On</label>
+
+- ENTRY:
+  EXPLAIN: Radio
+  BODY: |
+    ■ ハンドラ
+    const handleChangeRadio = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = parseInt(e.currentTarget.value ?? "0")
+        setRadio(value)
+      },
+      []
+    )
+
+    <input
+      type="radio"
+      id={radioId1}
+      name="myRadio"
+      onChange={handleChangeRadio}
+      value={1}
+      checked={radio === 1}
+    />
+    <label htmlFor={radioId1}>1</label>
+
+- ENTRY:
+  EXPLAIN: Select
+  BODY: |
+    type Options = {
+      title: string
+      value: string
+    }
+
+    type Select = {
+      options: Options[]
+      handleChangeSelect: (e: React.ChangeEvent<HTMLSelectElement>) => void
+    }
+
+    const [selectedValue, setSelectedValue] = useState<number>(1)
+
+    ■ ハンドラ
+    const handleChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const value = parseInt(e.currentTarget.value ?? 1)
+      setSelectedValue(value)
+    }
+
+    const SelectSet = ({ options, onChange }: Select) => {
+      return (
+        <select onChange={handleChangeSelect}>
+          {!!options.length &&
+            options.map((n, index) => (
+              <option key={index} value={n.value} >
+                {n.title}
+              </option>
+            ))}
+        </select>
+      )
+    }
+
+#-------------------------------
+# カスタムコンポーネント
+#-------------------------------
+- ENTRY:
+  CATEGORY: カスタムコンポーネント
+
+- ENTRY:
+  EXPLAIN: input
+  BODY: |
+    type Props = {
+      checkList: readonly boolean[]
+      labels: readonly string[]
+      handler: (index: number) => void
+    } & React.ComponentPropsWithoutRef<"input">
+
+    export const Checks: React.FC<Props> = ({
+      checkList, labels, handler, ...args
+    }) => {
+      const id = useId()
+
+      ■ ハンドラ
+      const handleChange = (index: number) => handler(index)
+
+      return (
+        <ul>
+          {labels.map((title, idx) => (
+            <li key={idx}>
+              <label htmlFor={id}>{title}</label>
+              <input
+                {...args}
+                id={id}
+                type="checkbox"
+                checked={checkList[idx]}
+                onChange={() => handleChange(idx)}
+              />
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: input+Ref
+  BODY: |
+    type Props = {
+      text: string
+      setText: React.Dispatch<React.SetStateAction<string>>
+      title: string
+    } & React.ComponentPropsWithRef<"input">
+
+    export const InputRef = forwardRef<HTMLInputElement, Props>(
+      ({ text, setText, title, ...args }, ref) => {
+        const id = useId()
+
+        ■ ハンドラ
+        const handleChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
+          const value = e.currentTarget.value
+          setText(value)
+        }
+
+        return (
+          <div>
+            <label htmlFor={id}>{title}</label>
+            <input {...args} id={id} ref={ref} onChange={handleChangeText} />
+          </div>
+        )
+      }
+    )
+
+- ENTRY:
+  EXPLAIN: input+Ref ファイルアップロード
+  BODY: |
+    import { Box, Button, Flex } from "@chakra-ui/react";
+    import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from "react";
+
+    export const FileUploadButton = ({
+      setSavedData,
+      type = ".txt",
+    }: {
+      setSavedData: Dispatch<SetStateAction<string | undefined>>;
+      type?: string;
+    }) => {
+      const refInput = useRef<HTMLInputElement>(null);
+      const handleButton = () => {
+        refInput.current?.click();
+      };
+      const [msg, setMsg] = useState("");
+
+      const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files || e.target.files.length === 0) {
+          console.error("保存データファイル選択");
+          return;
+        }
+
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const content = event.target?.result;
+          try {
+            setSavedData(content as string);
+            setMsg("ロードされました");
+          } catch (error) {
+            console.error(error);
+            setMsg("ロード失敗しました");
+          }
+        };
+        reader.readAsText(file);
+      };
+
+      return (
+        <Flex alignItems={"center"}>
+          <Button onClick={handleButton}>保存データファイル使用</Button>
+          <input
+            ref={refInput}
+            hidden={true}
+            type="file"
+            accept={type}
+            onChange={handleFileChange}
+          />
+          <Box ml={5}>{msg}</Box>
+        </Flex>
+      );
+    };

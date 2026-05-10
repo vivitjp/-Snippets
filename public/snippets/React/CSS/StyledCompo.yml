@@ -1,0 +1,421 @@
+---
+#-------------------------------
+# Package: Styled Component
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: Styled-Components インストール
+  BODY: |
+    ■ インストール時にバージョンの整合性に注意
+      環境によって型エラーが出たりする
+
+    ■ "next": "13.4.4",
+    "styled-components": "^6.1.1",
+    "@types/styled-components": "^5.1.30",
+
+    ■ "vite": "^4.3.2",
+    "styled-components": "5.3.6",
+    "@types/styled-components": "^5.1.26",
+
+#-------------------------------
+# error 解消
+#-------------------------------
+- ENTRY:
+  EXPLAIN: エラー解消
+  BODY: |
+    styled-components: unknown prop の警告を解消する2つの方法
+
+    ■ Errorコード
+    const StyledCopy = styled.p`
+      text-align: ${({ align }) => `${align}`};
+    `;
+
+    ■ 修正コード
+    const StyledCopy = styled.p`
+      text-align: ${({ $align }) => `${$align}`};
+    `;
+
+    ■ 使用
+    const Copy = ({ align = 'center', children, ...props }) => (
+      <StyledCopy {...props} align={align}>
+        {children}
+      </StyledCopy>
+    );
+
+#-------------------------------
+# Div Row / Column
+#-------------------------------
+- ENTRY:
+  EXPLAIN: 書式
+  BODY: |
+    type Props = {
+      fontSize: CSSProperties['fontSize'];
+    };
+
+    ■ 書式 A
+    const A = styled.div`
+      ...
+    `
+
+    ■ 書式 B
+    const B = styled.div<Props>`
+      ${({ fontSize = "12px" }) => css`
+        fontSize: ${ fontSize };
+        ...
+      `}
+    `;
+
+    ■ 書式 C
+    const C = styled.div<Props>`
+      fontSize: ${({ fontSize = "12px" }) => ${fontSize}};
+      ...
+    `;
+
+    ■ 書式 D
+    const Div = styled.div.attrs<Props>((props) => ({
+      style: {
+        fontSize: fontSize,
+      },
+    }))<Props>`
+      padding: 10px;
+      border: 1px solid black;
+    `;
+
+#-------------------------------
+# Div Row / Column
+#-------------------------------
+- ENTRY:
+  EXPLAIN: row & column コンポーネント
+  BODY: |
+    const Row = styled.div`
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 5px;
+      padding: 5px;
+    `
+    const Column = styled.div`
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 5px;
+      padding: 5px;
+    `
+
+- ENTRY:
+  EXPLAIN: div 引数
+  BODY: |
+    type Div = {
+      width?: number
+      isPending? : boolean
+    }
+
+    export const Div = styled.div<Div>`
+      width: ${({ width }) => `${width ? `${width}px` : "100%"}`};
+      :hover {
+        color: ${({ isPending = false }) =>
+          isPending ? "var(--main-color)" : "#777"};
+      }
+    `
+
+- ENTRY:
+  EXPLAIN: div flex 引数(css)
+  BODY: |
+    export const FlexDiv = styled.div`
+      ${(props) => css`
+        margin: 0;
+        padding: 0;
+        color: var(--main-color);
+        font-size: ${props.fontSize ?? "inherit"};
+        ${props.fontFamily && `font-family: ${props.fontFamily}`};
+      `}
+    `
+
+- ENTRY:
+  EXPLAIN: div flex 引数(css入れ子)
+  BODY: |
+    type MenuItem = {
+      isPending?: boolean
+    }
+    export const MenuItem = styled.div<MenuItem>`
+      ${({ isPending = false }) => css`
+        padding: 5px;
+        color: #999;
+        ${isPending &&
+        css`
+          color: #555;
+          :hover {
+            cursor: pointer;
+            color: var(--main-color);
+          }
+        `}
+      `}
+    `
+
+- ENTRY:
+  EXPLAIN: Disabled
+  BODY: |
+    export const FlexDiv = styled.div`
+      ${(props) => css`
+        margin: 0;
+        padding: 0;
+        color: var(--main-color);
+        font-size: ${props.fontSize ?? "inherit"};
+        ${props.fontFamily && `font-family: ${props.fontFamily}`};
+      `}
+      ${(props) =>
+        props.disabled &&
+        css`
+          background-color: #aaa;
+        `
+      }
+    `
+
+#-------------------------------
+# Input系 部品
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: button
+  BODY: |
+    const Button = styled.button`
+      width: 60px;
+      height: 25px;
+      padding: 3px 10px;
+      border: 1px solid #aaa;
+    `
+
+- ENTRY:
+  EXPLAIN: input button
+  BODY: |
+    const Button = styled.input.attrs({ type: "button" })`
+      padding: 0.2rem;
+      width: 160px;
+      height: 40px;
+      color: #999;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: white;
+      box-shadow: 1px 1px 5px #ccc;
+    `
+
+- ENTRY:
+  EXPLAIN: input text
+  BODY: |
+    const Input = styled.input.attrs({ type: "text" })`
+      padding: 0.2rem;
+      width: 160px;
+      height: 30px;
+      color: #555;
+      ::placeholder {
+        color: grey;
+      }
+    `
+
+- ENTRY:
+  EXPLAIN: input checkbox
+  BODY: |
+    const Checkbox = styled.input.attrs({ type: "checkbox" })`
+      padding: 0.2rem;
+      width: 50px;
+    `
+
+- ENTRY:
+  EXPLAIN: select
+  BODY: |
+    type Options = {
+      title: string
+      value: number
+    }
+    type SelectSet = {
+      options: Options[]
+      onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
+    }
+
+    const SelectSet = ({ options, onChange }: SelectSet) => {
+      return (
+        <Select onChange={onChange}>
+          {!!options.length &&
+            options.map((n, index) => (
+              <option key={index} value={n.value}>
+                {n.title}
+              </option>
+            ))}
+        </Select>
+      )
+    }
+
+    type Select = {
+      width?: number
+      height?: number
+    }
+    const Select = styled.select<Select>`
+      width: ${({ width = 160 }) => `${width}px`};
+      height: ${({ height = 40 }) => `${height}px`};
+      padding: 4px;
+      border: 1px solid #aaa;
+      background-color: white;
+      border-radius: 5px;
+    `
+
+#---------------------------------------------------
+# Parameters
+#---------------------------------------------------
+
+- ENTRY:
+  EXPLAIN: 引数付 div
+  BODY: |
+    type Div = {
+      width?: number
+      height?: number
+    }
+
+    const Div = styled.div<Div>`
+      width: ${({ width = 100 }) => `${width}px`};
+      height: ${({ height = 100 }) => `${height}px`};
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 2px;
+      padding: 0;
+    `
+
+- ENTRY:
+  EXPLAIN: 引数付 input
+  BODY: |
+    type Input = {
+      width?: number
+      height?: number
+    }
+
+    const Input = styled.input<Input>`
+      width: ${({ width = 100 }) => `${width}px`};
+      height: ${({ height = 100 }) => `${height}px`};
+      padding: 8px;
+      :hover { color: blue; }
+      ::placeholder { color: grey; }
+    `
+    //<Input width={200} placeholder="ここ" />
+
+- ENTRY:
+  EXPLAIN: 引数付(推奨)
+  BODY: |
+    type InputAttrs = {
+      width?: number
+      height?: number
+    }
+
+    const InputAttrs = styled.input.attrs<InputAttrs>(
+      ({ width = 200, height = 50 }) => ({
+        style: {
+          width: `${width}px`,
+          height: `${height}px`,
+        },
+      })
+    )<InputAttrs>`
+      border: 1px solid black;
+      :hover { color: blue; }
+      ::placeholder { color: grey; }
+    `
+
+- ENTRY:
+  EXPLAIN: (非)引数付
+  BODY: |
+    type InputAttrs = {
+      width?: number
+    }
+
+    const InputAttrs = styled.input.attrs<InputAttrs>(() => ({
+      type: "text",
+    }))<InputAttrs>`
+      width: ${({ width = 100 }) => `${width}px`};
+      padding: 8px;
+    `
+
+#---------------------------------------------------
+# forward
+#---------------------------------------------------
+
+- ENTRY:
+  EXPLAIN: attrs forward Input
+  BODY: |
+    type InputForward = {
+      width?: number
+    } & React.ComponentPropsWithRef<"input">
+
+    export const InputForward = React.forwardRef<HTMLInputElement, InputForward>(
+      ({ width = 100 }, ref) => {
+        return <InputForwardStyled width={width} ref={ref} />
+      }
+    )
+
+    export const InputForwardStyled = styled.input<{ width: number }>`
+      height: 100%;
+      width: ${({ width }) => `${width}px`};
+    `
+
+- ENTRY:
+  EXPLAIN: attrs forward Div
+  BODY: |
+    type DivForward = {
+      width?: number
+    } & ComponentProps<"div">
+
+    export const DivForward = React.forwardRef<HTMLDivElement, DivForward>(
+      ({ children, width = 100 }, ref) => {
+        return (
+          <DivForwardStyled width={width} ref={ref}>
+            {children}
+          </DivForwardStyled>
+        )
+      }
+    )
+
+    export const DivForwardStyled = styled.div<{ width: number }>`
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: flex-start;
+      height: 100%;
+      width: ${({ width }) => `${width}px`};
+      margin: 0;
+      padding: 0;
+    `
+
+- ENTRY:
+  EXPLAIN: Children付きRef
+  BODY: |
+    import React, { ReactNode } from "react"
+    import styled from "styled-components"
+
+    export const Details = styled.details`
+      font-size: 14px;
+      ...
+    `
+    export type DetailsRefType = {
+      children?: ReactNode
+    }
+
+    export const DetailsRef = React.forwardRef<HTMLDetailsElement, DetailsRefType>(
+      ({ children }, ref) => {
+        return <Details ref={ref}>{children}</Details>
+      }
+    )
+    --------------------------------------------------------------------
+    const SomeComponent = () => {
+        ...
+        const ref = useRef<HTMLDetailsElement>(null)
+
+        return (
+          <DetailsRef ref={refDetail}>
+            <SummaryWrapper>
+              <DivTitle>■ {title}</DivTitle>
+              <DivPrefix>{snippetsObject.prefix}</DivPrefix>
+            </SummaryWrapper>
+            <DetailInside>{highlighted}</DetailInside>
+          </DetailsRef>
+        )
+    }

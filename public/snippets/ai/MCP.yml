@@ -1,0 +1,262 @@
+---
+#-------------------------------
+# MCP
+# @src/pages/MCP_01 このフォルダに MCP を活用した最もシンプルなサンプルを作成。 MCP サーバーはフリーのものを使用する。
+#-------------------------------
+- ENTRY:
+  CATEGORY: MCP
+
+- ENTRY:
+  EXPLAIN: 概要
+  BODY: |
+    ■ MCP (Model-Context Protocol) 概要
+
+    ・モデルとコンテキストをやり取りするための軽量プロトコル
+    ・セッション管理、コンテキスト注入、ツール呼び出し、ストリーミング応答を整理して扱うための設計方針
+    ・目的: 再現性のある対話、外部知識の組み込み、マルチモデル連携、監査ログ確保
+
+    ■ ユースケース
+
+    ・RAG（Retrieval-Augmented Generation）で検索結果を安全にプロンプトに注入してモデルに渡す
+    ・モデルによる外部ツール呼び出し（データベースクエリ、コード実行、WebAPI 呼び出し）の仲介
+    ・マルチモデルルーティングとフェイルオーバー（用途に応じて最適モデルへ仲介）
+    ・セッション履歴の管理と会話コンテキストの差分同期
+    ・モデル応答のストリーミング（部分応答をクライアントへ逐次送信）と中断制御
+
+    ■ 設計パターン
+
+    ・HTTP REST 型: 単純なリクエスト/レスポンス、導入が容易
+    ・WebSocket ストリーミング型: 応答を逐次送信するシナリオに適合
+    ・gRPC 型: 高スループット・双方向ストリーミングが必要な場合に有効
+    ・イベント駆動（Pub/Sub）型: 大規模分散環境での非同期ワークフロー向け
+    ・エージェント指向型: ツール呼び出しや複数モデルの協調を扱う上位プロトコル
+
+    ■ 実装上の注意点
+
+    ・入力は常に正規化/サニタイズする（外部ツール呼び出し時の安全対策）
+    ・セッションとトレーサビリティを保持する（監査ログ、再現性）
+    ・トークン制限を実装してコスト制御する
+    ・エラーやタイムアウトの扱いを明確化する（中断、再試行ポリシー）
+
+    ■ まとめ
+
+    ・MCP はモデル統合の共通インターフェースとなり得る設計思想
+    ・シンプルな REST から双方向ストリーミングまでニーズに合わせて選択
+    ・セキュリティ、コスト、再現性を考慮して実装を決める
+
+- ENTRY:
+  EXPLAIN: MCP サーバー
+  BODY: |
+    ■ 概要
+
+    ・ホスト (エディタやエージェントランタイム) が接続する側ではない
+      ・ツール実行・リソース参照・プロンプト提供などの能力を宣言して応答する側
+    ・トランスポートは stdio、HTTP、WebSocket 等、採用プロトコルに依存
+      ・Cursor / Claude Desktop 等では主に stdio や SSE 系が多い
+    ・クライアントからのリクエストに応じてローカルファイル、外部 API、DB などと橋渡しする実装単位として置く
+
+    ■ 公開 MCP サーバー
+
+    ・npm 等で配布される参照実装やコミュニティ製サーバーを、その README の手順どおりに起動して接続試験に使う
+    ・公式・準公式の例として filesystem / fetch / memory など用途別のサーバーパッケージがよく紹介される
+      ・名称と入手先は時期で変わるのでドキュメント確認
+    ・無料でも README に API キーや OAuth、外部 SaaS 連携が必要なものがあるので、課金とデータ送信範囲を事前に読む
+
+    ■ アクセス
+
+    ・クライアントの MCP 設定に必要な環境変数・ヘッダを登録する
+      ・サーバー起動コマンド (stdio) 
+      ・またはエンドポイント URL (HTTP/SSE) 
+    ・stdio の場合以下を揃える
+      ・実行ファイルパス
+      ・引数
+      ・作業ディレクトリ
+      ・PATH が通るか
+    ・信頼できるソースのサーバーだけ有効化し、ファイル・ネットワーク・シークレットに触れる権限は必要最小限に留める
+
+- ENTRY:
+  EXPLAIN: フリー公開サーバー (URL・アクセス)
+  BODY: |
+    ■ 前提
+
+    ・「フリー」は多くが OSS として無償利用可 (ライセンスは各リポジトリ参照)
+    ・実体はローカルで stdio 起動するサーバーが主流 (npm の npx、Python の uvx / pip、Docker 等)
+    ・インターネット上に常時公開された無料ホスト URL だけに頼る形は限定的
+    ・ホスト型はレジストリや各 README で確認
+
+    ■ 公式ドキュメント・一覧の URL
+
+    ・仕様・入門: https://modelcontextprotocol.io/
+    ・参照実装リポジトリ: https://github.com/modelcontextprotocol/servers
+       (Everything / Fetch / Filesystem / Git / Memory / Sequential Thinking / Time 等)
+    ・公開サーバー検索: https://registry.modelcontextprotocol.io/
+       (MCP Registry)
+    ・リモート MCP の接続手順: https://modelcontextprotocol.io/docs/develop/connect-remote-servers.md
+    ・Cursor での MCP 設定: https://cursor.com/docs/context/mcp
+
+    ■ 参照実装の起動コマンド例 (ローカル・stdio)
+
+    ・TypeScript / npm (npx):
+    ・Everything (動作確認・テスト向け): `npx -y @modelcontextprotocol/server-everything`
+    ・Memory: `npx -y @modelcontextprotocol/server-memory`
+    ・Filesystem: `npx -y @modelcontextprotocol/server-filesystem` のあとに許可するディレクトリパスを引数で渡す
+    ・Sequential Thinking: `npx -y @modelcontextprotocol/server-sequential-thinking`
+    ・Python / uv (uvx 推奨):
+    ・Fetch: `uvx mcp-server-fetch` (pip なら `pip install mcp-server-fetch` のあと `python -m mcp_server_fetch`)
+    ・Time: `uvx mcp-server-time` (pip なら `mcp-server-time` インストール後 `python -m mcp_server_time`)
+    ・Git: `uvx mcp-server-git` に `--repository` とリポジトリパス等 (README 参照)
+    ・Docker イメージ例 (Fetch): `docker run -i --rm mcp/fetch` (Time は `mcp/time` 等、各 README の表記に従う)
+
+    ■ クライアントへの登録 (stdio・アクセス方法)
+
+    ・Claude Desktop 等の設定 JSON に `mcpServers` を追加し、`command` と `args` で上記コマンドを指定する
+    ・VS Code はワークスペースの `.vscode/mcp.json` 等、拡張の案内に従う
+    ・Cursor は MCP 設定画面またはプロジェクトの MCP 用 JSON に同様の command/args を書く (詳細は Cursor ドキュメント)
+    ・環境変数が要るサーバー (外部 API 連携) は `env` にキーを足す
+    ・リモート URL 型はクライアントが対応していればエンドポイントと認証ヘッダを登録 (connect-remote-servers の手順)
+
+    ■ 設定 JSON の例 (Claude Desktop 互換・memory のみ)
+
+      {
+        "mcpServers": {
+          "memory": {
+            "command": "npx",
+            "args": ["-y", "@modelcontextprotocol/server-memory"]
+          }
+        }
+      }
+
+    ■ 注意
+
+    ・Fetch はローカル/内部 IP へのアクセス等に注意 (公式 README の警告参照)
+    ・サードパーティ製は API キー・課金・データ送信範囲を README で必ず確認
+
+- ENTRY:
+  EXPLAIN: メッセージ設計
+  BODY: |
+    ■ MCP のメッセージ設計（例）
+
+    ・Request:
+      {
+        "sessionId": "string",
+        "type": "prompt", // prompt | tool | control
+        "payload": { "messages": [{"role":"user","text":"..."}], "context": {...} }
+      }
+    ・Response:
+      {
+        "sessionId": "string",
+        "type": "response", // response | tool-result | error
+        "payload": { "output": "...", "meta": {...} }
+      }
+
+- ENTRY:
+  EXPLAIN: 実装サンプル 1 — HTTP REST 型
+  BODY: |
+    ■ 実装サンプル 1 — HTTP REST 型（簡易 TypeScript/Express）
+
+      import express from 'express'
+      import bodyParser from 'body-parser'
+
+      const app = express()
+      app.use(bodyParser.json())
+
+      app.post('/mcp', async (req, res) => {
+        const { sessionId, type, payload } = req.body
+        // 1. コンテキストを取得/正規化
+        const context = payload.context || {}
+        // 2. (省略) 検索やサニタイズ、トークン制限を実施
+        // 3. モデル呼び出し（ここは実装依存、プレースホルダ）
+        const modelReply = await callModel({ messages: payload.messages, context })
+        res.json({ sessionId, type: 'response', payload: { output: modelReply } })
+      })
+
+      async function callModel(args: any) { return 'モデルの応答（ダミー）' }
+      app.listen(3000)
+
+    ■ callModel の実装例(OpenAI GPT-4o)
+
+      import { OpenAIApi, Configuration } from 'openai'
+      const openai = new OpenAIApi(new Configuration({ apiKey: process.env.OPENAI_API_KEY }))
+
+      async function callModel(args: any) {
+        const response = await openai.chat.completions.create({
+          model: 'gpt-4o',
+          messages: args.messages,
+          max_tokens: 1000,
+        })
+        return response.choices[0].message.content
+      }
+
+- ENTRY:
+  EXPLAIN: 実装サンプル 2 — WebSocket ストリーミング型
+  BODY: |
+    ■ 実装サンプル 2 — WebSocket ストリーミング型（簡易 TypeScript）
+
+      import http from 'http'
+      import WebSocket from 'ws'
+
+      const server = http.createServer()
+      const wss = new WebSocket.Server({ server })
+
+      wss.on('connection', (ws) => {
+        ws.on('message', async (raw) => {
+          const req = JSON.parse(raw.toString())
+          // 逐次トークナイズしてモデルからストリーミングで受け取りながら client に送る例
+          const stream = simpleModelStream(req.payload)
+          for await (const chunk of stream) {
+            ws.send(JSON.stringify({ sessionId: req.sessionId, type: 'response-chunk', payload: { chunk } }))
+          }
+          ws.send(JSON.stringify({ sessionId: req.sessionId, type: 'response-end' }))
+        })
+      })
+
+    ■ simpleModelStream の実装例(OpenAI GPT-4o)
+
+      async function* simpleModelStream(payload: any) {
+        // OpenAI のストリーミング API 呼び出し例
+        const response = await openai.chat.completions.create({
+          model: 'gpt-4o',
+          messages: payload.messages,
+          stream: true,
+        })
+        for await (const chunk of response) {
+          yield chunk.choices[0].delta.content
+        }
+      }
+
+
+- ENTRY:
+  EXPLAIN: CLI との比較と今後の展望
+  BODY: |
+    ■ 「CLI で置き換え」の意味
+
+    ・MCP はホストとツール側の会話の型(ツール一覧・スキーマ・呼び出し手順)を決めるプロトコル
+    ・CLI はシェルからコマンドを実行する操作様式
+    ・エージェントがターミナル経由で既存 CLI を叩けば目的が達成できるなら、その範囲では MCP サーバを立てずに済む、という文脈で「置き換え」と言われることが多い
+    ・既存 CLI を薄くラップした MCP サーバや、MCP を呼ぶ CLI もあるので、二者択一というより積み重ねとして捉えると分かりやすい
+
+    ■ 役割の切り分け(ざっくり)
+
+    ・CLI が向きやすいもの:
+
+      ・CI・バッチ・スクリプト・ローカル運用
+      ・Unix 的なパイプや既存コマンド群との合成
+
+    ・MCP が向きやすいもの:
+
+      ・IDE やエージェントホストからツールをカタログ化して選ばせる
+      ・スキーマ付きのツール呼び出しをホストが統一的に扱う
+      ・権限・接続設定をホスト側でまとめたい場合
+
+    ■ 今後の展望(動向ベース)
+
+    ・MCP は Agentic AI Foundation(AAIF) 経由で Linux Foundation 傘下に寄贈され、ベンダ中立の標準として育てる流れがある(時点は公式発表を参照)
+    ・「MCP が CLI を消す」「CLI に一本化」より、同じバックエンドを IDE からは MCP、パイプからは CLI、のように接続口を並べる併存が現実的になりやすい
+    ・複数 MCP でツール定義がコンテキストを圧迫する問題に対し、プロトコル・実装の改善と、オンデマンド読み込みや CLI ラッパのような周辺ツールの成熟が並走しうる
+
+    ■ まとめ
+
+    ・個人・小さな自動化なら CLI 直叩きで十分なケースも多い
+    ・チーム・IDE 統合・ツール一覧の統一を重視するなら MCP 側の価値が大きい
+    ・長期的には対立より、同じ能力を複数の接続口から使う設計が増えていく見立て
+

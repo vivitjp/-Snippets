@@ -1,0 +1,305 @@
+---
+#-------------------------------
+# RTL
+#-------------------------------
+
+#-------------------------------
+# Setup & 破棄
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: RTL(React Testing Library) インストール
+  BODY: |
+    npm install --save-dev @testing-library/react @testing-library/dom
+
+    ■ TypeScript
+    npm install --save-dev @testing-library/react @testing-library/dom @types/react @types/react-dom
+
+- ENTRY:
+  EXPLAIN: |
+    例: UserEvent.click
+  BODY: |
+    import {render, screen} from '@testing-library/react'
+    import userEvent from '@testing-library/user-event'
+    import '@testing-library/jest-dom'
+    import Fetch from './fetch'
+
+    test('loads and displays greeting', async () => {
+      // ■ ARRANGE
+      render(<Fetch url="/greeting" />)
+
+      // ■ ACT(userEvent)
+      await userEvent.click(screen.getByText('Load Greeting'))
+
+      // ■ AWAIT
+      await screen.findByRole('heading')
+
+      // ■ ASSERT
+      expect(screen.getByRole('heading')).toHaveTextContent('hello there')
+      expect(screen.getByRole('button')).toBeDisabled()
+    })
+
+- ENTRY:
+  EXPLAIN: |
+    例: fireEvent.click 非同期(MSW) 成功
+  BODY: |
+    import {render, screen} from '@testing-library/react'
+    import {http, HttpResponse} from 'msw'
+    import {setupServer} from 'msw/node'
+    import {render, fireEvent, screen} from '@testing-library/react'
+    import '@testing-library/jest-dom'
+    import Fetch from '../fetch'
+
+    const server = setupServer(
+      http.get('/greeting', () => {
+        return HttpResponse.json({greeting: 'hello there'})
+      }),
+    )
+
+    beforeAll(() => server.listen())
+    afterEach(() => server.resetHandlers())
+    afterAll(() => server.close())
+
+    test('loads and displays greeting', async () => {
+      // ■ ARRANGE
+      render(<Fetch url="/greeting" />)
+
+      // ■ ACT(fireEvent)
+      fireEvent.click(screen.getByText('Load Greeting'))
+
+      // ■ AWAIT
+      await screen.findByRole('heading')
+
+      // ■ ASSERT
+      expect(screen.getByRole('heading')).toHaveTextContent('hello there')
+      expect(screen.getByRole('button')).toBeDisabled()
+    })
+
+- ENTRY:
+  EXPLAIN: |
+    例: fireEvent.click 非同期(MSW) 失敗
+  BODY: |
+    import {render, screen} from '@testing-library/react'
+    import {http, HttpResponse} from 'msw'
+    import {setupServer} from 'msw/node'
+    import {render, fireEvent, screen} from '@testing-library/react'
+    import '@testing-library/jest-dom'
+    import Fetch from '../fetch'
+
+    const server = setupServer(
+      http.get('/greeting', () => {
+        return HttpResponse.json({greeting: 'hello there'})
+      }),
+    )
+
+    beforeAll(() => server.listen())
+    afterEach(() => server.resetHandlers())
+    afterAll(() => server.close())
+
+    test('handles server error', async () => {
+      server.use(
+        http.get('/greeting', () => {
+          return new HttpResponse(null, {status: 500})
+        }),
+      )
+
+      // ■ ARRANGE
+      render(<Fetch url="/greeting" />)
+
+      // ■ ACT(fireEvent)
+      fireEvent.click(screen.getByText('Load Greeting'))
+
+      // ■ AWAIT
+      await screen.findByRole('alert')
+
+      // ■ ASSERT
+      expect(screen.getByRole('alert')).toHaveTextContent('Oops, failed to fetch!')
+      expect(screen.getByRole('button')).not.toBeDisabled()
+    })
+
+# - ENTRY:
+#   EXPLAIN: テスト用 Fetch
+#   BODY: |
+#     ■[fetch.jsx]
+#     import React, {useState, useReducer} from 'react'
+#     import axios from 'axios'
+
+#     const initialState = { error: null, greeting: null }
+
+#     function greetingReducer(state, action) {
+#       switch (action.type) {
+#         case 'SUCCESS': {
+#           return { error: null, greeting: action.greeting }
+#         }
+#         case 'ERROR': {
+#           return { error: action.error, greeting: null }
+#         }
+#         default: { return state }
+#       }
+#     }
+
+#     export default function Fetch({url}) {
+#       const [{error, greeting}, dispatch] = useReducer(
+#         greetingReducer,
+#         initialState,
+#       )
+#       const [buttonClicked, setButtonClicked] = useState(false)
+
+#       const fetchGreeting = async url =>
+#         axios
+#           .get(url)
+#           .then(response => {
+#             const {data} = response
+#             const {greeting} = data
+#             dispatch({type: 'SUCCESS', greeting})
+#             setButtonClicked(true)
+#           })
+#           .catch(error => { dispatch({type: 'ERROR', error}) })
+
+#       const buttonText = buttonClicked ? 'Ok' : 'Load Greeting'
+
+#       return (
+#         <div>
+#           <button onClick={() => fetchGreeting(url)} disabled={buttonClicked}>
+#             {buttonText}
+#           </button>
+#           {greeting && <h1>{greeting}</h1>}
+#           {error && <p role="alert">Oops, failed to fetch!</p>}
+#         </div>
+#       )
+#     }
+
+- ENTRY:
+  EXPLAIN: fireEventとuserEvent
+  BODY: |
+    ■ user-event: ユーザー操作をシミュレートする関数
+
+      優先使用、簡潔に記述可能、
+
+      import userEvent from '@testing-library/user-event'
+
+      // ボタンクリック
+      userEvent.click(screen.getByRole('button'))
+      userEvent.type(screen.getByRole('textbox'), 'test')
+
+    ■ fireEven: DOMイベントを発火させる関数
+
+      import { fireEvent } from '@testing-library/react'
+
+      // ボタンクリック
+      fireEvent.click(screen.getByRole('button'))
+      fireEvent.change(screen.getByRole('textbox'), { target: { value: 'test' } })
+
+      fireEventを使用して入力値変更: 表示されないはずの入力値が表示される。
+      fireEventはDOMイベントを発火させるだけで、ユーザーが実際に行う操作をシミュレートできないため
+
+    参考URL: https://zenn.dev/k_log24/articles/4c1cd37ff0ca50
+
+- ENTRY:
+  EXPLAIN: Queriesの種類
+  BODY: |
+    ◯◯◯ByTestId
+    ◯◯◯ByRole
+    ◯◯◯ByLabelText
+    ◯◯◯ByTitle
+    ◯◯◯ByPlaceholderText
+    ◯◯◯ByText
+    ◯◯◯ByDisplayValue
+    ◯◯◯ByAltText
+  TABLE:
+    OPTION:
+      WIDTH:
+        - 15%
+        - 13%
+        - 13%
+        - 13%
+        - 13%
+      HAS_TITLE: true
+      ALIGN:
+        - left
+        - center
+        - center
+        - center
+        - center
+        - left
+    BODY: |
+      接頭辞	不一致	シングルMatch	複数Match	Await?	備考
+      get	      throw	return	throw	No	
+      find	    throw	return	throw	Yes	非同期
+      query	    null	return	throw	No	NULL Check のみに使用
+      getAll	  throw	array	array	No	配列
+      findAll	  throw	array	array	Yes	配列、非同期
+      queryAll	[]	array	array	No	配列、NULL Check のみに使用
+
+- ENTRY:
+  EXPLAIN: ByTestId
+  BODY: |
+    getByTestId(
+      container: HTMLElement,           // If `screen`, skip "container"
+      text: TextMatch,
+      options?: {
+        exact?: boolean = true,
+        normalizer?: NormalizerFn,
+      }
+    ): HTMLElement
+
+    ■ Option: TextMatch
+    // 文字列
+    screen.getByText('Hello World')                 // 完全一致
+    screen.getByText('llo Worl', {exact: false})    // 部分一致
+    screen.getByText('hello world', {exact: false}) // CASE無視
+
+    // 正規表現
+    screen.getByText(/World/)                       // 部分一致
+    screen.getByText(/world/i)                      // 部分一致、CASE無視
+    screen.getByText(/^hello world$/i)              // 完全一致、CASE無視
+
+    // カスタムCB
+    screen.getByText((content, el) => content.startsWith('Hello'))
+
+- ENTRY:
+  EXPLAIN: 非同期(findBy & waitFor)
+  BODY: |
+    const button = screen.getByRole('button', {name: 'Click Me'})
+    fireEvent.click(button)
+    await screen.findByText('Clicked once')
+    fireEvent.click(button)
+    await screen.findByText('Clicked twice')
+
+    ■ waitFor
+    function waitFor<T>(
+      callback: () => T | Promise<T>,
+      options?: {
+        container?: HTMLElement
+        timeout?: number
+        interval?: number
+        onTimeout?: (error: Error) => Error
+        mutationObserverOptions?: MutationObserverInit
+      },
+    ): Promise<T>
+
+    await waitFor(() => expect(mockAPI).toHaveBeenCalledTimes(1))
+
+- ENTRY:
+  EXPLAIN: FireEvent
+  BODY: |
+    <button>Submit</button>
+
+    fireEvent(
+      getByText(container, 'Submit'),
+      new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+      }),
+    )
+
+    ■ click
+    fireEvent.click(screen.getByText(/click me/i))
+
+    ■ change
+    fireEvent.change(getByLabelText(/username/i), {target: {value: 'a'}})
+
+    ■ keyDown
+    getByText('click me').focus();      //先にFOCUS
+    fireEvent.keyDown(domNode, {key: 'Enter', code: 'Enter', charCode: 13})
+    fireEvent.keyDown(domNode, {key: 'A', code: 'KeyA'})

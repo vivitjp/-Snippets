@@ -1,0 +1,39 @@
+---
+#-------------------------------
+# Recoil
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: Recoil 1 State
+  BODY: |
+    import { atom } from "recoil"
+
+    export const xxxxRecoilState = atom<TypeXxxx[]>({
+      key: "xxxxRecoilStateKey", //Unique名
+      default: dataXxxx, //初期データ
+    })
+
+- ENTRY:
+  EXPLAIN: Recoil 2 Root
+  BODY: |
+    import { RecoilRoot } from "recoil"
+
+    export const ParentCompo = () => {
+      return (
+        <RecoilRoot>
+          <ChildCompo />
+        </RecoilRoot>
+      )
+    }
+
+- ENTRY:
+  EXPLAIN: Recoil 3 Use
+  BODY: |
+    import { useRecoilState } from "recoil"
+    import { xxxxRecoilState } from "./xxxxRecoilState"
+
+    export const ChildCompo = () => {
+      const [xxxx] = useRecoilState(xxxxRecoilState)
+
+      return <Compo data={xxxx} />
+    }

@@ -1,0 +1,1926 @@
+---
+#-------------------------------
+# TypeScript 2024
+#-------------------------------
+- ENTRY:
+  CATEGORY: 基礎
+
+- ENTRY:
+  EXPLAIN: 型(ビルトイン型)
+  BODY: |
+    ■ プリミティブ型(7種類)
+
+    type Primitive = number | string | boolean | bigint | symbol | undefined | null
+
+    b:boolean   = true;                      // Boolean型
+    s:string    = "abc";                     // 文字列型
+    n:number    = 1;                         // 数型
+    b:bigint    = 10n;                       // BigInt型(ES2020)
+    y:symbol    = Symbol();                  // シンボル型
+    u:undefined = undefined;                 // undefined型
+    l:null      = null;                      // null型
+
+    ■ 組み込み型(4種類)
+
+    type Builtin = Primitive | Function | Date | Error | RegExp
+
+    const f: Function = ()=>{}                // 関数型
+    const f: Function = ()=>void              // 関数型(void)
+    const f: (...args:any[])=>any             // 関数型(引数/戻り値指定)
+
+    type Func = (a:number)=>string            // カスタム型
+    type FuncVoid = (a:number)=>void          // カスタム型(void)
+
+    const d: Date = new Date();               // 日付型
+    const d: Date = new Date("2024-01-01");   // 日付型(new)
+
+    const e: Error = new Error("error");      // エラー型
+    const e: Error = new TypeError("type");   // 型エラー型
+
+    const r: RegExp = /abc/;                  // 正規表現型
+    const r: RegExp = new RegExp("abc");      // 正規表現型(new)
+
+    ■ オブジェクト型
+
+    a:object={}                              // プリミティブ以外: {},[],()=>{}
+    b:Object={}                              // null,undefined以外全部:忌避!
+    c:{} = {}                                // ≒Object
+
+    ■ any 型
+
+    const a:any = 10;
+    const i:number = a;                      // (危険)代入OK i = any 型!
+    const s:string = a;                      // (危険)代入OK s = any 型!
+    const o:object = a;                      // (危険)代入OK o = any 型!
+
+    ■ unknown 型
+
+    const a:unknown = 10;
+    const i:number = a;                      // (安全)Error 代入不可
+    const s:string = a;                      // (安全)Error 代入不可
+    const o:object = a;                      // (安全)Error 代入不可 
+
+    if(typeof(a)==="string")                 // 型Check:v5.3
+      const s:string = a;                    // (安全)代入可
+
+    ■ never 型                                // Genericで多用される 
+
+    type A={ a:"A" }
+    type B={ a:"B" }
+
+    const f=(props:A|B)=>{
+      switch (props.a) {
+        case "A": return ...
+        case "B": return ...
+        default: let _ng:never = props       // 警告
+
+    ■ 定義済み関数型
+
+    CallableFunction    Function 由来の呼び出し可能オブジェクト用
+
+      例:
+        declare const fn: CallableFunction
+        fn.call(undefined, 1, 2)
+
+    NewableFunction     new で呼べるコンストラクタ用
+
+      例:
+        declare const Ctor: NewableFunction
+        new Ctor()
+
+    VoidFunction        引数なしで void を返す関数型（() => void に近い）
+
+      例:
+        const onDone: VoidFunction = () => {}
+        setTimeout(() => {}, 0)
+
+    ※ 実務では () => void や (...args: never[]) => void を書くことも多い
+
+    ■ DOM/JS ランタイム(lib に含まれる型)
+
+    Promise<T>          async/await の戻りや then/catch/finally を持つ標準の Promise
+    PromiseLike<T>      then だけ持てば Promise 互換として扱える最小形
+    ArrayLike<T>        length と数値インデックスで要素にアクセスできる(配列に似た集合)
+    Iterable<T>         Symbol.iterator を持ち for...of で列挙できる
+    Iterator<T>         next() で1要素ずつ進めるイテレータ(IteratorResult を返す)
+
+    ※ DOM を有効にしている場合は HTMLElement, Document など大量にある
+
+- ENTRY:
+  EXPLAIN: Union & Intersection
+  BODY: |
+    type P = { name:string, age: number }
+    type A = { city:string, zip: string }
+
+    ■ AND[ & ] 両方を満たす
+
+    const NG: P & A = { name: "Eve", age: 18 }                          // ❌ 不足
+    const NG: P & A = { city: "Paris", zip:"03" }                       // ❌ 不足
+    const NG: P & A = { name: "Eve", age: 18, city: "Paris" }           // ❌ 不足
+    const OK: P & A = { name: "Eve", age: 18, city: "Paris", zip:"03" } // ⭕両方を満たす
+
+    ■ OR[ | ] どちらか一方を満たす(排他的ORではないので両方でもOK)
+
+    const OK: P | A = { name: "Eve", age: 18 }                          // ⭕ P を満たす
+    const OK: P | A = { city: "Paris", zip:"03" }                       // ⭕ A を満たす
+    const OK: P | A = { name: "Eve", age: 18, city: "Paris" }           // ⭕ 少なくとも P を満たす
+    const OK: P | A = { name: "Eve", age: 18, city: "Paris", zip:"03" } // ⭕ 両方を満たす
+    const NG: P | A = { name: "Eve", city:"Eve" }                       // ❌ 混用
+    const NG: P | A = { city: "Paris", age: 18 }                        // ❌ 混用
+
+    ■ XOR 排他的OR(Utility活用)
+
+    type XOR<T> = { [X in keyof T]?: never | undefined; }
+
+    type XP = P & XOR<A>
+    type XA = A & XOR<P>
+
+    const OK: XP | XA = { name: "Eve", age: 18 }                          // ⭕ P を満たす
+    const OK: XP | XA = { city: "Paris", zip:"03" }                       // ⭕ A を満たす
+    const NG: XP | XA = { name: "Eve", age: 18, city: "Paris" }           // ❌ 排他的 OR
+    const NG: XP | XA = { name: "Eve", age: 18, city: "Paris", zip:"03" } // ❌ 排他的 OR
+    const NG: XP | XA = { name: "Eve", city:"Eve" }                       // ❌ 混用
+    const NG: XP | XA = { city: "Paris", age: 18 }                        // ❌ 混用
+
+- ENTRY:
+  EXPLAIN: 定数, widening & narrowing
+  BODY: |
+    ■ 定数化 (const)
+
+    ・const 宣言はリテラル型として推論される
+    ・let 宣言は一般的な型として推論される
+
+    ■ widening & narrowing
+
+    ・Widening: 型が一般化される (let 宣言やオブジェクトのプロパティ)
+    ・Narrowing: 型が特定化される (const 宣言や as const アサーション)
+
+    ■ 例
+
+    let a = 1                                // a:number型
+    const a = 1                              // a:1型
+    const a = {a:1}                          // widening:  {a:number}型
+    const b = {a:1} as const                 // narrowing: {readonly a:1}型
+    type A = { readonly a:number }           // 読取専用
+
+- ENTRY:
+  EXPLAIN: interface vs type
+  BODY: |
+    ■ interface
+
+    ・オブジェクト型を定義するための構文で
+    ・拡張やマージが可能
+    ・型の拡張に気づかないリスクあり
+
+    interface A { a:number, x?:string }
+    interface B { b:number }                 // {b}
+    interface B { c:number }                 // マージ{b,c} 同じ名前でもエラーにならない
+    interface C extends A, B {}              // {}必要
+    => const c:C ={ a:1, b:2, c:3 }
+
+    ■ type
+
+    ・型エイリアスを作成するための構文
+    ・より柔軟に型を定義できる
+    ・拡張やマージは不可
+
+    type A = { a: number, x?:string }
+    type B = A & { b: number }               // intersect
+    const b:B = { a: 1, b: 2 }               // 型適用
+
+- ENTRY:
+  EXPLAIN: keyof (型取得)
+  BODY: |
+    ■ 概要
+
+    ・オブジェクト型のプロパティ名をユニオン型として取得するための型演算子
+    ・型のプロパティ名を動的に取得して操作する際に使用される
+
+    ■ 基本構文
+
+    type Keys = keyof ObjectType
+
+    ■ 例
+
+    type Person = {
+      name: string;
+      age: number;
+      city: string;
+    }
+
+    type PersonKeys = keyof Person          // "name" | "age" | "city"
+    const key: PersonKeys = "name"          // 有効なプロパティ名
+
+    ■ 配列から型
+
+    const x = ["A", "B", "C"] as const
+
+    type Keys = (typeof x)[number]           // "A"|"B"|"C"
+    type Y = typeof x[0|1]                   // "A" | "B"
+
+    ■ 配列からオブジェクト型
+
+    const keys = ["A", "B", "C"] as const 
+    type Keys = { [K in typeof keys[number]] : number }
+
+    const values:Keys = { "A": 1, "B": 2, "C": 3 }
+
+    ■ オブジェクトから型(const無)
+
+    const o = { a: "A", b: "B" }             // const無 -> widening
+
+    type X = typeof o                        // {a:number;b:number;}
+    type K = keyof X                         // "a" | "b"
+    type Y = keyof typeof o                  // "a" | "b"
+    type B = (typeof o)[keyof typeof o]      // string <= Widening
+
+    ■ オブジェクトから型(const有)
+
+    const o = { a: "A", b: "B" } as const    // const有 -> narrowing
+
+    type X = typeof o                        // { readonly a:"A"; readonly b:"B"; } ⭕
+    type K = keyof X                         // "a" | "b"
+    type Y = keyof typeof o                  // "a" | "b"
+    type B = (typeof o)[keyof typeof o]      // "A" | "B"
+
+    ■ 配列からENUM作成
+
+    const array = ["A", "B", "C", "D"] as const
+
+    function makeEnum<T extends readonly string[]>(配列: T) {
+      return 配列.filter(Boolean).reduce(
+      (acc, cur) => ({ ...acc, [cur]: cur }),
+      {} as {[key in typeof 配列[number]]: string}
+      );
+    }
+
+    const ENUM = makeEnum(array);
+    結果: {
+      A: string; <-- 🔴 widening
+      B: string;
+      C: string;
+      D: string;
+    }
+
+    function makeEnumAsConst<T extends readonly string[]>(配列: T) {
+        return 配列.filter(Boolean).reduce(
+        (acc, cur) => ({ ...acc, [cur]: cur }),
+        {} as { readonly [key in typeof 配列[number]]: key} <-- 🔵 readonly const化
+        );
+    }
+
+    const ENUM2 = makeEnumAsConst(array);
+    結果: {
+      readonly A: "A";
+      readonly B: "B";
+      readonly C: "C";
+      readonly D: "D";
+    }
+
+- ENTRY:
+  EXPLAIN: MappedType (マップ型)
+  BODY: |
+    ■ 概要
+
+    ・既存の型を基に新しい型を動的に生成
+    ・型のプロパティを変換、修飾、フィルタリング
+    ・主にオブジェクト型で使用
+
+    ■ 基本構文
+
+    type NewType = {
+      [Key in keyof ExistingType]: Transform<ExistingType[Key]>
+    }
+
+    ■ 例
+
+    type Original = {
+      name: string;
+      age: number;
+    }
+
+    type PartialOriginal = {
+      [K in keyof Original]?: Original[K];          // オプショナル
+    }
+
+    type ReadonlyOriginal = {
+      readonly [K in keyof Original]: Original[K];  // 読み取り専用
+    }
+
+    type StringifiedOriginal = {
+      [K in keyof Original]: string;                // すべてstring型
+    }
+
+    ■ MappedType & Record<> 比較
+
+    type Property = "name" | "address"
+
+    type Person1 = { [ K in Property]: string }
+    {
+        name: string;
+        address: string;
+    }
+
+    type Person2 = Record<Property, string>
+    {
+        name: string;
+        address: string;
+    }
+
+    ■ MappedType + Record<>
+
+    type Section = "sales" | "management"
+    type Property = "name" | "address"
+
+    type SecPersonA = {[S in Section]: Record<Property, string> }
+
+    const secPersonA:SecPersonA  = {
+        sales: {name:"John", address: "Tokyo"},
+        management: {name:"Smith", address: "Osaka"}      // ❌ 全部使用必須
+    }
+
+    const secPersonB: Partial<SecPersonA>  = {
+        sales: {name:"John", address: "Tokyo"},
+        // management: {name:"Smith", address: "Osaka"}   // ⭕ 部分使用OK
+    }
+
+- ENTRY:
+  EXPLAIN: Indexed Access Type (添字アクセス)
+  BODY: |
+    ■ 概要
+
+    ・オブジェクト型の特定のプロパティの型を取得するために使用される
+    ・配列やタプルの要素の型を取得するためにも使用される
+
+    ■ 基本構文
+
+    type PropertyType = ObjectType[KeyType]
+    type ElementType = ArrayType[IndexType]
+
+    ■ 例
+
+    type T = {
+      a: { x:number }
+      b: string
+    }
+
+    const x: T["a"]      = { x: 123 }
+    const y: T["a"]["x"] = 123
+
+    ■ 型内の型流用
+
+    type A = T["a"];                    // { x:number }
+    type B = T["a"|"b"];                // { x:number } | string
+
+- ENTRY:
+  EXPLAIN: as (エイリアス)
+  BODY: |
+    ■ 概要
+
+    ・型や値に別名を付けるために使用される
+    ・型アサーションやモジュールのインポート時にも使用される(別用途)
+
+    ■ 基本構文
+
+    type NewType = {
+      [Key in keyof ExistingType as `some${Capitalize<string & Key>}`]: string
+    }
+
+    ■ 例
+
+    type Person = {
+      name: string;
+      age: number;
+    }
+
+    type Renamed = {
+      [K in keyof Person as `my${Capitalize<string & K>}`]: (param: Person[K]) => void;
+    }
+    結果型: {
+       myName: (param: string) => void; 
+       myAge: (param: number) => void;
+    }
+
+- ENTRY:
+  EXPLAIN: 型指定 (型アサーション)
+  BODY: |
+    ■ 概要
+
+    ・変数や式に対して特定の型を強制的に適用する方法
+    ・型チェックをバイパスするために使用されることが多い
+    ・慎重に使用する必要がある
+
+    ■ 例
+
+    type A = { a: number; b: string | number }
+
+    const a1: A = { a: 1, b: 2 }
+    const a2: A = { a: 1, b: "2" }
+    const a3 = { a: 1, b: 2 } as A           //型アサーション
+    [NG] const a4 = { a: "1", b: 2 } as A    //エラー: 間違った型アサーション
+    [NG] const a5 = <A>{ a: 1, b: 2 }        //エラー: 間違った型アサーションの使い方(<A>)
+
+    type B = { a: number; b: number }
+
+    const b = { a: 1, b: "2" } as B          // エラー: 間違った型アサーション
+    const b = { a: 1 } as unknown as B       // 強制(強制型アサーション) 🔴エラーにならない
+
+- ENTRY:
+  EXPLAIN: satisfies (型適合演算子) v4.9+
+  BODY: |
+    ■ 概要
+
+    ・TypeScript 4.9で導入された型演算子
+    ・オブジェクトや値が特定の型に適合していることを検証するために使用される
+    ・型の互換性をチェックするが、値の型自体は変更しない
+    ・1つ以上のプロパティを持つオブジェクトリテラルで使用されることが多い
+    ・as と異なり、型のリテラル性を保持する
+    ・Widening(string化)を防ぐなど
+
+    ■ 例
+
+    type A = { x: string; y: number }
+
+    const a1: A = { x: "X", y: 1 }
+
+    ・変数 `a1` の型: A ({ x: string; y: number })
+    ・理由: 変数注釈 `: A` が優先され、RHS は注釈に合わせて扱われる
+
+    const a2 = { x: "X", y: 1 } satisfies A
+
+    ・変数 `a2` の推論型: { x: "X"; y: 1 }
+    ・理由: `satisfies` は互換性チェックのみで、式の具体的な型（リテラル性）は保持する
+
+    const a3 = { x: "X", y: 1 } as const
+
+    ・推論型: { readonly x: "X"; readonly y: 1 }
+
+    const a4 = { x: "X", y: 1 } as const satisfies A
+
+    ・変数 `a4` の推論型: { readonly x: "X"; readonly y: 1 }
+    ・理由: `as const` が式の型を readonly リテラルにし、`satisfies` は互換性を検証するだけ
+
+    const a5: A = { x: "X", y: 1 } as const
+
+    ・変数 `a5` の型: A ({ x: string; y: number })
+    ・理由: 変数注釈が優先されるため、RHS の as const によるリテラル性は変数の型には反映されない
+
+- ENTRY:
+  EXPLAIN: enum (列挙体型)
+  BODY: |
+    ■ 概要
+
+    ・関連する定数の集合を定義するための構文
+    ・数値列挙体と文字列列挙体の2種類がある
+
+    ■ 基本構文(数値列挙体)
+
+    enum EnumName {
+      Member1 = 0,
+      Member2 = 1,
+      Member3 = 2,
+    }
+
+    enum ColorNo {
+      Red = 1,                          // ColorNo.Red = 1
+      Green,                            // ColorNo.Green = 2
+      Blue,                             // ColorNo.Blue = 3
+    }
+
+    ■ 基本構文(文字列列挙体)
+
+    enum EnumName {
+      Member1 = "value1",
+      Member2 = "value2",
+      Member3 = "value3",
+    }
+
+    enum ColorName {
+      Red = "red",                      // ColorName.Red = "red"
+      Blue = "blue",                    // ColorName.Blue = "blue"
+    }
+
+#-------------------------------
+# Function
+#-------------------------------
+- ENTRY:
+  CATEGORY: 関数
+
+- ENTRY:
+  EXPLAIN: 関数型
+  BODY: |
+    ■ 概要
+
+    ・関数の引数と戻り値の型を指定する方法
+    ・関数型(Function Type)とArrow関数型(Arrow Function Type)の2種類がある
+      ・違い: 構文のみで、使用上の違いはない
+    ・引数の数や型の互換性ルールがある
+      ・引数の数が少なくても多くてもOK(ただし型互換性は必要)
+      ・戻り値型は指定型に代入可能であればOK
+
+    ■ 基本構文(Function Type)
+
+    type FunctionType = {
+      (param1: Type1, param2: Type2): ReturnType;
+    }
+
+    type Func = {
+      (a: number, b: string): void;
+    }
+
+    ■ 基本構文(Arrow Function Type)
+
+    type ArrowFunctionType = (param1: Type1, param2: Type2) => ReturnType;
+
+    type Func = (a: number, b: string) => void;
+
+    ■ 例
+
+    const func: Func = (a: number, b: string): void => { ... }             // ⭕
+    const func: Func = (a: number): void => { ... }                        // ⭕: 引数不足
+    const func: Func = (): void => { ... }                                 // ⭕: 引数なし
+    const func: Func = (a: number, b: string, c: boolean): void => { ... } // ❌: 引数過多
+    const func: Func = (a: string, b: string): void => { ... }             // ❌: 引数型不一致
+    const func: Func = (a: number, b: string): number => { ... }           // ❌: 戻り値型不一致
+
+- ENTRY:
+  EXPLAIN: 関数オーバーロード
+  BODY: |
+    ■ 概要
+
+    ・同じ関数名で複数の関数シグネチャ(引数と戻り値の型)を定義する方法
+    ・関数の引数や戻り値の型が異なる場合に使用される
+    ・実装は1つで、オーバーロードされたシグネチャに基づいて動作を切り替える
+
+    ■ 基本サンプル
+
+      ※ 先に複数の関数宣言を行い、最後に1つの実装を記述する
+
+      function func(param: string): void
+      function func(param: string[]): void
+      function func(param: string | string[]): void  // Union でのまとめが必要(正確な型必須)
+      {
+          if(typeof param==="string") { } else { }
+      }
+
+      const result1 = func("ABC")
+      const result2 = func(["ABC"])
+
+    ■ 関数型宣言オーバーロード(戻り値 void)
+
+    type FuncOverload = {
+      (a: string): void;
+      (a: string[]): void;
+    }
+
+    const func: FuncOverload = (a: string | string[]): void => {
+      if(typeof a==="string") { } else { }
+    }
+
+    ■ 関数型宣言オーバーロード(戻り値多様)
+
+    type FuncOverload = {
+      (a: string): number;
+      (a: string[]): string;
+    }
+
+    const func: FuncOverload = ((a: string | string[]) => {
+      if(typeof a==="string") {
+        return a.length
+      } else {
+        return a.join(",")
+      }
+    }) as FuncOverload      // オーバーロード型を指定(これ以外の方法が見つかっていない)
+
+    ・戻り値型はオーバーロードのシグネチャに基づいて推論される
+    ・実装内での型チェックが必要
+
+- ENTRY:
+  EXPLAIN: コンパニオン (React Module命名規則)
+  BODY: |
+    ■ 概要
+
+    ・Reactコンポーネントとその型定義を同じ名前でエクスポートするパターン
+    ・コンポーネントのProps型を外部で再利用できるようにするために使用される
+    ・注意: 型のみ使用したい時は、type 型 を使用しないと、コンポーネント本体もインポートされてしまう
+
+    ■ 基本構文
+
+    // MyComponent.tsx
+    export type MyComponent = {
+      title: string;
+      count: number;
+    }
+
+    export const MyComponent: React.FC<MyComponent> = ({ title, count }) => {
+      return ( ... )}
+
+    // AnotherFile.tsx
+    import { MyComponent } from "./MyComponent"
+    const AnotherComponent: React.FC<MyComponent> = ({ title, count }) => {
+      return ( ... )
+    }
+
+    // 型のみ使用したい場合
+    import type { MyComponent } from "./MyComponent"
+
+- ENTRY:
+  EXPLAIN: オブジェクト型の多属性チェック
+  BODY: |
+    ■ 挙動の理由
+
+    ・TypeScriptの構造的型システムにより、オブジェクト型の互換性が柔軟に扱われる
+    ・関数の引数としてオブジェクト型を使用する場合、余分なプロパティがあっても型互換性が成立する
+    ・ただし、直接オブジェクトリテラルを渡す場合は、余分なプロパティがあるとエラーになる
+    ・これは、オブジェクトリテラルがその場で作成されるため、型チェックが厳密に行われるため
+
+    ■ 挙動例
+
+    type Props = {
+      a: string;
+    }
+
+    const func1 = (props: Props) => props.a
+
+    const a = { a: "a", b: "b" }
+    const b = { b: "b" }
+
+    func1(a)                     // ⭕ 多属性の間接代入
+    func1({ a: "a", b: "b" })    // ❌ 多属性の直接代入
+    func1(b)                     // ❌ 属性不足
+
+    ■ 余分引数の受け先追加
+
+    type PropsWithRest = {
+      a: string;
+      [x: string]: unknown      // 余分引数の受け先追加 
+    }
+
+    const func2 = (props: PropsWithRest) => props.a
+
+    // 多属性の直接代入 OK!
+    func2(a)                     // ⭕ 多属性の間接代入
+    func2({ a: "a", b: "b" })    // ⭕ 多属性の直接代入
+    func2(b)                     // ❌ 属性不足
+
+- ENTRY:
+  EXPLAIN: is (Type Predicate 型述語)
+  BODY: |
+    ■ 概要
+
+    ・関数が特定の型を持つかどうか"判定"するためだけ使用
+    ・関数の戻り値の型として「props is Type」の形式を使用、戻り値は boolean 型
+    ・型ガード関数(Type Guard Function)とも呼ばれる
+    ・故に、関数名は isXXX とする慣習がある
+
+    ■ 基本構文
+
+    const isType = (param: any): param is Type => {
+      // 型チェックのロジック
+      return 条件;
+    }
+
+    ■ サンプル
+
+    type Employee = {
+      id: number
+    }
+
+    type TempWorker = {
+      sid: number
+    }
+
+    const isMember = (props: Employee | TempWorker): props is Employee => {
+      return 'id' in props && typeof (props as Employee).id === "number"
+    }
+
+    const addMember = (props: Employee | TempWorker): string => {
+      if (isMember(props)) {
+        return "ABC"
+      } else {
+        return "XYZ"
+      }
+    }
+
+    const result = addMember({ id: 123 })
+    console.log(result)   // "ABC"
+
+#-------------------------------
+# Generics
+#-------------------------------
+- ENTRY:
+  CATEGORY: ジェネリクス
+
+- ENTRY:
+  EXPLAIN: 型宣言
+  BODY: |
+    ■ 概要
+
+    ・型パラメタを使用して、柔軟で再利用可能な型を定義する方法
+    ・型パラメタは、関数、インターフェース、クラス、型エイリアスで使用できる
+    ・型パラメタは、任意の数と型で定義できる
+
+    ■ 基本構文
+
+    type Param<T> = { a: T }            // 単一パラメタ
+    type Param<T, S> = { a: T, b: S }   // 複数パラメタ
+
+    const a: Param<number> = { a: 1 }
+    const b: Param<string> = { a: "x" }
+
+    const d: Param<number, string> = { a: 1, b: "x" }
+    const e: Param<string, boolean> = { a: "x", b: true }
+
+- ENTRY:
+  EXPLAIN: extends (制約)
+  BODY: |
+    ■ 概要
+
+    ・型パラメタに対して特定の型や型の集合に制約を設けるために使用される
+    ・型パラメタが指定された型や型の集合に適合することを保証する
+    ・型パラメタが特定のプロパティやメソッドを持つことを保証する
+
+    ■ 基本構文
+
+    type Param<T extends ConstraintType> = { a: T }
+    const a: Param<ValidType> = { a: ... }
+    const b: Param<InvalidType> = { a: ... }   // ❌ InvalidType は 不適合
+
+    ■ サンプル(Primitive型制約)
+
+    type TypeA<T extends number> = { a: T }
+
+    const a1: TypeA<number> = { a: 1 }
+    const a2: TypeA<string> = { a: "x" }       // ❌ string は number に不適合
+
+    ■ サンプル(Union型制約)
+
+    type ABC = "A" | "B" | "C"
+    type TypeB<T extends ABC> = { a: T }
+
+    const b1: TypeB<ABC> = { a: "A" }
+    const b2: TypeB<string> = { a: "X" }       // ❌ string は ABC に不適合
+
+    ■ サンプル(Object型制約)
+
+    type Obj = {
+      n: string
+      a: number
+    }
+    type TypeC<T extends Obj> = T
+
+    const c1: TypeC<Obj> = {
+      n: "a",
+      a: 1,
+    }
+
+    const c2: TypeC<{ n: string }> = {          // ❌ プロパティ不足
+      n: "a",
+    }
+
+    ■ 既存 Object から型取得して制約
+
+    const obj = { n: "abc", a: 1 }
+
+    type TypeD<T extends typeof obj> = T
+    const d: TypeD<typeof obj> = { n: "a", a: 1 }
+
+- ENTRY:
+  EXPLAIN: extends (三項分岐)
+  BODY: |
+    ■ 概要
+
+    ・型パラメタに対して条件分岐を行うために使用される
+    ・型パラメタが特定の型に適合するかどうかに基づいて、異なる型を返すことができる
+    ・条件分岐は、型パラメタが特定の型に適合する場合としない場合の2つのケースに分けられる
+
+    ■ 基本構文
+
+    type Param<T> = T extends ConditionType ? TrueType : FalseType
+    const a: Param<ValidType> = ...          // TrueType
+    const b: Param<InvalidType> = ...        // FalseType
+
+    ■ サンプル
+
+    type A = { a: string }
+    type B = { a: string }
+    type C = { a: string; b: number }
+
+    type AB = A extends B ? number : string  // 三項分岐: number
+    type BC = B extends C ? number : string  // 三項分岐: string
+
+    type Y<T> = T extends true ? 1 : 0       // 三項分岐
+
+    type Z<T extends boolean>                // (前半)型制約: T は Boolean
+      = T extends true ? "a" : "b"           // (後半)三項分岐
+
+- ENTRY:
+  EXPLAIN: extends + never (三項分岐で型変換)
+  BODY: |
+    ■ 概要
+
+    ・型パラメタに対して条件分岐を行い、特定の型に基づいて型変換を行う方法
+    ・Union型の各要素に対して個別に型変換を適用する場合に有効
+
+    ■ 基本構文
+
+    type Param<T> = T extends ConditionType ? TrueType : never
+
+    const a: Param<ValidType> = ...          // TrueType
+    const b: Param<InvalidType> = ...        // never
+
+    ■ サンプル
+
+    type ToString<T> = T extends number ? string : never
+
+    type A = ToString<number>                // string
+    type B = ToString<string>                // never
+    type C = ToString<number | string>       // string  (Union分解適用)
+
+    type MakeArray<T>
+      = T extends any ? T[] : never          // 要素を配列に変換
+    type X1 = MakeArray<string>              // string[]
+    type X2 = MakeArray<string | number>     // string[]|number[] 想定外
+
+    type MakeArrayBetter<T>
+      = [T] extends [any] ? T[] : never       // 改善
+    type Y = MakeArrayBetter<string | number> // (string|number)[] 想定通り
+
+- ENTRY:
+  EXPLAIN: extends + infer (三項分岐で内包ターゲット取り出し)
+  BODY: |
+    ■ 概要
+
+    ・型パラメタに対して条件分岐を行い、特定の型から内包されている型を抽出する方法
+    ・infer キーワードを使用して、条件分岐内で新しい型パラメタを導入できる
+    ・主にジェネリクス型の内包型を取得するために使用
+
+    ■ 基本構文
+
+    type Param<T> = T extends ContainerType<infer U> ? U : never
+    const a: Param<ValidType> = ...          // U
+
+    ■ サンプル
+
+    ・配列の解包
+
+      type UnwrapArray<T> = T extends Array<infer U> ? U : T
+      type A = UnwrapArray<string[]>          // string
+      type B = UnwrapArray<number[]>          // number
+
+    ・Promiseの解包
+
+      type UnwrapPromise<T> = T extends Promise<infer U> ? U : T
+      type C = UnwrapPromise<Promise<string>>  // string
+
+    ・関数の戻り値型を抽出
+
+      type UnwrapFunctionReturnType<T> = T extends (...args: any[]) => infer U ? U : T
+      type D = UnwrapFunctionReturnType<() => number> // number
+
+    ・ReturnType を抽出する (戻り値型の抽出)
+
+      type ExtractReturn<T> = T extends (...args: any[]) => infer R ? R : never
+      type R1 = ExtractReturn<() => string>        // string
+      type R2 = ExtractReturn<(x:number)=>Promise<number>> // Promise<number>
+
+    ・最初の引数型を抽出する (関数シグネチャから第1引数を取得)
+
+      type FirstArg<T> = T extends (a: infer A, ...args: any[]) => any ? A : never
+      type A1 = FirstArg<(x: number, y: string) => void> // number
+
+    ・配列/タプル要素の取り出し (配列要素やタプルの先頭/残りを取得)
+
+      type ElementOf<T> = T extends (infer U)[] ? U : T
+      type E1 = ElementOf<string[]>           // string
+
+      type Head<T> = T extends [infer H, ...any[]] ? H : never
+      type Tail<T> = T extends [any, ...infer R] ? R : never
+      type H1 = Head<[1, 2, 3]>                // 1
+      type T1 = Tail<[1, 2, 3]>                // [2, 3]
+
+    ・ネストした Promise を再帰的に展開する
+
+      type DeepAwait<T> = T extends Promise<infer U> ? DeepAwait<U> : T
+      type D1 = DeepAwait<Promise<Promise<string>>>    // string
+
+    ・応用例: 関数配列から戻り値のユニオンを取得する
+
+      type ReturnsOf<T extends any[]> 
+        = T[number] extends (...args: any[]) => infer R ? R : never
+      type RUnion 
+        = ReturnsOf<[() => number, () => string]>       // number | string
+
+    ■ 悪例(infer不要なのに使用)
+
+      type WrongConvert<T extends any> = T extends infer U ? [U] : never
+      => type RightConvert<T> = T extends [T] : never   // infer不要
+      => type RightConvert<T> = [T]                     // さらに簡略化
+
+    ■ 悪例(inferの多用)
+
+      type OverInfer<T> = T extends Array<infer U>
+        ? U extends Promise<infer V>
+          ? V
+          : U
+        : T
+      => type BetterInfer<T> 
+        = T extends Array<Promise<infer V>> ? V : T extends Array<infer U> ? U : T
+      => type BestInfer<T>
+        = T extends Array<infer U> ? U extends Promise<infer V> ? V : U : T
+
+- ENTRY:
+  EXPLAIN: extends + infer (文字列抽出)
+  BODY: |
+    ■ 概要
+
+    ・テンプレートリテラルの解析、部分抽出
+    ・型パラメタに対して条件分岐を行い、特定の文字列パターンから部分文字列を抽出する方法
+    ・infer キーワードを使用して、条件分岐内で新しい型パラメタを導入できる
+
+    ■ 基本構文
+
+    type Param<T> = T extends `prefix${infer U}suffix` ? U : never
+    const a: Param<ValidType> = ...          // U
+
+    ■ サンプル
+
+    ・文字列をパスカルケースに変更
+    type PascalCase<S extends string> = S extends `${infer H}${infer T}`
+      ? `${Capitalize<H>}${Lowercase<T>}`
+      : S
+    type G = PascalCase<"ABC">               //"Abc"
+
+    ・メールアドレスからドメイン部分を抽出
+    type EmailDomain<T extends string> = T extends `${string}@${infer D}` ? D : never
+    type D1 = EmailDomain<"example@example.com">     //"example.com"
+
+- ENTRY:
+  EXPLAIN: 関数型(非React)
+  BODY: |
+    ■ 概要
+
+    ・非React (汎用のユーティリティやライブラリ) 向けのジェネリック関数型の基本と例
+
+    ■ 基本構文
+
+    function identity<T>(value: T): T { return value }
+    const identity = <T>(value: T): T => value         // アロー関数
+    type Identity = <T>(value: T) => T                // 関数型エイリアス
+
+    const num = identity<number>(123)
+    const str = identity<string>("abc")
+    const bool = identity(true)                          // 型推論
+
+    const arrowNum: Identity = <T>(value: T): T => value
+    const arrowStr = arrowNum<string>("xyz")
+
+    const funcNum: Identity = function<T>(value: T): T { return value }
+    const funcStr = funcNum<string>("lmn")
+
+    ■ 複数型パラメタ
+
+    function pair<T, U>(first: T, second: U): [T, U] {
+      return [first, second]
+    }
+
+    const p1 = pair<number, string>(1, "a")
+    const p2 = pair(true, 3.14)   // 型推論
+
+    ■ 制約付きジェネリック
+
+    ・特定のプロパティを持つオブジェクト型に制約
+    function pluck = function<T, K extends keyof T>(obj: T, key: K): T[K] {
+      return obj[key]
+    }
+
+    const person = { name: "Alice", age: 30 }
+    const name = pluck(person, "name")          // string
+    const age = pluck(person, "age")            // number
+    // const invalid = pluck(person, "address") // ❌ エラー: 'address' は 'person' に存在しない
+
+    ■ デフォルト型パラメタ
+
+    function createArray<T = string>(length: number, value: T): T[] {
+      return Array.from({ length }, () => value)
+    }
+
+    const strArray = createArray(3, "hello")    // string[]
+    const numArray = createArray<number>(2, 42) // number[]
+
+    ■ 可変長引数(タプルを保持)
+
+    function makeTuple<T extends any[]>(...args: T): T {
+      return args
+    }
+
+    const tuple1 = makeTuple(1, "a", true)          // [number, string, boolean]
+    const tuple2 = makeTuple<string[]>(["x", "y"])  // [string[]]
+
+    ■ 高階関数 (HOF)
+
+    function withLogging<T extends (...args: any[]) => any>(fn: T): T {
+      return function(...args: Parameters<T>): ReturnType<T> {
+        console.log("Arguments:", args)
+        const result = fn(...args)
+        console.log("Result:", result)
+        return result
+      } as T
+    }
+
+    const add = (a: number, b: number): number => a + b
+    const loggedAdd = withLogging(add)
+
+    ■ 関数型エイリアスを使った実用的な例
+
+    type FuncWithLogging<T extends (...args: any[]) => any> = (
+      ...args: Parameters<T>
+    ) => ReturnType<T>
+
+    function withLoggingAlias<T extends (...args: any[]) => any>(
+      fn: T
+    ): FuncWithLogging<T> {
+      return function(...args: Parameters<T>): ReturnType<T> {
+        ...
+      } as FuncWithLogging<T>    <-- 型キャストが必要
+    }
+
+- ENTRY:
+  EXPLAIN: 関数型(React)
+  BODY: |
+    ■ 概要
+
+    ・Reactコンポーネント用のジェネリック関数型の書式
+    ・TypeScriptの型パラメタにカンマを付ける必要がある
+    ・これは、JSX構文と型パラメタの区別を明確にするため
+    ・ReactコンポーネントがJSX内で使用される場合、型パラメタの終端を示すためにカンマが必要
+
+    ■ 基本構文
+
+    const Component = <T,>(props: PropsType<T>): React.ReactNode => { ... }
+    const Component = <T, S>(props: PropsType<T, S>): React.ReactNode => { ... }
+    const Component = <T=DefaultType,>(props: PropsType<T>): React.ReactNode => { ... }
+    const Component = <T extends ConstraintType>(props: PropsType<T>): React.ReactNode => { ... }
+
+    const Component = <T,>(a: T): React.ReactNode => { ... }
+    const Component = <T, S>(a: T, b: S): React.ReactNode => { ... }
+    const Component = <T=string,>(a: T): React.ReactNode => { ... }
+    const Component = <T extends number>(a: T): React.ReactNode => { ... }
+
+    ■ 単一型パラメタ
+
+    type Props<T> = {
+      items: T[];
+      renderItem: (item: T) => React.ReactNode;
+    }
+
+    const GenericList = <T,>({ items, renderItem }: Props<T>): React.ReactNode => {
+      return ( ... )
+    }
+
+    ■ 複数型パラメタ
+
+    type Props<T, S> = {
+      items: T[];
+      selectedItem: S;
+      renderItem: (item: T, isSelected: boolean) => React.ReactNode;
+    }
+    const GenericList = <T, S>({ items, selectedItem, renderItem }: Props<T, S>): React.ReactNode => {
+      return ( ... )
+    }
+
+    ■ デフォルト型パラメタ
+
+    type Props<T = string> = {
+      items: T[];
+      renderItem: (item: T) => React.ReactNode;
+    }
+    const GenericList = <T = string>({ items, renderItem }: Props<T>): React.ReactNode => {
+      return ( ... )
+    }
+
+    ■ 可変長引数(タプルを保持)
+
+    function makeTuple<T extends any[]>(...args: T): T {
+      return args
+    }
+
+    const t1 = makeTuple(1, "a", true)       // type: [number, string, boolean]
+    const t2 = makeTuple(1, ["x", "y"])      // type: [number, string[]]
+
+    ・タプルの要素型だけ取り出すユーティリティ
+
+    type ElementOfTuple<T extends any[]> = T extends (infer U)[] ? U : never
+    type E1 = ElementOfTuple<typeof t1>        // number | string | boolean
+    type E2 = ElementOfTuple<typeof t2>        // number | string[]
+
+    ■ 高階コンポーネント (HOC)
+
+    type WithThemeProps = { theme?: string }
+
+    function withTheme<P extends object>(Component: React.ComponentType<P & WithThemeProps>) {
+      return (props: P) => {
+        const theme = "dark"
+        return <Component {...(props as P)} theme={theme} />
+      }
+    }
+
+    const Button: React.FC<{ label: string } & WithThemeProps>
+      = ({ label, theme }) => <button>{label} - {theme}</button>
+
+    const ThemedButton = withTheme(Button)
+
+    ■ 関数型エイリアスを使った実用的な例
+
+    ・汎用コールバック型エイリアス
+    type Callback<T extends any[] = any[], R = void> = (...args: T) => R
+
+    ・特定のコールバックを定義して使う
+    type ClickHandler = Callback<[MouseEvent], void>
+
+    const onClick: ClickHandler = (e) => { console.log(e.type) }
+
+    ・非同期関数のエイリアス
+    type AsyncFn<TArgs extends any[] = any[], R = unknown> = (...args: TArgs) => Promise<R>
+
+    const fetchJson: AsyncFn<[string], unknown> = async (url) => {
+      const res = await fetch(url)
+      return res.json()
+    }
+
+    ・HOF と組み合わせたエイリアス利用例
+    type FnWithParams<T extends (...args: any[]) => any> 
+      = (...args: Parameters<T>) => ReturnType<T>
+
+    function wrapWithDefault<T extends (...args: any[]) => any>
+      (fn: T, ...defaults: Partial<Parameters<T>>) : FnWithParams<T> {
+      return ((...args: any[]) => fn(...args)) as FnWithParams<T>
+    }
+
+    const sum = (a: number, b: number, c: number): number => a + b + c
+    const sumWithDefault = wrapWithDefault(sum, 1, 2)       // a=1, b=2 デフォルト化
+    const result = sumWithDefault(3)                        // c=3 指定 
+
+      ※ エイリアスは可読性と再利用性を高める。複雑になりすぎたら分解
+
+#-------------------------------
+# Class
+#-------------------------------
+- ENTRY:
+  CATEGORY: Class
+
+- ENTRY:
+  EXPLAIN: コンストラクタ
+  BODY: |
+    ■ 概要
+
+    ・クラスのインスタンスを生成するための特殊なメソッド
+    ・クラス名と同じ名前で定義され、new キーワードを使用して呼び出される
+    ・コンストラクタ内で、インスタンス変数の初期化や必要なセットアップ処理を行う
+
+    ■ 基本構文
+
+    class ClassName {
+      constructor(param1: Type1, param2: Type2) {
+        // 初期化コード
+      }
+    }
+
+    const instance = new ClassName(value1, value2)
+
+    ■ サンプル
+
+    class Person {
+      name: string
+      age: number
+
+      constructor(name: string, age: number) {
+        this.name = name
+        this.age = age
+      }
+    }
+
+    const alice = new Person("Alice", 30)
+    console.log(alice.name) // "Alice"
+    console.log(alice.age)  // 30
+
+- ENTRY:
+  EXPLAIN: プロパティ宣言
+  BODY: |
+    ■ 概要
+
+    ・クラス内で定義される変数(プロパティ)の宣言方法とアクセス制御
+    ・TypeScriptでは、クラス変数に対してアクセス修飾子を使用して、変数の可視性を制御
+    ・アクセス修飾子には、public、private、protectedの3種類
+
+    ■ 基本構文
+
+    class ClassName {
+      defaultVar: Type;                     // デフォルトは public
+      public publicVar: Type;               // どこからでもアクセス可能
+      private privateVar: Type;             // クラス内からのみアクセス可能
+      protected protectedVar: Type;         // クラス内およびサブクラスからアクセス可能
+      noInitialVar: Type;                   // ❌ 初期化省略
+      noNullInitialVar!: Type;              // ⭕ 初期化省略 (非nullアサーション)
+
+      constructor(param: Type) {
+        this.defaultVar = param;
+        this.publicVar = param;
+        this.privateVar = param;
+        this.protectedVar = param;
+        this.noInitialVar;                  // ❌ エラー: 初期化されていない
+        // noNullInitialVar は初期化省略可能
+      }
+    }
+
+    const instance = new ClassName(value);
+    console.log(instance.defaultVar);       // ⭕ アクセス可能
+    console.log(instance.publicVar);        // ⭕ アクセス可能
+    console.log(instance.privateVar);       // ❌ エラー: privateVar は private
+    console.log(instance.protectedVar);     // ❌ エラー: protectedVar は protected
+    console.log(instance.noNullInitialVar); // 🚫 アクセス可能だが undefined(Runtimeエラー誘発可能)
+
+- ENTRY:
+  EXPLAIN: プロパティ宣言(コンストラクタ・パラメタ・プロパティ)
+  BODY: |
+    ■ 概要
+
+    ・コンストラクタのパラメタにアクセス修飾子を付与、プロパティ宣言と初期化を同時実行
+    ・これにより、冗長なコードを省略し、クラスの可読性を向上させることができる
+
+    ■ 基本構文
+
+    class ClassName {
+      constructor(
+        public publicVar: Type,             // public プロパティ
+        private privateVar: Type,           // private プロパティ
+        protected protectedVar: Type        // protected プロパティ
+      ) {}
+    }
+
+    const instance = new ClassName(value1, value2, value3);
+    console.log(instance.publicVar);        // ⭕ アクセス可能
+    console.log(instance.privateVar);       // ❌ エラー: privateVar は private
+    console.log(instance.protectedVar);     // ❌ エラー: protectedVar は protected
+
+    ■ サンプル
+
+    class Employee {
+      public name: string;                  // 公開プロパティ
+      private id: number;                   // 非公開プロパティ
+      protected department: string;         // 保護されたプロパティ
+      public readonly hireDate: Date;       // 読み取り専用プロパティ
+
+      constructor(name: string, id: number, department: string, hireDate: Date) {
+        this.name = name;
+        this.id = id;
+        this.department = department;
+        this.hireDate = hireDate;
+      }
+
+      public getDetails(): string {
+        return `Name: ${this.name}, Department: ${this.department}`;
+      }
+    } 
+
+    const emp = new Employee("Bob", 12345, "Engineering", new Date("2020-01-15"));
+    console.log(emp.name);                  // ⭕ アクセス可能
+    // console.log(emp.id);                 // ❌ エラー: id は private
+    // console.log(emp.department);         // ❌ エラー: department は protected
+    console.log(emp.hireDate);              // ⭕ アクセス可能
+    console.log(emp.getDetails());          // ⭕ メソッド呼び出し
+
+- ENTRY:
+  EXPLAIN: プロパティ宣言(コンストラクタなし)
+  BODY: |
+    ■ 概要
+
+    ・コンストラクタを定義せずにクラスプロパティを宣言および初期化する方法
+    ・クラスプロパティは宣言時に初期化できる
+    ・コンストラクタが不要な場合、コードを簡潔に保つことができる
+
+    ■ 基本構文
+
+    class ClassName {
+      public var1: Type = initialValue1;      // プロパティ宣言と初期化
+      private var2: Type = initialValue2;     // プライベートプロパティ
+      protected var3: Type = initialValue3;   // プロテクテッドプロパティ
+      noInitialVar: Type;                     // ❌ 初期化省略
+      noNullInitialVar!: Type;                // ⭕ 初期化省略 (非nullアサーション)
+    }
+
+    const instance = new ClassName();
+    console.log(instance.var1);               // ⭕ アクセス可能
+    // console.log(instance.var2);            // ❌ エラー: var2 は private
+    // console.log(instance.var3);            // ❌ エラー: var3 は protected
+
+    ■ サンプル
+
+    class Counter {
+      public count: number = 0;               // 公開プロパティ
+      private step: number = 1;               // 非公開プロパティ
+
+      public increment(): void {
+        this.count += this.step;
+      }
+
+      public setStep(newStep: number): void {
+        this.step = newStep;
+      }
+    }
+
+    const counter = new Counter();
+    console.log(counter.count);             // ⭕ アクセス可能
+    counter.increment();
+    counter.setStep(5);
+
+- ENTRY:
+  EXPLAIN: プロパティ readonly
+  BODY: |
+    ■ 概要
+
+    ・クラスプロパティを読み取り専用にするための修飾子
+    ・readonly 修飾子を使用すると、プロパティは初期化後に変更できなくなる
+    ・初期化は、プロパティ宣言時またはコンストラクタ内でのみ行うことができる
+
+    ■ 基本構文
+
+    class ClassName {
+      public readonly readOnlyVar: Type;   // 読み取り専用プロパティ
+
+      constructor(param: Type) {
+        this.readOnlyVar = param;
+      }
+    }
+
+    const instance = new ClassName(value);
+    console.log(instance.readOnlyVar);     // ⭕ アクセス可能
+    instance.readOnlyVar = newValue;       // ❌ エラー: readOnlyVar は readonly
+
+    ■ サンプル
+
+    class Circle {
+      public readonly radius: number;       // 読み取り専用プロパティ
+
+      constructor(radius: number) {
+        this.radius = radius;
+      }
+
+      public getArea(): number {
+        return Math.PI * this.radius * this.radius;
+      }
+    }
+
+    const circle = new Circle(5);
+    console.log(circle.radius);             // ⭕ アクセス可能
+    console.log(circle.getArea());         // ⭕ メソッド呼び出し
+    // circle.radius = 10;                  // ❌ エラー: radius は readonly
+
+- ENTRY:
+  EXPLAIN: プロパティ 初期化省略
+  BODY: |
+    ■ 概要
+
+    ・クラスプロパティの初期化を省略する方法
+    ・TypeScriptでは、プロパティが未初期化のまま使用されることを防ぐために、コンパイラがエラーを報告する
+    ・初期化を省略するには、非nullアサーション演算子(!)を使用して、プロパティが後で初期化されることをコンパイラに伝える
+
+    ■ 基本構文
+
+    class ClassName {
+      public uninitializedVar!: Type;      // 初期化省略 (非nullアサーション)
+
+      constructor() {
+        this.uninitializedVar = initialValue;
+      }
+    }
+
+    const instance = new ClassName();
+    console.log(instance.uninitializedVar); // ⭕ アクセス可能
+
+    ■ サンプル
+
+    class User {
+      public name!: string;                // 初期化省略
+      public age!: number;                 // 初期化省略
+
+      constructor(name: string, age: number) {
+        this.name = name;
+        this.age = age;
+      }
+    }
+
+    const user = new User("Alice", 30);
+    console.log(user.name);                // ⭕ アクセス可能
+    console.log(user.age);                 // ⭕ アクセス可能
+
+- ENTRY:
+  EXPLAIN: プロパティ アクセサ (getter/setter)
+  BODY: |
+    ■ 概要
+
+    ・クラスプロパティに対してカスタムの取得(getter)および設定(setter)ロジックを定義する方法
+    ・getterはプロパティの値を取得するためのメソッドで、setterはプロパティの値を設定するためのメソッド
+    ・getterとsetterは、プロパティのようにアクセスできるが、実際にはメソッドとして動作する
+    ・バージョン4.3以降で利用可能
+
+    ■ 基本構文
+
+    class ClassName {
+      private _value: Type;
+
+      constructor(param: Type) {
+        this._value = param;
+      }
+
+      get value(): Type {
+        return this._value;
+      }
+
+      set value(newValue: Type) {
+        this._value = newValue;
+      }
+    }
+
+    const instance = new ClassName(value);
+    console.log(instance.value);           // ⭕ getter アクセス
+    instance.value = newValue;             // ⭕ setter アクセス
+
+    ■ サンプル
+
+    class Rectangle {
+      private _width: number;
+      private _height: number;
+
+      constructor(width: number, height: number) {
+        this._width = width;
+        this._height = height;
+      }
+
+      get width(): number {
+        return this._width;
+      }
+
+      set width(newWidth: number) {
+        if (newWidth <= 0) {
+          throw new Error("Width must be positive");
+        }
+        this._width = newWidth;
+      }
+
+      get height(): number {
+        return this._height;
+      }
+
+      set height(newHeight: number) {
+        if (newHeight <= 0) {
+          throw new Error("Height must be positive");
+        }
+        this._height = newHeight;
+      }
+
+      get area(): number {
+        return this._width * this._height;
+      }
+    }
+
+- ENTRY:
+  EXPLAIN: プロパティ 自動 accessor
+  BODY: |
+    ■ 概要
+
+    ・TypeScript 4.3以降で導入された、自動的にgetterとsetterを生成するプロパティ修飾子
+    ・accessor キーワードを使用してプロパティを宣言すると、コンパイラが自動的に対応するgetterとsetterを生成
+    ・コードの冗長性を減らし、プロパティのアクセス制御を簡素化
+    ・(短所)カスタムロジックを追加する場合は手動でgetterとsetterを定義
+
+    ■ 基本構文
+
+    class ClassName {
+      accessor autoValue: Type;            // 自動 accessor
+
+      constructor(param: Type) {
+        this.autoValue = param;
+      }
+    }
+
+    const instance = new ClassName(value);
+    console.log(instance.autoValue);       // ⭕ getter アクセス
+    instance.autoValue = newValue;         // ⭕ setter アクセス
+
+    ■ サンプル
+
+    class Person {
+      accessor name: string;                // 自動 accessor
+      accessor age: number;                 // 自動 accessor
+
+      constructor(name: string, age: number) {
+        this.name = name;
+        this.age = age;
+      }
+    }
+
+    const person = new Person("Alice", 30);
+    console.log(person.name);              // ⭕ getter アクセス
+    console.log(person.age);               // ⭕ getter アクセス
+    person.name = "Bob";                   // ⭕ setter アクセス
+    person.age = 35;                       // ⭕ setter アクセス
+
+- ENTRY:
+  EXPLAIN: extends クラス継承
+  BODY: |
+    ■ 概要
+
+    ・既存のクラスを基にして新しいクラスを作成するための仕組み
+    ・新しいクラスは、基底クラス(スーパークラス)のプロパティとメソッドを継承、独自プロパティやメソッドを追加できる
+    ・コードの再利用性を高め、オブジェクト指向の基本概念「is-a」関係を表現
+
+    ■ 基本構文
+
+    class BaseClass {
+      baseProperty: Type;
+
+      constructor(param: Type) {
+        this.baseProperty = param;
+      }
+
+      baseMethod(): void {
+        // 基底クラスのメソッド
+      }
+    }
+
+    class DerivedClass extends BaseClass {
+      derivedProperty: Type;
+
+      constructor(baseParam: Type, derivedParam: Type) {
+        super(baseParam); // 基底クラスのコンストラクタ呼び出し
+        this.derivedProperty = derivedParam;
+      }
+
+      derivedMethod(): void {
+        // 派生クラスのメソッド
+      }
+    }
+
+    const instance = new DerivedClass(baseValue, derivedValue);
+    console.log(instance.baseProperty);     // ⭕ 基底クラスのプロパティ
+    console.log(instance.derivedProperty);  // ⭕ 派生クラスのプロパティ
+    instance.baseMethod();                  // ⭕ 基底クラスのメソッド
+    instance.derivedMethod();               // ⭕ 派生クラスのメソッド
+
+    ■ サンプル(Company/Employee)
+
+    class Company {
+      name: string;
+
+      constructor(name: string) {
+        this.name = name;
+      }
+
+      getCompanyInfo(): string {
+        return `Company Name: ${this.name}`;
+      }
+    }
+
+    class Employee extends Company {
+      employeeId: number;
+
+      constructor(name: string, employeeId: number) {
+        super(name); // Companyのコンストラクタ呼び出し
+        this.employeeId = employeeId;
+      }
+
+      getEmployeeInfo(): string {
+        return `Employee ID: ${this.employeeId}, ${this.getCompanyInfo()}`;
+      }
+    }
+
+    const emp = new Employee("TechCorp", 101);
+    console.log(emp.getEmployeeInfo());
+
+- ENTRY:
+  EXPLAIN: abstract クラス継承専用
+  BODY: |
+    ■ 概要
+
+    ・`abstract` は基底クラスを定義、派生クラスで実装すべき抽象メンバー（メソッド／プロパティ）宣言
+    ・抽象クラス自体はインスタンス化不可
+    ・抽象メンバは派生クラスで必ず実装する必要あり
+
+    ・設計上の契約（テンプレート）を提供
+    ・メンバーは `protected`/`public` を付けられ、`private` の抽象は無意味
+    ・使い過ぎると継承階層が硬くなるため、インターフェースとの使い分けを検討
+      意味: 抽象クラスは「部分的に実装されたクラス」、インターフェースは「完全に未実装の契約」
+
+    ■ 基本構文
+
+    abstract class Base {
+      abstract doWork(): string
+      protected name: string
+      constructor(name: string) { this.name = name }
+      describe() { return `${this.name}: ${this.doWork()}` }
+    }
+
+    class Derived extends Base {
+      private value: number
+      constructor(name: string, value: number) {
+        super(name)
+        this.value = value
+      }
+      doWork(): string { return `value=${this.value}` }
+    }
+
+    const base = new Base()               // ❌ エラー: 抽象クラスはインスタンス化不可
+    const d = new Derived("D", 10)
+    console.log(d.describe(), d.doWork())
+
+    ■ ジェネリック抽象クラス
+
+    abstract class Repository<T> {
+      abstract getById(id: string): Promise<T>
+      abstract save(entity: T): Promise<void>
+    }
+
+    // 実装例
+    type User = { id: string; name: string }
+    class UserRepo extends Repository<User> {
+      async getById(id: string) { return { id, name: "unauthorized" } }
+      async save(entity: User) { /* persist */ }
+    }
+
+- ENTRY:
+  EXPLAIN: interface クラス実装契約
+  BODY: |
+    ■ 概要
+
+    ・`interface` はクラスが実装すべき契約（メソッド／プロパティのシグネチャ）を定義
+    ・インターフェース自体は実装を持たず、クラスは `implements` キーワードでインターフェースを実装
+    ・複数のインターフェースを同時に実装可能
+
+    ・柔軟な設計が可能、継承階層を硬くしない
+    ・抽象クラスと異なり、状態（プロパティの値）を持たない
+    ・クラス設計の契約を定義するために使用
+
+    ■ 基本構文
+
+    interface IWorker {
+      doWork(): string
+    }
+
+    class Worker implements IWorker {
+      doWork(): string {
+        return "Working..."
+      }
+    }
+
+    const w = new Worker()
+    console.log(w.doWork())
+
+    ■ 複数インターフェース実装
+
+    interface IReader {
+      read(): string
+    }
+
+    interface IWriter {
+      write(data: string): void
+    }
+
+    class FileHandler implements IReader, IWriter {
+      read(): string {
+        return "File data"
+      }
+      write(data: string): void {
+        console.log(`Writing: ${data}`)
+      }
+    }
+
+    const fh = new FileHandler()
+    console.log(fh.read())
+    fh.write("New data")
+
+- ENTRY:
+  EXPLAIN: static クラス静的メンバ(シングルトン)
+  BODY: |
+    ■ 概要
+
+    ・`static` キーワードは、クラスレベルで共有されるメンバー（プロパティ／メソッド）を定義
+    ・静的メンバーはクラスのインスタンスではなく、クラス自体に属する
+    ・静的メンバーは `ClassName.member` の形式でアクセス
+
+    ・ユーティリティ関数や定数をクラスに関連付ける場合に便利
+    ・インスタンスごとに異なる状態を持たない共通の機能を提供
+    ・シングルトンパターンの実装にも利用可能
+
+    ※ シングルトンパターン: クラスのインスタンスが1つだけ存在することを保証し、そのインスタンスへのグローバルアクセスを提供するデザインパターン
+
+    ※ シングルトンパターンに、他のstatic メンバー以外を混ぜる方法はどうか?
+
+    ■ サンプル1
+
+    class Logger {
+      private static _instance?: Logger
+      private buffer: string[] = []           // インスタンス状態（非 static）
+      static readonly VERSION = "1.0.0"      // クラス定数 (static)
+
+      private constructor() {}
+
+      static get instance(): Logger {
+        if (!this._instance) this._instance = new Logger()
+        return this._instance
+      }
+
+      log(msg: string) { this.buffer.push(msg) }    // インスタンスメソッド
+      flush() { console.log(this.buffer.join("\n")); this.buffer = [] }
+      static globalInfo() { return `Logger v${this.VERSION}` } // static ヘルパ
+    }
+
+    // 使い方
+    Logger.instance.log("hello")
+    console.log(Logger.globalInfo())
+    Logger.instance.flush()
+
+    ■ サンプル2: 即時生成で export
+
+    ※ クラスを使うが new を外部から行わせない
+
+    class Config {
+      private constructor(public readonly env: string) {}
+      get isProd() { return this.env === "production" } // インスタンス getter
+    }
+    export const config = new Config(process.env.NODE_ENV ?? "development")
+
+    ■ サンプル3: モジュール/オブジェクトパターン
+
+    export const Service = (() => {
+      let counter = 0                      // モジュールスコープの状態
+      function inc() { counter++; return counter }
+      const NAME = "Service"               // 定数（static 的）
+      return { inc, get count() { return counter }, NAME }
+    })()
+
+    ※ 注意点
+    ・状態（mutable）はインスタンス側に置く(static に mutable を置くとテストや初期化が困難)
+    ・静的ユーティリティや定数は static（またはモジュールスコープ）で問題なし
+    ・サブクラス化や DI を考えるなら private constructor を避け、ファクトリ関数＋インターフェースが柔軟。
+
+- ENTRY:
+  EXPLAIN: 参考 DI (依存性注入)
+  BODY: |
+    ■ 概要
+
+    ・DI (Dependency Injection) は、クラスの依存関係を外部から注入するデザインパターン
+    ・クラスが直接依存するオブジェクトを自分で生成せず、外部から提供される
+    ・これにより、クラスの結合度が低くなり、テスト容易性と柔軟性が向上
+    ・nestjs や Angular などのフレームワークで広く利用
+
+    ■ 基本構文
+
+    interface IService {
+      doSomething(): void
+    }
+    class Consumer {
+      private service: IService
+
+      constructor(service: IService) {
+        this.service = service
+      }
+
+      execute() {
+        this.service.doSomething()
+      }
+    }
+
+    class ServiceA implements IService {
+      doSomething() {
+        console.log("ServiceA doing something")
+      }
+    }
+    class ServiceB implements IService {
+      doSomething() {
+        console.log("ServiceB doing something")
+      }
+    }
+
+    // 使い方
+    const serviceA = new ServiceA()
+    const consumerA = new Consumer(serviceA)
+    consumerA.execute()
+    const serviceB = new ServiceB()
+    const consumerB = new Consumer(serviceB)
+    consumerB.execute()
+
+    ■ コンテナ例
+
+    interface Service {
+      doSomething(): void
+    }
+
+    class ServiceA implements Service {
+      doSomething() { console.log("ServiceA doing something") }
+    }
+
+    class ServiceB implements Service {
+      doSomething() { console.log("ServiceB doing something") }
+    }
+
+    class ServiceContainer {
+      private services = new Map<string, Service>()
+
+      register(name: string, service: Service) {
+        this.services.set(name, service)
+      }
+
+      get(name: string): Service | undefined {
+        return this.services.get(name)
+      }
+    }
+
+    // 使い方
+    const container = new ServiceContainer()
+    container.register("A", new ServiceA())
+    container.register("B", new ServiceB())
+    const serviceA = container.get("A")
+    serviceA?.doSomething()
+
+- ENTRY:
+  EXPLAIN: ジェネリック
+  BODY: |
+    ■ 概要
+
+    ・ジェネリッククラスは、型パラメタを使用してクラスのプロパティやメソッドの型を柔軟に定義できる
+    ・クラス定義時に型パラメタを指定し、インスタンス化時に具体的な型を提供
+    ・これにより、同じクラス定義を異なる型で再利用可能
+
+    ■ 基本構文
+
+    class GenericClass<T> {
+      private value: T;
+
+      constructor(value: T) {
+        this.value = value;
+      }
+
+      getValue(): T {
+        return this.value;
+      }
+    }
+
+    const instance1 = new GenericClass<number>(123);
+    console.log(instance1.getValue()); // 123
+
+    const instance2 = new GenericClass<string>("abc");
+    console.log(instance2.getValue()); // "abc"
+
+    ■ 複数型パラメタ
+
+    class Pair<T, U> {
+      private first: T;
+      private second: U;
+
+      constructor(first: T, second: U) {
+        this.first = first;
+        this.second = second;
+      }
+
+      getFirst(): T {
+        return this.first;
+      }
+
+      getSecond(): U {
+        return this.second;
+      }
+    }
+
+    const pair = new Pair<number, string>(1, "one");
+    console.log(pair.getFirst());  // 1
+    console.log(pair.getSecond()); // "one"
+
+    ■ リアルな課題のサンプル
+
+    class Repository<T> {
+      private items: T[] = [];
+
+      add(item: T): void {
+        this.items.push(item);
+      }
+
+      getAll(): T[] {
+        return this.items;
+      }
+
+      findById(id: number): T | undefined {
+        return this.items.find((item: any) => item.id === id);
+      }
+    }
+
+    interface User {
+      id: number;
+      name: string;
+    }
+
+    const userRepo = new Repository<User>();
+    userRepo.add({ id: 1, name: "Alice" });
+    userRepo.add({ id: 2, name: "Bob" });
+    console.log(userRepo.getAll());
+    console.log(userRepo.findById(1));

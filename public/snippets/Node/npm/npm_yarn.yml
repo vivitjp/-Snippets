@@ -1,0 +1,193 @@
+---
+#-------------------------------
+# npm & yarn
+#-------------------------------
+
+- ENTRY:
+  EXPLAIN: init, ls, list, bin
+  BODY: |
+    ■ package.json生成
+      npm init
+      yarn init
+
+    ■ インストール済確認
+      npm ls [-g] --depth=0
+      yarn [Global] list --depth=0
+
+      *インストール済パッケージ検索(要bash)
+      npm list --depth=0 | grep PACKAGE_NAME
+      yarn list --depth=0 | grep PACKAGE_NAME
+
+    ■ binの場所
+      npm bin [-g]
+      yarn [Global] bin
+
+- ENTRY:
+  EXPLAIN: install(add)
+  BODY: |
+    ■ package.json 記載パッケージ全インストール
+      npm i                             // package.json の指示どおりに範囲インストール
+                                        // キャレット(^)/チルダ(~) によるバージョン範囲
+      🔴重要
+      npm ci                            // package-lock.json があれば package-lock.json 記載バージョンを再現
+      yarn [install]                    // yarn.lock があれば yarn.lock 記載バージョンを再現
+
+      ※同一PCに複数プロジェクトがあり、yarn で同一パッケージを異なるバージョンでインストール済の場合、
+        キャッシュ済パッケージが yarn.lock のバージョンを無視してインストールされる場合がある。
+
+        yarn install --check-files      // yarn.lock のバージョンを強制的にインストール
+        yarn cache clean --force        // 事前にキャッシュクリア
+
+    ■ CI(lockfile を書き換えない)
+      yarn install --frozen-lockfile
+
+    ■ npm i と npm ci の違い(要約)
+      npm i                             // package.json の範囲に合わせて解決し lock を更新し得る
+      npm ci                            // lock に完全一致するよう node_modules を再構築(開発用の手軽さより再現性)
+
+    ■ dependencies(--global/-g)
+      npm i [-g] <PCKG>
+      yarn [Global] add <PCKG>
+
+    ■ devDependencies(--save-dev/-D)
+      npm i -D <PCKG>
+      yarn add --dev <PCKG>
+
+- ENTRY:
+  EXPLAIN: un(remove)
+  BODY: |
+    ■ 指定
+      npm un [-g] <PCKG>
+      yarn [Global] remove <PCKG>
+      
+    ■ Dev指定
+      npm un -D <PCKG>
+      yarn remove <PCKG>
+
+- ENTRY:
+  EXPLAIN: update
+  BODY: |
+    ■ 全体
+      npm update [-g]
+      yarn [Global] upgrade
+
+    ■ 指定PCKG
+      npm update [-g] <PCKG>
+      yarn [Global] upgrade <PCKG>
+
+- ENTRY:
+  EXPLAIN: info, outdated
+  BODY: |
+    ■ パッケージの情報
+      npm info [-g] <PCKG>
+      yarn info <PCKG>
+
+    ■ json出力
+      npm info <PCKG> --json
+      yarn info <PCKG> --json
+
+    ■ 属性情報
+      npm info <PCKG> {属性名}
+      yarn info <PCKG> {属性名}
+
+    ■ 古PCKG
+      npm outdated [-g]
+      yarn outdated
+
+    ■ 古PCKG:指定
+      npm outdated <PCKG>
+      yarn outdated <PCKG>
+
+- ENTRY:
+  EXPLAIN: cache
+  BODY: |
+    ■ クリア
+      npm cache verify
+      *npm cache clean (<v5)
+
+      yarn cache clean
+        --force                                   強制クリア
+        --all                                     local & global 共に
+        --list                                    一覧
+        --path <PATH>                             指定パス
+        --pattern <PATTERN>                       指定パターン
+        --json                                    json出力 
+        --help                                    ヘルプ
+
+    ■ ディレクトリ
+      yarn cache dir
+
+- ENTRY:
+  EXPLAIN: config
+  BODY: |
+    ■ 表示
+      npm config list
+      yarn config list
+
+    ■ Defaultのみ
+      npm config list -l
+
+    ■ 属性名指定
+      npm config get {属性名}
+      yarn config get {属性名}
+
+    ■ 属性名指定(json出力)
+      npm config list --json
+
+    ■ 属性名指定(set)
+      npm config set {属性名} {値}
+      yarn config set {属性名} {値}
+
+- ENTRY:
+  EXPLAIN: run
+  BODY: |
+    ■ スクリプト一覧
+      npm run
+      yarn [run]
+
+    ■ スクリプト実行
+      npm run {script}
+      yarn run {script}
+
+    ■ スクリプト実行(Yarn Classic の省略)
+      yarn {script}                     // yarn run {script} と同等
+
+    ■ 環境変数
+      npm run env
+      yarn run env
+
+- ENTRY:
+  EXPLAIN: link, pack, why, dedupe, prune
+  BODY: |
+    ■ ローカルパッケージのリンク
+      npm link [<PCKG>]
+      yarn link [<PCKG>]
+
+    ■ tarball 生成
+      npm pack [<PCKG>]
+
+    ■ なぜその依存が入ったか(Yarn Classic)
+      yarn why <PCKG>
+
+    ■ 依存の整理
+      npm dedupe
+      npm prune
+
+- ENTRY:
+  EXPLAIN: npx, audit, help
+  BODY: |
+    ■ ローカルPCKG実行
+      npx <PCKG>
+      npm exec <PCKG>                   // npm 7+ 系の公式相当
+      yarn -s run <PCKG>
+
+    ■ 脆弱性と解決
+      npm audit
+      npm audit --production            // dependencies のみ
+      npm audit fix
+      npm audit fix --force
+
+    ■ ヘルプ
+      npm -l
+      npm <command> -h
+      yarn help <command>

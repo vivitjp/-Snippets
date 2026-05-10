@@ -1,0 +1,1266 @@
+#-------------------------------
+# 現バージョン(2026年2月までの)
+#-------------------------------
+- ENTRY:
+  CATEGORY: バージョン リリース歴
+
+- ENTRY:
+  EXPLAIN: 2026年
+  BODY: |
+    ■ 概要
+
+    ・TypeScript 5.9 リリース（2026年2月）※記載時
+
+    ■ 参考リンク
+
+    TypeScript 5.9 リリースノート
+    https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-9.html
+
+- ENTRY:
+  EXPLAIN: 2025年
+  BODY: |
+    ■ 概要
+
+    ・TypeScript 5.8 リリース（2025年6月）
+    ・TypeScript 5.7 リリース（2025年2月）
+
+    ■ 参考リンク
+
+    TypeScript 5.8 リリースノート
+    https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-8.html
+
+    TypeScript 5.7 リリースノート
+    https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-7.html
+
+- ENTRY:
+  EXPLAIN: 2024年
+  BODY: |
+    ■ 概要
+
+    ・TypeScript 5.6 リリース（2024年10月）
+    ・TypeScript 5.5 リリース（2024年6月）
+    ・TypeScript 5.4 リリース（2024年2月）
+
+    ■ 参考リンク
+
+    TypeScript 5.6 リリースノート
+    https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-6.html
+
+    TypeScript 5.5 リリースノート
+    https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-5.html
+
+    TypeScript 5.4 リリースノート
+    https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-4.html
+
+- ENTRY:
+  EXPLAIN: 2023年
+  BODY: |
+    ■ 概要
+
+    ・TypeScript 5.3 リリース（2023年10月）
+    ・TypeScript 5.2 リリース（2023年6月）
+    ・TypeScript 5.1 リリース（2023年2月）
+
+    ■ 参考リンク
+
+    TypeScript 5.3 リリースノート
+    https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-3.html
+
+    TypeScript 5.2 リリースノート
+    https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-2.html
+
+    TypeScript 5.1 リリースノート
+    https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-1.html
+
+- ENTRY:
+  EXPLAIN: 2022年
+  BODY: |
+    ■ 概要
+
+    ・TypeScript 5.0 リリース（2022年10月）
+    ・TypeScript 4.9 リリース（2022年6月）
+    ・TypeScript 4.8 リリース（2022年2月）
+
+    ■ 参考リンク
+
+    TypeScript 5.0 リリースノート
+    https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html
+
+    TypeScript 4.9 リリースノート
+    https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-9.html
+
+    TypeScript 4.8 リリースノート
+    https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-8.html
+
+- ENTRY:
+  EXPLAIN: 2021年
+  BODY: |
+    ■ 概要
+
+    ・TypeScript 4.7 リリース（2021年11月）
+    ・TypeScript 4.6 リリース（2021年8月）
+    ・TypeScript 4.5 リリース（2021年5月）
+    ・TypeScript 4.4 リリース（2021年2月）
+
+    ■ 参考リンク
+
+    TypeScript 4.7 リリースノート
+    https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-7.html
+
+    TypeScript 4.6 リリースノート
+    https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-6.html
+
+    TypeScript 4.5 リリースノート
+    https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-5.html
+
+    TypeScript 4.4 リリースノート
+    https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-4.html
+
+- ENTRY:
+  EXPLAIN: 2020年
+  BODY: |
+    ■ 概要
+
+    ・TypeScript 4.3 リリース（2020年12月）
+    ・TypeScript 4.2 リリース（2020年8月）
+    ・TypeScript 4.1 リリース（2020年5月）
+    ・TypeScript 4.0 リリース（2020年3月）
+
+    ■ 参考リンク
+
+    TypeScript 4.3 リリースノート
+    https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-3.html
+
+    TypeScript 4.2 リリースノート
+    https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-2.html
+
+    TypeScript 4.1 リリースノート
+    https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-1.html
+
+    TypeScript 4.0 リリースノート
+    https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-0.html
+
+- ENTRY:
+  EXPLAIN: 2019年
+  BODY: |
+    ■ 概要
+
+    ・TypeScript 3.9 リリース（2019年5月）
+    ・TypeScript 3.8 リリース（2019年2月）
+
+    ■ 参考リンク
+
+    TypeScript 3.9 リリースノート
+    https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-9.html
+
+    TypeScript 3.8 リリースノート
+    https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html
+
+- ENTRY:
+  EXPLAIN: 2018年
+  BODY: |
+    ■ 概要
+
+    ・TypeScript 3.7 リリース（2018年11月）
+    ・TypeScript 3.6 リリース（2018年8月）
+    ・TypeScript 3.5 リリース（2018年5月）
+    ・TypeScript 3.4 リリース（2018年2月）
+
+    ■ 参考リンク
+
+    TypeScript 3.7 リリースノート
+    https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html
+
+    TypeScript 3.6 リリースノート
+    https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-6.html
+
+    TypeScript 3.5 リリースノート
+    https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-5.html
+
+    TypeScript 3.4 リリースノート
+    https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html
+
+#-------------------------------
+# 5.9
+#-------------------------------
+- ENTRY:
+  CATEGORY: version 5.9
+
+- ENTRY:
+  EXPLAIN: tsc --init の改善 - ミニマルで推奨設定を含む tsconfig.json 生成
+  BODY: |
+    ■ 概要
+
+    ・TypeScript 5.9 では、`tsc --init` がよりミニマルで実用的
+    ・以前はコメントアウトされた設定が多かったが、今はモジュール検出、ターゲット、型チェックなどの推奨設定がデフォルトで有効化
+
+    ■ 主な変更点
+
+    ・`module`: "nodenext"
+    ・`target`: "esnext"
+    ・`types`: [] (空配列で不要な型定義を制限)
+    ・`strict`: true
+    ・`jsx`: "react-jsx"
+    ・`verbatimModuleSyntax`: true
+    ・`isolatedModules`: true
+    ・`noUncheckedSideEffectImports`: true
+    ・`moduleDetection`: "force"
+    ・`skipLibCheck`: true
+
+- ENTRY:
+  EXPLAIN: import defer 構文のサポート - モジュールの遅延評価
+  BODY: |
+    ■ 概要
+    ECMAScript の deferred module evaluation proposal をサポート。`import defer * as feature from "./module"` のように使用し、モジュールの実行をプロパティアクセスまで遅延させる。
+
+    ■ 利点
+    ・副作用のある初期化を遅らせる
+    ・条件付きモジュール読み込みに最適
+    ・スタートアップパフォーマンスの改善
+
+    ■ 制限
+    ・名前空間インポートのみ許可
+    ・`--module preserve` または `esnext` でのみ動作
+
+- ENTRY:
+  EXPLAIN: --module node20 のサポート - Node.js v20 のモジュール解決
+  BODY: |
+    ■ 概要
+
+    ・`--module node20` オプションを追加
+    ・Node.js v20 の動作をモデル化し、安定した設定を提供
+    ・`nodenext` とは異なり、`--target es2023` を暗黙的に設定
+
+- ENTRY:
+  EXPLAIN: DOM API の要約説明追加
+  BODY: |
+    ■ 概要
+
+    ・DOM API の型定義に MDN ドキュメントに基づく要約説明を追加
+    ・ホバー時に API の概要表示
+
+- ENTRY:
+  EXPLAIN: 拡張可能なホバー (プレビュー) - 詳細表示の展開/折りたたみ
+  BODY: |
+    ■ 概要
+
+    ・ホバー (Quick Info) に + / - ボタンを追加
+    ・型の詳細を展開して表示可能
+    ・VS Code で利用可能
+
+- ENTRY:
+  EXPLAIN: ホバーの最大長設定可能
+  BODY: |
+    ■ 概要
+
+    ・`js/ts.hover.maximumLength` 設定でホバーの最大長を調整可能
+    ・デフォルトが長くなり、より多くの情報表示
+
+- ENTRY:
+  EXPLAIN: パフォーマンス最適化
+  BODY: |
+    ■ 概要
+    ・マッパーでのインスタンス化キャッシュ: 型推論の効率化
+    ・クロージャ作成の回避: ファイル存在チェックのパフォーマンス改善 (約11%高速化)
+
+- ENTRY:
+  EXPLAIN: 動作変更 - lib.d.ts と型推論の更新
+  BODY: |
+    ■ 概要
+
+    ・`ArrayBuffer` と `TypedArray` の関係変更: 互換性のない型エラーが発生する可能性
+    ・型引数推論の改善: 型変数のリークを防ぐが、一部コードでエラーが発生する可能性
+
+    ■ 対応策
+
+    ・`@types/node` を最新版に更新
+    ・より具体的な型を指定 (例: `Uint8Array<ArrayBuffer>`)
+
+#-------------------------------
+# 5.8
+#-------------------------------
+- ENTRY:
+  CATEGORY: version 5.8
+
+- ENTRY:
+  EXPLAIN: return式内の条件分岐の詳細チェック
+  BODY: |
+    ■ 概要
+
+    ・return文内の条件式（三項演算子など）の各ブランチを個別にチェック
+    ・型エラーをより正確に検出可能
+
+    // 改善: return内の条件式で型チェックが強化
+    // 以前: 条件式全体の型がanyに汚染され、エラーが見逃されやすかった
+    // 現在: 各ブランチがreturn型に対してチェックされる
+
+    declare const untypedCache: Map<any, any>;
+
+    function getUrlObject(urlString: string): URL {
+        return untypedCache.has(urlString) ?
+            untypedCache.get(urlString) :  // any型
+            urlString;  // string型
+        // エラー: stringはURLに代入不可
+    }
+
+- ENTRY:
+  EXPLAIN: --module nodenextでのESMのrequire()サポート
+  BODY: |
+    ■ 概要
+
+    ・Node.js 22以降でCommonJSからESMをrequire()可能に
+    ・--module nodenextでこの動作をサポート
+
+    ■ サンプル
+
+    // 改善: CommonJSからESMをrequire()
+    // 以前: CommonJSからESMをrequire()するとエラー
+    // 現在: Node.js 22+で可能（トップレベルawaitなしの場合）
+
+    // ESMファイル: esm-module.mjs
+    export const value = 42;
+
+    // CommonJSファイル
+    const esm = require('./esm-module.mjs'); // OK
+
+- ENTRY:
+  EXPLAIN: --module node18フラグの安定化
+  BODY: |
+    ■ 概要
+
+    ・--module node18を安定版として導入
+    ・Node.js 18向けの安定したモジュール解決
+
+    ■ サンプル
+
+    // tsconfig.json
+    {
+      "compilerOptions": {
+        "module": "node18"  // 安定版
+      }
+    }
+
+- ENTRY:
+  EXPLAIN: --erasableSyntaxOnlyオプション
+  BODY: |
+    ■ 概要
+
+    ・Node.jsの--experimental-strip-typesに適した構文のみ許可
+    ・enum, namespace, import= などを禁止
+
+    ■ サンプル
+
+    // エラーになる構文
+    enum Direction { Up, Down }  // エラー
+    namespace NS { }  // エラー
+    import Bar = require('bar');  // エラー
+
+    // OKな構文: 型のみの宣言など
+
+- ENTRY:
+  EXPLAIN: --libReplacementフラグ
+  BODY: |
+    ■ 概要
+
+    ・libファイルの置換機能を無効化可能
+    ・--libReplacement falseでパフォーマンス向上
+
+    ■ サンプル
+
+    // tsconfig.json
+    {
+      "compilerOptions": {
+        "libReplacement": false  // デフォルトで無効化推奨
+      }
+    }
+
+- ENTRY:
+  EXPLAIN: 宣言ファイルでの計算プロパティ名の保持
+  BODY: |
+    ■ 概要
+
+    ・クラス内の計算プロパティ名を宣言ファイルで保持
+    ・より正確な型定義出力
+
+    ■ サンプル
+
+    export let propName = "answer";
+
+    export class MyClass {
+        [propName] = 42;  // 宣言ファイルで[propName]: number; と出力
+    }
+
+- ENTRY:
+  EXPLAIN: プログラム読み込みと更新の最適化
+  BODY: |
+    ■ 概要
+
+    ・パス正規化の最適化でビルド速度向上
+    ・オプション再検証の回避で編集時のレスポンス改善
+
+    ■ サンプル
+
+    // 内部最適化: ユーザーコードに直接影響なし
+    // 大規模プロジェクトでのビルド/ウォッチ速度向上
+
+#-------------------------------
+# 5.7
+#-------------------------------
+- ENTRY:
+  CATEGORY: version 5.7
+
+- ENTRY:
+  EXPLAIN: 定数インデックスアクセスでの制御フロー狭め
+  BODY: |
+    ■ 概要
+
+    ・定数インデックスアクセスでの制御フロー解析の改善
+    ・オブジェクトのプロパティアクセスで型がより正確に狭まる
+
+    ■ サンプル
+
+    // 改善: 定数インデックスでの狭め
+    // 以前: インデックスアクセスで型が狭まらなかった
+    // 現在: 制御フロー解析で型が適切に狭まる
+
+    function check(obj: { a?: string; b?: number }) {
+      if (obj.a) {
+        // 以前: obj.a は string | undefined だった可能性
+        // 現在: obj.a は string と推論
+        console.log(obj.a.toUpperCase());
+      }
+    }
+
+- ENTRY:
+  EXPLAIN: Instanceof narrowing through symbols
+  BODY: |
+    ■ 概要
+
+    ・Symbol を通じた instanceof 狭め
+    ・Symbol ベースの型チェックで型が狭まる
+
+    ■ サンプル
+
+    // 改善: Symbol での instanceof 狭め
+    // 以前: Symbol でのチェックが狭めに影響しなかった
+    // 現在: Symbol を使用した instanceof で型が狭まる
+
+    const sym = Symbol();
+    class MyClass {
+      [sym]() {}
+    }
+    function checkInstance(x: unknown) {
+      if (x instanceof MyClass) {
+        // x は MyClass として扱える
+      }
+    }
+
+- ENTRY:
+  EXPLAIN: 関数推論の改善
+  BODY: |
+    ■ 概要
+
+    ・関数推論の改善
+    ・ジェネリクス関数の推論がより正確
+
+    ■ サンプル
+
+    // 改善: 関数推論の精度向上
+    // 以前: 複雑な関数で推論が失敗しやすかった
+    // 現在: より正確な関数型推論
+
+    function map<T, U>(arr: T[], fn: (x: T) => U): U[] {
+      return arr.map(fn);
+    }
+    const result = map([1, 2, 3], x => x.toString()); // string[]
+
+#-------------------------------
+# 5.6
+#-------------------------------
+- ENTRY:
+  CATEGORY: version 5.6
+
+- ENTRY:
+  EXPLAIN: Iteratorヘルパー
+  BODY: |
+    ■ 概要
+
+    ・Iterator に map, filter などのヘルパーメソッドを追加
+    ・ES2025 の Iterator helpers 提案に基づく
+
+    ■ サンプル
+
+    // 改善: Iterator に直接メソッドが追加
+    // 以前: Iterator を Array に変換してから操作する必要があった
+    // 現在: 直接 map, filter などが利用可能でメモリ効率向上
+
+    const iter = [1, 2, 3].values();
+    const doubled = iter.map(x => x * 2);
+    for (const value of doubled) {
+      console.log(value); // 2, 4, 6
+    }
+
+    // 他のメソッド例
+    const filtered = iter.filter(x => x > 1); // 以前は Array.from(iter).filter(...)
+    const taken = iter.take(2); // 最初の2要素
+
+    // 改善: 遅延評価でパフォーマンス向上
+    // 以前: 中間配列を作成してメモリ消費
+    // 現在: イテレータチェーンで効率的
+
+    const result = [1, 2, 3, 4, 5]
+      .values()
+      .filter(x => x % 2 === 0)
+      .map(x => x * 10)
+      .take(2); // 20, 40
+
+- ENTRY:
+  EXPLAIN: nullishおよびtruthyチェックの禁止
+  BODY: |
+    ■ 概要
+
+    ・nullish (??) や truthy チェックの禁止設定
+    ・strictNullChecks 下でより厳格なチェックを強制
+
+    ■ サンプル
+
+    // 改善: nullish チェックの禁止
+    // 以前: if (x ?? y) などの nullish チェックが許可されていた
+    // 現在: strictNullChecks 下でエラーになり、明示的なチェックを強制
+    // strictNullChecks 下で
+
+    if (x) { }    // エラー if x is possibly nullish
+
+    // 改善: truthy チェックの禁止
+    // 以前: if (x && y) などの truthy チェックが曖昧に扱われていた
+    // 現在: nullish 可能性がある場合にエラー
+
+    function check(x: string | null) {
+      if (x) { // エラー: x is possibly nullish
+        return x.toUpperCase()
+      }
+      return ""
+    }
+
+    // 正しい書き方: 明示的な null チェック
+    function checkCorrect(x: string | null) {
+      if (x !== null) { // OK
+        return x.toUpperCase()
+      }
+      return ""
+    }
+
+- ENTRY:
+  EXPLAIN: export = 宣言からの型インポート許可
+  BODY: |
+    ■ 概要
+
+    ・export = 宣言からの型インポートを許可
+
+    ■ サンプル
+
+    import type { T } from "module"     // module が export = ...
+
+#-------------------------------
+# 5.5
+#-------------------------------
+- ENTRY:
+  CATEGORY: version 5.5
+
+- ENTRY:
+  EXPLAIN: 条件型の推論改善
+  BODY: |
+    ■ 概要
+
+    ・条件型の評価と推論の最適化
+    ・ネストした条件型やユニオン型との組み合わせで、より正確な推論が可能になった
+
+    ■ サンプル
+
+    // 基本的な条件型（変化なし）
+    type IfString<T> = T extends string ? "S" : "O"
+    type R1 = IfString<"a"> // 推論: "S"
+
+    // 改善: ネストした条件型での推論精度向上
+    // 以前: より曖昧な推論だった場合がある
+    // 現在: より具体的な型を推論
+
+    type Nested<T> = T extends string ? (T extends "a" ? "A" : "Other") : "NotString"
+    type R2 = Nested<"a"> // 推論: "A" (以前は "A" | "Other" など曖昧だった可能性)
+
+    // 改善: ユニオン型との組み合わせの推論安定化
+    // 以前: 分布型の評価が不十分でエラーが出やすかった
+    // 現在: より正確な分布型評価
+
+    type UnionCheck<T> = T extends string | number ? "Primitive" : "Object"
+    type R3 = UnionCheck<string | number> // 推論: "Primitive" (以前は推論が失敗しやすかった)
+
+- ENTRY:
+  EXPLAIN: Mapped type の推論安定化
+  BODY: |
+    ■ 概要
+
+    ・Mapped type の推論精度向上
+    ・template literal type や keyof との組み合わせで、より正確な推論が可能になった
+
+    ■ サンプル
+
+    // 基本的な Mapped type（変化なし）
+    type Mapped<T> = { [K in keyof T]: T[K] }
+    type X = Mapped<{ a: number }> // { a: number }
+
+    // 改善: template literal type との組み合わせの推論安定化
+    // 以前: keyof の推論が不安定でエラーが出やすかった
+    // 現在: より正確な keyof 推論で安定
+
+    type Prefixed<T> = { [K in keyof T as `prefix_${string & K}`]: T[K] }
+    type Y = Prefixed<{ a: number; b: string }> // { prefix_a: number; prefix_b: string }
+
+    // 改善: 条件型との組み合わせの推論改善
+    // 以前: Mapped type 内の条件型推論が不十分
+    // 現在: 条件型の評価がより正確
+
+    type Filtered<T> = { [K in keyof T as T[K] extends string ? K : never]: T[K] }
+    type Z = Filtered<{ a: number; b: string }> // { b: string }
+
+#-------------------------------
+# 5.4
+#-------------------------------
+- ENTRY:
+  CATEGORY: version 5.4
+
+- ENTRY:
+  EXPLAIN: タプル推論
+  BODY: |
+    ■ 概要
+
+    ・タプル推論の挙動確認と例示
+    ・labeled tuples の導入と推論精度の向上
+
+    ■ サンプル
+
+    // 基本的なタプル推論（変化なし）
+    const t1 = [1, 2]
+    // 推論: number[]
+
+    const t2 = [1, 2] as const
+    // 推論: readonly [1, 2]
+
+    function pickFirst<T extends readonly number[]>(arr: T) { return arr[0] }
+    // pickFirst(t2) の戻り値型: 1（リテラル型）
+
+    // 改善: labeled tuples の導入
+    // 以前: タプル要素にラベルを付けられなかった
+    // 現在: ラベル付きタプルが可能で可読性向上
+
+    type Point = [x: number, y: number]
+    const p: Point = [10, 20]
+    const x = p[0] // number (ラベルは型チェックに影響しないが可読性向上)
+
+    // 改善: 推論の安定化
+    // 以前: 複雑なタプル操作で推論が失敗しやすかった
+    // 現在: より正確なタプル推論
+
+    function mapTuple<T extends readonly unknown[]>(arr: T): { [K in keyof T]: T[K] } {
+      return arr as any
+    }
+    const result = mapTuple([1, "a"]) // 推論: [number, string] (以前は any に陥りやすかった)
+
+- ENTRY:
+  EXPLAIN: 制御フロー解析の安定化
+  BODY: |
+    ■ 概要
+
+    ・制御フロー解析の安定化を示す簡易例
+    ・複雑な条件分岐での型推論がより正確になった
+
+    ■ サンプル
+
+    // 基本的な制御フロー（変化なし）
+    function parse(x: unknown) {
+      if (typeof x === "string") return x.toUpperCase()
+      if (Array.isArray(x)) return x.length
+      return null
+    }
+
+    // 改善: ネストした条件での解析安定化
+    // 以前: 複雑な条件で型が正しく狭められなかった場合があった
+    // 現在: より正確な制御フロー解析で型が適切に狭まる
+
+    function advancedParse(x: unknown) {
+      if (typeof x === "object" && x !== null) {
+        if ("type" in x && typeof x.type === "string") {
+          if (x.type === "user") {
+            // 以前: x が user 型として扱われなかった可能性
+            // 現在: x は { type: "user"; ... } として推論
+            return x.name; // 型安全
+          }
+        }
+      }
+      return null
+    }
+
+    // 改善: ユニオン型の制御フロー改善
+    // 以前: ユニオン型の各ブランチで型が曖昧だった
+    // 現在: 各ブランチで正確な型が推論
+
+    type Data = { type: "A"; value: number } | { type: "B"; value: string }
+    function handleData(data: Data) {
+      if (data.type === "A") {
+        return data.value * 2; // data.value: number
+      } else {
+        return data.value.toUpperCase(); // data.value: string
+      }
+    }
+
+#-------------------------------
+# 5.3
+#-------------------------------
+- ENTRY:
+  CATEGORY: version 5.3
+
+- ENTRY:
+  EXPLAIN: 静的/動的 import type
+  BODY: |
+    ■ 概要
+
+    ・静的importで型のみをインポート
+    ・動的importで型のみをインポート
+    ・型情報はコンパイル後に削除
+    ・バンドルされない(コンパニオンスタイルの場合、本体がバンドルされるのを防ぐ)
+
+    ■ 静的 import type
+
+    import type { MyType } from "./module";
+    type MyType2 = import("./module").MyType;
+
+    ■ 動的 import type
+
+    const module = await import("./module") as { MyType: typeof import("./module").MyType };
+    type MyType = module["MyType"];
+
+    ※ json モジュールの型指定
+
+    import module from "a.json" with { type: "json" }
+    const o = await import("a.json", { with: { type: "json" } });
+
+- ENTRY:
+  EXPLAIN: unknown型 check
+  BODY: |
+    ■ 概要
+
+    ・`unknown` は外部入力や未検証値を表す型で `any` より安全
+    ・直接プロパティ参照・関数呼び出し・代入は許可されず、事前に型狭め（narrowing）が必要
+
+    ■ TS 5.3 におけるポイント
+
+    ・制御フロー解析や型狭めの改善により、より多くのケースで `unknown` から安全に狭められる
+    ・ユーザー定義の型ガード（`v is T`）やアサーション関数（`asserts v is T`）との相性が良く、明示的なチェックで型が解決される
+
+    ■ サンプル：基本的な型狭め
+
+    const value: unknown = "hello"
+    if (typeof value === "string") {
+      const s: string = value
+      // s は string として扱える
+    }
+
+    ■ サンプル：in / instanceof / Array.isArray を用いた狭め
+
+    type Obj = { name: string }
+    const x: unknown = { name: "T" }
+    if (typeof x === "object" && x !== null && "name" in x) {
+      const o = x as Obj
+      // o.name を安全に使える
+    }
+    if (Array.isArray(x)) {
+      // 配列として扱える
+    }
+
+    ■ サンプル：ユーザー定義型ガード
+
+    function isString(v: unknown): v is string {
+      return typeof v === "string"
+    }
+    if (isString(value)) {
+      // value は string
+    }
+
+    ■ サンプル：アサーション関数（asserts）
+
+    function assertIsString(v: unknown): asserts v is string {
+      if (typeof v !== "string") throw new Error("Not string")
+    }
+    assertIsString(value)
+    // ここ以降、value は string
+
+    ■ 実践的パターン
+
+    ・API 境界では `unknown` を受け取り、内部で型ガード/バリデーションしてから具象型に変換
+    ・型安全を担保するために `as any` を乱用しない
+
+    ■ 注意点
+
+    ・`unknown` は型情報がないためインデックスやメソッド呼び出しを直接行えない
+    ・型ガードを慎重に設計しないとランタイム例外が発生する
+
+    ■ 重要語
+
+    ・型狭め（narrowing）：実行時チェックによりより具体的な型に絞ること
+    ・型ガード（type guard）：`v is T` 形式のユーザー定義関数
+    ・アサーション関数：`asserts v is T` で呼び出し後の型を保証する関数
+
+#-------------------------------
+# 5.2
+#-------------------------------
+- ENTRY:
+  CATEGORY: version 5.2
+
+- ENTRY:
+  EXPLAIN: Instance 削除時実行
+  BODY: |
+    ■ 概要
+
+    ・オブジェクト破棄時に実行されるクリーンアップ用のメソッドとして `Symbol.dispose` を定義する
+
+    ■ サンプル
+
+    class AFile implements Disposable {
+      constructor(private path: string) {}
+      [Symbol.dispose]() {
+        // リソース解放処理
+      }
+    }
+    // try/finally で明示的に dispose を呼ぶ
+    const file = new AFile(".file")
+    try {
+      // ファイル処理
+    } finally {
+      file[Symbol.dispose]()
+    }
+
+    ■ 補足 / ルール
+
+    ・ネイティブに `using` 構文がある環境では自動解放と併用可能
+    ・非同期解放が必要な場合は `Symbol.asyncDispose` を検討する
+
+- ENTRY:
+  EXPLAIN: Function削除時の実行
+  BODY: |
+    ■ 概要
+
+    ・関数が返すオブジェクトに `Symbol.dispose` / `Symbol.asyncDispose` を実装して解放可能にする設計
+
+    ■ サンプル（同期）
+
+    function createLogger(id: string): Disposable {
+      return {
+        [Symbol.dispose]() {
+          // ロガー解放処理
+        }
+      }
+    }
+    const logger = createLogger("a")
+    try {
+      // 使う
+    } finally {
+      logger[Symbol.dispose]()
+    }
+
+    ■ サンプル（非同期）
+
+    function createAsyncLogger(id: string): AsyncDisposable {
+      return {
+        async [Symbol.asyncDispose]() {
+          await flushToDisk()
+        }
+      }
+    }
+    // await を使って解放
+    const al = createAsyncLogger("a")
+    try {
+      // 使う
+    } finally {
+      await al[Symbol.asyncDispose]()
+    }
+
+    ■ 補足 / ルール
+
+    ・同期/非同期を混同しない
+    ・非同期解放は await が必須
+    ・ライブラリ設計では `dispose` の有無を型で表現する
+
+- ENTRY:
+  EXPLAIN: デコレータメタデータ
+  BODY: |
+    ■ 概要
+
+    ・デコレータ実行時にメタデータを付与するパターン
+    ・メタデータは `Symbol.metadata` に保存されることがある
+
+    ■ サンプル
+
+    interface X { name: string; metadata: Record<PropertyKey, unknown> }
+
+    function setMetadata(_target: any, context: any) {
+      const key = context.name
+      if (!context.constructor[Symbol.metadata]) context.constructor[Symbol.metadata] = {}
+      context.constructor[Symbol.metadata][key] = true
+    }
+
+    class AClass {
+      @setMetadata
+      foo = 123
+      @setMetadata
+      accessor bar = "hello!"
+      @setMetadata
+      baz() {}
+    }
+    const md = (AClass as any)[Symbol.metadata]
+
+    ■ 補足 / ルール
+
+    ・デコレータの仕様は進化中でありコンパイラ/トランスパイラごとの差異に注意
+    ・Metadata の構造は実装依存であるため外部公開する API としては型を明示する
+
+- ENTRY:
+  EXPLAIN: タプル
+  BODY: |
+    ■ 概要
+
+    ・Tuple は固定長・位置依存の要素を持つ配列型
+    ・名前付き要素（label）を付けられる
+
+    ■ サンプル
+
+    type T1<T> = [T, T]
+    type T2<T> = [f: T, s: T]
+    type T3<T> = [f: T, s: T, ...rest: T[]]
+    type X = [a: string, b: string]
+
+    const x: X = ["A", "B"]
+    const a = x[0] // string
+
+    // 可変長と結合
+    type Label = [number, number]
+    type NoLabel = [string, string]
+    type Z = [...Label, ...NoLabel] // [number, number, string, string]
+
+    ■ 補足 / ルール
+
+    ・タプルの型から値を取り出す際はインデックスアクセスで型が決まる
+    ・named labels は型の可読性を上げるための注釈であり実行時には影響しない
+
+#-------------------------------
+# 5.1
+#-------------------------------
+- ENTRY:
+  CATEGORY: version 5.1
+
+- ENTRY:
+  EXPLAIN: 関数がundefinedを返す
+  BODY: |
+    ■ 概要
+
+    ・関数が `undefined` を返す設計の扱い
+    ・戻り値型に `void`/`undefined` を明示して副作用関数を表現する
+
+    ■ サンプル
+
+    function doThing(): void {
+      // 副作用のみ
+    }
+
+    function maybeGet(): number | undefined {
+      if (Math.random() > 0.5) return 1
+      return undefined
+    }
+
+    const v = maybeGet()
+    if (v !== undefined) {
+      // v: number
+    }
+
+    ■ 補足 / ルール
+
+    ・`void` は呼び出し元に値を返さないことを示す
+    ・`undefined` を返す可能性がある場合は `T | undefined` を使う
+
+- ENTRY:
+  EXPLAIN: デコレータタイプ
+  BODY: |
+    ■ 概要
+
+    ・デコレータはクラスやメソッド、アクセサ、プロパティ、パラメータに適用できる
+
+    ■ Class Decorator
+
+    function cdt(constructor: Function) {}
+
+    @cdt
+    class C {}
+
+    ■ Method Decorator
+
+    function mdt(target: any, propertyKey: string, descriptor: PropertyDescriptor) {}
+
+    class D {
+      @mdt
+      m() {}
+    }
+
+    ■ 補足 / ルール
+
+    ・Accessor / Property / Parameter は同様に定義
+    ・デコレータは呼び出し順が重要
+    ・ファクトリと実行順を区別する
+    ・TS の設定で `experimentalDecorators` を有効にする必要がある場合がある
+
+#-------------------------------
+# 5.0
+#-------------------------------
+- ENTRY:
+  CATEGORY: version 5.0
+
+- ENTRY:
+  EXPLAIN: 即時関数による定義
+  BODY: |
+    ■ 概要
+
+    ・即時関数（IIFE）を利用してデコレータやラッパー関数を生成するパターン
+    ・外部状態をキャプチャして副作用を実装する
+
+    ■ サンプル
+
+    function decoLog(orgMethod: any, _context: any) {
+      return function (this: any, ...args: any[]) {
+        console.log(_context)
+        const result = orgMethod.call(this, ...args)
+        return result
+      }
+    }
+
+    class A {
+      a: string
+      constructor(a: string) { this.a = a }
+      @decoLog
+      get(A: string) { console.log(`Hi ${this?.a || "Oops"}`) }
+    }
+
+    const p = new A("John")
+    p.get("ABC")
+
+    ■ 補足 / ルール
+
+    ・IIFE を使う場合はクロージャに注意
+    ・メモリリークにならないよう参照を整理する
+
+- ENTRY:
+  EXPLAIN: デコレータのコール順
+  BODY: |
+    ■ 概要
+
+    ・デコレータの評価順と呼び出し順は異なる
+    ・ファクトリ評価が先に行われ適用は逆順となる
+
+    ■ サンプル
+
+    function first() {
+      console.log("first(): factory evaluated")
+      return function (_target: any, _propertyKey: string, _descriptor: PropertyDescriptor) {
+        console.log("first(): called")
+      }
+    }
+
+    function second() {
+      console.log("second(): factory evaluated")
+      return function (_target: any, _propertyKey: string, _descriptor: PropertyDescriptor) {
+        console.log("second(): called")
+      }
+    }
+
+    class ExampleClass {
+      accessor name: string = ""
+      @first()  // コメント: factory evaluated は first, second の順
+      @second() // 実行は second -> first の順
+      method(name: string) { this.name = name }
+    }
+
+    ■ 補足 / ルール
+
+    ・複数デコレータ適用時は最初に書かれたデコレータの factory が先に評価される
+    ・実行は下から上の順となる
+
+- ENTRY:
+  EXPLAIN: ジェネリック・定数
+  BODY: |
+    ■ 概要
+
+    ・ジェネリクス型引数と `const` による型推論の制御
+    ・`as const` や `const` 型引数でリテラル型を保持できる
+
+    ■ サンプル
+
+    type A = { a: readonly string[] }
+    const func = <T extends A>(obj: T): T["a"] => { return obj.a }
+    const res1 = func({ a: ["A", "B"] }) // string[]
+
+    // const 型引数でリテラルを保持
+    const cFunc = <const T extends A>(obj: T): T["a"] => { return obj.a }
+    const res2 = cFunc({ a: ["A", "B"] } as const) // readonly ["A","B"]
+
+    ■ 補足 / ルール
+
+    ・`as const` はオブジェクト全体のリテラル性を保持する
+    ・型推論をコントロールして不変性を明示できる
+
+#-------------------------------
+# 4.9
+#-------------------------------
+- ENTRY:
+  CATEGORY: version 4.9
+
+- ENTRY:
+  EXPLAIN: Widening 防止
+  BODY: |
+    ■ 概要
+
+    ・リテラル値の "widening"（リテラルがより一般的な型に拡張される挙動）を防ぎ、期待する厳密な型を維持する手法。
+    ・`as const` は式自体を readonly + リテラル型にする。
+    ・`satisfies` は式が期待する型を満たすかを検査する（型チェック目的）一方、式の推論型は変更しない。
+
+    ■ 比較サンプル（期待される型と理由）
+
+    type A = { x: string; y: number }
+
+    const a1: A = { x: "X", y: 1 }
+
+    ・変数 `a1` の型: A ({ x: string; y: number })
+    ・理由: 変数注釈 `: A` が優先され、RHS は注釈に合わせて扱われる
+
+    const a2 = { x: "X", y: 1 } satisfies A
+
+    ・変数 `a2` の推論型: { x: "X"; y: 1 }
+    ・理由: `satisfies` は互換性チェックのみで、式の具体的な型（リテラル性）は保持する
+
+    const a3 = { x: "X", y: 1 } as const
+
+    ・推論型: { readonly x: "X"; readonly y: 1 }
+
+    const a4 = { x: "X", y: 1 } as const satisfies A
+
+    ・変数 `a4` の推論型: { readonly x: "X"; readonly y: 1 }
+    ・理由: `as const` が式の型を readonly リテラルにし、`satisfies` は互換性を検証するだけ
+
+    const a5: A = { x: "X", y: 1 } as const
+
+    ・変数 `a5` の型: A ({ x: string; y: number })
+    ・理由: 変数注釈が優先されるため、RHS の as const によるリテラル性は変数の型には反映されない
+
+    ■ Tuple（配列）保存の比較
+
+    type Colors = "a" | "b"
+    type RGB = [r: number, g: number, b: number]
+
+    const z1 = { a: [255, 0, 255], b: "#00ff00" }
+
+    ・推論型: { a: number[]; b: string }
+
+    const z2 = { a: [255, 0, 255] as const, b: "#00ff00" }
+
+    ・推論型: { a: readonly [255, 0, 255]; b: string }
+
+    const z3 = { a: [255, 0, 255] as const, b: "#00ff00" } as const
+
+    ・推論型: { readonly a: readonly [255, 0, 255]; readonly b: "#00ff00" }
+
+    const z4 = { a: [255, 0, 255] as const, b: "#00ff00" } satisfies Record<Colors, string | RGB>
+
+    ・推論型: { a: readonly [255, 0, 255]; b: string }
+    ・理由: `satisfies` は互換性チェックであり、式の推論型（ここでは配列要素が readonly）を変えない
+
+    const z5 = { a: [255, 0, 255] as const, b: "#00ff00" } as const satisfies Record<Colors, string | RGB>
+
+    ・推論型: { readonly a: readonly [255, 0, 255]; readonly b: "#00ff00" }
+
+    ■ at() の挙動
+
+    ・注意: `arr.at(index)` は範囲外で `undefined` を返す可能性があるため戻り型は要素型 | undefined になる
+    ・`zX.a[0]` のような既知インデックスアクセスは要素型（リテラル）になる
+
+    ■ 補足 / ルール
+
+    ・`as const` は式を readonly + リテラル型に固定する
+    ・`satisfies` は期待型の検査に使い、式の推論型を変更しない（設計上の違いに注意）
+    ・変数注釈（`: A`）を付けると変数の型は注釈に従うため、RHS のリテラル性は変数型に反映されない
+
+- ENTRY:
+  EXPLAIN: アクセッサ
+  BODY: |
+    ■ 概要
+
+    ・`accessor` は get/set の省略記法
+    ・コンパイラがアクセッサを自動生成する
+
+    ■ サンプル
+
+    class X {
+      accessor a: string
+      constructor(a: string) { this.a = a }
+    }
+
+    const x = new X("a")
+    const res = x.a
+    x.a = "b"
+
+    ■ 補足 / ルール
+
+    ・古いトランスパイラではサポートされない場合があるためターゲット設定を確認する
+
+- ENTRY:
+  EXPLAIN: NaNの挙動
+  BODY: |
+    ■ 概要
+
+    ・NaN は自己比較が常に false である仕様
+    ・言語や型システムの最適化で挙動差が出る場合がある
+
+    ■ サンプル
+
+    const a = NaN
+    console.log(a == NaN)    // false
+    console.log(a === NaN)   // false
+    // 値が NaN か判定するには isNaN / Number.isNaN を使用
+    Number.isNaN(a) // true
+
+    ■ 補足 / ルール
+
+    ・`Number.isNaN` は厳密に NaN かを判定
+    ・グローバル isNaN は非数以外も true を返すため注意
+
+#-------------------------------
+# 4.8
+#-------------------------------
+- ENTRY:
+  CATEGORY: version 4.8
+
+- ENTRY:
+  EXPLAIN: Unknown型
+  BODY: |
+    ■ 概要
+
+    ・`unknown` は任意の値を受け取る型
+    ・使用前に型狭めが必要
+    ・`any` より安全に外部入力を扱う
+
+    ■ サンプル
+
+    const x: unknown = { a: 1 }
+    // const y: {} | null | undefined = x // エラー: 代入前に狭めが必要
+    if (typeof x === "object" && x !== null) {
+      const y: {} = x
+    }
+
+    ■ 補足 / ルール
+
+    ・`unknown` を使用することで API の境界で型安全性を強化できる
