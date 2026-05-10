@@ -58,14 +58,14 @@ div.colorTr {
 }
 div.colorName {
   font-size: 14px;
-  width: 200px;
+  width: 250px;
   padding: 3px 10px;
   color: white;
   background-color: white;
 }
 div.colorReversed {
   font-size: 14px;
-  width: 200px;
+  width: 250px;
   color: #333;
   background-color: #333;
   padding: 3px 10px;

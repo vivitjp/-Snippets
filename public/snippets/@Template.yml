@@ -1,0 +1,88 @@
+---
+#-------------------------------
+# ZZZZZZZZZZZ
+#-------------------------------
+- ENTRY: XXXXXX.category
+  CATEGORY: XXXXXX
+
+- ENTRY:
+  EXPLAIN:
+  BODY: |
+    ■ ABC
+
+- ENTRY:
+  EXPLAIN: |
+    ■ DEF
+  TABLE:
+    OPTION:
+      ALIGN:
+        - left
+        - center
+        - center
+        - left
+      HAS_TITLE: true
+      WIDTH:
+        - 25%
+        - 25%
+        - 25%
+        - 25%
+    BODY: |
+      プロパティ/機能 	Map 	WeakMap 	機能説明
+      *.prototype.constructor	〇	〇	インスタンス生成元のコンストラクタ(書き換え可能)
+      *.prototype.size	〇	×	要素数
+      *.prototype.delete()	〇	〇	対要素削除
+
+- ENTRY:
+  EXPLAIN:
+  OPTIONS:
+    COLS: 2
+  BODY: |
+    インターネットゲートウェイ
+    サブネット
+    仮想ルータ
+    ルートテーブル
+    VPC Peering
+    NAT ゲートウェイ
+
+- ENTRY:
+  EXPLAIN:
+  BODY: |
+    ┌────┬───────────────────┐
+    │    │                   │
+    ├────┼───────────────────┤
+    │    │                   │
+    └────┴───────────────────┘
+
+    ┌────┬───────────────────┐
+    │    │                   │
+    └────┴───────────────────┘
+
+    ┌─────────────────────┬───────────────────┐
+    │                     │                   │
+    └─────────────────────┴───────────────────┘
+
+    ┌─────────────────────────────────────────┐
+    │                                         │
+    └─────────────────────────────────────────┘
+
+    TOP
+     ├── AAA
+     ├── BBB
+     │    └── B1
+     ├── CCC
+     │    ├── C1
+     │    └── C2
+     │         └── C21
+     └── DDD
+
+- ENTRY:
+  EXPLAIN:
+  BODY: |
+
+- ENTRY:
+  EXPLAIN:
+  BODY: |
+
+- ENTRY:
+  EXPLAIN:
+  BODY: |
