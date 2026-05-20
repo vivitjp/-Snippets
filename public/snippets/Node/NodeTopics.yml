@@ -209,6 +209,45 @@
     ・Git対策: 大リポジトリは sparse-checkout / shallow clone / CI の部分チェックを活用
     ・リソース対策: CIランナーのメモリ上限や node --max-old-space-size を環境に合わせて調整
 
+- ENTRY:
+  EXPLAIN: ターボレポ
+  BODY: |
+    ■ TurboRepo
+
+    Vercelが開発したモノレポ管理ツール
+    高速なビルドとキャッシュ機能が特徴
+
+    ■ 主な機能
+
+    タスクランナー: パッケージ間の依存関係を理解し、必要なタスクのみ実行
+    キャッシュ: ビルド成果物をキャッシュして、同じタスクの再実行を高速化
+    並列実行: タスクを並列で実行してビルド時間を短縮
+    リモートキャッシュ: CI環境でのビルド成果物共有に対応
+
+    ■ 使い方
+
+    1. インストール
+       npm install turbo -D
+
+    2. turbo.json をプロジェクトルートに作成
+       {
+         "pipeline": {
+           "build": {
+             "dependsOn": ["^build"],
+             "outputs": ["dist/**"]
+           },
+           "test": {
+             "dependsOn": ["build"],
+             "outputs": []
+           }
+         }
+       }
+
+    3. コマンド実行
+       npx turbo run build
+       npx turbo run test
+
+
 #-------------------------------
 # Volta
 #-------------------------------

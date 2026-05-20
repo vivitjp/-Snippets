@@ -407,6 +407,152 @@
     git fetch origin                    // フェッチのみ（統合せず）
 
 #-------------------------------
+# 設定ファイル
+#-------------------------------
+
+- ENTRY:
+  CATEGORY: 設定ファイル
+
+- ENTRY:
+  EXPLAIN: .gitconfig
+  BODY: |
+    ■ 概要
+
+    ・Git のユーザー設定ファイル
+    ・スコープ: system(/etc/gitconfig) > global(~/.gitconfig) > local(.git/config)
+    ・git config コマンドで読み書きされる
+
+    ■ サンプル (~/.gitconfig)
+
+    [user]
+      name  = Taro Yamada
+      email = taro@example.com
+
+    [core]
+      editor     = code --wait        // コミットメッセージエディタ
+      autocrlf   = false              // 改行コード自動変換 (Windows: true)
+      quotepath  = false              // 日本語ファイル名を正しく表示
+
+    [alias]
+      st  = status
+      co  = checkout
+      br  = branch
+      lg  = log --oneline --graph --decorate --all
+
+    [pull]
+      rebase = false                  // pull 時に merge を使う
+
+    [init]
+      defaultBranch = main
+
+    ■ よく使うコマンド
+
+    git config --global user.name "名前"
+    git config --global --list          // 設定一覧表示
+    git config --local core.autocrlf    // ローカル設定を確認
+
+- ENTRY:
+  EXPLAIN: .gitignore
+  BODY: |
+    ■ 概要
+
+    ・Git の追跡対象から除外するファイル/ディレクトリを指定
+    ・プロジェクトルートまたは任意のディレクトリに配置
+    ・# はコメント、! は否定(除外対象から除外)
+
+    ■ パターン記法
+
+    *.log           // 拡張子で指定
+    build/          // ディレクトリ全体
+    /dist           // ルート直下の dist のみ
+    **/temp         // どの階層でも temp にマッチ
+    doc/**/*.txt    // doc 以下の全 .txt
+    !important.log  // important.log だけは追跡対象に戻す
+
+    ■ サンプル (Node.js プロジェクト)
+
+    # 依存関係
+    node_modules/
+
+    # ビルド成果物
+    dist/
+    build/
+    *.js.map
+
+    # 環境変数
+    .env
+    .env.local
+    .env.*.local
+
+    # エディタ・OS
+    .DS_Store
+    Thumbs.db
+    .vscode/
+    .idea/
+
+    # ログ
+    *.log
+    npm-debug.log*
+
+    ■ 既に追跡済みファイルを無視する場合
+
+    git rm --cached <file>    // インデックスから削除してから .gitignore に追加
+
+- ENTRY:
+  EXPLAIN: .gitattributes
+  BODY: |
+    ■ 概要
+
+    ・ファイルごとに Git の属性(改行コード・diff・merge 方法など)を定義
+    ・プロジェクトルートに配置し、チームで共有することで環境差異を吸収
+
+    ■ 主な属性
+
+    text                      // テキストとして扱い改行正規化
+    text=auto                 // Git が自動判定
+    eol=lf                    // リポジトリ内を LF に統一
+    eol=crlf                  // リポジトリ内を CRLF に統一
+    binary                    // バイナリ(差分・改行変換なし)
+    diff=<driver>             // カスタム diff ドライバを使用
+    merge=<driver>            // カスタム merge ドライバを使用
+    linguist-language=<lang>  // GitHub 言語統計を上書き
+
+    ■ サンプル
+
+    # デフォルト: テキストは LF で統一
+    # * は「全ファイル」を意味するグロブパターン(必須ではないが推奨)
+    # 省略すると .gitattributes に記述がないファイルはデフォルト動作(OS依存)になる
+
+    # この行を先頭に置くことで、後続の個別ルールで上書きできる
+
+    * text=auto eol=lf
+
+    # Windows バッチは CRLF 必須
+
+    *.bat text eol=crlf
+    *.cmd text eol=crlf
+
+    # バイナリ (差分・改行変換しない)
+
+    *.png  binary
+    *.jpg  binary
+    *.pdf  binary
+    *.zip  binary
+
+    # 差分を人間が読みやすく
+
+    *.md   diff=markdown
+
+    # GitHub の言語統計から除外
+
+    vendor/**  linguist-vendored=true
+    *.min.js   linguist-generated=true
+
+    ■ 設定の確認
+
+    git check-attr -a <file>    // ファイルに適用されている属性を確認
+
+#-------------------------------
 # エイリアス
 #-------------------------------
 - ENTRY:
